@@ -2,28 +2,38 @@
 """
 collector.py — Bộ thu thập metrics cho DT4N (Phase 1, Lesson 1.5)
 
-VAI TRÒ: "nửa dưới" của Sync Agent. Thu thập metric từ Mininet -> xuất JSON
-có cấu trúc (khít với Ditto Thing) + ghi log. KHÔNG đẩy lên Ditto (đó là Phase 2).
+VAI TRÒ KIẾN TRÚC: "nửa dưới" của Sync Agent — thuộc LỚP 2 (Bridge), KHÔNG phải
+Lớp 1. Nó CHẠM vào Mininet (qua host.cmd) để đọc, nhưng mục đích tồn tại của nó
+là CHUẨN BỊ DỮ LIỆU cho việc đồng bộ. Vì thế file này nằm ở bridge/, không phải
+mininet/. (Test: đổi Mininet -> GNS3 thì topology.py phải viết lại, còn logic
+parse/tính rate/format JSON ở đây GIỮ NGUYÊN -> bằng chứng nó thuộc Lớp 2.)
 
 NGUYÊN TẮC THIẾT KẾ:
-  - Separation of Concerns: chỉ THU THẬP, không biết Ditto tồn tại.
+  - Separation of Concerns: chỉ THU THẬP, không biết Ditto tồn tại (Phase 2 mới đẩy).
   - Đọc metric host PHẢI qua host.cmd() (trong namespace) — nếu không -> số sai.
   - rate = (counter_now - counter_prev) / Δt_THẬT (đo bằng timestamp, không giả định).
   - Output JSON cố tình giống cấu trúc Thing của Ditto -> Phase 2 chỉ việc PUT.
 
-CÁCH DÙNG (trong script đã có đối tượng `net`, sau net.start()):
-    from collector import Collector
+CÁCH DÙNG (KHÔNG chạy độc lập — cần đối tượng `net` từ tiến trình Mininet):
+    # bên trong run_phase1.py, sau net.start():
+    from bridge.collector import Collector
     col = Collector(net, interval=1.0)
     col.run(duration=30)            # chạy 30s, in + ghi snapshot mỗi 1s
+
+VÌ SAO KHÔNG CHẠY ĐƯỢC `python3 collector.py`?
+    Vì `net` chỉ sống trong tiến trình Python đang giữ Mininet. Đây là thiết kế
+    in-process, KHÔNG phải bug. Muốn chạy -> dùng runner run_phase1.py.
 """
 
 import json
+import os
 import time
 import datetime
 
 
 # ---------------------------------------------------------------------------
-# PARSE HELPERS — thuần logic, test được KHÔNG cần Mininet
+# PARSE HELPERS — thuần logic, TEST ĐƯỢC KHÔNG CẦN MININET
+# (Đây là phần chứng minh "logic thuộc Lớp 2": không đụng gì tới namespace.)
 # ---------------------------------------------------------------------------
 def parse_proc_net_dev(text, iface):
     """Trả (rxBytes, txBytes) của `iface` từ nội dung /proc/net/dev.
@@ -90,17 +100,104 @@ def utc_now_iso():
     return datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
 
 
+def ensure_parent_dir(path):
+    """Tạo thư mục cha cho file log nếu chưa có."""
+    parent = os.path.dirname(os.path.abspath(path))
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+
+
+def fmt_num(value):
+    if value is None:
+        return '-'
+    if isinstance(value, float):
+        return '%.2f' % value
+    return str(value)
+
+
+def fmt_mbps(bytes_per_sec):
+    if bytes_per_sec is None:
+        return '-'
+    return '%.2f' % ((bytes_per_sec * 8.0) / 1000000.0)
+
+
+def format_snapshot_pretty(snapshot, index):
+    """Format snapshot thành log dễ đọc cho người, khác JSONL dành cho máy."""
+    things = snapshot.get('things', {})
+    lines = []
+    lines.append('=' * 92)
+    lines.append('DT4N PHASE 1 SNAPSHOT #%03d' % index)
+    lines.append('timestamp: %s' % snapshot.get('timestamp', '-'))
+    lines.append('-' * 92)
+
+    lines.append('HOST TRAFFIC')
+    lines.append('  %-10s %-8s %-8s %14s %14s %12s %12s'
+                 % ('name', 'role', 'state', 'rxBytes', 'txBytes', 'rxMbps', 'txMbps'))
+    for key in sorted(things):
+        if not key.startswith('host-'):
+            continue
+        item = things[key]
+        attrs = item.get('attributes', {})
+        features = item.get('features', {})
+        traffic = features.get('traffic', {})
+        status = features.get('status', {})
+        lines.append('  %-10s %-8s %-8s %14s %14s %12s %12s'
+                     % (key.replace('host-', ''),
+                        attrs.get('role', '-'),
+                        status.get('state', '-'),
+                        fmt_num(traffic.get('rxBytes')),
+                        fmt_num(traffic.get('txBytes')),
+                        fmt_mbps(traffic.get('rxRate')),
+                        fmt_mbps(traffic.get('txRate'))))
+
+    lines.append('')
+    lines.append('SWITCH STATUS')
+    lines.append('  %-10s %-8s' % ('name', 'state'))
+    for key in sorted(things):
+        if not key.startswith('switch-'):
+            continue
+        item = things[key]
+        status = item.get('features', {}).get('status', {})
+        lines.append('  %-10s %-8s' % (key.replace('switch-', ''), status.get('state', '-')))
+
+    path_rows = []
+    for key in sorted(things):
+        if not key.startswith('link-'):
+            continue
+        item = things[key]
+        attrs = item.get('attributes', {})
+        quality = item.get('features', {}).get('quality', {})
+        path_rows.append((attrs, quality))
+    if path_rows:
+        lines.append('')
+        lines.append('PATH QUALITY')
+        lines.append('  %-8s -> %-8s %14s %14s' % ('src', 'dst', 'latency_ms', 'loss_pct'))
+        for attrs, quality in path_rows:
+            lines.append('  %-8s -> %-8s %14s %14s'
+                         % (attrs.get('src', '-'), attrs.get('dst', '-'),
+                            fmt_num(quality.get('latency_ms')),
+                            fmt_num(quality.get('packetLoss_pct'))))
+
+    lines.append('')
+    return '\n'.join(lines)
+
+
 # ---------------------------------------------------------------------------
 # COLLECTOR — phần CẦN Mininet (đối tượng net). Không test được trong sandbox.
 # ---------------------------------------------------------------------------
 class Collector:
     def __init__(self, net, interval=1.0, server_names=('srv1', 'srv2'),
-                 log_path='/tmp/dt4n_snapshots.jsonl', cmd_timeout=3):
+                 log_path='logs/dt4n_snapshots.jsonl',
+                 pretty_log_path='logs/phase1.log',
+                 cmd_timeout=3, ping_every=5, overwrite=True):
         self.net = net
         self.interval = interval                 # chu kỳ polling (giây) — Lesson 1.4
         self.server_names = set(server_names)     # host nào đóng vai 'server'
         self.log_path = log_path                  # ghi mỗi snapshot 1 dòng JSON (JSONL)
+        self.pretty_log_path = pretty_log_path    # log dễ đọc cho người xem demo
         self.cmd_timeout = cmd_timeout            # timeout lệnh (tránh treo cả vòng lặp)
+        self.ping_every = ping_every              # đo latency mỗi N chu kỳ (ping tốn + tự nhiễu)
+        self.overwrite = overwrite                # True -> lần chạy sau đè log lần trước
         self._prev = {}                           # lưu (rxBytes,txBytes,timestamp) chu kỳ trước theo host
         self._ping_counter = 0                    # đếm chu kỳ để đo latency THƯA hơn
 
@@ -177,11 +274,12 @@ class Collector:
         for sw in self.net.switches:
             snapshot['things']['switch-%s' % sw.name] = self.collect_switch(sw)
 
-        # latency: đo THƯA — mỗi 5 chu kỳ một lần (vì ping tốn + tự gây nhiễu)
+        # latency: đo THƯA — mỗi ping_every chu kỳ (vì ping tốn + tự gây nhiễu)
         self._ping_counter += 1
-        if self._ping_counter % 5 == 0 and len(self.net.hosts) >= 2:
+        if self._ping_counter % self.ping_every == 0 and len(self.net.hosts) >= 2:
             h1 = self.net.hosts[0]
-            srv = self.net.get('srv1') if 'srv1' in [h.name for h in self.net.hosts] else self.net.hosts[-1]
+            host_names = [h.name for h in self.net.hosts]
+            srv = self.net.get('srv1') if 'srv1' in host_names else self.net.hosts[-1]
             lat = self.collect_latency(h1, srv.IP())
             key = 'link-%s-%s' % (h1.name, srv.name)
             snapshot['things'][key] = {
@@ -196,17 +294,35 @@ class Collector:
         """Chạy `duration` giây, mỗi `interval` giây xuất 1 snapshot.
         In ra console + ghi 1 dòng JSON vào log (JSONL -> dataset thô cho ML Phase 5)."""
         end = time.time() + duration
-        print('[collector] bắt đầu, interval=%.1fs, ghi log -> %s'
-              % (self.interval, self.log_path))
-        with open(self.log_path, 'a') as logf:
+        mode = 'w' if self.overwrite else 'a'
+        ensure_parent_dir(self.log_path)
+        if self.pretty_log_path:
+            ensure_parent_dir(self.pretty_log_path)
+        print('[collector] bắt đầu, interval=%.1fs' % self.interval)
+        print('[collector] JSONL log  -> %s (%s)' % (self.log_path, 'overwrite' if mode == 'w' else 'append'))
+        if self.pretty_log_path:
+            print('[collector] Pretty log -> %s (%s)' % (self.pretty_log_path,
+                                                         'overwrite' if mode == 'w' else 'append'))
+        n = 0
+        prettyf = open(self.pretty_log_path, mode) if self.pretty_log_path else None
+        with open(self.log_path, mode) as logf:
             while time.time() < end:
                 t0 = time.time()
                 snap = self.collect_all()
                 line = json.dumps(snap)
-                print(line)                       # console
+                print('[collector] snapshot #%03d %s' % (n + 1, snap.get('timestamp', '-')))
                 logf.write(line + '\n')           # 1 snapshot = 1 dòng (JSONL)
                 logf.flush()
+                if prettyf:
+                    prettyf.write(format_snapshot_pretty(snap, n + 1) + '\n')
+                    prettyf.flush()
+                n += 1
                 # ngủ phần còn lại của chu kỳ (trừ thời gian đã tốn cho collect)
                 elapsed = time.time() - t0
                 time.sleep(max(0, self.interval - elapsed))
-        print('[collector] kết thúc.')
+        if prettyf:
+            prettyf.close()
+        print('[collector] kết thúc. Đã ghi %d snapshot -> %s' % (n, self.log_path))
+        if self.pretty_log_path:
+            print('[collector] log dễ đọc -> %s' % self.pretty_log_path)
+        return n
