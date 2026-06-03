@@ -1,0 +1,48 @@
+# ========================================================
+# .gitignore cho DT4N — lá chắn an toàn + chống rác
+# ========================================================
+
+# --- BÍ MẬT: TUYỆT ĐỐI không commit (nhớ Lesson 0.6 + MASTER_PLAN an toàn) ---
+.env
+.env.*
+*.key
+*.pem
+credentials
+aws_credentials
+**/secrets/
+*.htpasswd        # nếu bạn đặt mật khẩu Ditto thật
+
+# --- Python venv + cache (sinh tự động, không cần versioned) ---
+venv/
+.venv/
+env/
+**/venv/
+**/.venv/
+__pycache__/
+*.py[cod]
+*.egg-info/
+.pytest_cache/
+
+# --- Log + file tạm ---
+*.log
+logs/
+*.tmp
+*.bak
+
+# --- Rác của Mininet (nhớ Lesson 0.2/0.3: mạng rác, file sót) ---
+*.pid
+mininet.log
+
+# --- Docker volume data nếu lỡ map ra thư mục local ---
+mongo-data/
+docker-volumes/
+
+# --- File hệ điều hành / editor ---
+.DS_Store
+Thumbs.db
+.idea/
+.vscode/
+*.swp
+
+# --- Không ignore .gitkeep (giữ thư mục rỗng) ---
+!.gitkeep
