@@ -29,6 +29,7 @@ import json
 import os
 import time
 import datetime
+from contextlib import nullcontext
 
 
 # ---------------------------------------------------------------------------
@@ -189,7 +190,8 @@ class Collector:
     def __init__(self, net, interval=1.0, server_names=('srv1', 'srv2'),
                  log_path='logs/dt4n_snapshots.jsonl',
                  pretty_log_path='logs/phase1.log',
-                 cmd_timeout=3, ping_every=5, overwrite=True):
+                 cmd_timeout=3, ping_every=5, overwrite=True,
+                 net_lock=None):
         self.net = net
         self.interval = interval                 # chu kỳ polling (giây) — Lesson 1.4
         self.server_names = set(server_names)     # host nào đóng vai 'server'
@@ -200,6 +202,7 @@ class Collector:
         self.overwrite = overwrite                # True -> lần chạy sau đè log lần trước
         self._prev = {}                           # lưu (rxBytes,txBytes,timestamp) chu kỳ trước theo host
         self._ping_counter = 0                    # đếm chu kỳ để đo latency THƯA hơn
+        self.net_lock = net_lock                  # Mininet node.cmd không thread-safe
 
     # ---- thu thập 1 HOST (qua namespace) ----
     def collect_host(self, host, now_ts):
@@ -261,33 +264,63 @@ class Collector:
         out = src.cmd('ping -c 3 -W 1 %s' % dst_ip)
         return parse_ping(out)
 
+    def collect_link(self, link):
+        """Thu trạng thái 1 physical link trong Mininet.
+
+        net.configLinkStatus(a, b, 'down') sẽ kéo interface ở 2 đầu xuống, nên
+        chỉ cần kiểm tra isUp() của cả 2 interface để phản ánh trạng thái link.
+        """
+        a = link.intf1.node.name
+        b = link.intf2.node.name
+        up1 = link.intf1.isUp() if hasattr(link.intf1, 'isUp') else True
+        up2 = link.intf2.isUp() if hasattr(link.intf2, 'isUp') else True
+        state = 'up' if up1 and up2 else 'down'
+        return {
+            'attributes': {'type': 'link', 'endpointA': a, 'endpointB': b},
+            'features': {'status': {'state': state}},
+        }
+
     # ---- gom TẤT CẢ thành 1 snapshot ----
     def collect_all(self):
-        now_ts = time.time()
-        snapshot = {'timestamp': utc_now_iso(), 'things': {}}
+        lock = self.net_lock if self.net_lock is not None else nullcontext()
+        with lock:
+            now_ts = time.time()
+            snapshot = {'timestamp': utc_now_iso(), 'things': {}}
 
-        # hosts
-        for host in self.net.hosts:
-            snapshot['things']['host-%s' % host.name] = self.collect_host(host, now_ts)
+            # hosts
+            for host in self.net.hosts:
+                snapshot['things']['host-%s' % host.name] = self.collect_host(host, now_ts)
 
-        # switches
-        for sw in self.net.switches:
-            snapshot['things']['switch-%s' % sw.name] = self.collect_switch(sw)
+            # switches
+            for sw in self.net.switches:
+                snapshot['things']['switch-%s' % sw.name] = self.collect_switch(sw)
 
-        # latency: đo THƯA — mỗi ping_every chu kỳ (vì ping tốn + tự gây nhiễu)
-        self._ping_counter += 1
-        if self._ping_counter % self.ping_every == 0 and len(self.net.hosts) >= 2:
-            h1 = self.net.hosts[0]
-            host_names = [h.name for h in self.net.hosts]
-            srv = self.net.get('srv1') if 'srv1' in host_names else self.net.hosts[-1]
-            lat = self.collect_latency(h1, srv.IP())
-            key = 'link-%s-%s' % (h1.name, srv.name)
-            snapshot['things'][key] = {
-                'attributes': {'type': 'path', 'src': h1.name, 'dst': srv.name},
-                'features': {'quality': {'latency_ms': lat['latency_ms'],
-                                         'packetLoss_pct': lat['packet_loss_pct']}},
-            }
-        return snapshot
+            # physical links: cần để đo sync latency khi link up/down
+            seen_links = set()
+            for link in self.net.links:
+                a = link.intf1.node.name
+                b = link.intf2.node.name
+                lo, hi = sorted([a, b])
+                key = 'link-%s-%s' % (lo, hi)
+                if key in seen_links:
+                    continue
+                seen_links.add(key)
+                snapshot['things'][key] = self.collect_link(link)
+
+            # latency: đo THƯA — mỗi ping_every chu kỳ (vì ping tốn + tự gây nhiễu)
+            self._ping_counter += 1
+            if self.ping_every > 0 and self._ping_counter % self.ping_every == 0 and len(self.net.hosts) >= 2:
+                h1 = self.net.hosts[0]
+                host_names = [h.name for h in self.net.hosts]
+                srv = self.net.get('srv1') if 'srv1' in host_names else self.net.hosts[-1]
+                lat = self.collect_latency(h1, srv.IP())
+                key = 'link-%s-%s' % (h1.name, srv.name)
+                snapshot['things'][key] = {
+                    'attributes': {'type': 'path', 'src': h1.name, 'dst': srv.name},
+                    'features': {'quality': {'latency_ms': lat['latency_ms'],
+                                             'packetLoss_pct': lat['packet_loss_pct']}},
+                }
+            return snapshot
 
     # ---- VÒNG LẶP chu kỳ ----
     def run(self, duration=30):
