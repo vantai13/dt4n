@@ -5,6 +5,7 @@
 # --- BÍ MẬT: TUYỆT ĐỐI không commit (nhớ Lesson 0.6 + MASTER_PLAN an toàn) ---
 .env
 .env.*
+!.env.example
 *.key
 *.pem
 credentials
@@ -22,6 +23,8 @@ __pycache__/
 *.py[cod]
 *.egg-info/
 .pytest_cache/
+node_modules/
+dist/
 
 # --- Log + file tạm ---
 *.log
