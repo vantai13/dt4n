@@ -1,165 +1,136 @@
-<script setup>
-import { Network } from 'vis-network/standalone';
-import { computed, nextTick, onBeforeUnmount, onMounted, ref, watch } from 'vue';
-
-const props = defineProps({
-  nodes: { type: Array, default: () => [] },
-  edges: { type: Array, default: () => [] },
-  loading: { type: Boolean, default: false },
-  selectedKey: { type: String, default: '' },
-});
-
-const emit = defineEmits(['select']);
-const container = ref(null);
-let network = null;
-
-const hasData = computed(() => props.nodes.length > 0 || props.edges.length > 0);
-
-const options = {
-  autoResize: true,
-  interaction: {
-    hover: true,
-    multiselect: false,
-    navigationButtons: true,
-    keyboard: false,
-  },
-  physics: {
-    enabled: true,
-    solver: 'forceAtlas2Based',
-    stabilization: { iterations: 80, fit: true },
-    forceAtlas2Based: {
-      gravitationalConstant: -70,
-      centralGravity: 0.012,
-      springLength: 155,
-      springConstant: 0.08,
-    },
-  },
-  nodes: {
-    borderWidth: 2,
-    borderWidthSelected: 4,
-    shadow: false,
-    margin: 10,
-  },
-  edges: {
-    smooth: {
-      type: 'dynamic',
-      roundness: 0.18,
-    },
-    selectionWidth: 2,
-  },
-};
-
-function processNodes(nodes) {
-  return nodes.map((node) => {
-    const selected = props.selectedKey === `node:${node.id}`;
-    return {
-      ...node,
-      borderWidth: selected ? 4 : 2,
-      font: {
-        ...(node.font || {}),
-        bold: selected,
-      },
-    };
-  });
-}
-
-function processEdges(edges) {
-  return edges.map((edge) => {
-    const selected = props.selectedKey === `edge:${edge.id}`;
-    return {
-      ...edge,
-      width: selected ? Math.max(4, edge.width || 2) : edge.width,
-    };
-  });
-}
-
-function graphData() {
-  return {
-    nodes: processNodes(props.nodes),
-    edges: processEdges(props.edges),
-  };
-}
-
-function setGraphData() {
-  if (!network) {
-    return;
-  }
-  network.setData(graphData());
-  nextTick(() => network?.fit({ animation: { duration: 250, easingFunction: 'easeInOutQuad' } }));
-}
-
-function handleClick(params) {
-  if (params.nodes.length) {
-    emit('select', { type: 'node', id: params.nodes[0] });
-    return;
-  }
-  if (params.edges.length) {
-    emit('select', { type: 'edge', id: params.edges[0] });
-    return;
-  }
-  emit('select', null);
-}
-
-onMounted(() => {
-  network = new Network(container.value, graphData(), options);
-  network.on('click', handleClick);
-});
-
-onBeforeUnmount(() => {
-  if (network) {
-    network.destroy();
-    network = null;
-  }
-});
-
-watch(() => [props.nodes, props.edges], setGraphData, { deep: true });
-watch(() => props.selectedKey, setGraphData);
-</script>
-
 <template>
-  <section class="topology-surface" aria-label="Network topology">
-    <div ref="container" class="network-canvas"></div>
-    <div v-if="props.loading && !hasData" class="empty-state">Loading Ditto Things</div>
-    <div v-else-if="!hasData" class="empty-state">No Things found</div>
-  </section>
+  <div class="topology-view">
+    <h3>NETWORK TOPOLOGY</h3>
+    <div class="diagram-container" ref="networkContainer"></div>
+  </div>
 </template>
 
+<script setup>
+import { ref, onMounted, watch, computed } from 'vue'
+import { Network } from 'vis-network/standalone'
+import 'vis-network/styles/vis-network.css'
+
+// props.graph = { nodes: [...], edges: [...] } ĐÃ được translate.js dịch sẵn.
+// TopologyView KHÔNG còn đoán loại / parse label -> chỉ lo VẼ (Separation of Concerns).
+const props = defineProps(['graph'])
+const emit = defineEmits(['node-selected', 'edge-selected', 'selection-cleared'])
+
+const networkContainer = ref(null)
+const networkInstance = ref(null)
+
+// Trigger re-render khi dữ liệu đổi (so sánh bằng chuỗi hóa).
+const graphKey = computed(() => JSON.stringify(props.graph))
+
+// --- Dịch node (đã có type/state) -> định dạng vis-network + màu theo trạng thái ---
+function toVisNodes(nodes) {
+  if (!Array.isArray(nodes)) return []
+  return nodes.map(n => {
+    // Chọn 'group' (kiểu tô màu) theo type + HEALTH (do twin tính sẵn).
+    // KHÔNG tự suy trạng thái ở frontend -> health là single source of truth.
+    let group = n.type                       // 'host' | 'switch' (mặc định = ok)
+    if (n.state === 'down' || n.health === 'critical') group = `${n.type}-offline`
+    else if (n.health === 'warning') group = `${n.type}-high-load`
+
+    return {
+      id: n.id,
+      label: n.id,
+      group,
+      title: `${n.id}\nType: ${n.type}\nStatus: ${n.state}`,  // tooltip hover
+    }
+  })
+}
+
+// --- Dịch edge (đã có state) -> định dạng vis-network + màu/độ dày theo trạng thái ---
+function toVisEdges(edges) {
+  if (!Array.isArray(edges)) return []
+  return edges.map(e => {
+    let color = '#00F7F7', width = 2.5, dashes = false
+    if (e.state === 'down') { color = '#475569'; dashes = true; width = 1.5 }
+    else if (e.state === 'high-load') { color = '#F60000'; width = 4 }
+    else if (e.state === 'warning') { color = '#f97316'; width = 3.5 }
+
+    return {
+      id: e.id,
+      from: e.from,
+      to: e.to,
+      color: { color, highlight: color, hover: color },
+      width,
+      dashes,
+      smooth: { type: 'continuous', roundness: 0.5 },
+      font: { color: '#00F7F7', size: 11, strokeWidth: 3, strokeColor: '#0f172a' },
+    }
+  })
+}
+
+// --- Cấu hình vis-network: GIỮ NGUYÊN phần đẹp từ repo cũ (màu neon, physics, icon) ---
+const options = {
+  physics: {
+    enabled: true,
+    stabilization: { iterations: 200 },
+    solver: 'barnesHut',
+    barnesHut: { gravitationalConstant: -12000, centralGravity: 0.08,
+                 springLength: 120, springConstant: 0.06, damping: 0.12 },
+  },
+  interaction: { hover: true, tooltipDelay: 200, navigationButtons: false,
+                 keyboard: false, selectConnectedEdges: false },
+  nodes: {
+    font: { color: '#00F7F7', size: 13, strokeWidth: 3, strokeColor: '#0f172a' },
+    borderWidth: 3, size: 32, shape: 'dot',
+  },
+  edges: { color: { highlight: '#FFFFFF' }, selectionWidth: 4 },
+  groups: {
+    host:                { color: { border: '#0ea5e9', background: '#0f172a' },
+                           shadow: { enabled: true, color: 'rgba(14,165,233,0.8)', size: 25 } },
+    'host-offline':      { color: { border: '#475569', background: '#0f172a' },
+                           borderDashes: [8, 8], shadow: { enabled: false } },
+    'host-high-load':    { color: { border: '#F60000', background: '#0f172a' },
+                           shadow: { enabled: true, color: 'rgba(246,0,0,0.8)', size: 25 } },
+    switch:              { color: { border: '#f97316', background: '#0f172a' },
+                           shadow: { enabled: true, color: 'rgba(249,115,22,0.8)', size: 25 } },
+    'switch-offline':    { color: { border: '#475569', background: '#0f172a' },
+                           borderDashes: [8, 8], shadow: { enabled: false } },
+    'switch-high-load':  { color: { border: '#F60000', background: '#0f172a' },
+                           shadow: { enabled: true, color: 'rgba(246,0,0,0.8)', size: 25 } },
+  },
+}
+
+function buildData() {
+  return { nodes: toVisNodes(props.graph?.nodes), edges: toVisEdges(props.graph?.edges) }
+}
+
+function initNetwork() {
+  if (!networkContainer.value || !props.graph) return
+  networkInstance.value = new Network(networkContainer.value, buildData(), options)
+
+  networkInstance.value.on('selectNode', p => {
+    if (p.nodes.length) emit('node-selected', p.nodes[0])
+  })
+  networkInstance.value.on('selectEdge', p => {
+    if (p.edges.length) emit('edge-selected', p.edges[0])
+  })
+  networkInstance.value.on('click', p => {
+    if (!p.nodes.length && !p.edges.length) emit('selection-cleared')
+  })
+}
+
+onMounted(initNetwork)
+
+// Khi dữ liệu đổi -> cập nhật (Lesson 3.3 dùng nhiều; giờ để sẵn khung).
+watch(graphKey, () => {
+  if (!networkInstance.value) return
+  const data = buildData()
+  networkInstance.value.body.data.nodes.update(data.nodes)
+  networkInstance.value.body.data.edges.update(data.edges)
+})
+</script>
+
 <style scoped>
-.topology-surface {
-  position: relative;
-  min-height: 520px;
-  height: 100%;
-  border: 1px solid var(--border);
-  border-radius: 8px;
-  background: #ffffff;
-  overflow: hidden;
-}
-
-.network-canvas {
-  width: 100%;
-  height: 100%;
-  min-height: 520px;
-}
-
-.empty-state {
-  position: absolute;
-  inset: 0;
-  display: grid;
-  place-items: center;
-  color: var(--muted);
-  font-size: 15px;
-  pointer-events: none;
-}
-
-:deep(.vis-navigation .vis-button) {
-  border-radius: 8px;
-  box-shadow: none;
-}
-
-@media (max-width: 920px) {
-  .topology-surface,
-  .network-canvas {
-    min-height: 420px;
-  }
-}
+.topology-view { flex: 1; padding: 1.5rem; background-color: #0f172a;
+                 color: #94a3b8; display: flex; flex-direction: column; }
+h3 { color: #00F7F7; margin-bottom: 1rem; text-transform: uppercase;
+     letter-spacing: 1.2px; font-weight: 700; text-shadow: 0 0 10px rgba(0,247,247,0.5); }
+.diagram-container { flex: 1; border: 1px solid #334155; border-radius: 12px;
+     background-color: #0f172a; min-height: 600px; overflow: hidden;
+     border-bottom: 3px solid #00F7F7; box-shadow: 0 6px 20px rgba(0,247,247,0.3); }
+:deep(.vis-navigation) { display: none !important; }
 </style>

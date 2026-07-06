@@ -14,6 +14,7 @@ VÌ SAO TỒN TẠI:
 
 from bridge.ditto_common import (make_thing_id_host, make_thing_id_switch,
                                  make_thing_id_link)
+from bridge.health import compute_health_state   # Phase 3 / Lesson 3.4 (Lựa chọn B)
 
 
 def _wrap_properties(feature_dict):
@@ -43,6 +44,21 @@ def collector_to_things(snapshot):
         attrs = data.get('attributes', {})
         kind = attrs.get('type')
         features = data.get('features', {})
+
+        # === Phase 3 / Lesson 3.4 (Lựa chọn B): tính healthState NGAY TẠI TWIN ===
+        # ADDITIVE: chỉ THÊM feature 'health' mới. Logic dịch cũ bên dưới KHÔNG đổi.
+        # 'kind' có thể là 'host'/'switch'/'link'/'path'; nếu short_key gợi ý khác,
+        # ta chuẩn hóa nhẹ để compute_health_state nhận đúng loại.
+        health_kind = kind
+        if health_kind is None:
+            if short_key.startswith('host-'):   health_kind = 'host'
+            elif short_key.startswith('switch-'): health_kind = 'switch'
+            elif short_key.startswith('link-'):  health_kind = 'link'
+        state = compute_health_state(health_kind, features)
+        # Chèn thành FEATURE (dữ liệu ĐỘNG) — nó sẽ tự chảy qua _wrap_properties.
+        # KHÔNG đặt vào attributes (attributes là dữ liệu TĨNH, không đẩy mỗi chu kỳ).
+        features = dict(features)                 # bản sao -> không mutate input (immutable)
+        features['health'] = {'state': state}
 
         # short_key dạng 'host-h1' / 'switch-s1' / 'link-h1-srv1'
         if kind == 'host' or short_key.startswith('host-'):

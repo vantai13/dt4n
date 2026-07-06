@@ -23,6 +23,7 @@ export default defineConfig(({ mode }) => {
   const DITTO_URL  = env.DITTO_URL  || 'http://localhost:8080'
   const DITTO_USER = env.DITTO_USER || 'ditto'
   const DITTO_PASS = env.DITTO_PASSWORD || 'ditto'
+  const DITTO_PRE_AUTH = env.DITTO_PRE_AUTH || `nginx:${DITTO_USER}`
 
   // Tạo chuỗi Basic Auth: "Basic base64(user:pass)". Đây là cách HTTP mã hóa
   // cặp user/pass để gửi trong header Authorization (KHÔNG phải mã hóa bảo mật,
@@ -51,10 +52,13 @@ export default defineConfig(({ mode }) => {
           //   Ditto nhận   /api/2/search/things
           rewrite: (path) => path.replace(/^\/ditto/, ''),
           configure: (proxy) => {
-            // Gắn Basic Auth vào MỌI request đi qua proxy -> browser không cần
-            // biết mật khẩu. Đây là chỗ "giấu credential" ở tầng server.
+            // Gắn auth ở tầng proxy -> browser không cần biết mật khẩu.
+            // Authorization dùng khi đi qua nginx :8080.
+            // x-ditto-pre-authenticated dùng được khi trỏ thẳng gateway :8081
+            // trong môi trường lab, nơi nginx đang bị lỗi.
             proxy.on('proxyReq', (proxyReq) => {
               proxyReq.setHeader('Authorization', basicAuth)
+              proxyReq.setHeader('x-ditto-pre-authenticated', DITTO_PRE_AUTH)
             })
           },
         },

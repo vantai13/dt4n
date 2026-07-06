@@ -49,14 +49,17 @@ export function thingsToGraph(things) {
 
     if (type === 'host' || type === 'switch') {
       // --- HOST / SWITCH -> NODE ---
+      // Lesson 3.4 (Lựa chọn B): ĐỌC healthState do TWIN tính sẵn, KHÔNG tự tính.
+      // health là single source of truth -> dashboard/ML/controller cùng 1 trạng thái.
       const state = prop(thing, 'status', 'state') || 'unknown'
+      const health = prop(thing, 'health', 'state') || 'unknown'
 
       nodes.push({
         id: name,                 // tên ngắn -> khớp endpointA/B của link
         label: name,
         type,                     // giữ để chọn icon/màu ở tầng vẽ
-        state,                    // 'up' | 'down' | ...
-        // Gom mọi thông tin thô để InfoPanel hiển thị khi click (không mất mát).
+        state,                    // 'up' | 'down' | ... (trạng thái vật lý)
+        health,                   // 'ok'|'warning'|'critical'|'unknown' (do twin tính)
         raw: thing,
       })
     } else if (type === 'link') {
@@ -70,6 +73,7 @@ export function thingsToGraph(things) {
         from: a,
         to: b,
         state: prop(thing, 'status', 'state') || 'unknown',
+        health: prop(thing, 'health', 'state') || 'unknown',
         raw: thing,
       })
     }
@@ -77,4 +81,54 @@ export function thingsToGraph(things) {
   }
 
   return { nodes, edges }
+}
+
+
+// ===========================================================================
+// LESSON 3.3 — DEEP MERGE cho real-time.
+//
+// SSE endpoint /api/2/things trả về Thing JSON BỊ CẮT GỌT (chỉ nhánh thay đổi,
+// nhưng GIỮ cấu trúc lồng). Ví dụ đổi rxRate:
+//   { thingId: "org.dt4n:host-h1",
+//     features: { traffic: { properties: { rxRate: 2048 } } } }
+// -> ta chỉ cần merge SÂU cái mảnh này vào Thing đầy đủ trong state.
+// (KHÁC với Ditto Protocol dạng {path,value} của WebSocket — SSE là Thing JSON.)
+// ===========================================================================
+
+// Deep merge: trộn 'patch' vào 'target' tới tận field lá.
+//   - Nếu cả hai cùng là object -> đệ quy xuống sâu (KHÔNG thay nguyên nhánh).
+//   - Ngược lại -> patch ghi đè.
+// Đây là chỗ tránh lỗi "shallow merge xóa mất field anh em" ở lý thuyết 3.3.
+export function deepMerge(target, patch) {
+  if (!isPlainObject(target) || !isPlainObject(patch)) return patch
+  const out = { ...target }
+  for (const key of Object.keys(patch)) {
+    out[key] = deepMerge(target[key], patch[key])   // đệ quy -> merge sâu
+  }
+  return out
+}
+
+function isPlainObject(v) {
+  return v !== null && typeof v === 'object' && !Array.isArray(v)
+}
+
+// Áp một Thing-mảnh (từ SSE) vào 'thingsById' (map thingId -> Thing đầy đủ).
+// Trả về map MỚI (immutable -> Vue phát hiện thay đổi, dễ debug, không side-effect).
+// Xử lý đủ 3 loại: CREATE (Thing mới), UPDATE (merge sâu), DELETE (báo hiệu xóa).
+export function applyDelta(thingsById, delta) {
+  const id = delta?.thingId
+  if (!id) return thingsById                         // không có thingId -> bỏ (defensive)
+
+  const next = { ...thingsById }
+
+  // Ditto báo xóa bằng field _deleted (hoặc không còn attributes/features).
+  if (delta.__deleted === true) {
+    delete next[id]                                  // DELETE
+    return next
+  }
+
+  const existing = next[id]
+  next[id] = existing ? deepMerge(existing, delta)   // UPDATE (merge sâu)
+                      : delta                          // CREATE (Thing mới toanh)
+  return next
 }
