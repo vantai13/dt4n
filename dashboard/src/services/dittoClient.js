@@ -1,87 +1,50 @@
-import { fileURLToPath, URL } from 'node:url'
-import { defineConfig, loadEnv } from 'vite'
-import vue from '@vitejs/plugin-vue'
-
 // ---------------------------------------------------------------------------
-// vite.config.js — Cấu hình dev server + PROXY sang Ditto.
-//
-// VẤN ĐỀ file này giải quyết (xem Lesson 3.2, Phần 2.3):
-//   - Browser chạy dashboard ở localhost:5173; Ditto ở localhost:8080.
-//     Khác cổng = khác origin -> browser CHẶN request (CORS).
-//   - Không muốn nhét user/password Ditto vào code frontend (lộ mật khẩu).
-//
-// GIẢI PHÁP: proxy. Browser gọi '/ditto/...' (CÙNG origin -> không CORS).
-//   Vite âm thầm chuyển tiếp sang Ditto :8080, tự gắn Basic Auth ở tầng server
-//   (server-to-server, không bị luật browser ràng buộc). Mật khẩu KHÔNG lọt
-//   xuống browser -> đúng pattern "backend-for-frontend" của production.
+// dittoClient.js -- service layer fetches Things from Ditto.
+// Components call fetchAllThings(); they do not know URL/auth/pagination details.
 // ---------------------------------------------------------------------------
 
-export default defineConfig(({ mode }) => {
-  // Đọc biến môi trường từ file .env (KHÔNG hardcode host/mật khẩu vào code).
-  const env = loadEnv(mode, process.cwd(), '')
+const NAMESPACE = import.meta.env.VITE_DITTO_NAMESPACE || 'org.dt4n'
+const DITTO_PREFIX = '/ditto/api/2'
 
-  const DITTO_URL  = env.DITTO_URL  || 'http://localhost:8080'
-  const DITTO_USER = env.DITTO_USER || 'ditto'
-  const DITTO_PASS = env.DITTO_PASSWORD || 'ditto'
+async function dittoGet(path) {
+  const res = await fetch(DITTO_PREFIX + path, {
+    headers: { Accept: 'application/json' },
+  })
 
-  // Tạo chuỗi Basic Auth: "Basic base64(user:pass)". Đây là cách HTTP mã hóa
-  // cặp user/pass để gửi trong header Authorization (KHÔNG phải mã hóa bảo mật,
-  // chỉ là encode -> vì thế mới cần giấu ở tầng server, không phơi ra browser).
-  const basicAuth = 'Basic ' + Buffer.from(`${DITTO_USER}:${DITTO_PASS}`).toString('base64')
-
-  return {
-    plugins: [vue()],
-
-    resolve: {
-      // Cho phép viết '@/components/...' thay vì đường dẫn tương đối dài dòng.
-      alias: { '@': fileURLToPath(new URL('./src', import.meta.url)) },
-    },
-
-    server: {
-      host: 'localhost',
-      port: 5173,
-
-      proxy: {
-        // === Đường 1: request THƯỜNG (fetch, Search API) — dùng ở Lesson 3.2 ===
-        // Mọi request browser gửi tới '/ditto/...' sẽ được chuyển tiếp sang Ditto.
-        '/ditto': {
-          target: DITTO_URL,        // đích thật: http://localhost:8080
-          changeOrigin: true,       // sửa header Host cho khớp đích (Ditto cần)
-          // Bỏ tiền tố '/ditto' trước khi gửi đi:
-          //   browser gọi  /ditto/api/2/search/things
-          //   Ditto nhận   /api/2/search/things
-          rewrite: (path) => path.replace(/^\/ditto/, ''),
-          configure: (proxy) => {
-            // Gắn Basic Auth vào MỌI request đi qua proxy -> browser không cần
-            // biết mật khẩu. Đây là chỗ "giấu credential" ở tầng server.
-            proxy.on('proxyReq', (proxyReq) => {
-              proxyReq.setHeader('Authorization', basicAuth)
-            })
-          },
-        },
-
-        // === Đường 2: STREAMING SSE — dùng ở Lesson 3.3 (đường RIÊNG) ===
-        // Vì sao tách riêng: kết nối SSE sống lâu + phải "nhỏ giọt" tức thì.
-        //   - Nếu proxy ĐỆM (buffer) -> event kẹt lại -> dashboard không nhận gì.
-        //   - Nếu proxy TIMEOUT ngắn -> tự cắt kết nối đang sống.
-        // -> đường này tắt buffer + để kết nối sống mãi.
-        '/ditto-sse': {
-          target: DITTO_URL,
-          changeOrigin: true,
-          rewrite: (path) => path.replace(/^\/ditto-sse/, ''),
-          // timeout=0 -> KHÔNG tự cắt kết nối sống lâu.
-          timeout: 0,
-          proxyTimeout: 0,
-          configure: (proxy) => {
-            proxy.on('proxyReq', (proxyReq) => {
-              proxyReq.setHeader('Authorization', basicAuth)
-              // Bảo Ditto/nginx trung gian: đừng đệm, đẩy event ngay.
-              proxyReq.setHeader('X-Accel-Buffering', 'no')
-              proxyReq.setHeader('Cache-Control', 'no-cache')
-            })
-          },
-        },
-      },
-    },
+  if (!res.ok) {
+    const body = await res.text()
+    throw new Error(`Ditto ${res.status} at ${path}: ${body.slice(0, 200)}`)
   }
-})
+
+  return res.json()
+}
+
+async function searchThingsPage(cursor) {
+  const params = new URLSearchParams()
+  params.set('filter', `like(thingId,"${NAMESPACE}:*")`)
+
+  const options = ['size(200)']
+  if (cursor) options.push(`cursor(${cursor})`)
+  params.set('option', options.join(','))
+
+  const data = await dittoGet('/search/things?' + params.toString())
+  return {
+    items: data.items || [],
+    nextCursor: data.cursor || null,
+  }
+}
+
+export async function fetchAllThings() {
+  const all = []
+  let cursor = null
+  let guard = 0
+
+  do {
+    const { items, nextCursor } = await searchThingsPage(cursor)
+    all.push(...items)
+    cursor = nextCursor
+    guard += 1
+  } while (cursor && guard < 100)
+
+  return all
+}

@@ -62,6 +62,23 @@ export default defineConfig(({ mode }) => {
             })
           },
         },
+
+        // Đường riêng cho SSE: kết nối sống lâu, không timeout/buffer.
+        '/ditto-sse': {
+          target: DITTO_URL,
+          changeOrigin: true,
+          rewrite: (path) => path.replace(/^\/ditto-sse/, ''),
+          timeout: 0,
+          proxyTimeout: 0,
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq) => {
+              proxyReq.setHeader('Authorization', basicAuth)
+              proxyReq.setHeader('x-ditto-pre-authenticated', DITTO_PRE_AUTH)
+              proxyReq.setHeader('X-Accel-Buffering', 'no')
+              proxyReq.setHeader('Cache-Control', 'no-cache')
+            })
+          },
+        },
       },
     },
   }

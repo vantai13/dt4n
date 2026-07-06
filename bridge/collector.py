@@ -49,8 +49,34 @@ def parse_proc_net_dev(text, iface):
         if name.strip() != iface:
             continue
         cols = stats.split()
-        return int(cols[0]), int(cols[8])
+        if len(cols) <= 8:
+            continue
+        try:
+            return int(cols[0]), int(cols[8])
+        except ValueError:
+            # Defensive: Mininet shell output can be interleaved with commands such
+            # as ifconfig during link up/down. Treat that as "not a procfs row"
+            # instead of crashing the whole sync cycle.
+            continue
     return None
+
+
+def read_host_net_dev(host):
+    """Read /proc/net/dev for a Mininet host without using its interactive shell.
+
+    host.cmd() is fragile when the Mininet CLI is also issuing commands. Reading
+    /proc/<pid>/net/dev uses the host network namespace directly and avoids shell
+    output interleaving; fallback keeps tests/older Mininet objects working.
+    """
+    pid = getattr(host, 'pid', None)
+    if pid:
+        path = '/proc/%s/net/dev' % pid
+        try:
+            with open(path) as f:
+                return f.read()
+        except OSError:
+            pass
+    return host.cmd('cat /proc/net/dev')
 
 
 def parse_ping(text):
@@ -208,8 +234,8 @@ class Collector:
     def collect_host(self, host, now_ts):
         name = host.name
         iface = '%s-eth0' % name                  # interface chính của host trong Mininet
-        # ĐỌC TRONG NAMESPACE — bắt buộc host.cmd()
-        raw = host.cmd('cat /proc/net/dev')
+        # ĐỌC TRONG NAMESPACE nhưng tránh host.cmd() khi có thể để không đụng CLI.
+        raw = read_host_net_dev(host)
         parsed = parse_proc_net_dev(raw, iface)
 
         if parsed is None:

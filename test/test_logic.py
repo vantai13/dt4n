@@ -23,6 +23,11 @@ sample = """Inter-|   Receive                                                |  
 """
 check("rx,tx của h1-eth0", parse_proc_net_dev(sample, 'h1-eth0'), (98765, 54321))
 check("interface không tồn tại -> None", parse_proc_net_dev(sample, 'h9-eth0'), None)
+ifconfig_like = """h1-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
+        inet 10.0.0.1  netmask 255.0.0.0  broadcast 10.255.255.255
+"""
+check("output ifconfig bị trộn -> None, không crash",
+      parse_proc_net_dev(ifconfig_like, 'h1-eth0'), None)
 
 print("\n== TEST 2: parse_ping (đọc latency + packet loss) ==")
 ping_ok = """PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.

@@ -20,8 +20,6 @@ try:
 except ImportError:
     from mininet.collector import Collector
 
-logging.basicConfig(level=logging.INFO,
-                    format='%(asctime)s [%(levelname)s] %(message)s')
 log = logging.getLogger('sync_agent')
 
 FAILURE_ALERT_THRESHOLD = 5   # số chu kỳ hỏng liên tiếp thì cảnh báo to

@@ -67,7 +67,12 @@ def collector_to_things(snapshot):
         elif kind == 'switch' or short_key.startswith('switch-'):
             name = short_key.split('switch-', 1)[-1]
             tid = make_thing_id_switch(name)
-        elif kind in ('link', 'path') or short_key.startswith('link-'):
+        elif kind == 'path':
+            # Path probes are measurement rows in local snapshots, not physical
+            # topology Things from bootstrap. Do not PATCH them into Ditto as
+            # fake links such as org.dt4n:link-h1-srv1.
+            continue
+        elif kind == 'link' or short_key.startswith('link-'):
             # collector có thể đặt 'link-h1-srv1'; tách 2 đầu để canonical lại
             body = short_key.split('link-', 1)[-1]
             parts = body.split('-')

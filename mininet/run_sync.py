@@ -11,12 +11,59 @@ CHẠY:
     sudo python3 -m mininet.run_sync --period 1.0
 """
 import argparse, json, threading, time
+import logging
+import os
 from mininet.log import setLogLevel, info
+
+# mininet.log changes the global logger class. Reset it so bridge loggers
+# (sync_agent/pusher) do not inherit Mininet's stderr handler.
+logging.setLoggerClass(logging.Logger)
+
 from mininet.topology import build_net, start_net   # từ Phase 1 (đã refactor)
 from bridge.bootstrap import bootstrap_all, entities_from_net
 from bridge.sync_agent import run as sync_run
 from mininet.cli import CLI
 from measurements.measure_latency import main as measure_latency
+
+
+class LockedCLI(CLI):
+    """Serialize topology-changing CLI commands with the sync collector."""
+
+    def __init__(self, net, net_lock, *args, **kwargs):
+        self.net_lock = net_lock
+        super().__init__(net, *args, **kwargs)
+
+    def do_link(self, line):
+        with self.net_lock:
+            return super().do_link(line)
+
+
+def ensure_parent_dir(path):
+    parent = os.path.dirname(os.path.abspath(path))
+    if parent:
+        os.makedirs(parent, exist_ok=True)
+
+
+def configure_file_logging(path):
+    ensure_parent_dir(path)
+    root = logging.getLogger()
+    for handler in list(root.handlers):
+        root.removeHandler(handler)
+        handler.close()
+
+    handler = logging.FileHandler(path, mode='a', encoding='utf-8')
+    handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s'))
+    root.addHandler(handler)
+    root.setLevel(logging.INFO)
+
+    for name in ('run_sync', 'sync_agent', 'pusher', 'verify'):
+        logger = logging.getLogger(name)
+        for existing in list(logger.handlers):
+            logger.removeHandler(existing)
+            existing.close()
+        logger.propagate = True
+        logger.setLevel(logging.NOTSET)
+
 
 def main():
     p = argparse.ArgumentParser()
@@ -48,9 +95,16 @@ def main():
     p.add_argument('--output', default='docs/phase-2/verify_report.json',
                    help='file JSON output khi --verify')
     p.add_argument('--policy', default='ditto/policy.json')
+    p.add_argument('--log-path', default='logs/run_sync.log',
+                   help='file log runtime cho sync agent/pusher')
     a = p.parse_args()
     if a.measure_latency and a.verify:
         p.error('--measure-latency và --verify chỉ chạy một mode mỗi lần')
+
+    configure_file_logging(a.log_path)
+    log = logging.getLogger('run_sync')
+    log.info('Log runtime -> %s', os.path.abspath(a.log_path))
+
     setLogLevel('info')
 
     net = None
@@ -59,16 +113,19 @@ def main():
     net_lock = threading.RLock()
     try:
         # 1) dựng mạng (Phase 1)
+        log.info('Dung topology + start Mininet')
         net = build_net(clients=a.clients)
         start_net(net, stp_wait=a.stp_wait, do_pingall=True)
 
         # 2) bootstrap Thing khung (Lesson 2.2) - idempotent, skip nếu đã có
+        log.info('Bootstrap Things len Ditto')
         info('*** Bootstrap Things lên Ditto\n')
         policy = json.load(open(a.policy))
         bootstrap_all(entities_from_net(net), policy, mode='create')
 
         # 3) sync agent chạy NỀN trong thread riêng -> CLI vẫn dùng được để
         #    gõ kịch bản demo (iperf, link down) trong khi twin đang đồng bộ
+        log.info('Khoi dong Sync Agent thread nen')
         info('*** Khởi động Sync Agent (thread nền)\n')
         t = threading.Thread(target=sync_run, args=(net,),
                              kwargs={'period': a.period,
@@ -94,14 +151,17 @@ def main():
             return
 
         # 4) mở CLI để bạn chạy demo. Twin sống trong lúc bạn gõ lệnh.
+        log.info('CLI san sang')
         info('*** CLI sẵn sàng. Thử:  h1 iperf -s &   rồi  h2 iperf -c h1 -t 30\n')
         info('*** Mở Ditto UI xem rxRate nhảy. Gõ exit để dừng.\n')
-        CLI(net)
+        setLogLevel('output')
+        LockedCLI(net, net_lock)
     finally:
         stop_event.set()
         if t is not None:
             t.join(timeout=5)
         if net is not None:
+            logging.getLogger('run_sync').info('Tat mang')
             info('*** Tắt mạng\n')
             with net_lock:
                 net.stop()
