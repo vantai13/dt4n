@@ -27,6 +27,7 @@ const cmdFeedback = ref('')
 // STATE trung tâm: map thingId -> Thing đầy đủ. KHÔNG phải ref (không cần Vue
 // theo dõi sâu map này); mỗi lần đổi ta dịch lại -> gán graph.value (ref) -> UI đổi.
 let thingsById = {}
+let reflectionToken = 0
 
 // Dựng lại state đầy đủ từ Ditto (dùng cho lần đầu VÀ mỗi lần re-sync).
 async function resync() {
@@ -90,38 +91,56 @@ const onAlertFocus = (a) => {
 async function onCommand({ subject, target, params }) {
   cmdFeedback.value = 'Đang thực thi...'
   try {
-    const { ok, response } = await sendCommand(subject, target, params)
-    if (!ok || response?.status === 'rejected') {
+    const { ok, timedOut, rejected, response, error } =
+      await sendCommand(subject, target, params)
+    if (rejected) {
       cmdFeedback.value = 'Bị từ chối: ' + (response?.result || response?.reason || 'lỗi')
       return
     }
-    cmdFeedback.value = 'Đã nhận, đang chờ mạng phản ánh...'
+    if (!ok && !timedOut) {
+      cmdFeedback.value = 'Lỗi gửi lệnh: ' + (error || response?.message || 'lỗi')
+      return
+    }
+    cmdFeedback.value = timedOut
+      ? 'Đã gửi, đang chờ mạng phản ánh...'
+      : 'Đã nhận, đang chờ mạng phản ánh...'
     watchForReflection(subject, target)
   } catch (e) {
     cmdFeedback.value = 'Lỗi gửi lệnh: ' + e.message
   }
 }
 
-function watchForReflection(subject, target) {
+function thingState(target) {
+  return thingsById[target]?.features?.status?.properties?.state
+}
+
+async function watchForReflection(subject, target) {
   const expect = subject === 'disableLink' ? 'down'
                : subject === 'enableLink' ? 'up' : null
   if (!expect) {
-    cmdFeedback.value = 'Đã áp dụng.'
+    cmdFeedback.value = 'Đã gửi lệnh; chưa có trạng thái phản ánh trực tiếp.'
     return
   }
 
-  let tries = 0
-  const iv = setInterval(() => {
-    const t = thingsById[target]
-    const state = t?.features?.status?.properties?.state
+  const token = ++reflectionToken
+  const deadline = Date.now() + 20000
+  while (Date.now() < deadline && token === reflectionToken) {
+    const state = thingState(target)
     if (state === expect) {
       cmdFeedback.value = 'Thành công (mạng đã phản ánh).'
-      clearInterval(iv)
-    } else if (++tries > 30) {
-      cmdFeedback.value = 'Cảnh báo: chưa thấy mạng phản ánh kết quả.'
-      clearInterval(iv)
+      return
     }
-  }, 200)
+    await new Promise(resolve => setTimeout(resolve, 500))
+  }
+
+  if (token !== reflectionToken) return
+
+  try { await resync() } catch (_) { /* nếu resync lỗi, giữ cảnh báo bên dưới */ }
+  if (thingState(target) === expect) {
+    cmdFeedback.value = 'Thành công (mạng đã phản ánh).'
+  } else {
+    cmdFeedback.value = 'Cảnh báo: chưa thấy mạng phản ánh kết quả.'
+  }
 }
 </script>
 

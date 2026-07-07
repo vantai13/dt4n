@@ -172,7 +172,7 @@ HANDLERS = {
 }
 
 
-def parse_message_event(raw, event_name=None):
+def parse_message_event(raw, event_name=None, sse_fields=None):
     """Nhận CHUỖI event.data thô từ SSE -> trả dict {subject, value, correlation_id}
     hoặc None nếu không phải message thật (heartbeat/comment/JSON hỏng).
 
@@ -191,9 +191,13 @@ def parse_message_event(raw, event_name=None):
         log.warning('SSE: bỏ qua event không parse được JSON: %.120s', raw)
         return None
 
+    sse_fields = sse_fields or {}
+
     if not isinstance(msg, dict):
         return {'subject': event_name, 'value': msg,
-                'correlation_id': None, 'raw': msg}
+                'correlation_id': (sse_fields.get('correlation-id')
+                                   or sse_fields.get('correlationId')),
+                'raw': msg}
 
     # Ditto có 2 dạng hay gặp:
     # 1) Protocol envelope: subject nằm trong topic/subject, payload ở value.
@@ -210,7 +214,9 @@ def parse_message_event(raw, event_name=None):
         value = msg
 
     headers = msg.get('headers', {}) or {}
-    correlation_id = (headers.get('correlation-id')
+    correlation_id = (sse_fields.get('correlation-id')
+                      or sse_fields.get('correlationId')
+                      or headers.get('correlation-id')
                       or headers.get('correlationId')
                       or msg.get('correlation-id')
                       or msg.get('correlationId'))
@@ -314,10 +320,10 @@ def _stream_once(session, stop_event, net, net_lock):
             return
         log.info('SSE kết nối OK, đang nghe lệnh tại %s', INBOX_SSE_URL)
 
-        # iter_lines: đọc TỪNG DÒNG khi nó tới (streaming). SSE gói event dạng
-        # "event: <subject>\ndata: {...}\n\n". Ta gom các dòng của MỘT event.
+        # iter_lines: đọc TỪNG DÒNG khi nó tới (streaming). SSE gói event là
+        # một nhóm field "event:", "data:", có thể kèm metadata tùy Ditto version.
+        fields = {}
         data_buf = []
-        event_name = None
         for line in resp.iter_lines(decode_unicode=True):
             if stop_event is not None and stop_event.is_set():
                 log.info('Nhận stop_event -> đóng SSE.')
@@ -329,9 +335,11 @@ def _stream_once(session, stop_event, net, net_lock):
                 # dòng trống = HẾT một event -> ghép buffer, xử lý, reset.
                 if data_buf:
                     raw = '\n'.join(data_buf)
+                    fields['data'] = raw
                     data_buf = []
-                    parsed = parse_message_event(raw, event_name=event_name)
-                    event_name = None
+                    parsed = parse_message_event(raw,
+                                                 event_name=fields.get('event'),
+                                                 sse_fields=fields)
                     if parsed is not None:
                         try:
                             ok, code, detail = handle_command(
@@ -345,15 +353,22 @@ def _stream_once(session, stop_event, net, net_lock):
                         except Exception as e:
                             # 1 lệnh lỗi KHÔNG được làm sập stream (defensive).
                             log.exception('Xử lý lệnh lỗi (bỏ qua event): %s', e)
+                fields = {}
+                data_buf = []
                 continue
 
             if line.startswith(':'):
                 continue                 # comment/heartbeat của SSE -> bỏ qua
-            if line.startswith('event:'):
-                event_name = line[len('event:'):].strip() or None
-            if line.startswith('data:'):
-                data_buf.append(line[len('data:'):].lstrip())
-            # (field khác như 'id:' — bản này chưa cần)
+            if ':' in line:
+                key, _, value = line.partition(':')
+                key = key.strip()
+                value = value.lstrip()
+                if key == 'data':
+                    data_buf.append(value)
+                elif key:
+                    fields[key] = value
+            else:
+                fields[line.strip()] = ''
 
 
 def run(net=None, net_lock=None, stop_event=None):

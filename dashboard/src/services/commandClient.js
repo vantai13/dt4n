@@ -26,17 +26,32 @@ export async function sendCommand(subject, target, params = {}) {
          + `?timeout=5`
   const body = { target, ...params }
 
-  const res = await fetch(url, {
-    method: 'POST',
-    headers: {
-      'Content-Type': 'application/json',
-      'correlation-id': cid,
-    },
-    body: JSON.stringify(body),
-  })
-
-  // response ① có thể là JSON {status:accepted/rejected,...} hoặc lỗi HTTP.
   let response = null
-  try { response = await res.json() } catch (_) { /* có thể rỗng */ }
-  return { ok: res.ok, correlationId: cid, response }
+  let res = null
+  try {
+    res = await fetch(url, {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'correlation-id': cid,
+      },
+      body: JSON.stringify(body),
+    })
+    try { response = await res.json() } catch (_) { /* có thể rỗng */ }
+  } catch (e) {
+    return { ok: false, timedOut: false, rejected: false,
+             correlationId: cid, response: null, error: e.message }
+  }
+
+  // 408 = command.timeout: chưa có biên nhận tức thì, không có nghĩa lệnh trượt.
+  // App.vue sẽ quan sát state qua SSE để quyết định kết quả thật.
+  const timedOut = res.status === 408
+  const rejected = response?.status === 'rejected'
+  return {
+    ok: res.ok && !rejected,
+    timedOut,
+    rejected,
+    correlationId: cid,
+    response,
+  }
 }

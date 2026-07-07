@@ -133,17 +133,16 @@ def parse_ovs_dump_ports_state(text):
         return 'unknown'
 
     lower = out.lower()
-    error_markers = (
+    connection_errors = (
         'failed to connect',
         'broken pipe',
         'connection refused',
         'no such bridge',
         'is not a bridge',
         'does not exist',
-        'ovs-ofctl:',
-        'error',
+        'version negotiation failed',
     )
-    if any(marker in lower for marker in error_markers):
+    if any(marker in lower for marker in connection_errors):
         return 'down'
     if 'port' in lower:
         return 'up'
@@ -298,18 +297,25 @@ class Collector:
             },
         }
 
-    # ---- thu thập 1 SWITCH (ở ROOT namespace, dùng ovs-ofctl) ----
+    # ---- thu thập 1 SWITCH (ở ROOT namespace, tránh shell tương tác) ----
     def collect_switch(self, switch):
         name = switch.name
-        # ovs-ofctl chạy ở root (switch KHÔNG cô lập như host) -> dùng switch.cmd hoặc net
-        out = switch.cmd('ovs-ofctl dump-ports %s' % name)
-        # (Parse port stats chi tiết tùy format; ở đây giữ raw + state để Phase 2 mở rộng.)
-        state = parse_ovs_dump_ports_state(out)
+        try:
+            # switch.cmd('ovs-ofctl ...') có thể treo/đụng OpenFlow version khi
+            # Mininet CLI và Command Agent cùng sống trong một tiến trình. Dùng
+            # API Mininet qua OVSDB để hỏi trạng thái controller connection là
+            # đủ cho dashboard, và không giữ net_lock lâu một cách nguy hiểm.
+            connected = switch.connected()
+            state = 'up' if connected else 'down'
+            raw = 'controller_connected=%s' % connected
+        except Exception as e:
+            state = 'unknown'
+            raw = 'connected() error: %s' % e
         return {
             'attributes': {'type': 'switch'},
             'features': {
                 'status': {'state': state},
-                'portStatsRaw': {'dump': out.strip()[:500]},   # cắt bớt cho gọn log
+                'portStatsRaw': {'dump': raw[:500]},   # cắt bớt cho gọn log
             },
         }
 

@@ -24,6 +24,7 @@ from bridge.bootstrap import bootstrap_all, entities_from_net
 from bridge.sync_agent import run as sync_run
 from mininet.cli import CLI
 from measurements.measure_latency import main as measure_latency
+from measurements.measure_command_latency import main as measure_command_latency
 
 
 class LockedCLI(CLI):
@@ -73,15 +74,17 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--clients', type=int, default=3)
     p.add_argument('--period', type=float, default=1.0)
-    p.add_argument('--stp-wait', type=int, default=10)
+    p.add_argument('--stp-wait', type=int, default=20)
     p.add_argument('--ping-every', type=int, default=5,
                    help='đo latency mỗi N chu kỳ; 0 = tắt ping probe')
     p.add_argument('--reconcile-every', type=int, default=30,
                    help='cứ N chu kỳ gửi full state; 0 = tắt reconciliation')
     p.add_argument('--measure-latency', action='store_true',
                    help='chạy đo sync latency link down rồi thoát, không mở CLI')
+    p.add_argument('--measure-command', action='store_true',
+                   help='chạy đo command latency end-to-end rồi thoát, không mở CLI')
     p.add_argument('--trials', type=int, default=10,
-                   help='số lần đo khi dùng --measure-latency')
+                   help='số lần đo khi dùng --measure-latency/--measure-command')
     p.add_argument('--measure-link', default='h1-s1',
                    help='link để đo, dạng nodeA-nodeB, mặc định h1-s1')
     p.add_argument('--verify', action='store_true',
@@ -102,8 +105,8 @@ def main():
     p.add_argument('--log-path', default='logs/run_sync.log',
                    help='file log runtime cho sync agent/pusher')
     a = p.parse_args()
-    if a.measure_latency and a.verify:
-        p.error('--measure-latency và --verify chỉ chạy một mode mỗi lần')
+    if sum(bool(x) for x in (a.measure_latency, a.measure_command, a.verify)) > 1:
+        p.error('--measure-latency, --measure-command và --verify chỉ chạy một mode mỗi lần')
 
     configure_file_logging(a.log_path)
     log = logging.getLogger('run_sync')
@@ -160,6 +163,14 @@ def main():
             h, s = a.measure_link.split('-', 1)
             measure_latency(net, n_trials=a.trials, h=h, s=s,
                             net_lock=net_lock)
+            return
+
+        if a.measure_command:
+            # Cần cả Sync Agent (phản ánh state) và Command Agent (thực thi lệnh).
+            time.sleep(max(2.0, a.period * 3))
+            h, s = a.measure_link.split('-', 1)
+            measure_command_latency(net, n_trials=a.trials, h=h, s=s,
+                                    net_lock=net_lock)
             return
 
         if a.verify:

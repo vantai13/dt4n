@@ -41,15 +41,15 @@ def summarize(latencies_sec):
     }
 
 
-def format_report(stats, label=''):
+def format_report(stats, label='', title='Sync Latency'):
     """In bộ tứ chuẩn nghiên cứu."""
     if stats is None:
         return 'Không có mẫu hợp lệ.'
     return (
-        '=== Sync Latency%s (n=%d) ===\n'
+        '=== %s%s (n=%d) ===\n'
         '  mean: %5.0f ms\n  p50:  %5.0f ms\n  p95:  %5.0f ms\n'
         '  p99:  %5.0f ms\n  max:  %5.0f ms\n  min:  %5.0f ms'
-        % (' ' + label if label else '', stats['n'],
+        % (title, ' ' + label if label else '', stats['n'],
            stats['mean_ms'], stats['p50_ms'], stats['p95_ms'],
            stats['p99_ms'], stats['max_ms'], stats['min_ms'])
     )
