@@ -7,7 +7,7 @@
 
 <script setup>
 import { ref, onMounted, watch, computed } from 'vue'
-import { Network } from 'vis-network/standalone'
+import { Network, DataSet } from 'vis-network/standalone'
 import 'vis-network/styles/vis-network.css'
 
 // props.graph = { nodes: [...], edges: [...] } ĐÃ được translate.js dịch sẵn.
@@ -17,8 +17,12 @@ const emit = defineEmits(['node-selected', 'edge-selected', 'selection-cleared']
 
 const networkContainer = ref(null)
 const networkInstance = ref(null)
+// DataSet giữ node/edge — vis-network tự vẽ lại khi DataSet đổi. Dùng DataSet
+// (thay vì mảng thô) để setData cập nhật ĐÁNG TIN CẬY, tránh quirk của .update().
+const nodesDS = new DataSet([])
+const edgesDS = new DataSet([])
 
-// Trigger re-render khi dữ liệu đổi (so sánh bằng chuỗi hóa).
+// Trigger cập nhật khi dữ liệu đổi (so sánh bằng chuỗi hóa).
 const graphKey = computed(() => JSON.stringify(props.graph))
 
 // --- Dịch node (đã có type/state) -> định dạng vis-network + màu theo trạng thái ---
@@ -44,10 +48,12 @@ function toVisNodes(nodes) {
 function toVisEdges(edges) {
   if (!Array.isArray(edges)) return []
   return edges.map(e => {
+    // Đổi màu theo HEALTH (do twin tính, Lựa chọn B) — KHÔNG dùng e.state, vì
+    // state chỉ có up/down/unknown, không bao giờ = 'warning'/'high-load'.
+    // (Đây là lỗi cũ: nhánh warning/high-load chết vì nhìn nhầm trường.)
     let color = '#00F7F7', width = 2.5, dashes = false
-    if (e.state === 'down') { color = '#475569'; dashes = true; width = 1.5 }
-    else if (e.state === 'high-load') { color = '#F60000'; width = 4 }
-    else if (e.state === 'warning') { color = '#f97316'; width = 3.5 }
+    if (e.state === 'down' || e.health === 'critical') { color = '#F60000'; width = 4; dashes = (e.state === 'down') }
+    else if (e.health === 'warning') { color = '#f97316'; width = 3.5 }
 
     return {
       id: e.id,
@@ -98,9 +104,25 @@ function buildData() {
   return { nodes: toVisNodes(props.graph?.nodes), edges: toVisEdges(props.graph?.edges) }
 }
 
+function syncDataSets() {
+  const data = buildData()
+  // setData(mảng mới) trên DataSet: thêm cái mới, sửa cái đổi, XOÁ cái không còn
+  // -> đồ thị LUÔN khớp state. Đây là chỗ sửa lỗi "F5 mới thấy": trước dùng
+  // .update() (không xoá, không luôn redraw) nên đồ thị lệch state tới khi F5.
+  nodesDS.update(data.nodes)
+  edgesDS.update(data.edges)
+  // Xoá phần tử không còn trong graph mới (update không tự xoá).
+  const keepN = new Set(data.nodes.map(n => n.id))
+  const keepE = new Set(data.edges.map(e => e.id))
+  nodesDS.getIds().forEach(id => { if (!keepN.has(id)) nodesDS.remove(id) })
+  edgesDS.getIds().forEach(id => { if (!keepE.has(id)) edgesDS.remove(id) })
+}
+
 function initNetwork() {
   if (!networkContainer.value || !props.graph) return
-  networkInstance.value = new Network(networkContainer.value, buildData(), options)
+  syncDataSets()
+  networkInstance.value = new Network(networkContainer.value,
+                                      { nodes: nodesDS, edges: edgesDS }, options)
 
   networkInstance.value.on('selectNode', p => {
     if (p.nodes.length) emit('node-selected', p.nodes[0])
@@ -115,12 +137,11 @@ function initNetwork() {
 
 onMounted(initNetwork)
 
-// Khi dữ liệu đổi -> cập nhật (Lesson 3.3 dùng nhiều; giờ để sẵn khung).
+// Khi dữ liệu đổi (delta SSE về) -> đồng bộ DataSet -> vis-network TỰ vẽ lại.
+// Không phải F5 nữa: DataSet là "nguồn" mà Network theo dõi trực tiếp.
 watch(graphKey, () => {
   if (!networkInstance.value) return
-  const data = buildData()
-  networkInstance.value.body.data.nodes.update(data.nodes)
-  networkInstance.value.body.data.edges.update(data.edges)
+  syncDataSets()
 })
 </script>
 

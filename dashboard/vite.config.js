@@ -30,6 +30,23 @@ export default defineConfig(({ mode }) => {
   // chỉ là encode -> vì thế mới cần giấu ở tầng server, không phơi ra browser).
   const basicAuth = 'Basic ' + Buffer.from(`${DITTO_USER}:${DITTO_PASS}`).toString('base64')
 
+  // TỰ PHÁT HIỆN chế độ bypass: chỉ khi trỏ THẲNG gateway (cổng 8081) mới gửi
+  // x-ditto-pre-authenticated. Khi đi qua nginx (8080), theo Ditto docs client
+  // KHÔNG được tự set header đó — nginx là bên DUY NHẤT set nó. Gửi thừa có thể
+  // bị nginx từ chối (security hardening coi là giả mạo).
+  const isBypass = /:8081(\/|$)/.test(DITTO_URL)
+
+  // Hàm gắn auth đúng theo chế độ -> dùng chung cho cả 2 đường proxy (DRY).
+  function attachAuth(proxyReq) {
+    if (isBypass) {
+      // Bypass gateway :8081 (dev/lab, khi nginx lỗi) -> tự đóng vai nginx.
+      proxyReq.setHeader('x-ditto-pre-authenticated', DITTO_PRE_AUTH)
+    } else {
+      // Chuẩn: qua nginx :8080 -> chỉ gửi Basic Auth, để nginx tự set pre-auth.
+      proxyReq.setHeader('Authorization', basicAuth)
+    }
+  }
+
   return {
     plugins: [vue()],
 
@@ -43,27 +60,13 @@ export default defineConfig(({ mode }) => {
       port: 5173,
 
       proxy: {
-        // Mọi request browser gửi tới '/ditto/...' sẽ được chuyển tiếp sang Ditto.
-        '/ditto': {
-          target: DITTO_URL,        // đích thật: http://localhost:8080
-          changeOrigin: true,       // sửa header Host cho khớp đích (Ditto cần)
-          // Bỏ tiền tố '/ditto' trước khi gửi đi:
-          //   browser gọi  /ditto/api/2/search/things
-          //   Ditto nhận   /api/2/search/things
-          rewrite: (path) => path.replace(/^\/ditto/, ''),
-          configure: (proxy) => {
-            // Gắn auth ở tầng proxy -> browser không cần biết mật khẩu.
-            // Authorization dùng khi đi qua nginx :8080.
-            // x-ditto-pre-authenticated dùng được khi trỏ thẳng gateway :8081
-            // trong môi trường lab, nơi nginx đang bị lỗi.
-            proxy.on('proxyReq', (proxyReq) => {
-              proxyReq.setHeader('Authorization', basicAuth)
-              proxyReq.setHeader('x-ditto-pre-authenticated', DITTO_PRE_AUTH)
-            })
-          },
-        },
+        // ⚠️ THỨ TỰ QUAN TRỌNG: '/ditto-sse' PHẢI đứng TRƯỚC '/ditto'.
+        // Vì Vite khớp proxy theo TIỀN TỐ (startsWith) và dùng cái khớp ĐẦU TIÊN.
+        // Chuỗi '/ditto-sse/...' cũng bắt đầu bằng '/ditto', nên nếu '/ditto'
+        // đứng trước, nó sẽ NUỐT luôn request SSE -> rewrite sai -> 404 -> OFFLINE.
+        // Nguyên tắc: prefix CỤ THỂ hơn (dài hơn) phải xét TRƯỚC prefix tổng quát.
 
-        // Đường riêng cho SSE: kết nối sống lâu, không timeout/buffer.
+        // === Đường SSE (streaming, kết nối sống lâu, không buffer/timeout) ===
         '/ditto-sse': {
           target: DITTO_URL,
           changeOrigin: true,
@@ -72,10 +75,21 @@ export default defineConfig(({ mode }) => {
           proxyTimeout: 0,
           configure: (proxy) => {
             proxy.on('proxyReq', (proxyReq) => {
-              proxyReq.setHeader('Authorization', basicAuth)
-              proxyReq.setHeader('x-ditto-pre-authenticated', DITTO_PRE_AUTH)
-              proxyReq.setHeader('X-Accel-Buffering', 'no')
+              attachAuth(proxyReq)
+              proxyReq.setHeader('X-Accel-Buffering', 'no')   // nginx đừng đệm SSE
               proxyReq.setHeader('Cache-Control', 'no-cache')
+            })
+          },
+        },
+
+        // === Đường request THƯỜNG (fetch, Search API) ===
+        '/ditto': {
+          target: DITTO_URL,        // đích thật (nginx :8080, hoặc gateway :8081 khi bypass)
+          changeOrigin: true,       // sửa header Host cho khớp đích
+          rewrite: (path) => path.replace(/^\/ditto/, ''),
+          configure: (proxy) => {
+            proxy.on('proxyReq', (proxyReq) => {
+              attachAuth(proxyReq)
             })
           },
         },

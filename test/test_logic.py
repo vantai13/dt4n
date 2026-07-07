@@ -5,7 +5,7 @@ Chứng minh: parse /proc/net/dev, parse ping, tính rate đều đúng.
 
 import sys
 sys.path.insert(0, 'bridge')
-from collector import parse_proc_net_dev, parse_ping, compute_rate
+from collector import parse_proc_net_dev, parse_ping, compute_rate, parse_ovs_dump_ports_state
 
 passed = failed = 0
 def check(name, got, want):
@@ -63,6 +63,15 @@ check("bình thường: (2000-1000)/2s = 500", compute_rate(2000, 1000, 2.0), 50
 check("counter reset (now<prev) -> 0", compute_rate(50, 1000, 1.0), 0.0)
 check("dt=0 (tránh chia 0) -> 0", compute_rate(2000, 1000, 0), 0.0)
 check("dt âm (clock skew) -> 0", compute_rate(2000, 1000, -1), 0.0)
+
+print("\n== TEST 4: parse_ovs_dump_ports_state (trạng thái switch) ==")
+ovs_ok = """OFPST_PORT reply (xid=0x2): 3 ports
+  port  1: rx pkts=10, bytes=840, drop=0, errs=0, frame=0, over=0, crc=0
+"""
+ovs_down = """ovs-ofctl: s1: failed to connect to socket (Broken pipe)"""
+check("dump-ports hợp lệ -> up", parse_ovs_dump_ports_state(ovs_ok), 'up')
+check("dump-ports lỗi kết nối -> down", parse_ovs_dump_ports_state(ovs_down), 'down')
+check("output rỗng -> unknown", parse_ovs_dump_ports_state(''), 'unknown')
 
 print("\n" + "="*50)
 print("KẾT QUẢ: %d pass, %d fail" % (passed, failed))

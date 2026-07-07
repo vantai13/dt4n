@@ -122,6 +122,34 @@ def compute_rate(now_val, prev_val, dt):
     return delta / dt
 
 
+def parse_ovs_dump_ports_state(text):
+    """Return switch state from `ovs-ofctl dump-ports` output.
+
+    ovs-ofctl writes useful error text when a stopped switch cannot be reached.
+    Non-empty output alone is therefore not evidence that the switch is up.
+    """
+    out = (text or '').strip()
+    if not out:
+        return 'unknown'
+
+    lower = out.lower()
+    error_markers = (
+        'failed to connect',
+        'broken pipe',
+        'connection refused',
+        'no such bridge',
+        'is not a bridge',
+        'does not exist',
+        'ovs-ofctl:',
+        'error',
+    )
+    if any(marker in lower for marker in error_markers):
+        return 'down'
+    if 'port' in lower:
+        return 'up'
+    return 'unknown'
+
+
 def utc_now_iso():
     """Timestamp ISO 8601 UTC (vd '2026-05-30T10:00:00Z') — đúng định dạng Ditto."""
     return datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -276,7 +304,7 @@ class Collector:
         # ovs-ofctl chạy ở root (switch KHÔNG cô lập như host) -> dùng switch.cmd hoặc net
         out = switch.cmd('ovs-ofctl dump-ports %s' % name)
         # (Parse port stats chi tiết tùy format; ở đây giữ raw + state để Phase 2 mở rộng.)
-        state = 'up' if 'port' in out.lower() or out.strip() else 'unknown'
+        state = parse_ovs_dump_ports_state(out)
         return {
             'attributes': {'type': 'switch'},
             'features': {
