@@ -57,6 +57,7 @@ export function thingsToGraph(things) {
       nodes.push({
         id: name,                 // tên ngắn -> khớp endpointA/B của link
         label: name,
+        rawId: thing.thingId,
         type,                     // giữ để chọn icon/màu ở tầng vẽ
         state,                    // 'up' | 'down' | ... (trạng thái vật lý)
         health,                   // 'ok'|'warning'|'critical'|'unknown' (do twin tính)
@@ -70,6 +71,7 @@ export function thingsToGraph(things) {
 
       edges.push({
         id: name,                 // 'h1-s1'
+        rawId: thing.thingId,
         from: a,
         to: b,
         state: prop(thing, 'status', 'state') || 'unknown',

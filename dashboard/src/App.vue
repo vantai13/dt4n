@@ -5,6 +5,7 @@ import InfoPanel from './components/InfoPanel.vue'
 import AlertPanel from './components/AlertPanel.vue'
 import { fetchAllThings } from './services/dittoClient.js'
 import { openThingStream } from './services/sseClient.js'
+import { sendCommand } from './services/commandClient.js'
 import { thingsToGraph, applyDelta } from './lib/translate.js'
 
 // ---------------------------------------------------------------------------
@@ -21,6 +22,7 @@ const errorMsg = ref('')
 const live = ref(false)                        // đang nhận real-time?
 const selectedNodeId = ref(null)
 const selectedEdgeId = ref(null)
+const cmdFeedback = ref('')
 
 // STATE trung tâm: map thingId -> Thing đầy đủ. KHÔNG phải ref (không cần Vue
 // theo dõi sâu map này); mỗi lần đổi ta dịch lại -> gán graph.value (ref) -> UI đổi.
@@ -84,6 +86,43 @@ const onAlertFocus = (a) => {
   if (a.kind === 'node') onNode(a.id)
   else onEdge(a.id)
 }
+
+async function onCommand({ subject, target, params }) {
+  cmdFeedback.value = 'Đang thực thi...'
+  try {
+    const { ok, response } = await sendCommand(subject, target, params)
+    if (!ok || response?.status === 'rejected') {
+      cmdFeedback.value = 'Bị từ chối: ' + (response?.result || response?.reason || 'lỗi')
+      return
+    }
+    cmdFeedback.value = 'Đã nhận, đang chờ mạng phản ánh...'
+    watchForReflection(subject, target)
+  } catch (e) {
+    cmdFeedback.value = 'Lỗi gửi lệnh: ' + e.message
+  }
+}
+
+function watchForReflection(subject, target) {
+  const expect = subject === 'disableLink' ? 'down'
+               : subject === 'enableLink' ? 'up' : null
+  if (!expect) {
+    cmdFeedback.value = 'Đã áp dụng.'
+    return
+  }
+
+  let tries = 0
+  const iv = setInterval(() => {
+    const t = thingsById[target]
+    const state = t?.features?.status?.properties?.state
+    if (state === expect) {
+      cmdFeedback.value = 'Thành công (mạng đã phản ánh).'
+      clearInterval(iv)
+    } else if (++tries > 30) {
+      cmdFeedback.value = 'Cảnh báo: chưa thấy mạng phản ánh kết quả.'
+      clearInterval(iv)
+    }
+  }, 200)
+}
 </script>
 
 <template>
@@ -104,7 +143,13 @@ const onAlertFocus = (a) => {
       />
       <div class="side">
         <AlertPanel :graph="graph" @focus="onAlertFocus" />
-        <InfoPanel :graph="graph" :selectedNodeId="selectedNodeId" :selectedEdgeId="selectedEdgeId" />
+        <InfoPanel
+          :graph="graph"
+          :selectedNodeId="selectedNodeId"
+          :selectedEdgeId="selectedEdgeId"
+          :cmdFeedback="cmdFeedback"
+          @command="onCommand"
+        />
       </div>
     </div>
 
