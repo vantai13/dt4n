@@ -60,7 +60,7 @@ def configure_file_logging(path):
     root.addHandler(handler)
     root.setLevel(logging.INFO)
 
-    for name in ('run_sync', 'sync_agent', 'pusher', 'verify'):
+    for name in ('run_sync', 'sync_agent', 'command_agent', 'pusher', 'verify'):
         logger = logging.getLogger(name)
         for existing in list(logger.handlers):
             logger.removeHandler(existing)
@@ -113,6 +113,7 @@ def main():
 
     net = None
     t = None
+    tc = None
     stop_event = threading.Event()
     net_lock = threading.RLock()
     try:
@@ -140,6 +141,19 @@ def main():
                              daemon=True)
         t.start()
 
+        # === Phase 4 / Lesson 4.2: khởi động Command Agent (thread nền thứ 2) ===
+        # Chạy CHUNG tiến trình để (4.3) truy cập được `net`; dùng CHUNG net_lock
+        # để không đụng độ với collector của Sync Agent (tránh race condition).
+        from bridge.command_agent import run as command_run
+        log.info('Khoi dong Command Agent thread nen')
+        info('*** Khởi động Command Agent (thread nền) — nghe lệnh chiều xuống\n')
+        tc = threading.Thread(target=command_run,
+                              kwargs={'net': net,
+                                      'net_lock': net_lock,
+                                      'stop_event': stop_event},
+                              daemon=True)
+        tc.start()
+
         if a.measure_latency:
             # Cho sync agent vài chu kỳ đầu để đẩy trạng thái baseline lên Ditto.
             time.sleep(max(2.0, a.period * 3))
@@ -164,6 +178,9 @@ def main():
         stop_event.set()
         if t is not None:
             t.join(timeout=5)
+        # Phase 4: dừng luôn Command Agent
+        if tc is not None:
+            tc.join(timeout=5)
         if net is not None:
             logging.getLogger('run_sync').info('Tat mang')
             info('*** Tắt mạng\n')
