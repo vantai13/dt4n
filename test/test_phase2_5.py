@@ -42,7 +42,9 @@ ensure_requests_module()
 from bridge.sync_agent import build_full_changes, should_reconcile  # noqa: E402
 from bridge.verify import values_match  # noqa: E402
 from bridge.bootstrap import entities_from_net, entities_from_spec  # noqa: E402
-from bridge.command_agent import parse_message_event  # noqa: E402
+import bridge.command_agent as command_agent_mod  # noqa: E402
+from bridge.command_agent import handle_command, parse_message_event  # noqa: E402
+from bridge.collector import Collector  # noqa: E402
 from bridge.ditto_common import NAMESPACE, POLICY_ID  # noqa: E402
 
 
@@ -143,6 +145,82 @@ check('Command Agent lấy correlation từ payload UI',
       parsed.get('correlation_id') == 'cid-ui-1')
 check('subject lấy từ SSE event_name',
       parsed.get('subject') == 'disableLink')
+
+print('\n== TEST 6: command replay dedup ==')
+command_agent_mod.AUDIT_PATH = '/tmp/dt4n_command_agent_audit_test.log'
+dup_cid = 'cid-dup-test-phase2-5'
+first = handle_command({
+    'subject': 'rebootEverything',
+    'value': {'target': 'org.dt4n:link-h1-s1'},
+    'correlation_id': dup_cid,
+})
+second = handle_command({
+    'subject': 'rebootEverything',
+    'value': {'target': 'org.dt4n:link-h1-s1'},
+    'correlation_id': dup_cid,
+})
+check('lần đầu command lạ vẫn bị reject', first[0] is False and first[1] == 400)
+check('lần lặp cùng cid được bỏ qua như OK',
+      second[0] is True and second[2].startswith('duplicate ignored'))
+
+
+class _TrackingLock:
+    def __init__(self):
+        self.held = False
+
+    def __enter__(self):
+        self.held = True
+
+    def __exit__(self, exc_type, exc, tb):
+        self.held = False
+
+
+class _FakeHost(_FakeNode):
+    def cmd(self, command):
+        iface = '%s-eth0' % self.name
+        return """
+Inter-| Receive | Transmit
+ face |bytes packets errs drop fifo frame compressed multicast|bytes packets
+ %s: 1000 1 0 0 0 0 0 0 2000 2
+""" % iface
+
+
+class _FakeSwitch(_FakeNode):
+    def connected(self):
+        return True
+
+
+class _FakeNet:
+    def __init__(self):
+        self.hosts = [_FakeHost('h1'), _FakeHost('srv1', '10.0.0.4')]
+        self.switches = [_FakeSwitch('s1')]
+        self.links = [_FakeLink(self.hosts[0], self.switches[0])]
+
+    def get(self, name):
+        for node in self.hosts + self.switches:
+            if node.name == name:
+                return node
+        raise KeyError(name)
+
+
+class _PingTrackingCollector(Collector):
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.ping_saw_lock_held = None
+
+    def collect_latency(self, src, dst_ip):
+        self.ping_saw_lock_held = self.net_lock.held
+        return {'latency_ms': 1.23, 'packet_loss_pct': 0.0}
+
+
+print('\n== TEST 7: collector không giữ lock khi ping ==')
+tracking_lock = _TrackingLock()
+collector = _PingTrackingCollector(_FakeNet(), ping_every=1,
+                                   net_lock=tracking_lock)
+snapshot = collector.collect_all()
+check('ping chạy ngoài net_lock', collector.ping_saw_lock_held is False)
+check('snapshot vẫn có path quality từ ping',
+      snapshot['things']['link-h1-srv1']['features']['quality']['latency_ms'] == 1.23)
 
 print('\n' + '=' * 50)
 print('KET QUA: %d pass, %d fail' % (passed, failed))

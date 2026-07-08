@@ -321,7 +321,8 @@ class Collector:
 
     # ---- đo LATENCY (thưa hơn — Lesson 1.4: không phải metric nào cũng cùng tần suất) ----
     def collect_latency(self, src, dst_ip):
-        out = src.cmd('ping -c 3 -W 1 %s' % dst_ip)
+        # -i 0.2: 3 gói mất khoảng 0.6s thay vì mặc định khoảng 2s.
+        out = src.cmd('ping -c 3 -i 0.2 -W 1 %s' % dst_ip)
         return parse_ping(out)
 
     def collect_link(self, link):
@@ -342,6 +343,12 @@ class Collector:
 
     # ---- gom TẤT CẢ thành 1 snapshot ----
     def collect_all(self):
+        """Thu snapshot theo 2 giai đoạn để không giữ net_lock lúc ping.
+
+        Một lock duy nhất vẫn bảo vệ tài nguyên chung `net`, nhưng vùng giữ lock
+        chỉ bao quanh các thao tác đọc nhanh. Ping là I/O chậm nên chạy sau khi
+        đã nhả lock, giúp Command Agent chen vào tắt/bật link ngay.
+        """
         lock = self.net_lock if self.net_lock is not None else nullcontext()
         with lock:
             now_ts = time.time()
@@ -367,20 +374,32 @@ class Collector:
                 seen_links.add(key)
                 snapshot['things'][key] = self.collect_link(link)
 
-            # latency: đo THƯA — mỗi ping_every chu kỳ (vì ping tốn + tự gây nhiễu)
+            # Chỉ quyết định và lấy sẵn tham số ping trong lock; chưa ping ở đây.
             self._ping_counter += 1
+            ping_ctx = None
             if self.ping_every > 0 and self._ping_counter % self.ping_every == 0 and len(self.net.hosts) >= 2:
                 h1 = self.net.hosts[0]
                 host_names = [h.name for h in self.net.hosts]
                 srv = self.net.get('srv1') if 'srv1' in host_names else self.net.hosts[-1]
-                lat = self.collect_latency(h1, srv.IP())
-                key = 'link-%s-%s' % (h1.name, srv.name)
-                snapshot['things'][key] = {
-                    'attributes': {'type': 'path', 'src': h1.name, 'dst': srv.name},
-                    'features': {'quality': {'latency_ms': lat['latency_ms'],
-                                             'packetLoss_pct': lat['packet_loss_pct']}},
+                ping_ctx = {
+                    'src': h1,
+                    'dst_ip': srv.IP(),
+                    'key': 'link-%s-%s' % (h1.name, srv.name),
+                    'src_name': h1.name,
+                    'dst_name': srv.name,
                 }
-            return snapshot
+
+        # Hết lock: ping chậm không còn chặn Command Agent.
+        if ping_ctx is not None:
+            lat = self.collect_latency(ping_ctx['src'], ping_ctx['dst_ip'])
+            snapshot['things'][ping_ctx['key']] = {
+                'attributes': {'type': 'path',
+                               'src': ping_ctx['src_name'],
+                               'dst': ping_ctx['dst_name']},
+                'features': {'quality': {'latency_ms': lat['latency_ms'],
+                                         'packetLoss_pct': lat['packet_loss_pct']}},
+            }
+        return snapshot
 
     # ---- VÒNG LẶP chu kỳ ----
     def run(self, duration=30):

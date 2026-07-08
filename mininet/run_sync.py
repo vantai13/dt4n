@@ -10,7 +10,7 @@ CHẠY:
     sudo mn -c
     sudo python3 -m mininet.run_sync --period 1.0
 """
-import argparse, json, threading, time
+import argparse, json, sys, threading, time
 import logging
 import os
 from mininet.log import setLogLevel, info
@@ -18,6 +18,15 @@ from mininet.log import setLogLevel, info
 # mininet.log changes the global logger class. Reset it so bridge loggers
 # (sync_agent/pusher) do not inherit Mininet's stderr handler.
 logging.setLoggerClass(logging.Logger)
+
+try:
+    import requests  # noqa: F401
+except ImportError:
+    raise SystemExit(
+        'THIẾU requests trong interpreter này (%s). '
+        'Chạy bằng interpreter CÓ requests, ví dụ: '
+        'sudo /usr/bin/python3 -m mininet.run_sync --period 1.0'
+        % sys.executable)
 
 from mininet.topology import build_net, start_net   # từ Phase 1 (đã refactor)
 from bridge.bootstrap import bootstrap_all, entities_from_net

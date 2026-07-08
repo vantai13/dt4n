@@ -27,7 +27,9 @@ VÌ SAO CHUNG TIẾN TRÌNH với Mininet:
 import json
 import datetime
 import logging
+import threading
 import time
+from collections import OrderedDict
 
 import requests
 
@@ -56,6 +58,12 @@ AUDIT_PATH = 'logs/command_agent_audit.log'   # JSON-mỗi-dòng (JSONL)
 BW_MIN = 0
 BW_MAX = 100
 
+# DEDUP: SSE/live-message có thể giao lại cùng một command. Mỗi correlation-id
+# chỉ được thực thi một lần; các bản lặp được ack OK nhưng không chạm Mininet.
+_processed_ids = OrderedDict()
+_processed_lock = threading.Lock()
+_PROCESSED_MAX = 500
+
 
 def _ok(detail='ok'):
     return (True, 200, detail)
@@ -63,6 +71,20 @@ def _ok(detail='ok'):
 
 def _reject(code, reason):
     return (False, code, reason)
+
+
+def already_processed(cid):
+    """True nếu correlation-id đã xử lý trước đó, False nếu lần đầu."""
+    if not cid:
+        log.warning('Message KHÔNG có correlation-id -> không dedup được.')
+        return False
+    with _processed_lock:
+        if cid in _processed_ids:
+            return True
+        _processed_ids[cid] = time.time()
+        while len(_processed_ids) > _PROCESSED_MAX:
+            _processed_ids.popitem(last=False)
+        return False
 
 
 def audit(correlation_id, subject, target, params, result, reason=None):
@@ -240,6 +262,15 @@ def handle_command(parsed, net=None, net_lock=None):
     params = {k: v for k, v in value.items()
               if k not in ('target', 'clientCorrelationId')} \
              if isinstance(value, dict) else {}
+
+    if already_processed(cid):
+        reason = 'replay suppressed'
+        log.warning('BỎ QUA lệnh LẶP [%s] %s target=%s',
+                    cid, subject, target)
+        audit(cid, subject, target, params, 'duplicate_ignored', reason)
+        flow_event('AGENT', 'DUPLICATE_IGNORED', cid, subject, target,
+                   level='WARN', detail=reason, params=params)
+        return _ok('duplicate ignored (already executed)')
 
     log.info('NHẬN LỆNH [%s] %s target=%s params=%s',
              cid, subject, target, params)
