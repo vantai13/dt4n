@@ -32,6 +32,9 @@ const cmdFeedback = ref('')
 let thingsById = {}
 let reflectionToken = 0
 
+const DEFAULT_REFLECTION_TIMEOUT_MS = 20000
+const SWITCH_REFLECTION_TIMEOUT_MS = 45000
+
 // Dựng lại state đầy đủ từ Ditto (dùng cho lần đầu VÀ mỗi lần re-sync).
 async function resync(reason = 'manual') {
   const startedAt = performance.now()
@@ -117,7 +120,7 @@ const onAlertFocus = (a) => {
 }
 
 async function onCommand({ subject, target, params }) {
-  cmdFeedback.value = 'Đang thực thi...'
+  cmdFeedback.value = 'Đã gửi, đang chờ mạng phản ánh...'
   const correlationId = newCommandCorrelationId()
   logUi('command.ui.click', {
     correlationId,
@@ -126,9 +129,26 @@ async function onCommand({ subject, target, params }) {
     params,
     stateBefore: thingState(target),
   })
-  try {
-    const { ok, timedOut, rejected, response, error, httpStatus } =
-      await sendCommand(subject, target, params, correlationId)
+
+  const reflectPromise = watchForReflection(subject, target, params, correlationId)
+    .catch((e) => {
+      cmdFeedback.value = 'Lỗi quan sát trạng thái: ' + e.message
+      logUi('command.reflect.error', {
+        correlationId,
+        subject,
+        target,
+        error: e.message,
+      }, 'error')
+    })
+
+  sendCommand(subject, target, params, correlationId).then(({
+    ok,
+    timedOut,
+    rejected,
+    response,
+    error,
+    httpStatus,
+  }) => {
     logUi('command.ui.ack', {
       correlationId,
       subject,
@@ -141,21 +161,19 @@ async function onCommand({ subject, target, params }) {
       error,
     }, ok || timedOut ? 'info' : 'warn')
     if (rejected) {
+      reflectionToken++
       cmdFeedback.value = 'Bị từ chối: ' + (response?.result || response?.reason || 'lỗi')
       return
     }
     if (!ok && !timedOut) {
       cmdFeedback.value = 'Lỗi gửi lệnh: ' + (error || response?.message || 'lỗi')
-      return
     }
-    cmdFeedback.value = timedOut
-      ? 'Đã gửi, đang chờ mạng phản ánh...'
-      : 'Đã nhận, đang chờ mạng phản ánh...'
-    watchForReflection(subject, target, params, correlationId)
-  } catch (e) {
+  }).catch((e) => {
     cmdFeedback.value = 'Lỗi gửi lệnh: ' + e.message
     logUi('command.ui.error', { subject, target, error: e.message }, 'error')
-  }
+  })
+
+  return reflectPromise
 }
 
 function thingState(target) {
@@ -202,14 +220,17 @@ async function watchForReflection(subject, target, params = {}, correlationId = 
   }
 
   const token = ++reflectionToken
-  const deadline = Date.now() + 20000
+  const timeoutMs = subject === 'enableSwitch' || subject === 'disableSwitch'
+    ? SWITCH_REFLECTION_TIMEOUT_MS
+    : DEFAULT_REFLECTION_TIMEOUT_MS
+  const deadline = Date.now() + timeoutMs
   logUi('command.reflect.wait_start', {
     correlationId,
     subject,
     target,
     expect: expectDesc,
     stateNow: observed(),
-    timeoutMs: 20000,
+    timeoutMs,
   })
   while (Date.now() < deadline && token === reflectionToken) {
     if (matches()) {

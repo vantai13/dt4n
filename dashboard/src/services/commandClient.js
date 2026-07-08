@@ -12,17 +12,16 @@ import { logUi } from './debugLog.js'
 const NAMESPACE = import.meta.env.VITE_DITTO_NAMESPACE || 'org.dt4n'
 const DITTO_PREFIX = '/ditto/api/2'
 const CONTROLLER = `${NAMESPACE}:controller`
-const COMMAND_ACK_TIMEOUT_SECONDS = 3
+const COMMAND_ACK_TIMEOUT_SECONDS = 0
 
-// Sinh correlation-id duy nhất mỗi lệnh (để ghép response ①). crypto.randomUUID
-// có sẵn trong trình duyệt hiện đại.
+// Sinh correlation-id duy nhất mỗi lệnh để trace xuyên UI/Ditto/Agent/log.
+// crypto.randomUUID có sẵn trong trình duyệt hiện đại.
 export function newCommandCorrelationId() {
   return (crypto?.randomUUID?.() || 'cmd-' + Date.now() + '-' + Math.random())
 }
 
-// Gửi MỘT lệnh. Trả về { ok, response } của phản hồi ① (biên nhận tức thì).
-// LƯU Ý: ok ở đây = "lệnh HỢP LỆ & agent đã thực thi", KHÔNG phải "mạng đã đổi".
-// Bằng chứng mạng đổi = SSE state (kênh nhận), App.vue quan sát riêng.
+// Gửi MỘT lệnh theo kiểu fire-and-forget. Dashboard không chờ live response vì
+// kết quả thật vẫn là SSE state (kênh nhận), App.vue quan sát riêng.
 export async function sendCommand(subject, target, params = {}, correlationId = null) {
   const cid = correlationId || newCommandCorrelationId()
   const url = `${DITTO_PREFIX}/things/${CONTROLLER}/inbox/messages/${subject}`
@@ -65,8 +64,8 @@ export async function sendCommand(subject, target, params = {}, correlationId = 
              correlationId: cid, response: null, error: e.message }
   }
 
-  // 408 = command.timeout: chưa có biên nhận tức thì, không có nghĩa lệnh trượt.
-  // App.vue sẽ quan sát state qua SSE để quyết định kết quả thật.
+  // Với timeout=0, Ditto trả 202 ngay khi nhận message. App.vue vẫn quan sát
+  // state qua SSE để quyết định kết quả thật.
   const timedOut = res.status === 408
   const rejected = response?.status === 'rejected'
   logUi('command.send.response', {

@@ -263,6 +263,7 @@ export default defineConfig(({ mode }) => {
               attachAuth(proxyReq)
               proxyReq.setHeader('X-Accel-Buffering', 'no')   // nginx đừng đệm SSE
               proxyReq.setHeader('Cache-Control', 'no-cache')
+              proxyReq.setHeader('Accept-Encoding', 'identity')
             })
           },
         },

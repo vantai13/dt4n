@@ -219,15 +219,16 @@ def group_for_cid(correlation_id, window=45):
 
 
 def print_header(report):
-    report.line('trial cmd          target                 ack   route   exec  detect  push   ui    total  result')
-    report.line('-' * 108)
+    report.line('trial cmd          target                 ack   route   lock   exec  detect  push   ui    total  result')
+    report.line('-' * 115)
 
 
 def print_result(report, index, subject, group, ok, final_state, runtime):
     if group is None:
-        report.line('%5d %-12s %-22s %s %s %s %s %s %s %s  %s' % (
+        report.line('%5d %-12s %-22s %s %s %s %s %s %s %s %s  %s' % (
             index, subject, '-', fmt_ms(None), fmt_ms(None), fmt_ms(None),
             fmt_ms(None), fmt_ms(None), fmt_ms(None), fmt_ms(None),
+            fmt_ms(None),
             'missing trace group'))
         report.line('      runtime: %s | twin=%s' % (runtime, final_state))
         return {}
@@ -236,12 +237,13 @@ def print_result(report, index, subject, group, ok, final_state, runtime):
     result = 'OK' if ok else 'TIMEOUT'
     if m['note']:
         result += ' / ' + m['note']
-    report.line('%5d %-12s %-22s %s %s %s %s %s %s %s  %s' % (
+    report.line('%5d %-12s %-22s %s %s %s %s %s %s %s %s  %s' % (
         index,
         m['subject'][:12],
         short_target(m['target'])[:22],
         fmt_ms(m['ack_ms']),
         fmt_ms(m['route_ms']),
+        fmt_ms(m['lock_wait_ms']),
         fmt_ms(m['exec_ms']),
         fmt_ms(m['detect_ms']),
         fmt_ms(m['push_ms']),
@@ -258,6 +260,7 @@ def print_stage_summaries(report, rows):
     fields = [
         ('ack_ms', 'Ditto Ack'),
         ('route_ms', 'UI/Measure -> Agent'),
+        ('lock_wait_ms', 'Agent Lock Wait'),
         ('exec_ms', 'Agent Execute'),
         ('detect_ms', 'Sync Detect'),
         ('push_ms', 'Ditto Patch'),

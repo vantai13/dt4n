@@ -22,6 +22,7 @@ STAGES = {
     'UI_ACK': 'ui_ack',
     'WAIT_STATE': 'wait',
     'RECEIVE': 'agent_receive',
+    'LOCK_WAIT': 'lock_wait',
     'EXECUTE_DONE': 'exec_done',
     'STATE_DETECTED': 'detect',
     'STATE_PUSHED': 'push',
@@ -83,6 +84,7 @@ def read_events(path):
             'expect': row.get('expect'),
             'http': row.get('http'),
             'timed_out': row.get('timedOut'),
+            'wait_ms': row.get('waitMs'),
             'detail': row.get('detail'),
             'line': line,
         })
@@ -118,6 +120,11 @@ def group_events(events, window_seconds):
             if stage == 'ditto_response':
                 group['http'] = event.get('http')
                 group['timed_out'] = event.get('timed_out')
+            if stage == 'lock_wait':
+                try:
+                    group['lock_wait_ms'] = int(float(event.get('wait_ms')))
+                except (TypeError, ValueError):
+                    pass
             continue
 
         if stage in ('detect', 'push'):
@@ -195,6 +202,7 @@ def metrics_for_group(group):
         'expect': group.get('expect', '-'),
         'ack_ms': duration_ms(click_time, response_time),
         'route_ms': duration_ms(click_time, receive_time),
+        'lock_wait_ms': group.get('lock_wait_ms'),
         'exec_ms': duration_ms(receive_time, exec_time),
         'detect_ms': duration_ms(exec_time, detect_time),
         'push_ms': duration_ms(detect_time, push_time),
@@ -207,8 +215,8 @@ def metrics_for_group(group):
 def print_table(groups, limit):
     complete = [g for g in groups if 'click' in g or 'exec_done' in g]
     rows = complete[-limit:] if limit else complete
-    print('cmd          target                 ack   route   exec  detect  push   ui    total  note')
-    print('-' * 101)
+    print('cmd          target                 ack   route   lock   exec  detect  push   ui    total  note')
+    print('-' * 108)
     for group in rows:
         m = metrics_for_group(group)
 
@@ -217,6 +225,7 @@ def print_table(groups, limit):
             short_target(m['target'])[:22],
             fmt_ms(m['ack_ms']),
             fmt_ms(m['route_ms']),
+            fmt_ms(m['lock_wait_ms']),
             fmt_ms(m['exec_ms']),
             fmt_ms(m['detect_ms']),
             fmt_ms(m['push_ms']),

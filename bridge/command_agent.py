@@ -25,6 +25,7 @@ VÌ SAO CHUNG TIẾN TRÌNH với Mininet:
 """
 
 import json
+import codecs
 import datetime
 import logging
 import threading
@@ -51,12 +52,18 @@ INBOX_SSE_URL = '%s/things/%s/inbox/messages' % (DITTO_BASE_URL, CONTROLLER_THIN
 # TỰ viết vòng reconnect (khác EventSource của trình duyệt tự làm giúp).
 RECONNECT_DELAY = 2.0     # giây — chờ trước khi mở lại stream sau khi đứt
 SSE_READ_TIMEOUT = None   # None = không timeout đọc; stream giữ mở chờ event
+SSE_CHUNK_SIZE = 1        # đọc SSE từng byte để tránh iter_lines giữ event trong buffer
 
 AUDIT_PATH = 'logs/command_agent_audit.log'   # JSON-mỗi-dòng (JSONL)
 
 # Ngưỡng bandwidth hợp lệ (Mbps). Chặn giá trị điên rồ gây hành vi lạ ở tc.
 BW_MIN = 0
 BW_MAX = 100
+
+# Switch restart is asynchronous in Mininet/OVS: sw.start() creates the bridge
+# and controller rows, but OpenFlow connection can settle later.
+SWITCH_CONNECT_TIMEOUT = 12.0
+SWITCH_CONNECT_POLL = 0.3
 
 # DEDUP: SSE/live-message có thể giao lại cùng một command. Mỗi correlation-id
 # chỉ được thực thi một lần; các bản lặp được ack OK nhưng không chạm Mininet.
@@ -73,18 +80,28 @@ def _reject(code, reason):
     return (False, code, reason)
 
 
-def already_processed(cid):
-    """True nếu correlation-id đã xử lý trước đó, False nếu lần đầu."""
+def processed_result(cid):
+    """Return previous result tuple for correlation-id, or None if first time."""
     if not cid:
         log.warning('Message KHÔNG có correlation-id -> không dedup được.')
-        return False
+        return None
     with _processed_lock:
-        if cid in _processed_ids:
-            return True
-        _processed_ids[cid] = time.time()
+        item = _processed_ids.get(cid)
+        if item is None:
+            return None
+        if isinstance(item, dict):
+            return item.get('result')
+        return _ok('duplicate ignored (already executed)')
+
+
+def remember_processed(cid, result):
+    """Remember the exact result so redeliveries get the same response."""
+    if not cid:
+        return
+    with _processed_lock:
+        _processed_ids[cid] = {'ts': time.time(), 'result': result}
         while len(_processed_ids) > _PROCESSED_MAX:
             _processed_ids.popitem(last=False)
-        return False
 
 
 def audit(correlation_id, subject, target, params, result, reason=None):
@@ -142,6 +159,60 @@ def _resolve_switch(net, thing_id):
         if sw.name == name:
             return sw
     return None
+
+
+def _controller_target(controller):
+    protocol = getattr(controller, 'protocol', 'tcp')
+    ip = controller.IP() if hasattr(controller, 'IP') else getattr(controller, 'ip', '127.0.0.1')
+    port = getattr(controller, 'port', 6653) or 6653
+    return '%s:%s:%s' % (protocol, ip, port)
+
+
+def _controller_targets(controllers):
+    return [_controller_target(c) for c in (controllers or [])]
+
+
+def _switch_connected(sw):
+    try:
+        return bool(sw.connected())
+    except Exception as e:
+        log.warning('Kiểm tra switch.connected() lỗi cho %s: %s', sw.name, e)
+        return False
+
+
+def _switch_diag(sw):
+    """Best-effort OVS diagnostics for logs; never fail command handling."""
+    rows = []
+    for label, cmd in (
+            ('controllers', 'ovs-vsctl get-controller %s' % sw.name),
+            ('ports', 'ovs-vsctl list-ports %s' % sw.name),
+            ('bridge', 'ovs-vsctl br-exists %s; echo $?' % sw.name)):
+        try:
+            out = sw.cmd(cmd).strip().replace('\n', '|')
+        except Exception as e:
+            out = 'error:%s' % e
+        rows.append('%s=%s' % (label, out[:180]))
+    return '; '.join(rows)
+
+
+def _reattach_switch_controllers(sw, controllers):
+    targets = _controller_targets(controllers)
+    if not targets:
+        return []
+    # sw.start(net.controllers) should configure this already. Re-applying it
+    # makes restart behavior explicit after sw.stop() deletes the bridge.
+    sw.cmd('ovs-vsctl set-controller %s %s' % (sw.name, ' '.join(targets)))
+    return targets
+
+
+def _wait_switch_connected(sw, timeout=SWITCH_CONNECT_TIMEOUT):
+    started = time.monotonic()
+    deadline = started + timeout
+    while time.monotonic() < deadline:
+        if _switch_connected(sw):
+            return True, (time.monotonic() - started)
+        time.sleep(SWITCH_CONNECT_POLL)
+    return _switch_connected(sw), (time.monotonic() - started)
 
 
 def h_disable_link(net, target, params):
@@ -217,7 +288,23 @@ def h_enable_switch(net, target, params):
         return _reject(404, 'target not found: %s' % target)
     sw.start(net.controllers)
     sw.dt4n_admin_down = False
-    return _ok('switch %s -> up' % sw.name)
+    targets = _reattach_switch_controllers(sw, net.controllers)
+    connected, waited = _wait_switch_connected(sw)
+    if connected:
+        flow_event('AGENT', 'SWITCH_CONNECTED', target=target,
+                   detail='switch %s connected' % sw.name,
+                   waitMs=int(round(waited * 1000)),
+                   controllers=targets)
+        return _ok('switch %s -> up (controller connected)' % sw.name)
+
+    diag = _switch_diag(sw)
+    flow_event('AGENT', 'SWITCH_CONNECT_TIMEOUT', target=target,
+               level='WARN',
+               detail=diag,
+               waitMs=int(round(waited * 1000)),
+               controllers=targets)
+    return _reject(504, 'switch %s started but not connected to controller: %s'
+                   % (sw.name, diag))
 
 
 HANDLERS = {
@@ -253,9 +340,13 @@ def parse_message_event(raw, event_name=None, sse_fields=None):
     sse_fields = sse_fields or {}
 
     if not isinstance(msg, dict):
+        correlation_id = (sse_fields.get('correlation-id')
+                          or sse_fields.get('correlationId'))
+        correlation_source = ('sse-field' if correlation_id is not None
+                              else 'missing')
         return {'subject': event_name, 'value': msg,
-                'correlation_id': (sse_fields.get('correlation-id')
-                                   or sse_fields.get('correlationId')),
+                'correlation_id': correlation_id,
+                'correlation_source': correlation_source,
                 'raw': msg}
 
     # Ditto có 2 dạng hay gặp:
@@ -273,17 +364,74 @@ def parse_message_event(raw, event_name=None, sse_fields=None):
         value = msg
 
     headers = msg.get('headers', {}) or {}
-    correlation_id = (sse_fields.get('correlation-id')
-                      or sse_fields.get('correlationId')
-                      or headers.get('correlation-id')
-                      or headers.get('correlationId')
-                      or msg.get('correlation-id')
-                      or msg.get('correlationId'))
+    correlation_source = 'missing'
+    correlation_id = None
+    for source, candidate in (
+            ('sse-field:correlation-id', sse_fields.get('correlation-id')),
+            ('sse-field:correlationId', sse_fields.get('correlationId')),
+            ('headers:correlation-id', headers.get('correlation-id')),
+            ('headers:correlationId', headers.get('correlationId')),
+            ('message:correlation-id', msg.get('correlation-id')),
+            ('message:correlationId', msg.get('correlationId'))):
+        if candidate is not None:
+            correlation_id = candidate
+            correlation_source = source
+            break
     if correlation_id is None and isinstance(value, dict):
-        correlation_id = value.get('clientCorrelationId')
+        body_cid = value.get('clientCorrelationId')
+        if body_cid is not None:
+            correlation_id = body_cid
+            correlation_source = 'payload:clientCorrelationId'
 
     return {'subject': subject, 'value': value,
-            'correlation_id': correlation_id, 'raw': msg}
+            'correlation_id': correlation_id,
+            'correlation_source': correlation_source,
+            'path': msg.get('path'),
+            'topic': topic,
+            'raw': msg}
+
+
+def _event_target(parsed):
+    value = parsed.get('value') if isinstance(parsed, dict) else None
+    return value.get('target') if isinstance(value, dict) else None
+
+
+def _iter_sse_lines(resp, stop_event=None):
+    """Yield SSE lines as soon as bytes arrive.
+
+    requests.iter_lines() can wait for its internal chunk buffer before yielding.
+    Ditto live messages are tiny, so a delayed yield can make commands look slow
+    even though the TCP stream already has the event. Reading tiny chunks and
+    splitting lines ourselves keeps command delivery responsive.
+    """
+    encoding = resp.encoding or 'utf-8'
+    decoder = codecs.getincrementaldecoder(encoding)(errors='replace')
+    buf = ''
+    for chunk in resp.iter_content(chunk_size=SSE_CHUNK_SIZE,
+                                   decode_unicode=True):
+        if stop_event is not None and stop_event.is_set():
+            return
+        if not chunk:
+            continue
+        if isinstance(chunk, bytes):
+            chunk = decoder.decode(chunk)
+            if not chunk:
+                continue
+        buf += chunk
+        while '\n' in buf:
+            line, buf = buf.split('\n', 1)
+            if line.endswith('\r'):
+                line = line[:-1]
+            yield line
+
+    tail = decoder.decode(b'', final=True)
+    if tail:
+        buf += tail
+
+    if buf:
+        if buf.endswith('\r'):
+            buf = buf[:-1]
+        yield buf
 
 
 def handle_command(parsed, net=None, net_lock=None):
@@ -299,14 +447,16 @@ def handle_command(parsed, net=None, net_lock=None):
               if k not in ('target', 'clientCorrelationId')} \
              if isinstance(value, dict) else {}
 
-    if already_processed(cid):
+    cached = processed_result(cid)
+    if cached is not None:
         reason = 'replay suppressed'
         log.warning('BỎ QUA lệnh LẶP [%s] %s target=%s',
                     cid, subject, target)
         audit(cid, subject, target, params, 'duplicate_ignored', reason)
         flow_event('AGENT', 'DUPLICATE_IGNORED', cid, subject, target,
-                   level='WARN', detail=reason, params=params)
-        return _ok('duplicate ignored (already executed)')
+                   level='WARN', detail=reason, params=params,
+                   code=cached[1], cachedDetail=cached[2])
+        return cached
 
     log.info('NHẬN LỆNH [%s] %s target=%s params=%s',
              cid, subject, target, params)
@@ -319,20 +469,30 @@ def handle_command(parsed, net=None, net_lock=None):
         audit(cid, subject, target, params, 'rejected', reason)
         flow_event('AGENT', 'REJECT', cid, subject, target,
                    level='WARN', detail=reason)
-        return _reject(400, reason)
+        result_tuple = _reject(400, reason)
+        remember_processed(cid, result_tuple)
+        return result_tuple
 
     if net is None:
         reason = 'agent chưa gắn net (chạy sai tiến trình?)'
         audit(cid, subject, target, params, 'error', reason)
         flow_event('AGENT', 'ERROR', cid, subject, target,
                    level='ERROR', detail=reason)
-        return _reject(500, reason)
+        result_tuple = _reject(500, reason)
+        remember_processed(cid, result_tuple)
+        return result_tuple
 
     try:
         # Khóa cả resolve + execute để trạng thái net không đổi giữa chừng.
         flow_event('AGENT', 'EXECUTE_START', cid, subject, target)
         if net_lock is not None:
+            lock_wait_started = time.monotonic()
             with net_lock:
+                wait_ms = (time.monotonic() - lock_wait_started) * 1000
+                log.info('LOCK_WAIT [%s] %s target=%s %.0fms',
+                         cid, subject, target, wait_ms)
+                flow_event('AGENT', 'LOCK_WAIT', cid, subject, target,
+                           waitMs=int(round(wait_ms)))
                 ok, code, detail = handler(net, target, params)
         else:
             ok, code, detail = handler(net, target, params)
@@ -341,7 +501,9 @@ def handle_command(parsed, net=None, net_lock=None):
         audit(cid, subject, target, params, 'error', str(e))
         flow_event('AGENT', 'EXECUTE_ERROR', cid, subject, target,
                    level='ERROR', detail=str(e))
-        return _reject(500, 'execution error: %s' % e)
+        result_tuple = _reject(500, 'execution error: %s' % e)
+        remember_processed(cid, result_tuple)
+        return result_tuple
 
     result = 'ok' if ok else 'rejected'
     log.info('%s [%s] %s target=%s -> %s',
@@ -351,10 +513,13 @@ def handle_command(parsed, net=None, net_lock=None):
                cid, subject, target,
                level='INFO' if ok else 'WARN',
                detail=detail, code=code)
-    return (ok, code, detail)
+    result_tuple = (ok, code, detail)
+    remember_processed(cid, result_tuple)
+    return result_tuple
 
 
-def send_response(session, thing_id, subject, correlation_id, http_code, detail, ok):
+def send_response(session, thing_id, subject, correlation_id, http_code, detail, ok,
+                  correlation_source=None, original_path=None, original_topic=None):
     """Gửi biên nhận tức thì cho lệnh đã xử lý, nếu stream cung cấp correlation-id.
 
     Không cập nhật twin state ở đây. State thật vẫn đi vòng Mininet -> Sync Agent
@@ -388,7 +553,10 @@ def send_response(session, thing_id, subject, correlation_id, http_code, detail,
     }
     try:
         flow_event('AGENT', 'RESPONSE_SEND', correlation_id, subject, thing_id,
-                   code=http_code, ok=ok)
+                   code=http_code, ok=ok,
+                   correlationSource=correlation_source,
+                   originalPath=original_path,
+                   originalTopic=original_topic)
         r = session.post(url, json=body, headers=headers, auth=DITTO_AUTH,
                          params={'timeout': 0}, timeout=HTTP_TIMEOUT)
         if r.status_code not in (200, 201, 202, 204):
@@ -409,7 +577,11 @@ def send_response(session, thing_id, subject, correlation_id, http_code, detail,
 def _stream_once(session, stop_event, net, net_lock):
     """Mở MỘT phiên SSE, đọc từng dòng cho tới khi đứt/stop. Trả về khi cần
     reconnect. Không tự ngủ — vòng ngoài lo reconnect delay."""
-    headers = {'Accept': 'text/event-stream'}
+    headers = {
+        'Accept': 'text/event-stream',
+        'Accept-Encoding': 'identity',
+        'Cache-Control': 'no-cache',
+    }
     with session.get(INBOX_SSE_URL, headers=headers, auth=DITTO_AUTH,
                      stream=True, timeout=SSE_READ_TIMEOUT) as resp:
         if resp.status_code != 200:
@@ -445,11 +617,12 @@ def _stream_once(session, stop_event, net, net_lock):
         flow_event('AGENT', 'SSE_OPEN', target=CONTROLLER_THING_ID,
                    detail=INBOX_SSE_URL)
 
-        # iter_lines: đọc TỪNG DÒNG khi nó tới (streaming). SSE gói event là
-        # một nhóm field "event:", "data:", có thể kèm metadata tùy Ditto version.
+        # SSE gói event là một nhóm field "event:", "data:", có thể kèm
+        # metadata tùy Ditto version. Đọc bằng _iter_sse_lines để tránh
+        # requests.iter_lines() giữ event nhỏ trong buffer nội bộ.
         fields = {}
         data_buf = []
-        for line in resp.iter_lines(decode_unicode=True):
+        for line in _iter_sse_lines(resp, stop_event=stop_event):
             if stop_event is not None and stop_event.is_set():
                 log.info('Nhận stop_event -> đóng SSE.')
                 return
@@ -466,6 +639,16 @@ def _stream_once(session, stop_event, net, net_lock):
                                                  event_name=fields.get('event'),
                                                  sse_fields=fields)
                     if parsed is not None:
+                        flow_event('AGENT', 'SSE_EVENT',
+                                   parsed.get('correlation_id'),
+                                   parsed.get('subject'),
+                                   _event_target(parsed),
+                                   eventName=fields.get('event'),
+                                   bytes=len(raw),
+                                   correlationSource=parsed.get('correlation_source'),
+                                   path=parsed.get('path'),
+                                   topic=parsed.get('topic'),
+                                   sseFields=sorted(k for k in fields if k != 'data'))
                         try:
                             ok, code, detail = handle_command(
                                 parsed, net=net, net_lock=net_lock)
@@ -474,7 +657,10 @@ def _stream_once(session, stop_event, net, net_lock):
                                           CONTROLLER_THING_ID,
                                           parsed.get('subject'),
                                           parsed.get('correlation_id'),
-                                          code, detail, ok)
+                                          code, detail, ok,
+                                          correlation_source=parsed.get('correlation_source'),
+                                          original_path=parsed.get('path'),
+                                          original_topic=parsed.get('topic'))
                         except Exception as e:
                             # 1 lệnh lỗi KHÔNG được làm sập stream (defensive).
                             log.exception('Xử lý lệnh lỗi (bỏ qua event): %s', e)

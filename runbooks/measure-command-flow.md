@@ -65,7 +65,8 @@ watch -n 1 '/usr/bin/python3 measurements/trace_latency.py --limit 10'
 Y nghia cac cot:
 
 - `route`: tu luc UI ghi `CLICK` den luc Command Agent ghi `RECEIVE`.
-- `exec`: tu `RECEIVE` den `EXECUTE_DONE`; day la thoi gian thao tac Mininet.
+- `lock`: thoi gian Command Agent cho `net_lock` sau khi da nhan lenh.
+- `exec`: tu `RECEIVE` den `EXECUTE_DONE`; day la tong thoi gian cho lock + thao tac Mininet.
 - `detect`: tu `EXECUTE_DONE` den `STATE_DETECTED`; day la thoi gian cho chu ky Sync Agent.
 - `push`: tu `STATE_DETECTED` den `STATE_PUSHED`; day la thoi gian patch len Ditto.
 - `ui`: tu `STATE_PUSHED` den `STATE_OK`; day la thoi gian Ditto SSE ve dashboard.
@@ -74,7 +75,8 @@ Y nghia cac cot:
 Cach ket luan nhanh:
 
 - `route` lon, vi du > 3000 ms: duong lenh xuong Ditto/SSE/Command Agent cham.
-- `exec` lon: thao tac Mininet cham hoac bi khoa `net_lock` qua lau.
+- `lock` lon: Command Agent da nhan lenh nhung dang bi Sync Agent/Mininet giu `net_lock`.
+- `exec` lon nhung `lock` nho: thao tac Mininet cham.
 - `detect` xap xi `period`: binh thuong voi polling; muon nhanh hon thi giam `--period`.
 - `push` lon: Ditto hoac mang local cham khi patch state.
 - `ui` lon, hoac note `RESYNC`/`TIMEOUT`: dashboard khong nhan realtime SSE tot.
@@ -83,10 +85,10 @@ Cach ket luan nhanh:
 Vi du tu log cu hien tai:
 
 ```text
-target                 route   exec  detect  push   ui    total  note
+target                 route   lock   exec  detect  push   ui    total  note
 ----------------------------------------------------------------------------------
-link-s2-srv1             6396     18    --      --      --     9740  Ditto response timeout
-link-s2-srv1             9151      4    --      --      --    10056  Ditto response timeout
+link-s2-srv1             6396      0     18    --      --      --     9740  Ditto response timeout
+link-s2-srv1             9151      0      4    --      --      --    10056  Ditto response timeout
 ```
 
 Ket luan cua bang nay: thao tac Mininet rat nhanh (`exec` 4-18 ms), nhung lenh
@@ -124,7 +126,8 @@ Moi trial gom 2 lenh: `disableLink` roi `enableLink`. Bang ket qua co cac cot:
 
 - `ack`: tu luc script gui POST den luc Ditto tra response message.
 - `route`: tu luc script gui lenh den luc Command Agent nhan lenh.
-- `exec`: Command Agent nhan lenh -> Mininet thuc thi xong.
+- `lock`: thoi gian Command Agent cho `net_lock` sau khi da nhan lenh.
+- `exec`: Command Agent nhan lenh -> Mininet thuc thi xong, gom ca thoi gian cho lock.
 - `detect`: Mininet thuc thi xong -> Sync Agent phat hien state mong doi.
 - `push`: Sync Agent phat hien -> patch Ditto xong.
 - `ui`: patch Ditto xong -> twin state dat mong doi.

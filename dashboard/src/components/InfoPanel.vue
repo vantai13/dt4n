@@ -79,21 +79,33 @@ const bw = ref(10)
 const sending = ref(false)
 const localCmdStatus = ref('')
 const cmdStatus = computed(() => props.cmdFeedback || localCmdStatus.value)
+const commandDone = computed(() => {
+  const text = cmdStatus.value || ''
+  return text.startsWith('Thành công')
+    || text.startsWith('Bị từ chối')
+    || text.startsWith('Lỗi')
+    || text.startsWith('Cảnh báo')
+    || text.startsWith('Đã gửi lệnh; chưa có trạng thái')
+})
 const nodeDisableSubject = computed(() =>
   node.value?.type === 'switch' ? 'disableSwitch' : 'disableHost')
 const nodeEnableSubject = computed(() =>
   node.value?.type === 'switch' ? 'enableSwitch' : 'enableHost')
 
-watch(edge, (e) => {
-  if (e && e.bwMbps != null) bw.value = e.bwMbps
+watch(() => props.selectedEdgeId, () => {
+  if (edge.value?.bwMbps != null) bw.value = edge.value.bwMbps
 }, { immediate: true })
+
+watch(commandDone, (done) => {
+  if (done) sending.value = false
+})
 
 function emitCmd(subject, target, params = {}) {
   if (sending.value) return
   sending.value = true
   localCmdStatus.value = 'Đang gửi lệnh...'
   emit('command', { subject, target, params })
-  setTimeout(() => { sending.value = false }, 6500)
+  setTimeout(() => { sending.value = false }, 50000)
 }
 </script>
 

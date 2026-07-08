@@ -143,10 +143,120 @@ parsed = parse_message_event(
 )
 check('Command Agent lấy correlation từ payload UI',
       parsed.get('correlation_id') == 'cid-ui-1')
+check('Command Agent ghi rõ fallback correlation từ payload',
+      parsed.get('correlation_source') == 'payload:clientCorrelationId')
 check('subject lấy từ SSE event_name',
       parsed.get('subject') == 'disableLink')
+parsed_header = parse_message_event(
+    '{"headers":{"correlation-id":"cid-header"},"path":"/inbox/messages/disableLink",'
+    '"value":{"target":"org.dt4n:link-h1-s1","clientCorrelationId":"cid-body"}}',
+    event_name='disableLink',
+)
+check('Command Agent ưu tiên correlation-id trong headers',
+      parsed_header.get('correlation_id') == 'cid-header')
+check('Command Agent ghi rõ correlation lấy từ headers',
+      parsed_header.get('correlation_source') == 'headers:correlation-id')
 
-print('\n== TEST 6: command replay dedup ==')
+print('\n== TEST 6: command SSE raw reader ==')
+
+
+class _FakeSseResponse:
+    encoding = 'utf-8'
+
+    def __init__(self, chunks):
+        self.chunks = chunks
+
+    def iter_content(self, chunk_size=1, decode_unicode=True):
+        return iter(self.chunks)
+
+
+sse_lines = list(command_agent_mod._iter_sse_lines(_FakeSseResponse([
+    b'event: disableLink\r\n',
+    b'data: {"target":"org.dt4n:link-h1-s1"}\r\n\r\n',
+])))
+check('SSE reader tự tách dòng CRLF và dòng trống kết event',
+      sse_lines == [
+          'event: disableLink',
+          'data: {"target":"org.dt4n:link-h1-s1"}',
+          '',
+      ])
+unicode_event = 'data: {"note":"đã nhận"}\n\n'.encode('utf-8')
+split_at = unicode_event.index('đ'.encode('utf-8')) + 1
+unicode_lines = list(command_agent_mod._iter_sse_lines(_FakeSseResponse([
+    unicode_event[:split_at],
+    unicode_event[split_at:],
+])))
+check('SSE reader giữ đúng UTF-8 khi chunk cắt giữa ký tự',
+      unicode_lines == ['data: {"note":"đã nhận"}', ''])
+
+print('\n== TEST 7: enableSwitch chỉ OK khi controller connected ==')
+
+
+class _FakeController:
+    protocol = 'tcp'
+    port = 6653
+
+    def IP(self):
+        return '127.0.0.1'
+
+
+class _FakeCommandSwitch(_FakeNode):
+    def __init__(self, name, connected_after=1):
+        super().__init__(name)
+        self.connected_after = connected_after
+        self.connected_checks = 0
+        self.commands = []
+        self.started = False
+
+    def start(self, controllers):
+        self.started = True
+        self.controllers = controllers
+
+    def connected(self):
+        self.connected_checks += 1
+        if self.connected_after is None:
+            return False
+        return self.connected_checks > self.connected_after
+
+    def cmd(self, command):
+        self.commands.append(command)
+        if command.startswith('ovs-vsctl get-controller'):
+            return 'tcp:127.0.0.1:6653\n'
+        if command.startswith('ovs-vsctl list-ports'):
+            return 's1-eth1\n'
+        if command.startswith('ovs-vsctl br-exists'):
+            return '0\n'
+        return ''
+
+
+old_timeout = command_agent_mod.SWITCH_CONNECT_TIMEOUT
+old_poll = command_agent_mod.SWITCH_CONNECT_POLL
+command_agent_mod.SWITCH_CONNECT_TIMEOUT = 0.05
+command_agent_mod.SWITCH_CONNECT_POLL = 0.001
+try:
+    sw_ok = _FakeCommandSwitch('s1', connected_after=1)
+    net_ok = types.SimpleNamespace(switches=[sw_ok],
+                                   controllers=[_FakeController()])
+    ok_result = command_agent_mod.h_enable_switch(
+        net_ok, '%s:switch-s1' % NAMESPACE, {})
+    check('enableSwitch chờ đến khi connected rồi mới OK',
+          ok_result[0] is True and sw_ok.started)
+    check('enableSwitch re-attach controller sau start',
+          any('set-controller s1 tcp:127.0.0.1:6653' in c
+              for c in sw_ok.commands))
+
+    sw_fail = _FakeCommandSwitch('s1', connected_after=None)
+    net_fail = types.SimpleNamespace(switches=[sw_fail],
+                                     controllers=[_FakeController()])
+    fail_result = command_agent_mod.h_enable_switch(
+        net_fail, '%s:switch-s1' % NAMESPACE, {})
+    check('enableSwitch không báo up nếu controller chưa connected',
+          fail_result[0] is False and fail_result[1] == 504)
+finally:
+    command_agent_mod.SWITCH_CONNECT_TIMEOUT = old_timeout
+    command_agent_mod.SWITCH_CONNECT_POLL = old_poll
+
+print('\n== TEST 8: command replay dedup ==')
 command_agent_mod.AUDIT_PATH = '/tmp/dt4n_command_agent_audit_test.log'
 dup_cid = 'cid-dup-test-phase2-5'
 first = handle_command({
@@ -160,8 +270,8 @@ second = handle_command({
     'correlation_id': dup_cid,
 })
 check('lần đầu command lạ vẫn bị reject', first[0] is False and first[1] == 400)
-check('lần lặp cùng cid được bỏ qua như OK',
-      second[0] is True and second[2].startswith('duplicate ignored'))
+check('lần lặp cùng cid trả lại đúng kết quả reject cũ',
+      second[0] is False and second[1] == 400)
 
 
 class _TrackingLock:
@@ -213,7 +323,7 @@ class _PingTrackingCollector(Collector):
         return {'latency_ms': 1.23, 'packet_loss_pct': 0.0}
 
 
-print('\n== TEST 7: collector không giữ lock khi ping ==')
+print('\n== TEST 9: collector không giữ lock khi ping ==')
 tracking_lock = _TrackingLock()
 collector = _PingTrackingCollector(_FakeNet(), ping_every=1,
                                    net_lock=tracking_lock)
