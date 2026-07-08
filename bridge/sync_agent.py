@@ -13,6 +13,7 @@ import time
 
 from bridge.adapter import collector_to_things
 from bridge.differ import diff_snapshot, DEFAULT_TOL
+from bridge.flow_log import flow_event
 from bridge.pusher import patch_thing, make_session
 
 try:
@@ -37,6 +38,14 @@ def build_full_changes(things_now):
 def should_reconcile(cycle, reconcile_every):
     """True nếu chu kỳ này cần full reconciliation. 0 = tắt."""
     return reconcile_every > 0 and cycle % reconcile_every == 0
+
+
+def status_state_in(patch):
+    """Return the changed status.state from a patch, or None if absent."""
+    try:
+        return patch['features']['status']['properties']['state']
+    except (KeyError, TypeError):
+        return None
 
 
 def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
@@ -85,9 +94,16 @@ def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
                 # không đổi -> prev đã đúng, giữ nguyên (hoặc set lần đầu)
                 prev_things[tid] = data
                 continue
+            new_state = status_state_in(patch)
+            if new_state is not None:
+                flow_event('SYNC', 'STATE_DETECTED', target=tid,
+                           detail=new_state, cycle=cycle)
             if patch_thing(tid, patch, session=session):
                 n_ok += 1
                 prev_things[tid] = data        # CHỈ cập nhật prev khi PATCH OK
+                if new_state is not None:
+                    flow_event('SYNC', 'STATE_PUSHED', target=tid,
+                               detail=new_state, cycle=cycle)
             else:
                 n_fail += 1
                 # KHÔNG cập nhật prev[tid] -> chu kỳ sau diff lại ra changes -> tự retry

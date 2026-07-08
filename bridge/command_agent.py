@@ -133,6 +133,17 @@ def _resolve_host(net, thing_id):
     return None
 
 
+def _resolve_switch(net, thing_id):
+    """org.dt4n:switch-<name> -> đối tượng switch trong net, hoặc None."""
+    if not isinstance(thing_id, str) or ':switch-' not in thing_id:
+        return None
+    name = thing_id.split(':switch-', 1)[-1]
+    for sw in net.switches:
+        if sw.name == name:
+            return sw
+    return None
+
+
 def h_disable_link(net, target, params):
     ln = _resolve_link(net, target)
     if ln is None:
@@ -163,8 +174,13 @@ def h_set_bandwidth(net, target, params):
     if not (BW_MIN < bw <= BW_MAX):
         return _reject(400, 'bw out of range (%d, %d], got %s' %
                        (BW_MIN, BW_MAX, bw))
-    ln.intf1.config(bw=bw)
-    ln.intf2.config(bw=bw)
+    cfg = {'bw': float(bw)}
+    delay = getattr(ln, 'dt4n_delay', None)
+    if delay:
+        cfg['delay'] = delay
+    ln.intf1.config(**cfg)
+    ln.intf2.config(**cfg)
+    ln.dt4n_bw = float(bw)
     return _ok('link bw -> %s Mbps' % bw)
 
 
@@ -186,12 +202,32 @@ def h_enable_host(net, target, params):
     return _ok('host %s -> up' % h.name)
 
 
+def h_disable_switch(net, target, params):
+    sw = _resolve_switch(net, target)
+    if sw is None:
+        return _reject(404, 'target not found: %s' % target)
+    sw.dt4n_admin_down = True
+    sw.stop(deleteIntfs=False)
+    return _ok('switch %s -> down' % sw.name)
+
+
+def h_enable_switch(net, target, params):
+    sw = _resolve_switch(net, target)
+    if sw is None:
+        return _reject(404, 'target not found: %s' % target)
+    sw.start(net.controllers)
+    sw.dt4n_admin_down = False
+    return _ok('switch %s -> up' % sw.name)
+
+
 HANDLERS = {
     'disableLink': h_disable_link,
     'enableLink': h_enable_link,
     'setBandwidth': h_set_bandwidth,
     'disableHost': h_disable_host,
     'enableHost': h_enable_host,
+    'disableSwitch': h_disable_switch,
+    'enableSwitch': h_enable_switch,
 }
 
 

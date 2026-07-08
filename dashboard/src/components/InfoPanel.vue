@@ -25,11 +25,25 @@
         <p><span>From:</span> <strong>{{ edge.from }}</strong></p>
         <p><span>To:</span> <strong>{{ edge.to }}</strong></p>
         <p><span>Status:</span> <strong>{{ edge.state }}</strong></p>
+        <p v-if="edge.bwMbps != null"><span>Bandwidth:</span> <strong>{{ edge.bwMbps }} Mbps</strong></p>
       </template>
 
       <template v-else>
         <p class="placeholder">(Click a node or link to view details)</p>
       </template>
+    </div>
+
+    <div class="info-card" v-if="node">
+      <h4>Điều khiển {{ node.type === 'switch' ? 'Switch' : 'Host' }}</h4>
+      <button v-if="node.state !== 'down'" class="cmd-btn danger" :disabled="sending"
+              @click="emitCmd(nodeDisableSubject, node.rawId)">
+        Tắt {{ node.type }}
+      </button>
+      <button v-else class="cmd-btn ok" :disabled="sending"
+              @click="emitCmd(nodeEnableSubject, node.rawId)">
+        Bật lại {{ node.type }}
+      </button>
+      <p v-if="cmdStatus" class="cmd-status">{{ cmdStatus }}</p>
     </div>
 
     <div class="info-card" v-if="edge">
@@ -49,7 +63,7 @@
 </template>
 
 <script setup>
-import { computed, ref } from 'vue'
+import { computed, ref, watch } from 'vue'
 
 const props = defineProps(['graph', 'selectedNodeId', 'selectedEdgeId', 'cmdFeedback'])
 const emit = defineEmits(['command'])
@@ -65,6 +79,14 @@ const bw = ref(10)
 const sending = ref(false)
 const localCmdStatus = ref('')
 const cmdStatus = computed(() => props.cmdFeedback || localCmdStatus.value)
+const nodeDisableSubject = computed(() =>
+  node.value?.type === 'switch' ? 'disableSwitch' : 'disableHost')
+const nodeEnableSubject = computed(() =>
+  node.value?.type === 'switch' ? 'enableSwitch' : 'enableHost')
+
+watch(edge, (e) => {
+  if (e && e.bwMbps != null) bw.value = e.bwMbps
+}, { immediate: true })
 
 function emitCmd(subject, target, params = {}) {
   if (sending.value) return
@@ -76,7 +98,7 @@ function emitCmd(subject, target, params = {}) {
 </script>
 
 <style scoped>
-.info-panel { width: 340px; flex-shrink: 0; background: #1e293b; padding: 1.5rem;
+.info-panel { min-width: 0; background: #1e293b; padding: 1.5rem;
   color: #94a3b8; border-left: 1px solid #334155; overflow-y: auto; }
 h3 { color: #00F7F7; text-transform: uppercase; letter-spacing: 1px;
   text-shadow: 0 0 10px rgba(0,247,247,0.7); }

@@ -85,6 +85,15 @@ def build_net(clients=3, bw_backbone=20, bw_bottleneck=5,
                   controller=None, autoSetMacs=True, waitConnected=True)
     net.addController('c0', controller=RemoteController,
                       ip=controller_ip, port=controller_port)
+
+    # Stamp configured capacity on runtime links so the twin can reflect it.
+    # Keep delay too: TCIntf.config rebuilds qdisc, so bandwidth changes must
+    # pass the original delay back or the link silently loses its latency.
+    bottleneck = {'s2', 's3'}
+    for link in net.links:
+        a, b = link.intf1.node.name, link.intf2.node.name
+        link.dt4n_bw = bw_bottleneck if {a, b} == bottleneck else bw_backbone
+        link.dt4n_delay = delay
     return net
 
 

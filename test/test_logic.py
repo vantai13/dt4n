@@ -5,7 +5,8 @@ Chứng minh: parse /proc/net/dev, parse ping, tính rate đều đúng.
 
 import sys
 sys.path.insert(0, 'bridge')
-from collector import parse_proc_net_dev, parse_ping, compute_rate, parse_ovs_dump_ports_state
+from collector import (parse_proc_net_dev, parse_ping, compute_rate,
+                       parse_ovs_dump_ports_state, link_configured_bw)
 
 passed = failed = 0
 def check(name, got, want):
@@ -72,6 +73,28 @@ ovs_down = """ovs-ofctl: s1: failed to connect to socket (Broken pipe)"""
 check("dump-ports hợp lệ -> up", parse_ovs_dump_ports_state(ovs_ok), 'up')
 check("dump-ports lỗi kết nối -> down", parse_ovs_dump_ports_state(ovs_down), 'down')
 check("output rỗng -> unknown", parse_ovs_dump_ports_state(''), 'unknown')
+
+print("\n== TEST 5: link_configured_bw (đọc capacity link) ==")
+
+class FakeIntf:
+    def __init__(self, bw=None):
+        self.params = {}
+        if bw is not None:
+            self.params['bw'] = bw
+
+
+class FakeLink:
+    def __init__(self, bw_attr=None, bw_param=None):
+        self.intf1 = FakeIntf(bw_param)
+        self.intf2 = FakeIntf()
+        if bw_attr is not None:
+            self.dt4n_bw = bw_attr
+
+
+check("ưu tiên dt4n_bw", link_configured_bw(FakeLink(bw_attr=10, bw_param=20)), 10.0)
+check("fallback intf.params['bw']", link_configured_bw(FakeLink(bw_param=20)), 20.0)
+check("bw không hợp lệ -> None", link_configured_bw(FakeLink(bw_attr='bad')), None)
+check("không có bw -> None", link_configured_bw(FakeLink()), None)
 
 print("\n" + "="*50)
 print("KẾT QUẢ: %d pass, %d fail" % (passed, failed))

@@ -146,12 +146,12 @@ watch(graphKey, () => {
 </script>
 
 <style scoped>
-.topology-view { flex: 1; padding: 1.5rem; background-color: #0f172a;
-                 color: #94a3b8; display: flex; flex-direction: column; }
+.topology-view { min-width: 0; min-height: 0; padding: 1.5rem; background-color: #0f172a;
+                 color: #94a3b8; display: flex; flex-direction: column; overflow: hidden; }
 h3 { color: #00F7F7; margin-bottom: 1rem; text-transform: uppercase;
      letter-spacing: 1.2px; font-weight: 700; text-shadow: 0 0 10px rgba(0,247,247,0.5); }
-.diagram-container { flex: 1; border: 1px solid #334155; border-radius: 12px;
-     background-color: #0f172a; min-height: 600px; overflow: hidden;
+.diagram-container { flex: 1; min-height: 0; border: 1px solid #334155; border-radius: 12px;
+     background-color: #0f172a; overflow: hidden;
      border-bottom: 3px solid #00F7F7; box-shadow: 0 6px 20px rgba(0,247,247,0.3); }
 :deep(.vis-navigation) { display: none !important; }
 </style>

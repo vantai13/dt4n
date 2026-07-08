@@ -149,6 +149,29 @@ def parse_ovs_dump_ports_state(text):
     return 'unknown'
 
 
+def link_configured_bw(link):
+    """Return configured link bandwidth in Mbps, or None if unknown.
+
+    Prefer dt4n_bw, stamped by topology/command agent. Fall back to Mininet's
+    interface params so pure topology-created links still expose their capacity.
+    """
+    bw = getattr(link, 'dt4n_bw', None)
+    if bw is not None:
+        try:
+            return float(bw)
+        except (TypeError, ValueError):
+            return None
+
+    for intf in (getattr(link, 'intf1', None), getattr(link, 'intf2', None)):
+        params = getattr(intf, 'params', None)
+        if isinstance(params, dict) and params.get('bw') is not None:
+            try:
+                return float(params['bw'])
+            except (TypeError, ValueError):
+                pass
+    return None
+
+
 def utc_now_iso():
     """Timestamp ISO 8601 UTC (vd '2026-05-30T10:00:00Z') — đúng định dạng Ditto."""
     return datetime.datetime.now(datetime.timezone.utc).strftime('%Y-%m-%dT%H:%M:%SZ')
@@ -287,19 +310,34 @@ class Collector:
             tx_rate = compute_rate(tx, prev[1], dt)
         self._prev[name] = (rx, tx, now_ts)       # lưu cho chu kỳ sau
 
+        # Trạng thái vật lý thật của host: interface chính có cờ UP hay không.
+        default_intf = getattr(host, 'defaultIntf', None)
+        intf = default_intf() if callable(default_intf) else None
+        is_up = intf.isUp() if (intf is not None and hasattr(intf, 'isUp')) else True
+
         return {
             'attributes': {'type': 'host',
                            'role': 'server' if name in self.server_names else 'client'},
             'features': {
                 'traffic': {'rxBytes': rx, 'txBytes': tx,
                             'rxRate': round(rx_rate, 2), 'txRate': round(tx_rate, 2)},
-                'status': {'state': 'up'},
+                'status': {'state': 'up' if is_up else 'down'},
             },
         }
 
     # ---- thu thập 1 SWITCH (ở ROOT namespace, tránh shell tương tác) ----
     def collect_switch(self, switch):
         name = switch.name
+
+        if getattr(switch, 'dt4n_admin_down', False):
+            return {
+                'attributes': {'type': 'switch'},
+                'features': {
+                    'status': {'state': 'down'},
+                    'portStatsRaw': {'dump': 'admin down (switch stopped)'},
+                },
+            }
+
         try:
             # switch.cmd('ovs-ofctl ...') có thể treo/đụng OpenFlow version khi
             # Mininet CLI và Command Agent cùng sống trong một tiến trình. Dùng
@@ -336,9 +374,14 @@ class Collector:
         up1 = link.intf1.isUp() if hasattr(link.intf1, 'isUp') else True
         up2 = link.intf2.isUp() if hasattr(link.intf2, 'isUp') else True
         state = 'up' if up1 and up2 else 'down'
+
+        features = {'status': {'state': state}}
+        bw = link_configured_bw(link)
+        if bw is not None:
+            features['capacity'] = {'bwMbps': bw}
         return {
             'attributes': {'type': 'link', 'endpointA': a, 'endpointB': b},
-            'features': {'status': {'state': state}},
+            'features': features,
         }
 
     # ---- gom TẤT CẢ thành 1 snapshot ----

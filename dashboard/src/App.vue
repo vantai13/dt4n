@@ -3,6 +3,7 @@ import { ref, onMounted, onUnmounted } from 'vue'
 import TopologyView from './components/TopologyView.vue'
 import InfoPanel from './components/InfoPanel.vue'
 import AlertPanel from './components/AlertPanel.vue'
+import HistoryPanel from './components/HistoryPanel.vue'
 import { fetchAllThings } from './services/dittoClient.js'
 import { openThingStream } from './services/sseClient.js'
 import { sendCommand, newCommandCorrelationId } from './services/commandClient.js'
@@ -21,6 +22,7 @@ const graph = ref({ nodes: [], edges: [] })   // dữ liệu ĐÃ dịch, cho To
 const status = ref('loading')
 const errorMsg = ref('')
 const live = ref(false)                        // đang nhận real-time?
+const showHistory = ref(false)
 const selectedNodeId = ref(null)
 const selectedEdgeId = ref(null)
 const cmdFeedback = ref('')
@@ -149,7 +151,7 @@ async function onCommand({ subject, target, params }) {
     cmdFeedback.value = timedOut
       ? 'Đã gửi, đang chờ mạng phản ánh...'
       : 'Đã nhận, đang chờ mạng phản ánh...'
-    watchForReflection(subject, target, correlationId)
+    watchForReflection(subject, target, params, correlationId)
   } catch (e) {
     cmdFeedback.value = 'Lỗi gửi lệnh: ' + e.message
     logUi('command.ui.error', { subject, target, error: e.message }, 'error')
@@ -160,10 +162,40 @@ function thingState(target) {
   return thingsById[target]?.features?.status?.properties?.state
 }
 
-async function watchForReflection(subject, target, correlationId = null) {
-  const expect = subject === 'disableLink' ? 'down'
-               : subject === 'enableLink' ? 'up' : null
-  if (!expect) {
+function thingBw(target) {
+  return thingsById[target]?.features?.capacity?.properties?.bwMbps
+}
+
+async function watchForReflection(subject, target, params = {}, correlationId = null) {
+  let matches = null
+  let expectDesc = null
+  let observed = () => null
+
+  const STATE_EXPECT = {
+    disableLink: 'down',
+    enableLink: 'up',
+    disableHost: 'down',
+    enableHost: 'up',
+    disableSwitch: 'down',
+    enableSwitch: 'up',
+  }
+
+  if (subject in STATE_EXPECT) {
+    const expect = STATE_EXPECT[subject]
+    matches = () => thingState(target) === expect
+    expectDesc = expect
+    observed = () => thingState(target)
+  } else if (subject === 'setBandwidth') {
+    const want = Number(params?.bw)
+    matches = () => {
+      const cur = Number(thingBw(target))
+      return Number.isFinite(cur) && Math.abs(cur - want) < 0.5
+    }
+    expectDesc = `bw=${params?.bw}`
+    observed = () => thingBw(target)
+  }
+
+  if (!matches) {
     cmdFeedback.value = 'Đã gửi lệnh; chưa có trạng thái phản ánh trực tiếp.'
     logUi('command.reflect.skipped', { correlationId, subject, target })
     return
@@ -175,20 +207,19 @@ async function watchForReflection(subject, target, correlationId = null) {
     correlationId,
     subject,
     target,
-    expect,
-    stateNow: thingState(target),
+    expect: expectDesc,
+    stateNow: observed(),
     timeoutMs: 20000,
   })
   while (Date.now() < deadline && token === reflectionToken) {
-    const state = thingState(target)
-    if (state === expect) {
+    if (matches()) {
       cmdFeedback.value = 'Thành công (mạng đã phản ánh).'
       logUi('command.reflect.success', {
         correlationId,
         subject,
         target,
-        expect,
-        state,
+        expect: expectDesc,
+        state: observed(),
       })
       return
     }
@@ -198,14 +229,14 @@ async function watchForReflection(subject, target, correlationId = null) {
   if (token !== reflectionToken) return
 
   try { await resync('command-reflection-timeout') } catch (_) { /* nếu resync lỗi, giữ cảnh báo bên dưới */ }
-  if (thingState(target) === expect) {
+  if (matches()) {
     cmdFeedback.value = 'Thành công (mạng đã phản ánh).'
     logUi('command.reflect.success_after_resync', {
       correlationId,
       subject,
       target,
-      expect,
-      state: thingState(target),
+      expect: expectDesc,
+      state: observed(),
     })
   } else {
     cmdFeedback.value = 'Cảnh báo: chưa thấy mạng phản ánh kết quả.'
@@ -213,8 +244,8 @@ async function watchForReflection(subject, target, correlationId = null) {
       correlationId,
       subject,
       target,
-      expect,
-      state: thingState(target),
+      expect: expectDesc,
+      state: observed(),
     }, 'warn')
   }
 }
@@ -224,9 +255,12 @@ async function watchForReflection(subject, target, correlationId = null) {
   <div class="app">
     <header class="app-header">
       <span class="brand">Digital Twin — Network Dashboard</span>
-      <span class="live" :class="{ on: live }">
-        <span class="dot"></span>{{ live ? 'LIVE' : 'OFFLINE' }}
-      </span>
+      <div class="header-right">
+        <button class="hist-toggle" @click="showHistory = true">🕑 Lịch sử</button>
+        <span class="live" :class="{ on: live }">
+          <span class="dot"></span>{{ live ? 'LIVE' : 'OFFLINE' }}
+        </span>
+      </div>
     </header>
 
     <div v-if="status === 'ready'" class="main">
@@ -258,6 +292,8 @@ async function watchForReflection(subject, target, correlationId = null) {
       <p>{{ errorMsg }}</p>
       <button class="reload" @click="loadTopology">↻ Thử lại</button>
     </div>
+
+    <HistoryPanel v-if="showHistory" @close="showHistory = false" />
   </div>
 </template>
 
@@ -268,6 +304,10 @@ body, html { margin: 0; height: 100%; font-family: Arial, sans-serif; background
   height: 60px; padding: 0 1.5rem; border-bottom: 1px solid #334155; }
 .brand { color: #00F7F7; font-size: 1.25rem; font-weight: 700;
   text-shadow: 0 0 8px rgba(0,247,247,0.4); }
+.header-right { display: flex; align-items: center; gap: 14px; }
+.hist-toggle { background: #1e293b; color: #00F7F7; border: 1px solid #334155;
+  border-radius: 6px; padding: 6px 12px; font-weight: 700; cursor: pointer; }
+.hist-toggle:hover { filter: brightness(1.25); }
 .reload { background: #00F7F7; color: #0f172a; border: none; border-radius: 6px;
   padding: 6px 14px; font-weight: 600; cursor: pointer; }
 .live { display: flex; align-items: center; gap: 6px; font-size: 0.8rem;
@@ -276,10 +316,23 @@ body, html { margin: 0; height: 100%; font-family: Arial, sans-serif; background
 .live .dot { width: 9px; height: 9px; border-radius: 50%; background: #64748b; }
 .live.on .dot { background: #22c55e; box-shadow: 0 0 8px #22c55e; animation: pulse 1.4s infinite; }
 @keyframes pulse { 0%,100% { opacity: 1; } 50% { opacity: 0.35; } }
-.main { display: flex; flex: 1; overflow: hidden; }
-.side { width: 340px; flex-shrink: 0; display: flex; flex-direction: column;
-  background: #1e293b; border-left: 1px solid #334155; overflow-y: auto; }
-.side > * { border-left: none; }
+.main {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) 360px;
+  flex: 1;
+  min-height: 0;
+  overflow: hidden;
+}
+.side {
+  display: grid;
+  grid-template-rows: auto minmax(0, 1fr);
+  min-width: 0;
+  min-height: 0;
+  background: #1e293b;
+  border-left: 1px solid #334155;
+  overflow: hidden;
+}
+.side > * { border-left: none; min-height: 0; }
 .center { display: flex; flex-direction: column; align-items: center; justify-content: center;
   height: calc(100vh - 60px); color: #94a3b8; gap: 1rem; padding: 2rem; text-align: center; }
 .center.error h2 { color: #f87171; margin: 0; }

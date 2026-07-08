@@ -21,6 +21,7 @@ import vue from '@vitejs/plugin-vue'
 const REPO_ROOT = fileURLToPath(new URL('..', import.meta.url))
 const UI_LOG_PATH = path.join(REPO_ROOT, 'logs', 'dashboard_ui.jsonl')
 const FLOW_LOG_PATH = path.join(REPO_ROOT, 'logs', 'command_flow.log')
+const AUDIT_LOG_PATH = path.join(REPO_ROOT, 'logs', 'command_agent_audit.log')
 
 function compactJson(value) {
   if (value === undefined || value === null) return ''
@@ -171,6 +172,29 @@ function dashboardUiLogPlugin() {
               res.end()
             })
           })
+        })
+      })
+
+      server.middlewares.use('/_dt4n/history', (req, res, next) => {
+        if (req.method !== 'GET') return next()
+
+        fs.readFile(AUDIT_LOG_PATH, 'utf8', (err, data) => {
+          res.setHeader('Content-Type', 'application/json')
+          if (err) {
+            res.end(JSON.stringify({ entries: [] }))
+            return
+          }
+
+          const lines = data.split('\n').filter(Boolean).slice(-200)
+          const entries = []
+          for (const line of lines) {
+            try {
+              entries.push(JSON.parse(line))
+            } catch (_) {
+              // Bỏ qua dòng log hỏng để History vẫn mở được.
+            }
+          }
+          res.end(JSON.stringify({ entries: entries.reverse() }))
         })
       })
     },

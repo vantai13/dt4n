@@ -76,6 +76,7 @@ export function thingsToGraph(things) {
         to: b,
         state: prop(thing, 'status', 'state') || 'unknown',
         health: prop(thing, 'health', 'state') || 'unknown',
+        bwMbps: prop(thing, 'capacity', 'bwMbps') ?? null,
         raw: thing,
       })
     }

@@ -20,15 +20,15 @@ NGUYÊN TẮC THIẾT KẾ:
   - PRECEDENCE: khi nhiều điều kiện đúng, trạng thái XẤU NHẤT thắng (down > warning).
 
 HẠN CHẾ ĐÃ BIẾT (ghi vào báo cáo):
-  - Ngưỡng hiện CỐ ĐỊNH (hardcoded). Đúng cho link ~10Gbps, sai cho link khác.
+  - Ngưỡng hiện CỐ ĐỊNH (hardcoded) theo topo demo 20 Mbps, sai cho link khác.
     Hướng cải tiến: ngưỡng tương đối theo công suất link, hoặc cấu hình được.
 """
 
 # --- NGƯỠNG: gom về một chỗ (không rải rác) -> dễ chỉnh, dễ đưa ra config sau ---
 # rxRate/txRate collector trả về BYTES/GIÂY. Quy ra Mbps để so cho trực giác:
 #   Mbps = bytes_per_sec * 8 / 1_000_000
-HOST_WARN_MBPS = 800.0      # > 800 Mbps  -> warning (tải cao)
-HOST_CRIT_MBPS = 950.0      # > 950 Mbps  -> critical (sắp nghẽn, giả định link ~1Gbps)
+HOST_WARN_MBPS = 14.0       # > 70% link 20 Mbps -> warning (tải cao)
+HOST_CRIT_MBPS = 18.0       # > 90% link 20 Mbps -> critical (sắp nghẽn)
 
 PATH_WARN_LATENCY_MS = 50.0     # > 50ms   -> warning
 PATH_CRIT_LATENCY_MS = 150.0    # > 150ms  -> critical

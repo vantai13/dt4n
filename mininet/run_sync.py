@@ -92,10 +92,20 @@ def main():
                    help='chạy đo sync latency link down rồi thoát, không mở CLI')
     p.add_argument('--measure-command', action='store_true',
                    help='chạy đo command latency end-to-end rồi thoát, không mở CLI')
+    p.add_argument('--measure-flow', action='store_true',
+                   help='tự bật/tắt link qua Ditto và in latency từng chặng rồi thoát')
     p.add_argument('--trials', type=int, default=10,
                    help='số lần đo khi dùng --measure-latency/--measure-command')
     p.add_argument('--measure-link', default='h1-s1',
                    help='link để đo, dạng nodeA-nodeB, mặc định h1-s1')
+    p.add_argument('--flow-timeout', type=float, default=20.0,
+                   help='số giây chờ twin phản ánh mỗi lệnh khi --measure-flow')
+    p.add_argument('--flow-settle', type=float, default=1.0,
+                   help='số giây nghỉ giữa 2 lệnh khi --measure-flow')
+    p.add_argument('--flow-reset-log', action='store_true',
+                   help='xóa logs/command_flow.log trước khi --measure-flow')
+    p.add_argument('--flow-report', default='logs/command_flow_measure.log',
+                   help='file report dạng bảng khi --measure-flow')
     p.add_argument('--verify', action='store_true',
                    help='chạy nghiệm thu Phase 2 rồi thoát, không mở CLI')
     p.add_argument('--long', action='store_true',
@@ -114,8 +124,9 @@ def main():
     p.add_argument('--log-path', default='logs/run_sync.log',
                    help='file log runtime cho sync agent/pusher')
     a = p.parse_args()
-    if sum(bool(x) for x in (a.measure_latency, a.measure_command, a.verify)) > 1:
-        p.error('--measure-latency, --measure-command và --verify chỉ chạy một mode mỗi lần')
+    if sum(bool(x) for x in (a.measure_latency, a.measure_command,
+                             a.measure_flow, a.verify)) > 1:
+        p.error('--measure-latency, --measure-command, --measure-flow và --verify chỉ chạy một mode mỗi lần')
 
     configure_file_logging(a.log_path)
     log = logging.getLogger('run_sync')
@@ -180,6 +191,18 @@ def main():
             h, s = a.measure_link.split('-', 1)
             measure_command_latency(net, n_trials=a.trials, h=h, s=s,
                                     net_lock=net_lock)
+            return
+
+        if a.measure_flow:
+            # Cần cả Sync Agent + Command Agent, rồi tự gửi lệnh qua Ditto.
+            from measurements.measure_command_flow import main as measure_flow
+            time.sleep(max(2.0, a.period * 3))
+            h, s = a.measure_link.split('-', 1)
+            measure_flow(net, n_trials=a.trials, h=h, s=s,
+                         net_lock=net_lock, settle=a.flow_settle,
+                         reflection_timeout=a.flow_timeout,
+                         reset_log=a.flow_reset_log,
+                         report_path=a.flow_report)
             return
 
         if a.verify:
