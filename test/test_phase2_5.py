@@ -41,6 +41,9 @@ ensure_requests_module()
 
 from bridge.sync_agent import build_full_changes, should_reconcile  # noqa: E402
 from bridge.verify import values_match  # noqa: E402
+from bridge.bootstrap import entities_from_net, entities_from_spec  # noqa: E402
+from bridge.command_agent import parse_message_event  # noqa: E402
+from bridge.ditto_common import NAMESPACE, POLICY_ID  # noqa: E402
 
 
 passed = failed = 0
@@ -84,6 +87,62 @@ check('float lệch nhỏ tuyệt đối vẫn pass', values_match(100.0, 100.4,
 check('float lệch trong 5% vẫn pass', values_match(1000.0, 1040.0, tol_pct=5.0, tol_abs=1.0) is True)
 check('float lệch quá tolerance fail', values_match(1000.0, 1100.0, tol_pct=5.0, tol_abs=1.0) is False)
 check('ground truth 0 dùng tolerance tuyệt đối', values_match(0.0, 0.5, tol_abs=1.0) is True)
+
+print('\n== TEST 4: bootstrap sinh controller Thing ==')
+spec_entities = entities_from_spec(str(ROOT / 'ditto/topology_spec.json'))
+controllers = [e for e in spec_entities if e.get('kind') == 'controller']
+check('entities_from_spec có đúng 1 controller', len(controllers) == 1)
+if controllers:
+    controller = controllers[0]
+    check('controller thingId đúng namespace',
+          controller['thing_id'] == '%s:controller' % NAMESPACE)
+    check('controller dùng default policy',
+          controller['body'].get('policyId') == POLICY_ID)
+    check('controller type là command-sink',
+          controller['body'].get('attributes', {}).get('type') == 'controller'
+          and controller['body'].get('attributes', {}).get('role') == 'command-sink')
+
+
+class _FakeNode:
+    def __init__(self, name, ip='10.0.0.1'):
+        self.name = name
+        self._ip = ip
+
+    def IP(self):
+        return self._ip
+
+
+class _FakeIntf:
+    def __init__(self, node):
+        self.node = node
+
+
+class _FakeLink:
+    def __init__(self, a, b):
+        self.intf1 = _FakeIntf(a)
+        self.intf2 = _FakeIntf(b)
+
+
+host = _FakeNode('h1')
+switch = _FakeNode('s1')
+fake_net = types.SimpleNamespace(
+    hosts=[host],
+    switches=[switch],
+    links=[_FakeLink(host, switch)],
+)
+net_entities = entities_from_net(fake_net)
+check('entities_from_net có đúng 1 controller',
+      len([e for e in net_entities if e.get('kind') == 'controller']) == 1)
+
+print('\n== TEST 5: command correlation debug fallback ==')
+parsed = parse_message_event(
+    '{"target":"org.dt4n:link-h1-s1","clientCorrelationId":"cid-ui-1"}',
+    event_name='disableLink',
+)
+check('Command Agent lấy correlation từ payload UI',
+      parsed.get('correlation_id') == 'cid-ui-1')
+check('subject lấy từ SSE event_name',
+      parsed.get('subject') == 'disableLink')
 
 print('\n' + '=' * 50)
 print('KET QUA: %d pass, %d fail' % (passed, failed))

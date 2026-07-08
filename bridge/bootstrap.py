@@ -31,7 +31,7 @@ import sys
 import requests
 
 from bridge.ditto_common import (
-    DITTO_BASE_URL, DITTO_AUTH, POLICY_ID, HTTP_TIMEOUT,
+    DITTO_BASE_URL, DITTO_AUTH, NAMESPACE, POLICY_ID, HTTP_TIMEOUT,
     make_thing_id_host, make_thing_id_switch, make_thing_id_link,
 )
 
@@ -76,6 +76,28 @@ def _link_body(a, b):
     }
 
 
+def _controller_body():
+    """Controller Thing: inbox chung cho lệnh chiều xuống.
+
+    Nó không phản ánh thiết bị vật lý nào; Thing này tồn tại để dashboard POST
+    command message vào và Command Agent mở SSE đọc ra. Features tối thiểu giúp
+    debug/audit nhẹ mà không làm dashboard vẽ thêm node/edge.
+    """
+    return {
+        'policyId': POLICY_ID,
+        'attributes': {'type': 'controller', 'role': 'command-sink'},
+        'features': {
+            'command': {'properties': {'lastSubject': '', 'lastTs': ''}},
+        },
+    }
+
+
+def _append_controller(ents):
+    ents.append({'thing_id': '%s:controller' % NAMESPACE,
+                 'kind': 'controller', 'body': _controller_body()})
+    return ents
+
+
 def entities_from_net(net):
     """NGUỒN A: đọc từ Mininet `net` đang sống (cần Mininet)."""
     ents = []
@@ -95,7 +117,7 @@ def entities_from_net(net):
             continue
         seen.add(tid)
         ents.append({'thing_id': tid, 'kind': 'link', 'body': _link_body(a, b)})
-    return ents
+    return _append_controller(ents)
 
 
 def entities_from_spec(path):
@@ -121,7 +143,7 @@ def entities_from_spec(path):
             continue
         seen.add(tid)
         ents.append({'thing_id': tid, 'kind': 'link', 'body': _link_body(a, b)})
-    return ents
+    return _append_controller(ents)
 
 
 # ===========================================================================

@@ -5,7 +5,8 @@ import InfoPanel from './components/InfoPanel.vue'
 import AlertPanel from './components/AlertPanel.vue'
 import { fetchAllThings } from './services/dittoClient.js'
 import { openThingStream } from './services/sseClient.js'
-import { sendCommand } from './services/commandClient.js'
+import { sendCommand, newCommandCorrelationId } from './services/commandClient.js'
+import { logUi } from './services/debugLog.js'
 import { thingsToGraph, applyDelta } from './lib/translate.js'
 
 // ---------------------------------------------------------------------------
@@ -30,10 +31,28 @@ let thingsById = {}
 let reflectionToken = 0
 
 // Dựng lại state đầy đủ từ Ditto (dùng cho lần đầu VÀ mỗi lần re-sync).
-async function resync() {
-  const things = await fetchAllThings()        // FETCH snapshot đầy đủ
-  thingsById = Object.fromEntries(things.map(t => [t.thingId, t]))
-  rebuildGraph()
+async function resync(reason = 'manual') {
+  const startedAt = performance.now()
+  logUi('state.resync.start', { reason })
+  try {
+    const things = await fetchAllThings()      // FETCH snapshot đầy đủ
+    thingsById = Object.fromEntries(things.map(t => [t.thingId, t]))
+    rebuildGraph()
+    logUi('state.resync.done', {
+      reason,
+      things: things.length,
+      nodes: graph.value.nodes.length,
+      edges: graph.value.edges.length,
+      durationMs: Math.round(performance.now() - startedAt),
+    })
+  } catch (e) {
+    logUi('state.resync.error', {
+      reason,
+      error: e.message,
+      durationMs: Math.round(performance.now() - startedAt),
+    }, 'error')
+    throw e
+  }
 }
 
 // Dịch state -> graph (đồ thị vẽ TỪ state, đây là điểm mấu chốt kiến trúc).
@@ -46,12 +65,15 @@ function rebuildGraph() {
 
 async function loadTopology() {
   status.value = 'loading'
+  logUi('topology.load.start')
   try {
-    await resync()                             // snapshot ban đầu
+    await resync('initial-load')               // snapshot ban đầu
     startStream()                              // rồi mới nghe delta
+    logUi('topology.load.done')
   } catch (e) {
     status.value = 'error'
     errorMsg.value = e.message
+    logUi('topology.load.error', { error: e.message }, 'error')
   }
 }
 
@@ -68,9 +90,13 @@ function startStream() {
     // Kết nối (lại) OK -> RE-SYNC: lấy lại snapshot phòng khi bỏ lỡ delta lúc rớt.
     onOpen: async () => {
       live.value = true
-      try { await resync() } catch (_) { /* giữ state cũ nếu re-sync lỗi tạm */ }
+      logUi('sse.open')
+      try { await resync('sse-open') } catch (_) { /* giữ state cũ nếu re-sync lỗi tạm */ }
     },
-    onError: () => { live.value = false },      // EventSource sẽ tự thử lại
+    onError: () => {
+      live.value = false
+      logUi('sse.error', {}, 'warn')
+    },                                         // EventSource sẽ tự thử lại
   })
 }
 
@@ -90,9 +116,28 @@ const onAlertFocus = (a) => {
 
 async function onCommand({ subject, target, params }) {
   cmdFeedback.value = 'Đang thực thi...'
+  const correlationId = newCommandCorrelationId()
+  logUi('command.ui.click', {
+    correlationId,
+    subject,
+    target,
+    params,
+    stateBefore: thingState(target),
+  })
   try {
-    const { ok, timedOut, rejected, response, error } =
-      await sendCommand(subject, target, params)
+    const { ok, timedOut, rejected, response, error, httpStatus } =
+      await sendCommand(subject, target, params, correlationId)
+    logUi('command.ui.ack', {
+      correlationId,
+      subject,
+      target,
+      ok,
+      timedOut,
+      rejected,
+      httpStatus,
+      response,
+      error,
+    }, ok || timedOut ? 'info' : 'warn')
     if (rejected) {
       cmdFeedback.value = 'Bị từ chối: ' + (response?.result || response?.reason || 'lỗi')
       return
@@ -104,9 +149,10 @@ async function onCommand({ subject, target, params }) {
     cmdFeedback.value = timedOut
       ? 'Đã gửi, đang chờ mạng phản ánh...'
       : 'Đã nhận, đang chờ mạng phản ánh...'
-    watchForReflection(subject, target)
+    watchForReflection(subject, target, correlationId)
   } catch (e) {
     cmdFeedback.value = 'Lỗi gửi lệnh: ' + e.message
+    logUi('command.ui.error', { subject, target, error: e.message }, 'error')
   }
 }
 
@@ -114,20 +160,36 @@ function thingState(target) {
   return thingsById[target]?.features?.status?.properties?.state
 }
 
-async function watchForReflection(subject, target) {
+async function watchForReflection(subject, target, correlationId = null) {
   const expect = subject === 'disableLink' ? 'down'
                : subject === 'enableLink' ? 'up' : null
   if (!expect) {
     cmdFeedback.value = 'Đã gửi lệnh; chưa có trạng thái phản ánh trực tiếp.'
+    logUi('command.reflect.skipped', { correlationId, subject, target })
     return
   }
 
   const token = ++reflectionToken
   const deadline = Date.now() + 20000
+  logUi('command.reflect.wait_start', {
+    correlationId,
+    subject,
+    target,
+    expect,
+    stateNow: thingState(target),
+    timeoutMs: 20000,
+  })
   while (Date.now() < deadline && token === reflectionToken) {
     const state = thingState(target)
     if (state === expect) {
       cmdFeedback.value = 'Thành công (mạng đã phản ánh).'
+      logUi('command.reflect.success', {
+        correlationId,
+        subject,
+        target,
+        expect,
+        state,
+      })
       return
     }
     await new Promise(resolve => setTimeout(resolve, 500))
@@ -135,11 +197,25 @@ async function watchForReflection(subject, target) {
 
   if (token !== reflectionToken) return
 
-  try { await resync() } catch (_) { /* nếu resync lỗi, giữ cảnh báo bên dưới */ }
+  try { await resync('command-reflection-timeout') } catch (_) { /* nếu resync lỗi, giữ cảnh báo bên dưới */ }
   if (thingState(target) === expect) {
     cmdFeedback.value = 'Thành công (mạng đã phản ánh).'
+    logUi('command.reflect.success_after_resync', {
+      correlationId,
+      subject,
+      target,
+      expect,
+      state: thingState(target),
+    })
   } else {
     cmdFeedback.value = 'Cảnh báo: chưa thấy mạng phản ánh kết quả.'
+    logUi('command.reflect.timeout', {
+      correlationId,
+      subject,
+      target,
+      expect,
+      state: thingState(target),
+    }, 'warn')
   }
 }
 </script>

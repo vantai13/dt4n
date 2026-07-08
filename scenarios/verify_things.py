@@ -9,22 +9,21 @@ import sys
 import json
 import requests
 
+from bridge.bootstrap import entities_from_spec
 from bridge.ditto_common import (DITTO_BASE_URL, DITTO_AUTH, NAMESPACE, HTTP_TIMEOUT)
 
 
 def main(spec_path='ditto/topology_spec.json'):
-    spec = json.load(open(spec_path))
-    n_host = len(spec.get('hosts', []))
-    n_sw   = len(spec.get('switches', []))
-    # đếm link canonical (loại trùng)
-    seen = set()
-    for ln in spec.get('links', []):
-        seen.add(tuple(sorted([ln[0], ln[1]])))
-    n_link = len(seen)
-    expected = n_host + n_sw + n_link
+    entities = entities_from_spec(spec_path)
+    expected_ids = {e['thing_id'] for e in entities}
+    counts = {}
+    for e in entities:
+        counts[e['kind']] = counts.get(e['kind'], 0) + 1
+    expected = len(expected_ids)
 
-    print('Kỳ vọng từ spec: %d host + %d switch + %d link = %d Thing'
-          % (n_host, n_sw, n_link, expected))
+    print('Kỳ vọng từ spec/bootstrap: %d host + %d switch + %d link + %d controller = %d Thing'
+          % (counts.get('host', 0), counts.get('switch', 0),
+             counts.get('link', 0), counts.get('controller', 0), expected))
 
     # Đếm Thing thật trong namespace qua search API
     url = '%s/search/things' % DITTO_BASE_URL
@@ -34,12 +33,20 @@ def main(spec_path='ditto/topology_spec.json'):
         print('❌ search lỗi %d: %s' % (r.status_code, r.text[:200]))
         sys.exit(1)
     items = r.json().get('items', [])
+    actual_ids = {item.get('thingId') for item in items if item.get('thingId')}
     print('Thực tế trong Ditto: %d Thing' % len(items))
 
-    if len(items) == expected:
+    missing = sorted(expected_ids - actual_ids)
+    extra = sorted(actual_ids - expected_ids)
+    if not missing and not extra:
         print('✅ KHỚP — bootstrap đúng số lượng.')
     else:
-        print('⚠ LỆCH %d. Kiểm tra log bootstrap.' % (len(items) - expected))
+        print('⚠ LỆCH %d. Kiểm tra missing/extra bên dưới.'
+              % (len(actual_ids) - expected))
+        if missing:
+            print('  Thiếu: %s' % ', '.join(missing))
+        if extra:
+            print('  Thừa ngoài spec: %s' % ', '.join(extra))
 
     # GET 1 host xem cấu trúc
     if items:

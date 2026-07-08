@@ -74,7 +74,7 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--clients', type=int, default=3)
     p.add_argument('--period', type=float, default=1.0)
-    p.add_argument('--stp-wait', type=int, default=20)
+    p.add_argument('--stp-wait', type=int, default=30)
     p.add_argument('--ping-every', type=int, default=5,
                    help='đo latency mỗi N chu kỳ; 0 = tắt ping probe')
     p.add_argument('--reconcile-every', type=int, default=30,

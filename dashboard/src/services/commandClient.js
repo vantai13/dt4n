@@ -7,27 +7,41 @@
 //   correlation-id, trả response ①. KHÔNG biết gì về vẽ/merge (việc của App.vue).
 // ---------------------------------------------------------------------------
 
+import { logUi } from './debugLog.js'
+
 const NAMESPACE = import.meta.env.VITE_DITTO_NAMESPACE || 'org.dt4n'
 const DITTO_PREFIX = '/ditto/api/2'
 const CONTROLLER = `${NAMESPACE}:controller`
+const COMMAND_ACK_TIMEOUT_SECONDS = 3
 
 // Sinh correlation-id duy nhất mỗi lệnh (để ghép response ①). crypto.randomUUID
 // có sẵn trong trình duyệt hiện đại.
-function newCorrelationId() {
+export function newCommandCorrelationId() {
   return (crypto?.randomUUID?.() || 'cmd-' + Date.now() + '-' + Math.random())
 }
 
 // Gửi MỘT lệnh. Trả về { ok, response } của phản hồi ① (biên nhận tức thì).
 // LƯU Ý: ok ở đây = "lệnh HỢP LỆ & agent đã thực thi", KHÔNG phải "mạng đã đổi".
 // Bằng chứng mạng đổi = SSE state (kênh nhận), App.vue quan sát riêng.
-export async function sendCommand(subject, target, params = {}) {
-  const cid = newCorrelationId()
+export async function sendCommand(subject, target, params = {}, correlationId = null) {
+  const cid = correlationId || newCommandCorrelationId()
   const url = `${DITTO_PREFIX}/things/${CONTROLLER}/inbox/messages/${subject}`
-         + `?timeout=5`
-  const body = { target, ...params }
+         + `?timeout=${COMMAND_ACK_TIMEOUT_SECONDS}`
+  const body = { target, ...params, clientCorrelationId: cid }
+  const startedAt = performance.now()
+
+  logUi('command.send.start', {
+    correlationId: cid,
+    subject,
+    target,
+    params,
+    url,
+    timeoutSeconds: COMMAND_ACK_TIMEOUT_SECONDS,
+  })
 
   let response = null
   let res = null
+  let rawText = ''
   try {
     res = await fetch(url, {
       method: 'POST',
@@ -37,8 +51,16 @@ export async function sendCommand(subject, target, params = {}) {
       },
       body: JSON.stringify(body),
     })
-    try { response = await res.json() } catch (_) { /* có thể rỗng */ }
+    rawText = await res.text()
+    try { response = rawText ? JSON.parse(rawText) : null } catch (_) { /* có thể rỗng */ }
   } catch (e) {
+    logUi('command.send.network_error', {
+      correlationId: cid,
+      subject,
+      target,
+      error: e.message,
+      durationMs: Math.round(performance.now() - startedAt),
+    }, 'error')
     return { ok: false, timedOut: false, rejected: false,
              correlationId: cid, response: null, error: e.message }
   }
@@ -47,11 +69,25 @@ export async function sendCommand(subject, target, params = {}) {
   // App.vue sẽ quan sát state qua SSE để quyết định kết quả thật.
   const timedOut = res.status === 408
   const rejected = response?.status === 'rejected'
+  logUi('command.send.response', {
+    correlationId: cid,
+    subject,
+    target,
+    httpStatus: res.status,
+    httpOk: res.ok,
+    timedOut,
+    rejected,
+    durationMs: Math.round(performance.now() - startedAt),
+    response,
+    rawText: rawText.slice(0, 500),
+  }, timedOut || rejected || !res.ok ? 'warn' : 'info')
+
   return {
     ok: res.ok && !rejected,
     timedOut,
     rejected,
     correlationId: cid,
     response,
+    httpStatus: res.status,
   }
 }

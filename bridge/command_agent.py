@@ -32,8 +32,9 @@ import time
 import requests
 
 from bridge.ditto_common import (
-    DITTO_BASE_URL, DITTO_AUTH, NAMESPACE, HTTP_TIMEOUT,
+    DITTO_BASE_URL, DITTO_AUTH, NAMESPACE, POLICY_ID, HTTP_TIMEOUT,
 )
+from bridge.flow_log import flow_event
 
 log = logging.getLogger('command_agent')
 
@@ -220,6 +221,8 @@ def parse_message_event(raw, event_name=None, sse_fields=None):
                       or headers.get('correlationId')
                       or msg.get('correlation-id')
                       or msg.get('correlationId'))
+    if correlation_id is None and isinstance(value, dict):
+        correlation_id = value.get('clientCorrelationId')
 
     return {'subject': subject, 'value': value,
             'correlation_id': correlation_id, 'raw': msg}
@@ -234,23 +237,33 @@ def handle_command(parsed, net=None, net_lock=None):
     value = parsed.get('value') or {}
     cid = parsed.get('correlation_id')
     target = value.get('target') if isinstance(value, dict) else None
-    params = {k: v for k, v in value.items() if k != 'target'} \
+    params = {k: v for k, v in value.items()
+              if k not in ('target', 'clientCorrelationId')} \
              if isinstance(value, dict) else {}
+
+    log.info('NHẬN LỆNH [%s] %s target=%s params=%s',
+             cid, subject, target, params)
+    flow_event('AGENT', 'RECEIVE', cid, subject, target, params=params)
 
     handler = HANDLERS.get(subject)
     if handler is None:
         reason = 'unknown command: %s' % subject
         log.warning('TỪ CHỐI [%s]: %s', cid, reason)
         audit(cid, subject, target, params, 'rejected', reason)
+        flow_event('AGENT', 'REJECT', cid, subject, target,
+                   level='WARN', detail=reason)
         return _reject(400, reason)
 
     if net is None:
         reason = 'agent chưa gắn net (chạy sai tiến trình?)'
         audit(cid, subject, target, params, 'error', reason)
+        flow_event('AGENT', 'ERROR', cid, subject, target,
+                   level='ERROR', detail=reason)
         return _reject(500, reason)
 
     try:
         # Khóa cả resolve + execute để trạng thái net không đổi giữa chừng.
+        flow_event('AGENT', 'EXECUTE_START', cid, subject, target)
         if net_lock is not None:
             with net_lock:
                 ok, code, detail = handler(net, target, params)
@@ -259,12 +272,18 @@ def handle_command(parsed, net=None, net_lock=None):
     except Exception as e:
         log.exception('THỰC THI LỖI [%s] %s: %s', cid, subject, e)
         audit(cid, subject, target, params, 'error', str(e))
+        flow_event('AGENT', 'EXECUTE_ERROR', cid, subject, target,
+                   level='ERROR', detail=str(e))
         return _reject(500, 'execution error: %s' % e)
 
     result = 'ok' if ok else 'rejected'
     log.info('%s [%s] %s target=%s -> %s',
              'THỰC THI' if ok else 'TỪ CHỐI', cid, subject, target, detail)
     audit(cid, subject, target, params, result, None if ok else detail)
+    flow_event('AGENT', 'EXECUTE_DONE' if ok else 'REJECT',
+               cid, subject, target,
+               level='INFO' if ok else 'WARN',
+               detail=detail, code=code)
     return (ok, code, detail)
 
 
@@ -276,10 +295,14 @@ def send_response(session, thing_id, subject, correlation_id, http_code, detail,
     """
     if not correlation_id:
         log.warning('Message không có correlation-id -> không gửi được response')
+        flow_event('AGENT', 'RESPONSE_SKIP', correlation_id, subject, thing_id,
+                   level='WARN', detail='missing correlation-id')
         return
     if not subject:
         log.warning('Message không có subject -> không gửi được response [%s]',
                     correlation_id)
+        flow_event('AGENT', 'RESPONSE_SKIP', correlation_id, subject, thing_id,
+                   level='WARN', detail='missing subject')
         return
 
     # Response cho lệnh gửi tới inbox phải đi ra chiều outbox. Gửi lại inbox sẽ
@@ -297,13 +320,23 @@ def send_response(session, thing_id, subject, correlation_id, http_code, detail,
         'correlation-id': correlation_id,
     }
     try:
+        flow_event('AGENT', 'RESPONSE_SEND', correlation_id, subject, thing_id,
+                   code=http_code, ok=ok)
         r = session.post(url, json=body, headers=headers, auth=DITTO_AUTH,
                          params={'timeout': 0}, timeout=HTTP_TIMEOUT)
         if r.status_code not in (200, 201, 202, 204):
             log.warning('Gửi response [%s] trả HTTP %d: %.160s',
                         correlation_id, r.status_code, r.text)
+            flow_event('AGENT', 'RESPONSE_WARN', correlation_id, subject, thing_id,
+                       level='WARN', http_status=r.status_code,
+                       detail=r.text[:160])
+        else:
+            flow_event('AGENT', 'RESPONSE_OK', correlation_id, subject, thing_id,
+                       http_status=r.status_code)
     except Exception as e:
         log.warning('Gửi response [%s] lỗi (bỏ qua): %s', correlation_id, e)
+        flow_event('AGENT', 'RESPONSE_ERROR', correlation_id, subject, thing_id,
+                   level='ERROR', detail=str(e))
 
 
 def _stream_once(session, stop_event, net, net_lock):
@@ -313,12 +346,37 @@ def _stream_once(session, stop_event, net, net_lock):
     with session.get(INBOX_SSE_URL, headers=headers, auth=DITTO_AUTH,
                      stream=True, timeout=SSE_READ_TIMEOUT) as resp:
         if resp.status_code != 200:
-            # 403 -> Policy thiếu message:/ READ. 404 -> controller Thing chưa tạo.
-            log.error('SSE mở thất bại: HTTP %d (%s). Kiểm Policy message:/ READ '
-                      'và controller Thing tồn tại?', resp.status_code,
-                      resp.text[:120])
+            if resp.status_code == 404:
+                log.error(
+                    'SSE 404: controller Thing "%s" chưa tồn tại trong Ditto. '
+                    'Command Agent không thể nghe lệnh. Chạy lại bootstrap: '
+                    'python3 -m bridge.bootstrap --create --spec ditto/topology_spec.json. '
+                    'Tạo thủ công nếu cần: curl -u ditto:ditto -X PUT '
+                    '%s/things/%s -H "Content-Type: application/json" '
+                    '-d \'{"policyId":"%s"}\'',
+                    CONTROLLER_THING_ID, DITTO_BASE_URL,
+                    CONTROLLER_THING_ID, POLICY_ID)
+                flow_event('AGENT', 'SSE_404', target=CONTROLLER_THING_ID,
+                           level='ERROR',
+                           detail='controller Thing missing')
+            elif resp.status_code == 403:
+                log.error(
+                    'SSE 403: Policy thiếu quyền message:/ READ cho controller '
+                    'Thing "%s". Kiểm tra ditto/policy.json và chạy lại bootstrap.',
+                    CONTROLLER_THING_ID)
+                flow_event('AGENT', 'SSE_403', target=CONTROLLER_THING_ID,
+                           level='ERROR',
+                           detail='missing message:/ READ')
+            else:
+                log.error('SSE mở thất bại: HTTP %d (%s)',
+                          resp.status_code, resp.text[:120])
+                flow_event('AGENT', 'SSE_OPEN_FAIL', target=CONTROLLER_THING_ID,
+                           level='ERROR', http_status=resp.status_code,
+                           detail=resp.text[:120])
             return
         log.info('SSE kết nối OK, đang nghe lệnh tại %s', INBOX_SSE_URL)
+        flow_event('AGENT', 'SSE_OPEN', target=CONTROLLER_THING_ID,
+                   detail=INBOX_SSE_URL)
 
         # iter_lines: đọc TỪNG DÒNG khi nó tới (streaming). SSE gói event là
         # một nhóm field "event:", "data:", có thể kèm metadata tùy Ditto version.
