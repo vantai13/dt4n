@@ -5,8 +5,10 @@ Chứng minh: parse /proc/net/dev, parse ping, tính rate đều đúng.
 
 import sys
 sys.path.insert(0, 'bridge')
+import collector as collector_mod
 from collector import (parse_proc_net_dev, parse_ping, compute_rate,
-                       parse_ovs_dump_ports_state, link_configured_bw)
+                       parse_ovs_dump_ports_state, link_configured_bw,
+                       canonical_link_key, link_side_a_intf, Collector)
 
 passed = failed = 0
 def check(name, got, want):
@@ -24,6 +26,12 @@ sample = """Inter-|   Receive                                                |  
 """
 check("rx,tx của h1-eth0", parse_proc_net_dev(sample, 'h1-eth0'), (98765, 54321))
 check("interface không tồn tại -> None", parse_proc_net_dev(sample, 'h9-eth0'), None)
+switch_sample = """Inter-| Receive | Transmit
+ face |bytes packets errs drop fifo frame compressed multicast|bytes packets
+ s1-eth2:  4000      4    0    0    0     0          0         0    8000      8
+"""
+check("rx,tx của switch intf s1-eth2",
+      parse_proc_net_dev(switch_sample, 's1-eth2'), (4000, 8000))
 ifconfig_like = """h1-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
         inet 10.0.0.1  netmask 255.0.0.0  broadcast 10.255.255.255
 """
@@ -95,6 +103,62 @@ check("ưu tiên dt4n_bw", link_configured_bw(FakeLink(bw_attr=10, bw_param=20))
 check("fallback intf.params['bw']", link_configured_bw(FakeLink(bw_param=20)), 20.0)
 check("bw không hợp lệ -> None", link_configured_bw(FakeLink(bw_attr='bad')), None)
 check("không có bw -> None", link_configured_bw(FakeLink()), None)
+
+print("\n== TEST 6: collect_link traffic counters ==")
+
+class FakeNode:
+    def __init__(self, name):
+        self.name = name
+
+
+class FakeLinkIntf:
+    def __init__(self, node, name, up=True):
+        self.node = node
+        self.name = name
+        self.params = {}
+        self._up = up
+
+    def isUp(self):
+        return self._up
+
+
+class FakeTrafficLink:
+    def __init__(self):
+        self.intf1 = FakeLinkIntf(FakeNode('s3'), 's3-eth2')
+        self.intf2 = FakeLinkIntf(FakeNode('s2'), 's2-eth3')
+        self.dt4n_bw = 5
+
+
+traffic_link = FakeTrafficLink()
+check("canonical key sort theo tên node",
+      canonical_link_key('s3', 's2'), 'link-s2-s3')
+check("side A là intf phía s2",
+      link_side_a_intf(traffic_link).name, 's2-eth3')
+
+collector = object.__new__(Collector)
+collector._prev_link = {}
+old_read_intf_counters = collector_mod.read_intf_counters
+counter_values = [(1000, 2000), (1400, 2600)]
+
+def fake_read_intf_counters(_intf):
+    return counter_values.pop(0)
+
+collector_mod.read_intf_counters = fake_read_intf_counters
+try:
+    no_rate = Collector.collect_link(collector, traffic_link)
+    check("collect_link cũ không tự thêm traffic khi now_ts=None",
+          'traffic' not in no_rate['features'], True)
+    first = Collector.collect_link(collector, traffic_link, now_ts=100.0)
+    check("chu kỳ đầu link rate = 0",
+          first['features']['traffic']['rxRate'] == 0.0
+          and first['features']['traffic']['txRate'] == 0.0, True)
+    second = Collector.collect_link(collector, traffic_link, now_ts=102.0)
+    check("link rxRate = delta rx / dt",
+          second['features']['traffic']['rxRate'], 200.0)
+    check("link txRate = delta tx / dt",
+          second['features']['traffic']['txRate'], 300.0)
+finally:
+    collector_mod.read_intf_counters = old_read_intf_counters
 
 print("\n" + "="*50)
 print("KẾT QUẢ: %d pass, %d fail" % (passed, failed))

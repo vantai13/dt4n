@@ -57,3 +57,8 @@ def make_thing_id_link(name_a, name_b):
     Chống bẫy 'link trùng' (Lesson 2.2 Phần 8, dòng cuối bảng)."""
     lo, hi = sorted([_sanitize(name_a), _sanitize(name_b)])
     return '%s:link-%s-%s' % (NAMESPACE, lo, hi)
+
+
+def make_thing_id_path(src, dst):
+    """Directed path Thing id: h1->srv1 and srv1->h1 are different paths."""
+    return '%s:path-%s-%s' % (NAMESPACE, _sanitize(src), _sanitize(dst))

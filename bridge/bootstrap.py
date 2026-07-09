@@ -33,6 +33,7 @@ import requests
 from bridge.ditto_common import (
     DITTO_BASE_URL, DITTO_AUTH, NAMESPACE, POLICY_ID, HTTP_TIMEOUT,
     make_thing_id_host, make_thing_id_switch, make_thing_id_link,
+    make_thing_id_path,
 )
 
 
@@ -52,6 +53,7 @@ def _host_body(name, ip='0.0.0.0', role=None):
             'status':  {'properties': {'state': 'up'}},
             'traffic': {'properties': {'rxBytes': 0, 'txBytes': 0,
                                        'rxRate': 0, 'txRate': 0}},
+            'meta': {'properties': {'tSource': 0}},
         },
     }
 
@@ -62,6 +64,7 @@ def _switch_body(name):
         'features': {
             'status': {'properties': {'state': 'up'}},
             'portStats': {'properties': {'dump': ''}},
+            'meta': {'properties': {'tSource': 0}},
         },
     }
 
@@ -71,7 +74,22 @@ def _link_body(a, b):
         'attributes': {'type': 'link', 'endpointA': a, 'endpointB': b},
         'features': {
             'status':  {'properties': {'state': 'up'}},
+            'capacity': {'properties': {'bwMbps': 0}},
+            'traffic': {'properties': {'rxRate': 0, 'txRate': 0}},
             'quality': {'properties': {'latency_ms': 0, 'packetLoss_pct': 0}},
+            'meta': {'properties': {'tSource': 0}},
+        },
+    }
+
+
+def _path_body(src, dst):
+    """Path Thing: a directed multi-hop measurement, not a physical edge."""
+    return {
+        'policyId': POLICY_ID,
+        'attributes': {'type': 'path', 'src': src, 'dst': dst},
+        'features': {
+            'quality': {'properties': {'latency_ms': 0, 'packetLoss_pct': 0}},
+            'meta': {'properties': {'tSource': 0}},
         },
     }
 
@@ -98,6 +116,14 @@ def _append_controller(ents):
     return ents
 
 
+def _append_paths(ents, probes=(('h1', 'srv1'),)):
+    """Append fixed path probe Things. Collector currently probes h1 -> srv1."""
+    for src, dst in probes:
+        ents.append({'thing_id': make_thing_id_path(src, dst),
+                     'kind': 'path', 'body': _path_body(src, dst)})
+    return ents
+
+
 def entities_from_net(net):
     """NGUỒN A: đọc từ Mininet `net` đang sống (cần Mininet)."""
     ents = []
@@ -117,6 +143,7 @@ def entities_from_net(net):
             continue
         seen.add(tid)
         ents.append({'thing_id': tid, 'kind': 'link', 'body': _link_body(a, b)})
+    _append_paths(ents)
     return _append_controller(ents)
 
 
@@ -143,6 +170,7 @@ def entities_from_spec(path):
             continue
         seen.add(tid)
         ents.append({'thing_id': tid, 'kind': 'link', 'body': _link_body(a, b)})
+    _append_paths(ents)
     return _append_controller(ents)
 
 

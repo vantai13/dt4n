@@ -16,13 +16,16 @@ Neu vua sua code, phai restart `run_sync.py` de Sync Agent nap code moi.
 Terminal 1: chay controller OpenFlow.
 
 ```bash
-ryu-manager ryu.app.simple_switch_stp_13 --ofp-tcp-listen-port 6653
+cd ~/dt4n
+ryu-manager mininet.controller_static --ofp-tcp-listen-port 6653
 ```
 
 Terminal 2: chay Mininet + Sync Agent + Command Agent.
 
 ```bash
-sudo /usr/bin/python3 -m mininet.run_sync --period 1.0 --stp-wait 30
+cd ~/dt4n
+sudo mn -c
+sudo /usr/bin/python3 -m mininet.run_sync --period 1.0 --convergence-timeout 8
 ```
 
 Terminal 3: chay dashboard.

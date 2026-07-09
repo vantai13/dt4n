@@ -4,13 +4,13 @@ run_sync.py — Khởi động Phase 2 Lesson 2.3: topology + bootstrap + sync a
 Chạy 1 lệnh là twin bắt đầu sống. Mininet cần root.
 
 CHẠY:
-    # terminal 1: controller STP
-    ryu-manager ryu.app.simple_switch_stp_13 --ofp-tcp-listen-port 6653
+    # terminal 1: controller static
+    ryu-manager mininet.controller_static --ofp-tcp-listen-port 6653
     # terminal 2:
     sudo mn -c
     sudo python3 -m mininet.run_sync --period 1.0
 """
-import argparse, json, sys, threading, time
+import argparse, sys, time
 import logging
 import os
 from mininet.log import setLogLevel, info
@@ -28,9 +28,7 @@ except ImportError:
         'sudo /usr/bin/python3 -m mininet.run_sync --period 1.0'
         % sys.executable)
 
-from mininet.topology import build_net, start_net   # từ Phase 1 (đã refactor)
-from bridge.bootstrap import bootstrap_all, entities_from_net
-from bridge.sync_agent import run as sync_run
+from mininet.env_runner import EnvRunner
 from mininet.cli import CLI
 from measurements.measure_latency import main as measure_latency
 from measurements.measure_command_latency import main as measure_command_latency
@@ -70,7 +68,8 @@ def configure_file_logging(path):
     root.addHandler(handler)
     root.setLevel(logging.INFO)
 
-    for name in ('run_sync', 'sync_agent', 'command_agent', 'pusher', 'verify'):
+    for name in ('run_sync', 'env_runner', 'injection', 'sync_agent',
+                 'command_agent', 'pusher', 'verify'):
         logger = logging.getLogger(name)
         for existing in list(logger.handlers):
             logger.removeHandler(existing)
@@ -83,7 +82,10 @@ def main():
     p = argparse.ArgumentParser()
     p.add_argument('--clients', type=int, default=3)
     p.add_argument('--period', type=float, default=1.0)
-    p.add_argument('--stp-wait', type=int, default=30)
+    p.add_argument('--convergence-timeout', type=float, default=8.0,
+                   help='số giây tối đa chờ controller static hội tụ')
+    p.add_argument('--stp-wait', type=float, default=None,
+                   help='deprecated: alias cho --convergence-timeout, không sleep STP')
     p.add_argument('--ping-every', type=int, default=5,
                    help='đo latency mỗi N chu kỳ; 0 = tắt ping probe')
     p.add_argument('--reconcile-every', type=int, default=30,
@@ -123,7 +125,11 @@ def main():
     p.add_argument('--policy', default='ditto/policy.json')
     p.add_argument('--log-path', default='logs/run_sync.log',
                    help='file log runtime cho sync agent/pusher')
+    p.add_argument('--server-bg-rate', type=float, default=2.0,
+                   help='Mbps UDP nền srv1->srv2 qua s2-s3; 0 = tắt')
     a = p.parse_args()
+    if a.stp_wait is not None:
+        a.convergence_timeout = a.stp_wait
     if sum(bool(x) for x in (a.measure_latency, a.measure_command,
                              a.measure_flow, a.verify)) > 1:
         p.error('--measure-latency, --measure-command, --measure-flow và --verify chỉ chạy một mode mỗi lần')
@@ -134,48 +140,24 @@ def main():
 
     setLogLevel('info')
 
-    net = None
-    t = None
-    tc = None
-    stop_event = threading.Event()
-    net_lock = threading.RLock()
+    runner = None
     try:
-        # 1) dựng mạng (Phase 1)
-        log.info('Dung topology + start Mininet')
-        net = build_net(clients=a.clients)
-        start_net(net, stp_wait=a.stp_wait, do_pingall=True)
+        # 1) component dùng chung cho CLI demo và TwinEnv tương lai.
+        log.info('Dung EnvRunner + start Mininet')
+        runner = EnvRunner(policy_path=a.policy,
+                           sync_period=a.period,
+                           clients=a.clients,
+                           convergence_timeout=a.convergence_timeout,
+                           do_pingall=True,
+                           ping_every=a.ping_every,
+                           reconcile_every=a.reconcile_every,
+                           hard_every=0,
+                           mininet_log_level='info')
+        runner.start()
+        net, net_lock = runner.net, runner.net_lock
 
-        # 2) bootstrap Thing khung (Lesson 2.2) - idempotent, skip nếu đã có
-        log.info('Bootstrap Things len Ditto')
-        info('*** Bootstrap Things lên Ditto\n')
-        policy = json.load(open(a.policy))
-        bootstrap_all(entities_from_net(net), policy, mode='create')
-
-        # 3) sync agent chạy NỀN trong thread riêng -> CLI vẫn dùng được để
-        #    gõ kịch bản demo (iperf, link down) trong khi twin đang đồng bộ
-        log.info('Khoi dong Sync Agent thread nen')
-        info('*** Khởi động Sync Agent (thread nền)\n')
-        t = threading.Thread(target=sync_run, args=(net,),
-                             kwargs={'period': a.period,
-                                     'ping_every': a.ping_every,
-                                     'reconcile_every': a.reconcile_every,
-                                     'net_lock': net_lock,
-                                     'stop_event': stop_event},
-                             daemon=True)
-        t.start()
-
-        # === Phase 4 / Lesson 4.2: khởi động Command Agent (thread nền thứ 2) ===
-        # Chạy CHUNG tiến trình để (4.3) truy cập được `net`; dùng CHUNG net_lock
-        # để không đụng độ với collector của Sync Agent (tránh race condition).
-        from bridge.command_agent import run as command_run
-        log.info('Khoi dong Command Agent thread nen')
-        info('*** Khởi động Command Agent (thread nền) — nghe lệnh chiều xuống\n')
-        tc = threading.Thread(target=command_run,
-                              kwargs={'net': net,
-                                      'net_lock': net_lock,
-                                      'stop_event': stop_event},
-                              daemon=True)
-        tc.start()
+        if a.server_bg_rate > 0:
+            runner.start_server_background(rate_mbps=a.server_bg_rate)
 
         if a.measure_latency:
             # Cho sync agent vài chu kỳ đầu để đẩy trạng thái baseline lên Ditto.
@@ -218,17 +200,9 @@ def main():
         setLogLevel('output')
         LockedCLI(net, net_lock)
     finally:
-        stop_event.set()
-        if t is not None:
-            t.join(timeout=5)
-        # Phase 4: dừng luôn Command Agent
-        if tc is not None:
-            tc.join(timeout=5)
-        if net is not None:
-            logging.getLogger('run_sync').info('Tat mang')
-            info('*** Tắt mạng\n')
-            with net_lock:
-                net.stop()
+        if runner is not None:
+            logging.getLogger('run_sync').info('Tat EnvRunner')
+            runner.close()
 
 if __name__ == '__main__':
     main()

@@ -29,6 +29,8 @@ HẠN CHẾ ĐÃ BIẾT (ghi vào báo cáo):
 #   Mbps = bytes_per_sec * 8 / 1_000_000
 HOST_WARN_MBPS = 14.0       # > 70% link 20 Mbps -> warning (tải cao)
 HOST_CRIT_MBPS = 18.0       # > 90% link 20 Mbps -> critical (sắp nghẽn)
+LINK_WARN_UTIL = 0.70
+LINK_CRIT_UTIL = 0.90
 
 PATH_WARN_LATENCY_MS = 50.0     # > 50ms   -> warning
 PATH_CRIT_LATENCY_MS = 150.0    # > 150ms  -> critical
@@ -77,13 +79,31 @@ def health_for_host(features):
 
 
 def health_for_link(features):
-    """Trạng thái của 1 LINK vật lý: chủ yếu dựa trên up/down."""
+    """Trạng thái của 1 LINK vật lý: up/down + utilization nếu có."""
     state = features.get('status', {}).get('state')
     if state == 'down':
         return 'critical'
-    if state == 'up':
+    if state != 'up':
+        return 'unknown'
+
+    traffic = features.get('traffic', {})
+    capacity = features.get('capacity', {})
+    cap = capacity.get('bwMbps')
+    if not traffic or not cap or cap <= 0:
         return 'ok'
-    return 'unknown'
+
+    rx = _bytes_to_mbps(traffic.get('rxRate'))
+    tx = _bytes_to_mbps(traffic.get('txRate'))
+    peak = max([v for v in (rx, tx) if v is not None], default=None)
+    if peak is None:
+        return 'ok'
+
+    util = peak / cap
+    if util > LINK_CRIT_UTIL:
+        return 'critical'
+    if util > LINK_WARN_UTIL:
+        return 'warning'
+    return 'ok'
 
 
 def health_for_path(features):

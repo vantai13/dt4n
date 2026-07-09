@@ -13,6 +13,7 @@ BẪY FLOAT (Phần 5.3): rxRate tính từ counter/thời gian gần như LUÔN
 
 # Ngưỡng coi 2 số float là "như nhau". Đặt theo từng loại metric nếu cần.
 DEFAULT_TOL = 0.5      # byte/s — dưới mức này coi như nhiễu, không đáng gửi
+META_FEATURE = 'meta'
 
 
 def values_equal(old, new, tol=DEFAULT_TOL):
@@ -33,6 +34,10 @@ def diff_features(now, prev, tol=DEFAULT_TOL):
 
     changes = {}
     for fname, fdata in now.items():
+        # tSource changes every collection cycle. It must ride along with real
+        # deltas, not create a delta by itself, or delta sync becomes full sync.
+        if fname == META_FEATURE:
+            continue
         now_props = fdata.get('properties', {})
         prev_props = prev.get(fname, {}).get('properties', {})
 
@@ -44,6 +49,9 @@ def diff_features(now, prev, tol=DEFAULT_TOL):
 
         if changed:
             changes[fname] = {'properties': changed}
+
+    if changes and META_FEATURE in now:
+        changes[META_FEATURE] = now[META_FEATURE]
     return changes
 
 

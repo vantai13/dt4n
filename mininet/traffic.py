@@ -13,6 +13,7 @@ iperf v2 (Mininet đi kèm iperf v2, KHÔNG phải iperf3):
 import time
 
 IPERF_PORT = 5001
+SERVER_TO_SERVER_PORT = 5002
 
 
 def start_iperf_server(host, udp=False):
@@ -70,6 +71,27 @@ def stop_all_iperf(*hosts):
     print('[traffic] đã dừng các iperf server')
 
 
+def start_server_to_server(net, rate_mbps=2, duration=100000):
+    """Background srv1 -> srv2 traffic through bottleneck s2-s3.
+
+    This keeps s2-s3 alive in the state vector. With the default 5 Mbps
+    bottleneck, 2 Mbps gives util around 0.4 before any reroute.
+    """
+    srv1 = net.get('srv1')
+    srv2 = net.get('srv2')
+    rate_text = ('%g' % rate_mbps)
+
+    srv2.cmd('iperf -s -u -p %d > /tmp/iperf_srv2_bg.log 2>&1 &'
+             % SERVER_TO_SERVER_PORT)
+    time.sleep(0.5)
+    srv1.cmd('iperf -c %s -u -b %sM -p %d -t %d '
+             '> /tmp/iperf_srv1_to_srv2_bg.log 2>&1 &'
+             % (srv2.IP(), rate_text, SERVER_TO_SERVER_PORT, duration))
+    print('[traffic] nền srv1->srv2 UDP @%sMbps qua bottleneck s2-s3'
+          % rate_text)
+    return (srv1, srv2)
+
+
 # ---------------------------------------------------------------------------
 # HÀM CHO RUNNER GỌI: bật tải nền NON-BLOCKING (chạy ngầm) để collector quan sát.
 # Khác demo_scenarios cũ (chạy tuần tự, blocking). Runner cần traffic chạy SONG
@@ -83,9 +105,11 @@ def start_background_load(net, scenario='normal', duration=60, rate='50M'):
     """
     h1 = net.get('h1')
     srv1 = net.get('srv1')
+    srv2 = net.get('srv2')
     srv1_ip = srv1.IP()
 
-    stop_all_iperf(h1, srv1)
+    stop_all_iperf(h1, srv1, srv2)
+    bg_hosts = start_server_to_server(net, duration=duration + 5)
 
     udp = (scenario == 'flood')
     start_iperf_server(srv1, udp=udp)
@@ -100,7 +124,7 @@ def start_background_load(net, scenario='normal', duration=60, rate='50M'):
                % (srv1_ip, IPERF_PORT, duration))
         print('[traffic] NORMAL nền: h1 -> srv1 TCP trong %ds' % duration)
 
-    return (h1, srv1)
+    return tuple({h.name: h for h in (h1, srv1) + bg_hosts}.values())
 
 
 def demo_scenarios(net):

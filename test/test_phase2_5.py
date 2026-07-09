@@ -40,12 +40,15 @@ def ensure_requests_module():
 ensure_requests_module()
 
 from bridge.sync_agent import build_full_changes, should_reconcile  # noqa: E402
+from bridge.differ import diff_features  # noqa: E402
+from bridge.adapter import collector_to_things  # noqa: E402
+from bridge.health import compute_health_state  # noqa: E402
 from bridge.verify import values_match  # noqa: E402
 from bridge.bootstrap import entities_from_net, entities_from_spec  # noqa: E402
 import bridge.command_agent as command_agent_mod  # noqa: E402
 from bridge.command_agent import handle_command, parse_message_event  # noqa: E402
 from bridge.collector import Collector  # noqa: E402
-from bridge.ditto_common import NAMESPACE, POLICY_ID  # noqa: E402
+from bridge.ditto_common import NAMESPACE, POLICY_ID, make_thing_id_path  # noqa: E402
 
 
 passed = failed = 0
@@ -93,6 +96,7 @@ check('ground truth 0 dùng tolerance tuyệt đối', values_match(0.0, 0.5, to
 print('\n== TEST 4: bootstrap sinh controller Thing ==')
 spec_entities = entities_from_spec(str(ROOT / 'ditto/topology_spec.json'))
 controllers = [e for e in spec_entities if e.get('kind') == 'controller']
+paths = [e for e in spec_entities if e.get('kind') == 'path']
 check('entities_from_spec có đúng 1 controller', len(controllers) == 1)
 if controllers:
     controller = controllers[0]
@@ -103,6 +107,12 @@ if controllers:
     check('controller type là command-sink',
           controller['body'].get('attributes', {}).get('type') == 'controller'
           and controller['body'].get('attributes', {}).get('role') == 'command-sink')
+check('entities_from_spec có path h1->srv1',
+      any(e['thing_id'] == '%s:path-h1-srv1' % NAMESPACE for e in paths))
+check('path Thing là type=path, không phải link',
+      paths and paths[0]['body'].get('attributes', {}).get('type') == 'path')
+check('make_thing_id_path không sort hai đầu',
+      make_thing_id_path('h1', 'srv1') != make_thing_id_path('srv1', 'h1'))
 
 
 class _FakeNode:
@@ -115,14 +125,15 @@ class _FakeNode:
 
 
 class _FakeIntf:
-    def __init__(self, node):
+    def __init__(self, node, name=None):
         self.node = node
+        self.name = name or '%s-eth0' % node.name
 
 
 class _FakeLink:
     def __init__(self, a, b):
-        self.intf1 = _FakeIntf(a)
-        self.intf2 = _FakeIntf(b)
+        self.intf1 = _FakeIntf(a, '%s-eth0' % a.name)
+        self.intf2 = _FakeIntf(b, '%s-eth0' % b.name)
 
 
 host = _FakeNode('h1')
@@ -135,6 +146,76 @@ fake_net = types.SimpleNamespace(
 net_entities = entities_from_net(fake_net)
 check('entities_from_net có đúng 1 controller',
       len([e for e in net_entities if e.get('kind') == 'controller']) == 1)
+check('entities_from_net có path probe',
+      len([e for e in net_entities if e.get('kind') == 'path']) == 1)
+
+print('\n== TEST 4b: adapter path + tSource ==')
+snapshot = {
+    'timestamp': 'unused',
+    't_source': 1000.1234,
+    'things': {
+        'host-h1': {
+            'attributes': {'type': 'host', 'role': 'client'},
+            'features': {'status': {'state': 'up'}},
+        },
+        'path-h1-srv1': {
+            'attributes': {'type': 'path', 'src': 'h1', 'dst': 'srv1'},
+            'features': {'quality': {'latency_ms': 1.2, 'packetLoss_pct': 0.0}},
+            't_source': 1001.5678,
+        },
+    },
+}
+things = collector_to_things(snapshot)
+host_tid = '%s:host-h1' % NAMESPACE
+path_tid = '%s:path-h1-srv1' % NAMESPACE
+check('adapter gắn meta.tSource cho host từ snapshot fallback',
+      things[host_tid]['features']['meta']['properties']['tSource'] == 1000.123)
+check('adapter không vứt path Thing nữa',
+      path_tid in things)
+check('adapter dùng tSource riêng của path',
+      things[path_tid]['features']['meta']['properties']['tSource'] == 1001.568)
+check('adapter giữ quality của path',
+      things[path_tid]['features']['quality']['properties']['latency_ms'] == 1.2)
+
+print('\n== TEST 4c: meta không giết delta sync ==')
+prev_features = {
+    'status': {'properties': {'state': 'up'}},
+    'meta': {'properties': {'tSource': 100.0}},
+}
+now_only_meta = {
+    'status': {'properties': {'state': 'up'}},
+    'meta': {'properties': {'tSource': 101.0}},
+}
+check('chỉ meta đổi -> không sinh delta',
+      diff_features(now_only_meta, prev_features) == {})
+now_real_change = {
+    'status': {'properties': {'state': 'down'}},
+    'meta': {'properties': {'tSource': 101.0}},
+}
+delta = diff_features(now_real_change, prev_features)
+check('status đổi -> có delta status',
+      delta.get('status', {}).get('properties', {}).get('state') == 'down')
+check('meta đi kèm delta thật',
+      delta.get('meta', {}).get('properties', {}).get('tSource') == 101.0)
+
+print('\n== TEST 4d: link health theo utilization ==')
+check('link up không traffic -> ok',
+      compute_health_state('link', {
+          'status': {'state': 'up'},
+          'capacity': {'bwMbps': 5},
+      }) == 'ok')
+check('link util 80% -> warning',
+      compute_health_state('link', {
+          'status': {'state': 'up'},
+          'capacity': {'bwMbps': 5},
+          'traffic': {'rxRate': 0, 'txRate': 4_000_000 / 8},
+      }) == 'warning')
+check('link util 95% -> critical',
+      compute_health_state('link', {
+          'status': {'state': 'up'},
+          'capacity': {'bwMbps': 5},
+          'traffic': {'rxRate': 4_750_000 / 8, 'txRate': 0},
+      }) == 'critical')
 
 print('\n== TEST 5: command correlation debug fallback ==')
 parsed = parse_message_event(
@@ -330,7 +411,9 @@ collector = _PingTrackingCollector(_FakeNet(), ping_every=1,
 snapshot = collector.collect_all()
 check('ping chạy ngoài net_lock', collector.ping_saw_lock_held is False)
 check('snapshot vẫn có path quality từ ping',
-      snapshot['things']['link-h1-srv1']['features']['quality']['latency_ms'] == 1.23)
+      snapshot['things']['path-h1-srv1']['features']['quality']['latency_ms'] == 1.23)
+check('path Thing có t_source riêng',
+      isinstance(snapshot['things']['path-h1-srv1'].get('t_source'), float))
 
 print('\n' + '=' * 50)
 print('KET QUA: %d pass, %d fail' % (passed, failed))

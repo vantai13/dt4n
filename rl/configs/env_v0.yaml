@@ -1,0 +1,31 @@
+# DT4N Env v0 parameters frozen after Phase 4.5.6 validation.
+# Values marked null must be filled from measured artifacts before Phase 5.
+
+version: env_v0
+status: pending_measurement
+
+timing:
+  period_s: 1.0
+  delta_s: null
+  delta_source: docs/phase-4.5/delta.json
+  t_max_steps: 30
+
+reset:
+  reset_mode: hybrid
+  hard_every: 20
+  soft_reset_p95_s: null
+  hard_reset_s: null
+  equivalence_source: docs/phase-4.5/equivalence.json
+
+state:
+  draft_dims: 47
+  state_builder: rl.state_builder_draft
+
+actions:
+  toggleable_links_source: mininet.topology_meta.toggleable_links
+  command_path: Ditto inbox -> Command Agent -> Mininet
+  injection_path: InjectionChannel -> Mininet
+
+validation:
+  regression_report: docs/phase-4.5/regression_report.json
+  phase_gate: docs/phase-4.5/06-verification.md

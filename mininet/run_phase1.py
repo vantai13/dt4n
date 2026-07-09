@@ -20,8 +20,8 @@ VÌ SAO try/finally LÀ BẮT BUỘC:
     sau chạy lỗi "RTNETLINK File exists". finally đảm bảo LUÔN net.stop().
 
 CÁCH CHẠY (1 LỆNH DUY NHẤT — không cần vào CLI):
-    # terminal 1: controller STP (vì topo có VÒNG)
-    ryu-manager ryu.app.simple_switch_stp_13 --ofp-tcp-listen-port 6653
+    # terminal 1: controller static (không STP, không flood)
+    ryu-manager mininet.controller_static --ofp-tcp-listen-port 6653
 
     # terminal 2:
     sudo mn -c                                          # dọn mạng cũ
@@ -52,7 +52,10 @@ def main():
     p.add_argument('--bw-bottleneck', type=float, default=5)
     p.add_argument('--delay', type=str, default='2ms')
     p.add_argument('--loss', type=float, default=0)
-    p.add_argument('--stp-wait', type=int, default=30, help='giây đợi STP hội tụ')
+    p.add_argument('--convergence-timeout', type=float, default=8.0,
+                   help='số giây tối đa chờ controller static hội tụ')
+    p.add_argument('--stp-wait', type=float, default=None,
+                   help='deprecated: alias cho --convergence-timeout, không sleep STP')
     # tham số kịch bản + thu thập
     p.add_argument('--scenario', choices=['idle', 'normal', 'flood'], default='normal',
                    help='idle=không traffic; normal=TCP nền; flood=UDP tốc độ cao')
@@ -65,6 +68,8 @@ def main():
     p.add_argument('--pretty-log-path', type=str, default='logs/phase1.log',
                    help='log dễ đọc cho người xem demo; mặc định ghi đè mỗi lần chạy')
     args = p.parse_args()
+    if args.stp_wait is not None:
+        args.convergence_timeout = args.stp_wait
 
     setLogLevel('info')
 
@@ -72,11 +77,12 @@ def main():
     load_hosts = ()
     try:
         # ---- 1) DỰNG MẠNG (Lớp 1) ----
-        info('\n*** [1/3] Dựng topology + đợi STP\n')
+        info('\n*** [1/3] Dựng topology + đợi controller static\n')
         net = build_net(clients=args.clients, bw_backbone=args.bw_backbone,
                         bw_bottleneck=args.bw_bottleneck, delay=args.delay,
                         loss=args.loss)
-        start_net(net, stp_wait=args.stp_wait, do_pingall=True)
+        start_net(net, convergence_timeout=args.convergence_timeout,
+                  do_pingall=True)
 
         # ---- 2) BẬT TRAFFIC NỀN (Lớp 1) — song song với collector ----
         if args.scenario != 'idle':

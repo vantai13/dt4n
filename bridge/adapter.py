@@ -13,7 +13,7 @@ VÌ SAO TỒN TẠI:
 """
 
 from bridge.ditto_common import (make_thing_id_host, make_thing_id_switch,
-                                 make_thing_id_link)
+                                 make_thing_id_link, make_thing_id_path)
 from bridge.health import compute_health_state   # Phase 3 / Lesson 3.4 (Lựa chọn B)
 
 
@@ -38,6 +38,7 @@ def collector_to_things(snapshot):
     - Bọc 'properties' cho khớp Ditto.
     """
     things = snapshot.get('things', snapshot)   # chấp nhận cả 2 dạng
+    snapshot_ts = snapshot.get('t_source')
     result = {}
 
     for short_key, data in things.items():
@@ -54,11 +55,15 @@ def collector_to_things(snapshot):
             if short_key.startswith('host-'):   health_kind = 'host'
             elif short_key.startswith('switch-'): health_kind = 'switch'
             elif short_key.startswith('link-'):  health_kind = 'link'
+            elif short_key.startswith('path-'):  health_kind = 'path'
         state = compute_health_state(health_kind, features)
         # Chèn thành FEATURE (dữ liệu ĐỘNG) — nó sẽ tự chảy qua _wrap_properties.
         # KHÔNG đặt vào attributes (attributes là dữ liệu TĨNH, không đẩy mỗi chu kỳ).
         features = dict(features)                 # bản sao -> không mutate input (immutable)
         features['health'] = {'state': state}
+        t_source = data.get('t_source', snapshot_ts)
+        if t_source is not None:
+            features['meta'] = {'tSource': round(float(t_source), 3)}
 
         # short_key dạng 'host-h1' / 'switch-s1' / 'link-h1-srv1'
         if kind == 'host' or short_key.startswith('host-'):
@@ -67,11 +72,16 @@ def collector_to_things(snapshot):
         elif kind == 'switch' or short_key.startswith('switch-'):
             name = short_key.split('switch-', 1)[-1]
             tid = make_thing_id_switch(name)
-        elif kind == 'path':
-            # Path probes are measurement rows in local snapshots, not physical
-            # topology Things from bootstrap. Do not PATCH them into Ditto as
-            # fake links such as org.dt4n:link-h1-srv1.
-            continue
+        elif kind == 'path' or short_key.startswith('path-'):
+            src = attrs.get('src')
+            dst = attrs.get('dst')
+            if not (src and dst):
+                body = short_key.split('path-', 1)[-1]
+                parts = body.split('-')
+                if len(parts) < 2:
+                    continue
+                src, dst = parts[0], '-'.join(parts[1:])
+            tid = make_thing_id_path(src, dst)
         elif kind == 'link' or short_key.startswith('link-'):
             # collector có thể đặt 'link-h1-srv1'; tách 2 đầu để canonical lại
             body = short_key.split('link-', 1)[-1]

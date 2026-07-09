@@ -1,0 +1,372 @@
+#!/usr/bin/env python3
+"""Reusable Mininet/Ditto lifecycle component for future Gym environments.
+
+`run_sync.py` is an entry point: it parses CLI flags, dispatches measurement
+modes, and may block in the Mininet CLI. EnvRunner is the shared component under
+that entry point and the future TwinEnv: it owns the live net, background sync
+threads, and reset hygiene.
+"""
+
+import json
+import logging
+import subprocess
+import threading
+import time
+from collections import deque
+from bridge.ditto_reader import expected_thing_ids
+from mininet.topology_meta import baseline_bw, canonical, load_spec
+from rl.injection import InjectionChannel
+
+
+log = logging.getLogger('env_runner')
+
+
+class EnvRunner:
+    """Own the DT4N live network and reset it for RL-style episodes."""
+
+    def __init__(self, spec_path='ditto/topology_spec.json',
+                 policy_path='ditto/policy.json',
+                 sync_period=1.0, clients=3,
+                 bw_backbone=20.0, bw_bottleneck=5.0,
+                 convergence_timeout=8.0, do_pingall=False,
+                 ping_every=5, reconcile_every=30,
+                 steady_cycles=5, steady_tol=0.05,
+                 steady_timeout=20.0, steady_min_norm=0.01,
+                 hard_every=20, mininet_log_level='warning'):
+        self.spec_path = spec_path
+        self.spec = load_spec(spec_path)
+        self.policy_path = policy_path
+        self.sync_period = sync_period
+        self.clients = clients
+        self.bw_backbone = bw_backbone
+        self.bw_bottleneck = bw_bottleneck
+        self.convergence_timeout = convergence_timeout
+        self.do_pingall = do_pingall
+        self.ping_every = ping_every
+        self.reconcile_every = reconcile_every
+        self.baseline_bw = baseline_bw(self.spec, bw_backbone, bw_bottleneck)
+
+        self.steady_cycles = steady_cycles
+        self.steady_tol = steady_tol
+        self.steady_timeout = steady_timeout
+        self.steady_min_norm = steady_min_norm
+        self.hard_every = hard_every
+        self.mininet_log_level = mininet_log_level
+
+        self.net = None
+        self.net_lock = threading.RLock()
+        self.stop_event = threading.Event()
+        self._sync_thread = None
+        self._command_thread = None
+        self._background_hosts = ()
+        self.injection = None
+
+        self.session = None
+        self.thing_ids = expected_thing_ids(self.spec)
+
+        self._episode_count = 0
+        self._iperf_baseline = 0
+
+    # ------------------------------------------------------------------
+    # Lifecycle
+    # ------------------------------------------------------------------
+    def start(self):
+        """Build Mininet, bootstrap Ditto Things, and start sync/command threads."""
+        if self.net is not None:
+            raise RuntimeError('EnvRunner.start() called while net is already live')
+        from mininet.log import info, setLogLevel
+        from mininet.topology import build_net, start_net
+
+        if self.mininet_log_level:
+            setLogLevel(self.mininet_log_level)
+
+        log.info('EnvRunner.start()')
+        t0 = time.monotonic()
+        from bridge.bootstrap import bootstrap_all, entities_from_net
+        from bridge.command_agent import run as command_run
+        from bridge.ditto_reader import make_session
+        from bridge.sync_agent import run as sync_run
+
+        self.session = make_session()
+        self.stop_event.clear()
+
+        self.net = build_net(clients=self.clients,
+                             bw_backbone=self.bw_backbone,
+                             bw_bottleneck=self.bw_bottleneck)
+        start_net(self.net, convergence_timeout=self.convergence_timeout,
+                  do_pingall=self.do_pingall)
+        self.injection = InjectionChannel(self.net, self.net_lock)
+
+        info('*** Bootstrap Things lên Ditto\n')
+        with open(self.policy_path, encoding='utf-8') as f:
+            policy = json.load(f)
+        bootstrap_all(entities_from_net(self.net), policy, mode='create')
+
+        info('*** Khởi động Sync Agent (thread nền)\n')
+        self._sync_thread = threading.Thread(
+            target=sync_run,
+            args=(self.net,),
+            kwargs={
+                'period': self.sync_period,
+                'ping_every': self.ping_every,
+                'reconcile_every': self.reconcile_every,
+                'net_lock': self.net_lock,
+                'stop_event': self.stop_event,
+            },
+            daemon=True,
+        )
+        self._sync_thread.start()
+
+        info('*** Khởi động Command Agent (thread nền) — nghe lệnh chiều xuống\n')
+        self._command_thread = threading.Thread(
+            target=command_run,
+            kwargs={
+                'net': self.net,
+                'net_lock': self.net_lock,
+                'stop_event': self.stop_event,
+            },
+            daemon=True,
+        )
+        self._command_thread.start()
+
+        time.sleep(max(2.0, self.sync_period * 3))
+        self._iperf_baseline = self._count_iperf()
+        log.info('EnvRunner started in %.1fs, iperf baseline=%d',
+                 time.monotonic() - t0, self._iperf_baseline)
+        return self.net
+
+    def close(self):
+        """Stop background threads, kill traffic, stop Mininet, and run mn -c."""
+        self.stop_event.set()
+        for thread in (self._sync_thread, self._command_thread):
+            if thread is not None:
+                thread.join(timeout=5)
+        self._sync_thread = None
+        self._command_thread = None
+
+        if self.net is not None:
+            from mininet.log import info
+
+            log.info('EnvRunner.close(): stopping Mininet')
+            info('*** Tắt mạng\n')
+            with self.net_lock:
+                if self.injection is not None:
+                    self.injection.revert_all()
+                self._kill_iperf()
+                self.net.stop()
+            self.net = None
+            self.injection = None
+            self._background_hosts = ()
+
+        try:
+            subprocess.run(['mn', '-c'], capture_output=True, check=False)
+        except OSError as exc:
+            log.warning('mn -c skipped: %s', exc)
+
+    def hard_reset(self):
+        """Fully rebuild the network. Clean, slower, and used as a periodic drain."""
+        log.info('HARD reset')
+        t0 = time.monotonic()
+        self.close()
+        self.start()
+        return time.monotonic() - t0
+
+    # ------------------------------------------------------------------
+    # Episode reset
+    # ------------------------------------------------------------------
+    def soft_reset(self, scenario=None):
+        """Clean episode leftovers without rebuilding Mininet.
+
+        Returns an info dict with reset timing and dirty flags. Future TwinEnv
+        should put these values into Gym `info`.
+        """
+        if self.net is None:
+            raise RuntimeError('EnvRunner.soft_reset() called before start()')
+
+        t0 = time.monotonic()
+        timings = {}
+        self._episode_count += 1
+        mode = 'soft'
+
+        if self.hard_every and self._episode_count % self.hard_every == 0:
+            timings['hard_reset'] = self.hard_reset()
+            mode = 'hard'
+        else:
+            if self.injection is not None:
+                t = time.monotonic()
+                self.injection.revert_all()
+                timings['revert_scenarios'] = time.monotonic() - t
+
+            with self.net_lock:
+                t = time.monotonic()
+                self._kill_iperf()
+                timings['kill_iperf'] = time.monotonic() - t
+
+                t = time.monotonic()
+                self._restore_links()
+                timings['restore_links'] = time.monotonic() - t
+
+                t = time.monotonic()
+                self._flush_arp()
+                timings['flush_arp'] = time.monotonic() - t
+
+                t = time.monotonic()
+                self._reset_collector_cache()
+                timings['reset_cache'] = time.monotonic() - t
+
+        t = time.monotonic()
+        self._start_episode_traffic()
+        timings['start_traffic'] = time.monotonic() - t
+
+        ok, waited = self._wait_steady_state()
+        timings['steady_wait'] = waited
+
+        if scenario is not None:
+            if self.injection is None:
+                self.injection = InjectionChannel(self.net, self.net_lock)
+            self.injection.apply(scenario)
+
+        n_iperf = self._count_iperf()
+        leaked = n_iperf > self._iperf_baseline + 4
+        total = time.monotonic() - t0
+        info_dict = {
+            'reset_mode': mode,
+            'reset_total_s': total,
+            'reset_steady_ok': ok,
+            'reset_wait_s': waited,
+            'reset_dirty': (not ok) or leaked,
+            'iperf_count': n_iperf,
+            'active_scenarios': (
+                self.injection.active() if self.injection is not None else []
+            ),
+            'timings': timings,
+        }
+        if info_dict['reset_dirty']:
+            log.warning('Reset dirty: steady_ok=%s leaked=%s iperf=%d',
+                        ok, leaked, n_iperf)
+        return info_dict
+
+    def observe_raw(self, cache=None):
+        """Read current Ditto Things for the future TwinEnv observation path."""
+        from bridge.ditto_reader import fetch_snapshot, make_session
+
+        if self.session is None:
+            self.session = make_session()
+        return fetch_snapshot(self.session, self.thing_ids, cache=cache)
+
+    # ------------------------------------------------------------------
+    # Traffic helpers
+    # ------------------------------------------------------------------
+    def start_server_background(self, rate_mbps=2.0, duration=100000):
+        """Start only the srv1->srv2 UDP background used by run_sync CLI mode."""
+        if self.net is None:
+            raise RuntimeError('start_server_background() called before start()')
+        if rate_mbps <= 0:
+            return ()
+        from mininet.traffic import start_server_to_server
+
+        self._background_hosts = start_server_to_server(
+            self.net, rate_mbps=rate_mbps, duration=duration)
+        return self._background_hosts
+
+    def _start_episode_traffic(self):
+        """Start RL episode background traffic.
+
+        start_background_load already starts the srv1->srv2 UDP flow in this
+        repository, so do not start that flow a second time.
+        """
+        from mininet.traffic import start_background_load
+
+        self._background_hosts = start_background_load(
+            self.net, scenario='normal', duration=100000)
+        return self._background_hosts
+
+    # ------------------------------------------------------------------
+    # Cleanup steps
+    # ------------------------------------------------------------------
+    def _kill_iperf(self):
+        if self.net is None:
+            return
+        for host in self.net.hosts:
+            host.cmd('pkill -f iperf 2>/dev/null')
+        time.sleep(0.2)
+        self._background_hosts = ()
+
+    def _count_iperf(self):
+        result = subprocess.run(['pgrep', '-c', '-f', 'iperf'],
+                                capture_output=True, check=False)
+        try:
+            return int(result.stdout.decode().strip() or 0)
+        except ValueError:
+            return 0
+
+    def _restore_links(self):
+        """Bring every link up and restore baseline bandwidth plus original delay."""
+        for link in self.net.links:
+            a, b = link.intf1.node.name, link.intf2.node.name
+            self.net.configLinkStatus(a, b, 'up')
+
+            bw0 = self.baseline_bw.get(canonical(a, b))
+            if bw0 is None:
+                continue
+            cfg = {'bw': float(bw0)}
+            delay = getattr(link, 'dt4n_delay', None)
+            if delay:
+                cfg['delay'] = delay
+            link.intf1.config(**cfg)
+            link.intf2.config(**cfg)
+            link.dt4n_bw = float(bw0)
+
+    def _flush_arp(self):
+        for host in self.net.hosts:
+            host.cmd('ip -s -s neigh flush all 2>/dev/null')
+
+    def _reset_collector_cache(self):
+        collector = getattr(self.net, 'dt4n_collector', None)
+        if collector is None:
+            return
+        for attr in ('_prev', '_prev_link'):
+            value = getattr(collector, attr, None)
+            if hasattr(value, 'clear'):
+                value.clear()
+
+    # ------------------------------------------------------------------
+    # Steady-state gate
+    # ------------------------------------------------------------------
+    def _read_throughput_norm(self):
+        """Read server RX throughput from Ditto and normalize by backbone Mbps."""
+        from bridge.ditto_reader import fetch_snapshot, make_session
+
+        if self.session is None:
+            self.session = make_session()
+        things, _meta = fetch_snapshot(self.session, self.thing_ids)
+        total_mbps = 0.0
+        for name in ('srv1', 'srv2'):
+            thing_id = 'org.dt4n:host-%s' % name
+            try:
+                props = things[thing_id]['features']['traffic']['properties']
+                total_mbps += float(props.get('rxRate') or 0.0) * 8.0 / 1e6
+            except (KeyError, TypeError, ValueError):
+                pass
+        return total_mbps / float(self.bw_backbone)
+
+    def _wait_steady_state(self):
+        """Wait until throughput is stable for consecutive sync cycles.
+
+        rxRate is a one-cycle moving measurement. Immediately after iperf starts,
+        the first samples include socket setup and TCP slow start. Returning an
+        observation during that window makes s0 depend on Linux scheduling rather
+        than the experiment seed.
+        """
+        hist = deque(maxlen=self.steady_cycles)
+        t0 = time.monotonic()
+        while time.monotonic() - t0 < self.steady_timeout:
+            value = self._read_throughput_norm()
+            hist.append(value)
+            if len(hist) == self.steady_cycles:
+                spread = max(hist) - min(hist)
+                if spread < self.steady_tol and max(hist) >= self.steady_min_norm:
+                    return True, time.monotonic() - t0
+            time.sleep(self.sync_period)
+        log.warning('steady state timeout after %.1fs', self.steady_timeout)
+        return False, self.steady_timeout

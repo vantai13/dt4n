@@ -55,6 +55,7 @@ def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
 
     collector = Collector(net, interval=period, ping_every=ping_every,
                           net_lock=net_lock)
+    net.dt4n_collector = collector
     session = make_session()
     prev_things = None
     cycle = 0
