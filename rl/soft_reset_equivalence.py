@@ -2,7 +2,8 @@
 """Test soft-reset vs hard-reset initial-state equivalence.
 
 H0: s0 after soft reset and s0 after hard reset have the same distribution.
-We use KS-test per state dimension and Bonferroni correction across 47 tests.
+We use KS-test per state dimension and Bonferroni correction across the current
+state contract.
 """
 
 import argparse
@@ -205,9 +206,11 @@ def main():
             'util_avg3': 'Should not differ if state builder reset clears history.',
             'path_latency_norm': 'May differ if ARP/cache cleanup is incomplete.',
             'bw_norm': 'Should not differ; difference implies restore_links bug.',
-            'link_up_host_up_switch_up': 'Should not differ; all baseline up.',
+            'link_up_host_up': 'Should not differ; all baseline up.',
             'util': 'Should not differ after wait_steady_state.',
             'data_fresh': 'Should not differ when Ditto is healthy.',
+            'aoi_norm': 'May differ if cache/bootstrap freshness differs.',
+            'episode_dims': 'Should not differ; episode is None so both are 0.',
         },
     }
 
