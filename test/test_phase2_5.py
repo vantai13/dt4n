@@ -47,7 +47,8 @@ from bridge.verify import values_match  # noqa: E402
 from bridge.bootstrap import entities_from_net, entities_from_spec  # noqa: E402
 import bridge.command_agent as command_agent_mod  # noqa: E402
 from bridge.command_agent import handle_command, parse_message_event  # noqa: E402
-from bridge.collector import Collector  # noqa: E402
+import bridge.collector as collector_mod  # noqa: E402
+from bridge.collector import Collector, run_host_namespace_command  # noqa: E402
 from bridge.ditto_common import NAMESPACE, POLICY_ID, make_thing_id_path  # noqa: E402
 
 
@@ -414,6 +415,52 @@ check('snapshot vẫn có path quality từ ping',
       snapshot['things']['path-h1-srv1']['features']['quality']['latency_ms'] == 1.23)
 check('path Thing có t_source riêng',
       isinstance(snapshot['things']['path-h1-srv1'].get('t_source'), float))
+
+
+print('\n== TEST 10: collector ping không chiếm shell Mininet ==')
+
+
+class _NamespaceHost:
+    name = 'h1'
+    pid = 1234
+
+    def __init__(self):
+        self.cmd_called = False
+
+    def cmd(self, command):
+        self.cmd_called = True
+        return 'fallback'
+
+
+host = _NamespaceHost()
+calls = []
+orig_run = collector_mod.subprocess.run
+
+
+def _fake_run(argv, stdout=None, stderr=None, text=None, timeout=None,
+              check=None):
+    calls.append({
+        'argv': argv,
+        'timeout': timeout,
+        'text': text,
+        'check': check,
+    })
+    return types.SimpleNamespace(
+        stdout='1 packets transmitted, 1 received, 0% packet loss\n')
+
+
+collector_mod.subprocess.run = _fake_run
+try:
+    out = run_host_namespace_command(host, ['ping', '-c', '1', '10.0.0.1'],
+                                     timeout=3)
+finally:
+    collector_mod.subprocess.run = orig_run
+
+check('dùng mnexec -a <pid> thay vì host.cmd',
+      calls and calls[0]['argv'][:3] == ['mnexec', '-a', '1234'])
+check('truyền timeout xuống subprocess', calls and calls[0]['timeout'] == 3)
+check('không gọi host.cmd khi host có pid', host.cmd_called is False)
+check('stdout được trả về để parse ping', 'packet loss' in out)
 
 print('\n' + '=' * 50)
 print('KET QUA: %d pass, %d fail' % (passed, failed))

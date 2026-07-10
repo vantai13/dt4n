@@ -3,24 +3,59 @@
 traffic.py — Sinh traffic theo KỊCH BẢN cho DT4N (Phase 1, Lesson 1.3) — LỚP 1
 
 Làm mạng "sống" để có gì đó ĐÁNG đo. Mọi lệnh chạy qua host.cmd() => TRONG
-namespace của host (điểm bản lề Lesson 1.2).
+namespace của host (điểm bản lề Lesson 1.2). Riêng traffic nền dùng mnexec
+để không chiếm shell điều khiển nội bộ của Mininet.
 
 iperf v2 (Mininet đi kèm iperf v2, KHÔNG phải iperf3):
   server: iperf -s        (TCP)  |  iperf -s -u             (UDP)
   client: iperf -c IP -t 10 (TCP)|  iperf -c IP -u -b 50M -t 10  (UDP)
 """
 
+import subprocess
 import time
 
 IPERF_PORT = 5001
 SERVER_TO_SERVER_PORT = 5002
 
 
+def run_host_shell(host, command, timeout=3):
+    """Run a shell command inside a host namespace without using host.cmd().
+
+    host.cmd() goes through Mininet's single interactive shell for that node. A
+    background iperf start can race with collector/command activity and trip
+    Mininet's "self.waiting" assertion. mnexec starts a separate process in the
+    same namespace, so non-blocking traffic setup does not occupy that shell.
+    """
+    pid = getattr(host, 'pid', None)
+    if pid:
+        try:
+            p = subprocess.run(
+                ['mnexec', '-a', str(pid), 'sh', '-lc', command],
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                timeout=timeout,
+                check=False,
+            )
+            return p.stdout or ''
+        except subprocess.TimeoutExpired as e:
+            out = e.output or ''
+            if isinstance(out, bytes):
+                out = out.decode(errors='replace')
+            return out
+        except OSError:
+            pass
+    return host.cmd(command)
+
+
 def start_iperf_server(host, udp=False):
-    """Bật iperf server CHẠY NỀN trên `host`. Dùng '&' để khỏi treo host.cmd()."""
+    """Bật iperf server CHẠY NỀN trên `host`."""
     proto = '-u' if udp else ''
-    host.cmd('iperf -s %s -p %d > /tmp/iperf_srv_%s.log 2>&1 &'
-             % (proto, IPERF_PORT, host.name))
+    run_host_shell(
+        host,
+        'iperf -s %s -p %d > /tmp/iperf_srv_%s.log 2>&1 &'
+        % (proto, IPERF_PORT, host.name),
+    )
     time.sleep(1)   # cho server kịp mở cổng (tránh 'connection refused')
     print('[traffic] iperf server (%s) bật nền trên %s'
           % ('UDP' if udp else 'TCP', host.name))
@@ -66,8 +101,7 @@ def measure_latency(src, dst_ip, count=10):
 def stop_all_iperf(*hosts):
     """Dọn dẹp iperf server nền (tránh chiếm cổng lần chạy sau)."""
     for h in hosts:
-        h.cmd('kill %iperf 2>/dev/null')
-        h.cmd('pkill -f iperf 2>/dev/null')
+        run_host_shell(h, 'pkill -f iperf 2>/dev/null')
     print('[traffic] đã dừng các iperf server')
 
 
@@ -81,12 +115,18 @@ def start_server_to_server(net, rate_mbps=2, duration=100000):
     srv2 = net.get('srv2')
     rate_text = ('%g' % rate_mbps)
 
-    srv2.cmd('iperf -s -u -p %d > /tmp/iperf_srv2_bg.log 2>&1 &'
-             % SERVER_TO_SERVER_PORT)
+    run_host_shell(
+        srv2,
+        'iperf -s -u -p %d > /tmp/iperf_srv2_bg.log 2>&1 &'
+        % SERVER_TO_SERVER_PORT,
+    )
     time.sleep(0.5)
-    srv1.cmd('iperf -c %s -u -b %sM -p %d -t %d '
-             '> /tmp/iperf_srv1_to_srv2_bg.log 2>&1 &'
-             % (srv2.IP(), rate_text, SERVER_TO_SERVER_PORT, duration))
+    run_host_shell(
+        srv1,
+        'iperf -c %s -u -b %sM -p %d -t %d '
+        '> /tmp/iperf_srv1_to_srv2_bg.log 2>&1 &'
+        % (srv2.IP(), rate_text, SERVER_TO_SERVER_PORT, duration),
+    )
     print('[traffic] nền srv1->srv2 UDP @%sMbps qua bottleneck s2-s3'
           % rate_text)
     return (srv1, srv2)
@@ -116,12 +156,18 @@ def start_background_load(net, scenario='normal', duration=60, rate='50M'):
 
     if scenario == 'flood':
         # client UDP chạy NỀN (& ) -> không chặn runner
-        h1.cmd('iperf -c %s -p %d -u -b %s -t %d > /tmp/iperf_cli_h1.log 2>&1 &'
-               % (srv1_ip, IPERF_PORT, rate, duration))
+        run_host_shell(
+            h1,
+            'iperf -c %s -p %d -u -b %s -t %d > /tmp/iperf_cli_h1.log 2>&1 &'
+            % (srv1_ip, IPERF_PORT, rate, duration),
+        )
         print('[traffic] FLOOD nền: h1 -> srv1 UDP @%s trong %ds' % (rate, duration))
     else:
-        h1.cmd('iperf -c %s -p %d -t %d > /tmp/iperf_cli_h1.log 2>&1 &'
-               % (srv1_ip, IPERF_PORT, duration))
+        run_host_shell(
+            h1,
+            'iperf -c %s -p %d -t %d > /tmp/iperf_cli_h1.log 2>&1 &'
+            % (srv1_ip, IPERF_PORT, duration),
+        )
         print('[traffic] NORMAL nền: h1 -> srv1 TCP trong %ds' % duration)
 
     return tuple({h.name: h for h in (h1, srv1) + bg_hosts}.values())
@@ -138,7 +184,10 @@ def demo_scenarios(net):
     stop_all_iperf(srv1)
 
     start_iperf_server(srv1, udp=True)
-    h1.cmd('ping -c 12 %s > /tmp/ping_during_flood.log 2>&1 &' % srv1_ip)
+    run_host_shell(
+        h1,
+        'ping -c 12 %s > /tmp/ping_during_flood.log 2>&1 &' % srv1_ip,
+    )
     traffic_flood(h1, srv1_ip, rate='50M', duration=10)
     read_server_udp_report(srv1)
     print(h1.cmd('cat /tmp/ping_during_flood.log'))

@@ -56,14 +56,15 @@ def ensure_parent_dir(path):
         os.makedirs(parent, exist_ok=True)
 
 
-def configure_file_logging(path):
+def configure_file_logging(path, append=False):
     ensure_parent_dir(path)
     root = logging.getLogger()
     for handler in list(root.handlers):
         root.removeHandler(handler)
         handler.close()
 
-    handler = logging.FileHandler(path, mode='a', encoding='utf-8')
+    mode = 'a' if append else 'w'
+    handler = logging.FileHandler(path, mode=mode, encoding='utf-8')
     handler.setFormatter(logging.Formatter('%(asctime)s [%(levelname)s] %(name)s: %(message)s'))
     root.addHandler(handler)
     root.setLevel(logging.INFO)
@@ -125,6 +126,8 @@ def main():
     p.add_argument('--policy', default='ditto/policy.json')
     p.add_argument('--log-path', default='logs/run_sync.log',
                    help='file log runtime cho sync agent/pusher')
+    p.add_argument('--append-log', action='store_true',
+                   help='ghi nối tiếp --log-path thay vì tạo log mới')
     p.add_argument('--server-bg-rate', type=float, default=2.0,
                    help='Mbps UDP nền srv1->srv2 qua s2-s3; 0 = tắt')
     a = p.parse_args()
@@ -134,7 +137,7 @@ def main():
                              a.measure_flow, a.verify)) > 1:
         p.error('--measure-latency, --measure-command, --measure-flow và --verify chỉ chạy một mode mỗi lần')
 
-    configure_file_logging(a.log_path)
+    configure_file_logging(a.log_path, append=a.append_log)
     log = logging.getLogger('run_sync')
     log.info('Log runtime -> %s', os.path.abspath(a.log_path))
 

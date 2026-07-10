@@ -27,6 +27,8 @@ VÌ SAO KHÔNG CHẠY ĐƯỢC `python3 collector.py`?
 
 import json
 import os
+import shlex
+import subprocess
 import time
 import datetime
 from contextlib import nullcontext
@@ -77,6 +79,39 @@ def read_host_net_dev(host):
         except OSError:
             pass
     return host.cmd('cat /proc/net/dev')
+
+
+def run_host_namespace_command(host, argv, timeout=None):
+    """Run a command in a Mininet host namespace without using host.cmd().
+
+    Mininet's host.cmd() uses one interactive shell per node. If a collector
+    ping is still running there, a concurrent configLinkStatus() can hit
+    Mininet's "self.waiting" assertion. mnexec attaches a new process to the
+    host namespace, so slow probes do not occupy that interactive shell.
+    """
+    pid = getattr(host, 'pid', None)
+    if pid:
+        try:
+            p = subprocess.run(
+                ['mnexec', '-a', str(pid)] + list(argv),
+                stdout=subprocess.PIPE,
+                stderr=subprocess.STDOUT,
+                text=True,
+                timeout=timeout,
+                check=False,
+            )
+            return p.stdout or ''
+        except subprocess.TimeoutExpired as e:
+            out = e.output or ''
+            if isinstance(out, bytes):
+                out = out.decode(errors='replace')
+            return out
+        except OSError:
+            pass
+
+    # Fallback for tests/older Mininet objects. Real Mininet hosts normally have
+    # a pid, so this path should not run during concurrent command measurements.
+    return host.cmd(' '.join(shlex.quote(str(x)) for x in argv))
 
 
 def read_intf_counters(intf):
@@ -405,7 +440,11 @@ class Collector:
     # ---- đo LATENCY (thưa hơn — Lesson 1.4: không phải metric nào cũng cùng tần suất) ----
     def collect_latency(self, src, dst_ip):
         # -i 0.2: 3 gói mất khoảng 0.6s thay vì mặc định khoảng 2s.
-        out = src.cmd('ping -c 3 -i 0.2 -W 1 %s' % dst_ip)
+        out = run_host_namespace_command(
+            src,
+            ['ping', '-c', '3', '-i', '0.2', '-W', '1', dst_ip],
+            timeout=self.cmd_timeout,
+        )
         return parse_ping(out)
 
     def collect_link(self, link, now_ts=None):

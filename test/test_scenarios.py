@@ -12,6 +12,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from mininet.topology_meta import toggleable_links  # noqa: E402
+import mininet.traffic as traffic_mod  # noqa: E402
 from rl.injection import InjectionChannel  # noqa: E402
 from rl.oracle_policy import oracle_action, oracle_feasible  # noqa: E402
 from rl.scenarios import (  # noqa: E402
@@ -52,9 +53,10 @@ class FakeLink:
 
 
 class FakeHost:
-    def __init__(self, name, ip='10.0.0.1'):
+    def __init__(self, name, ip='10.0.0.1', pid=None):
         self.name = name
         self._ip = ip
+        self.pid = pid
         self.commands = []
 
     def IP(self):
@@ -130,6 +132,47 @@ def test_traffic_flood_revert_is_idempotent_and_uses_dedicated_port():
     assert 'pkill -f "iperf.*%d"' % FLOOD_PORT in h1_commands
 
 
+def test_server_background_traffic_uses_mnexec_when_host_has_pid():
+    class BgNet:
+        def __init__(self):
+            self.hosts = {
+                'srv1': FakeHost('srv1', '10.0.0.4', pid=111),
+                'srv2': FakeHost('srv2', '10.0.0.5', pid=222),
+            }
+
+        def get(self, name):
+            return self.hosts[name]
+
+    calls = []
+    orig_run = traffic_mod.subprocess.run
+    orig_sleep = traffic_mod.time.sleep
+
+    def fake_run(argv, stdout=None, stderr=None, text=None, timeout=None,
+                 check=None):
+        calls.append({
+            'argv': argv,
+            'timeout': timeout,
+            'text': text,
+            'check': check,
+        })
+        return type('Result', (), {'stdout': ''})()
+
+    traffic_mod.subprocess.run = fake_run
+    traffic_mod.time.sleep = lambda _seconds: None
+    try:
+        net = BgNet()
+        traffic_mod.start_server_to_server(net, rate_mbps=2, duration=60)
+    finally:
+        traffic_mod.subprocess.run = orig_run
+        traffic_mod.time.sleep = orig_sleep
+
+    assert len(calls) == 2
+    assert calls[0]['argv'][:3] == ['mnexec', '-a', '222']
+    assert calls[1]['argv'][:3] == ['mnexec', '-a', '111']
+    assert net.get('srv1').commands == []
+    assert net.get('srv2').commands == []
+
+
 def test_make_scenario_is_deterministic_for_same_seed():
     spec = _spec()
     a = make_scenario(42, spec)
@@ -175,6 +218,7 @@ if __name__ == '__main__':
     tests = [
         test_link_degrade_revert_is_idempotent_and_restores_delay,
         test_traffic_flood_revert_is_idempotent_and_uses_dedicated_port,
+        test_server_background_traffic_uses_mnexec_when_host_has_pid,
         test_make_scenario_is_deterministic_for_same_seed,
         test_link_degrade_only_uses_toggleable_links,
         test_injection_channel_tracks_and_reverts_active_scenarios,
