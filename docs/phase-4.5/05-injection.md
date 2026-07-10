@@ -83,14 +83,28 @@ current topology, that means:
 s1-s2, s1-s3, s2-s3
 ```
 
-## 3-Sigma Calibration
+## Robust Noise Calibration
 
 Do not choose scenario strength by feel.
 
-1. Run healthy network traffic.
-2. Measure baseline observation noise.
-3. A scenario should move at least one observation dimension by `>= 3 * sigma`.
+1. Run healthy episode-normal background traffic.
+2. Measure baseline observation noise on the normalized state vector.
+3. A scenario should move at least one non-degenerate state dimension by
+   `>= abs_delta_threshold`.
 4. The oracle should still name a recovery action within the step budget.
+
+The threshold is robust, not raw standard deviation:
+
+```text
+MAD = median(|x - median(x)|)
+sigma_robust = 1.4826 * MAD
+abs_delta_threshold = 3 * sigma_robust
+```
+
+Dimensions with `sigma_robust == 0` are marked `degenerate` and are excluded
+from the visibility gate. Raw standard deviation is reported only as
+`std_reference_only`; do not use it for the gate because bursty traffic and
+collector probes make raw features non-Gaussian.
 
 Generate baseline noise:
 
@@ -102,7 +116,11 @@ cd ~/dt4n
 ```
 
 The committed baseline file is intentionally marked `"measured": false` until
-you run this on a healthy live system.
+you run this on a healthy live system with episode-normal background traffic.
+
+Scenario generation intentionally requires `numpy`. If an interpreter lacks
+`numpy`, it fails loudly instead of silently switching to a different RNG
+sequence.
 
 ## Local Checks
 
@@ -110,10 +128,10 @@ Pure checks:
 
 ```bash
 cd ~/dt4n
-python3 test/test_scenarios.py
 /usr/bin/python3 test/test_scenarios.py
+/usr/bin/python3 test/test_noise_std.py
 python3 -m py_compile rl/scenarios.py rl/injection.py rl/oracle_policy.py \
-  test/test_scenarios.py measurements/measure_noise_std.py
+  test/test_scenarios.py test/test_noise_std.py measurements/measure_noise_std.py
 ```
 
 Check no global RNG use in scenario generation:

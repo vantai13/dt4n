@@ -58,22 +58,27 @@ def extract_t_source(thing_body):
         return None
 
 
-def compute_aoi(things, t_read):
-    """Pure function: return {thing_id: t_read - tSource}.
+def compute_aoi(things, t_read, read_times=None):
+    """Pure function: return {thing_id: t_observed - tSource}.
 
-    Missing tSource is omitted. Negative AoI is returned and logged, not clipped,
-    so clock skew or timestamp bugs remain visible.
+    Direct GET snapshots are read sequentially, so each Thing has its own
+    observation time. Use read_times[thing_id] when available and fall back to
+    t_read for cached/search results. Missing tSource is omitted. Negative AoI
+    is returned and logged, not clipped, so clock skew or timestamp bugs remain
+    visible.
     """
+    read_times = read_times or {}
     out = {}
     for tid, body in things.items():
         t_source = extract_t_source(body)
         if t_source is None:
             continue
-        aoi = t_read - t_source
+        t_obs = read_times.get(tid, t_read)
+        aoi = t_obs - t_source
         if aoi < -CLOCK_TOLERANCE:
             log.warning(
-                'Negative AoI %.3fs for %s (tSource=%.3f, t_read=%.3f)',
-                aoi, tid, t_source, t_read,
+                'Negative AoI %.3fs for %s (tSource=%.3f, t_obs=%.3f)',
+                aoi, tid, t_source, t_obs,
             )
         out[tid] = aoi
     return out
@@ -260,6 +265,7 @@ class SnapshotCache:
 def fetch_snapshot(session, thing_ids, cache=None):
     """Read a snapshot and return (things, info) for TwinEnv."""
     things, meta = fetch_all_things(session, thing_ids)
+    read_times = meta.get('read_times', {})
     if cache is not None:
         things, cache_info = cache.get(things, meta)
     else:
@@ -270,12 +276,13 @@ def fetch_snapshot(session, thing_ids, cache=None):
             'consecutive_fails': 0,
         }
 
-    aoi = compute_aoi(things, meta['t_read'])
+    aoi = compute_aoi(things, meta['t_read'], read_times=read_times)
     info = dict(meta)
     info.pop('read_times', None)
     info.update(cache_info)
     info['aoi'] = aoi
     info['aoi_summary'] = aoi_summary(aoi)
+    info['snapshot_span_s'] = meta.get('fetch_ms', 0.0) / 1000.0
     return things, info
 
 

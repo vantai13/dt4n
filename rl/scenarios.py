@@ -139,41 +139,15 @@ class TrafficFlood(Scenario):
 SCENARIO_TYPES = [LinkDegrade, TrafficFlood]
 
 
-class _LocalRng:
-    """Small deterministic RNG fallback with a numpy-like subset."""
-
-    def __init__(self, seed):
-        self._state = (int(seed) & ((1 << 64) - 1)) or 0x9E3779B97F4A7C15
-
-    def _next_u64(self):
-        # xorshift64*, local-state only; no global RNG.
-        x = self._state
-        x ^= (x >> 12) & ((1 << 64) - 1)
-        x ^= (x << 25) & ((1 << 64) - 1)
-        x ^= (x >> 27) & ((1 << 64) - 1)
-        self._state = x & ((1 << 64) - 1)
-        return (self._state * 2685821657736338717) & ((1 << 64) - 1)
-
-    def integers(self, low, high=None):
-        if high is None:
-            high = low
-            low = 0
-        span = int(high) - int(low)
-        if span <= 0:
-            raise ValueError('invalid integer range [%r, %r)' % (low, high))
-        return int(low) + int(self._next_u64() % span)
-
-    def uniform(self, low=0.0, high=1.0):
-        unit = self._next_u64() / float((1 << 64) - 1)
-        return float(low) + unit * (float(high) - float(low))
-
-
 def _rng_from_seed(seed):
     try:
         from numpy.random import default_rng
-        return default_rng(seed)
-    except ImportError:
-        return _LocalRng(seed)
+    except ImportError as exc:
+        raise RuntimeError(
+            'numpy is required for reproducible scenario generation. '
+            'Install numpy in the interpreter that runs experiments.'
+        ) from exc
+    return default_rng(seed)
 
 
 def _choice(rng, items):

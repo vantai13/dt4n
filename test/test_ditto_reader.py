@@ -48,6 +48,19 @@ def test_compute_aoi_is_pure():
     assert abs(aoi['org.dt4n:host-h1'] - 1.2) < 1e-9
 
 
+def test_compute_aoi_uses_per_thing_read_times():
+    aoi = compute_aoi(
+        FAKE,
+        t_read=1001.0,
+        read_times={
+            'org.dt4n:link-s2-s3': 1000.2,
+            'org.dt4n:host-h1': 1000.4,
+        },
+    )
+    assert abs(aoi['org.dt4n:link-s2-s3'] - 0.2) < 1e-9
+    assert abs(aoi['org.dt4n:host-h1'] - 0.9) < 1e-9
+
+
 def test_missing_tsource_is_omitted_not_zeroed():
     assert compute_aoi({'x': {'features': {}}}, t_read=100.0) == {}
 
@@ -126,6 +139,7 @@ if __name__ == '__main__':
     tests = [
         test_extract_t_source,
         test_compute_aoi_is_pure,
+        test_compute_aoi_uses_per_thing_read_times,
         test_missing_tsource_is_omitted_not_zeroed,
         test_negative_aoi_is_returned_not_clipped,
         test_no_nan_ever,

@@ -19,7 +19,6 @@ from rl.scenarios import (  # noqa: E402
     FLOOD_PORT,
     LinkDegrade,
     TrafficFlood,
-    _LocalRng,
     make_scenario,
 )
 
@@ -181,12 +180,48 @@ def test_make_scenario_is_deterministic_for_same_seed():
     assert a.describe() == b.describe()
 
 
+def test_scenario_golden_values():
+    spec = _spec()
+    got = [make_scenario(seed=s, spec=spec).describe()
+           for s in (0, 1, 2, 42)]
+    expected = [
+        {
+            'type': 'TrafficFlood',
+            'src': 'h2',
+            'dst': 'srv2',
+            'rate_mbps': 38,
+        },
+        {
+            'type': 'LinkDegrade',
+            'link_key': 's1-s3',
+            'factor': 0.5801854785303742,
+            'delay': '2ms',
+            'baseline': 20.0,
+        },
+        {
+            'type': 'TrafficFlood',
+            'src': 'h1',
+            'dst': 'srv1',
+            'rate_mbps': 39,
+        },
+        {
+            'type': 'LinkDegrade',
+            'link_key': 's2-s3',
+            'factor': 0.3755513759008209,
+            'delay': '2ms',
+            'baseline': 5.0,
+        },
+    ]
+    assert got == expected, 'Scenario RNG changed. Old results are invalid.'
+
+
 def test_link_degrade_only_uses_toggleable_links():
     spec = _spec()
     allowed = set(toggleable_links(spec))
     for seed in range(100):
-        scenario = LinkDegrade.params_from_seed(_LocalRng(seed), spec)
-        assert scenario.link_key in allowed
+        scenario = make_scenario(seed, spec)
+        if isinstance(scenario, LinkDegrade):
+            assert scenario.link_key in allowed
 
 
 def test_injection_channel_tracks_and_reverts_active_scenarios():
@@ -220,6 +255,7 @@ if __name__ == '__main__':
         test_traffic_flood_revert_is_idempotent_and_uses_dedicated_port,
         test_server_background_traffic_uses_mnexec_when_host_has_pid,
         test_make_scenario_is_deterministic_for_same_seed,
+        test_scenario_golden_values,
         test_link_degrade_only_uses_toggleable_links,
         test_injection_channel_tracks_and_reverts_active_scenarios,
         test_oracle_names_recovery_action,

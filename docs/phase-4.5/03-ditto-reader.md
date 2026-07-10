@@ -3,7 +3,7 @@
 This step adds the Python read path for future RL agents:
 
 - `bridge.ditto_reader.fetch_snapshot(session, thing_ids, cache=None)`
-- `bridge.ditto_reader.compute_aoi(things, t_read)`
+- `bridge.ditto_reader.compute_aoi(things, t_read, read_times=None)`
 - `bridge.ditto_reader.SnapshotCache`
 - `measurements/bench_reader.py`
 
@@ -23,12 +23,14 @@ measured.
 
 ## Semantics
 
-`t_read` is recorded when the response is received. AoI is therefore a
-conservative upper bound with error no larger than one request RTT.
+`t_read` is recorded when the whole snapshot finishes. Direct GET snapshots
+also keep `read_times[thingId]`, the response time for each individual Thing,
+so AoI does not inherit a systematic ordering bias from sequential reads.
 
-`compute_aoi(things, t_read)` is pure:
+`compute_aoi(things, t_read, read_times=None)` is pure:
 
 - it does not call `time.time()`
+- it uses per-Thing `read_times` when available, falling back to `t_read`
 - missing `tSource` is omitted, not treated as zero
 - negative AoI is returned and logged, not clipped
 
