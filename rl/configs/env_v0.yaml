@@ -18,8 +18,10 @@ reset:
   equivalence_source: docs/phase-4.5/equivalence.json
 
 state:
-  draft_dims: 47
+  dims: 45
   state_builder: rl.state_builder_draft
+  dims_source: "python3 -m rl.state_builder_draft  # in ra 45 tên chiều"
+  frozen_at_commit: cfb9026
 
 actions:
   toggleable_links_source: mininet.topology_meta.toggleable_links

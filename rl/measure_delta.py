@@ -31,7 +31,7 @@ LINK = 's2-s3'
 BW_LOW = 5.0
 BW_HIGH = 15.0
 SATURATION_PORT = 5004
-POLL = 0.05
+POLL = 0.2
 STABLE_N = 3
 STABLE_TOL = 0.05
 CHANGE_MIN = 0.10
@@ -43,9 +43,11 @@ def _link_read(session, thing_id):
     features = thing.get('features', {})
     cap = features.get('capacity', {}).get('properties', {}).get('bwMbps')
     traffic = features.get('traffic', {}).get('properties', {})
+    meta = features.get('meta', {}).get('properties', {})
+    tsource = meta.get('tSource')
     rate_bytes = max(traffic.get('rxRate') or 0.0,
                      traffic.get('txRate') or 0.0)
-    return cap, float(rate_bytes) * 8.0 / 1e6
+    return cap, float(rate_bytes) * 8.0 / 1e6, tsource
 
 
 def _stable(values, tol):
@@ -58,48 +60,59 @@ def _stable(values, tol):
 
 def wait_rate_stable(session, thing_id, timeout=12.0, min_rate_mbps=0.1):
     hist = []
+    last_ts = None
     t0 = time.monotonic()
     last = 0.0
     while time.monotonic() - t0 < timeout:
-        _cap, rate = _link_read(session, thing_id)
+        _cap, rate, ts = _link_read(session, thing_id)
         last = rate
-        hist.append(rate)
-        hist = hist[-STABLE_N:]
-        if rate >= min_rate_mbps and _stable(hist, STABLE_TOL):
-            return True, rate
+        if ts is not None and ts != last_ts:
+            last_ts = ts
+            hist.append(rate)
+            hist = hist[-STABLE_N:]
+            if rate >= min_rate_mbps and _stable(hist, STABLE_TOL):
+                return True, rate
         time.sleep(POLL)
     return False, last
 
 
 def measure_once(session, thing_id, bw_to, timeout=12.0):
-    _cap_before, rate_before = _link_read(session, thing_id)
+    _cap_before, rate_before, _ts0 = _link_read(session, thing_id)
     t0 = send_command('setBandwidth', thing_id, {'bw': bw_to})
     t1 = None
     hist = []
+    last_ts = None
+    n_samples = 0
 
     while time.monotonic() - t0 < timeout:
-        cap, rate = _link_read(session, thing_id)
+        cap, rate, ts = _link_read(session, thing_id)
         now = time.monotonic()
 
         if t1 is None and cap is not None and abs(float(cap) - bw_to) < 0.01:
             t1 = now - t0
 
-        hist.append(rate)
-        hist = hist[-STABLE_N:]
-        if len(hist) == STABLE_N and rate_before > 0.1:
-            changed = abs(rate - rate_before) / rate_before
-            if _stable(hist, STABLE_TOL) and changed > CHANGE_MIN:
-                return {
-                    't1_s': t1,
-                    't2_s': now - t0,
-                    'rate_before_mbps': rate_before,
-                    'rate_after_mbps': rate,
-                }
+        if ts is not None and ts != last_ts:
+            last_ts = ts
+            n_samples += 1
+            hist.append(rate)
+            hist = hist[-STABLE_N:]
+
+            if len(hist) == STABLE_N and rate_before > 0.1:
+                changed = abs(rate - rate_before) / rate_before
+                if _stable(hist, STABLE_TOL) and changed > CHANGE_MIN:
+                    return {
+                        't1_s': t1,
+                        't2_s': now - t0,
+                        'n_collector_samples': n_samples,
+                        'rate_before_mbps': rate_before,
+                        'rate_after_mbps': rate,
+                    }
         time.sleep(POLL)
 
     return {
         't1_s': t1,
         't2_s': None,
+        'n_collector_samples': n_samples,
         'rate_before_mbps': rate_before,
         'rate_after_mbps': hist[-1] if hist else None,
     }
@@ -161,10 +174,11 @@ def main():
             row = measure_once(session, thing_id, BW_HIGH,
                                timeout=args.timeout)
             rows.append(row)
-            print('%02d t1=%s t2=%s rate %.2f->%s Mbps' % (
+            print('%02d t1=%s t2=%s samples=%d rate %.2f->%s Mbps' % (
                 idx,
                 '%.2fs' % row['t1_s'] if row['t1_s'] is not None else 'TIMEOUT',
                 '%.2fs' % row['t2_s'] if row['t2_s'] is not None else 'TIMEOUT',
+                row['n_collector_samples'],
                 row['rate_before_mbps'],
                 '%.2f' % row['rate_after_mbps']
                 if row['rate_after_mbps'] is not None else 'NA',
@@ -191,10 +205,17 @@ def main():
         'bw_low_mbps': BW_LOW,
         'bw_high_mbps': BW_HIGH,
         'period_s': args.period,
+        'poll_interval_s': POLL,
         'stable_n': STABLE_N,
         'stable_tol': STABLE_TOL,
         'change_min': CHANGE_MIN,
         'margin_s': args.margin,
+        't2_resolution_note': (
+            'The t2 measurement resolves the consequence only at collector '
+            'sample boundaries (period=%.1fs), with poll granularity %.2fs. '
+            'Reported t2 therefore has a systematic floor of STABLE_N*period.'
+            % (args.period, POLL)
+        ),
         't1': t1_stats,
         't2': t2_stats,
         'delta_s': delta,
