@@ -1,0 +1,79 @@
+=== DT4N Measurement Machine ===
+Recorded at: 2026-07-10T14:46:14+07:00
+Repository: /home/vantai/dt4n
+Git branch: main
+Git HEAD: cfb902696a39fdfc3b5e97dfc962437ffa40d2cf
+Git describe: cfb9026
+
+=== OS ===
+ Static hostname: vantai
+       Icon name: computer-container
+         Chassis: container
+      Machine ID: 38827c93e2a743ef8948f4af192a9372
+         Boot ID: 7a4087ba768f438d95ea1e4927ad777c
+  Virtualization: wsl
+Operating System: Ubuntu 22.04.5 LTS
+          Kernel: Linux 6.6.87.1-microsoft-standard-WSL2
+Linux vantai 6.6.87.1-microsoft-standard-WSL2 #1 SMP PREEMPT_DYNAMIC Mon Apr 21 17:08:54 UTC 2025 x86_64 x86_64 x86_64 GNU/Linux
+
+=== CPU ===
+Architecture:                         x86_64
+CPU op-mode(s):                       32-bit, 64-bit
+Address sizes:                        48 bits physical, 48 bits virtual
+Byte Order:                           Little Endian
+CPU(s):                               12
+On-line CPU(s) list:                  0-11
+Vendor ID:                            AuthenticAMD
+Model name:                           AMD Ryzen 5 7535HS with Radeon Graphics
+CPU family:                           25
+Model:                                68
+Thread(s) per core:                   2
+Core(s) per socket:                   6
+Socket(s):                            1
+Stepping:                             1
+Microcode version:                    0xffffffff
+BogoMIPS:                             6587.44
+Flags:                                fpu vme de pse tsc msr pae mce cx8 apic sep mtrr pge mca cmov pat pse36 clflush mmx fxsr sse sse2 ht syscall nx mmxext fxsr_opt pdpe1gb rdtscp lm constant_tsc rep_good nopl tsc_reliable nonstop_tsc cpuid extd_apicid tsc_known_freq pni pclmulqdq ssse3 fma cx16 sse4_1 sse4_2 movbe popcnt aes xsave avx f16c rdrand hypervisor lahf_lm cmp_legacy svm cr8_legacy abm sse4a misalignsse 3dnowprefetch osvw topoext perfctr_core ssbd ibrs ibpb stibp vmmcall fsgsbase bmi1 avx2 smep bmi2 erms invpcid rdseed adx smap clflushopt clwb sha_ni xsaveopt xsavec xgetbv1 xsaves clzero xsaveerptr arat npt nrip_save tsc_scale vmcb_clean flushbyasid decodeassists pausefilter pfthreshold v_vmsave_vmload umip vaes vpclmulqdq rdpid fsrm
+Virtualization:                       AMD-V
+Hypervisor vendor:                    Microsoft
+Virtualization type:                  full
+L1d cache:                            192 KiB (6 instances)
+L1i cache:                            192 KiB (6 instances)
+
+=== MEMORY ===
+               total        used        free      shared  buff/cache   available
+Mem:           7.4Gi       5.6Gi       121Mi        19Mi       1.6Gi       1.6Gi
+Swap:          2.0Gi        45Mi       2.0Gi
+
+=== LOAD ===
+ 14:46:14 up  6:03,  2 users,  load average: 1.16, 0.93, 0.81
+
+=== PYTHON ===
+Python 3.10.12
+numpy: 1.21.5
+scipy: 1.8.0
+requests: 2.32.5
+
+=== RYU ===
+/bin/bash: line 51: ryu-manager: command not found
+
+=== OPEN VSWITCH ===
+sudo: a password is required
+
+=== MININET ===
+2.3.1b4
+
+=== DOCKER ===
+Docker version 28.2.2, build e6534b4
+Docker Compose version v2.37.1-desktop.1
+
+=== RUNNING CONTAINERS ===
+NAMES                    STATUS                    PORTS
+docker-nginx-1           Up 20 minutes             0.0.0.0:8080->80/tcp, [::]:8080->80/tcp
+docker-things-1          Up 20 minutes (healthy)   8080/tcp
+docker-connectivity-1    Up 20 minutes (healthy)   8080/tcp
+docker-gateway-1         Up 20 minutes (healthy)   0.0.0.0:8081->8080/tcp, [::]:8081->8080/tcp
+docker-things-search-1   Up 20 minutes (healthy)   8080/tcp
+docker-mongodb-1         Up 20 minutes             0.0.0.0:27017->27017/tcp, [::]:27017->27017/tcp
+docker-ditto-ui-1        Up 20 minutes             8080/tcp
+docker-policies-1        Up 20 minutes (healthy)   8080/tcp

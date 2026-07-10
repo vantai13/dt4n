@@ -51,3 +51,8 @@ Thumbs.db
 
 # --- Không ignore .gitkeep (giữ thư mục rỗng) ---
 !.gitkeep
+
+# Phase 4.5 raw logs (regenerable; artifacts/ and baseline/ are tracked)
+docs/phase-4.5/raw/*.log
+docs/phase-4.5/raw/*.txt
+!docs/phase-4.5/raw/.gitkeep
