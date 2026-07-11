@@ -52,6 +52,7 @@ POLL = 0.2
 STABLE_N = 3
 STABLE_TOL = 0.05
 CHANGE_MIN = 0.10
+CHANGE_FRAC = 0.50
 
 CONTROLLER = '%s:controller' % NAMESPACE
 FLOW_TS_RE = re.compile(r'^\[([\d-]+ [\d:.]+)\]')
@@ -266,7 +267,7 @@ def add_decomposition(row):
     click_wall = row.get('click_wall')
     exec_done = row.get('exec_done_wall')
 
-    for prefix in ('t1', 't2'):
+    for prefix in ('t1', 't_change', 't2'):
         source = row.get('%s_source_wall' % prefix)
         seen = row.get('%s_seen_wall' % prefix)
         if source is not None and click_wall is not None:
@@ -285,15 +286,24 @@ def add_decomposition(row):
             row['t2_source_wall'] - exec_done) * 1000.0
     else:
         row['metric_settle_after_exec_ms'] = None
+    if exec_done is not None and row.get('t_change_source_wall') is not None:
+        row['metric_change_after_exec_ms'] = (
+            row['t_change_source_wall'] - exec_done) * 1000.0
+    else:
+        row['metric_change_after_exec_ms'] = None
     return row
 
 
-def measure_once(session, thing_id, bw_to, timeout=12.0):
+def measure_once(session, thing_id, bw_to, timeout=12.0,
+                 change_min=CHANGE_MIN, change_threshold_mbps=None,
+                 change_frac=CHANGE_FRAC, sigma_rate_mbps=None):
     before = _link_read(session, thing_id)
     command = send_command_traced('setBandwidth', thing_id, {'bw': bw_to})
     t0 = command['click_mono']
     t1 = None
     t1_sample = None
+    t_change = None
+    t_change_sample = None
     t2_sample = None
     hist = []
     samples = []
@@ -316,6 +326,43 @@ def measure_once(session, thing_id, bw_to, timeout=12.0):
             enriched = dict(sample)
             enriched['seen_mono'] = now_mono
             samples.append(enriched)
+            if t_change is None and before['rate_mbps'] > 0.1:
+                abs_delta = abs(rate - before['rate_mbps'])
+                rel_delta = abs_delta / before['rate_mbps']
+                try:
+                    expected_swing = abs(float(bw_to) - before['rate_mbps'])
+                except (TypeError, ValueError):
+                    expected_swing = before['rate_mbps']
+                cap_before = before.get('cap')
+                try:
+                    expect_increase = float(bw_to) > float(cap_before)
+                except (TypeError, ValueError):
+                    expect_increase = True
+                if expect_increase:
+                    direction_ok = rate > before['rate_mbps']
+                else:
+                    direction_ok = rate < before['rate_mbps']
+                enough_abs = (
+                    change_threshold_mbps is not None
+                    and abs_delta >= change_threshold_mbps
+                )
+                enough_rel = rel_delta > change_min
+                if change_frac is not None:
+                    enough_change = (
+                        abs_delta >= change_frac * max(expected_swing, 0.01))
+                    if sigma_rate_mbps is not None:
+                        enough_change = (
+                            enough_change
+                            and abs_delta >= 3.0 * sigma_rate_mbps)
+                    if change_threshold_mbps is not None:
+                        enough_change = (
+                            enough_change
+                            and abs_delta >= change_threshold_mbps)
+                else:
+                    enough_change = enough_abs or enough_rel
+                if direction_ok and enough_change:
+                    t_change = now_mono - t0
+                    t_change_sample = enriched
             hist.append(rate)
             hist = hist[-STABLE_N:]
 
@@ -341,9 +388,16 @@ def measure_once(session, thing_id, bw_to, timeout=12.0):
         'exec_done_wall': flow.get('exec_done_wall'),
         'execute_error': flow.get('execute_error'),
         't1_s': t1,
+        't_change_s': t_change,
         't2_s': ((t2_sample['seen_mono'] - t0) if t2_sample else None),
         'n_collector_samples': len(samples),
         'rate_before_mbps': before['rate_mbps'],
+        'rate_change_mbps': (
+            t_change_sample['rate_mbps'] if t_change_sample else None),
+        'change_progress_frac': (
+            abs(t_change_sample['rate_mbps'] - before['rate_mbps'])
+            / max(abs(float(bw_to) - before['rate_mbps']), 0.01)
+            if t_change_sample else None),
         'rate_after_mbps': t2_sample['rate_mbps'] if t2_sample else (
             samples[-1]['rate_mbps'] if samples else None),
         'cap_before_mbps': before['cap'],
@@ -351,6 +405,12 @@ def measure_once(session, thing_id, bw_to, timeout=12.0):
         't1_source_wall': t1_sample.get('t_source_wall') if t1_sample else None,
         't1_seen_wall': t1_sample.get('read_wall') if t1_sample else None,
         't1_fetch_ms': t1_sample.get('fetch_ms') if t1_sample else None,
+        't_change_source_wall': (
+            t_change_sample.get('t_source_wall') if t_change_sample else None),
+        't_change_seen_wall': (
+            t_change_sample.get('read_wall') if t_change_sample else None),
+        't_change_fetch_ms': (
+            t_change_sample.get('fetch_ms') if t_change_sample else None),
         't2_source_wall': t2_sample.get('t_source_wall') if t2_sample else None,
         't2_seen_wall': t2_sample.get('read_wall') if t2_sample else None,
         't2_fetch_ms': t2_sample.get('fetch_ms') if t2_sample else None,
@@ -384,7 +444,7 @@ def summarize_ms(rows, key):
     return summarize(values)
 
 
-def start_saturation_traffic(net):
+def start_saturation_traffic(net, traffic='tcp', udp_rate_mbps=20.0):
     srv1 = net.get('srv1')
     srv2 = net.get('srv2')
     for host in (srv1, srv2):
@@ -392,17 +452,28 @@ def start_saturation_traffic(net):
             host,
             'pkill -f "iperf.*%d" 2>/dev/null' % SATURATION_PORT,
         )
+    udp = traffic == 'udp'
     run_host_shell(
         srv2,
-        'iperf -s -p %d > /tmp/delta_iperf_srv2.log 2>&1 &'
-        % SATURATION_PORT,
+        'iperf -s %s -p %d > /tmp/delta_iperf_srv2.log 2>&1 &'
+        % ('-u' if udp else '', SATURATION_PORT),
     )
     time.sleep(0.5)
+    if udp:
+        command = (
+            'iperf -c %s -u -b %gM -p %d -t 100000 '
+            '> /tmp/delta_iperf_srv1.log 2>&1 &'
+            % (srv2.IP(), udp_rate_mbps, SATURATION_PORT)
+        )
+    else:
+        command = (
+            'iperf -c %s -p %d -t 100000 '
+            '> /tmp/delta_iperf_srv1.log 2>&1 &'
+            % (srv2.IP(), SATURATION_PORT)
+        )
     run_host_shell(
         srv1,
-        'iperf -c %s -p %d -t 100000 '
-        '> /tmp/delta_iperf_srv1.log 2>&1 &'
-        % (srv2.IP(), SATURATION_PORT),
+        command,
     )
 
 
@@ -421,6 +492,10 @@ def write_csv(path, rows):
         't1_s',
         't1_command_to_sample_ms',
         't1_sample_to_seen_ms',
+        't_change_s',
+        't_change_command_to_sample_ms',
+        'metric_change_after_exec_ms',
+        't_change_sample_to_seen_ms',
         't2_s',
         't2_command_to_sample_ms',
         'metric_settle_after_exec_ms',
@@ -428,6 +503,8 @@ def write_csv(path, rows):
         't2_fetch_ms',
         'n_collector_samples',
         'rate_before_mbps',
+        'rate_change_mbps',
+        'change_progress_frac',
         'rate_after_mbps',
         'cap_before_mbps',
         'cap_after_mbps',
@@ -450,6 +527,21 @@ def main():
     p.add_argument('--period', type=float, default=1.0)
     p.add_argument('--timeout', type=float, default=12.0)
     p.add_argument('--margin', type=float, default=0.3)
+    p.add_argument('--traffic', choices=('tcp', 'udp'), default='tcp')
+    p.add_argument('--sat-mode', dest='traffic', choices=('tcp', 'udp'),
+                   help='alias for --traffic')
+    p.add_argument('--udp-rate-mbps', type=float, default=20.0)
+    p.add_argument('--change-min', type=float, default=CHANGE_MIN,
+                   help='relative threshold for t_change detection')
+    p.add_argument('--change-frac', type=float, default=CHANGE_FRAC,
+                   help='expected swing fraction for t_50 detection; '
+                        'set negative to use legacy change-min logic')
+    p.add_argument('--change-threshold-mbps', type=float, default=None,
+                   help='optional absolute threshold for t_change detection')
+    p.add_argument('--sigma-mbps', type=float, default=None,
+                   help='robust rate sigma in Mbps; t_50 must exceed 3*sigma')
+    p.add_argument('--sigma-json', default=None,
+                   help='JSON with robust_sigma_mbps for t_50 noise gate')
     p.add_argument('--out', default='docs/phase-4.5/artifacts/delta.json')
     p.add_argument('--csv', default='docs/phase-4.5/artifacts/delta_components.csv')
     p.add_argument('--log-path', default='docs/phase-4.5/raw/delta_runtime.log')
@@ -458,6 +550,13 @@ def main():
     p.add_argument('--run-sync-log-copy',
                    default='docs/phase-4.5/raw/delta_run_sync.log')
     args = p.parse_args()
+    if args.change_frac is not None and args.change_frac < 0:
+        args.change_frac = None
+    sigma_rate_mbps = args.sigma_mbps
+    if args.sigma_json:
+        with open(args.sigma_json, encoding='utf-8') as f:
+            sigma_data = json.load(f)
+        sigma_rate_mbps = sigma_data.get('robust_sigma_mbps', sigma_rate_mbps)
 
     configure_logging(args.log_path)
     reset_file(FLOW_LOG_PATH)
@@ -476,7 +575,8 @@ def main():
         runner.start()
         send_command_traced('setBandwidth', thing_id, {'bw': BW_LOW})
         wait_capacity(session, thing_id, BW_LOW, timeout=args.timeout)
-        start_saturation_traffic(runner.net)
+        start_saturation_traffic(runner.net, traffic=args.traffic,
+                                 udp_rate_mbps=args.udp_rate_mbps)
         ok, sample = wait_rate_stable(
             session, thing_id, timeout=args.timeout,
             min_rate_mbps=3.0, max_rate_mbps=8.5)
@@ -484,32 +584,44 @@ def main():
             'saturated_low_ok': ok,
             'low_rate_mbps': sample['rate_mbps'],
             'low_capacity_mbps': sample['cap'],
+            'traffic': args.traffic,
+            'udp_rate_mbps': args.udp_rate_mbps if args.traffic == 'udp' else None,
         }
-        print('baseline saturated=%s rate=%.2fMbps cap=%s' % (
-            ok, sample['rate_mbps'], sample['cap']))
+        print('baseline traffic=%s saturated=%s rate=%.2fMbps cap=%s' % (
+            args.traffic, ok, sample['rate_mbps'], sample['cap']))
         if not ok:
             print('WARNING: s2-s3 is not stably saturated at low bandwidth; '
                   't2 can be invalid.')
 
         for idx in range(1, args.trials + 1):
             row = measure_once(session, thing_id, BW_HIGH,
-                               timeout=args.timeout)
+                               timeout=args.timeout,
+                               change_min=args.change_min,
+                               change_threshold_mbps=args.change_threshold_mbps,
+                               change_frac=args.change_frac,
+                               sigma_rate_mbps=sigma_rate_mbps)
             rows.append(row)
-            print('%02d t1=%s t2=%s cmd=%s settle=%s sample_seen=%s '
-                  'samples=%d rate %.2f->%s Mbps' % (
+            print('%02d t1=%s t_change=%s t2=%s cmd=%s change=%s '
+                  'settle=%s sample_seen=%s samples=%d rate %.2f->%s->%s Mbps' % (
                       idx,
                       '%.2fs' % row['t1_s']
                       if row['t1_s'] is not None else 'TIMEOUT',
+                      '%.2fs' % row['t_change_s']
+                      if row['t_change_s'] is not None else 'TIMEOUT',
                       '%.2fs' % row['t2_s']
                       if row['t2_s'] is not None else 'TIMEOUT',
                       '%.0fms' % row['command_done_ms']
                       if row.get('command_done_ms') is not None else 'NA',
+                      '%.0fms' % row['metric_change_after_exec_ms']
+                      if row.get('metric_change_after_exec_ms') is not None else 'NA',
                       '%.0fms' % row['metric_settle_after_exec_ms']
                       if row.get('metric_settle_after_exec_ms') is not None else 'NA',
                       '%.0fms' % row['t2_sample_to_seen_ms']
                       if row.get('t2_sample_to_seen_ms') is not None else 'NA',
                       row['n_collector_samples'],
                       row['rate_before_mbps'],
+                      '%.2f' % row['rate_change_mbps']
+                      if row['rate_change_mbps'] is not None else 'NA',
                       '%.2f' % row['rate_after_mbps']
                       if row['rate_after_mbps'] is not None else 'NA',
                   ))
@@ -526,7 +638,12 @@ def main():
         runner.close()
 
     t1_stats = summarize([row['t1_s'] for row in rows])
+    t_change_stats = summarize([row['t_change_s'] for row in rows])
     t2_stats = summarize([row['t2_s'] for row in rows])
+    delta_change = (
+        t_change_stats['p95_s'] + args.margin
+        if t_change_stats is not None else None
+    )
     delta = t2_stats['p95_s'] + args.margin if t2_stats is not None else None
 
     result = {
@@ -535,21 +652,32 @@ def main():
         'bw_low_mbps': BW_LOW,
         'bw_high_mbps': BW_HIGH,
         'period_s': args.period,
+        'traffic': args.traffic,
+        'udp_rate_mbps': args.udp_rate_mbps if args.traffic == 'udp' else None,
         'poll_interval_s': POLL,
         'stable_n': STABLE_N,
         'stable_tol': STABLE_TOL,
-        'change_min': CHANGE_MIN,
+        'change_min': args.change_min,
+        'change_frac': args.change_frac,
+        'change_threshold_mbps': args.change_threshold_mbps,
+        'sigma_rate_mbps': sigma_rate_mbps,
         'margin_s': args.margin,
+        'delta_change_s': delta_change,
         'delta_s': delta,
         'baseline': baseline,
         'notes': [
             't1 is capacity reflection; t2 is traffic consequence reflection.',
+            't_change is the first new collector sample whose rate changed past the configured threshold.',
+            'When change_frac is set, t_change is t_50: direction-correct progress through the expected swing and above the noise gate.',
             't2 uses only new collector samples (meta.tSource changes).',
             'Delta recommendation is p95(t2_s) + margin_s.',
+            'Delta_change candidate is p95(t_change_s) + margin_s.',
             'component metric_settle_after_exec_ms is exec_done -> t2 sample tSource.',
+            'component metric_change_after_exec_ms is exec_done -> t_change sample tSource.',
             'component t2_sample_to_seen_ms is t2 tSource -> measurement GET saw it.',
         ],
         't1': t1_stats,
+        't_change': t_change_stats,
         't2': t2_stats,
         'components': {
             'post': summarize_ms(rows, 'post_ms'),
@@ -559,6 +687,12 @@ def main():
             'command_done': summarize_ms(rows, 'command_done_ms'),
             't1_command_to_sample': summarize_ms(rows, 't1_command_to_sample_ms'),
             't1_sample_to_seen': summarize_ms(rows, 't1_sample_to_seen_ms'),
+            't_change_command_to_sample': summarize_ms(
+                rows, 't_change_command_to_sample_ms'),
+            'metric_change_after_exec': summarize_ms(
+                rows, 'metric_change_after_exec_ms'),
+            't_change_sample_to_seen': summarize_ms(
+                rows, 't_change_sample_to_seen_ms'),
             't2_command_to_sample': summarize_ms(rows, 't2_command_to_sample_ms'),
             'metric_settle_after_exec': summarize_ms(
                 rows, 'metric_settle_after_exec_ms'),
@@ -593,7 +727,9 @@ def main():
 
     print('\n=== RESULT ===')
     print('t1:', t1_stats)
+    print('t_change:', t_change_stats)
     print('t2:', t2_stats)
+    print('Delta_change:', delta_change)
     print('Delta:', delta)
     print('components:', result['components'])
     print('Wrote %s' % args.out)

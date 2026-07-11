@@ -1,0 +1,74 @@
+{
+  "results": [
+    {
+      "ack_ms": 542.0139150010073,
+      "cid": "864f3fcc-3c0c-4a26-baae-97d85342640e",
+      "executed": false,
+      "expected": true,
+      "gate": "FAIL",
+      "http_status": "ReadTimeout",
+      "label": "valid_bw_15",
+      "post_ms": 2369.8126939998474,
+      "reason": "no_flow_log_entry",
+      "records": null,
+      "subject": "setBandwidth"
+    },
+    {
+      "ack_ms": 500.02717600000324,
+      "cid": "c44f45dc-b8cf-4edd-b1d4-ed891bed1047",
+      "executed": false,
+      "expected": false,
+      "gate": "FAIL",
+      "http_status": "ReadTimeout",
+      "label": "invalid_bw_negative",
+      "post_ms": 2210.3113360026327,
+      "reason": "no_flow_log_entry",
+      "records": null,
+      "subject": "setBandwidth"
+    },
+    {
+      "ack_ms": 741.3322739994328,
+      "cid": "812419ca-de5d-4b62-ad34-f7962457ca7f",
+      "executed": false,
+      "expected": false,
+      "gate": "FAIL",
+      "http_status": "ReadTimeout",
+      "label": "invalid_bw_string",
+      "post_ms": 2185.5681009983527,
+      "reason": "no_flow_log_entry",
+      "records": null,
+      "subject": "setBandwidth"
+    },
+    {
+      "ack_ms": 501.2587919991347,
+      "cid": "0b3b8220-b8b3-4316-9d8b-0de51feacbf9",
+      "executed": false,
+      "expected": false,
+      "gate": "FAIL",
+      "http_status": "ReadTimeout",
+      "label": "invalid_unknown_subject",
+      "post_ms": 2003.1487699998252,
+      "reason": "no_flow_log_entry",
+      "records": null,
+      "subject": "notACommand"
+    },
+    {
+      "ack_ms": 514.2971880013647,
+      "cid": "6ef58748-1388-4bdf-8bdd-04f07e38ad16",
+      "executed": false,
+      "expected": false,
+      "gate": "FAIL",
+      "http_status": 202,
+      "label": "invalid_bad_target",
+      "post_ms": 818.1600820025778,
+      "reason": "no_flow_log_entry",
+      "records": null,
+      "subject": "setBandwidth"
+    }
+  ],
+  "tail_stats": {
+    "file_pos": 4223,
+    "n_cids_indexed": 0,
+    "n_lines_read": 36
+  }
+}

@@ -1,0 +1,424 @@
+{
+  "results": [
+    {
+      "ack_ms": 41.27905000132159,
+      "cid": "46ee4460-bd45-433f-9f64-7fe79b7e53b1",
+      "executed": true,
+      "expected": true,
+      "gate": "PASS",
+      "http_status": 202,
+      "label": "valid_bw_15",
+      "post_ms": 33.89558799972292,
+      "reason": null,
+      "records": [
+        {
+          "bytes": "103",
+          "cid": "46ee4460-bd45-433f-9f64-7fe79b7e53b1",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "SSE_EVENT",
+          "eventName": "setBandwidth",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.613] [AGENT] [INFO] [cid=46ee4460-bd45-433f-9f64-7fe79b7e53b1] SSE_EVENT subject=setBandwidth target=org.dt4n:link-s2-s3 bytes=103 correlationSource=payload:clientCorrelationId eventName=setBandwidth sseFields=[\"event\"]",
+          "source": "AGENT",
+          "sseFields": "[\"event\"",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "46ee4460-bd45-433f-9f64-7fe79b7e53b1",
+          "event": "RECEIVE",
+          "level": "INFO",
+          "params": "{\"bw\":15.0}",
+          "raw": "[2026-07-10 22:35:17.613] [AGENT] [INFO] [cid=46ee4460-bd45-433f-9f64-7fe79b7e53b1] RECEIVE subject=setBandwidth target=org.dt4n:link-s2-s3 params={\"bw\":15.0}",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "46ee4460-bd45-433f-9f64-7fe79b7e53b1",
+          "event": "EXECUTE_START",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.613] [AGENT] [INFO] [cid=46ee4460-bd45-433f-9f64-7fe79b7e53b1] EXECUTE_START subject=setBandwidth target=org.dt4n:link-s2-s3",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "46ee4460-bd45-433f-9f64-7fe79b7e53b1",
+          "event": "LOCK_WAIT",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.613] [AGENT] [INFO] [cid=46ee4460-bd45-433f-9f64-7fe79b7e53b1] LOCK_WAIT subject=setBandwidth target=org.dt4n:link-s2-s3 waitMs=0",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3",
+          "waitMs": "0"
+        },
+        {
+          "cid": "46ee4460-bd45-433f-9f64-7fe79b7e53b1",
+          "code": "200",
+          "detail": "link",
+          "event": "EXECUTE_DONE",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.654] [AGENT] [INFO] [cid=46ee4460-bd45-433f-9f64-7fe79b7e53b1] EXECUTE_DONE subject=setBandwidth target=org.dt4n:link-s2-s3 detail=link bw -> 15.0 Mbps code=200",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "46ee4460-bd45-433f-9f64-7fe79b7e53b1",
+          "code": "200",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "RESPONSE_SEND",
+          "level": "INFO",
+          "ok": "true",
+          "raw": "[2026-07-10 22:35:17.654] [AGENT] [INFO] [cid=46ee4460-bd45-433f-9f64-7fe79b7e53b1] RESPONSE_SEND subject=setBandwidth target=org.dt4n:controller code=200 correlationSource=payload:clientCorrelationId ok=true",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:controller"
+        },
+        {
+          "cid": "46ee4460-bd45-433f-9f64-7fe79b7e53b1",
+          "event": "RESPONSE_OK",
+          "http_status": "202",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.685] [AGENT] [INFO] [cid=46ee4460-bd45-433f-9f64-7fe79b7e53b1] RESPONSE_OK subject=setBandwidth target=org.dt4n:controller http_status=202",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:controller"
+        }
+      ],
+      "subject": "setBandwidth"
+    },
+    {
+      "ack_ms": 0.1925690012285486,
+      "cid": "4fc10f68-cbda-4cd6-86ac-fee7fa3df590",
+      "executed": false,
+      "expected": false,
+      "gate": "PASS",
+      "http_status": 202,
+      "label": "invalid_bw_negative",
+      "post_ms": 28.45698900273419,
+      "reason": "bw out of range (0, 100], got -999.0",
+      "records": [
+        {
+          "bytes": "105",
+          "cid": "4fc10f68-cbda-4cd6-86ac-fee7fa3df590",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "SSE_EVENT",
+          "eventName": "setBandwidth",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.926] [AGENT] [INFO] [cid=4fc10f68-cbda-4cd6-86ac-fee7fa3df590] SSE_EVENT subject=setBandwidth target=org.dt4n:link-s2-s3 bytes=105 correlationSource=payload:clientCorrelationId eventName=setBandwidth sseFields=[\"event\"]",
+          "source": "AGENT",
+          "sseFields": "[\"event\"",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "4fc10f68-cbda-4cd6-86ac-fee7fa3df590",
+          "event": "RECEIVE",
+          "level": "INFO",
+          "params": "{\"bw\":-999.0}",
+          "raw": "[2026-07-10 22:35:17.926] [AGENT] [INFO] [cid=4fc10f68-cbda-4cd6-86ac-fee7fa3df590] RECEIVE subject=setBandwidth target=org.dt4n:link-s2-s3 params={\"bw\":-999.0}",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "4fc10f68-cbda-4cd6-86ac-fee7fa3df590",
+          "event": "EXECUTE_START",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.926] [AGENT] [INFO] [cid=4fc10f68-cbda-4cd6-86ac-fee7fa3df590] EXECUTE_START subject=setBandwidth target=org.dt4n:link-s2-s3",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "4fc10f68-cbda-4cd6-86ac-fee7fa3df590",
+          "event": "LOCK_WAIT",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.927] [AGENT] [INFO] [cid=4fc10f68-cbda-4cd6-86ac-fee7fa3df590] LOCK_WAIT subject=setBandwidth target=org.dt4n:link-s2-s3 waitMs=0",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3",
+          "waitMs": "0"
+        },
+        {
+          "cid": "4fc10f68-cbda-4cd6-86ac-fee7fa3df590",
+          "code": "400",
+          "detail": "bw",
+          "event": "REJECT",
+          "level": "WARN",
+          "raw": "[2026-07-10 22:35:17.927] [AGENT] [WARN] [cid=4fc10f68-cbda-4cd6-86ac-fee7fa3df590] REJECT subject=setBandwidth target=org.dt4n:link-s2-s3 detail=bw out of range (0, 100], got -999.0 code=400",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "4fc10f68-cbda-4cd6-86ac-fee7fa3df590",
+          "code": "400",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "RESPONSE_SEND",
+          "level": "INFO",
+          "ok": "false",
+          "raw": "[2026-07-10 22:35:17.927] [AGENT] [INFO] [cid=4fc10f68-cbda-4cd6-86ac-fee7fa3df590] RESPONSE_SEND subject=setBandwidth target=org.dt4n:controller code=400 correlationSource=payload:clientCorrelationId ok=false",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:controller"
+        },
+        {
+          "cid": "4fc10f68-cbda-4cd6-86ac-fee7fa3df590",
+          "event": "RESPONSE_OK",
+          "http_status": "202",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:17.955] [AGENT] [INFO] [cid=4fc10f68-cbda-4cd6-86ac-fee7fa3df590] RESPONSE_OK subject=setBandwidth target=org.dt4n:controller http_status=202",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:controller"
+        }
+      ],
+      "subject": "setBandwidth"
+    },
+    {
+      "ack_ms": 0.23495300047216006,
+      "cid": "6e4a6299-fdbd-4543-b34e-666dab2dc5d1",
+      "executed": false,
+      "expected": false,
+      "gate": "PASS",
+      "http_status": 202,
+      "label": "invalid_bw_string",
+      "post_ms": 29.49549500044668,
+      "reason": "bw must be a number, got 'abc'",
+      "records": [
+        {
+          "bytes": "104",
+          "cid": "6e4a6299-fdbd-4543-b34e-666dab2dc5d1",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "SSE_EVENT",
+          "eventName": "setBandwidth",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.209] [AGENT] [INFO] [cid=6e4a6299-fdbd-4543-b34e-666dab2dc5d1] SSE_EVENT subject=setBandwidth target=org.dt4n:link-s2-s3 bytes=104 correlationSource=payload:clientCorrelationId eventName=setBandwidth sseFields=[\"event\"]",
+          "source": "AGENT",
+          "sseFields": "[\"event\"",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "6e4a6299-fdbd-4543-b34e-666dab2dc5d1",
+          "event": "RECEIVE",
+          "level": "INFO",
+          "params": "{\"bw\":\"abc\"}",
+          "raw": "[2026-07-10 22:35:18.210] [AGENT] [INFO] [cid=6e4a6299-fdbd-4543-b34e-666dab2dc5d1] RECEIVE subject=setBandwidth target=org.dt4n:link-s2-s3 params={\"bw\":\"abc\"}",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "6e4a6299-fdbd-4543-b34e-666dab2dc5d1",
+          "event": "EXECUTE_START",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.210] [AGENT] [INFO] [cid=6e4a6299-fdbd-4543-b34e-666dab2dc5d1] EXECUTE_START subject=setBandwidth target=org.dt4n:link-s2-s3",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "6e4a6299-fdbd-4543-b34e-666dab2dc5d1",
+          "event": "LOCK_WAIT",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.210] [AGENT] [INFO] [cid=6e4a6299-fdbd-4543-b34e-666dab2dc5d1] LOCK_WAIT subject=setBandwidth target=org.dt4n:link-s2-s3 waitMs=0",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3",
+          "waitMs": "0"
+        },
+        {
+          "cid": "6e4a6299-fdbd-4543-b34e-666dab2dc5d1",
+          "code": "400",
+          "detail": "bw",
+          "event": "REJECT",
+          "level": "WARN",
+          "raw": "[2026-07-10 22:35:18.211] [AGENT] [WARN] [cid=6e4a6299-fdbd-4543-b34e-666dab2dc5d1] REJECT subject=setBandwidth target=org.dt4n:link-s2-s3 detail=bw must be a number, got 'abc' code=400",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "6e4a6299-fdbd-4543-b34e-666dab2dc5d1",
+          "code": "400",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "RESPONSE_SEND",
+          "level": "INFO",
+          "ok": "false",
+          "raw": "[2026-07-10 22:35:18.211] [AGENT] [INFO] [cid=6e4a6299-fdbd-4543-b34e-666dab2dc5d1] RESPONSE_SEND subject=setBandwidth target=org.dt4n:controller code=400 correlationSource=payload:clientCorrelationId ok=false",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:controller"
+        },
+        {
+          "cid": "6e4a6299-fdbd-4543-b34e-666dab2dc5d1",
+          "event": "RESPONSE_OK",
+          "http_status": "202",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.245] [AGENT] [INFO] [cid=6e4a6299-fdbd-4543-b34e-666dab2dc5d1] RESPONSE_OK subject=setBandwidth target=org.dt4n:controller http_status=202",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:controller"
+        }
+      ],
+      "subject": "setBandwidth"
+    },
+    {
+      "ack_ms": 0.2607440001156647,
+      "cid": "ee08e6e7-2049-4914-b19b-1c937e74a2c4",
+      "executed": false,
+      "expected": false,
+      "gate": "PASS",
+      "http_status": 202,
+      "label": "invalid_unknown_subject",
+      "post_ms": 29.913571997894906,
+      "reason": "unknown command: notACommand",
+      "records": [
+        {
+          "bytes": "103",
+          "cid": "ee08e6e7-2049-4914-b19b-1c937e74a2c4",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "SSE_EVENT",
+          "eventName": "notACommand",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.489] [AGENT] [INFO] [cid=ee08e6e7-2049-4914-b19b-1c937e74a2c4] SSE_EVENT subject=notACommand target=org.dt4n:link-s2-s3 bytes=103 correlationSource=payload:clientCorrelationId eventName=notACommand sseFields=[\"event\"]",
+          "source": "AGENT",
+          "sseFields": "[\"event\"",
+          "subject": "notACommand",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "ee08e6e7-2049-4914-b19b-1c937e74a2c4",
+          "event": "RECEIVE",
+          "level": "INFO",
+          "params": "{\"bw\":15.0}",
+          "raw": "[2026-07-10 22:35:18.489] [AGENT] [INFO] [cid=ee08e6e7-2049-4914-b19b-1c937e74a2c4] RECEIVE subject=notACommand target=org.dt4n:link-s2-s3 params={\"bw\":15.0}",
+          "source": "AGENT",
+          "subject": "notACommand",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "ee08e6e7-2049-4914-b19b-1c937e74a2c4",
+          "detail": "unknown",
+          "event": "REJECT",
+          "level": "WARN",
+          "raw": "[2026-07-10 22:35:18.490] [AGENT] [WARN] [cid=ee08e6e7-2049-4914-b19b-1c937e74a2c4] REJECT subject=notACommand target=org.dt4n:link-s2-s3 detail=unknown command: notACommand",
+          "source": "AGENT",
+          "subject": "notACommand",
+          "target": "org.dt4n:link-s2-s3"
+        },
+        {
+          "cid": "ee08e6e7-2049-4914-b19b-1c937e74a2c4",
+          "code": "400",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "RESPONSE_SEND",
+          "level": "INFO",
+          "ok": "false",
+          "raw": "[2026-07-10 22:35:18.490] [AGENT] [INFO] [cid=ee08e6e7-2049-4914-b19b-1c937e74a2c4] RESPONSE_SEND subject=notACommand target=org.dt4n:controller code=400 correlationSource=payload:clientCorrelationId ok=false",
+          "source": "AGENT",
+          "subject": "notACommand",
+          "target": "org.dt4n:controller"
+        },
+        {
+          "cid": "ee08e6e7-2049-4914-b19b-1c937e74a2c4",
+          "event": "RESPONSE_OK",
+          "http_status": "202",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.526] [AGENT] [INFO] [cid=ee08e6e7-2049-4914-b19b-1c937e74a2c4] RESPONSE_OK subject=notACommand target=org.dt4n:controller http_status=202",
+          "source": "AGENT",
+          "subject": "notACommand",
+          "target": "org.dt4n:controller"
+        }
+      ],
+      "subject": "notACommand"
+    },
+    {
+      "ack_ms": 0.38437799958046526,
+      "cid": "a3adffe5-b25e-4188-91d7-e46dd09c187f",
+      "executed": false,
+      "expected": false,
+      "gate": "PASS",
+      "http_status": 202,
+      "label": "invalid_bad_target",
+      "post_ms": 29.24206700117793,
+      "reason": "target not found: org.dt4n:link-no-such-link",
+      "records": [
+        {
+          "bytes": "110",
+          "cid": "a3adffe5-b25e-4188-91d7-e46dd09c187f",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "SSE_EVENT",
+          "eventName": "setBandwidth",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.769] [AGENT] [INFO] [cid=a3adffe5-b25e-4188-91d7-e46dd09c187f] SSE_EVENT subject=setBandwidth target=org.dt4n:link-no-such-link bytes=110 correlationSource=payload:clientCorrelationId eventName=setBandwidth sseFields=[\"event\"]",
+          "source": "AGENT",
+          "sseFields": "[\"event\"",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-no-such-link"
+        },
+        {
+          "cid": "a3adffe5-b25e-4188-91d7-e46dd09c187f",
+          "event": "RECEIVE",
+          "level": "INFO",
+          "params": "{\"bw\":15.0}",
+          "raw": "[2026-07-10 22:35:18.770] [AGENT] [INFO] [cid=a3adffe5-b25e-4188-91d7-e46dd09c187f] RECEIVE subject=setBandwidth target=org.dt4n:link-no-such-link params={\"bw\":15.0}",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-no-such-link"
+        },
+        {
+          "cid": "a3adffe5-b25e-4188-91d7-e46dd09c187f",
+          "event": "EXECUTE_START",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.770] [AGENT] [INFO] [cid=a3adffe5-b25e-4188-91d7-e46dd09c187f] EXECUTE_START subject=setBandwidth target=org.dt4n:link-no-such-link",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-no-such-link"
+        },
+        {
+          "cid": "a3adffe5-b25e-4188-91d7-e46dd09c187f",
+          "event": "LOCK_WAIT",
+          "level": "INFO",
+          "raw": "[2026-07-10 22:35:18.770] [AGENT] [INFO] [cid=a3adffe5-b25e-4188-91d7-e46dd09c187f] LOCK_WAIT subject=setBandwidth target=org.dt4n:link-no-such-link waitMs=0",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-no-such-link",
+          "waitMs": "0"
+        },
+        {
+          "cid": "a3adffe5-b25e-4188-91d7-e46dd09c187f",
+          "code": "404",
+          "detail": "target",
+          "event": "REJECT",
+          "level": "WARN",
+          "raw": "[2026-07-10 22:35:18.770] [AGENT] [WARN] [cid=a3adffe5-b25e-4188-91d7-e46dd09c187f] REJECT subject=setBandwidth target=org.dt4n:link-no-such-link detail=target not found: org.dt4n:link-no-such-link code=404",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:link-no-such-link"
+        },
+        {
+          "cid": "a3adffe5-b25e-4188-91d7-e46dd09c187f",
+          "code": "404",
+          "correlationSource": "payload:clientCorrelationId",
+          "event": "RESPONSE_SEND",
+          "level": "INFO",
+          "ok": "false",
+          "raw": "[2026-07-10 22:35:18.771] [AGENT] [INFO] [cid=a3adffe5-b25e-4188-91d7-e46dd09c187f] RESPONSE_SEND subject=setBandwidth target=org.dt4n:controller code=404 correlationSource=payload:clientCorrelationId ok=false",
+          "source": "AGENT",
+          "subject": "setBandwidth",
+          "target": "org.dt4n:controller"
+        }
+      ],
+      "subject": "setBandwidth"
+    }
+  ],
+  "tail_stats": {
+    "file_pos": 6343,
+    "n_cids_indexed": 5,
+    "n_lines_read": 36
+  }
+}

@@ -1,0 +1,8 @@
+Expected Thing ids: 17
+Warmup...
+A (direct)     p50= 119.1ms  p95= 144.0ms  max= 185.1ms  n_things=17
+B (search)     p50=  22.3ms  p95=  41.7ms  max= 664.9ms  n_things=19
+
+--- tSource skew: B - A (negative means search is older) ---
+n=510  p50=+0.000s  p05=+0.000s  min=+0.000s  max=+0.000s
+OK: no large median tSource skew detected.

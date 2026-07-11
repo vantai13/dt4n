@@ -1,0 +1,141 @@
+*** Creating network
+*** Adding hosts:
+h1 h2 h3 srv1 srv2 
+*** Adding switches:
+s1 s2 s3 
+*** Adding links:
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(h1, s1) (20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(h2, s1) (20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(h3, s1) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(s1, s2) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(s1, s3) (5.00Mbit 2ms delay) (5.00Mbit 2ms delay) (s2, s3) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(srv1, s2) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(srv2, s3) 
+*** Configuring hosts
+h1 h2 h3 srv1 srv2 
+*** Bật mạng (tạo namespace, dựng switch, nối link)
+*** Starting controller
+c0 
+*** Starting 3 switches
+s1 s2 s3 ...(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(5.00Mbit 2ms delay) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(5.00Mbit 2ms delay) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+
+*** Waiting for switches to connect
+s1 s2 s3 
+*** Ghi port map runtime -> ditto/port_map.json
+*** Controller static hội tụ sau 1.36s
+*** Node: c0, h1, h2, h3, s1, s2, s3, srv1, srv2
+*** Bootstrap Things lên Ditto
+*** Khởi động Sync Agent (thread nền)
+*** Khởi động Command Agent (thread nền) — nghe lệnh chiều xuống
+(5.00Mbit 2ms delay) (5.00Mbit 2ms delay) *** Tắt mạng
+*** Stopping 1 controllers
+c0 
+*** Stopping 8 links
+........
+*** Stopping 3 switches
+s1 s2 s3 
+*** Stopping 5 hosts
+h1 h2 h3 srv1 srv2 
+*** Done
+=== BOOTSTRAP (mode=create) ===
+[1] Policy:
+  ✅ policy org.dt4n:default-policy (204)
+[3] Things:
+  ⏭️  org.dt4n:host-h1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:host-h2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:host-h3 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:host-srv1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:host-srv2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:switch-s1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:switch-s2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:switch-s3 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-h1-s1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-h2-s1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-h3-s1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s1-s2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s1-s3 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s2-s3 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s2-srv1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s3-srv2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:path-h1-srv1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:controller đã tồn tại, bỏ qua
+=== XONG: 0 tạo, 18 bỏ qua, tổng 18 Thing ===
+baseline stable=True rate=4.895 cap=5.0 period=1.00
+01 rate=4.8948Mbps tSource=1783690440.813
+02 rate=4.9260Mbps tSource=1783690441.812
+03 rate=4.8835Mbps tSource=1783690442.812
+04 rate=4.8950Mbps tSource=1783690443.812
+05 rate=4.8950Mbps tSource=1783690444.813
+06 rate=4.8949Mbps tSource=1783690445.813
+07 rate=4.8950Mbps tSource=1783690446.813
+08 rate=4.9185Mbps tSource=1783690447.813
+09 rate=4.8597Mbps tSource=1783690448.813
+10 rate=4.8948Mbps tSource=1783690449.813
+11 rate=4.8949Mbps tSource=1783690450.813
+12 rate=4.8713Mbps tSource=1783690451.813
+13 rate=4.9186Mbps tSource=1783690452.814
+14 rate=4.8712Mbps tSource=1783690453.814
+15 rate=4.9071Mbps tSource=1783690454.814
+16 rate=4.9185Mbps tSource=1783690455.814
+17 rate=4.9186Mbps tSource=1783690456.814
+18 rate=4.8686Mbps tSource=1783690457.815
+19 rate=4.9186Mbps tSource=1783690458.815
+20 rate=4.8596Mbps tSource=1783690459.815
+21 rate=4.8712Mbps tSource=1783690460.815
+22 rate=4.8943Mbps tSource=1783690461.815
+23 rate=4.8928Mbps tSource=1783690462.816
+24 rate=4.9043Mbps tSource=1783690463.816
+25 rate=4.8808Mbps tSource=1783690464.816
+26 rate=4.9281Mbps tSource=1783690465.816
+27 rate=4.8707Mbps tSource=1783690466.816
+28 rate=4.9757Mbps tSource=1783690467.816
+29 rate=4.9191Mbps tSource=1783690468.817
+30 rate=4.8970Mbps tSource=1783690469.817
+31 rate=4.9232Mbps tSource=1783690470.817
+32 rate=4.7798Mbps tSource=1783690471.816
+33 rate=4.9105Mbps tSource=1783690472.816
+34 rate=4.8661Mbps tSource=1783690473.816
+35 rate=4.9371Mbps tSource=1783690474.816
+36 rate=4.9515Mbps tSource=1783690475.816
+37 rate=4.9292Mbps tSource=1783690476.816
+38 rate=4.9547Mbps tSource=1783690477.817
+39 rate=4.9414Mbps tSource=1783690478.817
+40 rate=4.9608Mbps tSource=1783690479.817
+41 rate=4.8813Mbps tSource=1783690480.817
+42 rate=4.9725Mbps tSource=1783690481.817
+43 rate=4.9814Mbps tSource=1783690482.817
+44 rate=4.9605Mbps tSource=1783690483.817
+45 rate=4.9284Mbps tSource=1783690484.818
+46 rate=4.9667Mbps tSource=1783690485.818
+47 rate=4.9625Mbps tSource=1783690486.818
+48 rate=4.8950Mbps tSource=1783690487.818
+49 rate=4.8950Mbps tSource=1783690488.818
+50 rate=4.9186Mbps tSource=1783690489.818
+51 rate=4.9070Mbps tSource=1783690490.818
+52 rate=4.8713Mbps tSource=1783690491.818
+53 rate=4.8950Mbps tSource=1783690492.819
+54 rate=4.8717Mbps tSource=1783690493.819
+55 rate=4.8949Mbps tSource=1783690494.819
+56 rate=4.8938Mbps tSource=1783690495.819
+57 rate=4.7054Mbps tSource=1783690496.819
+58 rate=4.9186Mbps tSource=1783690497.82
+59 rate=4.8596Mbps tSource=1783690498.82
+60 rate=4.8949Mbps tSource=1783690499.82
+
+RESULT {"mad_mbps": 0.023625760000000717, "max_rate_mbps": 4.98140464, "median_rate_mbps": 4.89501764, "min_rate_mbps": 4.7054004, "n": 60, "p95_rate_mbps": 4.7054004, "period_s": 1.0, "robust_sigma_mbps": 0.03502755177600106, "three_sigma_mbps": 0.10508265532800318, "traffic": "tcp"}

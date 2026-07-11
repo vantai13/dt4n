@@ -1,0 +1,94 @@
+*** Creating network
+*** Adding hosts:
+h1 h2 h3 srv1 srv2 
+*** Adding switches:
+s1 s2 s3 
+*** Adding links:
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(h1, s1) (20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(h2, s1) (20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(h3, s1) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(s1, s2) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(s1, s3) (5.00Mbit 2ms delay) (5.00Mbit 2ms delay) (s2, s3) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(srv1, s2) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(srv2, s3) 
+*** Configuring hosts
+h1 h2 h3 srv1 srv2 
+*** Bật mạng (tạo namespace, dựng switch, nối link)
+*** Starting controller
+c0 
+*** Starting 3 switches
+s1 s2 s3 ...(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay 0.00000% loss) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(5.00Mbit 2ms delay) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+(5.00Mbit 2ms delay) (20.00Mbit 2ms delay) *** Error: Warning: sch_htb: quantum of class 50001 is big. Consider r2q change.
+
+*** Waiting for switches to connect
+s1 s2 s3 
+*** Ghi port map runtime -> ditto/port_map.json
+*** Controller static hội tụ sau 1.36s
+*** Node: c0, h1, h2, h3, s1, s2, s3, srv1, srv2
+*** Bootstrap Things lên Ditto
+*** Khởi động Sync Agent (thread nền)
+*** Khởi động Command Agent (thread nền) — nghe lệnh chiều xuống
+(5.00Mbit 2ms delay) (5.00Mbit 2ms delay) (15.00Mbit 2ms delay) (15.00Mbit 2ms delay) (5.00Mbit 2ms delay) (5.00Mbit 2ms delay) (15.00Mbit 2ms delay) (15.00Mbit 2ms delay) (5.00Mbit 2ms delay) (5.00Mbit 2ms delay) (15.00Mbit 2ms delay) (15.00Mbit 2ms delay) (5.00Mbit 2ms delay) (5.00Mbit 2ms delay) (15.00Mbit 2ms delay) (15.00Mbit 2ms delay) (5.00Mbit 2ms delay) (5.00Mbit 2ms delay) (15.00Mbit 2ms delay) (15.00Mbit 2ms delay) (5.00Mbit 2ms delay) (5.00Mbit 2ms delay) *** Tắt mạng
+*** Stopping 1 controllers
+c0 
+*** Stopping 8 links
+........
+*** Stopping 3 switches
+s1 s2 s3 
+*** Stopping 5 hosts
+h1 h2 h3 srv1 srv2 
+*** Done
+=== BOOTSTRAP (mode=create) ===
+[1] Policy:
+  ✅ policy org.dt4n:default-policy (204)
+[3] Things:
+  ⏭️  org.dt4n:host-h1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:host-h2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:host-h3 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:host-srv1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:host-srv2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:switch-s1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:switch-s2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:switch-s3 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-h1-s1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-h2-s1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-h3-s1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s1-s2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s1-s3 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s2-s3 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s2-srv1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:link-s3-srv2 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:path-h1-srv1 đã tồn tại, bỏ qua
+  ⏭️  org.dt4n:controller đã tồn tại, bỏ qua
+=== XONG: 0 tạo, 18 bỏ qua, tổng 18 Thing ===
+baseline traffic=udp saturated=True rate=5.02Mbps cap=5.0
+01 t1=0.84s t_change=0.84s t2=3.74s cmd=41ms change=612ms settle=3612ms sample_seen=91ms samples=5 rate 5.02->11.80->14.96 Mbps
+02 t1=0.85s t_change=0.85s t2=4.00s cmd=51ms change=662ms settle=3663ms sample_seen=286ms samples=5 rate 5.01->12.36->15.52 Mbps
+03 t1=1.06s t_change=1.06s t2=3.98s cmd=55ms change=748ms settle=3748ms sample_seen=180ms samples=5 rate 4.93->13.76->14.79 Mbps
+04 t1=1.05s t_change=1.05s t2=3.97s cmd=50ms change=770ms settle=3771ms sample_seen=150ms samples=5 rate 5.01->13.47->15.07 Mbps
+05 t1=1.05s t_change=1.05s t2=3.96s cmd=53ms change=794ms settle=3795ms sample_seen=117ms samples=5 rate 5.02->13.59->15.07 Mbps
+
+=== RESULT ===
+t1: {'n': 5, 'mean_s': 0.9696087783999247, 'p50_s': 1.051660325998455, 'p95_s': 1.060029147000023, 'max_s': 1.060029147000023, 'min_s': 0.8392643999995926}
+t_change: {'n': 5, 'mean_s': 0.9696087783999247, 'p50_s': 1.051660325998455, 'p95_s': 1.060029147000023, 'max_s': 1.060029147000023, 'min_s': 0.8392643999995926}
+t2: {'n': 5, 'mean_s': 3.9325946068005577, 'p50_s': 3.971211387000949, 'p95_s': 4.000294651001241, 'max_s': 4.000294651001241, 'min_s': 3.7446090470002673}
+Delta_change: 1.360029147000023
+Delta: 4.3002946510012405
+components: {'post': {'n': 5, 'mean_s': 0.031841666200125476, 'p50_s': 0.031392888000482344, 'p95_s': 0.035868344000846264, 'max_s': 0.035868344000846264, 'min_s': 0.028784097999960068}, 'route': {'n': 5, 'mean_s': 0.01019878387451172, 'p50_s': 0.01034855842590332, 'p95_s': 0.01263284683227539, 'max_s': 0.01263284683227539, 'min_s': 0.008118629455566406}, 'lock_wait': {'n': 5, 'mean_s': 0.0, 'p50_s': 0.0, 'p95_s': 0.0, 'max_s': 0.0, 'min_s': 0.0}, 'exec': {'n': 5, 'mean_s': 0.03979992866516113, 'p50_s': 0.04199981689453125, 'p95_s': 0.042999982833862305, 'max_s': 0.042999982833862305, 'min_s': 0.032000064849853516}, 'command_done': {'n': 5, 'mean_s': 0.04999871253967285, 'p50_s': 0.05111861228942871, 'p95_s': 0.05463266372680664, 'max_s': 0.05463266372680664, 'min_s': 0.041310787200927734}, 't1_command_to_sample': {'n': 5, 'mean_s': 0.7671987533569335, 'p50_s': 0.8026328086853027, 'p95_s': 0.8465831279754639, 'max_s': 0.8465831279754639, 'min_s': 0.6533107757568359}, 't1_sample_to_seen': {'n': 5, 'mean_s': 0.20239601135253907, 'p50_s': 0.2050631046295166, 'p95_s': 0.2573854923248291, 'max_s': 0.2573854923248291, 'min_s': 0.13211297988891602}, 't_change_command_to_sample': {'n': 5, 'mean_s': 0.7671987533569335, 'p50_s': 0.8026328086853027, 'p95_s': 0.8465831279754639, 'max_s': 0.8465831279754639, 'min_s': 0.6533107757568359}, 'metric_change_after_exec': {'n': 5, 'mean_s': 0.7172000408172607, 'p50_s': 0.7480001449584961, 'p95_s': 0.7940001487731934, 'max_s': 0.7940001487731934, 'min_s': 0.6119999885559082}, 't_change_sample_to_seen': {'n': 5, 'mean_s': 0.20239601135253907, 'p50_s': 0.2050631046295166, 'p95_s': 0.2573854923248291, 'max_s': 0.2573854923248291, 'min_s': 0.13211297988891602}, 't2_command_to_sample': {'n': 5, 'mean_s': 3.7677987575531007, 'p50_s': 3.8026328086853027, 'p95_s': 3.847583055496216, 'max_s': 3.847583055496216, 'min_s': 3.653310775756836}, 'metric_settle_after_exec': {'n': 5, 'mean_s': 3.7178000450134276, 'p50_s': 3.748000144958496, 'p95_s': 3.7950000762939453, 'max_s': 3.7950000762939453, 'min_s': 3.611999988555908}, 't2_sample_to_seen': {'n': 5, 'mean_s': 0.16478357315063477, 'p50_s': 0.14985299110412598, 'p95_s': 0.28615593910217285, 'max_s': 0.28615593910217285, 'min_s': 0.09128880500793457}, 't2_fetch': {'n': 5, 'mean_s': 0.007663376399796107, 'p50_s': 0.008268424999187118, 'p95_s': 0.008636287000626908, 'max_s': 0.008636287000626908, 'min_s': 0.005582394000157365}}
+Wrote docs/phase-5/artifacts/delta_udp_p1.json
+Wrote docs/phase-5/artifacts/delta_udp_p1.csv

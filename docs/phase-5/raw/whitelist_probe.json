@@ -1,0 +1,123 @@
+{
+  "audit_rows": [
+    {
+      "correlationId": "5f3cb867-6a73-461f-8ded-003d1cf8f3dd",
+      "params": {
+        "bw": 15.0
+      },
+      "reason": null,
+      "result": "ok",
+      "subject": "setBandwidth",
+      "target": "org.dt4n:link-s2-s3",
+      "ts": "2026-07-10T13:32:20.840684Z"
+    },
+    {
+      "correlationId": "78ac8b7a-6810-40cd-946f-223446e34d3a",
+      "params": {
+        "bw": -999.0
+      },
+      "reason": "bw out of range (0, 100], got -999.0",
+      "result": "rejected",
+      "subject": "setBandwidth",
+      "target": "org.dt4n:link-s2-s3",
+      "ts": "2026-07-10T13:32:21.044208Z"
+    },
+    {
+      "correlationId": "1f0941fb-479c-4582-811d-a21829a7a8a1",
+      "params": {
+        "bw": "abc"
+      },
+      "reason": "bw must be a number, got 'abc'",
+      "result": "rejected",
+      "subject": "setBandwidth",
+      "target": "org.dt4n:link-s2-s3",
+      "ts": "2026-07-10T13:32:21.321707Z"
+    },
+    {
+      "correlationId": "cd794f72-7f3e-4bcf-bff9-4a6fe35ec105",
+      "params": {},
+      "reason": "unknown command: notACommand",
+      "result": "rejected",
+      "subject": "notACommand",
+      "target": "org.dt4n:link-s2-s3",
+      "ts": "2026-07-10T13:32:21.604759Z"
+    },
+    {
+      "correlationId": "44b24974-dc45-40e7-a065-7357f1df2247",
+      "params": {
+        "bw": 10.0
+      },
+      "reason": "target not found: org.dt4n:link-no-such-link",
+      "result": "rejected",
+      "subject": "setBandwidth",
+      "target": "org.dt4n:link-no-such-link",
+      "ts": "2026-07-10T13:32:21.881588Z"
+    }
+  ],
+  "records": [
+    {
+      "body": {
+        "bw": 15.0,
+        "clientCorrelationId": "5f3cb867-6a73-461f-8ded-003d1cf8f3dd",
+        "target": "org.dt4n:link-s2-s3"
+      },
+      "cid": "5f3cb867-6a73-461f-8ded-003d1cf8f3dd",
+      "elapsed_s": 0.03616649499963387,
+      "http_status": 202,
+      "label": "valid_bw_15",
+      "response_text": "",
+      "subject": "setBandwidth"
+    },
+    {
+      "body": {
+        "bw": -999.0,
+        "clientCorrelationId": "78ac8b7a-6810-40cd-946f-223446e34d3a",
+        "target": "org.dt4n:link-s2-s3"
+      },
+      "cid": "78ac8b7a-6810-40cd-946f-223446e34d3a",
+      "elapsed_s": 0.029203854999650503,
+      "http_status": 202,
+      "label": "invalid_bw_negative",
+      "response_text": "",
+      "subject": "setBandwidth"
+    },
+    {
+      "body": {
+        "bw": "abc",
+        "clientCorrelationId": "1f0941fb-479c-4582-811d-a21829a7a8a1",
+        "target": "org.dt4n:link-s2-s3"
+      },
+      "cid": "1f0941fb-479c-4582-811d-a21829a7a8a1",
+      "elapsed_s": 0.03010213099878456,
+      "http_status": 202,
+      "label": "invalid_bw_string",
+      "response_text": "",
+      "subject": "setBandwidth"
+    },
+    {
+      "body": {
+        "clientCorrelationId": "cd794f72-7f3e-4bcf-bff9-4a6fe35ec105",
+        "target": "org.dt4n:link-s2-s3"
+      },
+      "cid": "cd794f72-7f3e-4bcf-bff9-4a6fe35ec105",
+      "elapsed_s": 0.029814116000125068,
+      "http_status": 202,
+      "label": "invalid_unknown_subject",
+      "response_text": "",
+      "subject": "notACommand"
+    },
+    {
+      "body": {
+        "bw": 10.0,
+        "clientCorrelationId": "44b24974-dc45-40e7-a065-7357f1df2247",
+        "target": "org.dt4n:link-no-such-link"
+      },
+      "cid": "44b24974-dc45-40e7-a065-7357f1df2247",
+      "elapsed_s": 0.02967723300025682,
+      "http_status": 202,
+      "label": "invalid_bad_target",
+      "response_text": "",
+      "subject": "setBandwidth"
+    }
+  ]
+}

@@ -1,0 +1,158 @@
+{
+  "bench_reader_lines": [
+    "A (direct)     p50= 119.1ms  p95= 144.0ms  max= 185.1ms  n_things=17",
+    "B (search)     p50=  22.3ms  p95=  41.7ms  max= 664.9ms  n_things=19",
+    "n=510  p50=+0.000s  p05=+0.000s  min=+0.000s  max=+0.000s"
+  ],
+  "proposed_tcp_delta": [
+    {
+      "delta_formula_s": 2.4979673719995334,
+      "name": "delta_tcp_p1",
+      "parts": {
+        "margin_s": 0.3,
+        "period_s": 1.0,
+        "snapshot_p95_s": 0.144,
+        "t50_p95_s": 1.0539673719995335
+      }
+    },
+    {
+      "delta_formula_s": 1.5766187719987501,
+      "name": "delta_tcp_p05",
+      "parts": {
+        "margin_s": 0.3,
+        "period_s": 0.5,
+        "snapshot_p95_s": 0.144,
+        "t50_p95_s": 0.6326187719987502
+      }
+    }
+  ],
+  "rate_noise": {
+    "rate_noise_tcp_p0_5": {
+      "max_rate_mbps": 4.9766772800000005,
+      "median_rate_mbps": 4.905315719999999,
+      "min_rate_mbps": 4.4551904,
+      "period_s": 0.5,
+      "robust_sigma_mbps": 0.06249799483200044,
+      "three_sigma_mbps": 0.18749398449600133
+    },
+    "rate_noise_tcp_p1_0": {
+      "max_rate_mbps": 4.98140464,
+      "median_rate_mbps": 4.89501764,
+      "min_rate_mbps": 4.7054004,
+      "period_s": 1.0,
+      "robust_sigma_mbps": 0.03502755177600106,
+      "three_sigma_mbps": 0.10508265532800318
+    }
+  },
+  "t_change_check": [
+    {
+      "below_t50_trials": 0,
+      "first_sample_hits": 0,
+      "max_rate_seen_mbps": 14.744,
+      "min_progress_frac": 0.6651172017413631,
+      "name": "delta_tcp_p1",
+      "period_s": 1.0,
+      "sample_indices": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "t_change_p95_s": 1.0539673719995335,
+      "t_stable_p95_s": 4.178358060000392,
+      "traffic": "tcp"
+    },
+    {
+      "below_t50_trials": 0,
+      "first_sample_hits": 0,
+      "max_rate_seen_mbps": 15.547,
+      "min_progress_frac": 0.591565388288046,
+      "name": "delta_tcp_p05",
+      "period_s": 0.5,
+      "sample_indices": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "t_change_p95_s": 0.6326187719987502,
+      "t_stable_p95_s": 2.9307208159989386,
+      "traffic": "tcp"
+    },
+    {
+      "below_t50_trials": 0,
+      "first_sample_hits": 0,
+      "max_rate_seen_mbps": 15.525,
+      "min_progress_frac": 0.6798052322950783,
+      "name": "delta_udp_p1",
+      "period_s": 1.0,
+      "sample_indices": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "t_change_p95_s": 1.060029147000023,
+      "t_stable_p95_s": 4.000294651001241,
+      "traffic": "udp"
+    },
+    {
+      "below_t50_trials": 1,
+      "first_sample_hits": 0,
+      "max_rate_seen_mbps": 16.035,
+      "min_progress_frac": 0.43185117286492175,
+      "name": "delta_udp_p05",
+      "period_s": 0.5,
+      "sample_indices": [
+        2,
+        2,
+        2,
+        2,
+        2
+      ],
+      "t_change_p95_s": 0.6449789119997149,
+      "t_stable_p95_s": 3.554208565999943,
+      "traffic": "udp"
+    }
+  ],
+  "whitelist_probe": [
+    {
+      "audit_result": "ok",
+      "elapsed_s": 0.03616649499963387,
+      "http_status": 202,
+      "label": "valid_bw_15",
+      "reason": null
+    },
+    {
+      "audit_result": "rejected",
+      "elapsed_s": 0.029203854999650503,
+      "http_status": 202,
+      "label": "invalid_bw_negative",
+      "reason": "bw out of range (0, 100], got -999.0"
+    },
+    {
+      "audit_result": "rejected",
+      "elapsed_s": 0.03010213099878456,
+      "http_status": 202,
+      "label": "invalid_bw_string",
+      "reason": "bw must be a number, got 'abc'"
+    },
+    {
+      "audit_result": "rejected",
+      "elapsed_s": 0.029814116000125068,
+      "http_status": 202,
+      "label": "invalid_unknown_subject",
+      "reason": "unknown command: notACommand"
+    },
+    {
+      "audit_result": "rejected",
+      "elapsed_s": 0.02967723300025682,
+      "http_status": 202,
+      "label": "invalid_bad_target",
+      "reason": "target not found: org.dt4n:link-no-such-link"
+    }
+  ]
+}
