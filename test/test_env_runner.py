@@ -196,6 +196,59 @@ def test_iperf_leak_baseline_is_calibrated_from_first_episode_count():
     assert runner._iperf_leaked(11) is True
 
 
+def test_aoi_norm_p95_uses_dynamic_things_only():
+    runner = _runner_for_steady_test()
+    runner.dynamic_thing_ids = {'dynamic-a', 'dynamic-b'}
+
+    aoi_norm = runner._aoi_norm_p95({
+        'dynamic-a': 1.0,
+        'dynamic-b': 3.0,
+        'static-switch': 100.0,
+    })
+
+    assert abs(aoi_norm - 0.58) < 1e-9
+
+
+def test_wait_data_fresh_accepts_low_aoi():
+    runner = _runner_for_steady_test()
+    runner.dynamic_thing_ids = {'thing-a', 'thing-b'}
+    runner.fresh_aoi_norm_threshold = 0.5
+    runner.fresh_timeout = 0.03
+    runner.observe_raw = lambda: ({}, {
+        'data_fresh': 1.0,
+        'aoi': {'thing-a': 0.8, 'thing-b': 1.2},
+    })
+
+    ok, waited, aoi_norm = runner._wait_data_fresh()
+
+    assert ok is True
+    assert waited < runner.fresh_timeout
+    assert aoi_norm <= runner.fresh_aoi_norm_threshold
+
+
+def test_wait_data_fresh_rejects_stale_aoi():
+    runner = _runner_for_steady_test()
+    runner.dynamic_thing_ids = {'thing-a', 'thing-b'}
+    runner.fresh_aoi_norm_threshold = 0.5
+    runner.fresh_timeout = 0.03
+    runner.observe_raw = lambda: ({}, {
+        'data_fresh': 1.0,
+        'aoi': {'thing-a': 4.0, 'thing-b': 5.0},
+    })
+
+    logger = logging.getLogger('env_runner')
+    old_disabled = logger.disabled
+    logger.disabled = True
+    try:
+        ok, waited, aoi_norm = runner._wait_data_fresh()
+    finally:
+        logger.disabled = old_disabled
+
+    assert ok is False
+    assert waited == runner.fresh_timeout
+    assert aoi_norm > runner.fresh_aoi_norm_threshold
+
+
 if __name__ == '__main__':
     tests = [
         test_wait_steady_state_accepts_nonzero_stable_throughput,
@@ -204,6 +257,9 @@ if __name__ == '__main__':
         test_send_command_posts_to_ditto_controller_inbox,
         test_kill_iperf_uses_global_term_then_kill_when_needed,
         test_iperf_leak_baseline_is_calibrated_from_first_episode_count,
+        test_aoi_norm_p95_uses_dynamic_things_only,
+        test_wait_data_fresh_accepts_low_aoi,
+        test_wait_data_fresh_rejects_stale_aoi,
     ]
     for test in tests:
         test()

@@ -16,6 +16,11 @@ from collections import deque
 from bridge.ditto_reader import expected_thing_ids
 from mininet.topology_meta import baseline_bw, canonical, load_spec
 from rl.injection import InjectionChannel
+from rl.state_builder_draft import (
+    AOI_NORM_DIVISOR,
+    AOI_PERCENTILE,
+    dynamic_thing_ids,
+)
 
 
 log = logging.getLogger('env_runner')
@@ -35,7 +40,9 @@ class EnvRunner:
                  steady_cycles=5, steady_tol=0.05,
                  steady_timeout=20.0, steady_min_norm=0.01,
                  hard_every=20, mininet_log_level='warning',
-                 iperf_leak_tolerance=4):
+                 iperf_leak_tolerance=4,
+                 fresh_aoi_norm_threshold=0.5,
+                 fresh_timeout=None):
         self.spec_path = spec_path
         self.spec = load_spec(spec_path)
         self.policy_path = policy_path
@@ -56,6 +63,8 @@ class EnvRunner:
         self.hard_every = hard_every
         self.mininet_log_level = mininet_log_level
         self.iperf_leak_tolerance = int(iperf_leak_tolerance)
+        self.fresh_aoi_norm_threshold = float(fresh_aoi_norm_threshold)
+        self.fresh_timeout = fresh_timeout
 
         self.net = None
         self.net_lock = threading.RLock()
@@ -67,6 +76,7 @@ class EnvRunner:
 
         self.session = None
         self.thing_ids = expected_thing_ids(self.spec)
+        self.dynamic_thing_ids = dynamic_thing_ids(self.spec)
 
         self._episode_count = 0
         self._iperf_baseline = None
@@ -227,6 +237,14 @@ class EnvRunner:
         ok, waited = self._wait_steady_state()
         timings['steady_wait'] = waited
 
+        fresh_push_ok, fresh_push_s, fresh_push_ok_n, fresh_push_total = (
+            self._refresh_twin_snapshot()
+        )
+        timings['refresh_twin'] = fresh_push_s
+
+        fresh_ok, fresh_waited, fresh_aoi_norm = self._wait_data_fresh()
+        timings['data_fresh_wait'] = fresh_waited
+
         if scenario is not None:
             if self.injection is None:
                 self.injection = InjectionChannel(self.net, self.net_lock)
@@ -240,7 +258,12 @@ class EnvRunner:
             'reset_total_s': total,
             'reset_steady_ok': ok,
             'reset_wait_s': waited,
-            'reset_dirty': (not ok) or leaked,
+            'reset_fresh_push_ok': fresh_push_ok,
+            'reset_fresh_push_ok_n': fresh_push_ok_n,
+            'reset_fresh_push_total': fresh_push_total,
+            'reset_fresh_ok': fresh_ok,
+            'reset_aoi_norm': fresh_aoi_norm,
+            'reset_dirty': (not ok) or (not fresh_ok) or leaked,
             'iperf_count': n_iperf,
             'iperf_baseline': self._iperf_baseline,
             'iperf_leaked': leaked,
@@ -250,8 +273,10 @@ class EnvRunner:
             'timings': timings,
         }
         if info_dict['reset_dirty']:
-            log.warning('Reset dirty: steady_ok=%s leaked=%s iperf=%d baseline=%s',
-                        ok, leaked, n_iperf, self._iperf_baseline)
+            log.warning('Reset dirty: steady_ok=%s fresh_ok=%s '
+                        'aoi_norm=%s leaked=%s iperf=%d baseline=%s',
+                        ok, fresh_ok, fresh_aoi_norm, leaked, n_iperf,
+                        self._iperf_baseline)
         return info_dict
 
     def observe_raw(self, cache=None):
@@ -434,6 +459,57 @@ class EnvRunner:
             if hasattr(value, 'clear'):
                 value.clear()
 
+    def _refresh_twin_snapshot(self):
+        """Push one full fresh collector snapshot before the first observation.
+
+        Delta sync intentionally ignores meta.tSource-only changes, so quiet
+        Things may keep old timestamps until the next reconciliation cycle.
+        A soft reset needs a fresh baseline observation now, not up to
+        reconcile_every cycles later.
+        """
+        collector = getattr(self.net, 'dt4n_collector', None)
+        if collector is None:
+            return False, 0.0, 0, 0
+
+        from bridge.adapter import collector_to_things
+        from bridge.ditto_reader import make_session
+        from bridge.pusher import patch_thing
+
+        if self.session is None:
+            self.session = make_session()
+
+        t0 = time.monotonic()
+        try:
+            ping_every = int(getattr(collector, 'ping_every', 0) or 0)
+            if ping_every > 0 and hasattr(collector, '_ping_counter'):
+                collector._ping_counter = ping_every - 1
+            snapshot = collector.collect_all()
+            things_now = collector_to_things(snapshot)
+        except Exception as exc:
+            elapsed = time.monotonic() - t0
+            log.warning('fresh twin snapshot collect failed: %s', exc)
+            return False, elapsed, 0, 0
+
+        expected_ids = set(self.thing_ids)
+        n_ok = 0
+        n_total = 0
+        for tid, data in things_now.items():
+            if tid not in expected_ids:
+                continue
+            features = data.get('features', {})
+            if not features:
+                continue
+            n_total += 1
+            if patch_thing(tid, {'features': features}, session=self.session):
+                n_ok += 1
+
+        elapsed = time.monotonic() - t0
+        ok = n_total > 0 and n_ok == n_total
+        if not ok:
+            log.warning('fresh twin snapshot pushed %d/%d Thing(s)',
+                        n_ok, n_total)
+        return ok, elapsed, n_ok, n_total
+
     # ------------------------------------------------------------------
     # Steady-state gate
     # ------------------------------------------------------------------
@@ -474,3 +550,53 @@ class EnvRunner:
             time.sleep(self.sync_period)
         log.warning('steady state timeout after %.1fs', self.steady_timeout)
         return False, self.steady_timeout
+
+    def _wait_data_fresh(self, max_aoi_norm=None, timeout=None):
+        """Wait until the same aoi_norm used by the state vector is fresh."""
+        if max_aoi_norm is None:
+            max_aoi_norm = self.fresh_aoi_norm_threshold
+        if timeout is None:
+            timeout = (self.fresh_timeout if self.fresh_timeout is not None
+                       else self.steady_timeout)
+
+        t0 = time.monotonic()
+        last_aoi_norm = None
+        while time.monotonic() - t0 < timeout:
+            _things, meta = self.observe_raw()
+            last_aoi_norm = self._aoi_norm_p95(meta.get('aoi') or {})
+            fresh = float(meta.get('data_fresh', 0.0) or 0.0)
+            if fresh >= 1.0 and last_aoi_norm <= max_aoi_norm:
+                return True, time.monotonic() - t0, last_aoi_norm
+            time.sleep(self.sync_period)
+
+        log.warning('data freshness timeout after %.1fs: '
+                    'aoi_norm=%s threshold=%.3f',
+                    timeout, last_aoi_norm, max_aoi_norm)
+        return False, timeout, last_aoi_norm
+
+    def _aoi_norm_p95(self, aoi_map):
+        """Compute p95 AoI / divisor exactly like StateBuilderDraft."""
+        values = []
+        for tid, value in (aoi_map or {}).items():
+            if tid not in self.dynamic_thing_ids or value is None:
+                continue
+            try:
+                x = float(value)
+            except (TypeError, ValueError):
+                continue
+            if x >= -0.05:
+                values.append(x)
+
+        if not values:
+            return 0.0
+
+        values.sort()
+        if len(values) == 1:
+            p95 = values[0]
+        else:
+            pos = AOI_PERCENTILE * (len(values) - 1)
+            lo = int(pos)
+            hi = min(lo + 1, len(values) - 1)
+            frac = pos - lo
+            p95 = values[lo] + frac * (values[hi] - values[lo])
+        return min(max(p95 / AOI_NORM_DIVISOR, 0.0), 1.0)
