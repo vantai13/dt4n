@@ -20,6 +20,8 @@ from rl.injection import InjectionChannel
 
 log = logging.getLogger('env_runner')
 
+IPERF_PROCESS_PATTERN = '[i]perf'
+
 
 class EnvRunner:
     """Own the DT4N live network and reset it for RL-style episodes."""
@@ -32,7 +34,8 @@ class EnvRunner:
                  ping_every=5, reconcile_every=30,
                  steady_cycles=5, steady_tol=0.05,
                  steady_timeout=20.0, steady_min_norm=0.01,
-                 hard_every=20, mininet_log_level='warning'):
+                 hard_every=20, mininet_log_level='warning',
+                 iperf_leak_tolerance=4):
         self.spec_path = spec_path
         self.spec = load_spec(spec_path)
         self.policy_path = policy_path
@@ -52,6 +55,7 @@ class EnvRunner:
         self.steady_min_norm = steady_min_norm
         self.hard_every = hard_every
         self.mininet_log_level = mininet_log_level
+        self.iperf_leak_tolerance = int(iperf_leak_tolerance)
 
         self.net = None
         self.net_lock = threading.RLock()
@@ -65,7 +69,7 @@ class EnvRunner:
         self.thing_ids = expected_thing_ids(self.spec)
 
         self._episode_count = 0
-        self._iperf_baseline = 0
+        self._iperf_baseline = None
 
     # ------------------------------------------------------------------
     # Lifecycle
@@ -130,9 +134,11 @@ class EnvRunner:
         self._command_thread.start()
 
         time.sleep(max(2.0, self.sync_period * 3))
-        self._iperf_baseline = self._count_iperf()
-        log.info('EnvRunner started in %.1fs, iperf baseline=%d',
-                 time.monotonic() - t0, self._iperf_baseline)
+        startup_iperf = self._count_iperf()
+        self._iperf_baseline = None
+        log.info('EnvRunner started in %.1fs, startup iperf=%d; '
+                 'episode iperf baseline pending',
+                 time.monotonic() - t0, startup_iperf)
         return self.net
 
     def close(self):
@@ -227,7 +233,7 @@ class EnvRunner:
             self.injection.apply(scenario)
 
         n_iperf = self._count_iperf()
-        leaked = n_iperf > self._iperf_baseline + 4
+        leaked = self._iperf_leaked(n_iperf)
         total = time.monotonic() - t0
         info_dict = {
             'reset_mode': mode,
@@ -236,14 +242,16 @@ class EnvRunner:
             'reset_wait_s': waited,
             'reset_dirty': (not ok) or leaked,
             'iperf_count': n_iperf,
+            'iperf_baseline': self._iperf_baseline,
+            'iperf_leaked': leaked,
             'active_scenarios': (
                 self.injection.active() if self.injection is not None else []
             ),
             'timings': timings,
         }
         if info_dict['reset_dirty']:
-            log.warning('Reset dirty: steady_ok=%s leaked=%s iperf=%d',
-                        ok, leaked, n_iperf)
+            log.warning('Reset dirty: steady_ok=%s leaked=%s iperf=%d baseline=%s',
+                        ok, leaked, n_iperf, self._iperf_baseline)
         return info_dict
 
     def observe_raw(self, cache=None):
@@ -253,6 +261,65 @@ class EnvRunner:
         if self.session is None:
             self.session = make_session()
         return fetch_snapshot(self.session, self.thing_ids, cache=cache)
+
+    def send_command(self, cmd):
+        """Send one agent action through the real Ditto -> Command Agent path.
+
+        ``cmd`` is the dict returned by ``ActionSpace.to_command()``:
+        ``{'subject': ..., 'target': ..., 'params': {...}}``.  This deliberately
+        uses the front door instead of mutating Mininet directly, so whitelist,
+        deduplication, audit logs, and command timing stay in the loop.
+        """
+        if cmd is None:
+            return None
+
+        import uuid
+        import requests
+        from bridge.command_agent import (
+            CONTROLLER_THING_ID,
+            DITTO_AUTH,
+            DITTO_BASE_URL,
+            HTTP_TIMEOUT,
+        )
+
+        subject = cmd.get('subject')
+        target = cmd.get('target')
+        if not subject or not target:
+            raise ValueError('command requires subject and target: %r' % cmd)
+
+        cid = str(uuid.uuid4())
+        params = dict(cmd.get('params') or {})
+        body = {'target': target, 'clientCorrelationId': cid}
+        body.update(params)
+        headers = {
+            'Content-Type': 'application/json',
+            'correlation-id': cid,
+        }
+        url = '%s/things/%s/inbox/messages/%s?timeout=0' % (
+            DITTO_BASE_URL, CONTROLLER_THING_ID, subject)
+
+        post_started = time.monotonic()
+        result = {
+            'cid': cid,
+            'subject': subject,
+            'target': target,
+            'params': params,
+            'http_status': None,
+            'post_error': None,
+            'post_ms': None,
+        }
+        try:
+            response = requests.post(url, json=body, headers=headers,
+                                     auth=DITTO_AUTH, timeout=HTTP_TIMEOUT)
+            result['http_status'] = response.status_code
+            if response.status_code not in (200, 201, 202, 204):
+                result['post_error'] = response.text[:240]
+        except requests.exceptions.RequestException as exc:
+            result['post_error'] = '%s:%s' % (type(exc).__name__, exc)
+            log.warning('send_command failed: %s', exc)
+        finally:
+            result['post_ms'] = (time.monotonic() - post_started) * 1000.0
+        return result
 
     # ------------------------------------------------------------------
     # Traffic helpers
@@ -285,20 +352,57 @@ class EnvRunner:
     # Cleanup steps
     # ------------------------------------------------------------------
     def _kill_iperf(self):
+        """Terminate all iperf/iperf3 processes visible on this testbed.
+
+        Mininet hosts have their own network namespaces, but their processes
+        still exist in the host process table. Keep cleanup and counting in the
+        same scope: ask each host namespace to stop its iperf children, then
+        also run a global pkill for any orphaned or externally spawned iperf.
+        """
         if self.net is None:
             return
+
         for host in self.net.hosts:
             host.cmd('pkill -f iperf 2>/dev/null')
-        time.sleep(0.2)
+        subprocess.run(['pkill', '-f', IPERF_PROCESS_PATTERN],
+                       capture_output=True, check=False)
+        time.sleep(0.3)
+
+        if self._count_iperf() > 0:
+            for host in self.net.hosts:
+                host.cmd('pkill -9 -f iperf 2>/dev/null')
+            subprocess.run(['pkill', '-9', '-f', IPERF_PROCESS_PATTERN],
+                           capture_output=True, check=False)
+            time.sleep(0.3)
+
+        remaining = self._count_iperf()
+        if remaining:
+            log.warning('iperf cleanup left %d process(es)', remaining)
         self._background_hosts = ()
 
     def _count_iperf(self):
-        result = subprocess.run(['pgrep', '-c', '-f', 'iperf'],
+        """Count iperf/iperf3 processes in the host process table."""
+        result = subprocess.run(['pgrep', '-c', '-f', IPERF_PROCESS_PATTERN],
                                 capture_output=True, check=False)
         try:
             return int(result.stdout.decode().strip() or 0)
         except ValueError:
             return 0
+
+    def _iperf_leaked(self, n_iperf):
+        """Return True when iperf count grows beyond normal episode traffic.
+
+        The first soft reset starts the canonical episode traffic, so use that
+        count as the baseline. Counting at ``start()`` is too early because the
+        episode traffic is not running yet and would mark a healthy episode as
+        dirty.
+        """
+        if self._iperf_baseline is None:
+            self._iperf_baseline = int(n_iperf)
+            log.info('Calibrated episode iperf baseline=%d',
+                     self._iperf_baseline)
+            return False
+        return int(n_iperf) > self._iperf_baseline + self.iperf_leak_tolerance
 
     def _restore_links(self):
         """Bring every link up and restore baseline bandwidth plus original delay."""

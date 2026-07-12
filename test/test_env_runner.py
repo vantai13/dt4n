@@ -72,11 +72,138 @@ def test_reset_collector_cache_clears_host_and_link_state():
     assert runner.net.dt4n_collector._prev_link == {}
 
 
+def test_send_command_posts_to_ditto_controller_inbox():
+    runner = _runner_for_steady_test()
+
+    import requests
+    import uuid
+    from bridge.command_agent import (
+        CONTROLLER_THING_ID,
+        DITTO_AUTH,
+        DITTO_BASE_URL,
+        HTTP_TIMEOUT,
+    )
+
+    calls = []
+
+    class Response:
+        status_code = 202
+        text = ''
+
+    def fake_post(url, json=None, headers=None, auth=None, timeout=None):
+        calls.append({
+            'url': url,
+            'json': json,
+            'headers': headers,
+            'auth': auth,
+            'timeout': timeout,
+        })
+        return Response()
+
+    old_post = requests.post
+    old_uuid4 = uuid.uuid4
+    requests.post = fake_post
+    uuid.uuid4 = lambda: 'cid-fixed'
+    try:
+        result = runner.send_command({
+            'subject': 'setBandwidth',
+            'target': 'org.dt4n:link-s2-s3',
+            'params': {'bw': 15.0},
+        })
+    finally:
+        requests.post = old_post
+        uuid.uuid4 = old_uuid4
+
+    assert len(calls) == 1
+    assert calls[0]['url'] == (
+        '%s/things/%s/inbox/messages/setBandwidth?timeout=0' %
+        (DITTO_BASE_URL, CONTROLLER_THING_ID)
+    )
+    assert calls[0]['json'] == {
+        'target': 'org.dt4n:link-s2-s3',
+        'clientCorrelationId': 'cid-fixed',
+        'bw': 15.0,
+    }
+    assert calls[0]['headers']['correlation-id'] == 'cid-fixed'
+    assert calls[0]['auth'] == DITTO_AUTH
+    assert calls[0]['timeout'] == HTTP_TIMEOUT
+    assert result['cid'] == 'cid-fixed'
+    assert result['http_status'] == 202
+    assert result['post_error'] is None
+
+
+def test_kill_iperf_uses_global_term_then_kill_when_needed():
+    runner = _runner_for_steady_test()
+
+    class Host:
+        def __init__(self):
+            self.commands = []
+
+        def cmd(self, command):
+            self.commands.append(command)
+            return ''
+
+    class Net:
+        def __init__(self):
+            self.hosts = [Host(), Host()]
+
+    runner.net = Net()
+    runner._background_hosts = tuple(runner.net.hosts)
+
+    import mininet.env_runner as env_runner_mod
+
+    calls = []
+
+    def fake_run(argv, capture_output=None, check=None):
+        calls.append({
+            'argv': argv,
+            'capture_output': capture_output,
+            'check': check,
+        })
+        return type('Result', (), {'stdout': b''})()
+
+    counts = iter([2, 0])
+    old_run = env_runner_mod.subprocess.run
+    old_count = runner._count_iperf
+    env_runner_mod.subprocess.run = fake_run
+    runner._count_iperf = lambda: next(counts)
+    try:
+        runner._kill_iperf()
+    finally:
+        env_runner_mod.subprocess.run = old_run
+        runner._count_iperf = old_count
+
+    assert [call['argv'] for call in calls] == [
+        ['pkill', '-f', env_runner_mod.IPERF_PROCESS_PATTERN],
+        ['pkill', '-9', '-f', env_runner_mod.IPERF_PROCESS_PATTERN],
+    ]
+    for host in runner.net.hosts:
+        assert host.commands == [
+            'pkill -f iperf 2>/dev/null',
+            'pkill -9 -f iperf 2>/dev/null',
+        ]
+    assert runner._background_hosts == ()
+
+
+def test_iperf_leak_baseline_is_calibrated_from_first_episode_count():
+    runner = _runner_for_steady_test()
+    runner.iperf_leak_tolerance = 4
+
+    assert runner._iperf_baseline is None
+    assert runner._iperf_leaked(6) is False
+    assert runner._iperf_baseline == 6
+    assert runner._iperf_leaked(10) is False
+    assert runner._iperf_leaked(11) is True
+
+
 if __name__ == '__main__':
     tests = [
         test_wait_steady_state_accepts_nonzero_stable_throughput,
         test_wait_steady_state_rejects_stable_zero_throughput,
         test_reset_collector_cache_clears_host_and_link_state,
+        test_send_command_posts_to_ditto_controller_inbox,
+        test_kill_iperf_uses_global_term_then_kill_when_needed,
+        test_iperf_leak_baseline_is_calibrated_from_first_episode_count,
     ]
     for test in tests:
         test()

@@ -1,0 +1,3016 @@
+{
+  "alpha": 0.05,
+  "alpha_prime": 0.0011111111111111111,
+  "alpha_prime_effective": 0.002631578947368421,
+  "degenerate_dims": [
+    "link_up:h1-s1",
+    "link_up:h2-s1",
+    "link_up:h3-s1",
+    "link_up:s1-s2",
+    "link_up:s1-s3",
+    "link_up:s2-s3",
+    "link_up:s2-srv1",
+    "link_up:s3-srv2",
+    "bw_norm:h1-s1",
+    "bw_norm:h2-s1",
+    "bw_norm:h3-s1",
+    "bw_norm:s1-s2",
+    "bw_norm:s1-s3",
+    "bw_norm:s2-s3",
+    "bw_norm:s2-srv1",
+    "bw_norm:s3-srv2",
+    "host_up:h1",
+    "host_up:h2",
+    "host_up:h3",
+    "host_up:srv1",
+    "host_up:srv2",
+    "path_latency_norm:h1-srv1",
+    "path_loss_norm:h1-srv1",
+    "data_fresh",
+    "step_progress",
+    "healthy_streak_norm"
+  ],
+  "hard_infos": [
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.44153673880253186,
+        "link_key": "s1-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 0,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.2914254665374756,
+          "org.dt4n:host-h2": 0.2982189655303955,
+          "org.dt4n:host-h3": 0.30421924591064453,
+          "org.dt4n:host-srv1": 0.3104820251464844,
+          "org.dt4n:host-srv2": 0.31638598442077637,
+          "org.dt4n:link-h1-s1": 0.36613965034484863,
+          "org.dt4n:link-h2-s1": 0.3720839023590088,
+          "org.dt4n:link-h3-s1": 0.3774704933166504,
+          "org.dt4n:link-s1-s2": 0.33882594108581543,
+          "org.dt4n:link-s1-s3": 6.344927549362183,
+          "org.dt4n:link-s2-s3": 0.3495194911956787,
+          "org.dt4n:link-s2-srv1": 0.35477280616760254,
+          "org.dt4n:link-s3-srv2": 0.35993242263793945,
+          "org.dt4n:path-h1-srv1": 1.9877605438232422,
+          "org.dt4n:switch-s1": 11.322934865951538,
+          "org.dt4n:switch-s2": 11.328668117523193,
+          "org.dt4n:switch-s3": 11.334010124206543
+        },
+        "aoi_summary": {
+          "max": 11.334010124206543,
+          "mean": 2.7269280938541187,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 97.87624500131642,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09787624500131642,
+        "stale_ids": [],
+        "t_read": 1783850465.2157612
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.278262603000258,
+        "reset_wait_s": 6.679452176000268,
+        "timings": {
+          "steady_wait": 6.679452176000268
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 30,
+        "src": "h2",
+        "type": "TrafficFlood"
+      },
+      "idx": 1,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 1.7365989685058594,
+          "org.dt4n:host-h2": 3.7426185607910156,
+          "org.dt4n:host-h3": 3.7483572959899902,
+          "org.dt4n:host-srv1": 1.7544901371002197,
+          "org.dt4n:host-srv2": 1.760831356048584,
+          "org.dt4n:link-h1-s1": 1.8129973411560059,
+          "org.dt4n:link-h2-s1": 3.818976402282715,
+          "org.dt4n:link-h3-s1": 3.8246610164642334,
+          "org.dt4n:link-s1-s2": 1.7837247848510742,
+          "org.dt4n:link-s1-s3": 2.7893548011779785,
+          "org.dt4n:link-s2-s3": 1.7951793670654297,
+          "org.dt4n:link-s2-srv1": 1.8009040355682373,
+          "org.dt4n:link-s3-srv2": 1.8067469596862793,
+          "org.dt4n:path-h1-srv1": 5.444101572036743,
+          "org.dt4n:switch-s1": 14.768392324447632,
+          "org.dt4n:switch-s2": 14.77407455444336,
+          "org.dt4n:switch-s3": 14.780132055282593
+        },
+        "aoi_summary": {
+          "max": 14.780132055282593,
+          "mean": 4.8201259725234085,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 100.28742400027113,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.10028742400027113,
+        "stale_ids": [],
+        "t_read": 1783850488.5561025
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 11.723569169000257,
+        "reset_wait_s": 10.120421568000893,
+        "timings": {
+          "steady_wait": 10.120421568000893
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 41,
+        "src": "h2",
+        "type": "TrafficFlood"
+      },
+      "idx": 2,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.43443989753723145,
+          "org.dt4n:host-h2": 0.44184207916259766,
+          "org.dt4n:host-h3": 0.44836974143981934,
+          "org.dt4n:host-srv1": 0.45450353622436523,
+          "org.dt4n:host-srv2": 0.46118927001953125,
+          "org.dt4n:link-h1-s1": 0.5253078937530518,
+          "org.dt4n:link-h2-s1": 0.5321054458618164,
+          "org.dt4n:link-h3-s1": 0.5388896465301514,
+          "org.dt4n:link-s1-s2": 0.4908163547515869,
+          "org.dt4n:link-s1-s3": 1.4973235130310059,
+          "org.dt4n:link-s2-s3": 0.5038995742797852,
+          "org.dt4n:link-s2-srv1": 0.5105946063995361,
+          "org.dt4n:link-s3-srv2": 0.5180604457855225,
+          "org.dt4n:path-h1-srv1": 2.154644012451172,
+          "org.dt4n:switch-s1": 11.469228267669678,
+          "org.dt4n:switch-s2": 11.476732015609741,
+          "org.dt4n:switch-s3": 11.484784126281738
+        },
+        "aoi_summary": {
+          "max": 11.484784126281738,
+          "mean": 2.584866495693431,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 117.34100400099123,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.11734100400099123,
+        "stale_ids": [],
+        "t_read": 1783850510.7236452
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.421087476999674,
+        "reset_wait_s": 6.821373999000571,
+        "timings": {
+          "steady_wait": 6.821373999000571
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.3026823240875288,
+        "link_key": "s1-s2",
+        "type": "LinkDegrade"
+      },
+      "idx": 3,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.36643409729003906,
+          "org.dt4n:host-h2": 0.37236499786376953,
+          "org.dt4n:host-h3": 0.3776555061340332,
+          "org.dt4n:host-srv1": 0.38274431228637695,
+          "org.dt4n:host-srv2": 0.38768506050109863,
+          "org.dt4n:link-h1-s1": 0.4349324703216553,
+          "org.dt4n:link-h2-s1": 0.4403066635131836,
+          "org.dt4n:link-h3-s1": 0.4459035396575928,
+          "org.dt4n:link-s1-s2": 0.407825231552124,
+          "org.dt4n:link-s1-s3": 0.41316843032836914,
+          "org.dt4n:link-s2-s3": 0.41843605041503906,
+          "org.dt4n:link-s2-srv1": 0.4238903522491455,
+          "org.dt4n:link-s3-srv2": 0.42906785011291504,
+          "org.dt4n:path-h1-srv1": 2.046795606613159,
+          "org.dt4n:switch-s1": 11.393657207489014,
+          "org.dt4n:switch-s2": 11.398728847503662,
+          "org.dt4n:switch-s3": 11.40366506576538
+        },
+        "aoi_summary": {
+          "max": 11.40366506576538,
+          "mean": 2.443721252329209,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 90.08910400007153,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09008910400007153,
+        "stale_ids": [],
+        "t_read": 1783850530.5237968
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.349949284000104,
+        "reset_wait_s": 6.759255901999495,
+        "timings": {
+          "steady_wait": 6.759255901999495
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 34,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 4,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.36031532287597656,
+          "org.dt4n:host-h2": 0.36661744117736816,
+          "org.dt4n:host-h3": 0.37283825874328613,
+          "org.dt4n:host-srv1": 0.3786771297454834,
+          "org.dt4n:host-srv2": 0.3846313953399658,
+          "org.dt4n:link-h1-s1": 0.4375431537628174,
+          "org.dt4n:link-h2-s1": 0.4433400630950928,
+          "org.dt4n:link-h3-s1": 0.4489109516143799,
+          "org.dt4n:link-s1-s2": 0.4078948497772217,
+          "org.dt4n:link-s1-s3": 0.41388964653015137,
+          "org.dt4n:link-s2-s3": 0.41993260383605957,
+          "org.dt4n:link-s2-srv1": 0.4254922866821289,
+          "org.dt4n:link-s3-srv2": 0.4318068027496338,
+          "org.dt4n:path-h1-srv1": 2.054931640625,
+          "org.dt4n:switch-s1": 11.392335891723633,
+          "org.dt4n:switch-s2": 11.398197650909424,
+          "org.dt4n:switch-s3": 11.404244184494019
+        },
+        "aoi_summary": {
+          "max": 11.404244184494019,
+          "mean": 2.443623486687155,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 101.95820499939146,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.10195820499939146,
+        "stale_ids": [],
+        "t_read": 1783850550.2339327
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.347001192998505,
+        "reset_wait_s": 6.749957669999276,
+        "timings": {
+          "steady_wait": 6.749957669999276
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.5722248169554414,
+        "link_key": "s1-s2",
+        "type": "LinkDegrade"
+      },
+      "idx": 5,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.36937761306762695,
+          "org.dt4n:host-h2": 0.3763864040374756,
+          "org.dt4n:host-h3": 0.3826451301574707,
+          "org.dt4n:host-srv1": 0.38883376121520996,
+          "org.dt4n:host-srv2": 0.39539146423339844,
+          "org.dt4n:link-h1-s1": 0.453794002532959,
+          "org.dt4n:link-h2-s1": 0.45951151847839355,
+          "org.dt4n:link-h3-s1": 0.4660224914550781,
+          "org.dt4n:link-s1-s2": 0.4209158420562744,
+          "org.dt4n:link-s1-s3": 7.4287543296813965,
+          "org.dt4n:link-s2-s3": 0.43366408348083496,
+          "org.dt4n:link-s2-srv1": 0.43998146057128906,
+          "org.dt4n:link-s3-srv2": 0.44687867164611816,
+          "org.dt4n:path-h1-srv1": 2.071716785430908,
+          "org.dt4n:switch-s1": 11.402754068374634,
+          "org.dt4n:switch-s2": 11.409162282943726,
+          "org.dt4n:switch-s3": 11.415422916412354
+        },
+        "aoi_summary": {
+          "max": 11.415422916412354,
+          "mean": 2.8683066368103027,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 110.20596999878762,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.11020596999878762,
+        "stale_ids": [],
+        "t_read": 1783850570.5457182
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.35385871499966,
+        "reset_wait_s": 6.746163211000749,
+        "timings": {
+          "steady_wait": 6.746163211000749
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 48,
+        "src": "h2",
+        "type": "TrafficFlood"
+      },
+      "idx": 6,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.42076730728149414,
+          "org.dt4n:host-h2": 0.4269387722015381,
+          "org.dt4n:host-h3": 0.4329509735107422,
+          "org.dt4n:host-srv1": 0.43858861923217773,
+          "org.dt4n:host-srv2": 0.4449000358581543,
+          "org.dt4n:link-h1-s1": 0.5086209774017334,
+          "org.dt4n:link-h2-s1": 0.5162255764007568,
+          "org.dt4n:link-h3-s1": 0.533414363861084,
+          "org.dt4n:link-s1-s2": 0.4725360870361328,
+          "org.dt4n:link-s1-s3": 0.4797322750091553,
+          "org.dt4n:link-s2-s3": 0.4868621826171875,
+          "org.dt4n:link-s2-srv1": 0.4939236640930176,
+          "org.dt4n:link-s3-srv2": 0.5008900165557861,
+          "org.dt4n:path-h1-srv1": 2.1527578830718994,
+          "org.dt4n:switch-s1": 11.452865362167358,
+          "org.dt4n:switch-s2": 11.45991587638855,
+          "org.dt4n:switch-s3": 11.467464208602905
+        },
+        "aoi_summary": {
+          "max": 11.467464208602905,
+          "mean": 2.511138481252334,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 126.21610700080055,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.12621610700080055,
+        "stale_ids": [],
+        "t_read": 1783850590.307759
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.408796945999711,
+        "reset_wait_s": 6.814316846999645,
+        "timings": {
+          "steady_wait": 6.814316846999645
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.5263921380711774,
+        "link_key": "s1-s2",
+        "type": "LinkDegrade"
+      },
+      "idx": 7,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.3166627883911133,
+          "org.dt4n:host-h2": 0.3221402168273926,
+          "org.dt4n:host-h3": 0.32737207412719727,
+          "org.dt4n:host-srv1": 0.3330039978027344,
+          "org.dt4n:host-srv2": 0.33887386322021484,
+          "org.dt4n:link-h1-s1": 0.3893396854400635,
+          "org.dt4n:link-h2-s1": 0.39503908157348633,
+          "org.dt4n:link-h3-s1": 0.40177178382873535,
+          "org.dt4n:link-s1-s2": 0.3616049289703369,
+          "org.dt4n:link-s1-s3": 0.36733460426330566,
+          "org.dt4n:link-s2-s3": 0.37294912338256836,
+          "org.dt4n:link-s2-srv1": 0.37783360481262207,
+          "org.dt4n:link-s3-srv2": 0.38309621810913086,
+          "org.dt4n:path-h1-srv1": 2.005782127380371,
+          "org.dt4n:switch-s1": 11.346866369247437,
+          "org.dt4n:switch-s2": 11.352595329284668,
+          "org.dt4n:switch-s3": 11.357997417449951
+        },
+        "aoi_summary": {
+          "max": 11.357997417449951,
+          "mean": 2.397074306712431,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 97.67333499985398,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09767333499985398,
+        "stale_ids": [],
+        "t_read": 1783850610.412783
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.304094162000183,
+        "reset_wait_s": 6.707630782999331,
+        "timings": {
+          "steady_wait": 6.707630782999331
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.5252202990915116,
+        "link_key": "s1-s2",
+        "type": "LinkDegrade"
+      },
+      "idx": 8,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.3621077537536621,
+          "org.dt4n:host-h2": 0.36721205711364746,
+          "org.dt4n:host-h3": 0.3721950054168701,
+          "org.dt4n:host-srv1": 0.376875638961792,
+          "org.dt4n:host-srv2": 0.3819437026977539,
+          "org.dt4n:link-h1-s1": 0.43715548515319824,
+          "org.dt4n:link-h2-s1": 0.443131685256958,
+          "org.dt4n:link-h3-s1": 0.44873952865600586,
+          "org.dt4n:link-s1-s2": 0.4022092819213867,
+          "org.dt4n:link-s1-s3": 0.40912842750549316,
+          "org.dt4n:link-s2-s3": 0.4163358211517334,
+          "org.dt4n:link-s2-srv1": 0.42401885986328125,
+          "org.dt4n:link-s3-srv2": 0.4310762882232666,
+          "org.dt4n:path-h1-srv1": 2.061608076095581,
+          "org.dt4n:switch-s1": 11.389036655426025,
+          "org.dt4n:switch-s2": 11.394171476364136,
+          "org.dt4n:switch-s3": 11.398911952972412
+        },
+        "aoi_summary": {
+          "max": 11.398911952972412,
+          "mean": 2.442109276266659,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 97.33980800046993,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09733980800046993,
+        "stale_ids": [],
+        "t_read": 1783850630.2796097
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.352336306001234,
+        "reset_wait_s": 6.754232900999341,
+        "timings": {
+          "steady_wait": 6.754232900999341
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 40,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 9,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.4431135654449463,
+          "org.dt4n:host-h2": 0.44783782958984375,
+          "org.dt4n:host-h3": 0.452866792678833,
+          "org.dt4n:host-srv1": 0.45769548416137695,
+          "org.dt4n:host-srv2": 0.4627976417541504,
+          "org.dt4n:link-h1-s1": 0.5139932632446289,
+          "org.dt4n:link-h2-s1": 0.5196919441223145,
+          "org.dt4n:link-h3-s1": 0.5255773067474365,
+          "org.dt4n:link-s1-s2": 0.4854927062988281,
+          "org.dt4n:link-s1-s3": 0.4920961856842041,
+          "org.dt4n:link-s2-s3": 0.49752306938171387,
+          "org.dt4n:link-s2-srv1": 0.5030555725097656,
+          "org.dt4n:link-s3-srv2": 0.5088014602661133,
+          "org.dt4n:path-h1-srv1": 3.134270429611206,
+          "org.dt4n:switch-s1": 12.470117330551147,
+          "org.dt4n:switch-s2": 12.475717782974243,
+          "org.dt4n:switch-s3": 12.481592416763306
+        },
+        "aoi_summary": {
+          "max": 12.481592416763306,
+          "mean": 2.757190634222592,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 92.10915900075634,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09210915900075634,
+        "stale_ids": [],
+        "t_read": 1783850651.392271
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.431369251999058,
+        "reset_wait_s": 7.8348135340002045,
+        "timings": {
+          "steady_wait": 7.8348135340002045
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 46,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 10,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.7550885677337646,
+          "org.dt4n:host-h2": 6.808300018310547,
+          "org.dt4n:host-h3": 7.817319631576538,
+          "org.dt4n:host-srv1": 0.7792079448699951,
+          "org.dt4n:host-srv2": 0.7865495681762695,
+          "org.dt4n:link-h1-s1": 0.8422949314117432,
+          "org.dt4n:link-h2-s1": 6.893205165863037,
+          "org.dt4n:link-h3-s1": 7.900152206420898,
+          "org.dt4n:link-s1-s2": 0.811227560043335,
+          "org.dt4n:link-s1-s3": 5.862596273422241,
+          "org.dt4n:link-s2-s3": 0.8239755630493164,
+          "org.dt4n:link-s2-srv1": 0.8303093910217285,
+          "org.dt4n:link-s3-srv2": 0.8364958763122559,
+          "org.dt4n:path-h1-srv1": 1.392714023590088,
+          "org.dt4n:switch-s1": 15.839706897735596,
+          "org.dt4n:switch-s2": 15.845824003219604,
+          "org.dt4n:switch-s3": 15.851814270019531
+        },
+        "aoi_summary": {
+          "max": 15.851814270019531,
+          "mean": 5.333928346633911,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 113.80825199921674,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.11380825199921674,
+        "stale_ids": [],
+        "t_read": 1783850680.3557158
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 12.785562454999308,
+        "reset_wait_s": 11.18580349900003,
+        "timings": {
+          "steady_wait": 11.18580349900003
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.4253294142037582,
+        "link_key": "s1-s2",
+        "type": "LinkDegrade"
+      },
+      "idx": 11,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.40136003494262695,
+          "org.dt4n:host-h2": 1.4067728519439697,
+          "org.dt4n:host-h3": 0.41165661811828613,
+          "org.dt4n:host-srv1": 0.41683530807495117,
+          "org.dt4n:host-srv2": 0.4220576286315918,
+          "org.dt4n:link-h1-s1": 0.4688253402709961,
+          "org.dt4n:link-h2-s1": 1.4747624397277832,
+          "org.dt4n:link-h3-s1": 0.48071765899658203,
+          "org.dt4n:link-s1-s2": 0.4419879913330078,
+          "org.dt4n:link-s1-s3": 2.447396993637085,
+          "org.dt4n:link-s2-s3": 0.45293092727661133,
+          "org.dt4n:link-s2-srv1": 0.4581141471862793,
+          "org.dt4n:link-s3-srv2": 0.4635660648345947,
+          "org.dt4n:path-h1-srv1": 3.0972230434417725,
+          "org.dt4n:switch-s1": 12.427830696105957,
+          "org.dt4n:switch-s2": 12.433191061019897,
+          "org.dt4n:switch-s3": 12.438154458999634
+        },
+        "aoi_summary": {
+          "max": 12.438154458999634,
+          "mean": 2.9496107802671543,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 90.08930600066378,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09008930600066378,
+        "stale_ids": [],
+        "t_read": 1783850701.830225
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.388048781998805,
+        "reset_wait_s": 7.791925027000616,
+        "timings": {
+          "steady_wait": 7.791925027000616
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 54,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 12,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.30411505699157715,
+          "org.dt4n:host-h2": 1.3090269565582275,
+          "org.dt4n:host-h3": 1.3137125968933105,
+          "org.dt4n:host-srv1": 0.31852102279663086,
+          "org.dt4n:host-srv2": 0.32373690605163574,
+          "org.dt4n:link-h1-s1": 0.36847686767578125,
+          "org.dt4n:link-h2-s1": 1.373786211013794,
+          "org.dt4n:link-h3-s1": 1.378619909286499,
+          "org.dt4n:link-s1-s2": 0.34253382682800293,
+          "org.dt4n:link-s1-s3": 2.3474395275115967,
+          "org.dt4n:link-s2-s3": 0.35270118713378906,
+          "org.dt4n:link-s2-srv1": 0.35796618461608887,
+          "org.dt4n:link-s3-srv2": 0.3629472255706787,
+          "org.dt4n:path-h1-srv1": 1.9950573444366455,
+          "org.dt4n:switch-s1": 11.329448938369751,
+          "org.dt4n:switch-s2": 11.334028005599976,
+          "org.dt4n:switch-s3": 11.339010000228882
+        },
+        "aoi_summary": {
+          "max": 11.339010000228882,
+          "mean": 2.7324192804448746,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 83.80922400101554,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.08380922400101554,
+        "stale_ids": [],
+        "t_read": 1783850726.674058
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.292057208998813,
+        "reset_wait_s": 6.699336711999422,
+        "timings": {
+          "steady_wait": 6.699336711999422
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 5.0,
+        "delay": "2ms",
+        "factor": 0.23159178862970245,
+        "link_key": "s2-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 13,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.2817878723144531,
+          "org.dt4n:host-h2": 0.2866506576538086,
+          "org.dt4n:host-h3": 0.29183053970336914,
+          "org.dt4n:host-srv1": 0.29707980155944824,
+          "org.dt4n:host-srv2": 0.3022758960723877,
+          "org.dt4n:link-h1-s1": 0.36242103576660156,
+          "org.dt4n:link-h2-s1": 0.3678610324859619,
+          "org.dt4n:link-h3-s1": 0.37288904190063477,
+          "org.dt4n:link-s1-s2": 0.33073854446411133,
+          "org.dt4n:link-s1-s3": 0.33832597732543945,
+          "org.dt4n:link-s2-s3": 0.34518909454345703,
+          "org.dt4n:link-s2-srv1": 0.35157346725463867,
+          "org.dt4n:link-s3-srv2": 0.35732316970825195,
+          "org.dt4n:path-h1-srv1": 1.9649040699005127,
+          "org.dt4n:switch-s1": 11.310985088348389,
+          "org.dt4n:switch-s2": 11.318780660629272,
+          "org.dt4n:switch-s3": 11.326231479644775
+        },
+        "aoi_summary": {
+          "max": 11.326231479644775,
+          "mean": 2.365108672310324,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 101.83398600020155,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.10183398600020155,
+        "stale_ids": [],
+        "t_read": 1783850746.9319048
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.270583687000908,
+        "reset_wait_s": 6.671181895999325,
+        "timings": {
+          "steady_wait": 6.671181895999325
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 48,
+        "src": "h2",
+        "type": "TrafficFlood"
+      },
+      "idx": 14,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.34409666061401367,
+          "org.dt4n:host-h2": 0.34932422637939453,
+          "org.dt4n:host-h3": 6.35450553894043,
+          "org.dt4n:host-srv1": 0.35974836349487305,
+          "org.dt4n:host-srv2": 0.3649156093597412,
+          "org.dt4n:link-h1-s1": 0.4107944965362549,
+          "org.dt4n:link-h2-s1": 0.4161710739135742,
+          "org.dt4n:link-h3-s1": 7.422821283340454,
+          "org.dt4n:link-s1-s2": 0.3850414752960205,
+          "org.dt4n:link-s1-s3": 0.3902866840362549,
+          "org.dt4n:link-s2-s3": 0.3953361511230469,
+          "org.dt4n:link-s2-srv1": 0.4002828598022461,
+          "org.dt4n:link-s3-srv2": 0.40535640716552734,
+          "org.dt4n:path-h1-srv1": 2.0402138233184814,
+          "org.dt4n:switch-s1": 11.370790004730225,
+          "org.dt4n:switch-s2": 11.375896692276001,
+          "org.dt4n:switch-s3": 11.380927324295044
+        },
+        "aoi_summary": {
+          "max": 11.380927324295044,
+          "mean": 3.1862652161542107,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 89.04040299967164,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.08904040299967164,
+        "stale_ids": [],
+        "t_read": 1783850766.5342147
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.329994522000561,
+        "reset_wait_s": 6.72418400800052,
+        "timings": {
+          "steady_wait": 6.72418400800052
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 48,
+        "src": "h2",
+        "type": "TrafficFlood"
+      },
+      "idx": 15,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.3350210189819336,
+          "org.dt4n:host-h2": 5.339946985244751,
+          "org.dt4n:host-h3": 6.3448216915130615,
+          "org.dt4n:host-srv1": 0.3493978977203369,
+          "org.dt4n:host-srv2": 0.3543572425842285,
+          "org.dt4n:link-h1-s1": 0.40071892738342285,
+          "org.dt4n:link-h2-s1": 5.40564227104187,
+          "org.dt4n:link-h3-s1": 6.410867929458618,
+          "org.dt4n:link-s1-s2": 0.37606143951416016,
+          "org.dt4n:link-s1-s3": 5.38117241859436,
+          "org.dt4n:link-s2-s3": 0.38615942001342773,
+          "org.dt4n:link-s2-srv1": 0.3909456729888916,
+          "org.dt4n:link-s3-srv2": 0.3956642150878906,
+          "org.dt4n:path-h1-srv1": 2.0435879230499268,
+          "org.dt4n:switch-s1": 11.361733198165894,
+          "org.dt4n:switch-s2": 11.366825342178345,
+          "org.dt4n:switch-s3": 11.372203588485718
+        },
+        "aoi_summary": {
+          "max": 11.372203588485718,
+          "mean": 4.000889834235696,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 85.77801100000215,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.08577801100000215,
+        "stale_ids": [],
+        "t_read": 1783850785.3325891
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.322715573000096,
+        "reset_wait_s": 6.726920522,
+        "timings": {
+          "steady_wait": 6.726920522
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 43,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 16,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.2837228775024414,
+          "org.dt4n:host-h2": 1.2886769771575928,
+          "org.dt4n:host-h3": 0.2940175533294678,
+          "org.dt4n:host-srv1": 0.29900193214416504,
+          "org.dt4n:host-srv2": 0.3039689064025879,
+          "org.dt4n:link-h1-s1": 0.3506653308868408,
+          "org.dt4n:link-h2-s1": 1.3557658195495605,
+          "org.dt4n:link-h3-s1": 0.36127376556396484,
+          "org.dt4n:link-s1-s2": 0.32489728927612305,
+          "org.dt4n:link-s1-s3": 1.3301596641540527,
+          "org.dt4n:link-s2-s3": 0.3356130123138428,
+          "org.dt4n:link-s2-srv1": 0.34076356887817383,
+          "org.dt4n:link-s3-srv2": 0.34567880630493164,
+          "org.dt4n:path-h1-srv1": 1.9717462062835693,
+          "org.dt4n:switch-s1": 11.311045169830322,
+          "org.dt4n:switch-s2": 11.316072940826416,
+          "org.dt4n:switch-s3": 11.32158637046814
+        },
+        "aoi_summary": {
+          "max": 11.32158637046814,
+          "mean": 2.5373327171101288,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 87.97109599981923,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.08797109599981923,
+        "stale_ids": [],
+        "t_read": 1783850806.9797473
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.272851589999846,
+        "reset_wait_s": 6.672593852999853,
+        "timings": {
+          "steady_wait": 6.672593852999853
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 55,
+        "src": "h3",
+        "type": "TrafficFlood"
+      },
+      "idx": 17,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.35991358757019043,
+          "org.dt4n:host-h2": 5.365151882171631,
+          "org.dt4n:host-h3": 5.37042236328125,
+          "org.dt4n:host-srv1": 0.37546825408935547,
+          "org.dt4n:host-srv2": 0.38030195236206055,
+          "org.dt4n:link-h1-s1": 0.43210935592651367,
+          "org.dt4n:link-h2-s1": 5.437516689300537,
+          "org.dt4n:link-h3-s1": 5.4428441524505615,
+          "org.dt4n:link-s1-s2": 0.4020347595214844,
+          "org.dt4n:link-s1-s3": 6.408401966094971,
+          "org.dt4n:link-s2-s3": 0.4130074977874756,
+          "org.dt4n:link-s2-srv1": 0.4195404052734375,
+          "org.dt4n:link-s3-srv2": 0.4263877868652344,
+          "org.dt4n:path-h1-srv1": 2.0390994548797607,
+          "org.dt4n:switch-s1": 11.3867666721344,
+          "org.dt4n:switch-s2": 11.392660856246948,
+          "org.dt4n:switch-s3": 11.398114681243896
+        },
+        "aoi_summary": {
+          "max": 11.398114681243896,
+          "mean": 3.9676319010117473,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 93.72544000143535,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09372544000143535,
+        "stale_ids": [],
+        "t_read": 1783850825.495101
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.330712115001006,
+        "reset_wait_s": 6.72291503499946,
+        "timings": {
+          "steady_wait": 6.72291503499946
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 44,
+        "src": "h2",
+        "type": "TrafficFlood"
+      },
+      "idx": 18,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.519822359085083,
+          "org.dt4n:host-h2": 0.5252740383148193,
+          "org.dt4n:host-h3": 0.5304844379425049,
+          "org.dt4n:host-srv1": 0.5357708930969238,
+          "org.dt4n:host-srv2": 0.540724515914917,
+          "org.dt4n:link-h1-s1": 0.5855305194854736,
+          "org.dt4n:link-h2-s1": 0.5906245708465576,
+          "org.dt4n:link-h3-s1": 0.595956563949585,
+          "org.dt4n:link-s1-s2": 0.5609705448150635,
+          "org.dt4n:link-s1-s3": 1.5657618045806885,
+          "org.dt4n:link-s2-s3": 0.5705530643463135,
+          "org.dt4n:link-s2-srv1": 0.5751571655273438,
+          "org.dt4n:link-s3-srv2": 1.5801427364349365,
+          "org.dt4n:path-h1-srv1": 2.2494442462921143,
+          "org.dt4n:switch-s1": 11.547797441482544,
+          "org.dt4n:switch-s2": 11.55300760269165,
+          "org.dt4n:switch-s3": 11.557861804962158
+        },
+        "aoi_summary": {
+          "max": 11.557861804962158,
+          "mean": 2.716757900574628,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 86.0315879999689,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.0860315879999689,
+        "stale_ids": [],
+        "t_read": 1783850847.2844453
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.507262316999913,
+        "reset_wait_s": 6.904867613000533,
+        "timings": {
+          "steady_wait": 6.904867613000533
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.3583980191574892,
+        "link_key": "s1-s2",
+        "type": "LinkDegrade"
+      },
+      "idx": 19,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.5641441345214844,
+          "org.dt4n:host-h2": 0.5695188045501709,
+          "org.dt4n:host-h3": 0.5750637054443359,
+          "org.dt4n:host-srv1": 0.5801863670349121,
+          "org.dt4n:host-srv2": 0.5853533744812012,
+          "org.dt4n:link-h1-s1": 0.6319091320037842,
+          "org.dt4n:link-h2-s1": 0.6372816562652588,
+          "org.dt4n:link-h3-s1": 0.6426348686218262,
+          "org.dt4n:link-s1-s2": 0.6065354347229004,
+          "org.dt4n:link-s1-s3": 0.611945629119873,
+          "org.dt4n:link-s2-s3": 0.6171035766601562,
+          "org.dt4n:link-s2-srv1": 0.6217565536499023,
+          "org.dt4n:link-s3-srv2": 0.6274003982543945,
+          "org.dt4n:path-h1-srv1": 2.2732462882995605,
+          "org.dt4n:switch-s1": 11.592538118362427,
+          "org.dt4n:switch-s2": 11.59786319732666,
+          "org.dt4n:switch-s3": 11.603447198867798
+        },
+        "aoi_summary": {
+          "max": 11.603447198867798,
+          "mean": 2.6434075551874496,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 94.47830399949453,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09447830399949453,
+        "stale_ids": [],
+        "t_read": 1783850867.3042479
+      },
+      "reset": {
+        "reset_dirty": false,
+        "reset_mode": "hard",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.552440757999648,
+        "reset_wait_s": 6.679799988000013,
+        "timings": {
+          "steady_wait": 6.679799988000013
+        }
+      }
+    }
+  ],
+  "measured": true,
+  "multiple_comparison_note": "Bonferroni applied with m=45 (all dims). 26 dims are degenerate (zero variance in both samples, KS has no power). Effective independent tests ~= 19. Using m=19 would give alpha_prime=0.00263; this does not change the conclusion. We keep m=45 because infrastructure validation prioritizes avoiding false positives.",
+  "n_degenerate": 26,
+  "n_dims": 45,
+  "n_effective_tests": 19,
+  "n_rejected": 1,
+  "prediction_notes": {
+    "aoi_norm": "May differ if cache/bootstrap freshness differs.",
+    "bw_norm": "Should not differ; difference implies restore_links bug.",
+    "data_fresh": "May differ after hard_reset if Ditto Things were just bootstrapped and collector has not completed a full cycle for every Thing.",
+    "episode_dims": "Should not differ; episode is None so both are 0.",
+    "link_up_host_up": "Should not differ; all baseline up.",
+    "path_latency_norm": "May differ if ARP/cache cleanup is incomplete.",
+    "util": "Should not differ after wait_steady_state.",
+    "util_avg3": "Should not differ if state builder reset clears history."
+  },
+  "rows": [
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 0,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "link_up:h1-s1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 1,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "link_up:h2-s1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 2,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "link_up:h3-s1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 3,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "link_up:s1-s2",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 4,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "link_up:s1-s3",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 5,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "link_up:s2-s3",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 6,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "link_up:s2-srv1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 7,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "link_up:s3-srv2",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 8,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "bw_norm:h1-s1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 9,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "bw_norm:h2-s1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 10,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "bw_norm:h3-s1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 11,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "bw_norm:s1-s2",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 12,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "bw_norm:s1-s3",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 13,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "bw_norm:s2-s3",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 14,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "bw_norm:s2-srv1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 15,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "bw_norm:s3-srv2",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.15,
+      "degenerate": false,
+      "dim": 16,
+      "mean_hard": 0.9783963956,
+      "mean_soft": 0.9782928826,
+      "name": "util:h1-s1",
+      "p": 0.9831368772656193,
+      "rejected": false,
+      "std_hard": 0.00391594425411122,
+      "std_soft": 0.003055780555551337
+    },
+    {
+      "D": 0.4,
+      "degenerate": false,
+      "dim": 17,
+      "mean_hard": 1.11984e-05,
+      "mean_soft": 0.0,
+      "name": "util:h2-s1",
+      "p": 0.08105771161340149,
+      "rejected": false,
+      "std_hard": 1.4071480819841168e-05,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.35,
+      "degenerate": false,
+      "dim": 18,
+      "mean_hard": 1.11984e-05,
+      "mean_soft": 1.3998e-06,
+      "name": "util:h3-s1",
+      "p": 0.17453300569806826,
+      "rejected": false,
+      "std_hard": 1.4071480819841168e-05,
+      "std_soft": 6.260095909808411e-06
+    },
+    {
+      "D": 0.15,
+      "degenerate": false,
+      "dim": 19,
+      "mean_hard": 0.978485791,
+      "mean_soft": 0.9781442074,
+      "name": "util:s1-s2",
+      "p": 0.9831368772656193,
+      "rejected": false,
+      "std_hard": 0.0055800868516257445,
+      "std_soft": 0.003793693739150263
+    },
+    {
+      "D": 0.2,
+      "degenerate": false,
+      "dim": 20,
+      "mean_hard": 6.998999999999999e-06,
+      "mean_soft": 1.3998e-06,
+      "name": "util:s1-s3",
+      "p": 0.8319696107963263,
+      "rejected": false,
+      "std_hard": 1.2437549386307661e-05,
+      "std_soft": 6.260095909808411e-06
+    },
+    {
+      "D": 0.25,
+      "degenerate": false,
+      "dim": 21,
+      "mean_hard": 0.422028136,
+      "mean_soft": 0.4237893184,
+      "name": "util:s2-s3",
+      "p": 0.571336004933722,
+      "rejected": false,
+      "std_hard": 0.007049677585732598,
+      "std_soft": 0.0022995723158177853
+    },
+    {
+      "D": 0.25,
+      "degenerate": false,
+      "dim": 22,
+      "mean_hard": 0.9780464384,
+      "mean_soft": 0.9774610538,
+      "name": "util:s2-srv1",
+      "p": 0.571336004933722,
+      "rejected": false,
+      "std_hard": 0.007016254703191226,
+      "std_soft": 0.004903667421754574
+    },
+    {
+      "D": 0.35,
+      "degenerate": false,
+      "dim": 23,
+      "mean_hard": 0.1054437536,
+      "mean_soft": 0.1059170936,
+      "name": "util:s3-srv2",
+      "p": 0.17453300569806826,
+      "rejected": false,
+      "std_hard": 0.0018148863888051343,
+      "std_soft": 0.0005970938182241655
+    },
+    {
+      "D": 0.15,
+      "degenerate": false,
+      "dim": 24,
+      "mean_hard": 0.9783963956,
+      "mean_soft": 0.9782928826,
+      "name": "util_avg3:h1-s1",
+      "p": 0.9831368772656193,
+      "rejected": false,
+      "std_hard": 0.00391594425411122,
+      "std_soft": 0.003055780555551337
+    },
+    {
+      "D": 0.4,
+      "degenerate": false,
+      "dim": 25,
+      "mean_hard": 1.11984e-05,
+      "mean_soft": 0.0,
+      "name": "util_avg3:h2-s1",
+      "p": 0.08105771161340149,
+      "rejected": false,
+      "std_hard": 1.4071480819841168e-05,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.35,
+      "degenerate": false,
+      "dim": 26,
+      "mean_hard": 1.11984e-05,
+      "mean_soft": 1.3998e-06,
+      "name": "util_avg3:h3-s1",
+      "p": 0.17453300569806826,
+      "rejected": false,
+      "std_hard": 1.4071480819841168e-05,
+      "std_soft": 6.260095909808411e-06
+    },
+    {
+      "D": 0.15,
+      "degenerate": false,
+      "dim": 27,
+      "mean_hard": 0.978485791,
+      "mean_soft": 0.9781442074,
+      "name": "util_avg3:s1-s2",
+      "p": 0.9831368772656193,
+      "rejected": false,
+      "std_hard": 0.0055800868516257445,
+      "std_soft": 0.003793693739150263
+    },
+    {
+      "D": 0.2,
+      "degenerate": false,
+      "dim": 28,
+      "mean_hard": 6.998999999999999e-06,
+      "mean_soft": 1.3998e-06,
+      "name": "util_avg3:s1-s3",
+      "p": 0.8319696107963263,
+      "rejected": false,
+      "std_hard": 1.2437549386307661e-05,
+      "std_soft": 6.260095909808411e-06
+    },
+    {
+      "D": 0.25,
+      "degenerate": false,
+      "dim": 29,
+      "mean_hard": 0.422028136,
+      "mean_soft": 0.4237893184,
+      "name": "util_avg3:s2-s3",
+      "p": 0.571336004933722,
+      "rejected": false,
+      "std_hard": 0.007049677585732598,
+      "std_soft": 0.0022995723158177853
+    },
+    {
+      "D": 0.25,
+      "degenerate": false,
+      "dim": 30,
+      "mean_hard": 0.9780464384,
+      "mean_soft": 0.9774610538,
+      "name": "util_avg3:s2-srv1",
+      "p": 0.571336004933722,
+      "rejected": false,
+      "std_hard": 0.007016254703191226,
+      "std_soft": 0.004903667421754574
+    },
+    {
+      "D": 0.35,
+      "degenerate": false,
+      "dim": 31,
+      "mean_hard": 0.1054437536,
+      "mean_soft": 0.1059170936,
+      "name": "util_avg3:s3-srv2",
+      "p": 0.17453300569806826,
+      "rejected": false,
+      "std_hard": 0.0018148863888051343,
+      "std_soft": 0.0005970938182241655
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 32,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "host_up:h1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 33,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "host_up:h2",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 34,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "host_up:h3",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 35,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "host_up:srv1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 36,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "host_up:srv2",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.25,
+      "degenerate": false,
+      "dim": 37,
+      "mean_hard": 0.977868733,
+      "mean_soft": 0.978027067,
+      "name": "server_rx_norm:srv1",
+      "p": 0.571336004933722,
+      "rejected": false,
+      "std_hard": 0.001429081383866091,
+      "std_soft": 0.001865397590639254
+    },
+    {
+      "D": 0.35,
+      "degenerate": false,
+      "dim": 38,
+      "mean_hard": 0.1054437562,
+      "mean_soft": 0.1059473338,
+      "name": "server_rx_norm:srv2",
+      "p": 0.17453300569806826,
+      "rejected": false,
+      "std_hard": 0.001659429756308491,
+      "std_soft": 0.0003151717345207207
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 39,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "path_latency_norm:h1-srv1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 40,
+      "mean_hard": 0.0,
+      "mean_soft": 0.0,
+      "name": "path_loss_norm:h1-srv1",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 41,
+      "mean_hard": 1.0,
+      "mean_soft": 1.0,
+      "name": "data_fresh",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.65,
+      "degenerate": false,
+      "dim": 42,
+      "mean_hard": 0.5043318480253218,
+      "mean_soft": 0.9305552912950515,
+      "name": "aoi_norm",
+      "p": 0.0002704973445409677,
+      "rejected": true,
+      "std_hard": 0.3245051637534341,
+      "std_soft": 0.18371822502512963
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 43,
+      "mean_hard": 0.0,
+      "mean_soft": 0.0,
+      "name": "step_progress",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    },
+    {
+      "D": 0.0,
+      "degenerate": true,
+      "dim": 44,
+      "mean_hard": 0.0,
+      "mean_soft": 0.0,
+      "name": "healthy_streak_norm",
+      "p": 1.0,
+      "rejected": false,
+      "std_hard": 0.0,
+      "std_soft": 0.0
+    }
+  ],
+  "samples_per_mode": 20,
+  "soft_infos": [
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.4625698437171548,
+        "link_key": "s1-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 0,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 1.038757085800171,
+          "org.dt4n:host-h2": 9.0455641746521,
+          "org.dt4n:host-h3": 10.005954265594482,
+          "org.dt4n:host-srv1": 1.0552217960357666,
+          "org.dt4n:host-srv2": 1.0602765083312988,
+          "org.dt4n:link-h1-s1": 0.11070084571838379,
+          "org.dt4n:link-h2-s1": 9.116992235183716,
+          "org.dt4n:link-h3-s1": 10.077739477157593,
+          "org.dt4n:link-s1-s2": 1.0820255279541016,
+          "org.dt4n:link-s1-s3": 8.089232444763184,
+          "org.dt4n:link-s2-s3": 1.0935859680175781,
+          "org.dt4n:link-s2-srv1": 1.0995266437530518,
+          "org.dt4n:link-s3-srv2": 1.104940414428711,
+          "org.dt4n:path-h1-srv1": 2.7575132846832275,
+          "org.dt4n:switch-s1": 22.06878352165222,
+          "org.dt4n:switch-s2": 22.073960304260254,
+          "org.dt4n:switch-s3": 22.079503774642944
+        },
+        "aoi_summary": {
+          "max": 22.079503774642944,
+          "mean": 7.232957545448752,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 95.35497900105838,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09535497900105838,
+        "stale_ids": [],
+        "t_read": 1783850877.7795148
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.98813267100013,
+        "reset_wait_s": 6.6517979799991735,
+        "timings": {
+          "flush_arp": 0.010935332000372,
+          "kill_iperf": 0.3651039859996672,
+          "reset_cache": 1.3165001291781664e-05,
+          "restore_links": 0.3065421539995441,
+          "revert_scenarios": 0.05348512000091432,
+          "start_traffic": 1.5939579080004478,
+          "steady_wait": 6.6517979799991735
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.2814898057116742,
+        "link_key": "s1-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 1,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.4697535037994385,
+          "org.dt4n:host-h2": 1.4754807949066162,
+          "org.dt4n:host-h3": 1.4814317226409912,
+          "org.dt4n:host-srv1": 0.48741936683654785,
+          "org.dt4n:host-srv2": 0.49329042434692383,
+          "org.dt4n:link-h1-s1": 0.54850172996521,
+          "org.dt4n:link-h2-s1": 1.5542237758636475,
+          "org.dt4n:link-h3-s1": 1.5597491264343262,
+          "org.dt4n:link-s1-s2": 0.5180587768554688,
+          "org.dt4n:link-s1-s3": 2.524111032485962,
+          "org.dt4n:link-s2-s3": 0.5304555892944336,
+          "org.dt4n:link-s2-srv1": 0.5364322662353516,
+          "org.dt4n:link-s3-srv2": 0.5423145294189453,
+          "org.dt4n:path-h1-srv1": 3.207643985748291,
+          "org.dt4n:switch-s1": 2.499908208847046,
+          "org.dt4n:switch-s2": 2.5060207843780518,
+          "org.dt4n:switch-s3": 2.511934280395508
+        },
+        "aoi_summary": {
+          "max": 3.207643985748291,
+          "mean": 1.3792194057913387,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 103.95517500001006,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.10395517500001006,
+        "stale_ids": [],
+        "t_read": 1783850888.2196453
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.943515656999807,
+        "reset_wait_s": 6.67810975500106,
+        "timings": {
+          "flush_arp": 0.01153557500038005,
+          "kill_iperf": 0.35262897799839266,
+          "reset_cache": 1.024999983201269e-05,
+          "restore_links": 0.27343020899934345,
+          "revert_scenarios": 0.032956532999378396,
+          "start_traffic": 1.5868707680001535,
+          "steady_wait": 6.67810975500106
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 59,
+        "src": "h3",
+        "type": "TrafficFlood"
+      },
+      "idx": 2,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.38246655464172363,
+          "org.dt4n:host-h2": 12.962560653686523,
+          "org.dt4n:host-h3": 8.306680917739868,
+          "org.dt4n:host-srv1": 0.4029209613800049,
+          "org.dt4n:host-srv2": 0.4088704586029053,
+          "org.dt4n:link-h1-s1": 0.506188154220581,
+          "org.dt4n:link-h2-s1": 13.085898399353027,
+          "org.dt4n:link-h3-s1": 8.429911375045776,
+          "org.dt4n:link-s1-s2": 0.42931294441223145,
+          "org.dt4n:link-s1-s3": 14.008130073547363,
+          "org.dt4n:link-s2-s3": 0.4389517307281494,
+          "org.dt4n:link-s2-srv1": 0.4437241554260254,
+          "org.dt4n:link-s3-srv2": 0.4491424560546875,
+          "org.dt4n:path-h1-srv1": 4.187136650085449,
+          "org.dt4n:switch-s1": 13.98844051361084,
+          "org.dt4n:switch-s2": 13.993762493133545,
+          "org.dt4n:switch-s3": 13.998713731765747
+        },
+        "aoi_summary": {
+          "max": 14.008130073547363,
+          "mean": 6.260165424907909,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 146.22951799901784,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.14622951799901784,
+        "stale_ids": [],
+        "t_read": 1783850899.7491384
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.335259227000279,
+        "reset_wait_s": 6.69051296500038,
+        "timings": {
+          "flush_arp": 0.010806912001498858,
+          "kill_iperf": 0.7144887989998097,
+          "reset_cache": 1.1141999493702315e-05,
+          "restore_links": 0.300044481000441,
+          "revert_scenarios": 0.01981312799944135,
+          "start_traffic": 1.5927817920000962,
+          "steady_wait": 6.69051296500038
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 57,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 3,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.5607738494873047,
+          "org.dt4n:host-h2": 24.11223554611206,
+          "org.dt4n:host-h3": 19.45700478553772,
+          "org.dt4n:host-srv1": 0.577594518661499,
+          "org.dt4n:host-srv2": 0.5830411911010742,
+          "org.dt4n:link-h1-s1": 0.6336257457733154,
+          "org.dt4n:link-h2-s1": 24.185264825820923,
+          "org.dt4n:link-h3-s1": 19.529670476913452,
+          "org.dt4n:link-s1-s2": 0.6036179065704346,
+          "org.dt4n:link-s1-s3": 25.155637979507446,
+          "org.dt4n:link-s2-s3": 0.6158580780029297,
+          "org.dt4n:link-s2-srv1": 0.6211915016174316,
+          "org.dt4n:link-s3-srv2": 0.627488374710083,
+          "org.dt4n:path-h1-srv1": 4.319907903671265,
+          "org.dt4n:switch-s1": 25.133955717086792,
+          "org.dt4n:switch-s2": 25.138960361480713,
+          "org.dt4n:switch-s3": 25.144156455993652
+        },
+        "aoi_summary": {
+          "max": 25.155637979507446,
+          "mean": 11.588234424591064,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 95.15081800054759,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09515081800054759,
+        "stale_ids": [],
+        "t_read": 1783850910.8489094
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.311825543998566,
+        "reset_wait_s": 6.71303529800025,
+        "timings": {
+          "flush_arp": 0.010850917000425397,
+          "kill_iperf": 0.6903642930010392,
+          "reset_cache": 9.979001333704218e-06,
+          "restore_links": 0.2832800929991208,
+          "revert_scenarios": 0.014004921999003273,
+          "start_traffic": 1.593476815000031,
+          "steady_wait": 6.71303529800025
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 39,
+        "src": "h2",
+        "type": "TrafficFlood"
+      },
+      "idx": 4,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 1.8225269317626953,
+          "org.dt4n:host-h2": 4.828323841094971,
+          "org.dt4n:host-h3": 4.8334596157073975,
+          "org.dt4n:host-srv1": 1.8372187614440918,
+          "org.dt4n:host-srv2": 1.8423829078674316,
+          "org.dt4n:link-h1-s1": 0.892146110534668,
+          "org.dt4n:link-h2-s1": 4.899282932281494,
+          "org.dt4n:link-h3-s1": 0.9035537242889404,
+          "org.dt4n:link-s1-s2": 1.8641588687896729,
+          "org.dt4n:link-s1-s3": 3.87009859085083,
+          "org.dt4n:link-s2-s3": 1.8755650520324707,
+          "org.dt4n:link-s2-srv1": 1.880829095840454,
+          "org.dt4n:link-s3-srv2": 1.886627435684204,
+          "org.dt4n:path-h1-srv1": 5.58585786819458,
+          "org.dt4n:switch-s1": 4.848689556121826,
+          "org.dt4n:switch-s2": 4.853760719299316,
+          "org.dt4n:switch-s3": 4.85973334312439
+        },
+        "aoi_summary": {
+          "max": 5.58585786819458,
+          "mean": 3.1402479620540844,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 92.59697599918582,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09259697599918582,
+        "stale_ids": [],
+        "t_read": 1783850923.3538594
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 10.3672517039995,
+        "reset_wait_s": 7.770933312000125,
+        "timings": {
+          "flush_arp": 0.010115766001035809,
+          "kill_iperf": 0.6950123950009583,
+          "reset_cache": 1.3044998922850937e-05,
+          "restore_links": 0.27226812499975495,
+          "revert_scenarios": 0.013095193000481231,
+          "start_traffic": 1.5991460789991834,
+          "steady_wait": 7.770933312000125
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 5.0,
+        "delay": "2ms",
+        "factor": 0.3935483591218101,
+        "link_key": "s2-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 5,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.37197399139404297,
+          "org.dt4n:host-h2": 8.357044219970703,
+          "org.dt4n:host-h3": 10.023008108139038,
+          "org.dt4n:host-srv1": 0.3867323398590088,
+          "org.dt4n:host-srv2": 0.39185667037963867,
+          "org.dt4n:link-h1-s1": 0.43752217292785645,
+          "org.dt4n:link-h2-s1": 8.422618389129639,
+          "org.dt4n:link-h3-s1": 10.088995218276978,
+          "org.dt4n:link-s1-s2": 0.41225528717041016,
+          "org.dt4n:link-s1-s3": 14.417366743087769,
+          "org.dt4n:link-s2-s3": 0.4227578639984131,
+          "org.dt4n:link-s2-srv1": 0.4276409149169922,
+          "org.dt4n:link-s3-srv2": 0.43265342712402344,
+          "org.dt4n:path-h1-srv1": 1.0367887020111084,
+          "org.dt4n:switch-s1": 15.398009538650513,
+          "org.dt4n:switch-s2": 15.403352975845337,
+          "org.dt4n:switch-s3": 15.408412456512451
+        },
+        "aoi_summary": {
+          "max": 15.408412456512451,
+          "mean": 5.990528765846701,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 86.56809300009627,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.08656809300009627,
+        "stale_ids": [],
+        "t_read": 1783850933.8977902
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.007604824000737,
+        "reset_wait_s": 6.743105714000194,
+        "timings": {
+          "flush_arp": 0.010511413000131142,
+          "kill_iperf": 0.35337484299998323,
+          "reset_cache": 1.0210000255028717e-05,
+          "restore_links": 0.26581848100067873,
+          "revert_scenarios": 0.03176641099889821,
+          "start_traffic": 1.5961776099993585,
+          "steady_wait": 6.743105714000194
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 5.0,
+        "delay": "2ms",
+        "factor": 0.42362864842975356,
+        "link_key": "s2-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 6,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.784604549407959,
+          "org.dt4n:host-h2": 18.773237228393555,
+          "org.dt4n:host-h3": 20.439980030059814,
+          "org.dt4n:host-srv1": 0.8026101589202881,
+          "org.dt4n:host-srv2": 0.8082656860351562,
+          "org.dt4n:link-h1-s1": 0.8599710464477539,
+          "org.dt4n:link-h2-s1": 18.847264766693115,
+          "org.dt4n:link-h3-s1": 20.513654708862305,
+          "org.dt4n:link-s1-s2": 0.8330190181732178,
+          "org.dt4n:link-s1-s3": 24.84068250656128,
+          "org.dt4n:link-s2-s3": 0.8443276882171631,
+          "org.dt4n:link-s2-srv1": 0.8495311737060547,
+          "org.dt4n:link-s3-srv2": 0.8547501564025879,
+          "org.dt4n:path-h1-srv1": 1.4700016975402832,
+          "org.dt4n:switch-s1": 25.817406177520752,
+          "org.dt4n:switch-s2": 25.824115991592407,
+          "org.dt4n:switch-s3": 25.83010721206665
+        },
+        "aoi_summary": {
+          "max": 25.83010721206665,
+          "mean": 11.117266458623549,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 97.82483500021044,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09782483500021044,
+        "stale_ids": [],
+        "t_read": 1783850944.3230045
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.933485563000431,
+        "reset_wait_s": 6.662285967000571,
+        "timings": {
+          "flush_arp": 0.010510186999454163,
+          "kill_iperf": 0.3556786169992847,
+          "reset_cache": 1.0078998457174748e-05,
+          "restore_links": 0.2794472080004198,
+          "revert_scenarios": 0.03082963999986532,
+          "start_traffic": 1.5879533700008324,
+          "steady_wait": 6.662285967000571
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 5.0,
+        "delay": "2ms",
+        "factor": 0.39291785443316435,
+        "link_key": "s2-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 7,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.32326173782348633,
+          "org.dt4n:host-h2": 6.328116416931152,
+          "org.dt4n:host-h3": 6.332634925842285,
+          "org.dt4n:host-srv1": 0.33745574951171875,
+          "org.dt4n:host-srv2": 0.3424832820892334,
+          "org.dt4n:link-h1-s1": 0.3938906192779541,
+          "org.dt4n:link-h2-s1": 6.399099588394165,
+          "org.dt4n:link-h3-s1": 6.404266119003296,
+          "org.dt4n:link-s1-s2": 0.3631260395050049,
+          "org.dt4n:link-s1-s3": 6.372730493545532,
+          "org.dt4n:link-s2-s3": 0.3780844211578369,
+          "org.dt4n:link-s2-srv1": 0.3835322856903076,
+          "org.dt4n:link-s3-srv2": 0.38872289657592773,
+          "org.dt4n:path-h1-srv1": 2.008397340774536,
+          "org.dt4n:switch-s1": 6.347605466842651,
+          "org.dt4n:switch-s2": 6.3526623249053955,
+          "org.dt4n:switch-s3": 6.357765197753906
+        },
+        "aoi_summary": {
+          "max": 6.404266119003296,
+          "mean": 3.283166759154376,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 91.61997199953476,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09161997199953476,
+        "stale_ids": [],
+        "t_read": 1783850954.856399
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.046010079999178,
+        "reset_wait_s": 6.776720003999799,
+        "timings": {
+          "flush_arp": 0.011342138001054991,
+          "kill_iperf": 0.3553746109992062,
+          "reset_cache": 1.1632999303401448e-05,
+          "restore_links": 0.27079666499957966,
+          "revert_scenarios": 0.028748860999257886,
+          "start_traffic": 1.596307566998803,
+          "steady_wait": 6.776720003999799
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 51,
+        "src": "h3",
+        "type": "TrafficFlood"
+      },
+      "idx": 8,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 1.0287604331970215,
+          "org.dt4n:host-h2": 17.036523580551147,
+          "org.dt4n:host-h3": 8.041352272033691,
+          "org.dt4n:host-srv1": 1.0461318492889404,
+          "org.dt4n:host-srv2": 1.0517146587371826,
+          "org.dt4n:link-h1-s1": 0.1096796989440918,
+          "org.dt4n:link-h2-s1": 17.117998361587524,
+          "org.dt4n:link-h3-s1": 8.123514175415039,
+          "org.dt4n:link-s1-s2": 1.0773732662200928,
+          "org.dt4n:link-s1-s3": 8.085145711898804,
+          "org.dt4n:link-s2-s3": 1.0900046825408936,
+          "org.dt4n:link-s2-srv1": 1.0962638854980469,
+          "org.dt4n:link-s3-srv2": 1.1024420261383057,
+          "org.dt4n:path-h1-srv1": 2.7572755813598633,
+          "org.dt4n:switch-s1": 17.06036615371704,
+          "org.dt4n:switch-s2": 17.066575288772583,
+          "org.dt4n:switch-s3": 17.072952270507812
+        },
+        "aoi_summary": {
+          "max": 17.117998361587524,
+          "mean": 7.056710229200475,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 106.72163799972623,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.10672163799972623,
+        "stale_ids": [],
+        "t_read": 1783850965.578278
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.92095555600099,
+        "reset_wait_s": 6.673462761000337,
+        "timings": {
+          "flush_arp": 0.010956066000289866,
+          "kill_iperf": 0.3550070740002411,
+          "reset_cache": 1.1131000064779073e-05,
+          "restore_links": 0.2644025839999813,
+          "revert_scenarios": 0.018049140999210067,
+          "start_traffic": 1.592540748999454,
+          "steady_wait": 6.673462761000337
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 48,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 9,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 1.0637190341949463,
+          "org.dt4n:host-h2": 30.110523223876953,
+          "org.dt4n:host-h3": 2.0761396884918213,
+          "org.dt4n:host-srv1": 1.0806121826171875,
+          "org.dt4n:host-srv2": 1.0859382152557373,
+          "org.dt4n:link-h1-s1": 0.13759660720825195,
+          "org.dt4n:link-h2-s1": 0.1435990333557129,
+          "org.dt4n:link-h3-s1": 0.14928436279296875,
+          "org.dt4n:link-s1-s2": 1.1083078384399414,
+          "org.dt4n:link-s1-s3": 6.115097999572754,
+          "org.dt4n:link-s2-s3": 1.1199288368225098,
+          "org.dt4n:link-s2-srv1": 1.1261231899261475,
+          "org.dt4n:link-s3-srv2": 1.1313869953155518,
+          "org.dt4n:path-h1-srv1": 0.6798157691955566,
+          "org.dt4n:switch-s1": 30.132500410079956,
+          "org.dt4n:switch-s2": 30.13821029663086,
+          "org.dt4n:switch-s3": 30.143928289413452
+        },
+        "aoi_summary": {
+          "max": 30.143928289413452,
+          "mean": 8.090747763128842,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 97.66689600110112,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09766689600110112,
+        "stale_ids": [],
+        "t_read": 1783850978.642818
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 11.276072549999299,
+        "reset_wait_s": 9.005490016999829,
+        "timings": {
+          "flush_arp": 0.011583068999243551,
+          "kill_iperf": 0.35342267799933325,
+          "reset_cache": 1.2384000001475215e-05,
+          "restore_links": 0.29381737699986843,
+          "revert_scenarios": 0.014078778998737107,
+          "start_traffic": 1.5912041350002255,
+          "steady_wait": 9.005490016999829
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 48,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 10,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.965897798538208,
+          "org.dt4n:host-h2": 1.971233606338501,
+          "org.dt4n:host-h3": 10.976198196411133,
+          "org.dt4n:host-srv1": 0.9815294742584229,
+          "org.dt4n:host-srv2": 0.9866287708282471,
+          "org.dt4n:link-h1-s1": 1.038543701171875,
+          "org.dt4n:link-h2-s1": 2.0441482067108154,
+          "org.dt4n:link-h3-s1": 11.050048112869263,
+          "org.dt4n:link-s1-s2": 1.009298324584961,
+          "org.dt4n:link-s1-s3": 1.0155649185180664,
+          "org.dt4n:link-s2-s3": 1.0216515064239502,
+          "org.dt4n:link-s2-srv1": 1.0273487567901611,
+          "org.dt4n:link-s3-srv2": 1.0326828956604004,
+          "org.dt4n:path-h1-srv1": 1.6540708541870117,
+          "org.dt4n:switch-s1": 10.992017269134521,
+          "org.dt4n:switch-s2": 10.997864007949829,
+          "org.dt4n:switch-s3": 11.00348162651062
+        },
+        "aoi_summary": {
+          "max": 11.050048112869263,
+          "mean": 4.104012236875646,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 96.38196999912907,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09638196999912907,
+        "stale_ids": [],
+        "t_read": 1783850989.5440722
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.998557565000738,
+        "reset_wait_s": 6.733075074000226,
+        "timings": {
+          "flush_arp": 0.01099178599906736,
+          "kill_iperf": 0.3546780279993982,
+          "reset_cache": 1.1732001439668238e-05,
+          "restore_links": 0.2808204780012602,
+          "revert_scenarios": 0.0154891559996031,
+          "start_traffic": 1.5955447719989024,
+          "steady_wait": 6.733075074000226
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv2",
+        "rate_mbps": 37,
+        "src": "h3",
+        "type": "TrafficFlood"
+      },
+      "idx": 11,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.5831634998321533,
+          "org.dt4n:host-h2": 11.591321468353271,
+          "org.dt4n:host-h3": 3.5969481468200684,
+          "org.dt4n:host-srv1": 0.603421688079834,
+          "org.dt4n:host-srv2": 0.6092431545257568,
+          "org.dt4n:link-h1-s1": 0.6569831371307373,
+          "org.dt4n:link-h2-s1": 11.663318872451782,
+          "org.dt4n:link-h3-s1": 3.6677420139312744,
+          "org.dt4n:link-s1-s2": 0.6310691833496094,
+          "org.dt4n:link-s1-s3": 7.236454725265503,
+          "org.dt4n:link-s2-s3": 0.6417582035064697,
+          "org.dt4n:link-s2-srv1": 0.6464619636535645,
+          "org.dt4n:link-s3-srv2": 0.6520121097564697,
+          "org.dt4n:path-h1-srv1": 1.2987241744995117,
+          "org.dt4n:switch-s1": 20.615588665008545,
+          "org.dt4n:switch-s2": 20.62113046646118,
+          "org.dt4n:switch-s3": 20.62672185897827
+        },
+        "aoi_summary": {
+          "max": 20.62672185897827,
+          "mean": 6.231886078329647,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 97.68500899917854,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09768500899917854,
+        "stale_ids": [],
+        "t_read": 1783850999.161725
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 7.826556689000427,
+        "reset_wait_s": 5.575658626999939,
+        "timings": {
+          "flush_arp": 0.010461861000294448,
+          "kill_iperf": 0.3560127830005513,
+          "reset_cache": 1.2435000826371834e-05,
+          "restore_links": 0.2709887749988411,
+          "revert_scenarios": 0.013813118001053226,
+          "start_traffic": 1.5905450059999566,
+          "steady_wait": 5.575658626999939
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 32,
+        "src": "h1",
+        "type": "TrafficFlood"
+      },
+      "idx": 12,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.2586500644683838,
+          "org.dt4n:host-h2": 1.2637929916381836,
+          "org.dt4n:host-h3": 1.2688887119293213,
+          "org.dt4n:host-srv1": 0.27452731132507324,
+          "org.dt4n:host-srv2": 0.28043699264526367,
+          "org.dt4n:link-h1-s1": 0.33486199378967285,
+          "org.dt4n:link-h2-s1": 1.340649127960205,
+          "org.dt4n:link-h3-s1": 1.3464891910552979,
+          "org.dt4n:link-s1-s2": 0.3028383255004883,
+          "org.dt4n:link-s1-s3": 1.3088972568511963,
+          "org.dt4n:link-s2-s3": 0.3151266574859619,
+          "org.dt4n:link-s2-srv1": 0.32143521308898926,
+          "org.dt4n:link-s3-srv2": 0.327878475189209,
+          "org.dt4n:path-h1-srv1": 1.9564611911773682,
+          "org.dt4n:switch-s1": 1.2859961986541748,
+          "org.dt4n:switch-s2": 1.2920362949371338,
+          "org.dt4n:switch-s3": 1.2971069812774658
+        },
+        "aoi_summary": {
+          "max": 1.9564611911773682,
+          "mean": 0.8691807634690228,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 100.80702300001576,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.10080702300001576,
+        "stale_ids": [],
+        "t_read": 1783851009.8434627
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.948866202999852,
+        "reset_wait_s": 6.691814955000154,
+        "timings": {
+          "flush_arp": 0.010141808999833302,
+          "kill_iperf": 0.35567455900127243,
+          "reset_cache": 1.1332000212860294e-05,
+          "restore_links": 0.2782468380009959,
+          "revert_scenarios": 0.013564121998570045,
+          "start_traffic": 1.5921708829991985,
+          "steady_wait": 6.691814955000154
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.30473042220161584,
+        "link_key": "s1-s2",
+        "type": "LinkDegrade"
+      },
+      "idx": 13,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.9716289043426514,
+          "org.dt4n:host-h2": 11.978065967559814,
+          "org.dt4n:host-h3": 11.983605146408081,
+          "org.dt4n:host-srv1": 0.9879214763641357,
+          "org.dt4n:host-srv2": 0.9927308559417725,
+          "org.dt4n:link-h1-s1": 1.042463779449463,
+          "org.dt4n:link-h2-s1": 12.049104928970337,
+          "org.dt4n:link-h3-s1": 12.055052757263184,
+          "org.dt4n:link-s1-s2": 1.0139148235321045,
+          "org.dt4n:link-s1-s3": 12.020394563674927,
+          "org.dt4n:link-s2-s3": 1.0250389575958252,
+          "org.dt4n:link-s2-srv1": 1.0307955741882324,
+          "org.dt4n:link-s3-srv2": 1.0365793704986572,
+          "org.dt4n:path-h1-srv1": 2.6890127658843994,
+          "org.dt4n:switch-s1": 11.998456001281738,
+          "org.dt4n:switch-s2": 12.003450632095337,
+          "org.dt4n:switch-s3": 12.009160280227661
+        },
+        "aoi_summary": {
+          "max": 12.055052757263184,
+          "mean": 6.287492752075195,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 94.20285799933481,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09420285799933481,
+        "stale_ids": [],
+        "t_read": 1783851020.5510137
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.072167755999544,
+        "reset_wait_s": 6.757006663001448,
+        "timings": {
+          "flush_arp": 0.01208422599847836,
+          "kill_iperf": 0.35971837200122536,
+          "reset_cache": 1.154300116468221e-05,
+          "restore_links": 0.3036418310002773,
+          "revert_scenarios": 0.03617808400122158,
+          "start_traffic": 1.596372476000397,
+          "steady_wait": 6.757006663001448
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 5.0,
+        "delay": "2ms",
+        "factor": 0.4857002910916987,
+        "link_key": "s2-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 14,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.4682490825653076,
+          "org.dt4n:host-h2": 22.47552800178528,
+          "org.dt4n:host-h3": 22.48405122756958,
+          "org.dt4n:host-srv1": 0.4870030879974365,
+          "org.dt4n:host-srv2": 0.49323296546936035,
+          "org.dt4n:link-h1-s1": 0.5406296253204346,
+          "org.dt4n:link-h2-s1": 22.54703426361084,
+          "org.dt4n:link-h3-s1": 22.552271127700806,
+          "org.dt4n:link-s1-s2": 0.5147097110748291,
+          "org.dt4n:link-s1-s3": 22.522114753723145,
+          "org.dt4n:link-s2-s3": 0.5251379013061523,
+          "org.dt4n:link-s2-srv1": 0.5303390026092529,
+          "org.dt4n:link-s3-srv2": 0.535578727722168,
+          "org.dt4n:path-h1-srv1": 3.19686222076416,
+          "org.dt4n:switch-s1": 22.500658750534058,
+          "org.dt4n:switch-s2": 22.505889892578125,
+          "org.dt4n:switch-s3": 22.51105046272278
+        },
+        "aoi_summary": {
+          "max": 22.552271127700806,
+          "mean": 11.02296122382669,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 93.85663399916666,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09385663399916666,
+        "stale_ids": [],
+        "t_read": 1783851031.0478635
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.995589030999326,
+        "reset_wait_s": 6.712890199998583,
+        "timings": {
+          "flush_arp": 0.011227947001316352,
+          "kill_iperf": 0.35314297299919417,
+          "reset_cache": 1.2554999557323754e-05,
+          "restore_links": 0.2774661459989147,
+          "revert_scenarios": 0.03961309000078472,
+          "start_traffic": 1.5938643159988715,
+          "steady_wait": 6.712890199998583
+        }
+      }
+    },
+    {
+      "dirty": {
+        "dst": "srv1",
+        "rate_mbps": 36,
+        "src": "h2",
+        "type": "TrafficFlood"
+      },
+      "idx": 15,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.4256160259246826,
+          "org.dt4n:host-h2": 3.43062162399292,
+          "org.dt4n:host-h3": 3.4355006217956543,
+          "org.dt4n:host-srv1": 0.4404892921447754,
+          "org.dt4n:host-srv2": 0.44597434997558594,
+          "org.dt4n:link-h1-s1": 0.491375207901001,
+          "org.dt4n:link-h2-s1": 3.496295213699341,
+          "org.dt4n:link-h3-s1": 3.500386953353882,
+          "org.dt4n:link-s1-s2": 0.4658784866333008,
+          "org.dt4n:link-s1-s3": 3.471010208129883,
+          "org.dt4n:link-s2-s3": 0.4764440059661865,
+          "org.dt4n:link-s2-srv1": 0.48134517669677734,
+          "org.dt4n:link-s3-srv2": 0.48645710945129395,
+          "org.dt4n:path-h1-srv1": 4.1627161502838135,
+          "org.dt4n:switch-s1": 3.4510018825531006,
+          "org.dt4n:switch-s2": 3.455820083618164,
+          "org.dt4n:switch-s3": 3.460763931274414
+        },
+        "aoi_summary": {
+          "max": 4.1627161502838135,
+          "mean": 2.0928056660820458,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 87.7664689996891,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.0877664689996891,
+        "stale_ids": [],
+        "t_read": 1783851042.5697176
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.387618569000551,
+        "reset_wait_s": 6.750830050999866,
+        "timings": {
+          "flush_arp": 0.012255199999344768,
+          "kill_iperf": 0.6923536310005147,
+          "reset_cache": 1.0891000783885829e-05,
+          "restore_links": 0.3222855330004677,
+          "revert_scenarios": 0.01416943500043999,
+          "start_traffic": 1.5889018859998032,
+          "steady_wait": 6.750830050999866
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 5.0,
+        "delay": "2ms",
+        "factor": 0.3358703521697765,
+        "link_key": "s2-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 16,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 1.0401132106781006,
+          "org.dt4n:host-h2": 16.0474591255188,
+          "org.dt4n:host-h3": 16.05298089981079,
+          "org.dt4n:host-srv1": 1.0562398433685303,
+          "org.dt4n:host-srv2": 1.0614445209503174,
+          "org.dt4n:link-h1-s1": 0.10676264762878418,
+          "org.dt4n:link-h2-s1": 16.114036560058594,
+          "org.dt4n:link-h3-s1": 16.12170910835266,
+          "org.dt4n:link-s1-s2": 1.0814955234527588,
+          "org.dt4n:link-s1-s3": 16.08875036239624,
+          "org.dt4n:link-s2-s3": 1.0915379524230957,
+          "org.dt4n:link-s2-srv1": 1.096212387084961,
+          "org.dt4n:link-s3-srv2": 1.101719856262207,
+          "org.dt4n:path-h1-srv1": 1.675156593322754,
+          "org.dt4n:switch-s1": 16.0686616897583,
+          "org.dt4n:switch-s2": 16.073336601257324,
+          "org.dt4n:switch-s3": 16.078383445739746
+        },
+        "aoi_summary": {
+          "max": 16.12170910835266,
+          "mean": 8.115058842827292,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 91.05532400099037,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.09105532400099037,
+        "stale_ids": [],
+        "t_read": 1783851055.1911583
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 11.133642507000332,
+        "reset_wait_s": 8.860204729000543,
+        "timings": {
+          "flush_arp": 0.010499863001314225,
+          "kill_iperf": 0.3535690330008947,
+          "reset_cache": 1.0420000762678683e-05,
+          "restore_links": 0.2775520060004055,
+          "revert_scenarios": 0.03454004499872099,
+          "start_traffic": 1.5907369709984778,
+          "steady_wait": 8.860204729000543
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 5.0,
+        "delay": "2ms",
+        "factor": 0.4139056452629175,
+        "link_key": "s2-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 17,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.620978593826294,
+          "org.dt4n:host-h2": 26.629048585891724,
+          "org.dt4n:host-h3": 26.6341655254364,
+          "org.dt4n:host-srv1": 0.6362636089324951,
+          "org.dt4n:host-srv2": 0.6412849426269531,
+          "org.dt4n:link-h1-s1": 0.6857941150665283,
+          "org.dt4n:link-h2-s1": 26.69417953491211,
+          "org.dt4n:link-h3-s1": 26.698659420013428,
+          "org.dt4n:link-s1-s2": 0.6612529754638672,
+          "org.dt4n:link-s1-s3": 26.66889262199402,
+          "org.dt4n:link-s2-s3": 0.6703500747680664,
+          "org.dt4n:link-s2-srv1": 0.6757004261016846,
+          "org.dt4n:link-s3-srv2": 0.6811122894287109,
+          "org.dt4n:path-h1-srv1": 2.321457862854004,
+          "org.dt4n:switch-s1": 26.649174451828003,
+          "org.dt4n:switch-s2": 26.654186010360718,
+          "org.dt4n:switch-s3": 26.659659385681152
+        },
+        "aoi_summary": {
+          "max": 26.698659420013428,
+          "mean": 12.993068260305067,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 85.36404699952982,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.08536404699952982,
+        "stale_ids": [],
+        "t_read": 1783851065.7674592
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.993038089000038,
+        "reset_wait_s": 6.686659074999625,
+        "timings": {
+          "flush_arp": 0.011858348998430301,
+          "kill_iperf": 0.358931771999778,
+          "reset_cache": 1.341600000159815e-05,
+          "restore_links": 0.30167645900110074,
+          "revert_scenarios": 0.03339530300036131,
+          "start_traffic": 1.5935119269997813,
+          "steady_wait": 6.686659074999625
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.27169730692536814,
+        "link_key": "s1-s3",
+        "type": "LinkDegrade"
+      },
+      "idx": 18,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 1.0469269752502441,
+          "org.dt4n:host-h2": 7.053869724273682,
+          "org.dt4n:host-h3": 7.059585094451904,
+          "org.dt4n:host-srv1": 1.0644795894622803,
+          "org.dt4n:host-srv2": 1.070298671722412,
+          "org.dt4n:link-h1-s1": 0.12764573097229004,
+          "org.dt4n:link-h2-s1": 7.134923219680786,
+          "org.dt4n:link-h3-s1": 7.140956401824951,
+          "org.dt4n:link-s1-s2": 1.0970814228057861,
+          "org.dt4n:link-s1-s3": 7.104285717010498,
+          "org.dt4n:link-s2-s3": 1.109910011291504,
+          "org.dt4n:link-s2-srv1": 1.1160666942596436,
+          "org.dt4n:link-s3-srv2": 1.1219918727874756,
+          "org.dt4n:path-h1-srv1": 2.7790274620056152,
+          "org.dt4n:switch-s1": 7.07622504234314,
+          "org.dt4n:switch-s2": 7.083402156829834,
+          "org.dt4n:switch-s3": 7.090930700302124
+        },
+        "aoi_summary": {
+          "max": 7.140956401824951,
+          "mean": 3.957506263957304,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 105.43000500001654,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.10543000500001654,
+        "stale_ids": [],
+        "t_read": 1783851076.2150288
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 8.951703304999683,
+        "reset_wait_s": 6.673280498000167,
+        "timings": {
+          "flush_arp": 0.011280382999757421,
+          "kill_iperf": 0.3547412810003152,
+          "reset_cache": 1.2443999366951175e-05,
+          "restore_links": 0.27718933500000276,
+          "revert_scenarios": 0.033617629000218585,
+          "start_traffic": 1.5941857180005172,
+          "steady_wait": 6.673280498000167
+        }
+      }
+    },
+    {
+      "dirty": {
+        "baseline": 20.0,
+        "delay": "2ms",
+        "factor": 0.3768854383740702,
+        "link_key": "s1-s2",
+        "type": "LinkDegrade"
+      },
+      "idx": 19,
+      "read": {
+        "aborted": false,
+        "aoi": {
+          "org.dt4n:host-h1": 0.7530431747436523,
+          "org.dt4n:host-h2": 17.761045932769775,
+          "org.dt4n:host-h3": 17.76598811149597,
+          "org.dt4n:host-srv1": 0.7680046558380127,
+          "org.dt4n:host-srv2": 0.7725651264190674,
+          "org.dt4n:link-h1-s1": 0.8277690410614014,
+          "org.dt4n:link-h2-s1": 17.837404251098633,
+          "org.dt4n:link-h3-s1": 17.844653129577637,
+          "org.dt4n:link-s1-s2": 0.7927353382110596,
+          "org.dt4n:link-s1-s3": 17.80078887939453,
+          "org.dt4n:link-s2-s3": 0.8043508529663086,
+          "org.dt4n:link-s2-srv1": 0.8113527297973633,
+          "org.dt4n:link-s3-srv2": 0.8202729225158691,
+          "org.dt4n:path-h1-srv1": 3.4967212677001953,
+          "org.dt4n:switch-s1": 17.78063941001892,
+          "org.dt4n:switch-s2": 17.785619974136353,
+          "org.dt4n:switch-s3": 17.79082751274109
+        },
+        "aoi_summary": {
+          "max": 17.844653129577637,
+          "mean": 8.953751900616814,
+          "n": 17,
+          "n_negative": 0
+        },
+        "consecutive_fails": 0,
+        "data_fresh": 1.0,
+        "fetch_ms": 102.4974009997095,
+        "n_fail": 0,
+        "n_ok": 17,
+        "snapshot_span_s": 0.1024974009997095,
+        "stale_ids": [],
+        "t_read": 1783851086.9207225
+      },
+      "reset": {
+        "active_scenarios": [],
+        "iperf_baseline": 4,
+        "iperf_count": 4,
+        "iperf_leaked": false,
+        "reset_dirty": false,
+        "reset_mode": "soft",
+        "reset_steady_ok": true,
+        "reset_total_s": 9.000646686999971,
+        "reset_wait_s": 6.656017166998936,
+        "timings": {
+          "flush_arp": 0.010783503999846289,
+          "kill_iperf": 0.35465615000066464,
+          "reset_cache": 1.2262999007361941e-05,
+          "restore_links": 0.3034088790009264,
+          "revert_scenarios": 0.031064161001268076,
+          "start_traffic": 1.6376859419997345,
+          "steady_wait": 6.656017166998936
+        }
+      }
+    }
+  ],
+  "status": "accept"
+}

@@ -1,0 +1,1271 @@
+{
+  "n_seeds": 30,
+  "n_blind_spots": 0,
+  "blind_spot_seeds": [],
+  "decision_hint": "45 chieu DU: giu Lua chon B, khong them chieu.",
+  "results": [
+    {
+      "seed": 0,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv2",
+        "rate_mbps": 38
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 14,
+      "top_dims": [
+        {
+          "dim": "util:h2-s1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s1-s3",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s3-srv2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util_avg3:s1-s3",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "server_rx_norm:srv2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        }
+      ]
+    },
+    {
+      "seed": 1,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s1-s3",
+        "factor": 0.5801854785303742,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s1-s3",
+          "abs_delta": 0.5801854785303742,
+          "threshold": 1e-06,
+          "x_over_threshold": 580185.4785303742
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        },
+        {
+          "dim": "util_avg3:s2-s3",
+          "abs_delta": 3.7328e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 37.328
+        },
+        {
+          "dim": "util:s2-srv1",
+          "abs_delta": 2.7992000000000002e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 27.992000000000004
+        },
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 2.7992000000000002e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 27.992000000000004
+        }
+      ]
+    },
+    {
+      "seed": 2,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv1",
+        "rate_mbps": 39
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 10,
+      "top_dims": [
+        {
+          "dim": "util:h1-s1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s2-srv1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util_avg3:h1-s1",
+          "abs_delta": 0.9992695546666667,
+          "threshold": 1e-06,
+          "x_over_threshold": 999269.5546666667
+        },
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 0.998995504,
+          "threshold": 1e-06,
+          "x_over_threshold": 998995.5040000001
+        }
+      ]
+    },
+    {
+      "seed": 3,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv1",
+        "rate_mbps": 37
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 8,
+      "top_dims": [
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s2-srv1",
+          "abs_delta": 0.999513016,
+          "threshold": 1e-06,
+          "x_over_threshold": 999513.0160000001
+        },
+        {
+          "dim": "util:h1-s1",
+          "abs_delta": 0.9989083519999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 998908.352
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 0.9976990199999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 997699.0199999999
+        },
+        {
+          "dim": "util_avg3:h1-s1",
+          "abs_delta": 0.9972288226666666,
+          "threshold": 1e-06,
+          "x_over_threshold": 997228.8226666666
+        }
+      ]
+    },
+    {
+      "seed": 4,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv2",
+        "rate_mbps": 45
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 8,
+      "top_dims": [
+        {
+          "dim": "util:s3-srv2",
+          "abs_delta": 0.998376508,
+          "threshold": 1e-06,
+          "x_over_threshold": 998376.508
+        },
+        {
+          "dim": "util_avg3:s1-s3",
+          "abs_delta": 0.9981831159999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 998183.1159999999
+        },
+        {
+          "dim": "util_avg3:s3-srv2",
+          "abs_delta": 0.9981831053333332,
+          "threshold": 1e-06,
+          "x_over_threshold": 998183.1053333333
+        },
+        {
+          "dim": "util_avg3:h3-s1",
+          "abs_delta": 0.9979117226666666,
+          "threshold": 1e-06,
+          "x_over_threshold": 997911.7226666666
+        },
+        {
+          "dim": "server_rx_norm:srv2",
+          "abs_delta": 0.9977717960000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 997771.7960000001
+        }
+      ]
+    },
+    {
+      "seed": 5,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv1",
+        "rate_mbps": 55
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 10,
+      "top_dims": [
+        {
+          "dim": "util:s2-srv1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:h3-s1",
+          "abs_delta": 0.99959546,
+          "threshold": 1e-06,
+          "x_over_threshold": 999595.4600000001
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 0.99959546,
+          "threshold": 1e-06,
+          "x_over_threshold": 999595.4600000001
+        },
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 0.9995954599999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 999595.46
+        },
+        {
+          "dim": "util_avg3:h3-s1",
+          "abs_delta": 0.9989129333333334,
+          "threshold": 1e-06,
+          "x_over_threshold": 998912.9333333335
+        }
+      ]
+    },
+    {
+      "seed": 6,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s1-s3",
+        "factor": 0.3373083479253354,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s1-s3",
+          "abs_delta": 0.3373083479253354,
+          "threshold": 1e-06,
+          "x_over_threshold": 337308.3479253354
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        },
+        {
+          "dim": "aoi_norm",
+          "abs_delta": 0.13106611013412517,
+          "threshold": 1e-06,
+          "x_over_threshold": 131066.11013412518
+        },
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 3.9194666666666666e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 39.19466666666667
+        },
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 2.9870666666666665e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 29.870666666666665
+        }
+      ]
+    },
+    {
+      "seed": 7,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv2",
+        "rate_mbps": 57
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 13,
+      "top_dims": [
+        {
+          "dim": "util:s1-s3",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s3-srv2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util_avg3:s1-s3",
+          "abs_delta": 0.9984509853333333,
+          "threshold": 1e-06,
+          "x_over_threshold": 998450.9853333334
+        },
+        {
+          "dim": "util_avg3:s3-srv2",
+          "abs_delta": 0.9984509853333333,
+          "threshold": 1e-06,
+          "x_over_threshold": 998450.9853333334
+        },
+        {
+          "dim": "util_avg3:h2-s1",
+          "abs_delta": 0.9983798133333335,
+          "threshold": 1e-06,
+          "x_over_threshold": 998379.8133333335
+        }
+      ]
+    },
+    {
+      "seed": 8,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv1",
+        "rate_mbps": 60
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 8,
+      "top_dims": [
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 0.9994831200000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 999483.1200000001
+        },
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 0.997978468,
+          "threshold": 1e-06,
+          "x_over_threshold": 997978.4680000001
+        },
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 0.9972369386666666,
+          "threshold": 1e-06,
+          "x_over_threshold": 997236.9386666666
+        },
+        {
+          "dim": "util:h1-s1",
+          "abs_delta": 0.997064244,
+          "threshold": 1e-06,
+          "x_over_threshold": 997064.2440000001
+        },
+        {
+          "dim": "util_avg3:h1-s1",
+          "abs_delta": 0.9969660026666667,
+          "threshold": 1e-06,
+          "x_over_threshold": 996966.0026666668
+        }
+      ]
+    },
+    {
+      "seed": 9,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.31472688363502216,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 3,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s2-s3",
+          "abs_delta": 0.3147268836350221,
+          "threshold": 1e-06,
+          "x_over_threshold": 314726.8836350221
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        },
+        {
+          "dim": "util_avg3:h1-s1",
+          "abs_delta": 3.9194666666666666e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 39.19466666666667
+        }
+      ]
+    },
+    {
+      "seed": 10,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv1",
+        "rate_mbps": 36
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "util_avg3:h3-s1",
+          "abs_delta": 0.994248368,
+          "threshold": 1e-06,
+          "x_over_threshold": 994248.3680000001
+        },
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 0.9936576319999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 993657.632
+        },
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 0.9918434373333334,
+          "threshold": 1e-06,
+          "x_over_threshold": 991843.4373333334
+        },
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 0.9911948880000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 991194.8880000002
+        },
+        {
+          "dim": "util:h3-s1",
+          "abs_delta": 0.9827451039999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 982745.1039999999
+        }
+      ]
+    },
+    {
+      "seed": 11,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s1-s2",
+        "factor": 0.399711144976046,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 4,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s1-s2",
+          "abs_delta": 0.399711144976046,
+          "threshold": 1e-06,
+          "x_over_threshold": 399711.144976046
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 7.827504188627391e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 78.27504188627391
+        },
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 2.609168062875797e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 26.09168062875797
+        }
+      ]
+    },
+    {
+      "seed": 12,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv2",
+        "rate_mbps": 59
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 10,
+      "top_dims": [
+        {
+          "dim": "util:h1-s1",
+          "abs_delta": 0.9982575000000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 998257.5000000002
+        },
+        {
+          "dim": "util_avg3:h1-s1",
+          "abs_delta": 0.9973249533333335,
+          "threshold": 1e-06,
+          "x_over_threshold": 997324.9533333335
+        },
+        {
+          "dim": "server_rx_norm:srv2",
+          "abs_delta": 0.99716566,
+          "threshold": 1e-06,
+          "x_over_threshold": 997165.66
+        },
+        {
+          "dim": "util_avg3:s1-s3",
+          "abs_delta": 0.996763076,
+          "threshold": 1e-06,
+          "x_over_threshold": 996763.0760000001
+        },
+        {
+          "dim": "util_avg3:s3-srv2",
+          "abs_delta": 0.9964978826666666,
+          "threshold": 1e-06,
+          "x_over_threshold": 996497.8826666666
+        }
+      ]
+    },
+    {
+      "seed": 13,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv2",
+        "rate_mbps": 56
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 10,
+      "top_dims": [
+        {
+          "dim": "util_avg3:h3-s1",
+          "abs_delta": 0.9967983133333332,
+          "threshold": 1e-06,
+          "x_over_threshold": 996798.3133333332
+        },
+        {
+          "dim": "util_avg3:s1-s3",
+          "abs_delta": 0.9963214746666668,
+          "threshold": 1e-06,
+          "x_over_threshold": 996321.4746666668
+        },
+        {
+          "dim": "util_avg3:s3-srv2",
+          "abs_delta": 0.9961172026666666,
+          "threshold": 1e-06,
+          "x_over_threshold": 996117.2026666666
+        },
+        {
+          "dim": "server_rx_norm:srv2",
+          "abs_delta": 0.992985244,
+          "threshold": 1e-06,
+          "x_over_threshold": 992985.2440000001
+        },
+        {
+          "dim": "util:h3-s1",
+          "abs_delta": 0.9911878199999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 991187.82
+        }
+      ]
+    },
+    {
+      "seed": 14,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.34437866673370265,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 3,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s2-s3",
+          "abs_delta": 0.34437866673370265,
+          "threshold": 1e-06,
+          "x_over_threshold": 344378.66673370264
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        },
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 7.997333333333332e-06,
+          "threshold": 1e-06,
+          "x_over_threshold": 7.997333333333333
+        }
+      ]
+    },
+    {
+      "seed": 15,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv2",
+        "rate_mbps": 55
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 11,
+      "top_dims": [
+        {
+          "dim": "util:h3-s1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s1-s3",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s3-srv2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "server_rx_norm:srv2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util_avg3:s3-srv2",
+          "abs_delta": 0.9991282893333334,
+          "threshold": 1e-06,
+          "x_over_threshold": 999128.2893333335
+        }
+      ]
+    },
+    {
+      "seed": 16,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv2",
+        "rate_mbps": 43
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 11,
+      "top_dims": [
+        {
+          "dim": "server_rx_norm:srv2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:h2-s1",
+          "abs_delta": 0.9983824560000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 998382.4560000001
+        },
+        {
+          "dim": "util:s1-s3",
+          "abs_delta": 0.9965683160000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 996568.3160000001
+        },
+        {
+          "dim": "util_avg3:h2-s1",
+          "abs_delta": 0.9952979840000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 995297.9840000002
+        },
+        {
+          "dim": "util:s3-srv2",
+          "abs_delta": 0.9941494599999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 994149.46
+        }
+      ]
+    },
+    {
+      "seed": 17,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv1",
+        "rate_mbps": 34
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 0.9967297039999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 996729.704
+        },
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 0.9967217053333333,
+          "threshold": 1e-06,
+          "x_over_threshold": 996721.7053333333
+        },
+        {
+          "dim": "util_avg3:h3-s1",
+          "abs_delta": 0.9963321866666667,
+          "threshold": 1e-06,
+          "x_over_threshold": 996332.1866666668
+        },
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 0.99413352,
+          "threshold": 1e-06,
+          "x_over_threshold": 994133.52
+        },
+        {
+          "dim": "util:h3-s1",
+          "abs_delta": 0.9923601599999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 992360.16
+        }
+      ]
+    },
+    {
+      "seed": 18,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv1",
+        "rate_mbps": 52
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 0.999643816,
+          "threshold": 1e-06,
+          "x_over_threshold": 999643.816
+        },
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 0.999643816,
+          "threshold": 1e-06,
+          "x_over_threshold": 999643.816
+        },
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 0.9995361279999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 999536.1279999999
+        },
+        {
+          "dim": "util_avg3:h2-s1",
+          "abs_delta": 0.9993006573333333,
+          "threshold": 1e-06,
+          "x_over_threshold": 999300.6573333333
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 0.998931448,
+          "threshold": 1e-06,
+          "x_over_threshold": 998931.4480000001
+        }
+      ]
+    },
+    {
+      "seed": 19,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv1",
+        "rate_mbps": 58
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "util:h2-s1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s2-srv1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "server_rx_norm:srv1",
+          "abs_delta": 0.9996171439999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 999617.144
+        },
+        {
+          "dim": "util_avg3:h2-s1",
+          "abs_delta": 0.999510236,
+          "threshold": 1e-06,
+          "x_over_threshold": 999510.236
+        }
+      ]
+    },
+    {
+      "seed": 20,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv1",
+        "rate_mbps": 44
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 0.9986693786666666,
+          "threshold": 1e-06,
+          "x_over_threshold": 998669.3786666667
+        },
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 0.9986693786666666,
+          "threshold": 1e-06,
+          "x_over_threshold": 998669.3786666667
+        },
+        {
+          "dim": "util_avg3:h1-s1",
+          "abs_delta": 0.9984733653333334,
+          "threshold": 1e-06,
+          "x_over_threshold": 998473.3653333335
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 0.9977946320000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 997794.6320000001
+        },
+        {
+          "dim": "util:s2-srv1",
+          "abs_delta": 0.9977946320000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 997794.6320000001
+        }
+      ]
+    },
+    {
+      "seed": 21,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.4423388118283872,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 5,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s2-s3",
+          "abs_delta": 0.4423388118283872,
+          "threshold": 1e-06,
+          "x_over_threshold": 442338.8118283872
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        },
+        {
+          "dim": "util_avg3:h1-s1",
+          "abs_delta": 3.9192e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 39.192
+        },
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 3.9192e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 39.192
+        },
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 3.9192e-05,
+          "threshold": 1e-06,
+          "x_over_threshold": 39.192
+        }
+      ]
+    },
+    {
+      "seed": 22,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv2",
+        "rate_mbps": 36
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 13,
+      "top_dims": [
+        {
+          "dim": "util_avg3:s3-srv2",
+          "abs_delta": 0.997919724,
+          "threshold": 1e-06,
+          "x_over_threshold": 997919.724
+        },
+        {
+          "dim": "util:s3-srv2",
+          "abs_delta": 0.9977896359999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 997789.6359999999
+        },
+        {
+          "dim": "util_avg3:h2-s1",
+          "abs_delta": 0.9977237453333334,
+          "threshold": 1e-06,
+          "x_over_threshold": 997723.7453333335
+        },
+        {
+          "dim": "util_avg3:s1-s3",
+          "abs_delta": 0.9977181506666667,
+          "threshold": 1e-06,
+          "x_over_threshold": 997718.1506666667
+        },
+        {
+          "dim": "util:s1-s3",
+          "abs_delta": 0.997184916,
+          "threshold": 1e-06,
+          "x_over_threshold": 997184.9160000001
+        }
+      ]
+    },
+    {
+      "seed": 23,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.4565832883512922,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s2-s3",
+          "abs_delta": 0.45658328835129214,
+          "threshold": 1e-06,
+          "x_over_threshold": 456583.28835129214
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        },
+        {
+          "dim": "util:h1-s1",
+          "abs_delta": 0.00011758,
+          "threshold": 1e-06,
+          "x_over_threshold": 117.58
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 0.00011758,
+          "threshold": 1e-06,
+          "x_over_threshold": 117.58
+        },
+        {
+          "dim": "util:s2-srv1",
+          "abs_delta": 0.00011758,
+          "threshold": 1e-06,
+          "x_over_threshold": 117.58
+        }
+      ]
+    },
+    {
+      "seed": 24,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s1-s2",
+        "factor": 0.3620709262556575,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 2,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s1-s2",
+          "abs_delta": 0.3620709262556575,
+          "threshold": 1e-06,
+          "x_over_threshold": 362070.9262556575
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        }
+      ]
+    },
+    {
+      "seed": 25,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv2",
+        "rate_mbps": 30
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 11,
+      "top_dims": [
+        {
+          "dim": "util:s1-s3",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util_avg3:s1-s3",
+          "abs_delta": 0.9998668213333334,
+          "threshold": 1e-06,
+          "x_over_threshold": 999866.8213333334
+        },
+        {
+          "dim": "util_avg3:s3-srv2",
+          "abs_delta": 0.9998610226666665,
+          "threshold": 1e-06,
+          "x_over_threshold": 999861.0226666665
+        },
+        {
+          "dim": "util:s3-srv2",
+          "abs_delta": 0.999583068,
+          "threshold": 1e-06,
+          "x_over_threshold": 999583.068
+        },
+        {
+          "dim": "util:h1-s1",
+          "abs_delta": 0.9971810320000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 997181.0320000001
+        }
+      ]
+    },
+    {
+      "seed": 26,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv2",
+        "rate_mbps": 37
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 10,
+      "top_dims": [
+        {
+          "dim": "util_avg3:h2-s1",
+          "abs_delta": 0.9981301400000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 998130.1400000001
+        },
+        {
+          "dim": "util_avg3:s1-s3",
+          "abs_delta": 0.9981245413333334,
+          "threshold": 1e-06,
+          "x_over_threshold": 998124.5413333335
+        },
+        {
+          "dim": "util_avg3:s3-srv2",
+          "abs_delta": 0.9971166720000001,
+          "threshold": 1e-06,
+          "x_over_threshold": 997116.6720000001
+        },
+        {
+          "dim": "server_rx_norm:srv2",
+          "abs_delta": 0.996583996,
+          "threshold": 1e-06,
+          "x_over_threshold": 996583.996
+        },
+        {
+          "dim": "util:h2-s1",
+          "abs_delta": 0.994769824,
+          "threshold": 1e-06,
+          "x_over_threshold": 994769.824
+        }
+      ]
+    },
+    {
+      "seed": 27,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.32552570888897264,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 2,
+      "top_dims": [
+        {
+          "dim": "bw_norm:s2-s3",
+          "abs_delta": 0.3255257088889727,
+          "threshold": 1e-06,
+          "x_over_threshold": 325525.7088889727
+        },
+        {
+          "dim": "step_progress",
+          "abs_delta": 0.2,
+          "threshold": 1e-06,
+          "x_over_threshold": 200000.00000000003
+        }
+      ]
+    },
+    {
+      "seed": 28,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv1",
+        "rate_mbps": 57
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 15,
+      "top_dims": [
+        {
+          "dim": "util_avg3:s2-srv1",
+          "abs_delta": 0.9976930773333333,
+          "threshold": 1e-06,
+          "x_over_threshold": 997693.0773333334
+        },
+        {
+          "dim": "util_avg3:s1-s2",
+          "abs_delta": 0.9975597333333334,
+          "threshold": 1e-06,
+          "x_over_threshold": 997559.7333333334
+        },
+        {
+          "dim": "util_avg3:h3-s1",
+          "abs_delta": 0.9973634066666667,
+          "threshold": 1e-06,
+          "x_over_threshold": 997363.4066666667
+        },
+        {
+          "dim": "util:s1-s2",
+          "abs_delta": 0.994125052,
+          "threshold": 1e-06,
+          "x_over_threshold": 994125.052
+        },
+        {
+          "dim": "util:h3-s1",
+          "abs_delta": 0.993537148,
+          "threshold": 1e-06,
+          "x_over_threshold": 993537.148
+        }
+      ]
+    },
+    {
+      "seed": 29,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv2",
+        "rate_mbps": 45
+      },
+      "visible": true,
+      "blind_spot": false,
+      "n_moved": 9,
+      "top_dims": [
+        {
+          "dim": "util:h1-s1",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s1-s3",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util:s3-srv2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "server_rx_norm:srv2",
+          "abs_delta": 1.0,
+          "threshold": 1e-06,
+          "x_over_threshold": 1000000.0
+        },
+        {
+          "dim": "util_avg3:h1-s1",
+          "abs_delta": 0.9979117959999999,
+          "threshold": 1e-06,
+          "x_over_threshold": 997911.796
+        }
+      ]
+    }
+  ]
+}
