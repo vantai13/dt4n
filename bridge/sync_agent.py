@@ -130,7 +130,10 @@ def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
                          cycle, tag, n_ok, n_ok + n_fail, elapsed * 1000)
 
         if elapsed > period:
-            log.warning('Cycle overran: %.2fs > %.1fs', elapsed, period)
+            if elapsed > period * 3 or cycle % log_every == 0:
+                log.warning('Cycle overran: %.2fs > %.1fs', elapsed, period)
+            else:
+                log.debug('Cycle overran: %.2fs > %.1fs', elapsed, period)
 
         sleep_time = max(0, period - elapsed)
         if stop_event is not None:

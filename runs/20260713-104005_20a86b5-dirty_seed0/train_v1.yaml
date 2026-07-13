@@ -1,0 +1,14 @@
+# rl/configs/train_v1.yaml
+# Cau hinh vong train Phase 6.
+
+train:
+  n_episodes: 300           # so episode train (chot sau pilot 6.4)
+  warmup_steps: 300        # so buoc dau CHI gom kinh nghiem, chua train_step
+  eval_every: 25            # moi 25 episode -> eval VAL (greedy)
+  ckpt_every: 25            # moi 25 episode -> luu checkpoint
+  moving_avg_window: 20     # cua so trung binh truot cho return
+  log_dir: runs            # thu muc goc chua cac run
+
+# tro toi cac config khac (agent + eval da chot o 6.1, 6.2)
+agent_config: rl/configs/agent_v1.yaml
+eval_config:  rl/configs/eval_v1.yaml

@@ -40,6 +40,10 @@ from mininet.link import TCLink          # link đặt được bw/delay/loss (L
 from mininet.node import OVSSwitch, RemoteController
 from mininet.cli import CLI
 from mininet.log import setLogLevel, info
+from mininet.tc_filter import install_tc_warning_filter
+
+
+install_tc_warning_filter()
 
 
 class TriangleTopo(Topo):

@@ -16,8 +16,10 @@ import mininet.traffic as traffic_mod  # noqa: E402
 from rl.injection import InjectionChannel  # noqa: E402
 from rl.oracle_policy import oracle_action, oracle_feasible  # noqa: E402
 from rl.scenarios import (  # noqa: E402
+    CongestionShift,
     FLOOD_PORT,
     LinkDegrade,
+    LinkDown,
     TrafficFlood,
     make_scenario,
 )
@@ -131,6 +133,42 @@ def test_traffic_flood_revert_is_idempotent_and_uses_dedicated_port():
     assert 'pkill -f "iperf.*%d"' % FLOOD_PORT in h1_commands
 
 
+def test_link_down_is_severe_link_degrade():
+    net = FakeNet()
+    scenario = LinkDown('s1-s2', factor=0.98, delay='2ms', baseline=20.0)
+
+    scenario.apply(net)
+    assert net.links[0].dt4n_bw == 1.0
+    assert net.links[0].intf1.bw == 1.0
+
+    scenario.revert(net)
+    scenario.revert(net)
+
+    assert net.links[0].dt4n_bw == 20.0
+    assert net.links[0].intf1.bw == 20.0
+
+
+def test_congestion_shift_reverts_link_and_flood():
+    net = FakeNet()
+    scenario = CongestionShift(
+        's1-s2', factor=0.5, delay='2ms', baseline=20.0,
+        flood_src='h1', flood_dst='srv1', rate_mbps=25)
+
+    scenario.apply(net)
+    assert net.links[0].dt4n_bw == 10.0
+    assert net.links[0].intf1.bw == 10.0
+
+    scenario.revert(net)
+    scenario.revert(net)
+
+    h1_commands = '\n'.join(net.get('h1').commands)
+    srv1_commands = '\n'.join(net.get('srv1').commands)
+    assert net.links[0].dt4n_bw == 20.0
+    assert 'iperf -c 10.0.0.4 -u -b 25M' in h1_commands
+    assert 'pkill -f "iperf.*%d"' % FLOOD_PORT in h1_commands
+    assert 'pkill -f "iperf.*%d"' % FLOOD_PORT in srv1_commands
+
+
 def test_server_background_traffic_uses_mnexec_when_host_has_pid():
     class BgNet:
         def __init__(self):
@@ -186,23 +224,30 @@ def test_scenario_golden_values():
            for s in (0, 1, 2, 42)]
     expected = [
         {
+            'type': 'CongestionShift',
+            'degrade_link': 's1-s3',
+            'factor': 0.45395734275277405,
+            'delay': '2ms',
+            'baseline': 20.0,
+            'flood_src': 'h1',
+            'flood_dst': 'srv1',
+            'rate_mbps': 21,
+        },
+        {
             'type': 'TrafficFlood',
             'src': 'h2',
             'dst': 'srv2',
-            'rate_mbps': 38,
+            'rate_mbps': 59,
         },
         {
-            'type': 'LinkDegrade',
-            'link_key': 's1-s3',
-            'factor': 0.5801854785303742,
+            'type': 'CongestionShift',
+            'degrade_link': 's1-s2',
+            'factor': 0.45969822868282467,
             'delay': '2ms',
             'baseline': 20.0,
-        },
-        {
-            'type': 'TrafficFlood',
-            'src': 'h1',
-            'dst': 'srv1',
-            'rate_mbps': 39,
+            'flood_src': 'h2',
+            'flood_dst': 'srv2',
+            'rate_mbps': 29,
         },
         {
             'type': 'LinkDegrade',
@@ -244,6 +289,11 @@ def test_injection_channel_tracks_and_reverts_active_scenarios():
 def test_oracle_names_recovery_action():
     assert oracle_action(LinkDegrade('s1-s2', 0.5, '2ms', 20.0)) == (
         'bw_up', 's1-s2')
+    assert oracle_action(LinkDown('s1-s2', 0.98, '2ms', 20.0)) == (
+        'bw_up', 's1-s2')
+    assert oracle_action(
+        CongestionShift('s1-s3', 0.5, '2ms', 20.0, 'h1', 'srv1', 25)
+    ) == ('bw_up', 's1-s3')
     assert oracle_action(TrafficFlood('h1', 'srv1', 40)) == (
         'bw_up', 's2-s3')
     assert oracle_feasible(TrafficFlood('h1', 'srv1', 40), max_steps=10)
@@ -253,6 +303,8 @@ if __name__ == '__main__':
     tests = [
         test_link_degrade_revert_is_idempotent_and_restores_delay,
         test_traffic_flood_revert_is_idempotent_and_uses_dedicated_port,
+        test_link_down_is_severe_link_degrade,
+        test_congestion_shift_reverts_link_and_flood,
         test_server_background_traffic_uses_mnexec_when_host_has_pid,
         test_make_scenario_is_deterministic_for_same_seed,
         test_scenario_golden_values,

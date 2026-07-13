@@ -38,6 +38,10 @@ from bridge.ditto_common import (
     DITTO_BASE_URL, DITTO_AUTH, NAMESPACE, POLICY_ID, HTTP_TIMEOUT,
 )
 from bridge.flow_log import flow_event
+from mininet.tc_filter import install_tc_warning_filter
+
+
+install_tc_warning_filter()
 
 log = logging.getLogger('command_agent')
 

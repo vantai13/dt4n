@@ -6,13 +6,17 @@ whether a generated fault has an obvious recovery path within a small step
 budget before we ask a blind RL agent to learn it.
 """
 
-from rl.scenarios import LinkDegrade, TrafficFlood
+from rl.scenarios import CongestionShift, LinkDegrade, LinkDown, TrafficFlood
 
 
 def oracle_action(scenario):
     """Return a high-level corrective action tuple, or None if unsupported."""
+    if isinstance(scenario, LinkDown):
+        return ('bw_up', scenario.link_key)
     if isinstance(scenario, LinkDegrade):
         return ('bw_up', scenario.link_key)
+    if isinstance(scenario, CongestionShift):
+        return ('bw_up', scenario.degrade_link)
     if isinstance(scenario, TrafficFlood):
         return ('bw_up', 's2-s3')
     return None

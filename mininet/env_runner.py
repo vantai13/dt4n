@@ -14,6 +14,7 @@ import threading
 import time
 from collections import deque
 from bridge.ditto_reader import expected_thing_ids
+from mininet.tc_filter import install_tc_warning_filter
 from mininet.topology_meta import baseline_bw, canonical, load_spec
 from rl.injection import InjectionChannel
 from rl.state_builder_draft import (
@@ -22,6 +23,8 @@ from rl.state_builder_draft import (
     dynamic_thing_ids,
 )
 
+
+install_tc_warning_filter()
 
 log = logging.getLogger('env_runner')
 
@@ -151,8 +154,12 @@ class EnvRunner:
                  time.monotonic() - t0, startup_iperf)
         return self.net
 
-    def close(self):
-        """Stop background threads, kill traffic, stop Mininet, and run mn -c."""
+    def close(self, cleanup_mn=False):
+        """Stop background threads, kill traffic, and stop Mininet.
+
+        ``mn -c`` also kills ``ryu-manager``. Keep it opt-in so periodic hard
+        resets during training do not tear down the external controller.
+        """
         self.stop_event.set()
         for thread in (self._sync_thread, self._command_thread):
             if thread is not None:
@@ -174,16 +181,17 @@ class EnvRunner:
             self.injection = None
             self._background_hosts = ()
 
-        try:
-            subprocess.run(['mn', '-c'], capture_output=True, check=False)
-        except OSError as exc:
-            log.warning('mn -c skipped: %s', exc)
+        if cleanup_mn:
+            try:
+                subprocess.run(['mn', '-c'], capture_output=True, check=False)
+            except OSError as exc:
+                log.warning('mn -c skipped: %s', exc)
 
     def hard_reset(self):
         """Fully rebuild the network. Clean, slower, and used as a periodic drain."""
         log.info('HARD reset')
         t0 = time.monotonic()
-        self.close()
+        self.close(cleanup_mn=False)
         self.start()
         return time.monotonic() - t0
 

@@ -11,8 +11,11 @@ Why this path is separate from the Command Agent:
 import time
 from abc import ABC, abstractmethod
 
+from mininet.tc_filter import install_tc_warning_filter
 from mininet.topology_meta import baseline_bw, canonical, toggleable_links
 
+
+install_tc_warning_filter()
 
 DEFAULT_DELAY = '2ms'
 IPERF_PORT = 5001
@@ -136,7 +139,107 @@ class TrafficFlood(Scenario):
         self._applied = False
 
 
-SCENARIO_TYPES = [LinkDegrade, TrafficFlood]
+class LinkDown(LinkDegrade):
+    """Cut one non-bridge link almost completely.
+
+    This is the severe end of LinkDegrade. We keep a tiny bandwidth floor via
+    LinkDegrade.apply() because bw=0 can upset Linux tc/Mininet configuration.
+    """
+
+    @classmethod
+    def params_from_seed(cls, rng, spec):
+        candidates = toggleable_links(spec)
+        if not candidates:
+            raise ValueError('no toggleable links available for LinkDown')
+        link_key = _choice(rng, candidates)
+        factor = float(rng.uniform(0.97, 0.99))
+        bw0 = baseline_bw(spec)[link_key]
+        return cls(link_key, factor, DEFAULT_DELAY, bw0)
+
+
+class CongestionShift(Scenario):
+    """Degrade one link and add UDP load so the bottleneck shifts elsewhere."""
+
+    def __init__(self, degrade_link, factor, delay, baseline,
+                 flood_src, flood_dst, rate_mbps):
+        self.degrade_link = degrade_link
+        self.factor = float(factor)
+        self.delay = delay
+        self.baseline = float(baseline)
+        self.flood_src = flood_src
+        self.flood_dst = flood_dst
+        self.rate_mbps = int(rate_mbps)
+        self._applied = False
+
+    @classmethod
+    def params_from_seed(cls, rng, spec):
+        candidates = toggleable_links(spec)
+        clients = [
+            h['name'] for h in spec.get('hosts', [])
+            if isinstance(h, dict) and h.get('role') == 'client'
+        ]
+        servers = [
+            h['name'] for h in spec.get('hosts', [])
+            if isinstance(h, dict) and h.get('role') == 'server'
+        ]
+        if not candidates or not clients or not servers:
+            raise ValueError(
+                'CongestionShift needs links plus client/server hosts')
+        degrade_link = _choice(rng, candidates)
+        factor = float(rng.uniform(0.4, 0.6))
+        bw0 = baseline_bw(spec)[degrade_link]
+        src = _choice(rng, clients)
+        dst = _choice(rng, servers)
+        rate = int(rng.integers(20, 41))
+        return cls(degrade_link, factor, DEFAULT_DELAY, bw0, src, dst, rate)
+
+    def _find_link(self, net):
+        for link in net.links:
+            a = link.intf1.node.name
+            b = link.intf2.node.name
+            if canonical(a, b) == self.degrade_link:
+                return link
+        return None
+
+    def apply(self, net):
+        link = self._find_link(net)
+        if link is None:
+            raise ValueError('link not found: %s' % self.degrade_link)
+
+        new_bw = max(1.0, self.baseline * (1.0 - self.factor))
+        cfg = {'bw': new_bw, 'delay': self.delay}
+        link.intf1.config(**cfg)
+        link.intf2.config(**cfg)
+        link.dt4n_bw = new_bw
+
+        self.revert_flood(net)
+        src = net.get(self.flood_src)
+        dst = net.get(self.flood_dst)
+        dst.cmd('iperf -s -u -p %d > /tmp/shift_srv_%s.log 2>&1 &'
+                % (FLOOD_PORT, self.flood_dst))
+        time.sleep(0.3)
+        src.cmd('iperf -c %s -u -b %dM -p %d -t 100000 '
+                '> /tmp/shift_cli_%s.log 2>&1 &'
+                % (dst.IP(), self.rate_mbps, FLOOD_PORT, self.flood_src))
+        self._applied = True
+
+    def revert_flood(self, net):
+        for name in (self.flood_src, self.flood_dst):
+            net.get(name).cmd(
+                'pkill -f "iperf.*%d" 2>/dev/null' % FLOOD_PORT)
+
+    def revert(self, net):
+        self.revert_flood(net)
+        link = self._find_link(net)
+        if link is not None:
+            cfg = {'bw': self.baseline, 'delay': self.delay}
+            link.intf1.config(**cfg)
+            link.intf2.config(**cfg)
+            link.dt4n_bw = self.baseline
+        self._applied = False
+
+
+SCENARIO_TYPES = [LinkDegrade, TrafficFlood, LinkDown, CongestionShift]
 
 
 def _rng_from_seed(seed):

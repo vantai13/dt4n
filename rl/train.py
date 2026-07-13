@@ -116,6 +116,12 @@ def train(agent, env, cfg, train_seeds, val_seeds, seed, config_paths=()):
         agent.decay_epsilon()
         returns.append(res['return'])
         ret_ma = float(np.mean(returns[-ma_window:]))
+        status = 'TERM' if res['terminated'] else 'TRUNC'
+        print(f"ep {ep+1:3d}/{tcfg['n_episodes']:3d} | "
+              f"ret={res['return']:7.2f} | ret_ma={ret_ma:7.2f} | "
+              f"steps={res['steps']:2d} | {status} | "
+              f"actions={res['n_interventions']:2d} | eps={agent.epsilon:.3f}",
+              flush=True)
 
         # eval dinh ky tren VAL (greedy)
         val_return = ''
