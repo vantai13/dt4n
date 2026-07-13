@@ -1,0 +1,21 @@
+# rl/configs/eval_v1.yaml
+# Giao thuc danh gia Phase 6 — DONG DAU tai Lesson 6.2, dung nguyen cho 6.5 + Phase 7.
+# 3 TAP SEED MOI TRUONG: khoa vinh vien, khong sua.
+
+version: eval_v1
+status: stamped
+
+seeds:
+  train:   {start: 0,    count: 200}   # 0..199   — train agent + tinh chinh rule-based
+  val:     {start: 500,  count: 20}    # 500..519 — theo doi/chon checkpoint, hyperparameter
+  heldout: {start: 1000, count: 50}    # 1000..1049 — CHAM DIEM CUOI, chi chay 1 lan
+
+eval:
+  epsilon: 0.0            # eval = thi: greedy tuyet doi
+  episodes_per_seed: 1    # moi seed 1 episode (seed da quyet dinh kich ban)
+  metrics: [recovery_time, return, mean_throughput, n_interventions]
+  truncated_recovery_time: t_max   # episode het gio -> ghi recovery_time = t_max, dem % that bai rieng
+
+output:
+  per_episode_csv: true   # 1 dong / episode
+  summary_table: true     # mean +/- std, %truncated
