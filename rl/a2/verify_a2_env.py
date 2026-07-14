@@ -20,13 +20,13 @@ from rl.a2.policies_a2 import (
     policy_equal,
     policy_greedy,
     policy_noop,
-    policy_oracle_dynamic,
+    policy_myopic_oracle,
 )
 from rl.a2.twin_env_a2 import TwinEnvA2
 
 
 POLICIES = {
-    'oracle': policy_oracle_dynamic,
+    'myopic_oracle': policy_myopic_oracle,
     'greedy': policy_greedy,
     'equal': policy_equal,
     'noop': policy_noop,
@@ -95,14 +95,14 @@ def main():
         print('[a2] %-8s return_mean=%7.2f  sat_mean=%.3f'
               % (name, ret_mean, sat_mean))
 
-    oracle_return = summary['oracle'][0]
+    oracle_return = summary['myopic_oracle'][0]
     equal_return = summary['equal'][0]
     gap = oracle_return - equal_return
     print('\n[a2] === GATE TRADE-OFF ===')
-    print('[a2] oracle return=%.2f vs equal return=%.2f -> gap=%.2f'
+    print('[a2] myopic_oracle return=%.2f vs equal return=%.2f -> gap=%.2f'
           % (oracle_return, equal_return, gap))
     if gap > args.gap_threshold:
-        print('[a2] RESULT: OK, dynamic oracle beats fixed equal allocation.')
+        print('[a2] RESULT: OK, myopic oracle beats fixed equal allocation.')
         print('[a2] RL has room: no single fixed allocation is optimal for all demand.')
     else:
         print('[a2] RESULT: WARN, trade-off is weak.')

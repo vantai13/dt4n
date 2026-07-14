@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A2 scripted policies: baselines plus a demand-aware oracle."""
+"""A2 scripted policies: baselines plus demand-aware myopic oracle."""
 
 
 def policy_noop(env, obs, info):
@@ -28,9 +28,19 @@ def policy_greedy(env, obs, info):
 
 
 def policy_oracle_dynamic(env, obs, info):
-    """Use known demand to move toward the best theoretical allocation level."""
-    d_a = env._scenario.demand_A
-    d_b = env._scenario.demand_B
+    """Myopic oracle: knows current demand, but optimizes only this step.
+
+    It is not an optimal oracle over the whole episode. In dynamic A2 it may go
+    too far toward the current high-demand branch and pay a reaction delay after
+    the demand flips.
+    """
+    if hasattr(env, 'sync_true_demand_for_action'):
+        d_a, d_b = env.sync_true_demand_for_action()
+    elif hasattr(env, '_cur_demand'):
+        d_a, d_b = env._cur_demand
+    else:
+        d_a = env._scenario.demand_A
+        d_b = env._scenario.demand_B
 
     best_level = 0
     best_score = -1.0
@@ -48,3 +58,6 @@ def policy_oracle_dynamic(env, obs, info):
     if cur > best_level:
         return 2
     return 0
+
+
+policy_myopic_oracle = policy_oracle_dynamic

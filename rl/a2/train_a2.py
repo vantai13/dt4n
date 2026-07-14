@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""A2 stage 4: train DQN on static-demand A2 to verify the train pipeline.
+"""A2 train: static-demand pipeline check or dynamic-demand A2.
 
 This is not meant to make DQN look dramatic against greedy. The A2 static gate
 already showed greedy is near-oracle with fresh static observations. The goal is
@@ -23,7 +23,12 @@ if ROOT not in sys.path:
     sys.path.insert(0, ROOT)
 
 from mininet.env_runner import EnvRunner
-from rl.a2.policies_a2 import policy_equal, policy_greedy, policy_noop
+from rl.a2.policies_a2 import (
+    policy_equal,
+    policy_greedy,
+    policy_myopic_oracle,
+    policy_noop,
+)
 from rl.a2.state_a2 import A2_STATE_DIM
 from rl.a2.twin_env_a2 import TwinEnvA2
 
@@ -119,7 +124,7 @@ def train_episode(env, agent, seed):
 
 def parse_args():
     ap = argparse.ArgumentParser(
-        description='Train DQN on A2 static demand as a pipeline check.')
+        description='Train DQN on A2 static or dynamic demand.')
     ap.add_argument('--episodes', type=int, default=150)
     ap.add_argument('--t-max', type=int, default=8)
     ap.add_argument('--eval-every', type=int, default=30)
@@ -128,6 +133,12 @@ def parse_args():
     ap.add_argument('--val-seed-start', type=int, default=500)
     ap.add_argument('--delta-s', type=float, default=1.8)
     ap.add_argument('--sync-period', type=float, default=0.5)
+    ap.add_argument('--dynamic', action='store_true',
+                    help='enable phase-5 dynamic demand shift scenarios')
+    ap.add_argument('--base-mbps', type=float, default=3.0,
+                    help='always-on base Mbps per branch in dynamic mode')
+    ap.add_argument('--burst-mbps', type=float, default=None,
+                    help='fixed burst Mbps; default derives burst from demand')
     ap.add_argument('--batch-size', type=int, default=64)
     ap.add_argument('--learning-rate', type=float, default=1e-3)
     ap.add_argument('--epsilon-decay', type=float, default=0.97)
@@ -154,6 +165,11 @@ def import_agent_or_exit():
 
 def main():
     args = parse_args()
+    if args.dynamic:
+        if args.out == 'docs/phase-6/artifacts/a2_train_static.json':
+            args.out = 'docs/phase-6/artifacts/a2_train_dynamic.json'
+        if args.save_model == 'docs/phase-6/artifacts/a2_dqn_static.pt':
+            args.save_model = 'docs/phase-6/artifacts/a2_dqn_dynamic.pt'
     DQNAgent = import_agent_or_exit()
 
     train_seeds = list(range(args.train_seed_start,
@@ -164,10 +180,15 @@ def main():
     runner = EnvRunner(sync_period=args.sync_period, hard_every=0)
     print('[train-a2] start()...', flush=True)
     runner.start()
-    env = TwinEnvA2(
-        runner,
-        cfg={'delta_s': args.delta_s, 't_max_steps': args.t_max},
-    )
+    env_cfg = {
+        'delta_s': args.delta_s,
+        't_max_steps': args.t_max,
+        'dynamic': args.dynamic,
+        'base_mbps': args.base_mbps,
+    }
+    if args.burst_mbps is not None:
+        env_cfg['burst_mbps'] = args.burst_mbps
+    env = TwinEnvA2(runner, cfg=env_cfg)
     agent = DQNAgent(
         state_size=A2_STATE_DIM,
         action_size=env.action_space.n,
@@ -180,11 +201,13 @@ def main():
     t0 = time.monotonic()
     try:
         print('[train-a2] precompute validation baselines...', flush=True)
-        for name, policy in (
+        baseline_policies = [
+            ('myopic_oracle', policy_myopic_oracle),
             ('greedy', policy_greedy),
             ('equal', policy_equal),
             ('noop', policy_noop),
-        ):
+        ]
+        for name, policy in baseline_policies:
             ret, sat = eval_policy(env, policy, val_seeds)
             baselines[name] = {'return': ret, 'sat': sat}
             print('[train-a2] baseline %-6s return=%.2f sat=%.3f'
@@ -205,22 +228,35 @@ def main():
                     ),
                     'agent_return': round(agent_ret, 4),
                     'agent_sat': round(agent_sat, 4),
+                    'myopic_oracle_return': round(
+                        baselines['myopic_oracle']['return'], 4),
+                    # Compatibility with early A2 logs before the baseline was
+                    # named precisely.
+                    'oracle_return': round(
+                        baselines['myopic_oracle']['return'], 4),
                     'greedy_return': round(baselines['greedy']['return'], 4),
                     'equal_return': round(baselines['equal']['return'], 4),
                     'noop_return': round(baselines['noop']['return'], 4),
                 }
+                eval_row['agent_minus_greedy'] = round(
+                    agent_ret - baselines['greedy']['return'], 4)
+                eval_row['agent_minus_myopic_oracle'] = round(
+                    agent_ret - baselines['myopic_oracle']['return'], 4)
                 log.append(eval_row)
                 print('[train-a2] ep=%3d eps=%.3f train=%.2f loss=%s | '
-                      'agent=%.2f greedy=%.2f equal=%.2f noop=%.2f'
+                      'agent=%.2f myopic=%.2f greedy=%.2f equal=%.2f noop=%.2f '
+                      'gap_g=%.2f'
                       % (
                           episode,
                           row['epsilon'],
                           row['return'],
                           '-' if row['loss'] is None else '%.4f' % row['loss'],
                           agent_ret,
+                          baselines['myopic_oracle']['return'],
                           baselines['greedy']['return'],
                           baselines['equal']['return'],
                           baselines['noop']['return'],
+                          agent_ret - baselines['greedy']['return'],
                       ),
                       flush=True)
     finally:
@@ -229,6 +265,13 @@ def main():
     os.makedirs(os.path.dirname(args.out) or '.', exist_ok=True)
     artifact = {
         'args': vars(args),
+        'mode': 'dynamic' if args.dynamic else 'static',
+        'baseline_notes': {
+            'myopic_oracle': (
+                'Knows current demand immediately but greedily optimizes the '
+                'current step only; it is not an optimal episode oracle.'
+            ),
+        },
         'baselines': baselines,
         'log': log,
         'elapsed_s': round(time.monotonic() - t0, 3),
@@ -251,16 +294,28 @@ def main():
     noop_ret = float(last['noop_return'])
     equal_ret = float(last['equal_return'])
     greedy_ret = float(last['greedy_return'])
+    myopic_ret = float(last.get('myopic_oracle_return',
+                                last.get('oracle_return', greedy_ret)))
     print('\n[train-a2] === VERIFY PIPELINE ===')
-    print('[train-a2] agent=%.2f vs noop=%.2f equal=%.2f greedy=%.2f'
-          % (agent_ret, noop_ret, equal_ret, greedy_ret))
+    print('[train-a2] agent=%.2f vs noop=%.2f equal=%.2f greedy=%.2f '
+          'myopic_oracle=%.2f'
+          % (agent_ret, noop_ret, equal_ret, greedy_ret, myopic_ret))
+    print('[train-a2] gaps: agent-greedy=%+.2f agent-myopic=%+.2f'
+          % (agent_ret - greedy_ret, agent_ret - myopic_ret))
     if agent_ret >= noop_ret and agent_ret >= equal_ret:
         print('[train-a2] RESULT: OK, DQN beats weak baselines.')
-        if agent_ret >= greedy_ret - 0.3:
+        if args.dynamic:
+            if agent_ret > greedy_ret:
+                print('[train-a2] Dynamic result: DQN is above greedy.')
+            else:
+                print('[train-a2] Dynamic result: DQN is not above greedy yet.')
+            print('[train-a2] myopic_oracle is current-demand greedy, not an optimal oracle.')
+        elif agent_ret >= greedy_ret - 0.3:
             print('[train-a2] It is near greedy, which is the expected static-A2 ceiling.')
         else:
             print('[train-a2] It still trails greedy; acceptable for a short pipeline check.')
-        print('[train-a2] Next: move to dynamic demand, where greedy should weaken.')
+        if not args.dynamic:
+            print('[train-a2] Next: move to dynamic demand, where greedy should weaken.')
     else:
         print('[train-a2] RESULT: WARN, DQN is below weak baselines. Debug train pipeline.')
     print('[train-a2] artifact -> %s' % args.out)

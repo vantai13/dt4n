@@ -23,6 +23,31 @@ class DemandScenario:
                 'kind': self.kind}
 
 
+@dataclass
+class DynamicDemandScenario:
+    """Demand flips at t_shift, creating the decision-flip A2 needs."""
+
+    demand_A_1: float
+    demand_B_1: float
+    demand_A_2: float
+    demand_B_2: float
+    t_shift: int
+    kind: str
+
+    def demand_at(self, t):
+        if int(t) < self.t_shift:
+            return self.demand_A_1, self.demand_B_1
+        return self.demand_A_2, self.demand_B_2
+
+    def describe(self):
+        return {
+            't_shift': self.t_shift,
+            'kind': self.kind,
+            'phase1': (self.demand_A_1, self.demand_B_1),
+            'phase2': (self.demand_A_2, self.demand_B_2),
+        }
+
+
 def make_demand_scenario(seed, c_total=20.0):
     """Sinh scenario demand theo seed. Tong demand > c_total (khan hiem)."""
     rng = np.random.default_rng(seed)
@@ -43,3 +68,30 @@ def make_demand_scenario(seed, c_total=20.0):
     return DemandScenario(demand_A=round(float(dA), 1),
                           demand_B=round(float(dB), 1),
                           kind=str(kind))
+
+
+def make_dynamic_scenario(seed, c_total=20.0, t_max=8):
+    """Generate a demand scenario that flips direction around mid-episode."""
+    rng = np.random.default_rng(seed)
+    high = rng.uniform(0.70, 0.85) * c_total
+    low = rng.uniform(0.15, 0.30) * c_total
+
+    lo = max(1, int(t_max) // 3)
+    hi = max(lo + 1, 2 * int(t_max) // 3 + 1)
+    t_shift = int(rng.integers(lo, hi))
+
+    if rng.random() < 0.5:
+        dA1, dB1, dA2, dB2 = high, low, low, high
+        kind = 'A_to_B'
+    else:
+        dA1, dB1, dA2, dB2 = low, high, high, low
+        kind = 'B_to_A'
+
+    return DynamicDemandScenario(
+        demand_A_1=round(float(dA1), 1),
+        demand_B_1=round(float(dB1), 1),
+        demand_A_2=round(float(dA2), 1),
+        demand_B_2=round(float(dB2), 1),
+        t_shift=t_shift,
+        kind=kind,
+    )

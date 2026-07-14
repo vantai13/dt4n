@@ -48,9 +48,10 @@ from mininet.traffic import (
     stop_all_iperf,
 )
 from rl.a2.allocation import AllocationSpace
+from rl.a2.demand_dynamic import DynamicDemand
 from rl.a2.state_a2 import build_a2_state, A2_STATE_DIM
 from rl.a2.reward_a2 import compute_reward_a2, RewardA2Config
-from rl.a2.demand_scenario import make_demand_scenario
+from rl.a2.demand_scenario import make_demand_scenario, make_dynamic_scenario
 
 
 BRANCH_A_LINK = 's1-s2'   # duong toi srv1
@@ -67,15 +68,29 @@ class TwinEnvA2(gym.Env):
         self.delta_s = cfg.get('delta_s', 1.8)
         self.t_max = cfg.get('t_max_steps', 8)
         self.flow_duration = int(cfg.get('flow_duration', 120))
+        self.dynamic = bool(cfg.get('dynamic', False))
+        self.base_mbps = float(cfg.get('base_mbps', 3.0))
+        self.burst_mbps = cfg.get('burst_mbps', None)
+        if self.burst_mbps is not None:
+            self.burst_mbps = float(self.burst_mbps)
 
         self.alloc = AllocationSpace(c_total=self.c_total, n_levels=5)
         self.reward_cfg = RewardA2Config(**cfg.get('reward', {}))
+        self.dd = (
+            DynamicDemand(
+                self.net,
+                base_mbps=self.base_mbps,
+                flow_duration=self.flow_duration,
+            )
+            if self.dynamic else None
+        )
 
         self.action_space = spaces.Discrete(self.alloc.n_actions)  # 3
         self.observation_space = spaces.Box(low=0.0, high=1.0,
                                             shape=(A2_STATE_DIM,), dtype=np.float32)
 
         self._scenario = None
+        self._cur_demand = (0.0, 0.0)
         self._t = 0
         self._last_action = 0
 
@@ -137,18 +152,55 @@ class TwinEnvA2(gym.Env):
               .get('traffic', {}).get('rxRate', 0.0) or 0.0)
         return float(gA) * 8.0 / 1e6, float(gB) * 8.0 / 1e6
 
+    def _scenario_demand_at(self, t):
+        if hasattr(self._scenario, 'demand_at'):
+            return self._scenario.demand_at(t)
+        return self._scenario.demand_A, self._scenario.demand_B
+
+    def _sync_dynamic_demand(self, t, force=False):
+        """Push the true demand for time t into the base+burst traffic layer."""
+        dA, dB = self._scenario_demand_at(t)
+        next_demand = (float(dA), float(dB))
+        if not self.dynamic:
+            self._cur_demand = next_demand
+            return False
+
+        changed = force or next_demand != self._cur_demand
+        if changed:
+            self.dd.set_demand('A', next_demand[0], self.burst_mbps)
+            self.dd.set_demand('B', next_demand[1], self.burst_mbps)
+            self._cur_demand = next_demand
+        return changed
+
+    def sync_true_demand_for_action(self):
+        """Myopic-oracle hook: reveal true demand before choosing an action."""
+        if self._scenario is None:
+            return self._cur_demand
+        self._sync_dynamic_demand(self._t)
+        return self._cur_demand
+
     # ---------- Gym API ----------
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
-        self._scenario = make_demand_scenario(seed if seed is not None else 0,
-                                              c_total=self.c_total)
+        s = seed if seed is not None else 0
+        if self.dynamic:
+            self._scenario = make_dynamic_scenario(
+                s, c_total=self.c_total, t_max=self.t_max)
+        else:
+            self._scenario = make_demand_scenario(s, c_total=self.c_total)
         self._t = 0
         self._last_action = 0
         # bat dau o allocation can bang
         cA, cB = self.alloc.reset()
         self._apply_allocation(cA, cB)
-        # dat demand traffic
-        self._start_demand_traffic(self._scenario.demand_A, self._scenario.demand_B)
+        dA, dB = self._scenario_demand_at(0)
+        self._cur_demand = (float(dA), float(dB))
+        if self.dynamic:
+            self.dd.start()
+            self._cur_demand = (0.0, 0.0)
+            self._sync_dynamic_demand(0, force=True)
+        else:
+            self._start_demand_traffic(dA, dB)
         time.sleep(self.delta_s)
         obs = self._observe()
         info = {'scenario': self._scenario.describe()}
@@ -159,10 +211,11 @@ class TwinEnvA2(gym.Env):
         return self._build_obs(gA, gB)
 
     def _build_obs(self, gA, gB):
+        dA, dB = self._cur_demand
         return build_a2_state(
             alloc_level_norm=self.alloc.level_norm(),
             goodput_A=gA, goodput_B=gB,
-            demand_A=self._scenario.demand_A, demand_B=self._scenario.demand_B,
+            demand_A=dA, demand_B=dB,
             c_total=self.c_total,
             step_progress=self._t / max(self.t_max, 1),
             last_action=self._last_action,
@@ -171,6 +224,7 @@ class TwinEnvA2(gym.Env):
     def step(self, action):
         action = int(action)
         self._last_action = action
+        demand_changed = self._sync_dynamic_demand(self._t)
         # 1-2. apply action -> set bw
         cA, cB = self.alloc.apply(action)
         self._apply_allocation(cA, cB)
@@ -179,19 +233,20 @@ class TwinEnvA2(gym.Env):
         # 4. doc goodput
         gA, gB = self._read_goodput()
         # 5. reward
-        bd = compute_reward_a2(gA, self._scenario.demand_A,
-                               gB, self._scenario.demand_B,
+        dA, dB = self._cur_demand
+        bd = compute_reward_a2(gA, dA,
+                               gB, dB,
                                action, self.reward_cfg)
         # 6. state
         self._t += 1
         obs = self._build_obs(gA, gB)
         satA = (
-            min(gA / self._scenario.demand_A, 1.0)
-            if self._scenario.demand_A > 1e-6 else 1.0
+            min(gA / dA, 1.0)
+            if dA > 1e-6 else 1.0
         )
         satB = (
-            min(gB / self._scenario.demand_B, 1.0)
-            if self._scenario.demand_B > 1e-6 else 1.0
+            min(gB / dB, 1.0)
+            if dB > 1e-6 else 1.0
         )
 
         # A2 la bai toan phan bo lien tuc, khong phai reach-goal recovery.
@@ -202,6 +257,7 @@ class TwinEnvA2(gym.Env):
         info = {
             'reward_breakdown': bd.__dict__, 'goodput_A': gA, 'goodput_B': gB,
             'sat_A': satA, 'sat_B': satB, 'alloc': (cA, cB),
-            'total_sat': satA + satB,
+            'total_sat': satA + satB, 'demand_A': dA, 'demand_B': dB,
+            'demand_changed': demand_changed,
         }
         return obs, bd.total, terminated, truncated, info
