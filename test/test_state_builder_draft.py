@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Pure tests for the 45-dimension draft state builder."""
+"""Pure tests for the 51-dimension draft state builder."""
 
 import json
 import math
@@ -14,7 +14,6 @@ if str(ROOT) not in sys.path:
 from bridge.ditto_common import (  # noqa: E402
     make_thing_id_host,
     make_thing_id_link,
-    make_thing_id_path,
 )
 from rl.soft_reset_equivalence import ks_2samp  # noqa: E402
 from rl.state_builder_draft import (  # noqa: E402
@@ -23,6 +22,7 @@ from rl.state_builder_draft import (  # noqa: E402
     StateBuilderDraft,
     build_state_from_snapshot,
     dim_names,
+    mm1_delay_norm,
 )
 
 
@@ -30,21 +30,24 @@ def _spec():
     return json.load(open(ROOT / 'ditto/topology_spec.json', encoding='utf-8'))
 
 
-def test_dim_names_are_45_and_stable():
-    assert len(DIM_NAMES) == 45
-    assert STATE_DIM == 45
+def test_dim_names_are_51_and_stable():
+    assert len(DIM_NAMES) == 51
+    assert STATE_DIM == 51
     assert DIM_NAMES[0] == 'link_up:h1-s1'
     assert DIM_NAMES[-3:] == [
         'aoi_norm',
         'step_progress',
         'healthy_streak_norm',
     ]
+    assert 'delay_mm1:s2-s3' in DIM_NAMES
+    assert not any(name.startswith('path_latency_norm:') for name in DIM_NAMES)
+    assert not any(name.startswith('path_loss_norm:') for name in DIM_NAMES)
     assert not any(name.startswith('switch_up:') for name in DIM_NAMES)
     assert 'max_aoi_norm' not in DIM_NAMES
     assert 'fetch_ms_norm' not in DIM_NAMES
 
 
-def test_build_state_returns_45_numbers():
+def test_build_state_returns_51_numbers():
     spec = _spec()
     things = {}
     for host in spec['hosts']:
@@ -63,12 +66,6 @@ def test_build_state_returns_45_numbers():
                                            'txRate': 0}},
             }
         }
-    things[make_thing_id_path('h1', 'srv1')] = {
-        'features': {
-            'quality': {'properties': {'latency_ms': 10.0,
-                                       'packetLoss_pct': 0.0}},
-        }
-    }
     vector = build_state_from_snapshot(
         things, info={'data_fresh': 1.0,
                       'aoi': {
@@ -77,8 +74,17 @@ def test_build_state_returns_45_numbers():
                       }},
         spec=spec,
     )
-    assert len(vector) == 45
+    assert len(vector) == 51
     assert all(isinstance(value, float) for value in vector)
+
+
+def test_mm1_delay_norm_is_finite_and_monotonic():
+    d0 = mm1_delay_norm(0.0)
+    d50 = mm1_delay_norm(0.5)
+    d99 = mm1_delay_norm(0.99)
+    d100 = mm1_delay_norm(1.0)
+    assert 0.0 <= d0 < d50 < d99 <= 1.0
+    assert d100 == d99
 
 
 def test_state_builder_reset_clears_util_history():
@@ -161,7 +167,7 @@ def test_episode_dims_normalize():
 def test_all_dims_in_expected_range_and_no_nan():
     spec = _spec()
     vector = build_state_from_snapshot({}, info={'aoi': {}}, spec=spec)
-    assert len(vector) == 45
+    assert len(vector) == 51
     assert all(not math.isnan(value) for value in vector)
     for value, name in zip(vector, dim_names(spec)):
         high = 5.0 if name.startswith('bw_norm:') else 1.0
@@ -179,8 +185,9 @@ def test_ks_helper_detects_separated_samples():
 
 if __name__ == '__main__':
     tests = [
-        test_dim_names_are_45_and_stable,
-        test_build_state_returns_45_numbers,
+        test_dim_names_are_51_and_stable,
+        test_build_state_returns_51_numbers,
+        test_mm1_delay_norm_is_finite_and_monotonic,
         test_state_builder_reset_clears_util_history,
         test_util_uses_current_bw_not_baseline,
         test_aoi_norm_ignores_irrelevant_things,

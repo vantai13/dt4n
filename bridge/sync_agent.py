@@ -49,7 +49,7 @@ def status_state_in(patch):
 
 
 def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
-        ping_every=5, net_lock=None, stop_event=None, reconcile_every=30):
+        ping_every=20, net_lock=None, stop_event=None, reconcile_every=30):
     log.info('Sync Agent start: period=%.1fs, tol=%.2f, ping_every=%d, reconcile_every=%d',
              period, tol, ping_every, reconcile_every)
 

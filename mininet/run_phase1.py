@@ -62,7 +62,7 @@ def main():
     p.add_argument('--rate', type=str, default='50M', help='tốc độ UDP khi flood')
     p.add_argument('--duration', type=int, default=60, help='giây thu thập metrics')
     p.add_argument('--interval', type=float, default=1.0, help='chu kỳ polling (giây)')
-    p.add_argument('--ping-every', type=int, default=5, help='đo latency mỗi N chu kỳ')
+    p.add_argument('--ping-every', type=int, default=20, help='đo latency mỗi N chu kỳ')
     p.add_argument('--log-path', type=str, default='logs/dt4n_snapshots.jsonl',
                    help='JSONL snapshot log cho validation; mặc định ghi đè mỗi lần chạy')
     p.add_argument('--pretty-log-path', type=str, default='logs/phase1.log',

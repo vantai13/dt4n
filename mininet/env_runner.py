@@ -39,7 +39,7 @@ class EnvRunner:
                  sync_period=1.0, clients=3,
                  bw_backbone=20.0, bw_bottleneck=5.0,
                  convergence_timeout=8.0, do_pingall=False,
-                 ping_every=5, reconcile_every=30,
+                 ping_every=20, reconcile_every=30,
                  steady_cycles=5, steady_tol=0.05,
                  steady_timeout=20.0, steady_min_norm=0.01,
                  hard_every=20, mininet_log_level='warning',
@@ -253,6 +253,12 @@ class EnvRunner:
         fresh_ok, fresh_waited, fresh_aoi_norm = self._wait_data_fresh()
         timings['data_fresh_wait'] = fresh_waited
 
+        # HEALTH GATE: mang-NEN phai khoe TRUOC khi inject su co.
+        # Dat o day, khong dat sau inject: sau inject mang "om" la dung.
+        t = time.monotonic()
+        health = self.assert_baseline_healthy()
+        timings['health_gate'] = time.monotonic() - t
+
         if scenario is not None:
             if self.injection is None:
                 self.injection = InjectionChannel(self.net, self.net_lock)
@@ -275,6 +281,7 @@ class EnvRunner:
             'iperf_count': n_iperf,
             'iperf_baseline': self._iperf_baseline,
             'iperf_leaked': leaked,
+            'health': health,
             'active_scenarios': (
                 self.injection.active() if self.injection is not None else []
             ),
@@ -488,9 +495,6 @@ class EnvRunner:
 
         t0 = time.monotonic()
         try:
-            ping_every = int(getattr(collector, 'ping_every', 0) or 0)
-            if ping_every > 0 and hasattr(collector, '_ping_counter'):
-                collector._ping_counter = ping_every - 1
             snapshot = collector.collect_all()
             things_now = collector_to_things(snapshot)
         except Exception as exc:
@@ -537,6 +541,31 @@ class EnvRunner:
             except (KeyError, TypeError, ValueError):
                 pass
         return total_mbps / float(self.bw_backbone)
+
+    def assert_baseline_healthy(self, thr_min=0.30, max_retries=2):
+        """Health gate: mang-NEN (chua co su co) phai khoe.
+
+        Goi trong soft_reset ngay truoc khi inject scenario. Neu mang nen
+        khong khoe, hard_reset lai de tranh train tren env chet.
+        """
+        for attempt in range(max_retries + 1):
+            thr = self._read_throughput_norm()
+            if thr >= thr_min:
+                return {
+                    'throughput_norm': round(thr, 4),
+                    'attempts': attempt,
+                    'recovered_by_hard_reset': attempt > 0,
+                }
+            log.error('HEALTH GATE FAIL (attempt %d/%d): thr=%.3f < %.2f '
+                      '-> hard_reset lai', attempt, max_retries, thr, thr_min)
+            if attempt < max_retries:
+                self.hard_reset()
+                self._start_episode_traffic()
+                self._wait_steady_state()
+
+        raise RuntimeError(
+            'HEALTH GATE: mang-nen van chet sau %d lan hard_reset (thr=%.3f). '
+            'Dung train — dieu tra ha tang truoc.' % (max_retries, thr))
 
     def _wait_steady_state(self):
         """Wait until throughput is stable for consecutive sync cycles.

@@ -4,7 +4,7 @@
 Ghep 4 manh:
     - EnvRunner        : so huu Mininet + Ditto + threads (da co)
     - scenarios        : sinh su co theo seed (Lesson 5.2)
-    - StateBuilderDraft: doc Ditto -> vector 45 chieu (Lesson 5.3)
+    - StateBuilderDraft: doc Ditto -> vector 51 chieu (Lesson 5.3)
     - RewardCalculator : tinh reward 5 thanh phan (Lesson 5.1, code Phan 2)
     + ActionSpace      : dich action index -> lenh Command Agent
 
@@ -45,13 +45,14 @@ class TwinEnv(gym.Env if gym else object):
         self.t_max = self.cfg.get('t_max_steps', 15)
         self.k_healthy = self.cfg.get('k_healthy', 3)       # khoe lien tiep bao nhieu buoc = thang
         self.recovery_thr = self.cfg.get('recovery_throughput', 0.85)  # nguong coi la khoe
-        self.recovery_loss = self.cfg.get('recovery_loss', 0.05)
 
         # --- 4 manh ghep ---
         self.builder = StateBuilderDraft(spec=self.topology_spec, t_max=self.t_max,
                                          k_healthy=self.k_healthy)
         self.action_map = ActionSpace(self.topology_spec)
-        self.reward_cfg = RewardConfig(**self.cfg.get('reward', {}))
+        reward_cfg = dict(self.cfg.get('reward', {}))
+        reward_cfg.pop('w_loss', None)  # reward v3 removed loss from scoring.
+        self.reward_cfg = RewardConfig(**reward_cfg)
 
         # --- Khai bao khong gian Gym ---
         self._dim_names = dim_names(self.topology_spec)
@@ -99,6 +100,7 @@ class TwinEnv(gym.Env if gym else object):
         self._t = 0
         self._healthy_streak = 0
         self.builder.reset()
+        self.action_map.reset()   # dong bo _link_up voi mang sau soft_reset
 
         # Doc observation dau tien (mang da co su co)
         obs = self._observe()
@@ -132,12 +134,14 @@ class TwinEnv(gym.Env if gym else object):
         # --- 4. Doc state moi ---
         obs = self._observe()
 
-        # --- 5. Trich throughput/loss tu obs de tinh reward ---
+        # --- 5. Trich tin hieu tu obs ---
         thr = self._throughput_from_obs(obs)
-        loss = self._loss_from_obs(obs)
+        max_util = self._max_util_from_obs(obs)
 
         # --- 6. Cap nhat healthy_streak ---
-        healthy_now = (thr >= self.recovery_thr) and (loss <= self.recovery_loss)
+        # Khoe = nhanh nen srv1 phuc hoi throughput. KHONG dung util lam dieu
+        # kien khoe: baseline TCP co the day util len cao ngay ca khi mang tot.
+        healthy_now = (thr >= self.recovery_thr)
         if healthy_now:
             self._healthy_streak += 1
         else:
@@ -146,7 +150,7 @@ class TwinEnv(gym.Env if gym else object):
 
         # --- 7. Tinh reward ---
         breakdown = compute_reward(
-            throughput_norm=thr, loss_norm=loss,
+            throughput_norm=thr,
             action_is_noop=is_noop, just_recovered=just_recovered,
             t_step=self._t, t_max=self.t_max, cfg=self.reward_cfg)
 
@@ -157,7 +161,8 @@ class TwinEnv(gym.Env if gym else object):
         # --- 9. Tra ve + info giau de debug (KHONG cho agent hoc) ---
         info = {
             'reward_breakdown': breakdown.__dict__,
-            'throughput': thr, 'loss': loss,
+            'throughput': thr,
+            'congestion': max_util,
             'healthy_streak': self._healthy_streak,
             'action_is_noop': is_noop,
             'action_requested': cmd,
@@ -177,11 +182,15 @@ class TwinEnv(gym.Env if gym else object):
         return np.asarray(vec, dtype=np.float32)
 
     def _throughput_from_obs(self, obs):
-        # server_rx_norm:srv1 va srv2 la proxy cho throughput toi dich.
+        # srv1 = nhanh NEN (h1->srv1 TCP luon chay). Day la thu chinh phai cuu.
+        # KHONG dung mean srv1/srv2: flood co the lam srv2 dem rac va che mat
+        # su co cuc bo tren nhanh nen.
         i1 = self._dim_names.index('server_rx_norm:srv1')
-        i2 = self._dim_names.index('server_rx_norm:srv2')
-        return float((obs[i1] + obs[i2]) / 2.0)
+        return float(obs[i1])
 
-    def _loss_from_obs(self, obs):
-        i = self._dim_names.index('path_loss_norm:h1-srv1')
-        return float(obs[i])
+    def _max_util_from_obs(self, obs):
+        idxs = [
+            i for i, name in enumerate(self._dim_names)
+            if name.startswith('util:')
+        ]
+        return float(max(obs[i] for i in idxs)) if idxs else 0.0

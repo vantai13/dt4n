@@ -14,14 +14,14 @@ from measurements.scenario_visibility import (  # noqa: E402
 )
 
 
-DIM_ORDER = ['util:s2-s3', 'link_up:s1-s2', 'path_loss_norm:h1-srv1']
+DIM_ORDER = ['util:s2-s3', 'link_up:s1-s2', 'delay_mm1:s2-s3']
 THRESHOLDS = {
     'util:s2-s3':          {'abs_delta_threshold': 0.05, 'degenerate': False,
                             'sigma_robust': 0.0167},
     'link_up:s1-s2':       {'abs_delta_threshold': 0.0,  'degenerate': True,
                             'sigma_robust': 0.0},
-    'path_loss_norm:h1-srv1': {'abs_delta_threshold': 0.02, 'degenerate': False,
-                               'sigma_robust': 0.0067},
+    'delay_mm1:s2-s3':     {'abs_delta_threshold': 0.02, 'degenerate': False,
+                            'sigma_robust': 0.0067},
 }
 
 
@@ -39,7 +39,7 @@ def test_visible_when_one_dim_exceeds_threshold():
 def test_blind_spot_when_nothing_moves_enough():
     # moi chieu chi rung trong nguong -> khong nhin thay -> blind-spot
     baseline = [0.30, 1.0, 0.010]
-    faulted  = [0.33, 1.0, 0.015]   # util +0.03 < 0.05; loss +0.005 < 0.02
+    faulted  = [0.33, 1.0, 0.015]   # util +0.03 < 0.05; delay +0.005 < 0.02
     movements = dimension_movements(baseline, faulted, DIM_ORDER, THRESHOLDS)
     verdict = classify_scenario(movements)
     assert verdict['blind_spot'] is True
@@ -49,7 +49,7 @@ def test_blind_spot_when_nothing_moves_enough():
 def test_degenerate_dim_moves_on_any_change():
     # link_up (degenerate) lat tu 1 -> 0: du delta nho van tinh nhin thay
     baseline = [0.30, 1.0, 0.010]
-    faulted  = [0.31, 0.0, 0.011]   # util & loss trong nguong; chi link_up lat
+    faulted  = [0.31, 0.0, 0.011]   # util & delay trong nguong; chi link_up lat
     movements = dimension_movements(baseline, faulted, DIM_ORDER, THRESHOLDS)
     verdict = classify_scenario(movements)
     assert verdict['visible'] is True

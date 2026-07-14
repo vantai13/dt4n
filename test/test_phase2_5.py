@@ -405,16 +405,15 @@ class _PingTrackingCollector(Collector):
         return {'latency_ms': 1.23, 'packet_loss_pct': 0.0}
 
 
-print('\n== TEST 9: collector không giữ lock khi ping ==')
+print('\n== TEST 9: collector v2 không ping trong collect_all ==')
 tracking_lock = _TrackingLock()
 collector = _PingTrackingCollector(_FakeNet(), ping_every=1,
                                    net_lock=tracking_lock)
 snapshot = collector.collect_all()
-check('ping chạy ngoài net_lock', collector.ping_saw_lock_held is False)
-check('snapshot vẫn có path quality từ ping',
-      snapshot['things']['path-h1-srv1']['features']['quality']['latency_ms'] == 1.23)
-check('path Thing có t_source riêng',
-      isinstance(snapshot['things']['path-h1-srv1'].get('t_source'), float))
+check('collect_all không gọi collect_latency',
+      collector.ping_saw_lock_held is None)
+check('snapshot không sinh path quality từ ping',
+      'path-h1-srv1' not in snapshot['things'])
 
 
 print('\n== TEST 10: collector ping không chiếm shell Mininet ==')

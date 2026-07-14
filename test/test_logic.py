@@ -6,7 +6,8 @@ Chứng minh: parse /proc/net/dev, parse ping, tính rate đều đúng.
 import sys
 sys.path.insert(0, 'bridge')
 import collector as collector_mod
-from collector import (parse_proc_net_dev, parse_ping, compute_rate,
+from collector import (parse_proc_net_dev, parse_proc_net_dev_full,
+                       parse_ping, compute_rate,
                        parse_ovs_dump_ports_state, link_configured_bw,
                        canonical_link_key, link_side_a_intf, Collector)
 
@@ -20,9 +21,9 @@ def check(name, got, want):
 
 print("== TEST 1: parse_proc_net_dev (đọc counter từ /proc/net/dev) ==")
 sample = """Inter-|   Receive                                                |  Transmit
- face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets
-    lo:    1234      10    0    0    0     0          0         0    1234      10
- h1-eth0:  98765     321    0    0    0     0          0         0   54321     210
+ face |bytes    packets errs drop fifo frame compressed multicast|bytes    packets errs drop fifo colls carrier compressed
+    lo:    1234      10    0    0    0     0          0         0    1234      10    0    0    0     0       0          0
+ h1-eth0:  98765     321    0    2    0     0          0         0   54321     210    0    3    0     0       0          0
 """
 check("rx,tx của h1-eth0", parse_proc_net_dev(sample, 'h1-eth0'), (98765, 54321))
 check("interface không tồn tại -> None", parse_proc_net_dev(sample, 'h9-eth0'), None)
@@ -37,6 +38,12 @@ ifconfig_like = """h1-eth0: flags=4163<UP,BROADCAST,RUNNING,MULTICAST>  mtu 1500
 """
 check("output ifconfig bị trộn -> None, không crash",
       parse_proc_net_dev(ifconfig_like, 'h1-eth0'), None)
+check("full counters đọc bytes/packets/drop",
+      parse_proc_net_dev_full(sample, 'h1-eth0'),
+      {
+          'rx_bytes': 98765, 'rx_packets': 321, 'rx_drop': 2,
+          'tx_bytes': 54321, 'tx_packets': 210, 'tx_drop': 3,
+      })
 
 print("\n== TEST 2: parse_ping (đọc latency + packet loss) ==")
 ping_ok = """PING 10.0.0.1 (10.0.0.1) 56(84) bytes of data.
@@ -138,12 +145,22 @@ check("side A là intf phía s2",
 collector = object.__new__(Collector)
 collector._prev_link = {}
 old_read_intf_counters = collector_mod.read_intf_counters
-counter_values = [(1000, 2000), (1400, 2600)]
+old_read_intf_counters_full = collector_mod.read_intf_counters_full
+counter_values = [
+    {
+        'rx_bytes': 1000, 'rx_packets': 10, 'rx_drop': 0,
+        'tx_bytes': 2000, 'tx_packets': 20, 'tx_drop': 0,
+    },
+    {
+        'rx_bytes': 1400, 'rx_packets': 14, 'rx_drop': 1,
+        'tx_bytes': 2600, 'tx_packets': 26, 'tx_drop': 2,
+    },
+]
 
-def fake_read_intf_counters(_intf):
+def fake_read_intf_counters_full(_intf):
     return counter_values.pop(0)
 
-collector_mod.read_intf_counters = fake_read_intf_counters
+collector_mod.read_intf_counters_full = fake_read_intf_counters_full
 try:
     no_rate = Collector.collect_link(collector, traffic_link)
     check("collect_link cũ không tự thêm traffic khi now_ts=None",
@@ -157,8 +174,11 @@ try:
           second['features']['traffic']['rxRate'], 200.0)
     check("link txRate = delta tx / dt",
           second['features']['traffic']['txRate'], 300.0)
+    check("link lossPct = delta drop / (delta tx packets + drop)",
+          second['features']['traffic']['lossPct'], 33.333)
 finally:
     collector_mod.read_intf_counters = old_read_intf_counters
+    collector_mod.read_intf_counters_full = old_read_intf_counters_full
 
 print("\n" + "="*50)
 print("KẾT QUẢ: %d pass, %d fail" % (passed, failed))

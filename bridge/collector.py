@@ -63,6 +63,37 @@ def parse_proc_net_dev(text, iface):
     return None
 
 
+def parse_proc_net_dev_full(text, iface):
+    """Return full counters for `iface` from /proc/net/dev.
+
+    This extends parse_proc_net_dev without changing its tuple return contract.
+    /proc/net/dev columns after ':':
+      Receive : bytes[0] packets[1] errs[2] drop[3] ...
+      Transmit: bytes[8] packets[9] errs[10] drop[11] ...
+    """
+    for line in text.splitlines():
+        if ':' not in line:
+            continue
+        name, stats = line.split(':', 1)
+        if name.strip() != iface:
+            continue
+        cols = stats.split()
+        if len(cols) <= 11:
+            continue
+        try:
+            return {
+                'rx_bytes': int(cols[0]),
+                'rx_packets': int(cols[1]),
+                'rx_drop': int(cols[3]),
+                'tx_bytes': int(cols[8]),
+                'tx_packets': int(cols[9]),
+                'tx_drop': int(cols[11]),
+            }
+        except (ValueError, IndexError):
+            continue
+    return None
+
+
 def read_host_net_dev(host):
     """Read /proc/net/dev for a Mininet host without using its interactive shell.
 
@@ -140,6 +171,29 @@ def read_intf_counters(intf):
             return None
 
     return parse_proc_net_dev(text, iface)
+
+
+def read_intf_counters_full(intf):
+    """Return full interface counters, including packet/drop counters."""
+    node = intf.node
+    iface = intf.name
+    is_switch = hasattr(node, 'dpid') or node.__class__.__name__.endswith('Switch')
+    pid = getattr(node, 'pid', None)
+
+    try:
+        if is_switch or not pid:
+            with open('/proc/net/dev') as f:
+                text = f.read()
+        else:
+            with open('/proc/%s/net/dev' % pid) as f:
+                text = f.read()
+    except OSError:
+        try:
+            text = node.cmd('cat /proc/net/dev')
+        except Exception:
+            return None
+
+    return parse_proc_net_dev_full(text, iface)
 
 
 def canonical_link_key(a, b):
@@ -345,7 +399,7 @@ class Collector:
     def __init__(self, net, interval=1.0, server_names=('srv1', 'srv2'),
                  log_path='logs/dt4n_snapshots.jsonl',
                  pretty_log_path='logs/phase1.log',
-                 cmd_timeout=3, ping_every=5, overwrite=True,
+                 cmd_timeout=3, ping_every=20, overwrite=True,
                  net_lock=None):
         self.net = net
         self.interval = interval                 # chu kỳ polling (giây) — Lesson 1.4
@@ -353,10 +407,10 @@ class Collector:
         self.log_path = log_path                  # ghi mỗi snapshot 1 dòng JSON (JSONL)
         self.pretty_log_path = pretty_log_path    # log dễ đọc cho người xem demo
         self.cmd_timeout = cmd_timeout            # timeout lệnh (tránh treo cả vòng lặp)
-        self.ping_every = ping_every              # đo latency mỗi N chu kỳ (ping tốn + tự nhiễu)
+        self.ping_every = ping_every              # legacy option; collect_all no longer pings
         self.overwrite = overwrite                # True -> lần chạy sau đè log lần trước
         self._prev = {}                           # lưu (rxBytes,txBytes,timestamp) chu kỳ trước theo host
-        self._prev_link = {}                      # link_key -> (rxBytes,txBytes,timestamp)
+        self._prev_link = {}                      # link_key -> dict counters + timestamp
         self._ping_counter = 0                    # đếm chu kỳ để đo latency THƯA hơn
         self.net_lock = net_lock                  # Mininet node.cmd không thread-safe
 
@@ -439,10 +493,12 @@ class Collector:
 
     # ---- đo LATENCY (thưa hơn — Lesson 1.4: không phải metric nào cũng cùng tần suất) ----
     def collect_latency(self, src, dst_ip):
-        # -i 0.2: 3 gói mất khoảng 0.6s thay vì mặc định khoảng 2s.
+        # Ping tren duong TCP bao hoa co the timeout lau. Mot goi va timeout
+        # ngan van du lam tin hieu latency/loss cho state, nhung khong lam
+        # sync cycle keo dai ~1.4s.
         out = run_host_namespace_command(
             src,
-            ['ping', '-c', '3', '-i', '0.2', '-W', '1', dst_ip],
+            ['ping', '-c', '1', '-W', '0.3', dst_ip],
             timeout=self.cmd_timeout,
         )
         return parse_ping(out)
@@ -452,7 +508,7 @@ class Collector:
 
         net.configLinkStatus(a, b, 'down') sẽ kéo interface ở 2 đầu xuống, nên
         chỉ cần kiểm tra isUp() của cả 2 interface để phản ánh trạng thái link.
-        now_ts=None giữ hành vi cũ; now_ts=float thì thêm traffic rxRate/txRate.
+        now_ts=None giữ hành vi cũ; now_ts=float thì thêm traffic rxRate/txRate/lossPct.
         """
         a = link.intf1.node.name
         b = link.intf2.node.name
@@ -466,20 +522,38 @@ class Collector:
             features['capacity'] = {'bwMbps': bw}
         if now_ts is not None:
             key = canonical_link_key(a, b)
-            counters = read_intf_counters(link_side_a_intf(link))
+            counters = read_intf_counters_full(link_side_a_intf(link))
             if counters is not None:
-                rx, tx = counters
                 prev = self._prev_link.get(key)
                 if prev is None:
                     rx_rate = tx_rate = 0.0
+                    loss_pct = 0.0
                 else:
-                    dt = now_ts - prev[2]
-                    rx_rate = compute_rate(rx, prev[0], dt)
-                    tx_rate = compute_rate(tx, prev[1], dt)
-                self._prev_link[key] = (rx, tx, now_ts)
+                    dt = now_ts - prev['ts']
+                    rx_rate = compute_rate(
+                        counters['rx_bytes'], prev['rx_bytes'], dt)
+                    tx_rate = compute_rate(
+                        counters['tx_bytes'], prev['tx_bytes'], dt)
+                    d_tx = max(0, counters['tx_packets'] - prev['tx_packets'])
+                    d_drop = (
+                        max(0, counters['tx_drop'] - prev['tx_drop']) +
+                        max(0, counters['rx_drop'] - prev['rx_drop'])
+                    )
+                    total = d_tx + d_drop
+                    loss_pct = (100.0 * d_drop / total) if total > 0 else 0.0
+                    loss_pct = max(0.0, min(100.0, loss_pct))
+                self._prev_link[key] = {
+                    'rx_bytes': counters['rx_bytes'],
+                    'tx_bytes': counters['tx_bytes'],
+                    'tx_packets': counters['tx_packets'],
+                    'tx_drop': counters['tx_drop'],
+                    'rx_drop': counters['rx_drop'],
+                    'ts': now_ts,
+                }
                 features['traffic'] = {
                     'rxRate': round(rx_rate, 2),
                     'txRate': round(tx_rate, 2),
+                    'lossPct': round(loss_pct, 3),
                 }
         return {
             'attributes': {'type': 'link', 'endpointA': a, 'endpointB': b},
@@ -488,11 +562,10 @@ class Collector:
 
     # ---- gom TẤT CẢ thành 1 snapshot ----
     def collect_all(self):
-        """Thu snapshot theo 2 giai đoạn để không giữ net_lock lúc ping.
+        """Thu snapshot nhanh từ counter/status, không ping trong vòng nóng.
 
-        Một lock duy nhất vẫn bảo vệ tài nguyên chung `net`, nhưng vùng giữ lock
-        chỉ bao quanh các thao tác đọc nhanh. Ping là I/O chậm nên chạy sau khi
-        đã nhả lock, giúp Command Agent chen vào tắt/bật link ngay.
+        State v2 suy delay từ util counter (M/M/1), nên không còn cần path
+        latency/loss từ ping. Bỏ ping ở đây giúp sync cycle phẳng hơn.
         """
         lock = self.net_lock if self.net_lock is not None else nullcontext()
         with lock:
@@ -525,36 +598,6 @@ class Collector:
                 data = self.collect_link(link, now_ts)
                 data['t_source'] = now_ts
                 snapshot['things'][key] = data
-
-            # Chỉ quyết định và lấy sẵn tham số ping trong lock; chưa ping ở đây.
-            self._ping_counter += 1
-            ping_ctx = None
-            if self.ping_every > 0 and self._ping_counter % self.ping_every == 0 and len(self.net.hosts) >= 2:
-                host_names = [h.name for h in self.net.hosts]
-                h1 = self.net.get('h1') if 'h1' in host_names else self.net.hosts[0]
-                srv = self.net.get('srv1') if 'srv1' in host_names else self.net.hosts[-1]
-                ping_ctx = {
-                    'src': h1,
-                    'dst_ip': srv.IP(),
-                    'src_name': h1.name,
-                    'dst_name': srv.name,
-                }
-
-        # Hết lock: ping chậm không còn chặn Command Agent.
-        if ping_ctx is not None:
-            t_ping_start = time.time()
-            lat = self.collect_latency(ping_ctx['src'], ping_ctx['dst_ip'])
-            t_ping_end = time.time()
-            t_source_path = (t_ping_start + t_ping_end) / 2.0
-            key = 'path-%s-%s' % (ping_ctx['src_name'], ping_ctx['dst_name'])
-            snapshot['things'][key] = {
-                'attributes': {'type': 'path',
-                               'src': ping_ctx['src_name'],
-                               'dst': ping_ctx['dst_name']},
-                'features': {'quality': {'latency_ms': lat['latency_ms'],
-                                         'packetLoss_pct': lat['packet_loss_pct']}},
-                't_source': t_source_path,
-            }
         return snapshot
 
     # ---- VÒNG LẶP chu kỳ ----

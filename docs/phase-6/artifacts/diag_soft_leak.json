@@ -1,0 +1,539 @@
+{
+  "episodes": 30,
+  "toggle_bias": 0.6,
+  "trend": {
+    "mean_base_first_third": 1.0844,
+    "mean_base_last_third": 1.0778,
+    "n_health_retries": 1,
+    "infra_problem": true,
+    "diagnosis": "RACE (retry rai rac, gate cuu)"
+  },
+  "rows": [
+    {
+      "episode": 1,
+      "scenario": {
+        "type": "LinkDown",
+        "link_key": "s2-s3",
+        "factor": 0.9782360292566549,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "health_throughput": 1.0454,
+      "final_throughput": 0.9789,
+      "steps": 5,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 2,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s1-s3",
+        "factor": 0.5456823478478172,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "health_throughput": 1.089,
+      "final_throughput": 0.9741,
+      "steps": 3,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 3,
+      "scenario": {
+        "type": "LinkDown",
+        "link_key": "s2-s3",
+        "factor": 0.9840171303408619,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "health_throughput": 1.0833,
+      "final_throughput": 0.9765,
+      "steps": 12,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 4,
+      "scenario": {
+        "type": "LinkDown",
+        "link_key": "s1-s3",
+        "factor": 0.9858521000219769,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "health_throughput": 1.0704,
+      "final_throughput": 0.9765,
+      "steps": 3,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 5,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv1",
+        "rate_mbps": 49
+      },
+      "health_throughput": 1.0874,
+      "final_throughput": 1.0,
+      "steps": 11,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 6,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv2",
+        "rate_mbps": 58
+      },
+      "health_throughput": 1.1019,
+      "final_throughput": 0.1908,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 7,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s1-s2",
+        "factor": 0.298333506355852,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "health_throughput": 1.0759,
+      "final_throughput": 0.0549,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 8,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv2",
+        "rate_mbps": 51
+      },
+      "health_throughput": 1.0693,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 9,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.501348488489651,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "health_throughput": 1.1236,
+      "final_throughput": 0.0061,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 10,
+      "scenario": {
+        "type": "LinkDown",
+        "link_key": "s1-s2",
+        "factor": 0.983342592074842,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "health_throughput": 1.0978,
+      "final_throughput": 0.2453,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 11,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h1",
+        "dst": "srv2",
+        "rate_mbps": 39
+      },
+      "health_throughput": 1.0783,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 12,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.5936311194932706,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "health_throughput": 1.0707,
+      "final_throughput": 0.9754,
+      "steps": 3,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 13,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h2",
+        "dst": "srv2",
+        "rate_mbps": 32
+      },
+      "health_throughput": 1.0966,
+      "final_throughput": 0.6554,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 14,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv1",
+        "rate_mbps": 31
+      },
+      "health_throughput": 1.0824,
+      "final_throughput": 0.9952,
+      "steps": 5,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 15,
+      "scenario": {
+        "type": "CongestionShift",
+        "degrade_link": "s1-s3",
+        "factor": 0.5954270550670682,
+        "delay": "2ms",
+        "baseline": 20.0,
+        "flood_src": "h1",
+        "flood_dst": "srv1",
+        "rate_mbps": 26
+      },
+      "health_throughput": 1.0784,
+      "final_throughput": 1.0,
+      "steps": 12,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 16,
+      "scenario": {
+        "type": "LinkDown",
+        "link_key": "s1-s3",
+        "factor": 0.9848825553545765,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "health_throughput": 1.0936,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 17,
+      "scenario": {
+        "type": "CongestionShift",
+        "degrade_link": "s1-s3",
+        "factor": 0.5333156121699296,
+        "delay": "2ms",
+        "baseline": 20.0,
+        "flood_src": "h1",
+        "flood_dst": "srv2",
+        "rate_mbps": 25
+      },
+      "health_throughput": 1.0817,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 18,
+      "scenario": {
+        "type": "CongestionShift",
+        "degrade_link": "s1-s2",
+        "factor": 0.4646176454761128,
+        "delay": "2ms",
+        "baseline": 20.0,
+        "flood_src": "h2",
+        "flood_dst": "srv1",
+        "rate_mbps": 32
+      },
+      "health_throughput": 1.0769,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 19,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv2",
+        "rate_mbps": 32
+      },
+      "health_throughput": 1.0947,
+      "final_throughput": 0.6576,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 1,
+      "health_recovered": true
+    },
+    {
+      "episode": 20,
+      "scenario": {
+        "type": "CongestionShift",
+        "degrade_link": "s1-s2",
+        "factor": 0.4154457863355633,
+        "delay": "2ms",
+        "baseline": 20.0,
+        "flood_src": "h3",
+        "flood_dst": "srv1",
+        "rate_mbps": 26
+      },
+      "health_throughput": 1.0853,
+      "final_throughput": 0.6675,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 21,
+      "scenario": {
+        "type": "CongestionShift",
+        "degrade_link": "s2-s3",
+        "factor": 0.5543538152602092,
+        "delay": "2ms",
+        "baseline": 5.0,
+        "flood_src": "h3",
+        "flood_dst": "srv1",
+        "rate_mbps": 35
+      },
+      "health_throughput": 1.0776,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 22,
+      "scenario": {
+        "type": "LinkDown",
+        "link_key": "s1-s2",
+        "factor": 0.9712627424113273,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "health_throughput": 1.0208,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 23,
+      "scenario": {
+        "type": "CongestionShift",
+        "degrade_link": "s1-s2",
+        "factor": 0.4895396077386809,
+        "delay": "2ms",
+        "baseline": 20.0,
+        "flood_src": "h2",
+        "flood_dst": "srv1",
+        "rate_mbps": 26
+      },
+      "health_throughput": 1.0764,
+      "final_throughput": 0.9937,
+      "steps": 13,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 24,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s1-s3",
+        "factor": 0.35854905969930156,
+        "delay": "2ms",
+        "baseline": 20.0
+      },
+      "health_throughput": 1.0845,
+      "final_throughput": 0.9811,
+      "steps": 3,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 25,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.21230741405554643,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "health_throughput": 1.0827,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 26,
+      "scenario": {
+        "type": "CongestionShift",
+        "degrade_link": "s1-s3",
+        "factor": 0.5490802024210493,
+        "delay": "2ms",
+        "baseline": 20.0,
+        "flood_src": "h3",
+        "flood_dst": "srv1",
+        "rate_mbps": 38
+      },
+      "health_throughput": 1.0884,
+      "final_throughput": 0.6723,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 27,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.3017892435936469,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "health_throughput": 1.0802,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 28,
+      "scenario": {
+        "type": "CongestionShift",
+        "degrade_link": "s2-s3",
+        "factor": 0.5147325073919199,
+        "delay": "2ms",
+        "baseline": 5.0,
+        "flood_src": "h2",
+        "flood_dst": "srv1",
+        "rate_mbps": 35
+      },
+      "health_throughput": 1.0849,
+      "final_throughput": 0.9952,
+      "steps": 3,
+      "terminated": 1,
+      "truncated": 0,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 29,
+      "scenario": {
+        "type": "TrafficFlood",
+        "src": "h3",
+        "dst": "srv2",
+        "rate_mbps": 53
+      },
+      "health_throughput": 1.0946,
+      "final_throughput": 0.0,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    },
+    {
+      "episode": 30,
+      "scenario": {
+        "type": "LinkDegrade",
+        "link_key": "s2-s3",
+        "factor": 0.20541018899624197,
+        "delay": "2ms",
+        "baseline": 5.0
+      },
+      "health_throughput": 1.0883,
+      "final_throughput": 0.6554,
+      "steps": 15,
+      "terminated": 0,
+      "truncated": 1,
+      "health_attempts": 0,
+      "health_recovered": false
+    }
+  ]
+}

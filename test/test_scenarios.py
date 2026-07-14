@@ -14,7 +14,7 @@ if str(ROOT) not in sys.path:
 from mininet.topology_meta import toggleable_links  # noqa: E402
 import mininet.traffic as traffic_mod  # noqa: E402
 from rl.injection import InjectionChannel  # noqa: E402
-from rl.oracle_policy import oracle_action, oracle_feasible  # noqa: E402
+from rl.oracle_policy import oracle_action, oracle_actions, oracle_feasible  # noqa: E402
 from rl.scenarios import (  # noqa: E402
     CongestionShift,
     FLOOD_PORT,
@@ -295,7 +295,12 @@ def test_oracle_names_recovery_action():
         CongestionShift('s1-s3', 0.5, '2ms', 20.0, 'h1', 'srv1', 25)
     ) == ('bw_up', 's1-s3')
     assert oracle_action(TrafficFlood('h1', 'srv1', 40)) == (
-        'bw_up', 's2-s3')
+        'bw_up', 'h1-s1')
+    assert oracle_actions(TrafficFlood('h1', 'srv1', 40))[:3] == [
+        ('bw_up', 'h1-s1'),
+        ('bw_up', 's1-s2'),
+        ('bw_up', 's2-srv1'),
+    ]
     assert oracle_feasible(TrafficFlood('h1', 'srv1', 40), max_steps=10)
 
 

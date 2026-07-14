@@ -87,7 +87,7 @@ def main():
                    help='số giây tối đa chờ controller static hội tụ')
     p.add_argument('--stp-wait', type=float, default=None,
                    help='deprecated: alias cho --convergence-timeout, không sleep STP')
-    p.add_argument('--ping-every', type=int, default=5,
+    p.add_argument('--ping-every', type=int, default=20,
                    help='đo latency mỗi N chu kỳ; 0 = tắt ping probe')
     p.add_argument('--reconcile-every', type=int, default=30,
                    help='cứ N chu kỳ gửi full state; 0 = tắt reconciliation')

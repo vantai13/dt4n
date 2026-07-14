@@ -203,7 +203,7 @@ def main():
         'n_blind_spots': len(blind_spots),
         'blind_spot_seeds': [r['seed'] for r in blind_spots],
         'decision_hint': (
-            '45 chieu DU: giu Lua chon B, khong them chieu.'
+            'State hien tai DU: khong can them chieu quan sat luc nay.'
             if not blind_spots else
             'CO blind-spot: can them path probe (Lua chon A) hoac rang buoc scenario.'
         ),

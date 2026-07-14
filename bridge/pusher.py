@@ -15,6 +15,7 @@ NGUYÊN TẮC (Lesson 2.4 Phần 2):
 """
 
 import logging
+import os
 import random
 import time
 
@@ -31,6 +32,14 @@ MAX_RETRIES  = 3       # số lần thử LẠI sau lần đầu (tổng tối �
 BASE_BACKOFF = 1.0     # giây — thời gian chờ gốc
 MAX_BACKOFF  = 8.0     # giây — trần chờ (không để backoff phình vô hạn)
 JITTER       = 0.3     # ±30% nhiễu ngẫu nhiên — chống thundering herd
+
+# ---- Chế độ fast-fail cho RL training/diagnostic ----
+# Production ưu tiên bền: retry kiên nhẫn để không mất update.
+# Training ưu tiên nhịp ổn định: Ditto treo thì bỏ nhanh, cycle sau bù lại.
+FAST_PUSH = os.environ.get('DT4N_FAST_PUSH', '0') == '1'
+if FAST_PUSH:
+    MAX_RETRIES = 0
+FAST_PUSH_TIMEOUT = float(os.environ.get('DT4N_FAST_PUSH_TIMEOUT', '1.0'))
 
 # Status code coi là TẠM THỜI -> đáng retry. 4xx KHÔNG nằm đây (vĩnh viễn).
 RETRY_STATUSES = {408, 429, 500, 502, 503, 504}
@@ -55,12 +64,13 @@ def patch_thing(thing_id, features_patch, session=None):
         else {'features': features_patch}
     url = '%s/things/%s' % (DITTO_BASE_URL, thing_id)
     http = session or requests
+    timeout = FAST_PUSH_TIMEOUT if FAST_PUSH else HTTP_TIMEOUT
 
     # range(MAX_RETRIES+1): lần đầu (attempt=0) + MAX_RETRIES lần thử lại
     for attempt in range(MAX_RETRIES + 1):
         try:
             r = http.patch(url, json=body, headers=MERGE_PATCH_HEADERS,
-                           auth=DITTO_AUTH, timeout=HTTP_TIMEOUT)
+                           auth=DITTO_AUTH, timeout=timeout)
 
             # --- THÀNH CÔNG ---
             if r.status_code in (200, 204):
@@ -95,7 +105,7 @@ def patch_thing(thing_id, features_patch, session=None):
                             thing_id, type(e).__name__, wait)
                 time.sleep(wait)
                 continue
-            log.error('PATCH %s bỏ cuộc sau %d lần: %s', thing_id, MAX_RETRIES, e)
+            log.error('PATCH %s bỏ cuộc sau %d lần: %s', thing_id, attempt + 1, e)
             return False
 
         except Exception as e:

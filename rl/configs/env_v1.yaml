@@ -82,11 +82,12 @@ noise:
   source: docs/phase-5/artifacts/rate_noise_final.json
 
 state:
-  dims: 45
+  dims: 51
   state_builder: rl.state_builder_draft
-  known_gap_loss: >
-    No per-link loss in v1. V5 must test whether TrafficFlood cases not on the
-    h1->srv1 probe path still move at least one state dimension by >3 sigma.
+  version: state_v2_util_mm1
+  note: >
+    Path ping latency/loss dimensions were removed. Per-link delay_mm1 is
+    inferred from util via an M/M/1 curve; reward remains throughput-centric.
 
 budget:
   hard_every: 20

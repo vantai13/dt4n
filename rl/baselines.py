@@ -40,11 +40,11 @@ class RuleBasedPolicy:
 
     Logic (chi nhin state, khong biet scenario):
       1. Neu link nao util_avg3 > u_hi  -> bw_up dung link do (action 1+i).
-      2. Neu chua, va loss cao + throughput thap -> bw_up link backbone tac
-         nhat (proxy cho TrafficFlood ma oracle biet la 's2-s3').
+      2. Neu chua, va throughput nhanh nen srv1 thap -> bw_up link util cao
+         nhat (neu khong ro thi fallback s2-s3).
       3. Con lai (mang khoe hoac khong ro) -> no-op.
 
-    Cac nguong (u_hi, loss_hi, thr_lo) la "hyperparameter" cua rule-based,
+    Cac nguong (u_hi, thr_lo) la "hyperparameter" cua rule-based,
     TINH CHINH tren TRAIN_SEEDS cho cong bang voi agent. Gia tri duoi la
     diem khoi dau hop ly; chot sau khi chay tren TRAIN_SEEDS.
     """
@@ -55,13 +55,11 @@ class RuleBasedPolicy:
         self.links = sorted(baseline_bw(spec, 20.0, 5.0).keys())   # thu tu canonical
         self.names = dim_names(spec)
         self.u_hi = u_hi
-        self.loss_hi = loss_hi
+        self.loss_hi = loss_hi  # legacy ctor arg; loss dim was removed in state v2.
         self.thr_lo = thr_lo
         # chi so cac chieu can doc (tinh 1 lan, tranh .index() moi buoc)
         self._util_avg3_idx = [self.names.index('util_avg3:%s' % l) for l in self.links]
         self._i_thr1 = self.names.index('server_rx_norm:srv1')
-        self._i_thr2 = self.names.index('server_rx_norm:srv2')
-        self._i_loss = self.names.index('path_loss_norm:h1-srv1')
         # action index: 1+i = bw_up link thu i (khop ActionSpace layout)
         self._bw_up_base = 1
         # link backbone tac nhat de noi khi flood (oracle goi y 's2-s3')
@@ -69,17 +67,18 @@ class RuleBasedPolicy:
 
     def select_action(self, state, epsilon=None):
         util = np.array([state[i] for i in self._util_avg3_idx])
-        thr = (state[self._i_thr1] + state[self._i_thr2]) / 2.0
-        loss = state[self._i_loss]
+        thr = state[self._i_thr1]
 
         # Luat 1: link nghen nhat vuot nguong -> noi chinh no
         i_max = int(np.argmax(util))
         if util[i_max] > self.u_hi:
             return self._bw_up_base + i_max            # bw_up(link i_max)
 
-        # Luat 2: loss cao + throughput thap -> noi backbone s2-s3
-        if loss > self.loss_hi and thr < self.thr_lo:
-            return self._bw_up_base + self._i_s2s3     # bw_up(s2-s3)
+        # Luat 2: throughput nhanh nen thap -> noi link dang tai nhat.
+        if thr < self.thr_lo:
+            if util[i_max] > 0.05:
+                return self._bw_up_base + i_max
+            return self._bw_up_base + self._i_s2s3
 
         # Luat 3: khoe / khong ro -> khong lam gi
         return 0

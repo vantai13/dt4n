@@ -18,20 +18,26 @@ if ROOT not in sys.path:
 from bridge.ditto_common import (
     make_thing_id_host,
     make_thing_id_link,
-    make_thing_id_path,
 )
 from mininet.topology_meta import baseline_bw, canonical, load_spec
 
 
 DEFAULT_SPEC_PATH = 'ditto/topology_spec.json'
 DEFAULT_BW_BACKBONE = 20.0
-PATH_LATENCY_DIVISOR = 100.0
-PATH_LOSS_DIVISOR = 100.0
 AOI_NORM_DIVISOR = 5.0
 AOI_PERCENTILE = 0.95
 BW_NORM_CLIP = 5.0
 DEFAULT_T_MAX = 30
 DEFAULT_K_HEALTHY = 3
+
+# --- M/M/1 delay model (suy delay tu util, KHONG ping) ---
+# delay_queue = base + K * rho/(1-rho), rho = util (tai chuan hoa).
+# Khi rho->1, hang doi dai -> delay tang phi tuyen; cap rho < 1 de tranh
+# chia 0 vi queue thuc te huu han.
+MM1_BASE_MS = 2.0
+MM1_K_MS = 6.0
+MM1_RHO_CAP = 0.99
+MM1_DELAY_NORM = 60.0
 
 
 def _link_endpoints(link):
@@ -63,7 +69,6 @@ def dynamic_thing_ids(spec):
         ids.add(make_thing_id_host(name))
     for link in spec.get('links', []):
         ids.add(make_thing_id_link(*_link_endpoints(link)))
-    ids.add(make_thing_id_path('h1', 'srv1'))
     return ids
 
 
@@ -77,11 +82,10 @@ def dim_names(spec=None):
     names += ['bw_norm:%s' % key for key in links]
     names += ['util:%s' % key for key in links]
     names += ['util_avg3:%s' % key for key in links]
+    names += ['delay_mm1:%s' % key for key in links]
     names += ['host_up:%s' % name for name in hosts]
     names += ['server_rx_norm:%s' % name for name in servers]
     names += [
-        'path_latency_norm:h1-srv1',
-        'path_loss_norm:h1-srv1',
         'data_fresh',
         'aoi_norm',
         'step_progress',
@@ -114,6 +118,13 @@ def _clip(value, lo=0.0, hi=1.0):
     return lo if value < lo else hi if value > hi else value
 
 
+def mm1_delay_norm(util):
+    """Suy delay tu util bang M/M/1, tra ve delay chuan hoa [0,1]."""
+    rho = min(float(util), MM1_RHO_CAP)
+    delay_ms = MM1_BASE_MS + MM1_K_MS * rho / (1.0 - rho)
+    return _clip(delay_ms / MM1_DELAY_NORM, 0.0, 1.0)
+
+
 def _percentile(values, q):
     if not values:
         return 0.0
@@ -128,7 +139,7 @@ def _percentile(values, q):
 
 
 class StateBuilderDraft:
-    """45-dimensional state-vector builder with resettable util history."""
+    """51-dimensional state-vector builder with resettable util history."""
 
     def __init__(self, spec=None, util_window=3, bw_backbone=DEFAULT_BW_BACKBONE,
                  t_max=DEFAULT_T_MAX, k_healthy=DEFAULT_K_HEALTHY):
@@ -206,6 +217,9 @@ class StateBuilderDraft:
             hist.append(utils[key])
             values.append(sum(hist) / len(hist) if hist else 0.0)
 
+        for key in self.links:
+            values.append(mm1_delay_norm(utils[key]))
+
         for name in self.hosts:
             values.append(_state_up(things.get(make_thing_id_host(name), {})))
 
@@ -214,13 +228,6 @@ class StateBuilderDraft:
                                   'traffic')
             rx_mbps = _num(traffic.get('rxRate')) * 8.0 / 1e6
             values.append(_clip(rx_mbps / max(self.bw_backbone, 1e-9)))
-
-        path = things.get(make_thing_id_path('h1', 'srv1'), {})
-        quality = _properties(path, 'quality')
-        values.append(_clip(_num(quality.get('latency_ms')) /
-                            PATH_LATENCY_DIVISOR))
-        values.append(_clip(_num(quality.get('packetLoss_pct')) /
-                            PATH_LOSS_DIVISOR))
 
         values.append(_clip(_num(info.get('data_fresh'), 1.0)))
         values.append(self._aoi_norm(info))

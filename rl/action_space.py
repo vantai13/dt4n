@@ -41,6 +41,15 @@ class ActionSpace:
         # Nho trang thai link up/down de toggle dung chieu (can dong bo voi env)
         self._link_up = {l: True for l in self.toggle_links}
 
+    def reset(self):
+        """Goi moi episode trong TwinEnv.reset().
+
+        Sau soft_reset -> _restore_links, moi link o tang Mininet deu "up".
+        Dict _link_up phai dong bo lai voi thuc te do, neu khong toggle se
+        gui lenh nguoc chieu va state leak tich luy qua cac episode.
+        """
+        self._link_up = {l: True for l in self.toggle_links}
+
     def is_noop(self, action):
         return self._table[int(action)][0] == 'noop'
 
