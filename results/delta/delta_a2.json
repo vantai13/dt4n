@@ -1,0 +1,227 @@
+{
+  "bw_high_mbps": 15.0,
+  "bw_low_mbps": 5.0,
+  "delta_all_max_s": 0.7452066800033208,
+  "delta_max_s": 0.7452066800033208,
+  "delta_mean_s": 0.73658745549983,
+  "delta_p95_s": 0.745089456999267,
+  "delta_s_recommended": 1.045089456999267,
+  "demand_a_mbps": 18.0,
+  "demand_b_mbps": 18.0,
+  "failed_repeats": 0,
+  "generated_at_epoch": 1784043601.3927383,
+  "margin_s": 0.3,
+  "measured": true,
+  "notes": [
+    "delta_s_recommended = p95(stable measurements) + margin.",
+    "Goodput is read from host-srv1/host-srv2 rxRate, matching TwinEnvA2.",
+    "If failed_repeats is non-zero, inspect samples before trusting p95."
+  ],
+  "poll_s": 0.2,
+  "repeats": 20,
+  "samples": [
+    {
+      "click_monotonic": 42753.669811817,
+      "delta_s": 0.7328293210011907,
+      "last_goodput": {
+        "gA": 14.9698408,
+        "gB": 14.9698408,
+        "total": 29.9396816
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42755.21394165,
+      "delta_s": 0.7335954959999071,
+      "last_goodput": {
+        "gA": 14.98746064,
+        "gB": 15.07940824,
+        "total": 30.06686888
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42756.755871788,
+      "delta_s": 0.7347512260021176,
+      "last_goodput": {
+        "gA": 15.05223736,
+        "gB": 15.05223736,
+        "total": 30.10447472
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42758.298200391,
+      "delta_s": 0.7344009119988186,
+      "last_goodput": {
+        "gA": 15.05449144,
+        "gB": 15.05449144,
+        "total": 30.10898288
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42760.628460797,
+      "delta_s": 0.7436407870045514,
+      "last_goodput": {
+        "gA": 14.962227519999999,
+        "gB": 14.962227519999999,
+        "total": 29.924455039999998
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42762.182212714,
+      "delta_s": 0.732988095995097,
+      "last_goodput": {
+        "gA": 14.912606,
+        "gB": 15.03687776,
+        "total": 29.94948376
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42763.724485665,
+      "delta_s": 0.735669424997468,
+      "last_goodput": {
+        "gA": 15.063325359999999,
+        "gB": 15.063325359999999,
+        "total": 30.126650719999997
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42765.27067883,
+      "delta_s": 0.736842518002959,
+      "last_goodput": {
+        "gA": 15.10281752,
+        "gB": 15.10281752,
+        "total": 30.20563504
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42766.817636291,
+      "delta_s": 0.7452066800033208,
+      "last_goodput": {
+        "gA": 15.05429768,
+        "gB": 15.05429768,
+        "total": 30.10859536
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42768.412392929,
+      "delta_s": 0.734616001995164,
+      "last_goodput": {
+        "gA": 15.036504,
+        "gB": 15.03889616,
+        "total": 30.07540016
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42769.958241661,
+      "delta_s": 0.7371300189988688,
+      "last_goodput": {
+        "gA": 14.94170432,
+        "gB": 14.94170432,
+        "total": 29.88340864
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42771.503921291,
+      "delta_s": 0.7346041819982929,
+      "last_goodput": {
+        "gA": 14.98968696,
+        "gB": 14.98968696,
+        "total": 29.97937392
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42773.048282787,
+      "delta_s": 0.7364544550000574,
+      "last_goodput": {
+        "gA": 14.97830296,
+        "gB": 15.02995224,
+        "total": 30.0082552
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42774.636635855,
+      "delta_s": 0.7394121920006,
+      "last_goodput": {
+        "gA": 15.09567224,
+        "gB": 15.09567224,
+        "total": 30.19134448
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42776.187548437,
+      "delta_s": 0.733322683001461,
+      "last_goodput": {
+        "gA": 15.0199676,
+        "gB": 15.0199676,
+        "total": 30.0399352
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42777.729049052,
+      "delta_s": 0.745089456999267,
+      "last_goodput": {
+        "gA": 14.945016560000001,
+        "gB": 14.945016560000001,
+        "total": 29.890033120000002
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42779.304142161,
+      "delta_s": 0.735266336996574,
+      "last_goodput": {
+        "gA": 15.05486816,
+        "gB": 15.05486816,
+        "total": 30.10973632
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42780.897088841,
+      "delta_s": 0.7363978639987181,
+      "last_goodput": {
+        "gA": 15.073179199999998,
+        "gB": 15.073179199999998,
+        "total": 30.146358399999997
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42782.442101496,
+      "delta_s": 0.7329609720036387,
+      "last_goodput": {
+        "gA": 15.041698720000001,
+        "gB": 15.041698720000001,
+        "total": 30.083397440000002
+      },
+      "stable": true
+    },
+    {
+      "click_monotonic": 42783.984961213,
+      "delta_s": 0.7365704859985271,
+      "last_goodput": {
+        "gA": 14.9640136,
+        "gB": 14.9640136,
+        "total": 29.9280272
+      },
+      "stable": true
+    }
+  ],
+  "stable_n": 3,
+  "stable_repeats": 20,
+  "stable_tol": 0.05
+}

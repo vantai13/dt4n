@@ -14,14 +14,14 @@ import threading
 import time
 from collections import deque
 from bridge.ditto_reader import expected_thing_ids
-from mininet.tc_filter import install_tc_warning_filter
-from mininet.topology_meta import baseline_bw, canonical, load_spec
-from rl.injection import InjectionChannel
-from rl.state_builder_draft import (
+from mininet.aoi_norm import (
     AOI_NORM_DIVISOR,
     AOI_PERCENTILE,
     dynamic_thing_ids,
 )
+from mininet.tc_filter import install_tc_warning_filter
+from mininet.topology_meta import baseline_bw, canonical, load_spec
+from rl.injection import InjectionChannel
 
 
 install_tc_warning_filter()
