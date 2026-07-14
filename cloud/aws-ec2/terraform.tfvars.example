@@ -1,0 +1,42 @@
+# Copy file nay thanh terraform.tfvars roi chinh truoc khi apply:
+#   cp terraform.tfvars.example terraform.tfvars
+
+project_name = "dt4n"
+environment  = "research"
+aws_region   = "ap-southeast-1"
+
+# Bat dau bang m7i.2xlarge de tiet kiem credit; resize len m7i.4xlarge khi benchmark/train nang.
+instance_type  = "m7i.2xlarge"
+instance_count = 1
+
+root_volume_size_gb                = 200
+root_volume_delete_on_termination  = false
+allocate_elastic_ip                = true
+create_conda_envs                  = false
+install_dashboard_dependencies     = true
+
+ryu_conda_env_name = "sdn_net"
+rl_conda_env_name  = "sdn_rl"
+
+# Ban dang dat private key trong thu muc nay. File .pem bi .gitignore loai khoi git.
+# Neu chi co .pem, tao public key bang:
+#   chmod 600 dt4n-aws.pem
+#   ssh-keygen -y -f dt4n-aws.pem > dt4n-aws.pub
+ssh_public_key_file  = "./dt4n-aws.pub"
+ssh_private_key_file = "./dt4n-aws.pem"
+
+# Nen thay 0.0.0.0/0 bang IP public cua ban, vi du ["1.2.3.4/32"].
+# Xem IP hien tai:
+#   curl https://checkip.amazonaws.com
+ssh_allowed_cidrs = ["0.0.0.0/0"]
+app_allowed_cidrs = ["0.0.0.0/0"]
+
+# 80: nginx, 8080: Ditto nginx demo, 5173: Vite dashboard dev server.
+public_app_ports = [80, 8080, 5173]
+
+# De rong neu dung default subnet/default VPC.
+subnet_id = ""
+
+# Repo public se clone luc bootstrap. Neu private hoac muon dung rsync local, de "".
+git_repo_url = "https://github.com/vantai13/dt4n.git"
+git_branch   = "main"
