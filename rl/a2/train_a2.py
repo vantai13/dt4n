@@ -31,6 +31,7 @@ from rl.a2.policies_a2 import (
     policy_myopic_oracle,
     policy_noop,
 )
+from rl.a2.scenarios.demand_scenarios import SCENARIO_NAMES
 from rl.a2.state_a2 import A2_STATE_DIM
 from rl.a2.twin_env_a2 import TwinEnvA2
 
@@ -54,11 +55,18 @@ def agent_config(args):
     }
 
 
-def eval_policy(env, policy_fn, seeds):
+def _scenario_opts(scenarios, seed):
+    """Pick one named scenario deterministically for this seed."""
+    if not scenarios:
+        return None
+    return {'scenario': scenarios[int(seed) % len(scenarios)]}
+
+
+def eval_policy(env, policy_fn, seeds, scenarios=None):
     returns = []
     sats = []
     for seed in seeds:
-        obs, info = env.reset(seed=seed)
+        obs, info = env.reset(seed=seed, options=_scenario_opts(scenarios, seed))
         terminated = False
         truncated = False
         total_return = 0.0
@@ -73,11 +81,11 @@ def eval_policy(env, policy_fn, seeds):
     return float(np.mean(returns)), float(np.mean(sats))
 
 
-def eval_agent(env, agent, seeds):
+def eval_agent(env, agent, seeds, scenarios=None):
     returns = []
     sats = []
     for seed in seeds:
-        obs, info = env.reset(seed=seed)
+        obs, info = env.reset(seed=seed, options=_scenario_opts(scenarios, seed))
         terminated = False
         truncated = False
         total_return = 0.0
@@ -92,8 +100,8 @@ def eval_agent(env, agent, seeds):
     return float(np.mean(returns)), float(np.mean(sats))
 
 
-def train_episode(env, agent, seed):
-    obs, info = env.reset(seed=seed)
+def train_episode(env, agent, seed, scenarios=None):
+    obs, info = env.reset(seed=seed, options=_scenario_opts(scenarios, seed))
     terminated = False
     truncated = False
     total_return = 0.0
@@ -149,7 +157,10 @@ def parse_args():
     ap.add_argument('--val-seeds', type=int, default=8)
     ap.add_argument('--train-seed-start', type=int, default=1000)
     ap.add_argument('--val-seed-start', type=int, default=500)
-    ap.add_argument('--delta-s', type=float, default=1.8)
+    ap.add_argument('--scenarios', default=None,
+                    help='comma-separated named A2 scenarios; empty keeps '
+                         'the old static/dynamic generator')
+    ap.add_argument('--delta-s', type=float, default=1.1)
     ap.add_argument('--sync-period', type=float, default=0.5)
     ap.add_argument('--dynamic', action='store_true',
                     help='enable phase-5 dynamic demand shift scenarios')
@@ -191,6 +202,18 @@ def import_agent_or_exit():
 
 def main():
     args = parse_args()
+    scenarios = (
+        [s.strip() for s in args.scenarios.split(',') if s.strip()]
+        if args.scenarios else None
+    )
+    if scenarios:
+        unknown = [s for s in scenarios if s not in SCENARIO_NAMES]
+        if unknown:
+            raise SystemExit(
+                'unknown scenario(s): %s\nknown: %s'
+                % (', '.join(unknown), ', '.join(SCENARIO_NAMES))
+            )
+        print('[train-a2] scenarios: %s' % ', '.join(scenarios), flush=True)
     if args.dynamic:
         if args.out == 'docs/phase-6/artifacts/a2_train_static.json':
             args.out = 'docs/phase-6/artifacts/a2_train_dynamic.json'
@@ -236,13 +259,13 @@ def main():
             ('noop', policy_noop),
         ]
         for name, policy in baseline_policies:
-            ret, sat = eval_policy(env, policy, val_seeds)
+            ret, sat = eval_policy(env, policy, val_seeds, scenarios)
             baselines[name] = {'return': ret, 'sat': sat}
             print('[train-a2] baseline %-6s return=%.2f sat=%.3f'
                   % (name, ret, sat), flush=True)
 
         for episode, seed in enumerate(train_seeds, 1):
-            row = train_episode(env, agent, seed)
+            row = train_episode(env, agent, seed, scenarios)
             episode_row = {
                 'episode': episode,
                 'seed': seed,
@@ -269,7 +292,7 @@ def main():
                       flush=True)
 
             if episode % args.eval_every == 0 or episode == args.episodes:
-                agent_ret, agent_sat = eval_agent(env, agent, val_seeds)
+                agent_ret, agent_sat = eval_agent(env, agent, val_seeds, scenarios)
                 best_agent_return = max(best_agent_return, agent_ret)
                 eval_row = {
                     'episode': episode,
@@ -323,7 +346,12 @@ def main():
     os.makedirs(os.path.dirname(args.out) or '.', exist_ok=True)
     artifact = {
         'args': vars(args),
-        'mode': 'dynamic' if args.dynamic else 'static',
+        'mode': (
+            'mixed_named_scenarios'
+            if scenarios else
+            ('dynamic' if args.dynamic else 'static')
+        ),
+        'scenarios': scenarios,
         'baseline_notes': {
             'myopic_oracle': (
                 'Knows current demand immediately but greedily optimizes the '

@@ -69,6 +69,8 @@ class TwinEnvA2(gym.Env):
         self.t_max = cfg.get('t_max_steps', 8)
         self.flow_duration = int(cfg.get('flow_duration', 120))
         self.dynamic = bool(cfg.get('dynamic', False))
+        self._default_dynamic = self.dynamic
+        self.scenario_name = cfg.get('scenario_name')
         self.base_mbps = float(cfg.get('base_mbps', 3.0))
         self.burst_mbps = cfg.get('burst_mbps', None)
         if self.burst_mbps is not None:
@@ -76,14 +78,9 @@ class TwinEnvA2(gym.Env):
 
         self.alloc = AllocationSpace(c_total=self.c_total, n_levels=5)
         self.reward_cfg = RewardA2Config(**cfg.get('reward', {}))
-        self.dd = (
-            DynamicDemand(
-                self.net,
-                base_mbps=self.base_mbps,
-                flow_duration=self.flow_duration,
-            )
-            if self.dynamic else None
-        )
+        self.dd = None
+        if self.dynamic:
+            self._ensure_dynamic_demand()
 
         self.action_space = spaces.Discrete(self.alloc.n_actions)  # 3
         self.observation_space = spaces.Box(low=0.0, high=1.0,
@@ -93,6 +90,14 @@ class TwinEnvA2(gym.Env):
         self._cur_demand = (0.0, 0.0)
         self._t = 0
         self._last_action = 0
+
+    def _ensure_dynamic_demand(self):
+        if self.dd is None:
+            self.dd = DynamicDemand(
+                self.net,
+                base_mbps=self.base_mbps,
+                flow_duration=self.flow_duration,
+            )
 
     # ---------- Mininet helpers ----------
     def _find_link(self, key):
@@ -183,11 +188,25 @@ class TwinEnvA2(gym.Env):
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
         s = seed if seed is not None else 0
-        if self.dynamic:
+        name = None
+        if options and isinstance(options, dict):
+            name = options.get('scenario')
+        name = name or self.scenario_name
+        if name:
+            from rl.a2.scenarios.demand_scenarios import make_scenario
+
+            self._scenario = make_scenario(
+                name, s, c_total=self.c_total, t_max=self.t_max)
+            self.dynamic = hasattr(self._scenario, 'demand_at')
+        elif self._default_dynamic:
             self._scenario = make_dynamic_scenario(
                 s, c_total=self.c_total, t_max=self.t_max)
+            self.dynamic = True
         else:
             self._scenario = make_demand_scenario(s, c_total=self.c_total)
+            self.dynamic = False
+        if self.dynamic:
+            self._ensure_dynamic_demand()
         self._t = 0
         self._last_action = 0
         # bat dau o allocation can bang
