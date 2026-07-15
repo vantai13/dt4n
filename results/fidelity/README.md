@@ -17,7 +17,8 @@ va lech do chu yeu den tu stale data hay bug dong bo?
 - `analysis.fidelity_error_intercept_mbps`: sai-vi-loi khi AoI ve 0.
 - `analysis.staleness_error_slope_mbps_per_s`: sai-vi-cu tren moi giay AoI.
 - `analysis.r2_aoi_explains_abs_error`: AoI giai thich duoc bao nhieu error.
-- `analysis.dominant_source`: `staleness`, `fidelity_bug`, hoac `mixed`.
+- `analysis.dominant_source`: `twin_good`, `staleness`, `fidelity_bug`,
+  hoac `mixed`.
 
 ## Lenh Sinh A2
 

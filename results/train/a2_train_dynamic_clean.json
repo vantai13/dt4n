@@ -1,0 +1,151 @@
+{
+  "args": {
+    "episodes": 200,
+    "t_max": 8,
+    "eval_every": 30,
+    "val_seeds": 8,
+    "train_seed_start": 1000,
+    "val_seed_start": 500,
+    "delta_s": 1.1,
+    "sync_period": 0.5,
+    "dynamic": true,
+    "base_mbps": 3.0,
+    "burst_mbps": null,
+    "batch_size": 64,
+    "learning_rate": 0.001,
+    "epsilon_decay": 0.97,
+    "out": "results/train/a2_train_dynamic_clean.json",
+    "save_model": "results/train/a2_dqn_dynamic_clean.pt",
+    "cleanup_mn": false
+  },
+  "mode": "dynamic",
+  "baseline_notes": {
+    "myopic_oracle": "Knows current demand immediately but greedily optimizes the current step only; it is not an optimal episode oracle."
+  },
+  "baselines": {
+    "myopic_oracle": {
+      "return": 13.774546236487513,
+      "sat": 1.8236342535084145
+    },
+    "greedy": {
+      "return": 12.830649177351887,
+      "sat": 1.7407462508648743
+    },
+    "equal": {
+      "return": 12.241537730565046,
+      "sat": 1.6539940125543313
+    },
+    "noop": {
+      "return": 12.24378314170729,
+      "sat": 1.6542099174718548
+    }
+  },
+  "log": [
+    {
+      "episode": 30,
+      "epsilon": 0.401,
+      "train_return": 10.531,
+      "train_loss": 0.072948,
+      "agent_return": 11.4423,
+      "agent_sat": 1.6055,
+      "myopic_oracle_return": 13.7745,
+      "oracle_return": 13.7745,
+      "greedy_return": 12.8306,
+      "equal_return": 12.2415,
+      "noop_return": 12.2438,
+      "agent_minus_greedy": -1.3883,
+      "agent_minus_myopic_oracle": -2.3322
+    },
+    {
+      "episode": 60,
+      "epsilon": 0.1608,
+      "train_return": 12.7996,
+      "train_loss": 0.325117,
+      "agent_return": 11.5831,
+      "agent_sat": 1.612,
+      "myopic_oracle_return": 13.7745,
+      "oracle_return": 13.7745,
+      "greedy_return": 12.8306,
+      "equal_return": 12.2415,
+      "noop_return": 12.2438,
+      "agent_minus_greedy": -1.2475,
+      "agent_minus_myopic_oracle": -2.1914
+    },
+    {
+      "episode": 90,
+      "epsilon": 0.0645,
+      "train_return": 12.1126,
+      "train_loss": 0.035082,
+      "agent_return": 12.883,
+      "agent_sat": 1.7431,
+      "myopic_oracle_return": 13.7745,
+      "oracle_return": 13.7745,
+      "greedy_return": 12.8306,
+      "equal_return": 12.2415,
+      "noop_return": 12.2438,
+      "agent_minus_greedy": 0.0524,
+      "agent_minus_myopic_oracle": -0.8915
+    },
+    {
+      "episode": 120,
+      "epsilon": 0.05,
+      "train_return": 12.1037,
+      "train_loss": 0.032908,
+      "agent_return": 13.1709,
+      "agent_sat": 1.7697,
+      "myopic_oracle_return": 13.7745,
+      "oracle_return": 13.7745,
+      "greedy_return": 12.8306,
+      "equal_return": 12.2415,
+      "noop_return": 12.2438,
+      "agent_minus_greedy": 0.3403,
+      "agent_minus_myopic_oracle": -0.6036
+    },
+    {
+      "episode": 150,
+      "epsilon": 0.05,
+      "train_return": 13.4882,
+      "train_loss": 0.031259,
+      "agent_return": 13.2653,
+      "agent_sat": 1.7734,
+      "myopic_oracle_return": 13.7745,
+      "oracle_return": 13.7745,
+      "greedy_return": 12.8306,
+      "equal_return": 12.2415,
+      "noop_return": 12.2438,
+      "agent_minus_greedy": 0.4346,
+      "agent_minus_myopic_oracle": -0.5093
+    },
+    {
+      "episode": 180,
+      "epsilon": 0.05,
+      "train_return": 14.0585,
+      "train_loss": 0.028158,
+      "agent_return": 13.3248,
+      "agent_sat": 1.7841,
+      "myopic_oracle_return": 13.7745,
+      "oracle_return": 13.7745,
+      "greedy_return": 12.8306,
+      "equal_return": 12.2415,
+      "noop_return": 12.2438,
+      "agent_minus_greedy": 0.4942,
+      "agent_minus_myopic_oracle": -0.4497
+    },
+    {
+      "episode": 200,
+      "epsilon": 0.05,
+      "train_return": 13.325,
+      "train_loss": 0.019496,
+      "agent_return": 13.4042,
+      "agent_sat": 1.7878,
+      "myopic_oracle_return": 13.7745,
+      "oracle_return": 13.7745,
+      "greedy_return": 12.8306,
+      "equal_return": 12.2415,
+      "noop_return": 12.2438,
+      "agent_minus_greedy": 0.5736,
+      "agent_minus_myopic_oracle": -0.3703
+    }
+  ],
+  "elapsed_s": 3372.367
+}

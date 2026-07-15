@@ -66,20 +66,47 @@ def summarize(vectors, dim_names):
     return out
 
 
-def collect_a2_state_live(env, samples, interval, warmup):
-    """Doc state 9 chieu tu A2 env dang chay khoe (khong su co)."""
+def collect_a2_state_live(env, samples, interval, warmup,
+                          freeze_step_progress=True):
+    """Doc state 9 chieu tu A2 env dang chay khoe (khong su co).
+
+    Dung step(0) thay vi _observe() thuan tuy. action 0 giu nguyen allocation,
+    nhung van di qua dung pipeline A2: sync demand -> apply bw -> cho delta ->
+    doc goodput. Nhu vay goodput/saturation khong bi do tren traffic da chet.
+    """
     vectors = []
+    resets = 0
+    env.reset()
     total = samples + max(0, warmup)
     for idx in range(1, total + 1):
-        obs = env._observe()
+        step_out = env.step(0)
+        if len(step_out) == 5:
+            obs, _reward, terminated, truncated, _info = step_out
+            done = bool(terminated or truncated)
+        else:
+            obs, _reward, done, _info = step_out
         kept = idx > warmup
+        obs_vec = list(obs)
+        if freeze_step_progress:
+            obs_vec[A2_DIM_NAMES.index('step_progress')] = 0.0
         if kept:
-            vectors.append(list(obs))
+            vectors.append(obs_vec)
         print('%03d/%03d %s dim=%d' %
               (idx, total, 'keep' if kept else 'warmup', len(obs)))
-        if idx < total:
+
+        if done and idx < total:
+            env.reset()
+            resets += 1
+
+        # step() da co time.sleep(delta_s). interval o day chi la extra spacing.
+        if idx < total and interval > 0:
             time.sleep(interval)
-    return vectors
+    return vectors, {
+        'collection_mode': 'step_noop',
+        'action_used': 0,
+        'freeze_step_progress': bool(freeze_step_progress),
+        'resets': resets,
+    }
 
 
 def make_self_test_vectors(samples):
@@ -125,8 +152,16 @@ def parse_args():
     parser.add_argument('--samples', type=int, default=300)
     parser.add_argument('--warmup', type=int, default=3,
                         help='initial observations to discard')
-    parser.add_argument('--interval', type=float, default=1.0,
-                        help='seconds between live observations')
+    parser.add_argument('--interval', type=float, default=0.0,
+                        help='extra seconds after each env.step(0); 0 is usually enough')
+    parser.add_argument('--delta-s', type=float, default=1.8,
+                        help='TwinEnvA2 delta_s used during live collection')
+    parser.add_argument('--t-max', type=int,
+                        help='episode horizon for live collection; default avoids truncation')
+    parser.add_argument('--flow-duration', type=int,
+                        help='iperf duration in seconds; default covers the full run')
+    parser.add_argument('--no-freeze-step-progress', action='store_true',
+                        help='keep raw step_progress instead of freezing it for noise calibration')
     parser.add_argument('--out', default='results/noise/noise_a2.json')
     parser.add_argument('--condition', default='a2_healthy_stable_demand',
                         help='label for the live baseline condition')
@@ -140,19 +175,31 @@ def main():
 
     if args.self_test:
         vectors = make_self_test_vectors(args.samples)
+        collection_info = {'collection_mode': 'self_test'}
         print('SELF-TEST: %d vector gia, dim=%d' %
               (len(vectors), len(vectors[0]) if vectors else 0))
     else:
         from mininet.env_runner import EnvRunner  # noqa: E402
         from rl.a2.twin_env_a2 import TwinEnvA2  # noqa: E402
 
+        total = args.samples + max(0, args.warmup)
+        t_max = args.t_max if args.t_max is not None else total + 1
+        flow_duration = args.flow_duration
+        if flow_duration is None:
+            step_span = args.delta_s + max(0.0, args.interval)
+            flow_duration = int(math.ceil(total * step_span + 60.0))
+
         runner = EnvRunner()
         runner.start()
         try:
-            env = TwinEnvA2(runner=runner)
-            env.reset()
-            vectors = collect_a2_state_live(
-                env, args.samples, args.interval, args.warmup)
+            env = TwinEnvA2(runner=runner, cfg={
+                'delta_s': args.delta_s,
+                't_max_steps': t_max,
+                'flow_duration': flow_duration,
+            })
+            vectors, collection_info = collect_a2_state_live(
+                env, args.samples, args.interval, args.warmup,
+                freeze_step_progress=not args.no_freeze_step_progress)
         finally:
             runner.close()
 
@@ -171,10 +218,16 @@ def main():
         'state_dim': len(A2_DIM_NAMES),
         'dimension_order': A2_DIM_NAMES,
         'degenerate_dimensions': degenerate,
+        'collection': collection_info,
+        'delta_s': args.delta_s,
+        't_max_steps': None if args.self_test else t_max,
+        'flow_duration_s': None if args.self_test else flow_duration,
         'generated_at_epoch': time.time(),
         'notes': [
             'Measure while the A2 network is healthy and no fault is injected.',
             'Statistics are computed on the normalized A2 9D state vector.',
+            'Live collection uses env.step(0), not raw _observe(), so A2 demand traffic stays exercised.',
+            'By default step_progress is frozen because it is deterministic episode time, not measurement noise.',
             'Scenario visibility criterion: a real event should move at least one non-degenerate dimension beyond 3 sigma.',
             'three_sigma = 3 * sigma_robust; sigma_robust = 1.4826 * MAD.',
             'std_reference_only is for comparison only; do not use it as the gate.',

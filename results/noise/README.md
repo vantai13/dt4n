@@ -16,6 +16,8 @@ bao nhieu? Ket qua dung de lap nguong phan biet dao dong vo hai voi su co that.
 - `state_dims.<dim>.three_sigma`: nguong 3-sigma.
 - `degenerate_dimensions`: chieu khong dao dong trong dieu kien do.
 - `condition`: dieu kien luc do; khong doc so neu dieu kien sai.
+- `collection.freeze_step_progress`: mac dinh true vi step_progress la thoi gian
+  episode tat dinh, khong phai nhieu nen cua sensor/goodput.
 
 ## Lenh Sinh A2
 
@@ -23,7 +25,8 @@ bao nhieu? Ket qua dung de lap nguong phan biet dao dong vo hai voi su co that.
 sudo -E env PYTHONPATH="$PWD" DT4N_FAST_PUSH=1 "$CONDA_PY" rl/a2/measure_noise_a2.py \
   --samples 300 \
   --warmup 3 \
-  --interval 1.0 \
+  --interval 0.0 \
+  --delta-s 1.1 \
   --condition a2_healthy_stable_demand \
   --out results/noise/noise_a2.json
 ```

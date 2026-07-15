@@ -13,9 +13,18 @@ Thu muc nay chua ket qua training/evaluation va model checkpoint.
 ## Key Can Doc
 
 - `baselines`: return/satisfaction cua oracle, greedy, equal, noop.
-- `log`: cac moc eval trong qua trinh train.
+- `episode_log`: moi episode train mot dong, co return/loss/epsilon/steps.
+- `log`: cac moc eval trong qua trinh train, theo `--eval-every`.
 - `elapsed_s`: tong thoi gian chay.
 - `args`: tham so CLI da dung cho run.
+
+## File Sidecar Sau Khi Train
+
+Script train moi tu dong ghi them:
+
+- `<out>.episodes.csv`: bang tung episode train.
+- `<out>.eval.csv`: bang cac moc eval.
+- `<out>.svg`: bieu do train/eval doc duoc truc tiep trong VSCode/browser.
 
 ## Lenh Sinh A2
 
@@ -34,6 +43,8 @@ Vi du dynamic:
 sudo -E env PYTHONPATH="$PWD" DT4N_FAST_PUSH=1 "$CONDA_PY" rl/a2/train_a2.py \
   --dynamic \
   --episodes 200 \
+  --eval-every 30 \
+  --delta-s 1.1 \
   --out results/train/a2_train_dynamic.json \
   --save-model results/train/a2_dqn_dynamic.pt
 ```

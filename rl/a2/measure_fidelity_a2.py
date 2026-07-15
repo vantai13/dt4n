@@ -31,6 +31,9 @@ from mininet.traffic import (  # noqa: E402
 )
 
 
+TWIN_GOOD_INTERCEPT_MBPS = 0.15
+
+
 def resolve_thing(args):
     return args.thing if args.thing else make_thing_id_host(args.host)
 
@@ -61,6 +64,19 @@ def linear_regression(xs, ys):
                  for x, y in zip(xs, ys))
     r2 = 1.0 - ss_res / ss_tot if ss_tot > 0 else 0.0
     return intercept, slope, r2
+
+
+def classify_dominant_source(intercept, r2,
+                             twin_good_intercept_mbps=TWIN_GOOD_INTERCEPT_MBPS):
+    """Classify fidelity error source without overcalling tiny errors as bugs."""
+    if math.isfinite(r2) and r2 > 0.5:
+        return 'staleness'
+    if (math.isfinite(intercept) and
+            intercept <= float(twin_good_intercept_mbps)):
+        return 'twin_good'
+    if math.isfinite(r2) and r2 < 0.2:
+        return 'fidelity_bug'
+    return 'mixed'
 
 
 def start_a2_branch_traffic(net, demand_a, demand_b, duration):
@@ -102,7 +118,7 @@ def read_twin_goodput_and_aoi(session, thing_id):
     return float(rate) * 8.0 / 1e6, aoi, meta
 
 
-def analyze(samples):
+def analyze(samples, twin_good_intercept_mbps=TWIN_GOOD_INTERCEPT_MBPS):
     if not samples:
         return {'n': 0}
 
@@ -110,11 +126,8 @@ def analyze(samples):
     abs_errors = [row['abs_error_mbps'] for row in samples]
     rel_errors = [row['rel_error'] for row in samples]
     intercept, slope, r2 = linear_regression(aois, abs_errors)
-    dominant = (
-        'staleness' if r2 > 0.5 else
-        'fidelity_bug' if r2 < 0.2 else
-        'mixed'
-    )
+    dominant = classify_dominant_source(
+        intercept, r2, twin_good_intercept_mbps)
     return {
         'n': len(samples),
         'abs_error_mean_mbps': sum(abs_errors) / len(abs_errors),
@@ -129,6 +142,11 @@ def analyze(samples):
         'staleness_error_slope_mbps_per_s': slope,
         'r2_aoi_explains_abs_error': r2,
         'dominant_source': dominant,
+        'dominant_source_thresholds': {
+            'staleness_r2_gt': 0.5,
+            'fidelity_bug_r2_lt': 0.2,
+            'twin_good_intercept_mbps_lte': twin_good_intercept_mbps,
+        },
     }
 
 
@@ -148,6 +166,9 @@ def parse_args():
     parser.add_argument('--flow-duration', type=int, default=100000)
     parser.add_argument('--min-real-mbps', type=float, default=0.05,
                         help='discard samples below this real goodput')
+    parser.add_argument('--twin-good-intercept-mbps', type=float,
+                        default=TWIN_GOOD_INTERCEPT_MBPS,
+                        help='if intercept is at or below this Mbps, label low-r2 runs twin_good')
     parser.add_argument('--progress-every', type=int, default=10)
     parser.add_argument('--cleanup-mn', action='store_true',
                         help='also run mn -c on exit; may stop external controllers')
@@ -221,7 +242,7 @@ def main():
     finally:
         runner.close(cleanup_mn=args.cleanup_mn)
 
-    analysis = analyze(samples)
+    analysis = analyze(samples, args.twin_good_intercept_mbps)
     dt_reads = [row['dt_read_s'] for row in records if row.get('dt_read_s') is not None]
     result = {
         'measured': True,
@@ -250,6 +271,7 @@ def main():
         'generated_at_epoch': time.time(),
         'notes': [
             'intercept large -> fidelity/collector/sync bug, not staleness.',
+            'low r2 with small intercept is labeled twin_good, not fidelity_bug.',
             'slope large with r2 > 0.5 -> error is mainly explained by AoI.',
             'Samples below min_real_mbps are discarded to avoid divide-by-near-zero relative error.',
         ],

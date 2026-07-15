@@ -11,6 +11,7 @@ Run on the Mininet/controller machine:
 """
 
 import argparse
+import csv
 import json
 import os
 import sys
@@ -122,6 +123,22 @@ def train_episode(env, agent, seed):
     }
 
 
+def sidecar_path(out_path, suffix):
+    root, _ext = os.path.splitext(out_path)
+    return root + suffix
+
+
+def write_csv(path, rows, fieldnames):
+    if not rows:
+        return
+    os.makedirs(os.path.dirname(path) or '.', exist_ok=True)
+    with open(path, 'w', newline='', encoding='utf-8') as f:
+        writer = csv.DictWriter(f, fieldnames=fieldnames)
+        writer.writeheader()
+        writer.writerows(rows)
+    print('[train-a2] csv -> %s' % path, flush=True)
+
+
 def parse_args():
     ap = argparse.ArgumentParser(
         description='Train DQN on A2 static or dynamic demand.')
@@ -144,6 +161,14 @@ def parse_args():
     ap.add_argument('--epsilon-decay', type=float, default=0.97)
     ap.add_argument('--out', default='docs/phase-6/artifacts/a2_train_static.json')
     ap.add_argument('--save-model', default='docs/phase-6/artifacts/a2_dqn_static.pt')
+    ap.add_argument('--episode-csv',
+                    help='write one row per train episode; default: <out>.episodes.csv')
+    ap.add_argument('--eval-csv',
+                    help='write one row per eval point; default: <out>.eval.csv')
+    ap.add_argument('--plot-svg',
+                    help='write train/eval SVG chart; default: <out>.svg')
+    ap.add_argument('--print-every', type=int, default=1,
+                    help='print every N train episodes; 0 disables per-episode prints')
     ap.add_argument('--cleanup-mn', action='store_true',
                     help='also run mn -c on exit; this may kill ryu-manager')
     return ap.parse_args()
@@ -196,6 +221,7 @@ def main():
     )
 
     log = []
+    episode_log = []
     baselines = {}
     best_agent_return = -float('inf')
     t0 = time.monotonic()
@@ -215,6 +241,30 @@ def main():
 
         for episode, seed in enumerate(train_seeds, 1):
             row = train_episode(env, agent, seed)
+            episode_row = {
+                'episode': episode,
+                'seed': seed,
+                'epsilon': round(row['epsilon'], 6),
+                'train_return': round(row['return'], 6),
+                'train_loss': (
+                    None if row['loss'] is None else round(row['loss'], 8)
+                ),
+                'steps': int(row['steps']),
+            }
+            episode_log.append(episode_row)
+            if args.print_every and (
+                    episode == 1 or episode % args.print_every == 0):
+                print('[train-a2] train_ep=%3d seed=%d eps=%.3f return=%.2f '
+                      'loss=%s steps=%d'
+                      % (
+                          episode,
+                          seed,
+                          row['epsilon'],
+                          row['return'],
+                          '-' if row['loss'] is None else '%.4f' % row['loss'],
+                          row['steps'],
+                      ),
+                      flush=True)
 
             if episode % args.eval_every == 0 or episode == args.episodes:
                 agent_ret, agent_sat = eval_agent(env, agent, val_seeds)
@@ -273,12 +323,38 @@ def main():
             ),
         },
         'baselines': baselines,
+        'episode_log': episode_log,
         'log': log,
         'elapsed_s': round(time.monotonic() - t0, 3),
     }
     with open(args.out, 'w', encoding='utf-8') as f:
         json.dump(artifact, f, indent=2)
         f.write('\n')
+
+    episode_csv = args.episode_csv or sidecar_path(args.out, '.episodes.csv')
+    eval_csv = args.eval_csv or sidecar_path(args.out, '.eval.csv')
+    plot_svg = args.plot_svg or sidecar_path(args.out, '.svg')
+    write_csv(
+        episode_csv,
+        episode_log,
+        ['episode', 'seed', 'epsilon', 'train_return', 'train_loss', 'steps'],
+    )
+    write_csv(
+        eval_csv,
+        log,
+        [
+            'episode', 'epsilon', 'train_return', 'train_loss',
+            'agent_return', 'agent_sat', 'myopic_oracle_return',
+            'oracle_return', 'greedy_return', 'equal_return', 'noop_return',
+            'agent_minus_greedy', 'agent_minus_myopic_oracle',
+        ],
+    )
+    try:
+        from rl.a2.plot_train_a2 import write_reports
+        write_reports(args.out, plot_svg=plot_svg,
+                      episode_csv=episode_csv, eval_csv=eval_csv)
+    except Exception as exc:
+        print('[train-a2] plot skipped: %s' % exc, flush=True)
 
     try:
         agent.save(args.save_model)
