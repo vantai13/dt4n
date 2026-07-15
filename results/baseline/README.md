@@ -10,6 +10,8 @@ rule-based co hanh vi hop ly khong.
 - `diag_soft_leak.json`: chan doan leak khi soft reset.
 - `oracle_executability.json`: oracle/action co thuc thi duoc trong env khong.
 - `rulebased_diag.json`: chan doan policy rule-based.
+- `a2_dynamic_demand_audit.json`: audit demand dynamic A2, kiem tra tong demand
+  co vuot capacity va best allocation level co doi du xa sau t_shift khong.
 
 ## Cach Doc
 

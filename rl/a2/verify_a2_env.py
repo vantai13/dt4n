@@ -19,6 +19,7 @@ from mininet.env_runner import EnvRunner
 from rl.a2.policies_a2 import (
     policy_equal,
     policy_greedy,
+    policy_greedy_strong,
     policy_noop,
     policy_myopic_oracle,
 )
@@ -28,6 +29,7 @@ from rl.a2.twin_env_a2 import TwinEnvA2
 POLICIES = {
     'myopic_oracle': policy_myopic_oracle,
     'greedy': policy_greedy,
+    'greedy_strong': policy_greedy_strong,
     'equal': policy_equal,
     'noop': policy_noop,
 }

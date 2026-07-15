@@ -15,6 +15,8 @@ Thu muc nay chua ket qua training/evaluation va model checkpoint.
 - `baselines`: return/satisfaction cua oracle, greedy, equal, noop.
 - `episode_log`: moi episode train mot dong, co return/loss/epsilon/steps.
 - `log`: cac moc eval trong qua trinh train, theo `--eval-every`.
+- `agent_minus_greedy_strong`: gap voi baseline rule-based manh. Day la cot
+  can doc khi tra loi phan bien "if-else co du khong?".
 - `elapsed_s`: tong thoi gian chay.
 - `args`: tham so CLI da dung cho run.
 
@@ -45,6 +47,10 @@ sudo -E env PYTHONPATH="$PWD" DT4N_FAST_PUSH=1 "$CONDA_PY" rl/a2/train_a2.py \
   --episodes 200 \
   --eval-every 30 \
   --delta-s 1.1 \
-  --out results/train/a2_train_dynamic.json \
-  --save-model results/train/a2_dqn_dynamic.pt
+  --out results/train/a2_train_hard.json \
+  --save-model results/train/a2_dqn_hard.pt
 ```
+
+Sau khi demand dynamic duoc lam kho hon, khong so truc tiep run moi voi file
+`a2_train_dynamic_clean.json` cu. Hay so trong cung mot run: agent vs greedy,
+agent vs greedy_strong, agent vs myopic_oracle.

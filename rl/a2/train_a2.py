@@ -27,6 +27,7 @@ from mininet.env_runner import EnvRunner
 from rl.a2.policies_a2 import (
     policy_equal,
     policy_greedy,
+    policy_greedy_strong,
     policy_myopic_oracle,
     policy_noop,
 )
@@ -230,6 +231,7 @@ def main():
         baseline_policies = [
             ('myopic_oracle', policy_myopic_oracle),
             ('greedy', policy_greedy),
+            ('greedy_strong', policy_greedy_strong),
             ('equal', policy_equal),
             ('noop', policy_noop),
         ]
@@ -285,17 +287,21 @@ def main():
                     'oracle_return': round(
                         baselines['myopic_oracle']['return'], 4),
                     'greedy_return': round(baselines['greedy']['return'], 4),
+                    'greedy_strong_return': round(
+                        baselines['greedy_strong']['return'], 4),
                     'equal_return': round(baselines['equal']['return'], 4),
                     'noop_return': round(baselines['noop']['return'], 4),
                 }
                 eval_row['agent_minus_greedy'] = round(
                     agent_ret - baselines['greedy']['return'], 4)
+                eval_row['agent_minus_greedy_strong'] = round(
+                    agent_ret - baselines['greedy_strong']['return'], 4)
                 eval_row['agent_minus_myopic_oracle'] = round(
                     agent_ret - baselines['myopic_oracle']['return'], 4)
                 log.append(eval_row)
                 print('[train-a2] ep=%3d eps=%.3f train=%.2f loss=%s | '
-                      'agent=%.2f myopic=%.2f greedy=%.2f equal=%.2f noop=%.2f '
-                      'gap_g=%.2f'
+                      'agent=%.2f myopic=%.2f greedy=%.2f greedy_strong=%.2f '
+                      'equal=%.2f noop=%.2f gap_g=%.2f gap_gs=%.2f'
                       % (
                           episode,
                           row['epsilon'],
@@ -304,9 +310,11 @@ def main():
                           agent_ret,
                           baselines['myopic_oracle']['return'],
                           baselines['greedy']['return'],
+                          baselines['greedy_strong']['return'],
                           baselines['equal']['return'],
                           baselines['noop']['return'],
                           agent_ret - baselines['greedy']['return'],
+                          agent_ret - baselines['greedy_strong']['return'],
                       ),
                       flush=True)
     finally:
@@ -345,8 +353,9 @@ def main():
         [
             'episode', 'epsilon', 'train_return', 'train_loss',
             'agent_return', 'agent_sat', 'myopic_oracle_return',
-            'oracle_return', 'greedy_return', 'equal_return', 'noop_return',
-            'agent_minus_greedy', 'agent_minus_myopic_oracle',
+            'oracle_return', 'greedy_return', 'greedy_strong_return',
+            'equal_return', 'noop_return', 'agent_minus_greedy',
+            'agent_minus_greedy_strong', 'agent_minus_myopic_oracle',
         ],
     )
     try:
@@ -370,14 +379,18 @@ def main():
     noop_ret = float(last['noop_return'])
     equal_ret = float(last['equal_return'])
     greedy_ret = float(last['greedy_return'])
+    greedy_strong_ret = float(last.get('greedy_strong_return', greedy_ret))
     myopic_ret = float(last.get('myopic_oracle_return',
                                 last.get('oracle_return', greedy_ret)))
     print('\n[train-a2] === VERIFY PIPELINE ===')
     print('[train-a2] agent=%.2f vs noop=%.2f equal=%.2f greedy=%.2f '
-          'myopic_oracle=%.2f'
-          % (agent_ret, noop_ret, equal_ret, greedy_ret, myopic_ret))
-    print('[train-a2] gaps: agent-greedy=%+.2f agent-myopic=%+.2f'
-          % (agent_ret - greedy_ret, agent_ret - myopic_ret))
+          'greedy_strong=%.2f myopic_oracle=%.2f'
+          % (agent_ret, noop_ret, equal_ret, greedy_ret, greedy_strong_ret,
+             myopic_ret))
+    print('[train-a2] gaps: agent-greedy=%+.2f agent-greedy_strong=%+.2f '
+          'agent-myopic=%+.2f'
+          % (agent_ret - greedy_ret, agent_ret - greedy_strong_ret,
+             agent_ret - myopic_ret))
     if agent_ret >= noop_ret and agent_ret >= equal_ret:
         print('[train-a2] RESULT: OK, DQN beats weak baselines.')
         if args.dynamic:
@@ -385,6 +398,10 @@ def main():
                 print('[train-a2] Dynamic result: DQN is above greedy.')
             else:
                 print('[train-a2] Dynamic result: DQN is not above greedy yet.')
+            if agent_ret > greedy_strong_ret:
+                print('[train-a2] Strong-baseline result: DQN is above greedy_strong.')
+            else:
+                print('[train-a2] Strong-baseline result: DQN is not above greedy_strong yet.')
             print('[train-a2] myopic_oracle is current-demand greedy, not an optimal oracle.')
         elif agent_ret >= greedy_ret - 0.3:
             print('[train-a2] It is near greedy, which is the expected static-A2 ceiling.')

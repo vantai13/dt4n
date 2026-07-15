@@ -15,6 +15,7 @@ COLORS = {
     'agent': '#7c3aed',
     'myopic': '#16a34a',
     'greedy': '#64748b',
+    'greedy_strong': '#0891b2',
     'equal': '#f59e0b',
     'noop': '#ef4444',
     'gap': '#0f766e',
@@ -80,6 +81,7 @@ def write_svg(path, artifact):
     train_loss = _series(episode_rows, 'episode', 'train_loss')
     eval_agent = _series(eval_rows, 'episode', 'agent_return')
     eval_gap = _series(eval_rows, 'episode', 'agent_minus_greedy')
+    eval_gap_strong = _series(eval_rows, 'episode', 'agent_minus_greedy_strong')
     all_points.extend(train_return)
     all_points.extend(eval_agent)
 
@@ -93,7 +95,7 @@ def write_svg(path, artifact):
 
     max_ep = max(x for x, _ in all_points)
     returns = [y for _, y in all_points]
-    for name in ('myopic_oracle', 'greedy', 'equal', 'noop'):
+    for name in ('myopic_oracle', 'greedy', 'greedy_strong', 'equal', 'noop'):
         row = baselines.get(name) or {}
         val = _clean_number(row.get('return'))
         if val is not None:
@@ -152,6 +154,7 @@ def write_svg(path, artifact):
     baseline_defs = [
         ('myopic_oracle', 'myopic_oracle', COLORS['myopic']),
         ('greedy', 'greedy', COLORS['greedy']),
+        ('greedy_strong', 'greedy_strong', COLORS['greedy_strong']),
         ('equal', 'equal', COLORS['equal']),
         ('noop', 'noop', COLORS['noop']),
     ]
@@ -182,9 +185,10 @@ def write_svg(path, artifact):
 
     # Gap panel in miniature.
     gap_top = height - 58
-    if eval_gap:
-        g_min = min(0.0, min(y for _, y in eval_gap))
-        g_max = max(0.0, max(y for _, y in eval_gap))
+    gap_points = list(eval_gap) + list(eval_gap_strong)
+    if gap_points:
+        g_min = min(0.0, min(y for _, y in gap_points))
+        g_max = max(0.0, max(y for _, y in gap_points))
         g_pad = max(0.1, (g_max - g_min) * 0.2)
         g_min -= g_pad
         g_max += g_pad
@@ -193,15 +197,22 @@ def write_svg(path, artifact):
             return gap_top - 72 + (g_max - float(y)) / max(g_max - g_min, 1e-9) * 55
 
         zero_y = gy(0)
-        lines.append('<text x="%d" y="%d" font-family="sans-serif" font-size="13" font-weight="700" fill="#334155">agent - greedy</text>' %
+        lines.append('<text x="%d" y="%d" font-family="sans-serif" font-size="13" font-weight="700" fill="#334155">agent - baselines</text>' %
                      (left, gap_top - 82))
         lines.append('<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" stroke="#94a3b8" stroke-dasharray="4 4"/>' %
                      (left, zero_y, width - right, zero_y))
-        lines.append('<polyline fill="none" stroke="%s" stroke-width="2.4" points="%s"/>' %
-                     (COLORS['gap'], _polyline(eval_gap, sx, gy)))
-        for x, y in eval_gap:
-            lines.append('<circle cx="%.1f" cy="%.1f" r="3" fill="%s"/>' %
-                         (sx(x), gy(y), COLORS['gap']))
+        if eval_gap:
+            lines.append('<polyline fill="none" stroke="%s" stroke-width="2.4" points="%s"/>' %
+                         (COLORS['gap'], _polyline(eval_gap, sx, gy)))
+            for x, y in eval_gap:
+                lines.append('<circle cx="%.1f" cy="%.1f" r="3" fill="%s"/>' %
+                             (sx(x), gy(y), COLORS['gap']))
+        if eval_gap_strong:
+            lines.append('<polyline fill="none" stroke="%s" stroke-width="2.4" points="%s"/>' %
+                         (COLORS['greedy_strong'], _polyline(eval_gap_strong, sx, gy)))
+            for x, y in eval_gap_strong:
+                lines.append('<rect x="%.1f" y="%.1f" width="6" height="6" fill="%s"/>' %
+                             (sx(x) - 3, gy(y) - 3, COLORS['greedy_strong']))
 
     # Compact legend.
     lx, ly = left, top - 24
@@ -249,9 +260,9 @@ def write_reports(json_path, plot_svg=None, episode_csv=None, eval_csv=None):
             [
                 'episode', 'epsilon', 'train_return', 'train_loss',
                 'agent_return', 'agent_sat', 'myopic_oracle_return',
-                'oracle_return', 'greedy_return', 'equal_return',
-                'noop_return', 'agent_minus_greedy',
-                'agent_minus_myopic_oracle',
+                'oracle_return', 'greedy_return', 'greedy_strong_return',
+                'equal_return', 'noop_return', 'agent_minus_greedy',
+                'agent_minus_greedy_strong', 'agent_minus_myopic_oracle',
             ],
         )
     outputs['plot_svg'] = write_svg(plot_svg, artifact)

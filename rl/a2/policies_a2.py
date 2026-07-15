@@ -27,6 +27,36 @@ def policy_greedy(env, obs, info):
     return 0
 
 
+def policy_greedy_strong(env, obs, info):
+    """Fair strong rule baseline using the same state and action limits as RL.
+
+    It reads demand from the observation, scores every allocation level by
+    total satisfaction, then moves one relative step toward the best level.
+    Unlike myopic_oracle, it does not call env.sync_true_demand_for_action(),
+    so it does not peek at a demand flip before that flip appears in state.
+    """
+    c_total = env.alloc.c_total
+    d_a = float(obs[3]) * c_total
+    d_b = float(obs[4]) * c_total
+
+    best_level = 0
+    best_score = -1.0
+    for level, (c_a, c_b) in enumerate(env.alloc.levels):
+        sat_a = min(c_a / d_a, 1.0) if d_a > 1e-6 else 1.0
+        sat_b = min(c_b / d_b, 1.0) if d_b > 1e-6 else 1.0
+        score = sat_a + sat_b
+        if score > best_score:
+            best_level = level
+            best_score = score
+
+    cur = env.alloc._level
+    if cur < best_level:
+        return 1
+    if cur > best_level:
+        return 2
+    return 0
+
+
 def policy_oracle_dynamic(env, obs, info):
     """Myopic oracle: knows current demand, but optimizes only this step.
 
