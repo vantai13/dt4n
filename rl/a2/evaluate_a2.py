@@ -160,7 +160,8 @@ def parse_args():
     parser.add_argument('--scenarios', default=','.join(SCENARIO_NAMES),
                         help='comma-separated scenario names')
     parser.add_argument('--delta-s', type=float, default=1.1)
-    parser.add_argument('--t-max', type=int, default=8)
+    parser.add_argument('--t-max', type=int, default=12)
+    parser.add_argument('--n-levels', type=int, default=7)
     parser.add_argument('--sync-period', type=float, default=0.5)
     parser.add_argument('--base-mbps', type=float, default=3.0)
     parser.add_argument('--burst-mbps', type=float, default=None)
@@ -214,6 +215,7 @@ def main():
         env_cfg = {
             'delta_s': args.delta_s,
             't_max_steps': args.t_max,
+            'n_levels': args.n_levels,
             'base_mbps': args.base_mbps,
         }
         if args.burst_mbps is not None:

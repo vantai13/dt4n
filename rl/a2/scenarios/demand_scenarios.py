@@ -6,13 +6,15 @@ the same DemandScenario/DynamicDemandScenario API, but gives each case a stable
 name so evaluation can say which behavior was tested.
 """
 
+import warnings
+
 import numpy as np
 
 from rl.a2.allocation import AllocationSpace
 from rl.a2.demand_scenario import DemandScenario, DynamicDemandScenario
 
 
-def default_levels(c_total=20.0, n_levels=5):
+def default_levels(c_total=20.0, n_levels=7):
     """Return the canonical A2 allocation levels from the allocation module."""
     return AllocationSpace(c_total=c_total, n_levels=n_levels).levels
 
@@ -54,13 +56,16 @@ def best_level_for(demand_A, demand_B, levels=None):
 
 
 def _skewed_pair(rng, c_total, total_frac_lo, total_frac_hi, to_a):
-    """Generate an intentionally skewed demand pair.
+    """Generate a skewed pair while keeping both branches controllable.
 
-    Extreme skew pushes the optimal allocation toward edge levels.  That keeps
-    the task from collapsing into "middle allocation is almost always fine".
+    The allocation levels can serve roughly 4..16 Mbps per branch.  If a demand
+    falls outside that range, its satisfaction can become almost constant over
+    all levels.  Pilot v2 used extreme skew and made one branch always full,
+    collapsing the task into one live dimension.  These ranges keep both
+    satisfaction dimensions moving while still making demand clearly skewed.
     """
     total = rng.uniform(total_frac_lo, total_frac_hi) * c_total
-    frac_a = rng.uniform(0.80, 0.92) if to_a else rng.uniform(0.08, 0.20)
+    frac_a = rng.uniform(0.60, 0.68) if to_a else rng.uniform(0.32, 0.40)
     return round(total * frac_a, 1), round(total * (1.0 - frac_a), 1)
 
 
@@ -95,15 +100,17 @@ def make_scenario(name, seed, c_total=20.0, t_max=8, levels=None):
 
     if name in ('S3_flip_near', 'S4_flip_far', 'S5_scarce_flip'):
         if name == 'S3_flip_near':
-            lo_f, hi_f, gap_min, gap_max = 1.10, 1.25, 1, 2
+            lo_f, hi_f, gap_min, gap_max = 1.10, 1.25, 1, 1
         elif name == 'S4_flip_far':
-            lo_f, hi_f, gap_min, gap_max = 1.10, 1.25, 3, 4
+            lo_f, hi_f, gap_min, gap_max = 1.10, 1.25, 2, 2
         else:
-            lo_f, hi_f, gap_min, gap_max = 1.25, 1.40, 2, 4
+            lo_f, hi_f, gap_min, gap_max = 1.25, 1.40, 1, 2
 
         to_a_first = rng.random() < 0.5
         demand_a_1 = demand_b_1 = demand_a_2 = demand_b_2 = None
-        for _ in range(60):
+        found = False
+        gap = 0
+        for _ in range(200):
             demand_a_1, demand_b_1 = _skewed_pair(
                 rng, c_total, lo_f, hi_f, to_a_first
             )
@@ -115,7 +122,15 @@ def make_scenario(name, seed, c_total=20.0, t_max=8, levels=None):
                 - best_level_for(demand_a_2, demand_b_2, levels)[0]
             )
             if gap_min <= gap <= gap_max:
+                found = True
                 break
+        if not found:
+            warnings.warn(
+                'scenario %s seed=%s: could not find best-level gap in '
+                '[%d,%d] after 200 tries; got gap=%d. Check skew/gap ranges.'
+                % (name, seed, gap_min, gap_max, gap),
+                RuntimeWarning,
+            )
 
         return DynamicDemandScenario(
             demand_A_1=demand_a_1,

@@ -178,7 +178,8 @@ def parse_args():
     ap.add_argument('--episodes', type=int, default=150)
     ap.add_argument('--seed', type=int, default=0,
                     help='agent seed for Torch/NumPy/exploration')
-    ap.add_argument('--t-max', type=int, default=8)
+    ap.add_argument('--t-max', type=int, default=12)
+    ap.add_argument('--n-levels', type=int, default=7)
     ap.add_argument('--eval-every', type=int, default=30)
     ap.add_argument('--val-seeds', type=int, default=8)
     ap.add_argument('--train-seed-start', type=int, default=1000)
@@ -265,6 +266,7 @@ def main():
     env_cfg = {
         'delta_s': args.delta_s,
         't_max_steps': args.t_max,
+        'n_levels': args.n_levels,
         'dynamic': args.dynamic,
         'base_mbps': args.base_mbps,
     }

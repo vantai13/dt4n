@@ -12,7 +12,7 @@ thoi gian (sequential), switching cost tu nhien (moi shift la 1 buoc).
 class AllocationSpace:
     """Quan ly cac muc phan bo roi rac giua 2 branch voi budget co dinh."""
 
-    def __init__(self, c_total=20.0, n_levels=5):
+    def __init__(self, c_total=20.0, n_levels=7):
         self.c_total = float(c_total)
         self.n_levels = n_levels
         # sinh n_levels muc: tu (cao A, thap B) -> (thap A, cao B)

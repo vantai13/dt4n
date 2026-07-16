@@ -23,12 +23,13 @@ def test_allocation_reset_rng_is_deterministic():
     assert 0 <= alloc_a._level < alloc_a.n_levels
 
 
-def test_named_static_skew_is_extreme():
+def test_named_static_skew_keeps_both_branches_live():
     for seed in range(20):
         scenario = make_scenario('S2_static_skew', seed)
         total = scenario.demand_A + scenario.demand_B
         frac_a = scenario.demand_A / total
-        assert frac_a <= 0.22 or frac_a >= 0.78
+        assert 0.30 <= frac_a <= 0.42 or 0.58 <= frac_a <= 0.70
+        assert min(scenario.demand_A, scenario.demand_B) > 4.0
 
 
 def test_named_far_flip_keeps_far_best_level_gap():
@@ -38,5 +39,4 @@ def test_named_far_flip_keeps_far_best_level_gap():
             scenario.demand_A_1, scenario.demand_B_1)
         level_2, _ = best_level_for(
             scenario.demand_A_2, scenario.demand_B_2)
-        assert abs(level_1 - level_2) >= 3
-
+        assert abs(level_1 - level_2) == 2

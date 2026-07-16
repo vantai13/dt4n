@@ -67,7 +67,8 @@ class TwinEnvA2(gym.Env):
         cfg = cfg or {}
         self.c_total = cfg.get('c_total', 20.0)
         self.delta_s = cfg.get('delta_s', 1.8)
-        self.t_max = cfg.get('t_max_steps', 8)
+        self.t_max = cfg.get('t_max_steps', 12)
+        self.n_levels = int(cfg.get('n_levels', 7))
         self.flow_duration = int(cfg.get('flow_duration', 120))
         self.dynamic = bool(cfg.get('dynamic', False))
         self._default_dynamic = self.dynamic
@@ -77,7 +78,8 @@ class TwinEnvA2(gym.Env):
         if self.burst_mbps is not None:
             self.burst_mbps = float(self.burst_mbps)
 
-        self.alloc = AllocationSpace(c_total=self.c_total, n_levels=5)
+        self.alloc = AllocationSpace(c_total=self.c_total,
+                                     n_levels=self.n_levels)
         self.reward_cfg = RewardA2Config(**cfg.get('reward', {}))
         self.dd = None
         if self.dynamic:
@@ -201,11 +203,13 @@ class TwinEnvA2(gym.Env):
             from rl.a2.scenarios.demand_scenarios import make_scenario
 
             self._scenario = make_scenario(
-                name, s, c_total=self.c_total, t_max=self.t_max)
+                name, s, c_total=self.c_total, t_max=self.t_max,
+                levels=self.alloc.levels)
             self.dynamic = hasattr(self._scenario, 'demand_at')
         elif self._default_dynamic:
             self._scenario = make_dynamic_scenario(
-                s, c_total=self.c_total, t_max=self.t_max)
+                s, c_total=self.c_total, t_max=self.t_max,
+                levels=self.alloc.levels)
             self.dynamic = True
         else:
             self._scenario = make_demand_scenario(s, c_total=self.c_total)
