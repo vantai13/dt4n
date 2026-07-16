@@ -55,6 +55,29 @@ def agent_config(args):
     }
 
 
+def set_global_seed(seed):
+    """Seed Python, NumPy, and Torch for reproducible agent initialization."""
+    import random
+    import torch
+
+    random.seed(seed)
+    np.random.seed(seed)
+    torch.manual_seed(seed)
+    if torch.cuda.is_available():
+        torch.cuda.manual_seed_all(seed)
+    torch.backends.cudnn.deterministic = True
+    torch.backends.cudnn.benchmark = False
+
+
+def parse_z_steps(text):
+    z_steps = tuple(int(z.strip()) for z in str(text).split(',') if z.strip())
+    if not z_steps:
+        raise ValueError('--stale-z must contain at least one integer')
+    if any(z < 0 for z in z_steps):
+        raise ValueError('--stale-z values must be >= 0')
+    return z_steps
+
+
 def _scenario_opts(scenarios, seed):
     """Pick one named scenario deterministically for this seed."""
     if not scenarios:
@@ -112,9 +135,10 @@ def train_episode(env, agent, seed, scenarios=None):
         action = agent.select_action(obs)
         next_obs, reward, terminated, truncated, info = env.step(action)
 
-        # A2 is continuing optimization. Horizon truncation stops collection but
-        # is not natural termination, so keep bootstrapping through time limits.
-        agent.remember(obs, action, reward, next_obs, terminated)
+        # State includes step_progress, so this is a finite-horizon MDP.  At
+        # the time limit there is no future reward to bootstrap from.
+        done_for_bootstrap = bool(terminated or truncated)
+        agent.remember(obs, action, reward, next_obs, done_for_bootstrap)
         loss = agent.train_step()
         if loss is not None:
             losses.append(float(loss))
@@ -152,6 +176,8 @@ def parse_args():
     ap = argparse.ArgumentParser(
         description='Train DQN on A2 static or dynamic demand.')
     ap.add_argument('--episodes', type=int, default=150)
+    ap.add_argument('--seed', type=int, default=0,
+                    help='agent seed for Torch/NumPy/exploration')
     ap.add_argument('--t-max', type=int, default=8)
     ap.add_argument('--eval-every', type=int, default=30)
     ap.add_argument('--val-seeds', type=int, default=8)
@@ -171,6 +197,11 @@ def parse_args():
     ap.add_argument('--batch-size', type=int, default=64)
     ap.add_argument('--learning-rate', type=float, default=1e-3)
     ap.add_argument('--epsilon-decay', type=float, default=0.97)
+    ap.add_argument('--stale-z', default='0',
+                    help='comma-separated demand staleness in steps, e.g. '
+                         '"0,1,2,3,5"; "0" keeps the env unwrapped')
+    ap.add_argument('--mask-aoi', action='store_true',
+                    help='zero out AoI dimensions for no-AoI ablation')
     ap.add_argument('--out', default='docs/phase-6/artifacts/a2_train_static.json')
     ap.add_argument('--save-model', default='docs/phase-6/artifacts/a2_dqn_static.pt')
     ap.add_argument('--episode-csv',
@@ -202,6 +233,9 @@ def import_agent_or_exit():
 
 def main():
     args = parse_args()
+    DQNAgent = import_agent_or_exit()
+    set_global_seed(args.seed)
+    z_choices = parse_z_steps(args.stale_z)
     scenarios = (
         [s.strip() for s in args.scenarios.split(',') if s.strip()]
         if args.scenarios else None
@@ -219,7 +253,6 @@ def main():
             args.out = 'docs/phase-6/artifacts/a2_train_dynamic.json'
         if args.save_model == 'docs/phase-6/artifacts/a2_dqn_static.pt':
             args.save_model = 'docs/phase-6/artifacts/a2_dqn_dynamic.pt'
-    DQNAgent = import_agent_or_exit()
 
     train_seeds = list(range(args.train_seed_start,
                              args.train_seed_start + args.episodes))
@@ -238,6 +271,20 @@ def main():
     if args.burst_mbps is not None:
         env_cfg['burst_mbps'] = args.burst_mbps
     env = TwinEnvA2(runner, cfg=env_cfg)
+    use_wrapper = (z_choices != (0,)) or args.mask_aoi
+    if use_wrapper:
+        from rl.a2.staleness import StalenessWrapper
+
+        env = StalenessWrapper(
+            env,
+            z_steps_choices=z_choices,
+            mask_aoi_dims=args.mask_aoi,
+        )
+        print('[train-a2] StalenessWrapper: z_steps=%s mask_aoi=%s'
+              % (list(z_choices), args.mask_aoi), flush=True)
+    else:
+        print('[train-a2] no StalenessWrapper (z=0, mask_aoi=False)',
+              flush=True)
     agent = DQNAgent(
         state_size=A2_STATE_DIM,
         action_size=env.action_space.n,
@@ -346,9 +393,17 @@ def main():
     os.makedirs(os.path.dirname(args.out) or '.', exist_ok=True)
     artifact = {
         'args': vars(args),
+        'agent_seed': args.seed,
+        'stale_z_steps': list(z_choices),
+        'mask_aoi': bool(args.mask_aoi),
+        'state_dim': A2_STATE_DIM,
         'mode': (
+            'mixed_named_scenarios_stale'
+            if scenarios and use_wrapper else
             'mixed_named_scenarios'
             if scenarios else
+            'stale'
+            if use_wrapper else
             ('dynamic' if args.dynamic else 'static')
         ),
         'scenarios': scenarios,

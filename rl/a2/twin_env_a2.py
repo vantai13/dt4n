@@ -52,6 +52,7 @@ from rl.a2.demand_dynamic import DynamicDemand
 from rl.a2.state_a2 import build_a2_state, A2_STATE_DIM
 from rl.a2.reward_a2 import compute_reward_a2, RewardA2Config
 from rl.a2.demand_scenario import make_demand_scenario, make_dynamic_scenario
+from rl.a2.scenarios.demand_scenarios import best_level_for
 
 
 BRANCH_A_LINK = 's1-s2'   # duong toi srv1
@@ -184,6 +185,10 @@ class TwinEnvA2(gym.Env):
         self._sync_dynamic_demand(self._t)
         return self._cur_demand
 
+    def true_demand(self):
+        """Return the current true demand without changing env state."""
+        return self._cur_demand
+
     # ---------- Gym API ----------
     def reset(self, seed=None, options=None):
         super().reset(seed=seed)
@@ -209,8 +214,10 @@ class TwinEnvA2(gym.Env):
             self._ensure_dynamic_demand()
         self._t = 0
         self._last_action = 0
-        # bat dau o allocation can bang
-        cA, cB = self.alloc.reset()
+        # Boc allocation khoi dau theo seed. Bat dau luon o giua la mot
+        # "mon qua" cho noop, vi (10,10) gan toi uu trong nhieu scenario.
+        alloc_rng = np.random.default_rng(int(s) + 31337)
+        cA, cB = self.alloc.reset(rng=alloc_rng)
         self._apply_allocation(cA, cB)
         dA, dB = self._scenario_demand_at(0)
         self._cur_demand = (float(dA), float(dB))
@@ -221,8 +228,17 @@ class TwinEnvA2(gym.Env):
         else:
             self._start_demand_traffic(dA, dB)
         time.sleep(self.delta_s)
-        obs = self._observe()
-        info = {'scenario': self._scenario.describe()}
+        gA, gB = self._read_goodput()
+        obs = self._build_obs(gA, gB)
+        info = {
+            'scenario': self._scenario.describe(),
+            'goodput_A': gA, 'goodput_B': gB,
+            'demand_A': self._cur_demand[0],
+            'demand_B': self._cur_demand[1],
+            'alloc': self.alloc.current(),
+            'alloc_level_norm': self.alloc.level_norm(),
+            't': self._t,
+        }
         return obs, info
 
     def _observe(self):
@@ -244,6 +260,7 @@ class TwinEnvA2(gym.Env):
         action = int(action)
         self._last_action = action
         demand_changed = self._sync_dynamic_demand(self._t)
+        prev_level = self.alloc._level
         # 1-2. apply action -> set bw
         cA, cB = self.alloc.apply(action)
         self._apply_allocation(cA, cB)
@@ -256,6 +273,14 @@ class TwinEnvA2(gym.Env):
         bd = compute_reward_a2(gA, dA,
                                gB, dB,
                                action, self.reward_cfg)
+        true_best, _ = best_level_for(dA, dB, self.alloc.levels)
+        if prev_level < true_best:
+            correct_action = 1
+        elif prev_level > true_best:
+            correct_action = 2
+        else:
+            correct_action = 0
+        wrong_target = action != correct_action
         # 6. state
         self._t += 1
         obs = self._build_obs(gA, gB)
@@ -278,5 +303,12 @@ class TwinEnvA2(gym.Env):
             'sat_A': satA, 'sat_B': satB, 'alloc': (cA, cB),
             'total_sat': satA + satB, 'demand_A': dA, 'demand_B': dB,
             'demand_changed': demand_changed,
+            'alloc_level_norm': self.alloc.level_norm(),
+            't': self._t,
+            'prev_level': int(prev_level),
+            'cur_level': int(self.alloc._level),
+            'true_best_level': int(true_best),
+            'correct_action': int(correct_action),
+            'wrong_target': bool(wrong_target),
         }
         return obs, bd.total, terminated, truncated, info

@@ -32,9 +32,19 @@ class AllocationSpace:
             levels.append((cA, cB))
         return levels
 
-    def reset(self, level=None):
-        """Reset ve muc dau episode (mac dinh: can bang giua)."""
-        self._level = self.n_levels // 2 if level is None else int(level)
+    def reset(self, level=None, rng=None):
+        """Reset ve muc dau episode.
+
+        level != None: dat cung (dung cho test/debug).
+        rng != None: boc ngau nhien theo rng (dung cho train/eval).
+        ca hai None: ve giua, giu hanh vi cu cho tuong thich.
+        """
+        if level is not None:
+            self._level = int(level)
+        elif rng is not None:
+            self._level = int(rng.integers(0, self.n_levels))
+        else:
+            self._level = self.n_levels // 2
         return self.current()
 
     def current(self):

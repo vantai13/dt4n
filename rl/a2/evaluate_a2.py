@@ -18,7 +18,7 @@ from rl.a2.scenarios.demand_scenarios import (  # noqa: E402
     eval_seeds,
 )
 from rl.a2.state_a2 import A2_STATE_DIM  # noqa: E402
-from rl.a2.train_a2 import agent_config  # noqa: E402
+from rl.a2.train_a2 import agent_config, parse_z_steps  # noqa: E402
 from rl.a2.utils.stats import (  # noqa: E402
     format_stat,
     significantly_better,
@@ -31,6 +31,9 @@ def run_episode(env, policy_fn, seed, scenario_name):
     obs, info = env.reset(seed=seed, options={'scenario': scenario_name})
     total_return = 0.0
     total_sat = 0.0
+    wrong = 0
+    noop = 0
+    aois = []
     steps = 0
     terminated = False
     truncated = False
@@ -40,20 +43,29 @@ def run_episode(env, policy_fn, seed, scenario_name):
         obs, reward, terminated, truncated, info = env.step(action)
         total_return += float(reward)
         total_sat += float(info.get('total_sat', float(obs[5]) + float(obs[6])))
+        wrong += int(info.get('wrong_target', False))
+        noop += int(action == 0)
+        aois.append(float(info.get('aoi_measured_s', 0.0)))
         steps += 1
 
     return {
         'return': total_return,
         'sat': total_sat,
         'sat_mean': total_sat / max(steps, 1),
+        'wrong_rate': wrong / max(steps, 1),
+        'noop_freq': noop / max(steps, 1),
+        'aoi_mean_s': sum(aois) / max(len(aois), 1),
+        'z_steps': int(info.get('z_steps', 0)),
         'steps': steps,
     }
 
 
-def build_policies(model_path, cfg):
+def build_policies(model_path, cfg, include_diagnostics=False):
     """Build policy callables. Load DQN only when a checkpoint exists."""
     from rl.a2.policies_a2 import (
         policy_equal,
+        policy_blind_oracle,
+        policy_clairvoyant,
         policy_greedy,
         policy_greedy_strong,
         policy_noop,
@@ -67,6 +79,9 @@ def build_policies(model_path, cfg):
         'greedy_strong': policy_greedy_strong,
         'myopic_oracle': policy_oracle_dynamic,
     }
+    if include_diagnostics:
+        policies['blind_oracle'] = policy_blind_oracle
+        policies['clairvoyant'] = policy_clairvoyant
 
     if not model_path or not os.path.exists(model_path):
         print('[eval-a2] warning: model %r not found; skipping agent'
@@ -149,6 +164,12 @@ def parse_args():
     parser.add_argument('--sync-period', type=float, default=0.5)
     parser.add_argument('--base-mbps', type=float, default=3.0)
     parser.add_argument('--burst-mbps', type=float, default=None)
+    parser.add_argument('--stale-z', default='0',
+                        help='comma-separated demand staleness in steps')
+    parser.add_argument('--mask-aoi', action='store_true',
+                        help='zero out AoI dimensions for no-AoI ablation')
+    parser.add_argument('--include-diagnostics', action='store_true',
+                        help='include blind_oracle and clairvoyant policies')
     parser.add_argument('--out', default='results/eval/eval_a2.json')
     parser.add_argument('--plot-dir', default='results/eval/plots')
     parser.add_argument('--cleanup-mn', action='store_true',
@@ -163,6 +184,7 @@ def parse_args():
 
 def main():
     args = parse_args()
+    z_choices = parse_z_steps(args.stale_z)
     scenarios = [s.strip() for s in args.scenarios.split(',') if s.strip()]
     unknown = [s for s in scenarios if s not in SCENARIO_NAMES]
     if unknown:
@@ -182,6 +204,9 @@ def main():
 
     results_return = {}
     results_sat_mean = {}
+    results_wrong_rate = {}
+    results_noop_freq = {}
+    results_aoi_mean = {}
     raw = {}
     t0 = time.monotonic()
 
@@ -194,7 +219,25 @@ def main():
         if args.burst_mbps is not None:
             env_cfg['burst_mbps'] = args.burst_mbps
         env = TwinEnvA2(runner=runner, cfg=env_cfg)
-        policies = build_policies(args.model, cfg)
+        use_wrapper = (z_choices != (0,)) or args.mask_aoi
+        if use_wrapper:
+            from rl.a2.staleness import StalenessWrapper
+
+            env = StalenessWrapper(
+                env,
+                z_steps_choices=z_choices,
+                mask_aoi_dims=args.mask_aoi,
+            )
+            print('[eval-a2] StalenessWrapper: z_steps=%s mask_aoi=%s'
+                  % (list(z_choices), args.mask_aoi), flush=True)
+        else:
+            print('[eval-a2] no StalenessWrapper (z=0, mask_aoi=False)',
+                  flush=True)
+        policies = build_policies(
+            args.model,
+            cfg,
+            include_diagnostics=args.include_diagnostics,
+        )
 
         for scenario in scenarios:
             raw[scenario] = {policy: [] for policy in policies}
@@ -217,6 +260,18 @@ def main():
                 policy: summarize(row['sat_mean'] for row in rows)
                 for policy, rows in raw[scenario].items()
             }
+            results_wrong_rate[scenario] = {
+                policy: summarize(row['wrong_rate'] for row in rows)
+                for policy, rows in raw[scenario].items()
+            }
+            results_noop_freq[scenario] = {
+                policy: summarize(row['noop_freq'] for row in rows)
+                for policy, rows in raw[scenario].items()
+            }
+            results_aoi_mean[scenario] = {
+                policy: summarize(row['aoi_mean_s'] for row in rows)
+                for policy, rows in raw[scenario].items()
+            }
             print_table(
                 scenario,
                 results_return[scenario],
@@ -233,6 +288,9 @@ def main():
         'scenario_desc': {s: SCENARIO_DESC.get(s, '') for s in scenarios},
         'policies': list(policies.keys()),
         'model': args.model,
+        'stale_z_steps': list(z_choices),
+        'mask_aoi': bool(args.mask_aoi),
+        'state_dim': A2_STATE_DIM,
         'args': vars(args),
         'elapsed_s': round(time.monotonic() - t0, 1),
         'notes': [
@@ -242,6 +300,9 @@ def main():
         ],
         'return': results_return,
         'sat_mean': results_sat_mean,
+        'wrong_rate': results_wrong_rate,
+        'noop_freq': results_noop_freq,
+        'aoi_mean_s': results_aoi_mean,
         'raw': raw,
     }
 
