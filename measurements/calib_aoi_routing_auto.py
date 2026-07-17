@@ -7,7 +7,11 @@ This automates the manual recipe:
 2. start the routing Mininet topology,
 3. bootstrap routing Things into Ditto,
 4. start sync_agent,
-5. run ``calib_aoi_routing`` against hload_e -> hsink_e.
+5. run ``calib_aoi_routing`` against hsink_e -> hload_e.
+
+The direction matters: routing utilization is defined as ``txRate`` on the
+canonical link side. For link sC-sE, canonical side A is sC, so the load must
+leave the sC side (hsink_e) toward the sE side (hload_e).
 """
 
 from __future__ import annotations
@@ -82,7 +86,7 @@ def parse_args(argv: Iterable[str] | None = None):
     p.add_argument("--node-b", default="sE")
     p.add_argument("--ifname", default="sC-eth3")
     p.add_argument("--bw", type=float, default=4.0)
-    p.add_argument("--sink-ip", default="10.0.0.12")
+    p.add_argument("--sink-ip", default="10.0.0.11")
     p.add_argument("--iperf-grace", type=float, default=5.0)
     p.add_argument("--spec", default=ROUTING_SPEC_PATH)
     p.add_argument("--routes", default=ROUTING_TABLE_PATH)
@@ -169,8 +173,8 @@ def main(argv: Iterable[str] | None = None) -> None:
             node_b=args.node_b,
             ifname=args.ifname,
             bw=args.bw,
-            load_pid=hload.pid,
-            sink_pid=hsink.pid,
+            load_pid=hsink.pid,
+            sink_pid=hload.pid,
             sink_ip=args.sink_ip,
             mode=args.mode,
             duration=args.duration,
