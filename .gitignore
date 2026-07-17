@@ -56,3 +56,19 @@ Thumbs.db
 docs/phase-4.5/raw/*.log
 docs/phase-4.5/raw/*.txt
 !docs/phase-4.5/raw/.gitkeep
+
+# --- Phase 9+: chống rác quay lại ---
+# Checkpoint tái tạo được từ train_r.py + seed. TRỪ frozen_policies/ (di sản có chủ đích).
+results/train/*.pt
+runs/
+!frozen_policies/**
+
+# Hình phải sinh từ CSV bằng script, không commit hình vẽ tay
+results/**/plots_*/
+*.png
+!docs/**/*.png        # trừ hình trong docs (dùng cho luận văn)
+
+# Thư mục làm việc tạm
+_graveyard/
+_legacy/
+scratch/

@@ -191,3 +191,87 @@ A routing episode is often tens of milliseconds, while the measured Ditto sync
 period is 500 ms. The twin may not refresh inside one flow at all. If the
 sync-period curve stays flat near 0.5 s, that is a finding: AoI is acting across
 flow arrivals more than inside a single per-packet route episode.
+
+## 2026-07-17 - Lesson 9.3: pilot load balance
+
+### QD-21: Separate LOAD_CFG_TRAIN from LOAD_CFG_V1
+
+Before running the DQN pilot, `scripts/diag_decision_balance.py` checks whether
+the optimal E/F decision is alive. `LOAD_CFG_V1` is intentionally strong for the
+Dijkstra AoI sweep, but it makes E almost never optimal at C/D. A DQN could then
+learn the correct static rule "always choose F", stop reading utilization, and
+become insensitive to AoI.
+
+This is not reward hacking: it is optimal behavior in a world whose training
+distribution is wrong for RQ3. The fix is to change the training world, not to
+punish the agent.
+
+`LOAD_CFG_V1` remains locked for the Phase 8/10 Dijkstra sweep:
+`e_load=(0.80, 0.97), drift_sigma=0.15`.
+
+`LOAD_CFG_TRAIN` is added for DQN training:
+`e_load=(0.60, 0.97), drift_sigma=0.15`.
+It covers both balanced and bottleneck regimes, keeping the optimal decision
+variable while avoiding a train/eval distribution gap on the bottleneck side.
+
+Measured by `scripts/pilot_load_cfg.py --seeds 300`:
+
+- V1 current: `frac_E_better=0.000`, `cost_bl max=0.5869`, verdict `FAIL`.
+- V2d covering / selected train config: `frac_E_better=0.330`,
+  `cost_bl max=0.4612`, verdict `PASS`.
+- V2e covering also passed and was monotone, but had less balance headroom
+  (`frac_E_better=0.223`). Training chooses the better decision-balance margin.
+
+### QD-22: Gate policy responsiveness before 5-seed training
+
+`scripts/pilot_train_r.py` runs a one-seed pilot and checks the behavior before
+committing to 5 seeds:
+
+- manual path inspection over 10 eval seeds,
+- mean Q-spread on two-action states,
+- `safe_path_freq(bottleneck_E) - safe_path_freq(normal) > 0.20`,
+- arrival rate and revisit rate.
+
+The safe-path gate uses a difference, not an absolute level. A policy that has
+the same safe-path frequency under every load is static even if its absolute
+frequency looks reasonable.
+
+Pilot result for `scripts/pilot_train_r.py --seed 0 --episodes 400`:
+
+- unique paths: `4/10`,
+- Q-spread: `0.1790`,
+- safe-path delta: `0.5700`,
+- arrived rate: `1.0000`,
+- revisit rate: `0.0000`,
+- verdict: `GO`.
+
+## 2026-07-17 - Lesson 9.4: 5-seed SNR gate
+
+### QD-23: Do not fix the SRC first-hop quirk before Phase 11
+
+The pilot revealed a known imperfection: the learned policy often starts with
+`SRC -> B`, although `SRC -> A` has lower base delay. The state exposes
+neighbor utilization but not neighbor base delay, so the agent has to infer
+base-delay offsets from the node identity. At SRC the performance difference is
+small, about 0.9% of total return.
+
+This does not threaten the AoI measurement because AoI matters where stale
+utilization flips a decision. The large, flipping decision is C/D `E` vs `F`,
+not SRC `A` vs `B`. Adding base-delay features would expand state 7D to 9D and
+weaken the AoI ablation from 28.6% to 22.2% for a tiny return gain.
+
+Decision: record the quirk and leave the state unchanged.
+
+### QD-24: Fix the 5-seed SNR gate before seeing 5-seed results
+
+The decisive Phase 9 question is whether agent variance can swallow the Phase
+11 effect. The SNR gate is fixed before the real 5-seed train:
+
+- `headroom_sweep = 0.5869`,
+- `std_agent <= 0.1956` means `SNR >= 3` and PASS,
+- `0.1956 < std_agent <= 0.2934` means WARN and run 10 seeds,
+- `std_agent > 0.2934` means FAIL and the stage needs investigation.
+
+`scripts/train_5seed.sh` runs seeds 0..4 sequentially and refuses to run on a
+dirty working tree. `scripts/analyze_5seed.py` computes the behavior gates,
+`std_agent`, SNR, and the `safe_path_freq(AoI=0)` anchor for Phase 11.

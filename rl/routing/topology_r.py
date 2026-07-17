@@ -58,3 +58,16 @@ LOAD_CFG_V1 = {
     'e_load': (0.80, 0.97),
     'drift_sigma': 0.15,
 }
+
+# [9.3] Training load, intentionally separate from LOAD_CFG_V1.
+#
+# LOAD_CFG_V1 is locked for the Dijkstra AoI sweep: it gives a strong,
+# monotone cost-of-blindness signal. But under V1, E is almost never the right
+# C/D next hop, so a DQN can learn the static policy "always choose F" and stop
+# reading utilization. This training config covers both balanced and bottleneck
+# regimes so the optimal E/F decision stays alive during learning.
+LOAD_CFG_TRAIN = {
+    'base_load': (0.25, 0.40),
+    'e_load': (0.60, 0.97),
+    'drift_sigma': 0.15,
+}

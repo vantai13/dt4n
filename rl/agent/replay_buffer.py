@@ -12,7 +12,7 @@ from collections import deque
 
 
 class ReplayBuffer:
-    """Bo nho kinh nghiem uniform. Luu (s,a,r,s',done), sample ngau nhien.
+    """Bo nho kinh nghiem uniform. Luu (s,a,r,s',done,next_mask).
 
     Vi sao sample ngau nhien? Mau lien nhau trong 1 episode rat tuong quan
     (dang nghen thi buoc sau van nghen). Train tren du lieu tuong quan ->
@@ -21,23 +21,29 @@ class ReplayBuffer:
 
     Loi ich phu (rat quy voi env cham ~2s/buoc cua ta): moi trai nghiem
     duoc TAI SU DUNG nhieu lan truoc khi bi day ra khoi deque.
+
+    [9.1] Luu next_valid_mask de Bellman target khong lay max qua action
+    khong ton tai. Luu mask trong buffer ro rang hon viec suy nguoc tu
+    next_state, vi cach encode state co the doi khi them staleness layer.
     """
 
     def __init__(self, capacity: int = 50000):
         self.buffer = deque(maxlen=capacity)   # day thi tu xoa cai cu nhat
 
-    def push(self, state, action, reward, next_state, done):
-        self.buffer.append((state, action, reward, next_state, done))
+    def push(self, state, action, reward, next_state, done, next_valid_mask):
+        self.buffer.append((state, action, reward, next_state, done,
+                            np.asarray(next_valid_mask, dtype=np.float32)))
 
     def sample(self, batch_size: int = 64):
         batch = random.sample(self.buffer, batch_size)   # khong lay trung
-        states, actions, rewards, next_states, dones = zip(*batch)
+        states, actions, rewards, next_states, dones, next_masks = zip(*batch)
         return (
             np.array(states,      dtype=np.float32),
             np.array(actions,     dtype=np.int64),
             np.array(rewards,     dtype=np.float32),
             np.array(next_states, dtype=np.float32),
             np.array(dones,       dtype=np.float32),   # float de dung trong (1-done)
+            np.array(next_masks,   dtype=np.float32),
         )
 
     def __len__(self):
