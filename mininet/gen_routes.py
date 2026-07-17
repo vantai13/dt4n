@@ -35,12 +35,20 @@ def edge_weight(a, b):
     return W_BOTTLENECK if frozenset((a, b)) == BOTTLENECK_EDGE else W_NORMAL
 
 
+def link_endpoints(link):
+    """Return the two endpoint names from a legacy list or metadata dict link."""
+    if isinstance(link, dict):
+        return link["endpoints"][0], link["endpoints"][1]
+    return link[0], link[1]
+
+
 def build_graph(spec, excluded_edges=()):
     """Return an undirected weighted graph from the topology spec."""
     graph = defaultdict(dict)
     excluded = {frozenset(edge) for edge in excluded_edges}
 
-    for a, b in spec.get("links", []):
+    for link in spec.get("links", []):
+        a, b = link_endpoints(link)
         edge = frozenset((a, b))
         if edge in excluded:
             continue
@@ -113,7 +121,8 @@ def host_attachment(spec):
 
     for host in host_items(spec):
         attached_to = None
-        for a, b in spec.get("links", []):
+        for link in spec.get("links", []):
+            a, b = link_endpoints(link)
             if a == host["name"] and b in switches:
                 attached_to = b
                 break

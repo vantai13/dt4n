@@ -55,6 +55,7 @@ except ImportError:
 from rl.routing.link_model import loss_rate, total_delay_ms
 from rl.routing.reward_r import REWARD_VERSION, step_reward
 from rl.routing.state_r import MAX_NEIGHBORS, R_STATE_DIM, build_route_state
+from rl.routing.util_spec import UTIL_MAX, clamp_util
 
 
 class RouteEnv(gym.Env):
@@ -109,9 +110,9 @@ class RouteEnv(gym.Env):
         e_lo, e_hi = self.load_cfg.get('e_load', (0.60, 0.95))
         rho = {}
         for link in self.link:
-            rho[link] = float(self._rng.uniform(base_lo, base_hi))
+            rho[link] = clamp_util(self._rng.uniform(base_lo, base_hi))
 
-        e_level = float(self._rng.uniform(e_lo, e_hi))
+        e_level = clamp_util(self._rng.uniform(e_lo, e_hi))
         for link in (('C', 'E'), ('D', 'E')):
             if link in rho:
                 rho[link] = e_level
@@ -124,7 +125,7 @@ class RouteEnv(gym.Env):
             self._rho[link] = float(np.clip(
                 self._rho[link] + self._rng.normal(0.0, sigma),
                 0.02,
-                1.10,
+                UTIL_MAX,
             ))
 
     def peek_next_rho(self):
@@ -137,7 +138,7 @@ class RouteEnv(gym.Env):
         rng = np.random.default_rng()
         rng.bit_generator.state = copy.deepcopy(self._rng.bit_generator.state)
         return {
-            link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, 1.10))
+            link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, UTIL_MAX))
             for link, rho in self._rho.items()
         }
 

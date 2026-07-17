@@ -7,6 +7,8 @@ expensive. Here we cap utilization, a physical modeling choice, and leave the
 M/M/1 curve itself intact.
 """
 
+# UNCALIBRATED: inherited from the routing-sdn simulator lineage. Lesson 9.0
+# measures these from Mininet and should replace them with link_profiles.json.
 RHO_CAP = 0.97
 LOSS_THRESHOLD = 0.85
 LOSS_FULL = 1.20

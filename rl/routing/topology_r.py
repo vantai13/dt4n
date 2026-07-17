@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Locked 8-node routing topology for Phase 8-12.
 
-V2 is calibrated to the real Mininet testbed's small-machine link budget:
-4-8 Mbps rather than the old simulator-only 50-100 Mbps. The structure stays
-8-node and compact so the state/action design from Lesson 8.2 remains valid.
+V2 is the uncalibrated 8-node starting topology inherited from the routing-sdn
+lineage, scaled down to the small-machine Mininet budget. Lesson 9.0 measures
+the real link curves; until those profiles are consumed, the numeric link
+parameters here should be treated as UNCALIBRATED.
 
 Structure:
     SRC -> {A,B} -> {C,D} -> {E narrow-fast | F wide-slow} -> F -> DST

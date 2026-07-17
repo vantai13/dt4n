@@ -14,6 +14,7 @@ from collections import deque
 import numpy as np
 
 from rl.routing.state_r import build_route_state, mask_aoi
+from rl.routing.util_spec import UTIL_MAX
 
 
 class StalenessWrapper:
@@ -80,7 +81,7 @@ class StalenessWrapper:
         chain = []
         for _ in range(depth):
             past = {
-                link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, 1.10))
+                link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, UTIL_MAX))
                 for link, rho in past.items()
             }
             chain.append(dict(past))

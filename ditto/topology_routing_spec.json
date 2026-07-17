@@ -1,0 +1,199 @@
+{
+  "_comment": "Lesson 9.0 routing calibration topology. Use with DT4N_TOPOLOGY_SPEC=ditto/topology_routing_spec.json, DT4N_ROUTING_TABLE=ditto/routing_table_routing.json, and DT4N_PORT_MAP=ditto/port_map_routing.json.",
+  "hosts": [
+    {
+      "ip": "10.0.0.1",
+      "name": "hsrc",
+      "role": "client"
+    },
+    {
+      "ip": "10.0.0.2",
+      "name": "hdst",
+      "role": "server"
+    },
+    {
+      "ip": "10.0.0.11",
+      "name": "hload_e",
+      "role": "load"
+    },
+    {
+      "ip": "10.0.0.12",
+      "name": "hsink_e",
+      "role": "sink"
+    }
+  ],
+  "links": [
+    {
+      "bwMbps": 8.0,
+      "delayMs": 2.0,
+      "endpoints": [
+        "hsrc",
+        "sA"
+      ],
+      "maxQueuePkts": 10,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 8.0,
+      "delayMs": 2.5,
+      "endpoints": [
+        "hsrc",
+        "sB"
+      ],
+      "maxQueuePkts": 10,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 6.0,
+      "delayMs": 3.0,
+      "endpoints": [
+        "sA",
+        "sC"
+      ],
+      "maxQueuePkts": 7,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 6.0,
+      "delayMs": 4.0,
+      "endpoints": [
+        "sA",
+        "sD"
+      ],
+      "maxQueuePkts": 7,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 6.0,
+      "delayMs": 4.0,
+      "endpoints": [
+        "sB",
+        "sC"
+      ],
+      "maxQueuePkts": 7,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 6.0,
+      "delayMs": 3.0,
+      "endpoints": [
+        "sB",
+        "sD"
+      ],
+      "maxQueuePkts": 7,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 4.0,
+      "delayMs": 2.0,
+      "endpoints": [
+        "sC",
+        "sE"
+      ],
+      "maxQueuePkts": 5,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 4.0,
+      "delayMs": 2.0,
+      "endpoints": [
+        "sD",
+        "sE"
+      ],
+      "maxQueuePkts": 5,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 8.0,
+      "delayMs": 1.0,
+      "endpoints": [
+        "sE",
+        "sF"
+      ],
+      "maxQueuePkts": 10,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 8.0,
+      "delayMs": 6.0,
+      "endpoints": [
+        "sC",
+        "sF"
+      ],
+      "maxQueuePkts": 10,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 8.0,
+      "delayMs": 5.5,
+      "endpoints": [
+        "sD",
+        "sF"
+      ],
+      "maxQueuePkts": 10,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 8.0,
+      "delayMs": 1.5,
+      "endpoints": [
+        "sF",
+        "hdst"
+      ],
+      "maxQueuePkts": 10,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 20.0,
+      "delayMs": 1.0,
+      "endpoints": [
+        "hload_e",
+        "sE"
+      ],
+      "maxQueuePkts": 25,
+      "queueTargetMs": 15.0
+    },
+    {
+      "bwMbps": 20.0,
+      "delayMs": 1.0,
+      "endpoints": [
+        "hsink_e",
+        "sC"
+      ],
+      "maxQueuePkts": 25,
+      "queueTargetMs": 15.0
+    }
+  ],
+  "pathProbes": [
+    [
+      "hsrc",
+      "hdst"
+    ]
+  ],
+  "switches": [
+    {
+      "dpid": "1",
+      "name": "sA"
+    },
+    {
+      "dpid": "2",
+      "name": "sB"
+    },
+    {
+      "dpid": "3",
+      "name": "sC"
+    },
+    {
+      "dpid": "4",
+      "name": "sD"
+    },
+    {
+      "dpid": "5",
+      "name": "sE"
+    },
+    {
+      "dpid": "6",
+      "name": "sF"
+    }
+  ]
+}

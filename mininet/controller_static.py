@@ -46,6 +46,7 @@ class StaticMultipath(app_manager.RyuApp):
     def __init__(self, *args, **kwargs):
         super().__init__(*args, **kwargs)
         self.spec = load_spec(SPEC_PATH)
+        self.spec_dpid_to_name = self._build_dpid_to_name()
         self.primary_routes = self._load_primary_routes()
         self.host_info = host_attachment(self.spec)
         self.ip_to_mac = self._build_ip_to_mac()
@@ -92,9 +93,30 @@ class StaticMultipath(app_manager.RyuApp):
             out[ip] = "00:00:00:00:00:%02x" % last
         return out
 
+    def _build_dpid_to_name(self):
+        """Map explicit switch DPID metadata from the topology spec.
+
+        The Phase 1 triangle used canonical names s1/s2/s3, so dpid=1 -> s1
+        was enough. The routing calibration topology uses semantic switch names
+        such as sA and sF; those must be declared explicitly in the spec.
+        """
+        out = {}
+        for item in self.spec.get("switches", []):
+            if not isinstance(item, dict):
+                continue
+            name = item.get("name")
+            dpid = item.get("dpid")
+            if not name or dpid is None:
+                continue
+            try:
+                out[int(str(dpid).replace(":", ""), 16)] = name
+            except ValueError:
+                LOG.warning("Ignoring invalid dpid for %s: %s", name, dpid)
+        return out
+
     def _dpid_to_switch_name(self, dpid):
         """Mininet default: s1 has dpid 1, s2 has dpid 2, etc."""
-        return "s%d" % dpid
+        return self.spec_dpid_to_name.get(int(dpid), "s%d" % dpid)
 
     def add_flow(self, dp, priority, match, actions, buffer_id=None):
         parser = dp.ofproto_parser

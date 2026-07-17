@@ -82,6 +82,12 @@ def _link_body(a, b):
     }
 
 
+def _spec_link_endpoints(link):
+    if isinstance(link, dict):
+        return link['endpoints'][0], link['endpoints'][1]
+    return link[0], link[1]
+
+
 def _path_body(src, dst):
     """Path Thing: a directed multi-hop measurement, not a physical edge."""
     return {
@@ -164,13 +170,13 @@ def entities_from_spec(path):
                      'kind': 'switch', 'body': _switch_body(name)})
     seen = set()
     for ln in spec.get('links', []):
-        a, b = ln[0], ln[1]              # link mô tả là cặp ["h1","s1"]
+        a, b = _spec_link_endpoints(ln)  # list pair or metadata dict
         tid = make_thing_id_link(a, b)
         if tid in seen:
             continue
         seen.add(tid)
         ents.append({'thing_id': tid, 'kind': 'link', 'body': _link_body(a, b)})
-    _append_paths(ents)
+    _append_paths(ents, probes=spec.get('pathProbes', (('h1', 'srv1'),)))
     return _append_controller(ents)
 
 

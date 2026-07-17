@@ -21,6 +21,7 @@ small measured floor is kept because the real reader never observes zero AoI.
 import numpy as np
 
 from rl.routing.state_r import build_route_state, mask_aoi
+from rl.routing.util_spec import UTIL_MAX
 
 
 DITTO_AOI_CALIBRATION = {
@@ -99,7 +100,7 @@ class DittoStalenessWrapper:
         sigma = base_sigma * float(np.sqrt(age_s / max(ref_s, 1e-12)))
         rng = np.random.default_rng((int(self._episode_seed) + 515_151) % (2**32))
         return {
-            link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, 1.10))
+            link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, UTIL_MAX))
             for link, rho in self.env._rho.items()
         }
 
