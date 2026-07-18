@@ -1,0 +1,172 @@
+{
+  "all_pass": true,
+  "delta_mean": 1.0,
+  "delta_min": 0.5,
+  "delta_std": 0.0,
+  "episodes": 50,
+  "frozen_dir": "frozen_policies/v1",
+  "per_seed": [
+    {
+      "audit_pass": true,
+      "delta_S1_S2": 1.0,
+      "model_sha256_ok": true,
+      "scenarios": {
+        "S1_viaE_better": {
+          "E_usage": 1.0,
+          "arrived": 1.0,
+          "return_mean": 4.186406175571622,
+          "return_std": 0.02271366696853517
+        },
+        "S2_direct_better": {
+          "E_usage": 0.0,
+          "arrived": 1.0,
+          "return_mean": 3.9612547264645293,
+          "return_std": 0.039736370461537794
+        },
+        "S3_both_free": {
+          "E_usage": 0.62,
+          "arrived": 1.0,
+          "return_mean": 4.111731793135128,
+          "return_std": 0.09702632937822664
+        },
+        "S4_both_busy": {
+          "E_usage": 0.04,
+          "arrived": 1.0,
+          "return_mean": 3.24330491354359,
+          "return_std": 0.09569791049854875
+        }
+      },
+      "seed": 0
+    },
+    {
+      "audit_pass": true,
+      "delta_S1_S2": 1.0,
+      "model_sha256_ok": true,
+      "scenarios": {
+        "S1_viaE_better": {
+          "E_usage": 1.0,
+          "arrived": 1.0,
+          "return_mean": 4.202864906899884,
+          "return_std": 0.014939482861550411
+        },
+        "S2_direct_better": {
+          "E_usage": 0.0,
+          "arrived": 1.0,
+          "return_mean": 3.9777134577927917,
+          "return_std": 0.032349836731544165
+        },
+        "S3_both_free": {
+          "E_usage": 0.8,
+          "arrived": 1.0,
+          "return_mean": 4.1644305129956365,
+          "return_std": 0.08517786227074814
+        },
+        "S4_both_busy": {
+          "E_usage": 0.12,
+          "arrived": 1.0,
+          "return_mean": 3.2696561562909725,
+          "return_std": 0.08014340968157468
+        }
+      },
+      "seed": 1
+    },
+    {
+      "audit_pass": true,
+      "delta_S1_S2": 1.0,
+      "model_sha256_ok": true,
+      "scenarios": {
+        "S1_viaE_better": {
+          "E_usage": 1.0,
+          "arrived": 1.0,
+          "return_mean": 4.16774878021517,
+          "return_std": 0.015215921194358521
+        },
+        "S2_direct_better": {
+          "E_usage": 0.0,
+          "arrived": 1.0,
+          "return_mean": 3.9425973311080775,
+          "return_std": 0.03260882109135202
+        },
+        "S3_both_free": {
+          "E_usage": 0.14,
+          "arrived": 1.0,
+          "return_mean": 3.9816151594397953,
+          "return_std": 0.08153975471518203
+        },
+        "S4_both_busy": {
+          "E_usage": 0.0,
+          "arrived": 1.0,
+          "return_mean": 3.2172801395386665,
+          "return_std": 0.09462736782480372
+        }
+      },
+      "seed": 2
+    },
+    {
+      "audit_pass": true,
+      "delta_S1_S2": 1.0,
+      "model_sha256_ok": true,
+      "scenarios": {
+        "S1_viaE_better": {
+          "E_usage": 1.0,
+          "arrived": 1.0,
+          "return_mean": 4.1773585506131505,
+          "return_std": 0.04039538984522599
+        },
+        "S2_direct_better": {
+          "E_usage": 0.0,
+          "arrived": 1.0,
+          "return_mean": 3.9522071015060583,
+          "return_std": 0.049739684329263255
+        },
+        "S3_both_free": {
+          "E_usage": 0.46,
+          "arrived": 1.0,
+          "return_mean": 4.068218642472712,
+          "return_std": 0.1172498585118796
+        },
+        "S4_both_busy": {
+          "E_usage": 0.02,
+          "arrived": 1.0,
+          "return_mean": 3.23097907952964,
+          "return_std": 0.10095545785853999
+        }
+      },
+      "seed": 3
+    },
+    {
+      "audit_pass": true,
+      "delta_S1_S2": 1.0,
+      "model_sha256_ok": true,
+      "scenarios": {
+        "S1_viaE_better": {
+          "E_usage": 1.0,
+          "arrived": 1.0,
+          "return_mean": 4.16810042024687,
+          "return_std": 0.04179134649707782
+        },
+        "S2_direct_better": {
+          "E_usage": 0.0,
+          "arrived": 1.0,
+          "return_mean": 3.9429489711397774,
+          "return_std": 0.05320556645266482
+        },
+        "S3_both_free": {
+          "E_usage": 0.26,
+          "arrived": 1.0,
+          "return_mean": 4.010927941701582,
+          "return_std": 0.10348349208579134
+        },
+        "S4_both_busy": {
+          "E_usage": 0.0,
+          "arrived": 1.0,
+          "return_mean": 3.217631779570367,
+          "return_std": 0.10364240446138501
+        }
+      },
+      "seed": 4
+    }
+  ],
+  "seed0": 900,
+  "version": "v1"
+}
