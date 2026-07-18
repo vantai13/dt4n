@@ -20,7 +20,13 @@ from rl.routing.route_env import RouteEnv
 from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import R_STATE_DIM
 from rl.routing.oracle_gate import DEFAULT_DRIFT_STEPS, estimate_oracle_headroom
-from rl.routing.topology_r import LOAD_CFG_TRAIN, LOAD_CFG_V1, LOAD_PRESETS, TOPO
+from rl.routing.topology_r import (
+    LOAD_CFG_TRAIN,
+    LOAD_CFG_V1,
+    LOAD_PRESETS,
+    SCENARIOS_TRAIN,
+    TOPO,
+)
 from rl.routing.train_r import make_eval_env, run_agent_episode
 
 
@@ -57,6 +63,11 @@ def _cfg_load_cfg(cfg):
         return LOAD_CFG_TRAIN
     if value == 'LOAD_CFG_V1':
         return LOAD_CFG_V1
+    if value == 'SCENARIOS_TRAIN':
+        return {
+            'scenarios': SCENARIOS_TRAIN,
+            'scenario_mix': tuple(SCENARIOS_TRAIN),
+        }
     return LOAD_PRESETS[value]
 
 

@@ -12,7 +12,6 @@ from rl.routing.link_model import (
     CRITICAL_TO_FULL_RHO_OFFERED,
     LOW_TO_CRITICAL_RHO_OFFERED,
     loss_rate,
-    rho_measured_from_offered,
     total_delay_ms,
 )
 from rl.routing.reward_r import step_reward
@@ -25,7 +24,17 @@ from rl.routing.state_r import (
     build_route_state,
     mask_aoi,
 )
-from rl.routing.topology_r import LOAD_PRESETS, TOPO
+from rl.routing.topology_r import (
+    BUSY_LOAD,
+    DIRECT_F_LINKS,
+    FREE_LOAD,
+    LOAD_PRESETS,
+    SCENARIOS,
+    SCENARIOS_TRAIN,
+    TOPO,
+    TRAIN_SCENARIO_MIX,
+    VIA_E_LINKS,
+)
 
 
 def _base_delay(topo, src, dst):
@@ -56,17 +65,22 @@ def test_topology_v2_link_budget_and_degree():
     assert _base_delay(TOPO, 'D', 'F') == 6.0
 
 
-def test_load_presets_are_slices_of_one_axis():
-    assert set(LOAD_PRESETS) == {'normal', 'borderline', 'bottleneck_E'}
-    assert LOAD_PRESETS['normal']['e_load'][1] < LOAD_PRESETS['borderline']['e_load'][1]
-    assert LOAD_PRESETS['borderline']['e_load'][0] < LOAD_PRESETS['bottleneck_E']['e_load'][0]
-    assert LOAD_PRESETS['normal']['e_load'][1] < LOW_TO_CRITICAL_RHO_OFFERED
+def test_load_scenarios_pinch_decision_links_independently():
+    assert set(TRAIN_SCENARIO_MIX) == set(SCENARIOS_TRAIN)
+    assert SCENARIOS_TRAIN['S1_viaE_better']['e_load'] == FREE_LOAD
+    assert SCENARIOS_TRAIN['S1_viaE_better']['f_load'] == BUSY_LOAD
+    assert SCENARIOS_TRAIN['S2_direct_better']['e_load'] == BUSY_LOAD
+    assert SCENARIOS_TRAIN['S2_direct_better']['f_load'] == FREE_LOAD
+    assert FREE_LOAD[1] < LOW_TO_CRITICAL_RHO_OFFERED
+    assert BUSY_LOAD[0] > CRITICAL_TO_FULL_RHO_OFFERED
+    assert VIA_E_LINKS == (('C', 'E'), ('D', 'E'))
+    assert DIRECT_F_LINKS == (('C', 'F'), ('D', 'F'))
+    assert SCENARIOS['S1_via_E_free']['direct_load'] == BUSY_LOAD
+    assert LOAD_PRESETS['normal'] == SCENARIOS['S3_both_free']
+    assert LOAD_PRESETS['bottleneck_E'] == SCENARIOS['S2_direct_F_free']
+    assert LOAD_PRESETS['S1_viaE_better'] == SCENARIOS_TRAIN['S1_viaE_better']
     assert LOAD_PRESETS['borderline']['e_load'][0] <= LOW_TO_CRITICAL_RHO_OFFERED
     assert LOAD_PRESETS['borderline']['e_load'][1] >= CRITICAL_TO_FULL_RHO_OFFERED
-    assert LOAD_PRESETS['bottleneck_E']['e_load'][0] > CRITICAL_TO_FULL_RHO_OFFERED
-    for preset in LOAD_PRESETS.values():
-        assert preset['base_load'] == (0.75, 0.95)
-        assert preset['drift_sigma'] == 0.0
 
 
 def test_mask_touches_only_aoi():
@@ -150,6 +164,47 @@ def test_route_env_splits_offered_measured_and_loss():
     assert loss > 0.25
 
 
+def test_route_env_samples_direct_load_separately_from_via_e():
+    env = RouteEnv(
+        TOPO,
+        load_cfg={
+            'base_load': (0.25, 0.25),
+            'e_load': (0.40, 0.40),
+            'direct_load': (1.10, 1.10),
+            'drift_sigma': 0.0,
+        },
+        seed=0,
+    )
+    _obs, info = env.reset(seed=0)
+    offered = info['rho_offered_snapshot']
+
+    assert offered[('C', 'E')] == 0.40
+    assert offered[('D', 'E')] == 0.40
+    assert offered[('C', 'F')] == 1.10
+    assert offered[('D', 'F')] == 1.10
+    assert offered[('E', 'F')] == 0.25
+
+
+def test_route_env_accepts_f_load_alias_for_direct_path():
+    env = RouteEnv(
+        TOPO,
+        load_cfg={
+            'base_load': (0.25, 0.25),
+            'e_load': (0.40, 0.40),
+            'f_load': (1.10, 1.10),
+            'drift_sigma': 0.0,
+        },
+        seed=0,
+    )
+    _obs, info = env.reset(seed=0)
+    offered = info['rho_offered_snapshot']
+
+    assert offered[('C', 'E')] == 0.40
+    assert offered[('D', 'E')] == 0.40
+    assert offered[('C', 'F')] == 1.10
+    assert offered[('D', 'F')] == 1.10
+
+
 def test_terminated_is_real():
     env = RouteEnv(TOPO, seed=0)
     _obs, info = env.reset(seed=0)
@@ -193,7 +248,7 @@ def _run_as_script():
     tests = [
         test_aoi_norm_not_saturated_in_range,
         test_dim,
-        test_load_presets_are_slices_of_one_axis,
+        test_load_scenarios_pinch_decision_links_independently,
         test_mask_does_not_mutate,
         test_mask_touches_only_aoi,
         test_calibrated_delay_has_rev5_cliff_and_finite_ceiling,
@@ -201,6 +256,8 @@ def _run_as_script():
         test_sim_time_advances_by_physical_link_delay,
         test_terminated_is_real,
         test_route_env_splits_offered_measured_and_loss,
+        test_route_env_samples_direct_load_separately_from_via_e,
+        test_route_env_accepts_f_load_alias_for_direct_path,
         test_topology_v2_flips_on_measured_queue_cliff_at_c,
         test_topology_v2_link_budget_and_degree,
     ]

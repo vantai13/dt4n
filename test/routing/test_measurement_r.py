@@ -14,6 +14,7 @@ from rl.routing.oracles import (
     posthoc_dijkstra,
 )
 from rl.routing.route_env import RouteEnv
+from rl.routing.reward_r import W_HOP
 from rl.routing.topology_r import TOPO
 from rl.routing.link_model import loss_rate
 
@@ -81,7 +82,11 @@ def test_ospf_calibrated_uses_expected_link_cost_at_c():
 
     assert env.adj['C'][straw] == 'E'
     assert env.adj['C'][calibrated] == 'F'
-    assert weights[('C', 'E')] + weights[('E', 'F')] > weights[('C', 'F')]
+    assert (
+        weights[('C', 'E')] + W_HOP
+        + weights[('E', 'F')] + W_HOP
+        > weights[('C', 'F')] + W_HOP
+    )
 
 
 def test_ospf_expected_weights_fail_loud_without_queue_metadata():

@@ -6,11 +6,12 @@ from dataclasses import asdict, dataclass
 
 REWARD_VERSION = 'r_v2'
 
-W_LOSS = 0.5
+W_LOSS = 2.0
 W_HOP = 0.02
 R_ARRIVED = 5.0
 R_FAIL = -5.0
 DELAY_NORM_MS = 20.0
+DELAY_CLIP = -1.0
 
 # r_v1 inherited DELAY_NORM_MS=100 from the old 50-100 Mbps topology. TOPO V2
 # uses a smaller 4-8 Mbps budget where routing-relevant delays are closer to
@@ -35,7 +36,7 @@ class RewardBreakdown:
 def step_reward(delay_ms, loss, arrived=False, failed=False):
     """Compute reward from true link metrics."""
     b = RewardBreakdown()
-    b.delay_term = -float(delay_ms) / DELAY_NORM_MS
+    b.delay_term = max(DELAY_CLIP, -float(delay_ms) / DELAY_NORM_MS)
     b.loss_term = -W_LOSS * float(loss)
     b.hop_term = -W_HOP
     if arrived:

@@ -16,8 +16,18 @@ from rl.routing.link_model import (
     loss_rate,
     total_delay_ms,
 )
-from rl.routing.reward_r import DELAY_NORM_MS, W_HOP, W_LOSS, step_reward
-from rl.routing.topology_r import LOAD_CFG_TRAIN, TOPO_V2
+from rl.routing.reward_r import (
+    DELAY_CLIP,
+    DELAY_NORM_MS,
+    W_HOP,
+    step_reward,
+)
+from rl.routing.topology_r import (
+    LOAD_CFG_TRAIN,
+    TOPO_V2,
+    default_offered_load_max,
+    sample_offered_load,
+)
 
 
 DEFAULT_DRIFT_STEPS = 2
@@ -64,61 +74,32 @@ def _edge_map(topo=TOPO_V2):
 
 def _offered_max(load_cfg):
     """Match RouteEnv's offered-load ceiling for drift clipping."""
-    base_hi = load_cfg.get('base_load', (0.25, 0.40))[1]
-    e_hi = load_cfg.get('e_load', (0.60, 0.95))[1]
-    return float(load_cfg.get('offered_load_max', max(1.30, base_hi, e_hi)))
-
-
-def _sample_offered_with_drift(rng, lo, hi, sigma, n_steps, hi_clip):
-    """Sample offered load as seen after the flow has drifted to C/D.
-
-    RouteEnv samples offered load at reset, then calls _drift() after each hop.
-    The E/F decision happens after SRC->{A,B}->{C,D}, so the useful oracle gate
-    should see the post-drift distribution, not only the reset distribution.
-    """
-    value = float(rng.uniform(float(lo), float(hi)))
-    for _ in range(int(n_steps)):
-        value = float(np.clip(
-            value + rng.normal(0.0, float(sigma)),
-            OFFERED_MIN,
-            float(hi_clip),
-        ))
-    return value
+    if load_cfg.get('offered_load_max') is not None:
+        return float(load_cfg['offered_load_max'])
+    return default_offered_load_max(load_cfg)
 
 
 def _sample_rho_offered_after_drift(rng, edges, load_cfg, drift_steps):
     """Sample one RouteEnv-shaped offered-load snapshot at the C/D decision."""
-    base_lo, base_hi = load_cfg['base_load']
-    e_lo, e_hi = load_cfg['e_load']
-    sigma = float(load_cfg.get('drift_sigma', 0.15))
+    rho_off, _scenario_name, active_cfg = sample_offered_load(
+        edges.keys(),
+        load_cfg,
+        rng,
+    )
+    sigma = float(active_cfg.get('drift_sigma', load_cfg.get('drift_sigma', 0.15)))
     hi_clip = _offered_max(load_cfg)
 
-    rho_off = {
-        link: _sample_offered_with_drift(
-            rng,
-            base_lo,
-            base_hi,
-            sigma,
-            drift_steps,
-            hi_clip,
-        )
-        for link in edges
-    }
-
-    # RouteEnv gives the E bottleneck links one shared initial level, then each
-    # link drifts independently. Only C->E is used by this C-node gate, but keep
-    # D->E shaped the same for audit symmetry.
-    e_initial = float(rng.uniform(float(e_lo), float(e_hi)))
-    for link in (('C', 'E'), ('D', 'E')):
-        if link in rho_off:
-            value = e_initial
-            for _ in range(int(drift_steps)):
-                value = float(np.clip(
-                    value + rng.normal(0.0, sigma),
-                    OFFERED_MIN,
-                    hi_clip,
-                ))
-            rho_off[link] = value
+    # RouteEnv samples load at reset, then calls _drift() after each traversed
+    # hop. The C/D branch decision sees this post-drift distribution.
+    for link in rho_off:
+        value = rho_off[link]
+        for _ in range(int(drift_steps)):
+            value = float(np.clip(
+                value + rng.normal(0.0, sigma),
+                OFFERED_MIN,
+                hi_clip,
+            ))
+        rho_off[link] = value
 
     return rho_off
 
@@ -140,7 +121,8 @@ def path_cost(path, rho_off_map, edges, w_loss=None):
         if w_loss is None:
             total += -step_reward(delay_ms, loss).total
         else:
-            total += delay_ms / DELAY_NORM_MS + float(w_loss) * loss + W_HOP
+            delay_cost = min(delay_ms / DELAY_NORM_MS, -DELAY_CLIP)
+            total += delay_cost + float(w_loss) * loss + W_HOP
     return total
 
 
@@ -238,15 +220,19 @@ def evaluate_oracle_gate(load_cfg=LOAD_CFG_TRAIN, n_samples=200_000, seed=0,
     )
 
 
-def evaluate_config(base_load=None, e_load=None, w_loss=None, n=50_000,
-                    seed=0, std_seed_estimate=None,
+def evaluate_config(base_load=None, e_load=None, direct_load=None, w_loss=None,
+                    n=50_000, seed=0, std_seed_estimate=None,
                     drift_steps=DEFAULT_DRIFT_STEPS):
     """Return a compact dict for config sweeps."""
     cfg = dict(LOAD_CFG_TRAIN)
+    cfg.pop('scenarios', None)
+    cfg.pop('scenario_mix', None)
     if base_load is not None:
         cfg['base_load'] = tuple(base_load)
     if e_load is not None:
         cfg['e_load'] = tuple(e_load)
+    if direct_load is not None:
+        cfg['direct_load'] = tuple(direct_load)
     result = evaluate_oracle_gate(
         load_cfg=cfg,
         n_samples=int(n),
@@ -272,15 +258,21 @@ def print_result(result, load_cfg=LOAD_CFG_TRAIN,
                  std_seed_estimate=None,
                  drift_steps=DEFAULT_DRIFT_STEPS):
     std_seed_estimate = _require_std_seed_estimate(std_seed_estimate)
-    e_lo, e_hi = load_cfg['e_load']
-    b_lo, b_hi = load_cfg['base_load']
+    mix = load_cfg.get('scenario_mix')
 
     print('=' * 72)
-    print(
-        'ORACLE GATE - LOAD_CFG_TRAIN: '
-        'base_load=(%.2f, %.2f), e_load=(%.2f, %.2f)'
-        % (b_lo, b_hi, e_lo, e_hi)
-    )
+    if mix:
+        print('ORACLE GATE - LOAD_CFG_TRAIN scenarios: %s' % ', '.join(mix))
+    else:
+        e_lo, e_hi = load_cfg['e_load']
+        b_lo, b_hi = load_cfg['base_load']
+        d_lo, d_hi = load_cfg.get('direct_load', load_cfg.get('f_load', (b_lo, b_hi)))
+        print(
+            'ORACLE GATE - LOAD_CFG_TRAIN: '
+            'base_load=(%.2f, %.2f), e_load=(%.2f, %.2f), '
+            'direct_load=(%.2f, %.2f)'
+            % (b_lo, b_hi, e_lo, e_hi, d_lo, d_hi)
+        )
     print('=' * 72)
     print('drift_steps = %d' % int(drift_steps))
     print('samples = %d' % result.n_samples)

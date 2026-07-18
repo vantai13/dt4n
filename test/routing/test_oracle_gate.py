@@ -20,7 +20,7 @@ def test_oracle_gate_requires_current_std_agent():
         raise AssertionError('gate must not use a stale default std estimate')
 
 
-def test_oracle_gate_warns_current_training_stage_with_rev5_std():
+def test_oracle_gate_allows_scenario_training_stage_with_rev5_std():
     result = evaluate_oracle_gate(
         n_samples=20_000,
         seed=0,
@@ -28,14 +28,14 @@ def test_oracle_gate_warns_current_training_stage_with_rev5_std():
     )
     assert result.g1_balance
     assert result.g3_symmetry
-    assert not result.g2_snr
-    assert not result.ok
+    assert result.g2_snr
+    assert result.ok
 
 
 def _run_as_script():
     tests = [
         test_oracle_gate_requires_current_std_agent,
-        test_oracle_gate_warns_current_training_stage_with_rev5_std,
+        test_oracle_gate_allows_scenario_training_stage_with_rev5_std,
     ]
     for test in tests:
         test()

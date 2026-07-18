@@ -82,7 +82,10 @@ class StalenessWrapper:
         if self._z_steps <= 0:
             return
 
-        sigma = float(self.env.load_cfg.get('drift_sigma', 0.05))
+        if hasattr(self.env, '_drift_sigma'):
+            sigma = self.env._drift_sigma()
+        else:
+            sigma = float(self.env.load_cfg.get('drift_sigma', 0.05))
         rng = np.random.default_rng((int(self._episode_seed) + 555_111) % (2**32))
         depth = max(self.z_choices)
         past = dict(self.env._rho_offered)

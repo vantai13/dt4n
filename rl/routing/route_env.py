@@ -60,6 +60,7 @@ from rl.routing.link_model import (
 )
 from rl.routing.reward_r import REWARD_VERSION, step_reward
 from rl.routing.state_r import MAX_NEIGHBORS, R_STATE_DIM, build_route_state
+from rl.routing.topology_r import default_offered_load_max, sample_offered_load
 
 
 class RouteEnv(gym.Env):
@@ -111,16 +112,21 @@ class RouteEnv(gym.Env):
         self._rho_offered = {}
         self._rho = {}
         self._loss = {}
+        self._load_scenario = None
+        self._active_load_cfg = dict(self.load_cfg)
 
     def _default_offered_max(self):
-        base_hi = self.load_cfg.get('base_load', (0.25, 0.40))[1]
-        e_hi = self.load_cfg.get('e_load', (0.60, 0.95))[1]
-        return max(1.30, float(base_hi), float(e_hi))
+        return default_offered_load_max(self.load_cfg)
 
     def _offered_max(self):
-        return float(self.load_cfg.get(
-            'offered_load_max',
-            self._default_offered_max(),
+        if self.load_cfg.get('offered_load_max') is not None:
+            return float(self.load_cfg['offered_load_max'])
+        return self._default_offered_max()
+
+    def _drift_sigma(self):
+        return float(self._active_load_cfg.get(
+            'drift_sigma',
+            self.load_cfg.get('drift_sigma', 0.05),
         ))
 
     def _sync_observed_link_metrics(self):
@@ -141,26 +147,18 @@ class RouteEnv(gym.Env):
         deployable utilization exposed to the agent is derived separately and
         clipped by ``rho_measured_from_offered``.
         """
-        base_lo, base_hi = self.load_cfg.get('base_load', (0.25, 0.40))
-        e_lo, e_hi = self.load_cfg.get('e_load', (0.60, 0.95))
-        hi = self._offered_max()
-        rho = {}
-        for link in self.link:
-            rho[link] = float(np.clip(
-                self._rng.uniform(base_lo, base_hi),
-                0.02,
-                hi,
-            ))
-
-        e_level = float(np.clip(self._rng.uniform(e_lo, e_hi), 0.02, hi))
-        for link in (('C', 'E'), ('D', 'E')):
-            if link in rho:
-                rho[link] = e_level
+        rho, scenario_name, active_cfg = sample_offered_load(
+            self.link.keys(),
+            self.load_cfg,
+            self._rng,
+        )
+        self._load_scenario = scenario_name
+        self._active_load_cfg = active_cfg
         return rho
 
     def _drift(self):
         """Move congestion slightly so stale observations can become wrong."""
-        sigma = float(self.load_cfg.get('drift_sigma', 0.05))
+        sigma = self._drift_sigma()
         hi = self._offered_max()
         for link in self._rho_offered:
             self._rho_offered[link] = float(np.clip(
@@ -172,7 +170,7 @@ class RouteEnv(gym.Env):
 
     def peek_next_rho_offered(self):
         """Return the next offered-load snapshot without consuming env RNG."""
-        sigma = float(self.load_cfg.get('drift_sigma', 0.05))
+        sigma = self._drift_sigma()
         hi = self._offered_max()
         rng = np.random.default_rng()
         rng.bit_generator.state = copy.deepcopy(self._rng.bit_generator.state)
@@ -239,6 +237,7 @@ class RouteEnv(gym.Env):
             'path': list(self.path),
             'step': self.step_count,
             'sim_time_s': float(self.sim_time_s),
+            'load_scenario': self._load_scenario,
             'rho_offered_snapshot': dict(self._rho_offered),
             'rho_measured_snapshot': dict(self._rho),
             'rho_snapshot': dict(self._rho),

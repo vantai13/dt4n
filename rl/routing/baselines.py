@@ -10,9 +10,9 @@ from rl.routing.oracles import (
     dijkstra_next_hop_by_weight,
     edge_cost,
 )
+from rl.routing.topology_r import sample_offered_load
 
 
-_BOTTLENECKS = {('C', 'E'), ('D', 'E')}
 _EXPECTED_WEIGHT_SAMPLES = 2_000
 _EXPECTED_WEIGHT_CACHE = {}
 
@@ -48,9 +48,6 @@ def ospf_calibrated(env, info):
 
 def _weight_cache_key(env, n_samples):
     """Return a stable cache key for one static expected-weight table."""
-    e_lo, e_hi = env.load_cfg.get('e_load', (0.60, 0.95))
-    b_lo, b_hi = env.load_cfg.get('base_load', (0.25, 0.40))
-    drift_sigma = float(env.load_cfg.get('drift_sigma', 0.0))
     links = tuple(
         (
             link,
@@ -61,7 +58,7 @@ def _weight_cache_key(env, n_samples):
         for link, meta in sorted(env.link.items())
     )
     return (
-        tuple(float(x) for x in (e_lo, e_hi, b_lo, b_hi, drift_sigma)),
+        repr(env.load_cfg),
         links,
         int(n_samples),
     )
@@ -77,34 +74,39 @@ def expected_ospf_weights(env, n_samples=_EXPECTED_WEIGHT_SAMPLES):
     if key in _EXPECTED_WEIGHT_CACHE:
         return dict(_EXPECTED_WEIGHT_CACHE[key])
 
-    e_lo, e_hi = env.load_cfg.get('e_load', (0.60, 0.95))
-    b_lo, b_hi = env.load_cfg.get('base_load', (0.25, 0.40))
     rng = np.random.default_rng(12_345)
-    weights = {}
+    costs_by_link = {link: [] for link in env.link}
 
-    for link, meta in env.link.items():
-        # [9.4] Fail loud: missing capacity/queue metadata is a modeling bug.
-        # Using .get() would pass None to the link model, silently disabling the
-        # finite queue ceiling and making OSPF run with the wrong physics.
-        base_delay = meta['base_delay']
-        bw_mbps = meta['base_bw']
-        queue_pkts = meta['queue_pkts']
+    for _ in range(int(n_samples)):
+        offered, _scenario_name, _active_cfg = sample_offered_load(
+            env.link.keys(),
+            env.load_cfg,
+            rng,
+        )
+        for link, meta in env.link.items():
+            # [9.4] Fail loud: missing capacity/queue metadata is a modeling bug.
+            # Using .get() would pass None to the link model, silently disabling
+            # the finite queue ceiling and making OSPF use the wrong physics.
+            base_delay = meta['base_delay']
+            bw_mbps = meta['base_bw']
+            queue_pkts = meta['queue_pkts']
 
-        lo, hi = (e_lo, e_hi) if link in _BOTTLENECKS else (b_lo, b_hi)
-        samples = rng.uniform(float(lo), float(hi), int(n_samples))
-        costs = []
-        for offered in samples:
-            loss = loss_rate(offered)
-            costs.append(
+            rho_offered = offered[link]
+            loss = loss_rate(rho_offered)
+            costs_by_link[link].append(
                 edge_cost(
                     base_delay,
-                    offered,
+                    rho_offered,
                     loss=loss,
                     bw_mbps=bw_mbps,
                     queue_pkts=queue_pkts,
                 )
             )
-        weights[link] = float(np.mean(costs))
+
+    weights = {
+        link: float(np.mean(costs))
+        for link, costs in costs_by_link.items()
+    }
 
     _EXPECTED_WEIGHT_CACHE[key] = dict(weights)
     return dict(weights)

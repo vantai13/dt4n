@@ -7,9 +7,13 @@ sys.path.insert(0, '.')
 sys.path.insert(0, 'scripts')
 
 from diag_decision_balance import frac_E_better
-from rl.routing.metrics_r import evaluate_z_range
 from rl.routing.oracle_gate import evaluate_oracle_gate
-from rl.routing.topology_r import LOAD_CFG_TRAIN, LOAD_CFG_V1
+from rl.routing.topology_r import (
+    LOAD_CFG_TRAIN,
+    LOAD_CFG_V1,
+    SCENARIOS_TRAIN,
+    TRAIN_SCENARIO_MIX,
+)
 
 
 REV5_STD_AGENT = 0.07988327839856281
@@ -31,7 +35,7 @@ def test_load_cfg_train_keeps_decision_alive():
     assert 0.35 <= result.p_e_optimal <= 0.65
 
 
-def test_load_cfg_train_needs_current_std_for_snr_gate():
+def test_load_cfg_train_passes_current_std_snr_gate():
     result = evaluate_oracle_gate(
         n_samples=20_000,
         seed=0,
@@ -39,27 +43,26 @@ def test_load_cfg_train_needs_current_std_for_snr_gate():
     )
     assert result.g1_balance
     assert result.g3_symmetry
-    assert not result.g2_snr
-    assert not result.ok
+    assert result.g2_snr
+    assert result.ok
 
 
-def test_load_cfg_train_keeps_aoi_signal_measurable():
-    """The balanced train load should still have a measurable AoI effect."""
-    rows = evaluate_z_range(
-        z_values=(0, 1, 3, 5, 8, 12),
-        seeds=range(100),
-        load_cfg=LOAD_CFG_TRAIN,
+def test_load_cfg_train_uses_corrected_static_scenario_mix():
+    """Train on corrected C/D->E vs C/D->F scenarios; dynamic drift is later."""
+    assert LOAD_CFG_TRAIN['scenario_mix'] == TRAIN_SCENARIO_MIX
+    assert LOAD_CFG_TRAIN['scenarios'] == SCENARIOS_TRAIN
+    assert all(
+        SCENARIOS_TRAIN[name]['drift_sigma'] == 0.0
+        for name in TRAIN_SCENARIO_MIX
     )
-    costs = [row['cost_of_blindness'] for row in rows]
-    assert max(costs) > 0.30
 
 
 def _run_as_script():
     tests = [
         test_load_cfg_v1_is_usable_but_less_balanced_than_train,
         test_load_cfg_train_keeps_decision_alive,
-        test_load_cfg_train_needs_current_std_for_snr_gate,
-        test_load_cfg_train_keeps_aoi_signal_measurable,
+        test_load_cfg_train_passes_current_std_snr_gate,
+        test_load_cfg_train_uses_corrected_static_scenario_mix,
     ]
     passed = 0
     for test in tests:

@@ -31,7 +31,13 @@ from rl.routing.oracles import clairvoyant_dijkstra, posthoc_dijkstra
 from rl.routing.route_env import RouteEnv
 from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import R_STATE_DIM
-from rl.routing.topology_r import LOAD_CFG_TRAIN, LOAD_CFG_V1, LOAD_PRESETS, TOPO
+from rl.routing.topology_r import (
+    LOAD_CFG_TRAIN,
+    LOAD_CFG_V1,
+    LOAD_PRESETS,
+    SCENARIOS_TRAIN,
+    TOPO,
+)
 
 
 NOISE_FLOOR = 0.04
@@ -90,6 +96,13 @@ def _load_cfg(cfg):
         return LOAD_CFG_TRAIN
     if value == 'LOAD_CFG_V1':
         return LOAD_CFG_V1
+    if value == 'SCENARIOS_TRAIN':
+        # Independent-congestion training mix. RouteEnv picks one named
+        # scenario per episode from topology_r.SCENARIOS_TRAIN.
+        return {
+            'scenarios': SCENARIOS_TRAIN,
+            'scenario_mix': tuple(SCENARIOS_TRAIN),
+        }
     return LOAD_PRESETS[value]
 
 
