@@ -269,7 +269,7 @@ def parse_args(argv=None):
     parser.add_argument('--episodes', type=int, default=None,
                         help='override config train.episodes for pilots')
     parser.add_argument('--out-root', default='results/train')
-    parser.add_argument('--print-every', type=int, default=25)
+    parser.add_argument('--print-every', type=int, default=10)
     return parser.parse_args(argv)
 
 
@@ -328,6 +328,7 @@ def main(argv=None):
     ), flush=True)
 
     episode_rows, eval_rows, epsilon_trace = [], [], []
+    last_eval = None
     eval_every = int(cfg['train']['eval_every'])
     warmup_steps = int(cfg['train'].get('warmup_steps', 0))
     print_every = max(int(args.print_every), 1)
@@ -351,14 +352,29 @@ def main(argv=None):
             ev = eval_agent(cfg, agent, val_seeds, z=0)
             ev['episode'] = idx
             eval_rows.append(ev)
-            if idx % print_every == 0:
-                recent = [r['train_return'] for r in episode_rows[-25:]]
-                print(
-                    f'  ep {idx:>4} eps={agent.epsilon:.3f} '
-                    f'train_ret={np.mean(recent):.3f} '
-                    f'val_ret={ev["return"]:.3f} arrived={ev["arrived"]:.2f}',
-                    flush=True,
+            last_eval = ev
+
+        if idx % print_every == 0 or idx == len(train_seeds):
+            recent10 = [r['train_return'] for r in episode_rows[-10:]]
+            recent25 = [r['train_return'] for r in episode_rows[-25:]]
+            loss = row['loss']
+            loss_str = 'n/a' if loss is None else f'{loss:.4f}'
+            if last_eval is None:
+                val_str = 'val_ret=n/a arrived=n/a'
+            else:
+                val_str = (
+                    f'val_ret={last_eval["return"]:.3f}'
+                    f'@{last_eval["episode"]} '
+                    f'arrived={last_eval["arrived"]:.2f}'
                 )
+            print(
+                f'  ep {idx:>4}/{len(train_seeds):<4} '
+                f'eps={agent.epsilon:.3f} '
+                f'train10={np.mean(recent10):.3f} '
+                f'train25={np.mean(recent25):.3f} '
+                f'loss={loss_str} z={row["z_steps"]} {val_str}',
+                flush=True,
+            )
 
     if not eval_rows:
         ev = eval_agent(cfg, agent, val_seeds, z=0)
