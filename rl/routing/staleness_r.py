@@ -13,8 +13,8 @@ from collections import deque
 
 import numpy as np
 
+from rl.routing.link_model import loss_rate, rho_measured_from_offered
 from rl.routing.state_r import build_route_state, mask_aoi
-from rl.routing.util_spec import UTIL_MAX
 
 
 class StalenessWrapper:
@@ -34,7 +34,9 @@ class StalenessWrapper:
         self._z_steps = 0
         self._last_aoi_s = 0.0
         self._last_obs_utils = ()
+        self._last_obs_losses = ()
         self._last_obs_snapshot = {}
+        self._last_obs_loss_snapshot = {}
         self._episode_seed = 0
         self._clock = clock  # accepted for older callers; sim-time is canonical
 
@@ -52,8 +54,12 @@ class StalenessWrapper:
         return int(rng.choice(self.z_choices))
 
     def _record(self):
-        """Timestamp a full copy of the true per-link rho snapshot."""
-        self._hist.append((self._sim_time_s(), dict(self.env._rho)))
+        """Timestamp a full copy of the true per-link observed snapshot."""
+        self._hist.append((
+            self._sim_time_s(),
+            dict(self.env._rho),
+            dict(self.env._loss),
+        ))
 
     def _sim_time_s(self):
         """Nominal simulator time in seconds.
@@ -77,11 +83,15 @@ class StalenessWrapper:
         sigma = float(self.env.load_cfg.get('drift_sigma', 0.05))
         rng = np.random.default_rng((int(self._episode_seed) + 555_111) % (2**32))
         depth = max(self.z_choices)
-        past = dict(self.env._rho)
+        past = dict(self.env._rho_offered)
         chain = []
         for _ in range(depth):
             past = {
-                link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, UTIL_MAX))
+                link: float(np.clip(
+                    rho + rng.normal(0.0, sigma),
+                    0.02,
+                    self.env._offered_max(),
+                ))
                 for link, rho in past.items()
             }
             chain.append(dict(past))
@@ -91,32 +101,45 @@ class StalenessWrapper:
         # the episode seed only, never z, so z changes only "how far back".
         for k in range(depth, 0, -1):
             t = self._sim_time_s() - k * float(self.env.STEP_DURATION_S)
-            self._hist.append((t, chain[k - 1]))
+            offered = chain[k - 1]
+            rho_snap = {
+                link: rho_measured_from_offered(value)
+                for link, value in offered.items()
+            }
+            loss_snap = {
+                link: loss_rate(value)
+                for link, value in offered.items()
+            }
+            self._hist.append((t, rho_snap, loss_snap))
 
     def _observed_snapshot(self):
-        """Return ``(snapshot_seen_by_agent, measured_aoi_seconds)``."""
+        """Return ``(rho_seen, loss_seen, measured_aoi_seconds)``."""
         if not self._hist:
-            return dict(self.env._rho), 0.0
+            return dict(self.env._rho), dict(self.env._loss), 0.0
 
         idx = max(0, len(self._hist) - 1 - self._z_steps)
-        t_rec, snap = self._hist[idx]
+        t_rec, snap, loss_snap = self._hist[idx]
         if self._z_steps == 0:
-            return snap, 0.0
-        return snap, max(0.0, self._sim_time_s() - t_rec)
+            return snap, loss_snap, 0.0
+        return snap, loss_snap, max(0.0, self._sim_time_s() - t_rec)
 
     def _rebuild_obs(self):
         """Rebuild state from a raw snapshot; never patch obs[2:4]."""
-        snap, aoi_s = self._observed_snapshot()
+        snap, loss_snap, aoi_s = self._observed_snapshot()
         node = self.env.current
 
         utils_obs = []
+        losses_obs = []
         for nb in self.env.adj[node]:
             link = (node, nb)
             utils_obs.append(snap.get(link, self.env._rho[link]))
+            losses_obs.append(loss_snap.get(link, self.env._loss[link]))
 
         self._last_aoi_s = aoi_s
         self._last_obs_utils = tuple(float(x) for x in utils_obs)
+        self._last_obs_losses = tuple(float(x) for x in losses_obs)
         self._last_obs_snapshot = dict(snap)
+        self._last_obs_loss_snapshot = dict(loss_snap)
 
         obs = build_route_state(
             current_idx=self.env.node_to_idx[node],
@@ -125,6 +148,7 @@ class StalenessWrapper:
             max_steps=self.env.max_steps,
             neighbor_utils=utils_obs,
             neighbor_valid=self.env.valid_mask(),
+            neighbor_losses=losses_obs,
             aoi_s=aoi_s,
         )
         if self.mask_aoi_dims:
@@ -134,13 +158,22 @@ class StalenessWrapper:
     def _augment_info(self, info):
         info = dict(info)
         true_utils = tuple(float(x) for x in self.env.true_utils())
+        true_losses = tuple(float(x) for x in self.env.true_losses())
         obs_utils_rounded = tuple(round(x, 9) for x in self._last_obs_utils)
+        obs_losses_rounded = tuple(round(x, 9) for x in self._last_obs_losses)
         true_utils_rounded = tuple(round(x, 9) for x in true_utils)
+        true_losses_rounded = tuple(round(x, 9) for x in true_losses)
         info['z_steps'] = int(self._z_steps)
         info['aoi_measured_s'] = round(float(self._last_aoi_s), 4)
         info['neighbor_utils_observed'] = list(self._last_obs_utils)
+        info['neighbor_losses_observed'] = list(self._last_obs_losses)
         info['rho_snapshot_observed'] = dict(self._last_obs_snapshot)
-        info['util_is_stale'] = obs_utils_rounded != true_utils_rounded
+        info['loss_snapshot_observed'] = dict(self._last_obs_loss_snapshot)
+        info['util_is_stale'] = (
+            obs_utils_rounded != true_utils_rounded
+            or obs_losses_rounded != true_losses_rounded
+        )
+        info['loss_is_stale'] = obs_losses_rounded != true_losses_rounded
         return info
 
     def reset(self, seed=None, options=None):

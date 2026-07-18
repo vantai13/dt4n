@@ -8,7 +8,7 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.link_model import loss_rate, total_delay_ms
+from rl.routing.link_model import loss_rate, rho_measured_from_offered, total_delay_ms
 from rl.routing.reward_r import step_reward
 from rl.routing.route_env import RouteEnv
 from rl.routing.state_r import (
@@ -32,7 +32,7 @@ def _base_delay(topo, src, dst):
 def test_dim():
     state = build_route_state(0, 8, 0, 15, [0.3, 0.4], [1, 1], aoi_s=0.0)
     assert state.shape == (R_STATE_DIM,)
-    assert R_STATE_DIM == 7
+    assert R_STATE_DIM == 9
     assert R_STATE_DIM <= 16
 
 
@@ -45,6 +45,9 @@ def test_topology_v2_link_budget_and_degree():
     for src, _dst, _delay, _bw in TOPO['edges']:
         degree[src] += 1
     assert max(degree.values()) <= 2
+    assert TOPO['default_queue_pkts'] == 13
+    assert _base_delay(TOPO, 'C', 'F') == 6.0
+    assert _base_delay(TOPO, 'D', 'F') == 6.0
 
 
 def test_load_presets_are_slices_of_one_axis():
@@ -76,24 +79,60 @@ def test_aoi_norm_not_saturated_in_range():
     assert AOI_NORM_DIVISOR_S >= max_aoi_in_sweep
 
 
-def test_mm1_monotone_and_unbounded():
+def test_calibrated_delay_monotone_and_bounded():
     prev = -1.0
     for rho in [0.3, 0.5, 0.7, 0.8, 0.9, 0.95, 0.97]:
         delay = total_delay_ms(2.0, rho)
         assert delay > prev
         prev = delay
-    assert total_delay_ms(2.0, 0.97) > 4 * total_delay_ms(2.0, 0.8)
+    assert total_delay_ms(2.0, 0.97) < 1.2 * total_delay_ms(2.0, 0.8)
 
 
-def test_topology_v2_decision_flips_at_c():
+def _link_reward(topo, src, dst, rho_offered):
+    env = RouteEnv(topo, seed=0)
+    link = env.link[(src, dst)]
+    rho_measured = rho_measured_from_offered(rho_offered)
+    delay = total_delay_ms(
+        link['base_delay'],
+        rho_measured,
+        bw_mbps=link.get('base_bw'),
+        queue_pkts=link.get('queue_pkts'),
+    )
+    return step_reward(delay, loss_rate(rho_offered)).total
+
+
+def test_topology_v2_flips_on_measured_queue_cliff_at_c():
     base_ce = _base_delay(TOPO, 'C', 'E')
     base_cf = _base_delay(TOPO, 'C', 'F')
-    r_f = step_reward(total_delay_ms(base_cf, 0.30), loss_rate(0.30)).total
-    r_e_low = step_reward(total_delay_ms(base_ce, 0.60), loss_rate(0.60)).total
-    r_e_high = step_reward(total_delay_ms(base_ce, 0.90), loss_rate(0.90)).total
+    assert base_ce < base_cf
+
+    r_f = _link_reward(TOPO, 'C', 'F', 0.30)
+    r_e_low = _link_reward(TOPO, 'C', 'E', 0.70)
+    r_e_high = _link_reward(TOPO, 'C', 'E', 0.95)
 
     assert r_e_low > r_f
     assert r_e_high < r_f
+
+
+def test_route_env_splits_offered_measured_and_loss():
+    env = RouteEnv(
+        TOPO,
+        load_cfg={
+            'base_load': (0.25, 0.25),
+            'e_load': (1.30, 1.30),
+            'drift_sigma': 0.0,
+        },
+        seed=0,
+    )
+    _obs, info = env.reset(seed=0)
+
+    offered = info['rho_offered_snapshot'][('C', 'E')]
+    measured = info['rho_snapshot'][('C', 'E')]
+    loss = info['loss_snapshot'][('C', 'E')]
+
+    assert offered == 1.30
+    assert measured == 1.0
+    assert loss > 0.25
 
 
 def test_terminated_is_real():
@@ -142,11 +181,12 @@ def _run_as_script():
         test_load_presets_are_slices_of_one_axis,
         test_mask_does_not_mutate,
         test_mask_touches_only_aoi,
-        test_mm1_monotone_and_unbounded,
+        test_calibrated_delay_monotone_and_bounded,
         test_no_staleness_code_in_env,
         test_sim_time_advances_by_physical_link_delay,
         test_terminated_is_real,
-        test_topology_v2_decision_flips_at_c,
+        test_route_env_splits_offered_measured_and_loss,
+        test_topology_v2_flips_on_measured_queue_cliff_at_c,
         test_topology_v2_link_budget_and_degree,
     ]
     passed = 0

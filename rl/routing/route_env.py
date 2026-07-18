@@ -6,9 +6,10 @@ clean z=0 case is just ``RouteEnv`` itself, not a branch inside this class.
 
 Contract for that future wrapper:
     - true_utils() returns true per-neighbor utilization at the current node.
+    - true_losses() returns true per-neighbor loss at the current node.
     - info['neighbor_utils_true'] provides raw material so the wrapper can
       rebuild a state instead of patching obs[2:4].
-    - reward is always computed from true utilization.
+    - reward is always computed from true measured delay and true loss.
 """
 
 import copy
@@ -52,10 +53,13 @@ except ImportError:
     gym = _Gym()
     spaces = _Spaces()
 
-from rl.routing.link_model import loss_rate, total_delay_ms
+from rl.routing.link_model import (
+    loss_rate,
+    rho_measured_from_offered,
+    total_delay_ms,
+)
 from rl.routing.reward_r import REWARD_VERSION, step_reward
 from rl.routing.state_r import MAX_NEIGHBORS, R_STATE_DIM, build_route_state
-from rl.routing.util_spec import UTIL_MAX, clamp_util
 
 
 class RouteEnv(gym.Env):
@@ -76,11 +80,13 @@ class RouteEnv(gym.Env):
 
         self.adj = {node: [] for node in self.nodes}
         self.link = {}
+        default_queue_pkts = topo_cfg.get('default_queue_pkts')
         for src, dst, delay, bw in topo_cfg['edges']:
             self.adj[src].append(dst)
             self.link[(src, dst)] = {
                 'base_delay': float(delay),
                 'base_bw': float(bw),
+                'queue_pkts': default_queue_pkts,
             }
         for node in self.nodes:
             if len(self.adj[node]) > MAX_NEIGHBORS:
@@ -102,17 +108,51 @@ class RouteEnv(gym.Env):
         self.step_count = 0
         self.sim_time_s = 0.0
         self.path = []
+        self._rho_offered = {}
         self._rho = {}
+        self._loss = {}
+
+    def _default_offered_max(self):
+        base_hi = self.load_cfg.get('base_load', (0.25, 0.40))[1]
+        e_hi = self.load_cfg.get('e_load', (0.60, 0.95))[1]
+        return max(1.30, float(base_hi), float(e_hi))
+
+    def _offered_max(self):
+        return float(self.load_cfg.get(
+            'offered_load_max',
+            self._default_offered_max(),
+        ))
+
+    def _sync_observed_link_metrics(self):
+        """Refresh deployable measured util/loss from offered load."""
+        self._rho = {
+            link: rho_measured_from_offered(rho_offered)
+            for link, rho_offered in self._rho_offered.items()
+        }
+        self._loss = {
+            link: loss_rate(rho_offered)
+            for link, rho_offered in self._rho_offered.items()
+        }
 
     def _sample_load(self):
-        """Draw per-link utilization for one episode."""
+        """Draw per-link offered load for one episode.
+
+        Offered load is the traffic we try to inject. It may exceed 1.0. The
+        deployable utilization exposed to the agent is derived separately and
+        clipped by ``rho_measured_from_offered``.
+        """
         base_lo, base_hi = self.load_cfg.get('base_load', (0.25, 0.40))
         e_lo, e_hi = self.load_cfg.get('e_load', (0.60, 0.95))
+        hi = self._offered_max()
         rho = {}
         for link in self.link:
-            rho[link] = clamp_util(self._rng.uniform(base_lo, base_hi))
+            rho[link] = float(np.clip(
+                self._rng.uniform(base_lo, base_hi),
+                0.02,
+                hi,
+            ))
 
-        e_level = clamp_util(self._rng.uniform(e_lo, e_hi))
+        e_level = float(np.clip(self._rng.uniform(e_lo, e_hi), 0.02, hi))
         for link in (('C', 'E'), ('D', 'E')):
             if link in rho:
                 rho[link] = e_level
@@ -121,25 +161,44 @@ class RouteEnv(gym.Env):
     def _drift(self):
         """Move congestion slightly so stale observations can become wrong."""
         sigma = float(self.load_cfg.get('drift_sigma', 0.05))
-        for link in self._rho:
-            self._rho[link] = float(np.clip(
-                self._rho[link] + self._rng.normal(0.0, sigma),
+        hi = self._offered_max()
+        for link in self._rho_offered:
+            self._rho_offered[link] = float(np.clip(
+                self._rho_offered[link] + self._rng.normal(0.0, sigma),
                 0.02,
-                UTIL_MAX,
+                hi,
             ))
+        self._sync_observed_link_metrics()
+
+    def peek_next_rho_offered(self):
+        """Return the next offered-load snapshot without consuming env RNG."""
+        sigma = float(self.load_cfg.get('drift_sigma', 0.05))
+        hi = self._offered_max()
+        rng = np.random.default_rng()
+        rng.bit_generator.state = copy.deepcopy(self._rng.bit_generator.state)
+        return {
+            link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, hi))
+            for link, rho in self._rho_offered.items()
+        }
 
     def peek_next_rho(self):
-        """Return the next drifted rho snapshot without consuming env RNG.
+        """Return the next measured rho snapshot without consuming env RNG.
 
         This is a measurement hook for post-hoc diagnostics, not policy input.
         It clones the RNG state so peeking cannot perturb the episode.
         """
-        sigma = float(self.load_cfg.get('drift_sigma', 0.05))
-        rng = np.random.default_rng()
-        rng.bit_generator.state = copy.deepcopy(self._rng.bit_generator.state)
+        offered = self.peek_next_rho_offered()
         return {
-            link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, UTIL_MAX))
-            for link, rho in self._rho.items()
+            link: rho_measured_from_offered(rho_offered)
+            for link, rho_offered in offered.items()
+        }
+
+    def peek_next_loss(self):
+        """Return the next loss snapshot without consuming env RNG."""
+        offered = self.peek_next_rho_offered()
+        return {
+            link: loss_rate(rho_offered)
+            for link, rho_offered in offered.items()
         }
 
     def neighbors(self, node):
@@ -149,13 +208,17 @@ class RouteEnv(gym.Env):
         """Return true per-neighbor utilization at the current node."""
         return [self._rho[(self.current, nb)] for nb in self.adj[self.current]]
 
+    def true_losses(self):
+        """Return true per-neighbor loss at the current node."""
+        return [self._loss[(self.current, nb)] for nb in self.adj[self.current]]
+
     def valid_mask(self):
         mask = np.zeros(MAX_NEIGHBORS, dtype=np.float32)
         for idx in range(len(self.adj[self.current])):
             mask[idx] = 1.0
         return mask
 
-    def _obs(self, utils_observed, aoi_s=0.0):
+    def _obs(self, utils_observed, losses_observed=None, aoi_s=0.0):
         return build_route_state(
             current_idx=self.node_to_idx[self.current],
             n_nodes=self.n_nodes,
@@ -163,6 +226,7 @@ class RouteEnv(gym.Env):
             max_steps=self.max_steps,
             neighbor_utils=utils_observed,
             neighbor_valid=self.valid_mask(),
+            neighbor_losses=losses_observed,
             aoi_s=aoi_s,
         )
 
@@ -170,12 +234,18 @@ class RouteEnv(gym.Env):
         return {
             'current_node': self.current,
             'neighbor_utils_true': list(self.true_utils()),
+            'neighbor_losses_true': list(self.true_losses()),
             'valid_mask': self.valid_mask().copy(),
             'path': list(self.path),
             'step': self.step_count,
             'sim_time_s': float(self.sim_time_s),
+            'rho_offered_snapshot': dict(self._rho_offered),
+            'rho_measured_snapshot': dict(self._rho),
             'rho_snapshot': dict(self._rho),
             'rho_snapshot_next': self.peek_next_rho(),
+            'rho_offered_snapshot_next': self.peek_next_rho_offered(),
+            'loss_snapshot': dict(self._loss),
+            'loss_snapshot_next': self.peek_next_loss(),
             'reward_version': self.reward_version,
         }
 
@@ -187,8 +257,9 @@ class RouteEnv(gym.Env):
         self.step_count = 0
         self.sim_time_s = 0.0
         self.path = [self.current]
-        self._rho = self._sample_load()
-        return self._obs(self.true_utils()), self._info()
+        self._rho_offered = self._sample_load()
+        self._sync_observed_link_metrics()
+        return self._obs(self.true_utils(), self.true_losses()), self._info()
 
     def step(self, action):
         action = int(action)
@@ -204,7 +275,7 @@ class RouteEnv(gym.Env):
                 **breakdown.as_dict(),
             })
             return (
-                self._obs(self.true_utils()),
+                self._obs(self.true_utils(), self.true_losses()),
                 breakdown.total,
                 False,
                 True,
@@ -213,11 +284,19 @@ class RouteEnv(gym.Env):
 
         nxt = neighbors[action]
         link = (self.current, nxt)
-        rho_true = self._rho[link]
+        rho_offered = self._rho_offered[link]
+        rho_measured = self._rho[link]
         base_delay = self.link[link]['base_delay']
+        bw_mbps = self.link[link].get('base_bw')
+        queue_pkts = self.link[link].get('queue_pkts')
 
-        delay_ms = total_delay_ms(base_delay, rho_true)
-        loss = loss_rate(rho_true)
+        delay_ms = total_delay_ms(
+            base_delay,
+            rho_measured,
+            bw_mbps=bw_mbps,
+            queue_pkts=queue_pkts,
+        )
+        loss = loss_rate(rho_offered)
 
         self.sim_time_s += float(delay_ms) / 1000.0
         self.current = nxt
@@ -248,11 +327,13 @@ class RouteEnv(gym.Env):
             'invalid_action': False,
             'link_delay_ms': delay_ms,
             'link_loss': loss,
-            'link_rho_true': rho_true,
+            'link_rho_true': rho_measured,
+            'link_rho_measured': rho_measured,
+            'link_rho_offered': rho_offered,
             **breakdown.as_dict(),
         })
         return (
-            self._obs(self.true_utils()),
+            self._obs(self.true_utils(), self.true_losses()),
             breakdown.total,
             terminated,
             truncated,

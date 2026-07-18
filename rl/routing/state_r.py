@@ -1,9 +1,11 @@
 #!/usr/bin/env python3
 """RouteEnv state builder, intentionally compact for AoI ablation.
 
-State is 7-D. Two dimensions are AoI features, so a Phase-11 ablation hides
-2/7 = 28.6% of the input. Keeping the state small is part of the experiment:
-it prevents the AoI signal from being diluted by unrelated routing features.
+State is 9-D. ``util`` carries delivered throughput and clips at 1.0, while
+``loss`` carries the overload information that remains visible after the link
+has saturated. Two dimensions are AoI features, so a Phase-11 ablation hides a
+large enough part of the input to stay measurable without diluting the routing
+signal with unrelated features.
 """
 
 import numpy as np
@@ -16,14 +18,17 @@ R_DIM_NAMES = [
     'hop_progress',
     'util_n0',
     'util_n1',
+    'loss_n0',
+    'loss_n1',
     'valid_n1',
     'aoi_norm',
     'data_fresh',
 ]
 R_STATE_DIM = len(R_DIM_NAMES)
 
-AOI_DIMS = (5, 6)
+AOI_DIMS = (7, 8)
 UTIL_DIMS = (2, 3)
+LOSS_DIMS = (4, 5)
 
 AOI_NORM_DIVISOR_S = 6.0
 FRESH_THRESHOLD_S = 1.0
@@ -40,18 +45,23 @@ def aoi_features(aoi_s):
 def build_route_state(current_idx, n_nodes,
                       step, max_steps,
                       neighbor_utils, neighbor_valid,
+                      neighbor_losses=None,
                       aoi_s=0.0):
-    """Build the 7-D normalized RouteEnv state vector.
+    """Build the normalized RouteEnv state vector.
 
     ``neighbor_utils`` are what the agent observes. A later staleness wrapper
-    may pass older values here. Reward must still be computed from true values
-    inside the environment.
+    may pass older values here. ``neighbor_losses`` follows the same observed
+    snapshot. Reward must still be computed from true values inside the
+    environment.
     """
     def clip01(x):
         return float(max(0.0, min(1.0, x)))
 
     denom = max(int(n_nodes) - 1, 1)
     utils = list(neighbor_utils) + [0.0] * MAX_NEIGHBORS
+    if neighbor_losses is None:
+        neighbor_losses = [0.0] * MAX_NEIGHBORS
+    losses = list(neighbor_losses) + [0.0] * MAX_NEIGHBORS
     valid = list(neighbor_valid) + [0.0] * MAX_NEIGHBORS
     aoi_norm, data_fresh = aoi_features(aoi_s)
 
@@ -60,6 +70,8 @@ def build_route_state(current_idx, n_nodes,
         clip01(float(step) / max(int(max_steps), 1)),
         clip01(utils[0]),
         clip01(utils[1]),
+        clip01(losses[0]),
+        clip01(losses[1]),
         clip01(valid[1]),
         aoi_norm,
         data_fresh,

@@ -20,8 +20,8 @@ small measured floor is kept because the real reader never observes zero AoI.
 
 import numpy as np
 
+from rl.routing.link_model import loss_rate, rho_measured_from_offered
 from rl.routing.state_r import build_route_state, mask_aoi
-from rl.routing.util_spec import UTIL_MAX
 
 
 DITTO_AOI_CALIBRATION = {
@@ -59,8 +59,10 @@ class DittoStalenessWrapper:
         self._last_sync_time_s = 0.0
         self._next_sync_time_s = self.sync_period_s
         self._observed_snapshot = {}
+        self._observed_loss_snapshot = {}
         self._last_aoi_s = 0.0
         self._last_obs_utils = ()
+        self._last_obs_losses = ()
         self._episode_seed = 0
 
         self.action_space = env.action_space
@@ -93,16 +95,29 @@ class DittoStalenessWrapper:
         """
         age_s = float(max(0.0, age_s))
         if age_s == 0.0:
-            return dict(self.env._rho)
+            return dict(self.env._rho), dict(self.env._loss)
 
         ref_s = DITTO_AOI_CALIBRATION['sync_period_s']
         base_sigma = float(self.env.load_cfg.get('drift_sigma', 0.05))
         sigma = base_sigma * float(np.sqrt(age_s / max(ref_s, 1e-12)))
         rng = np.random.default_rng((int(self._episode_seed) + 515_151) % (2**32))
-        return {
-            link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, UTIL_MAX))
-            for link, rho in self.env._rho.items()
+        offered = {
+            link: float(np.clip(
+                rho + rng.normal(0.0, sigma),
+                0.02,
+                self.env._offered_max(),
+            ))
+            for link, rho in self.env._rho_offered.items()
         }
+        rho_snap = {
+            link: rho_measured_from_offered(value)
+            for link, value in offered.items()
+        }
+        loss_snap = {
+            link: loss_rate(value)
+            for link, value in offered.items()
+        }
+        return rho_snap, loss_snap
 
     def _record_syncs_up_to_now(self):
         """Record every sync boundary crossed by physical env time."""
@@ -110,6 +125,7 @@ class DittoStalenessWrapper:
         eps = 1e-12
         while self._next_sync_time_s <= now + eps:
             self._observed_snapshot = dict(self.env._rho)
+            self._observed_loss_snapshot = dict(self.env._loss)
             self._last_sync_time_s = float(self._next_sync_time_s)
             self._next_sync_time_s += self.sync_period_s
 
@@ -123,12 +139,17 @@ class DittoStalenessWrapper:
         """Rebuild observation from the latest twin snapshot."""
         node = self.env.current
         utils_obs = []
+        losses_obs = []
         for nb in self.env.adj[node]:
             link = (node, nb)
             utils_obs.append(self._observed_snapshot.get(link, self.env._rho[link]))
+            losses_obs.append(
+                self._observed_loss_snapshot.get(link, self.env._loss[link])
+            )
 
         self._last_aoi_s = self._aoi_s()
         self._last_obs_utils = tuple(float(x) for x in utils_obs)
+        self._last_obs_losses = tuple(float(x) for x in losses_obs)
 
         obs = build_route_state(
             current_idx=self.env.node_to_idx[node],
@@ -137,6 +158,7 @@ class DittoStalenessWrapper:
             max_steps=self.env.max_steps,
             neighbor_utils=utils_obs,
             neighbor_valid=self.env.valid_mask(),
+            neighbor_losses=losses_obs,
             aoi_s=self._last_aoi_s,
         )
         if self.mask_aoi_dims:
@@ -146,8 +168,11 @@ class DittoStalenessWrapper:
     def _augment_info(self, info):
         info = dict(info)
         true_utils = tuple(float(x) for x in self.env.true_utils())
+        true_losses = tuple(float(x) for x in self.env.true_losses())
         obs_utils_rounded = tuple(round(x, 9) for x in self._last_obs_utils)
+        obs_losses_rounded = tuple(round(x, 9) for x in self._last_obs_losses)
         true_utils_rounded = tuple(round(x, 9) for x in true_utils)
+        true_losses_rounded = tuple(round(x, 9) for x in true_losses)
 
         info['sync_period_s'] = float(self.sync_period_s)
         info['aoi_floor_s'] = float(self.aoi_floor_s)
@@ -156,8 +181,14 @@ class DittoStalenessWrapper:
         info['next_sync_time_s'] = float(self._next_sync_time_s)
         info['aoi_measured_s'] = float(self._last_aoi_s)
         info['neighbor_utils_observed'] = list(self._last_obs_utils)
+        info['neighbor_losses_observed'] = list(self._last_obs_losses)
         info['rho_snapshot_observed'] = dict(self._observed_snapshot)
-        info['util_is_stale'] = obs_utils_rounded != true_utils_rounded
+        info['loss_snapshot_observed'] = dict(self._observed_loss_snapshot)
+        info['util_is_stale'] = (
+            obs_utils_rounded != true_utils_rounded
+            or obs_losses_rounded != true_losses_rounded
+        )
+        info['loss_is_stale'] = obs_losses_rounded != true_losses_rounded
         return info
 
     def reset(self, seed=None, options=None):
@@ -171,7 +202,7 @@ class DittoStalenessWrapper:
         if self._next_sync_time_s <= 0.0:
             self._next_sync_time_s = self.sync_period_s
 
-        self._observed_snapshot = self._initial_sync_snapshot(
+        self._observed_snapshot, self._observed_loss_snapshot = self._initial_sync_snapshot(
             self.aoi_floor_s + self._phase_s
         )
         self._record_syncs_up_to_now()

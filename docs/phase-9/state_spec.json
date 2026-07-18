@@ -1,10 +1,12 @@
 {
-  "state": "route_state_v1",
+  "state": "route_state_v2",
   "dimensions": [
     "current_node",
     "hop_progress",
     "util_n0",
     "util_n1",
+    "loss_n0",
+    "loss_n1",
     "valid_n1",
     "aoi_norm",
     "data_fresh"
@@ -22,8 +24,12 @@
     "aoi_norm_divisor_s": 6.0,
     "fresh_threshold_s": 1.0
   },
+  "loss": {
+    "source_of_truth": "Ditto link traffic.lossPct / calibrated simulator loss",
+    "reason": "Delivered utilization saturates at 1.0, so loss is the deploy-time channel that preserves overload information."
+  },
   "notes": [
     "Offered overload is not encoded in utilization once throughput saturates.",
-    "Loss is the deploy-time channel that can carry overload information, but route_state_v1 does not yet include loss."
+    "route_state_v2 includes loss because the calibrated routing decision depends on the finite-queue saturation cliff."
   ]
 }

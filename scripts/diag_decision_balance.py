@@ -24,12 +24,31 @@ def frac_E_better(load_cfg, n=400):
         env = RouteEnv(TOPO, load_cfg=load_cfg, seed=seed)
         _obs, info = env.reset(seed=seed)
         rho = info['rho_snapshot']
+        loss = info['loss_snapshot']
 
         cost_e = (
-            edge_cost(env.link[('C', 'E')]['base_delay'], rho[('C', 'E')]) + W_HOP
-            + edge_cost(env.link[('E', 'F')]['base_delay'], rho[('E', 'F')]) + W_HOP
+            edge_cost(
+                env.link[('C', 'E')]['base_delay'],
+                rho[('C', 'E')],
+                loss=loss[('C', 'E')],
+                bw_mbps=env.link[('C', 'E')].get('base_bw'),
+                queue_pkts=env.link[('C', 'E')].get('queue_pkts'),
+            ) + W_HOP
+            + edge_cost(
+                env.link[('E', 'F')]['base_delay'],
+                rho[('E', 'F')],
+                loss=loss[('E', 'F')],
+                bw_mbps=env.link[('E', 'F')].get('base_bw'),
+                queue_pkts=env.link[('E', 'F')].get('queue_pkts'),
+            ) + W_HOP
         )
-        cost_f = edge_cost(env.link[('C', 'F')]['base_delay'], rho[('C', 'F')]) + W_HOP
+        cost_f = edge_cost(
+            env.link[('C', 'F')]['base_delay'],
+            rho[('C', 'F')],
+            loss=loss[('C', 'F')],
+            bw_mbps=env.link[('C', 'F')].get('base_bw'),
+            queue_pkts=env.link[('C', 'F')].get('queue_pkts'),
+        ) + W_HOP
         n_better += int(cost_e < cost_f)
     return n_better / max(int(n), 1)
 
@@ -68,6 +87,7 @@ def main(argv=None):
         (0.62, 0.88),
         (0.65, 0.85),
         (0.70, 0.85),
+        (0.70, 1.10),
         (0.75, 0.95),
         (0.80, 0.97),
     ]

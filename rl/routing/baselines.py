@@ -3,7 +3,18 @@
 
 import numpy as np
 
-from rl.routing.oracles import _hop_to_action, dijkstra_next_hop
+from rl.routing.link_model import loss_rate, rho_measured_from_offered
+from rl.routing.oracles import (
+    _hop_to_action,
+    dijkstra_next_hop,
+    dijkstra_next_hop_by_weight,
+    edge_cost,
+)
+
+
+_BOTTLENECKS = {('C', 'E'), ('D', 'E')}
+_EXPECTED_WEIGHT_SAMPLES = 2_000
+_EXPECTED_WEIGHT_CACHE = {}
 
 
 def ospf_reactive(env, info):
@@ -20,23 +31,84 @@ def ospf_reactive(env, info):
 
 
 def ospf_calibrated(env, info):
-    """Twin-free OSPF-like baseline using expected load.
+    """Twin-free OSPF-like baseline using expected link cost.
 
-    This models an admin who knows capacity/history and sets static weights
-    accordingly, while still ignoring instantaneous twin state.
+    This models a competent admin who knows capacity/history and sets static
+    weights accordingly, while still ignoring instantaneous twin state.
+
+    Lesson 9.4: use ``E[cost(rho)]``, not ``cost(E[rho])``. The calibrated link
+    model has a finite-queue cliff near saturation, so using only mean load
+    systematically underprices the E bottleneck and creates a straw baseline.
     """
     node = info['current_node']
+    weights = expected_ospf_weights(env)
+    next_hop = dijkstra_next_hop_by_weight(env, weights, source=node)
+    return _hop_to_action(env, node, next_hop)
+
+
+def _weight_cache_key(env, n_samples):
+    """Return a stable cache key for one static expected-weight table."""
     e_lo, e_hi = env.load_cfg.get('e_load', (0.60, 0.95))
     b_lo, b_hi = env.load_cfg.get('base_load', (0.25, 0.40))
-    e_mean = 0.5 * (float(e_lo) + float(e_hi))
-    b_mean = 0.5 * (float(b_lo) + float(b_hi))
-    bottlenecks = {('C', 'E'), ('D', 'E')}
-    view = {
-        link: (e_mean if link in bottlenecks else b_mean)
-        for link in env.link
-    }
-    next_hop = dijkstra_next_hop(env, view, source=node)
-    return _hop_to_action(env, node, next_hop)
+    drift_sigma = float(env.load_cfg.get('drift_sigma', 0.0))
+    links = tuple(
+        (
+            link,
+            meta['base_delay'],
+            meta['base_bw'],
+            meta['queue_pkts'],
+        )
+        for link, meta in sorted(env.link.items())
+    )
+    return (
+        tuple(float(x) for x in (e_lo, e_hi, b_lo, b_hi, drift_sigma)),
+        links,
+        int(n_samples),
+    )
+
+
+def expected_ospf_weights(env, n_samples=_EXPECTED_WEIGHT_SAMPLES):
+    """Return static expected edge costs for the calibrated OSPF baseline.
+
+    Values are in reward-cost units and exclude the fixed hop penalty. A fixed
+    RNG seed makes the baseline deterministic and reproducible.
+    """
+    key = _weight_cache_key(env, n_samples)
+    if key in _EXPECTED_WEIGHT_CACHE:
+        return dict(_EXPECTED_WEIGHT_CACHE[key])
+
+    e_lo, e_hi = env.load_cfg.get('e_load', (0.60, 0.95))
+    b_lo, b_hi = env.load_cfg.get('base_load', (0.25, 0.40))
+    rng = np.random.default_rng(12_345)
+    weights = {}
+
+    for link, meta in env.link.items():
+        # [9.4] Fail loud: missing capacity/queue metadata is a modeling bug.
+        # Using .get() would pass None to the link model, silently disabling the
+        # finite queue ceiling and making OSPF run with the wrong physics.
+        base_delay = meta['base_delay']
+        bw_mbps = meta['base_bw']
+        queue_pkts = meta['queue_pkts']
+
+        lo, hi = (e_lo, e_hi) if link in _BOTTLENECKS else (b_lo, b_hi)
+        samples = rng.uniform(float(lo), float(hi), int(n_samples))
+        costs = []
+        for offered in samples:
+            measured = rho_measured_from_offered(offered)
+            loss = loss_rate(offered)
+            costs.append(
+                edge_cost(
+                    base_delay,
+                    measured,
+                    loss=loss,
+                    bw_mbps=bw_mbps,
+                    queue_pkts=queue_pkts,
+                )
+            )
+        weights[link] = float(np.mean(costs))
+
+    _EXPECTED_WEIGHT_CACHE[key] = dict(weights)
+    return dict(weights)
 
 
 def ecmp_static(env, info):

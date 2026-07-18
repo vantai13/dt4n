@@ -8,7 +8,11 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.link_model import loss_rate, total_delay_ms
+from rl.routing.link_model import (
+    loss_rate,
+    rho_measured_from_offered,
+    total_delay_ms,
+)
 from rl.routing.reward_r import step_reward
 from rl.routing.route_env import RouteEnv
 from rl.routing.state_r import R_STATE_DIM
@@ -74,19 +78,37 @@ def run_random_episodes(n_episodes=500):
 
 
 def consequence_sweep():
-    print('\n=== Consequence width at node C (sweep rho_E) ===')
-    print(' rho_E |  r(choose E) |  r(choose F) |    diff')
-    print('-----------------------------------------------')
+    print('\n=== Consequence width at node C (sweep offered rho_E) ===')
+    print(' rho_off | rho_meas |   loss |  r(choose E) |  r(choose F) |    diff')
+    print('--------------------------------------------------------------------')
     max_gap = 0.0
-    rho_f = 0.30
+    rho_f_off = 0.30
+    rho_f_meas = rho_measured_from_offered(rho_f_off)
+    loss_f = loss_rate(rho_f_off)
     base_e = _base_delay(TOPO, 'C', 'E')
     base_f = _base_delay(TOPO, 'C', 'F')
-    r_f = step_reward(total_delay_ms(base_f, rho_f), loss_rate(rho_f)).total
-    for rho_e in [0.3, 0.5, 0.6, 0.7, 0.8, 0.85, 0.9, 0.95, 0.97]:
-        r_e = step_reward(total_delay_ms(base_e, rho_e), loss_rate(rho_e)).total
+    env = RouteEnv(TOPO, seed=0)
+    q_e = env.link[('C', 'E')].get('queue_pkts')
+    q_f = env.link[('C', 'F')].get('queue_pkts')
+    bw_e = env.link[('C', 'E')].get('base_bw')
+    bw_f = env.link[('C', 'F')].get('base_bw')
+    r_f = step_reward(
+        total_delay_ms(base_f, rho_f_meas, bw_mbps=bw_f, queue_pkts=q_f),
+        loss_f,
+    ).total
+    for rho_e_off in [0.3, 0.5, 0.7, 0.85, 0.90, 0.927, 0.95, 1.0, 1.1]:
+        rho_e_meas = rho_measured_from_offered(rho_e_off)
+        loss_e = loss_rate(rho_e_off)
+        r_e = step_reward(
+            total_delay_ms(base_e, rho_e_meas, bw_mbps=bw_e, queue_pkts=q_e),
+            loss_e,
+        ).total
         diff = r_e - r_f
         max_gap = max(max_gap, abs(diff))
-        print(f'{rho_e:6.2f} | {r_e:12.4f} | {r_f:12.4f} | {diff:+7.4f}')
+        print(
+            f'{rho_e_off:8.3f} | {rho_e_meas:8.3f} | {loss_e:6.3f} | '
+            f'{r_e:12.4f} | {r_f:12.4f} | {diff:+7.4f}'
+        )
     print(f'\nmax wrong-decision width: {max_gap:.4f}')
 
 
