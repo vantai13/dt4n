@@ -13,12 +13,16 @@ sys.path.insert(0, '.')
 from rl.routing.oracle_gate import evaluate_config
 
 
+REV5_STD_AGENT = 0.07988327839856281
+
+
 def test_gate_rejects_phase8_style_config():
     row = evaluate_config(
         base_load=(0.25, 0.40),
         e_load=(0.60, 0.97),
         n=50_000,
         seed=0,
+        std_seed_estimate=REV5_STD_AGENT,
     )
     print(
         'Phase8-style config: P(E)=%.3f SNR=%.2f asym=%.2f gates=%s%s%s'
@@ -42,6 +46,7 @@ def test_gate_rejects_obvious_static_e_config():
         e_load=(0.30, 0.50),
         n=20_000,
         seed=0,
+        std_seed_estimate=REV5_STD_AGENT,
     )
     print(
         'Always-E config: P(E)=%.3f SNR=%.2f asym=%.2f gates=%s%s%s'

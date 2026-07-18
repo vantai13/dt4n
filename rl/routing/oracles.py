@@ -1,8 +1,8 @@
 #!/usr/bin/env python3
 """Matched Dijkstra oracles: measuring instruments, not baselines.
 
-clairvoyant_dijkstra uses the true rho snapshot.
-blind_dijkstra uses the observed snapshot, which may be stale.
+clairvoyant_dijkstra uses the true offered-load snapshot.
+blind_dijkstra uses the observed offered-load snapshot, which may be stale.
 
 Both run the same algorithm over the same topology and differ only in the data
 they are allowed to see. Their gap is the isolated cost of stale twin state.
@@ -14,16 +14,16 @@ from rl.routing.link_model import loss_rate, total_delay_ms
 from rl.routing.reward_r import DELAY_NORM_MS, W_HOP, W_LOSS
 
 
-def edge_cost(base_delay_ms, rho, loss=None, bw_mbps=None, queue_pkts=None):
+def edge_cost(base_delay_ms, rho_offered, loss=None, bw_mbps=None, queue_pkts=None):
     """Cost of traversing one link in reward units, not milliseconds."""
     delay_ms = total_delay_ms(
         base_delay_ms,
-        rho,
+        rho_offered,
         bw_mbps=bw_mbps,
         queue_pkts=queue_pkts,
     )
     if loss is None:
-        loss = loss_rate(rho)
+        loss = loss_rate(rho_offered)
     return delay_ms / DELAY_NORM_MS + W_LOSS * float(loss)
 
 
@@ -37,8 +37,8 @@ def _hop_to_action(env, node, next_hop):
         return 0
 
 
-def dijkstra_next_hop(env, rho_view, loss_view=None, source=None, dest=None):
-    """Return the next hop on the cheapest path under ``rho_view``."""
+def dijkstra_next_hop(env, rho_offered_view, loss_view=None, source=None, dest=None):
+    """Return the next hop on the cheapest path under offered-load view."""
     src = source if source is not None else env.current
     dst = dest if dest is not None else env.destination
     if src == dst:
@@ -60,15 +60,15 @@ def dijkstra_next_hop(env, rho_view, loss_view=None, source=None, dest=None):
 
         for nb in env.adj[node]:
             link = (node, nb)
-            rho = rho_view.get(link)
-            if rho is None:
+            rho_offered = rho_offered_view.get(link)
+            if rho_offered is None:
                 continue
             loss = loss_view.get(link) if loss_view is not None else None
             link_cfg = env.link[link]
             base_delay = link_cfg['base_delay']
             new_dist = cur_dist + edge_cost(
                 base_delay,
-                rho,
+                rho_offered,
                 loss=loss,
                 bw_mbps=link_cfg.get('base_bw'),
                 queue_pkts=link_cfg.get('queue_pkts'),
@@ -134,10 +134,10 @@ def dijkstra_next_hop_by_weight(env, weight_view, source=None, dest=None):
 
 
 def clairvoyant_dijkstra(env, info):
-    """Optimal next hop under true utilization."""
+    """Optimal next hop under true offered load."""
     next_hop = dijkstra_next_hop(
         env,
-        info['rho_snapshot'],
+        info['rho_offered_snapshot'],
         loss_view=info.get('loss_snapshot'),
     )
     return _hop_to_action(env, info['current_node'], next_hop)
@@ -145,7 +145,10 @@ def clairvoyant_dijkstra(env, info):
 
 def blind_dijkstra(env, info):
     """Optimal next hop under the observed, possibly stale, utilization."""
-    rho_view = info.get('rho_snapshot_observed', info['rho_snapshot'])
+    rho_view = info.get(
+        'rho_offered_snapshot_observed',
+        info.get('rho_offered_snapshot', info['rho_snapshot']),
+    )
     loss_view = info.get('loss_snapshot_observed', info.get('loss_snapshot'))
     next_hop = dijkstra_next_hop(env, rho_view, loss_view=loss_view)
     return _hop_to_action(env, info['current_node'], next_hop)
@@ -158,10 +161,10 @@ def posthoc_dijkstra(env, info):
     measure the drift noise floor so wrong-rate metrics do not credit drift to
     staleness.
     """
-    rho_view = info.get('rho_snapshot_next')
+    rho_view = info.get('rho_offered_snapshot_next')
     loss_view = info.get('loss_snapshot_next')
     if rho_view is None:
-        rho_view = env.peek_next_rho()
+        rho_view = env.peek_next_rho_offered()
     if loss_view is None:
         loss_view = env.peek_next_loss()
     next_hop = dijkstra_next_hop(env, rho_view, loss_view=loss_view)

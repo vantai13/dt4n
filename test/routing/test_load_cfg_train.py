@@ -12,6 +12,9 @@ from rl.routing.oracle_gate import evaluate_oracle_gate
 from rl.routing.topology_r import LOAD_CFG_TRAIN, LOAD_CFG_V1
 
 
+REV5_STD_AGENT = 0.07988327839856281
+
+
 def test_load_cfg_v1_is_usable_but_less_balanced_than_train():
     """After calibration V1 is usable, while TRAIN is the tighter balance."""
     frac = frac_E_better(LOAD_CFG_V1, n=200)
@@ -20,13 +23,24 @@ def test_load_cfg_v1_is_usable_but_less_balanced_than_train():
 
 def test_load_cfg_train_keeps_decision_alive():
     """Training load must keep the post-drift E/F decision from freezing."""
-    result = evaluate_oracle_gate(n_samples=20_000, seed=0)
+    result = evaluate_oracle_gate(
+        n_samples=20_000,
+        seed=0,
+        std_seed_estimate=REV5_STD_AGENT,
+    )
     assert 0.35 <= result.p_e_optimal <= 0.65
 
 
-def test_load_cfg_train_passes_pretrain_oracle_gate():
-    result = evaluate_oracle_gate(n_samples=20_000, seed=0)
-    assert result.ok
+def test_load_cfg_train_needs_current_std_for_snr_gate():
+    result = evaluate_oracle_gate(
+        n_samples=20_000,
+        seed=0,
+        std_seed_estimate=REV5_STD_AGENT,
+    )
+    assert result.g1_balance
+    assert result.g3_symmetry
+    assert not result.g2_snr
+    assert not result.ok
 
 
 def test_load_cfg_train_keeps_aoi_signal_measurable():
@@ -44,7 +58,7 @@ def _run_as_script():
     tests = [
         test_load_cfg_v1_is_usable_but_less_balanced_than_train,
         test_load_cfg_train_keeps_decision_alive,
-        test_load_cfg_train_passes_pretrain_oracle_gate,
+        test_load_cfg_train_needs_current_std_for_snr_gate,
         test_load_cfg_train_keeps_aoi_signal_measurable,
     ]
     passed = 0

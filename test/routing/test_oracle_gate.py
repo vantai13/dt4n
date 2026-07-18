@@ -8,17 +8,34 @@ sys.path.insert(0, '.')
 from rl.routing.oracle_gate import evaluate_oracle_gate
 
 
-def test_oracle_gate_allows_current_training_stage():
-    result = evaluate_oracle_gate(n_samples=20_000, seed=0)
+REV5_STD_AGENT = 0.07988327839856281
+
+
+def test_oracle_gate_requires_current_std_agent():
+    try:
+        evaluate_oracle_gate(n_samples=1_000, seed=0)
+    except ValueError as exc:
+        assert 'std_seed_estimate is required' in str(exc)
+    else:
+        raise AssertionError('gate must not use a stale default std estimate')
+
+
+def test_oracle_gate_warns_current_training_stage_with_rev5_std():
+    result = evaluate_oracle_gate(
+        n_samples=20_000,
+        seed=0,
+        std_seed_estimate=REV5_STD_AGENT,
+    )
     assert result.g1_balance
-    assert result.g2_snr
     assert result.g3_symmetry
-    assert result.ok
+    assert not result.g2_snr
+    assert not result.ok
 
 
 def _run_as_script():
     tests = [
-        test_oracle_gate_allows_current_training_stage,
+        test_oracle_gate_requires_current_std_agent,
+        test_oracle_gate_warns_current_training_stage_with_rev5_std,
     ]
     for test in tests:
         test()

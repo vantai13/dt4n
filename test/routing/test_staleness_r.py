@@ -72,7 +72,7 @@ def test_history_is_copied_not_referenced():
     env.reset(seed=1)
     for _ in range(3):
         env.step(0)
-    snapshots = [snap for (_ts, snap, _loss_snap) in env._hist]
+    snapshots = [snap for (_ts, _offered, snap, _loss_snap) in env._hist]
     assert len(snapshots) >= 2
     assert snapshots[0] is not snapshots[-1]
     diffs = [link for link in snapshots[0]
@@ -83,7 +83,7 @@ def test_history_is_copied_not_referenced():
 def test_warmup_timestamps_are_oldest_first():
     env = StalenessWrapper(RouteEnv(TOPO, seed=0), z_steps_choices=(3,))
     env.reset(seed=1)
-    times = [ts for (ts, _snap, _loss_snap) in env._hist]
+    times = [ts for (ts, _offered, _snap, _loss_snap) in env._hist]
     assert times == sorted(times)
     assert times[-1] == 0.0
 
@@ -94,8 +94,14 @@ def test_warmup_past_is_shared_across_z_for_same_seed():
     e3.reset(seed=7)
     e5.reset(seed=7)
 
-    by_time3 = {ts: (snap, loss_snap) for ts, snap, loss_snap in e3._hist}
-    by_time5 = {ts: (snap, loss_snap) for ts, snap, loss_snap in e5._hist}
+    by_time3 = {
+        ts: (offered, snap, loss_snap)
+        for ts, offered, snap, loss_snap in e3._hist
+    }
+    by_time5 = {
+        ts: (offered, snap, loss_snap)
+        for ts, offered, snap, loss_snap in e5._hist
+    }
     common_times = set(by_time3) & set(by_time5)
     assert common_times
     for ts in common_times:
@@ -139,6 +145,9 @@ def test_observed_utils_belong_to_current_node():
     expected_loss = [loss_seen_by_agent[('C', 'E')],
                      loss_seen_by_agent[('C', 'F')]]
     assert info['neighbor_losses_observed'] == expected_loss
+
+    offered_seen_by_oracle = info['rho_offered_snapshot_observed']
+    assert set(snap_seen_by_agent) == set(offered_seen_by_oracle)
 
 
 def _run_as_script():

@@ -38,20 +38,26 @@ TOPO_V2 = {
 # Backward-compatible name used by the Lesson 8.2/8.3 code.
 TOPO = TOPO_V2
 
-# Named slices of the same continuous load axis. Use these for demo or Phase 12
-# storytelling, not for the main AoI curve where ``e_load`` is swept.
+# Named deterministic evaluation slices. These are behavior probes, not train
+# distributions. They are pinned to the measured rev5 cliff: below the cliff
+# E should be attractive; above it F should be attractive. Keep drift off so
+# the preset measures reaction to the intended regime instead of smearing both
+# regimes back into the train distribution.
 LOAD_PRESETS = {
     'normal': {
-        'base_load': (0.25, 0.40),
-        'e_load': (0.30, 0.50),
+        'base_load': (0.75, 0.95),
+        'e_load': (0.40, 0.70),
+        'drift_sigma': 0.0,
     },
     'borderline': {
-        'base_load': (0.25, 0.40),
-        'e_load': (0.70, 0.85),
+        'base_load': (0.75, 0.95),
+        'e_load': (0.925, 0.935),
+        'drift_sigma': 0.0,
     },
     'bottleneck_E': {
-        'base_load': (0.25, 0.40),
-        'e_load': (0.88, 0.95),
+        'base_load': (0.75, 0.95),
+        'e_load': (0.95, 1.15),
+        'drift_sigma': 0.0,
     },
 }
 

@@ -15,19 +15,15 @@ from rl.routing.oracles import (
 )
 from rl.routing.route_env import RouteEnv
 from rl.routing.topology_r import TOPO
-from rl.routing.link_model import loss_rate, rho_measured_from_offered
+from rl.routing.link_model import loss_rate
 
 
 def _view_from_offered(offered):
-    rho = {
-        link: rho_measured_from_offered(value)
-        for link, value in offered.items()
-    }
     loss = {
         link: loss_rate(value)
         for link, value in offered.items()
     }
-    return rho, loss
+    return dict(offered), loss
 
 
 def test_dijkstra_flips_at_c_on_measured_queue_cliff():
@@ -52,6 +48,7 @@ def test_blind_equals_clairvoyant_when_observed_is_true():
     env = RouteEnv(TOPO, seed=0)
     _obs, info = env.reset(seed=0)
     info['rho_snapshot_observed'] = dict(info['rho_snapshot'])
+    info['rho_offered_snapshot_observed'] = dict(info['rho_offered_snapshot'])
     info['loss_snapshot_observed'] = dict(info['loss_snapshot'])
     assert blind_dijkstra(env, info) == clairvoyant_dijkstra(env, info)
 

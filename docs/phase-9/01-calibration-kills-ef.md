@@ -3,10 +3,11 @@
 ## Finding
 
 The old E/F route choice depended on an M/M/1 blow-up near `rho=1.0`. Lesson
-9.0 Mininet measurements showed that this blow-up is not physical for the HTB
-links used here: delivered utilization saturates, queueing delay is roughly
-linear before saturation, and overload appears through finite-queue delay plus
-loss.
+9.0 Mininet measurements showed that this blow-up is not physical for the
+HTB+netem links used here: delivered utilization saturates, subthreshold qdisc
+backlog is BDP/netem occupancy rather than congestion, a narrow critical band
+appears around `rho_offered=0.930`, and overload appears through a finite-queue
+cliff plus loss.
 
 ## Consequence
 
@@ -14,7 +15,8 @@ Using only the old calibrated-linear delay made E win almost everywhere in the
 original topology, so the agent could ignore utilization. Using the measured
 finite-queue cliff restores a real decision:
 
-- Below saturation, the narrow-fast E path can be cheaper.
+- Below saturation, the narrow-fast E path can be cheaper because there is no
+  measured congestion buildup.
 - Above saturation, C/D->E jumps to the finite queue ceiling and loss appears,
   so the F path becomes cheaper.
 
@@ -33,11 +35,14 @@ finite-queue cliff restores a real decision:
 
 ## Limitation
 
-The cliff is directly bracketed, not directly pinpointed. Measurements show
-`rho_offered=0.90` still has low queueing delay, while `rho_offered=0.95`
-hits the finite queue ceiling. The `0.927` threshold comes from the fitted
-overhead factor, so a tighter calibration would need an extra sweep inside
-`0.90..0.95`.
+The cliff is now directly bracketed by the fine density sweep. Measurements
+show `rho_offered=0.925` still has only BDP occupancy, while
+`rho_offered=0.930` enters a metastable middle/high-queue regime and
+`rho_offered>=0.935` is near the finite queue ceiling.
+
+The density follow-up resolves the meaning of the low-load linear-looking
+region: `q_delay ~= base_delay * rho_measured` is BDP/netem occupancy, not a
+queueing law. See `docs/phase-9/02-density-resolves-law.md`.
 
 ## Gate Validation
 

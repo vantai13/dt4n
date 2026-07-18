@@ -14,14 +14,12 @@ import numpy as np
 
 from rl.routing.link_model import (
     loss_rate,
-    rho_measured_from_offered,
     total_delay_ms,
 )
 from rl.routing.reward_r import DELAY_NORM_MS, W_HOP, W_LOSS, step_reward
 from rl.routing.topology_r import LOAD_CFG_TRAIN, TOPO_V2
 
 
-STD_SEED_ESTIMATE = 0.0276
 DEFAULT_DRIFT_STEPS = 2
 OFFERED_MIN = 0.02
 
@@ -41,6 +39,15 @@ class OracleGateResult:
     @property
     def ok(self):
         return self.g1_balance and self.g2_snr and self.g3_symmetry
+
+
+@dataclass
+class OracleHeadroomResult:
+    n_samples: int
+    p_e_optimal: float
+    regret_always_f: float
+    regret_always_e: float
+    regret_ratio: float
 
 
 def _edge_map(topo=TOPO_V2):
@@ -123,10 +130,9 @@ def path_cost(path, rho_off_map, edges, w_loss=None):
         link = (src, dst)
         info = edges[link]
         rho_off = rho_off_map[link]
-        rho_meas = rho_measured_from_offered(rho_off)
         delay_ms = total_delay_ms(
             info['base_delay'],
-            rho_meas,
+            rho_off,
             bw_mbps=info['bw_mbps'],
             queue_pkts=info['queue_pkts'],
         )
@@ -138,10 +144,8 @@ def path_cost(path, rho_off_map, edges, w_loss=None):
     return total
 
 
-def evaluate_oracle_gate(load_cfg=LOAD_CFG_TRAIN, n_samples=200_000, seed=0,
-                         std_seed_estimate=STD_SEED_ESTIMATE,
-                         w_loss=None, drift_steps=DEFAULT_DRIFT_STEPS):
-    """Evaluate the three pre-train oracle gates."""
+def _sample_path_cost_arrays(load_cfg, n_samples, seed, w_loss, drift_steps):
+    """Return paired C/D path costs for the current measured-physics stage."""
     edges = _edge_map()
     rng = np.random.default_rng(int(seed))
 
@@ -160,28 +164,82 @@ def evaluate_oracle_gate(load_cfg=LOAD_CFG_TRAIN, n_samples=200_000, seed=0,
         c_e[idx] = path_cost(path_e, rho_off, edges, w_loss=w_loss)
         c_f[idx] = path_cost(path_f, rho_off, edges, w_loss=w_loss)
 
+    return c_e, c_f
+
+
+def estimate_oracle_headroom(load_cfg=LOAD_CFG_TRAIN, n_samples=200_000,
+                             seed=0, w_loss=None,
+                             drift_steps=DEFAULT_DRIFT_STEPS):
+    """Estimate oracle balance/regret without making an SNR gate decision."""
+    c_e, c_f = _sample_path_cost_arrays(
+        load_cfg,
+        n_samples,
+        seed,
+        w_loss,
+        drift_steps,
+    )
     e_wins = c_e < c_f
     p_e = float(e_wins.mean())
     regret_f = float(np.where(e_wins, c_f - c_e, 0.0).mean())
     regret_e = float(np.where(~e_wins, c_e - c_f, 0.0).mean())
-    snr = regret_f / max(float(std_seed_estimate), 1e-12)
     ratio = max(regret_f, regret_e) / max(min(regret_f, regret_e), 1e-9)
 
-    return OracleGateResult(
+    return OracleHeadroomResult(
         n_samples=int(n_samples),
         p_e_optimal=p_e,
         regret_always_f=regret_f,
         regret_always_e=regret_e,
-        snr_f=snr,
         regret_ratio=ratio,
-        g1_balance=0.35 <= p_e <= 0.65,
+    )
+
+
+def _require_std_seed_estimate(std_seed_estimate):
+    if std_seed_estimate is None:
+        raise ValueError(
+            'std_seed_estimate is required. Measure it from the 5 seed run of '
+            'the CURRENT link model, then pass --std-seed-estimate. Do not '
+            'reuse the old Phase-8 value 0.0276; the model has changed.'
+        )
+    value = float(std_seed_estimate)
+    if value <= 0.0:
+        raise ValueError('std_seed_estimate must be > 0')
+    return value
+
+
+def evaluate_oracle_gate(load_cfg=LOAD_CFG_TRAIN, n_samples=200_000, seed=0,
+                         std_seed_estimate=None, w_loss=None,
+                         drift_steps=DEFAULT_DRIFT_STEPS):
+    """Evaluate the three pre-train oracle gates.
+
+    ``std_seed_estimate`` intentionally has no usable default. Agent variance
+    depends on the current link model and training harness; reusing a Phase-8
+    noise floor after the physics changed would make G2 report a false PASS.
+    """
+    std_seed_estimate = _require_std_seed_estimate(std_seed_estimate)
+    headroom = estimate_oracle_headroom(
+        load_cfg=load_cfg,
+        n_samples=n_samples,
+        seed=seed,
+        w_loss=w_loss,
+        drift_steps=drift_steps,
+    )
+    snr = headroom.regret_always_f / max(std_seed_estimate, 1e-12)
+
+    return OracleGateResult(
+        n_samples=int(n_samples),
+        p_e_optimal=headroom.p_e_optimal,
+        regret_always_f=headroom.regret_always_f,
+        regret_always_e=headroom.regret_always_e,
+        snr_f=snr,
+        regret_ratio=headroom.regret_ratio,
+        g1_balance=0.35 <= headroom.p_e_optimal <= 0.65,
         g2_snr=snr > 3.0,
-        g3_symmetry=ratio < 5.0,
+        g3_symmetry=headroom.regret_ratio < 5.0,
     )
 
 
 def evaluate_config(base_load=None, e_load=None, w_loss=None, n=50_000,
-                    seed=0, std_seed_estimate=STD_SEED_ESTIMATE,
+                    seed=0, std_seed_estimate=None,
                     drift_steps=DEFAULT_DRIFT_STEPS):
     """Return a compact dict for config sweeps."""
     cfg = dict(LOAD_CFG_TRAIN)
@@ -211,8 +269,9 @@ def evaluate_config(base_load=None, e_load=None, w_loss=None, n=50_000,
 
 
 def print_result(result, load_cfg=LOAD_CFG_TRAIN,
-                 std_seed_estimate=STD_SEED_ESTIMATE,
+                 std_seed_estimate=None,
                  drift_steps=DEFAULT_DRIFT_STEPS):
+    std_seed_estimate = _require_std_seed_estimate(std_seed_estimate)
     e_lo, e_hi = load_cfg['e_load']
     b_lo, b_hi = load_cfg['base_load']
 
@@ -248,7 +307,8 @@ def parse_args(argv=None):
     parser.add_argument('--samples', type=int, default=200_000)
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--std-seed-estimate', type=float,
-                        default=STD_SEED_ESTIMATE)
+                        required=True,
+                        help='measured std_agent from the current 5-seed run')
     parser.add_argument('--w-loss', type=float, default=None,
                         help='temporary reward loss weight for what-if sweeps')
     parser.add_argument('--drift-steps', type=int, default=DEFAULT_DRIFT_STEPS,

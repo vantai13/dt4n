@@ -3,7 +3,7 @@
 
 import numpy as np
 
-from rl.routing.link_model import loss_rate, rho_measured_from_offered
+from rl.routing.link_model import loss_rate
 from rl.routing.oracles import (
     _hop_to_action,
     dijkstra_next_hop,
@@ -94,12 +94,11 @@ def expected_ospf_weights(env, n_samples=_EXPECTED_WEIGHT_SAMPLES):
         samples = rng.uniform(float(lo), float(hi), int(n_samples))
         costs = []
         for offered in samples:
-            measured = rho_measured_from_offered(offered)
             loss = loss_rate(offered)
             costs.append(
                 edge_cost(
                     base_delay,
-                    measured,
+                    offered,
                     loss=loss,
                     bw_mbps=bw_mbps,
                     queue_pkts=queue_pkts,

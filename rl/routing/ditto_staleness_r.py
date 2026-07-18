@@ -58,6 +58,7 @@ class DittoStalenessWrapper:
         self._phase_s = 0.0
         self._last_sync_time_s = 0.0
         self._next_sync_time_s = self.sync_period_s
+        self._observed_offered_snapshot = {}
         self._observed_snapshot = {}
         self._observed_loss_snapshot = {}
         self._last_aoi_s = 0.0
@@ -95,7 +96,11 @@ class DittoStalenessWrapper:
         """
         age_s = float(max(0.0, age_s))
         if age_s == 0.0:
-            return dict(self.env._rho), dict(self.env._loss)
+            return (
+                dict(self.env._rho_offered),
+                dict(self.env._rho),
+                dict(self.env._loss),
+            )
 
         ref_s = DITTO_AOI_CALIBRATION['sync_period_s']
         base_sigma = float(self.env.load_cfg.get('drift_sigma', 0.05))
@@ -117,13 +122,14 @@ class DittoStalenessWrapper:
             link: loss_rate(value)
             for link, value in offered.items()
         }
-        return rho_snap, loss_snap
+        return offered, rho_snap, loss_snap
 
     def _record_syncs_up_to_now(self):
         """Record every sync boundary crossed by physical env time."""
         now = float(self.env.sim_time_s)
         eps = 1e-12
         while self._next_sync_time_s <= now + eps:
+            self._observed_offered_snapshot = dict(self.env._rho_offered)
             self._observed_snapshot = dict(self.env._rho)
             self._observed_loss_snapshot = dict(self.env._loss)
             self._last_sync_time_s = float(self._next_sync_time_s)
@@ -182,6 +188,7 @@ class DittoStalenessWrapper:
         info['aoi_measured_s'] = float(self._last_aoi_s)
         info['neighbor_utils_observed'] = list(self._last_obs_utils)
         info['neighbor_losses_observed'] = list(self._last_obs_losses)
+        info['rho_offered_snapshot_observed'] = dict(self._observed_offered_snapshot)
         info['rho_snapshot_observed'] = dict(self._observed_snapshot)
         info['loss_snapshot_observed'] = dict(self._observed_loss_snapshot)
         info['util_is_stale'] = (
@@ -202,9 +209,11 @@ class DittoStalenessWrapper:
         if self._next_sync_time_s <= 0.0:
             self._next_sync_time_s = self.sync_period_s
 
-        self._observed_snapshot, self._observed_loss_snapshot = self._initial_sync_snapshot(
-            self.aoi_floor_s + self._phase_s
-        )
+        (
+            self._observed_offered_snapshot,
+            self._observed_snapshot,
+            self._observed_loss_snapshot,
+        ) = self._initial_sync_snapshot(self.aoi_floor_s + self._phase_s)
         self._record_syncs_up_to_now()
         obs = self._rebuild_obs()
         return obs, self._augment_info(info)

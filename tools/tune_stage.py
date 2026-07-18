@@ -38,6 +38,12 @@ def parse_args(argv=None):
     parser.add_argument('--e-his', default=','.join(map(str, DEFAULT_E_HIS)))
     parser.add_argument('--drift-steps', type=int, default=2)
     parser.add_argument(
+        '--std-seed-estimate',
+        type=float,
+        required=True,
+        help='measured std_agent from the current model 5-seed run',
+    )
+    parser.add_argument(
         '--w-losses',
         default=str(W_LOSS),
         help='comma-separated what-if W_LOSS values; default keeps reward fixed',
@@ -69,6 +75,7 @@ def main(argv=None):
                     w_loss=w_loss,
                     n=args.samples,
                     seed=args.seed,
+                    std_seed_estimate=args.std_seed_estimate,
                     drift_steps=args.drift_steps,
                 )
                 print(

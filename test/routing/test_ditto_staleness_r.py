@@ -65,6 +65,7 @@ def test_fast_sync_refreshes_observed_snapshot():
     assert info1['last_sync_time_s'] >= 0.001
     assert env.aoi_floor_s <= info1['aoi_measured_s']
     assert info1['aoi_measured_s'] < env.aoi_floor_s + info1['sync_period_s']
+    assert info1['rho_offered_snapshot_observed'] == info1['rho_offered_snapshot']
     assert info1['rho_snapshot_observed'] == info1['rho_snapshot']
     assert info1['loss_snapshot_observed'] == info1['loss_snapshot']
 

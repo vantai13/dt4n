@@ -292,7 +292,7 @@ class RouteEnv(gym.Env):
 
         delay_ms = total_delay_ms(
             base_delay,
-            rho_measured,
+            rho_offered,
             bw_mbps=bw_mbps,
             queue_pkts=queue_pkts,
         )

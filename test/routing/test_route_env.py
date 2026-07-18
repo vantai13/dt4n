@@ -8,7 +8,13 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.link_model import loss_rate, rho_measured_from_offered, total_delay_ms
+from rl.routing.link_model import (
+    CRITICAL_TO_FULL_RHO_OFFERED,
+    LOW_TO_CRITICAL_RHO_OFFERED,
+    loss_rate,
+    rho_measured_from_offered,
+    total_delay_ms,
+)
 from rl.routing.reward_r import step_reward
 from rl.routing.route_env import RouteEnv
 from rl.routing.state_r import (
@@ -54,6 +60,13 @@ def test_load_presets_are_slices_of_one_axis():
     assert set(LOAD_PRESETS) == {'normal', 'borderline', 'bottleneck_E'}
     assert LOAD_PRESETS['normal']['e_load'][1] < LOAD_PRESETS['borderline']['e_load'][1]
     assert LOAD_PRESETS['borderline']['e_load'][0] < LOAD_PRESETS['bottleneck_E']['e_load'][0]
+    assert LOAD_PRESETS['normal']['e_load'][1] < LOW_TO_CRITICAL_RHO_OFFERED
+    assert LOAD_PRESETS['borderline']['e_load'][0] <= LOW_TO_CRITICAL_RHO_OFFERED
+    assert LOAD_PRESETS['borderline']['e_load'][1] >= CRITICAL_TO_FULL_RHO_OFFERED
+    assert LOAD_PRESETS['bottleneck_E']['e_load'][0] > CRITICAL_TO_FULL_RHO_OFFERED
+    for preset in LOAD_PRESETS.values():
+        assert preset['base_load'] == (0.75, 0.95)
+        assert preset['drift_sigma'] == 0.0
 
 
 def test_mask_touches_only_aoi():
@@ -79,22 +92,24 @@ def test_aoi_norm_not_saturated_in_range():
     assert AOI_NORM_DIVISOR_S >= max_aoi_in_sweep
 
 
-def test_calibrated_delay_monotone_and_bounded():
+def test_calibrated_delay_has_rev5_cliff_and_finite_ceiling():
     prev = -1.0
-    for rho in [0.3, 0.5, 0.7, 0.8, 0.9, 0.95, 0.97]:
-        delay = total_delay_ms(2.0, rho)
-        assert delay > prev
+    for rho in [0.3, 0.5, 0.7, 0.9, 0.925, 0.930, 0.935, 0.95]:
+        delay = total_delay_ms(2.0, rho, bw_mbps=4.0, queue_pkts=13)
+        assert delay >= prev
         prev = delay
-    assert total_delay_ms(2.0, 0.97) < 1.2 * total_delay_ms(2.0, 0.8)
+    assert (total_delay_ms(2.0, 0.930, bw_mbps=4.0, queue_pkts=13) - 2.0) > (
+        10.0 * (total_delay_ms(2.0, 0.925, bw_mbps=4.0, queue_pkts=13) - 2.0)
+    )
+    assert total_delay_ms(2.0, 1.30, bw_mbps=4.0, queue_pkts=13) < 42.0
 
 
 def _link_reward(topo, src, dst, rho_offered):
     env = RouteEnv(topo, seed=0)
     link = env.link[(src, dst)]
-    rho_measured = rho_measured_from_offered(rho_offered)
     delay = total_delay_ms(
         link['base_delay'],
-        rho_measured,
+        rho_offered,
         bw_mbps=link.get('base_bw'),
         queue_pkts=link.get('queue_pkts'),
     )
@@ -181,7 +196,7 @@ def _run_as_script():
         test_load_presets_are_slices_of_one_axis,
         test_mask_does_not_mutate,
         test_mask_touches_only_aoi,
-        test_calibrated_delay_monotone_and_bounded,
+        test_calibrated_delay_has_rev5_cliff_and_finite_ceiling,
         test_no_staleness_code_in_env,
         test_sim_time_advances_by_physical_link_delay,
         test_terminated_is_real,

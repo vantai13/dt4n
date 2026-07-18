@@ -19,7 +19,8 @@ from rl.routing.oracles import posthoc_dijkstra
 from rl.routing.route_env import RouteEnv
 from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import R_STATE_DIM
-from rl.routing.topology_r import LOAD_PRESETS, TOPO
+from rl.routing.oracle_gate import DEFAULT_DRIFT_STEPS, estimate_oracle_headroom
+from rl.routing.topology_r import LOAD_CFG_TRAIN, LOAD_CFG_V1, LOAD_PRESETS, TOPO
 from rl.routing.train_r import make_eval_env, run_agent_episode
 
 
@@ -28,7 +29,7 @@ GATE_ARRIVED = 0.95
 GATE_REVISIT = 0.05
 GATE_PATH_UNIQUE = 2
 
-HEADROOM_SWEEP = 0.5869
+HEADROOM_SWEEP_FALLBACK = 0.2235
 STD_ORACLE_REF = 0.0390
 SNR_PASS = 3.0
 SNR_WARN = 2.0
@@ -46,6 +47,17 @@ def _preset_load(name):
     load = dict(LOAD_PRESETS[name])
     load.setdefault('drift_sigma', 0.15)
     return load
+
+
+def _cfg_load_cfg(cfg):
+    value = cfg['env']['load_cfg']
+    if isinstance(value, dict):
+        return value
+    if value == 'LOAD_CFG_TRAIN':
+        return LOAD_CFG_TRAIN
+    if value == 'LOAD_CFG_V1':
+        return LOAD_CFG_V1
+    return LOAD_PRESETS[value]
 
 
 def eval_preset(agent, cfg, preset, seeds):
@@ -127,6 +139,14 @@ def parse_args(argv=None):
     parser.add_argument('--heldout-start', type=int, default=2000)
     parser.add_argument('--heldout-n', type=int, default=50)
     parser.add_argument('--out', default='docs/phase-9/artifacts/analyze_5seed.json')
+    parser.add_argument('--headroom-samples', type=int, default=50_000)
+    parser.add_argument('--drift-steps', type=int, default=DEFAULT_DRIFT_STEPS)
+    parser.add_argument(
+        '--headroom-sweep',
+        type=float,
+        default=None,
+        help='override dynamic oracle headroom, mainly for audit replay',
+    )
     return parser.parse_args(argv)
 
 
@@ -134,6 +154,29 @@ def main(argv=None):
     args = parse_args(argv)
     with open(args.config, encoding='utf-8') as fh:
         cfg = yaml.safe_load(fh)
+
+    if args.headroom_sweep is None:
+        try:
+            gate = estimate_oracle_headroom(
+                load_cfg=_cfg_load_cfg(cfg),
+                n_samples=int(args.headroom_samples),
+                drift_steps=int(args.drift_steps),
+            )
+            headroom_sweep = float(gate.regret_always_f)
+            print(
+                'Dynamic headroom_sweep from oracle gate: %.4f '
+                '(samples=%d, drift_steps=%d)'
+                % (headroom_sweep, args.headroom_samples, args.drift_steps)
+            )
+        except Exception as exc:
+            headroom_sweep = HEADROOM_SWEEP_FALLBACK
+            print(
+                'WARNING: dynamic headroom failed (%s); using fallback %.4f'
+                % (exc, headroom_sweep)
+            )
+    else:
+        headroom_sweep = float(args.headroom_sweep)
+        print('Using overridden headroom_sweep: %.4f' % headroom_sweep)
 
     selected = _select_run_dirs(args.runs_glob)
     if len(selected) < 5:
@@ -154,11 +197,13 @@ def main(argv=None):
         z0, rows_z0 = eval_z0(agent, cfg, heldout)
 
         paths = [tuple(row['path']) for row in rows_bottleneck]
+        paths_z0 = [tuple(row['path']) for row in rows_z0]
         revisit_rate = float(np.mean([
             len(set(row['path'])) < len(row['path'])
             for row in rows_bottleneck
         ]))
         path_unique = len(Counter(paths))
+        path_unique_z0 = len(Counter(paths_z0))
         safe_delta = bottleneck['safe_path_freq'] - normal['safe_path_freq']
 
         row = {
@@ -174,6 +219,8 @@ def main(argv=None):
             'safe_path_freq_aoi0': z0['safe_path_freq'],
             'revisit_rate': revisit_rate,
             'path_unique': path_unique,
+            'path_unique_bottleneck': path_unique,
+            'path_unique_z0': path_unique_z0,
             'gate_static': safe_delta > GATE_SAFE_DELTA,
             'gate_arrived': z0['arrived'] > GATE_ARRIVED,
             'gate_revisit': revisit_rate < GATE_REVISIT,
@@ -191,7 +238,8 @@ def main(argv=None):
             f"seed {agent_seed}: ret={row['return_z0']:.4f} "
             f"safe_delta={safe_delta:.4f} "
             f"anchor={row['safe_path_freq_aoi0']:.4f} "
-            f"paths={path_unique} {'PASS' if ok else 'FAIL'}"
+            f"paths_bottleneck={path_unique} paths_z0={path_unique_z0} "
+            f"{'PASS' if ok else 'FAIL'}"
         )
 
     per_seed.sort(key=lambda row: row['agent_seed'])
@@ -199,7 +247,7 @@ def main(argv=None):
     mean_return = float(returns.mean())
     std_agent = float(returns.std(ddof=1))
     ci95 = float(1.96 * std_agent / np.sqrt(len(returns)))
-    snr = float(HEADROOM_SWEEP / std_agent) if std_agent > 0 else float('inf')
+    snr = float(headroom_sweep / std_agent) if std_agent > 0 else float('inf')
 
     if snr >= SNR_PASS:
         verdict = 'PASS'
@@ -217,7 +265,7 @@ def main(argv=None):
     print('=' * 60)
     print(f'return_z0      = {mean_return:.4f} +/- {ci95:.4f} CI95')
     print(f'std_agent      = {std_agent:.4f} ({100 * std_agent / abs(mean_return):.1f}% of mean)')
-    print(f'headroom_sweep = {HEADROOM_SWEEP:.4f}')
+    print(f'headroom_sweep = {headroom_sweep:.4f}')
     print(f'SNR            = {snr:.2f} -> {verdict}')
     print(f'std_agent/std_oracle_ref = {std_agent / STD_ORACLE_REF:.1f}x')
     print(
@@ -245,7 +293,7 @@ def main(argv=None):
         'mean_return': mean_return,
         'std_agent': std_agent,
         'ci95': ci95,
-        'headroom_sweep': HEADROOM_SWEEP,
+        'headroom_sweep': headroom_sweep,
         'snr': snr,
         'snr_verdict': verdict,
         'std_oracle_ref': STD_ORACLE_REF,
@@ -260,7 +308,7 @@ def main(argv=None):
             'path_unique': GATE_PATH_UNIQUE,
             'snr_pass': SNR_PASS,
             'snr_warn': SNR_WARN,
-            'headroom_sweep': HEADROOM_SWEEP,
+            'headroom_sweep': headroom_sweep,
         },
     }
     os.makedirs(os.path.dirname(args.out), exist_ok=True)

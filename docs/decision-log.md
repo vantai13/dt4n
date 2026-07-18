@@ -275,3 +275,77 @@ The decisive Phase 9 question is whether agent variance can swallow the Phase
 `scripts/train_5seed.sh` runs seeds 0..4 sequentially and refuses to run on a
 dirty working tree. `scripts/analyze_5seed.py` computes the behavior gates,
 `std_agent`, SNR, and the `safe_path_freq(AoI=0)` anchor for Phase 11.
+
+## 2026-07-18 - Lesson 9.0 rev5: density resolves link model meaning
+
+### QD-25: Use offered load for calibrated physical delay
+
+The calibrated delay model now takes offered load, not measured utilization.
+This is necessary because measured utilization clips near `1.0`, while the
+fine density sweep distinguishes:
+
+- `rho_offered=0.925`: BDP occupancy only.
+- `rho_offered=0.930`: metastable queue, about `0.71 * ceiling`.
+- `rho_offered>=0.935`: near-full finite queue.
+
+The subthreshold formula is still:
+`qdisc_delay_ms = base_delay_ms * rho_measured`.
+
+Its interpretation changed. It is not a new queueing law and not M/M/1. The
+density probes show that low-load mean qdisc backlog matches BDP/netem
+occupancy:
+
+- `bw=4, base=2.0`: mean packets `0.61`, BDP `0.64`.
+- `bw=6, base=3.0`: mean packets `1.52`, BDP `1.44`.
+- `bw=8, base=1.5`: mean packets `0.96`, BDP `0.96`.
+
+The apparent "forbidden zone" was an artifact twice over. In the 3-config
+density matrix, the only config with BDP above one packet, `bw=6, base=3.0`,
+is the only config with substantial mass at two packets. In the fine cliff
+sweep, `rho_offered=0.930` has large middle-queue mass.
+
+### QD-26: The real calibrated effect is a narrow finite-queue transition
+
+The robust effect is not gradual queue growth. It is the transition from BDP
+occupancy through a very narrow metastable band into a near-full finite queue.
+The fine cliff sweep brackets the transition at:
+
+`rho_offered in (0.925, 0.930]`.
+
+`loss_rate()` keeps the fitted overhead factor `1.079`, giving a derived
+offered-load cross-check at `1 / 1.079 = 0.927`. After saturation, measured
+utilization is clipped to `1.0`, queue delay uses the finite queue ceiling, and
+overload magnitude is carried by loss. The agent state remains measured
+utilization plus loss; reward/oracles/gates use offered-load snapshots.
+
+## 2026-07-18 - Lesson 9.5: gate std must be model-local
+
+### QD-27: Remove the hardcoded Phase-8 seed std from the oracle gate
+
+`STD_SEED_ESTIMATE = 0.0276` came from an older Phase-8/M/M/1 world. After the
+link model moved to rev5, the measured 5-seed agent std is about `0.0799`.
+Using the old value made G2 report:
+
+`SNR = 0.2219 / 0.0276 = 8.04`
+
+The current-model estimate is:
+
+`SNR = 0.2219 / 0.0799 = 2.78`
+
+So the rev5 gate is WARN/NO-GO for the 1500-episode agent variance, even though
+G1 balance and G3 symmetry remain acceptable. `evaluate_oracle_gate()` and
+`tools/tune_stage.py` now require an explicit `std_seed_estimate`; callers must
+measure it from the current 5-seed run before making an SNR claim.
+
+### QD-28: Return is not enough, but behavior presets must match the physics
+
+The rev5 1500-episode run had stable returns but unstable `safe_delta`. The
+first interpretation was that some seeds were static. A direct heldout check
+showed a more precise issue: the old `normal`/`bottleneck_E` presets were
+chosen for the M/M/1 world, where `e_load=0.85` looked congested. In rev5, the
+measured cliff is near `rho_offered=0.9275`, so both old presets were below
+the cliff and asked the agent to distinguish two mostly uncongested worlds.
+
+This keeps the behavior gates necessary, but their scenarios must be calibrated
+whenever the link model changes. `LOAD_PRESETS` now uses deterministic rev5
+slices below/around/above the measured cliff and sets `drift_sigma=0.0`.

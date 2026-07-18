@@ -35,6 +35,7 @@ class StalenessWrapper:
         self._last_aoi_s = 0.0
         self._last_obs_utils = ()
         self._last_obs_losses = ()
+        self._last_obs_offered_snapshot = {}
         self._last_obs_snapshot = {}
         self._last_obs_loss_snapshot = {}
         self._episode_seed = 0
@@ -57,6 +58,7 @@ class StalenessWrapper:
         """Timestamp a full copy of the true per-link observed snapshot."""
         self._hist.append((
             self._sim_time_s(),
+            dict(self.env._rho_offered),
             dict(self.env._rho),
             dict(self.env._loss),
         ))
@@ -110,22 +112,27 @@ class StalenessWrapper:
                 link: loss_rate(value)
                 for link, value in offered.items()
             }
-            self._hist.append((t, rho_snap, loss_snap))
+            self._hist.append((t, dict(offered), rho_snap, loss_snap))
 
     def _observed_snapshot(self):
-        """Return ``(rho_seen, loss_seen, measured_aoi_seconds)``."""
+        """Return ``(offered_seen, rho_seen, loss_seen, measured_aoi_seconds)``."""
         if not self._hist:
-            return dict(self.env._rho), dict(self.env._loss), 0.0
+            return (
+                dict(self.env._rho_offered),
+                dict(self.env._rho),
+                dict(self.env._loss),
+                0.0,
+            )
 
         idx = max(0, len(self._hist) - 1 - self._z_steps)
-        t_rec, snap, loss_snap = self._hist[idx]
+        t_rec, offered_snap, snap, loss_snap = self._hist[idx]
         if self._z_steps == 0:
-            return snap, loss_snap, 0.0
-        return snap, loss_snap, max(0.0, self._sim_time_s() - t_rec)
+            return offered_snap, snap, loss_snap, 0.0
+        return offered_snap, snap, loss_snap, max(0.0, self._sim_time_s() - t_rec)
 
     def _rebuild_obs(self):
         """Rebuild state from a raw snapshot; never patch obs[2:4]."""
-        snap, loss_snap, aoi_s = self._observed_snapshot()
+        offered_snap, snap, loss_snap, aoi_s = self._observed_snapshot()
         node = self.env.current
 
         utils_obs = []
@@ -138,6 +145,7 @@ class StalenessWrapper:
         self._last_aoi_s = aoi_s
         self._last_obs_utils = tuple(float(x) for x in utils_obs)
         self._last_obs_losses = tuple(float(x) for x in losses_obs)
+        self._last_obs_offered_snapshot = dict(offered_snap)
         self._last_obs_snapshot = dict(snap)
         self._last_obs_loss_snapshot = dict(loss_snap)
 
@@ -167,6 +175,7 @@ class StalenessWrapper:
         info['aoi_measured_s'] = round(float(self._last_aoi_s), 4)
         info['neighbor_utils_observed'] = list(self._last_obs_utils)
         info['neighbor_losses_observed'] = list(self._last_obs_losses)
+        info['rho_offered_snapshot_observed'] = dict(self._last_obs_offered_snapshot)
         info['rho_snapshot_observed'] = dict(self._last_obs_snapshot)
         info['loss_snapshot_observed'] = dict(self._last_obs_loss_snapshot)
         info['util_is_stale'] = (
