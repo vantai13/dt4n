@@ -155,6 +155,23 @@ LOAD_CFG_TRAIN = {
     'drift_sigma': 0.0,
 }
 
+# [10.1] Phase-10 sweep load: reuse the calibrated S1-S4 branch-choice
+# scenarios, but let the parent load config own drift. Child scenarios must not
+# carry drift_sigma here, otherwise resolve_load_scenario() would shadow the
+# parent value and silently disable drift.
+SCENARIOS_SWEEP = {
+    name: {key: value for key, value in scenario.items()
+           if key != 'drift_sigma'}
+    for name, scenario in SCENARIOS_TRAIN.items()
+}
+
+LOAD_CFG_SWEEP = {
+    'base_load': BASE_LOAD,
+    'scenarios': SCENARIOS_SWEEP,
+    'scenario_mix': tuple(SCENARIOS_SWEEP),
+    'drift_sigma': 0.15,
+}
+
 
 _LOAD_META_KEYS = {'scenarios', 'scenario_mix'}
 
