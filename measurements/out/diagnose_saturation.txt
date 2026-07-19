@@ -1,0 +1,59 @@
+[MODE] full saturation diagnostic
+### Diagnose wrong_excess saturation ###
+z_values=(0, 1, 2, 3, 5, 8, 12, 20, 30, 40, 60)
+load_cfg=LOAD_CFG_SWEEP
+
+========================================================================
+TEST 1 - tail noise at z=20 (5 blocks x 500 seeds)
+========================================================================
+  block 1: seeds=0-499 wrong_excess=0.2233 CoB=0.3283
+  block 2: seeds=500-999 wrong_excess=0.2433 CoB=0.3560
+  block 3: seeds=1000-1499 wrong_excess=0.2560 CoB=0.3640
+  block 4: seeds=1500-1999 wrong_excess=0.1933 CoB=0.3076
+  block 5: seeds=2000-2499 wrong_excess=0.2140 CoB=0.3192
+  mean=0.2260 sd_between_blocks=0.0246
+  max-min=0.0627
+  spread/sd=2.55
+  Read: tail up/down of this size is sampling noise unless it repeats.
+
+[CSV] wrote measurements/out/diagnose_saturation_test1.csv
+========================================================================
+TEST 2 - extended z sweep for plateau (N=800)
+========================================================================
+  z= 0 AoI=  0.0s wrong_excess=0.0000 CoB=0.0000
+  z= 1 AoI=  0.5s wrong_excess=0.0733 CoB=0.1078
+  z= 2 AoI=  1.0s wrong_excess=0.1121 CoB=0.1453
+  z= 3 AoI=  1.5s wrong_excess=0.1279 CoB=0.2124
+  z= 5 AoI=  2.5s wrong_excess=0.1717 CoB=0.2545
+  z= 8 AoI=  4.0s wrong_excess=0.1846 CoB=0.2863
+  z=12 AoI=  6.0s wrong_excess=0.2008 CoB=0.3133
+  z=20 AoI= 10.0s wrong_excess=0.2313 CoB=0.3368
+  z=30 AoI= 15.0s wrong_excess=0.2433 CoB=0.3689
+  z=40 AoI= 20.0s wrong_excess=0.2504 CoB=0.3673
+  z=60 AoI= 30.0s wrong_excess=0.2488 CoB=0.3738
+  |last - previous| = 0.0017
+  Tail verdict: flat enough by the 0.01 wrong_excess heuristic.
+
+[CSV] wrote measurements/out/diagnose_saturation_test2.csv
+========================================================================
+TEST 3 - one-timescale vs two-timescale fit
+========================================================================
+  [1-tau] A=0.2360 tau=1.9273s R2=0.96722 AIC=-89.83 BIC=-89.03
+  [2-tau] fast: A1=0.1207 tau1=0.7247s
+          slow: A2=0.1316 tau2=5.7756s
+          A_total=0.2522 tau_ratio=7.97x R2=0.99725 AIC=-113.10 BIC=-111.51
+  delta_R2  = +0.03003
+  delta_AIC = -23.27 (negative favors 2-tau)
+  delta_BIC = -22.48 (negative favors 2-tau)
+  Verdict: two-timescale structure is worth investigating.
+
+========================================================================
+TEST 4 - fit stability across 3 independent seed blocks
+========================================================================
+  block 1: seeds=0-399 1tau_tau=2.481s R2=0.9823 | 2tau_tau1=1.343s tau2=7.614s dBIC=-8.28
+  block 2: seeds=400-799 1tau_tau=1.418s R2=0.9277 | 2tau_tau1=0.534s tau2=5.896s dBIC=-7.62
+  block 3: seeds=800-1199 1tau_tau=2.006s R2=0.9548 | 2tau_tau1=0.480s tau2=4.515s dBIC=-8.95
+  1tau tau mean=1.968s sd=0.533s
+  Read: stable tau across blocks is stronger than a single pretty fit.
+
+[CSV] wrote measurements/out/diagnose_saturation_test4.csv

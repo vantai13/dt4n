@@ -1,0 +1,36 @@
+Phase 10.3 main figure summary
+
+Z_VALUES = (0, 1, 2, 3, 5, 8, 12, 20)
+
+Sanity checks:
+  z=0 wrong_excess      = 0.000000
+  clair return spread   = 0.000000
+  mean clair CI95       = 0.033452
+  clair wrong spread    = 0.000000
+  wrong_excess monotone = True
+
+Fit on wrong_excess:
+  A       = 0.2181
+  tau     = 1.9971 s
+  knee90  = 4.5985 s
+  R2      = 0.9892
+
+Robustness fit (drop z=20):
+  A       = 0.2083
+  tau     = 1.8121 s
+  R2      = 0.9892
+
+Ditto operating region:
+  wrong_excess@0.55s = 0.0525
+  pct_of_A           = 24.1%
+  relation           = BEFORE tau
+
+Rows:
+  z= 0 AoI= 0.00s CoB=0.0000 +/-0.0000 wrong_excess=0.0000 +/-0.0000
+  z= 1 AoI= 0.50s CoB=0.1002 +/-0.0282 wrong_excess=0.0620 +/-0.0267
+  z= 2 AoI= 1.00s CoB=0.1364 +/-0.0293 wrong_excess=0.0960 +/-0.0270
+  z= 3 AoI= 1.50s CoB=0.2035 +/-0.0375 wrong_excess=0.1093 +/-0.0298
+  z= 5 AoI= 2.50s CoB=0.2366 +/-0.0398 wrong_excess=0.1500 +/-0.0305
+  z= 8 AoI= 4.00s CoB=0.2789 +/-0.0416 wrong_excess=0.1827 +/-0.0299
+  z=12 AoI= 6.00s CoB=0.3171 +/-0.0413 wrong_excess=0.2060 +/-0.0325
+  z=20 AoI=10.00s CoB=0.3283 +/-0.0427 wrong_excess=0.2233 +/-0.0327
