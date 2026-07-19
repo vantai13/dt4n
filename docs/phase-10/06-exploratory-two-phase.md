@@ -66,6 +66,39 @@ Fit lai tren 3 bo seed doc lap:
 - **Khong anh huong tru cot:** breaking point confirmatory (`~1.8-2.5s`) va ket
   luan "Ditto that du tuoi" trong `05-results.md` khong doi.
 
+## 5b. Quan sat phu: safe_path_freq khong phai kenh co che sach
+
+**Gia thuyet ban dau:** AoI cao -> blind hieu nham duong nguy la an toan
+-> bo duong an toan -> `blind_safe_path_freq` giam don dieu theo AoI.
+
+**Du lieu 500 seed bac bo dang don dieu:**
+
+| z | AoI(s) | safe(blind) | safe(clair) |
+|--:|-------:|------------:|------------:|
+| 0 | 0.0 | 0.310 | 0.310 |
+| 1 | 0.5 | 0.346 | 0.310 |
+| 2 | 1.0 | 0.410 | 0.310 |
+| 3 | 1.5 | 0.282 | 0.310 |
+| 5 | 2.5 | 0.256 | 0.310 |
+| 8 | 4.0 | 0.264 | 0.310 |
+| 12 | 6.0 | 0.298 | 0.310 |
+| 20 | 10.0 | 0.382 | 0.310 |
+
+- Clair giu `0.310` co dinh, nhat quan voi viec clairvoyant on dinh theo AoI.
+- Blind dao dong quanh `0.310`, non-monotone: tang o AoI thap/rat cao, giam o
+  AoI trung.
+
+**Dien giai:** anh cu gay hieu nham theo ca hai chieu. Doi khi blind tuong
+duong nguy la an toan nen chon it safe hon; doi khi blind tuong duong thuong la
+nguy nen ne vao safe nhieu hon. Hai hieu ung nay triet tieu mot phan, lam
+duong `safe_path_freq` len xuong.
+
+**Ket luan:** `safe_path_freq` khong dung lam bang chung co che chinh, giong
+bai hoc `voi_headroom`: metric nghe hop ly nhung do ra bi nhieu/cancellation.
+Kenh co che sach van la `wrong_excess` (Pearson `0.985` voi
+`cost_of_blindness`). Giu `safe_path_freq` nhu quan sat phu va diem neo Phase 11,
+kem canh bao non-monotone.
+
 ## 6. Viec tuong lai neu phat trien len
 
 - Co dinh `A_total=0.25` tu Test 2, fit it tham so hon de giam degeneracy.
@@ -75,4 +108,5 @@ Fit lai tren 3 bo seed doc lap:
 
 **Du lieu:** `measurements/out/diagnose_saturation.txt`,
 `measurements/out/diagnose_saturation_test2.csv`,
-`measurements/out/diagnose_saturation_test4.csv`.
+`measurements/out/diagnose_saturation_test4.csv`,
+`measurements/out/mechanism_10_4.csv`.

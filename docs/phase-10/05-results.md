@@ -63,6 +63,26 @@
   (`0.55 << 1.8`). Twin du tuoi cho bai toan nay; loi ton du nho
   (khoang `5%`). Day la phat hien thuc tien, khong phai that bai.
 
+## 5b. Co che (Lesson 10.4): chon sai -> mat diem
+
+Khong chi bao cao hien tuong return giam, Phase 10.4 do them kenh co che.
+
+**Bang chung dinh luong (500 seed, `LOAD_CFG_SWEEP`):**
+
+- `Pearson(wrong_excess, cost_of_blindness | AoI>0) = 0.985`
+  -> truc sai-lam va truc mat-diem di cung nhip theo AoI.
+- Chuoi nhan-qua: AoI cao -> anh twin cu -> blind chon next-hop sai
+  -> luong vao link da nghen -> return giam.
+
+**Bang chung dinh tinh:** episode seed `2` (xem `07-handtrace-seed2.md`).
+Tai node `D`, E/F dao ngoi trong `1.5s`:
+`D->E: 0.698 -> 1.300`; `D->F: 0.871 -> 0.280`. Blind tin anh cu, re vao
+`E` dang nghen, mat `1.18` reward so voi clairvoyant.
+
+**Ghi chu metric phu (`safe_path_freq`):** do duoc nhung non-monotone theo AoI,
+nen khong phai kenh co che sach. Khong dung lam bang chung chinh; `wrong_excess`
+voi Pearson `0.985` la kenh co che dang tin. Chi tiet o `06-exploratory-two-phase.md`.
+
 ## 6. Gate GO/NO-GO Phase 11
 
 - `cost_of_blindness_max = 0.3283` (tai `z=20`)
@@ -81,7 +101,8 @@
 
 **San pham kem:** `measurements/out/sweep_10_2.csv`,
 `measurements/out/main_figure_10_3.csv`, `measurements/out/sweep_10_2_mechanism.md`,
-`measurements/out/main_figure_10_3_cost_ci.md`. Figure PNG/log co the tai tao tu
-script va duoc repo ignore theo `.gitignore`.
+`measurements/out/main_figure_10_3_cost_ci.md`,
+`measurements/out/mechanism_10_4.csv`, `measurements/out/mechanism_10_4.txt`,
+`measurements/out/mechanism_10_4.png`.
 
 **Chu ky:** vantai13 - 2026-07-19
