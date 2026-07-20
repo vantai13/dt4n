@@ -72,6 +72,20 @@ tin hieu staleness tren nhieu nen agent.
 - Confounder can tranh: dynamics-shift. De tai do observation-shift; dynamics
   phai duoc khoa bang link_model version va sha256.
 
+## 4b. Training load Phase 11 (amendment truoc train)
+
+Phase 11 train tren `LOAD_CFG_ABLATION`, gom ca 6 scenario:
+
+- S1-S4 tu `SCENARIOS_TRAIN`: tinh trong episode (`drift_sigma=0.0`)
+- S5-S6 tu `SCENARIOS_DYNAMIC`: dong trong episode (`drift_sigma=0.20`)
+
+Ly do them S5-S6: ablation AoI can co episode ma anh cu khac su that trong luc
+train. S1-S4 tinh van giu branch-choice calibration; S5-S6 dong tao observation
+shift de chieu AoI co thong tin de hoc.
+
+`LOAD_CFG_ABLATION` khong dat `drift_sigma` o cap cha; moi scenario tu giu drift
+rieng de tranh lam mo ranh gioi tinh/dong.
+
 ## 5. Ngan sach
 
 Frozen config that ghi `train.episodes = 2000`. Phase 11 tam lay cung muc nay

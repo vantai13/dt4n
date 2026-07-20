@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Phase 11.1 ablation-clean verification tests.
+"""Phase 11.1/11.2 ablation-clean verification tests.
 
 These tests are deliberately cheap: they validate the experimental apparatus
 before Phase 11 spends time training 2 x 5 seeds.
@@ -13,12 +13,21 @@ import yaml
 
 from rl.agent.dqn_agent import DQNAgent
 from rl.routing.state_r import AOI_DIMS, R_STATE_DIM
+from rl.routing.topology_r import LOAD_CFG_ABLATION
 from rl.routing.train_r import make_eval_env, make_train_env
 
 
-CFG_AOI_PATH = Path("rl/routing/configs/train_r_scenario.yaml")
-CFG_NOAOI_PATH = Path("rl/routing/configs/train_r_mask_aoi.yaml")
+CFG_AOI_PATH = Path("rl/routing/configs/train_r_ablation_aoi.yaml")
+CFG_NOAOI_PATH = Path("rl/routing/configs/train_r_ablation_mask.yaml")
 EXPECTED_Z_CHOICES = {0, 1, 3, 5, 8, 12}
+EXPECTED_SCENARIOS = {
+    "S1_viaE_better",
+    "S2_direct_better",
+    "S3_both_free",
+    "S4_both_busy",
+    "S5_E_rising",
+    "S6_F_rising",
+}
 EXPECTED_PARAM_COUNT = 4037
 
 
@@ -28,15 +37,29 @@ def load_cfg(path):
         return yaml.safe_load(handle)
 
 
+def test_ablation_load_cfg_has_static_and_dynamic_scenarios():
+    """Phase 11 training load must include S1-S4 static and S5-S6 dynamic."""
+    mix = tuple(LOAD_CFG_ABLATION["scenario_mix"])
+    scenarios = LOAD_CFG_ABLATION["scenarios"]
+
+    assert set(mix) == EXPECTED_SCENARIOS
+    assert len(mix) == 6
+    assert "drift_sigma" not in LOAD_CFG_ABLATION
+    assert all(float(scenarios[name]["drift_sigma"]) == 0.0 for name in mix[:4])
+    assert all(float(scenarios[name]["drift_sigma"]) > 0.0 for name in mix[4:])
+
+
 def test_mask_config_diff_is_only_version_and_mask_aoi():
     """The no-AoI branch must differ by exactly one experimental variable."""
     cfg_aoi = load_cfg(CFG_AOI_PATH)
     cfg_noaoi = load_cfg(CFG_NOAOI_PATH)
 
-    assert cfg_aoi["version"] == "train_r_scenario"
-    assert cfg_noaoi["version"] == "train_r_mask_aoi"
+    assert cfg_aoi["version"] == "train_r_ablation_aoi"
+    assert cfg_noaoi["version"] == "train_r_ablation_mask"
     assert cfg_aoi["train"]["mask_aoi"] is False
     assert cfg_noaoi["train"]["mask_aoi"] is True
+    assert cfg_aoi["env"]["load_cfg"] == "LOAD_CFG_ABLATION"
+    assert cfg_noaoi["env"]["load_cfg"] == "LOAD_CFG_ABLATION"
 
     normalized = deepcopy(cfg_noaoi)
     normalized["version"] = cfg_aoi["version"]

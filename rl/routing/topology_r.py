@@ -155,6 +155,18 @@ LOAD_CFG_TRAIN = {
     'drift_sigma': 0.0,
 }
 
+# [11.2] Phase-11 ablation training load: S1-S4 static + S5-S6 dynamic.
+#
+# Keep drift_sigma owned by each child scenario. S1-S4 stay static
+# (drift_sigma=0.0), while S5-S6 remain dynamic (drift_sigma=0.20). Do not put
+# a parent drift_sigma here, otherwise it would be mixed into every scenario and
+# blur the static/dynamic split this ablation is meant to expose.
+LOAD_CFG_ABLATION = {
+    'base_load': BASE_LOAD,
+    'scenarios': {**SCENARIOS_TRAIN, **SCENARIOS_DYNAMIC},
+    'scenario_mix': tuple(SCENARIOS_TRAIN) + tuple(SCENARIOS_DYNAMIC),
+}
+
 # [10.1] Phase-10 sweep load: reuse the calibrated S1-S4 branch-choice
 # scenarios, but let the parent load config own drift. Child scenarios must not
 # carry drift_sigma here, otherwise resolve_load_scenario() would shadow the

@@ -33,11 +33,16 @@ State van la 9D, nen capacity cua agent khong doi.
 
 Script test: `test/routing/test_ablation_clean.py`.
 
+Cap nhat sau Lesson 11.2: test song hien tai chay tren cap config 6-scenario
+`train_r_ablation_aoi.yaml` / `train_r_ablation_mask.yaml`. Logic verify van
+la ba gate cua 11.1: dung luong bang nhau, mask that su che AoI, va z bien
+thien.
+
 Config diff ky vong:
 
 ```diff
--version: train_r_scenario
-+version: train_r_mask_aoi
+-version: train_r_ablation_aoi
++version: train_r_ablation_mask
 -  mask_aoi: false
 +  mask_aoi: true
 ```
@@ -45,7 +50,7 @@ Config diff ky vong:
 Lenh chay:
 
 ```bash
-diff -u rl/routing/configs/train_r_scenario.yaml rl/routing/configs/train_r_mask_aoi.yaml
+diff -u rl/routing/configs/train_r_ablation_aoi.yaml rl/routing/configs/train_r_ablation_mask.yaml
 conda run -n sdn_rl python -m pytest -q test/routing/test_ablation_clean.py
 ```
 
