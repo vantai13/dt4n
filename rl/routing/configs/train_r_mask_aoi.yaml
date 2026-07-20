@@ -1,0 +1,51 @@
+# rl/routing/configs/train_r_scenario.yaml
+# Independent-congestion scenario training (Phase 9 follow-up).
+#
+# Motivation: the previous single-scenario load only congested the via-E path,
+# so "go direct" was an always-safe default and the trained policy could
+# degenerate to static. This config trains on the S1-S4 mix from
+# topology_r.SCENARIOS_TRAIN, which congests the via-E and direct paths
+# independently.
+
+version: train_r_mask_aoi
+
+agent:
+  hidden_layers: [64, 32]
+  device: cpu
+
+  use_double: true
+  use_dueling: true
+  exploration: epsilon_greedy
+
+  gamma: 0.95
+  learning_rate: 0.001
+  batch_size: 64
+  buffer_capacity: 20000
+  target_update_freq: 200
+
+  epsilon_start: 1.0
+  epsilon_end: 0.05
+  epsilon_decay: 0.995
+
+  temp_start: 2.0
+  temp_end: 0.1
+  temp_decay: 0.9985
+
+train:
+  episodes: 2000
+  warmup_steps: 500
+  eval_every: 25
+  z_steps_choices: [0, 1, 3, 5, 8, 12]
+  mask_aoi: true
+
+env:
+  max_steps: 15
+  load_cfg: SCENARIOS_TRAIN
+
+seeds:
+  train_seed_start: 1000
+  train_seed_stride: 100000
+  val_seed_start: 500
+  val_seeds: 20
+  heldout_seed_start: 2000
+  heldout_seeds: 50
