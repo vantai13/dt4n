@@ -60,6 +60,14 @@ Khong dung `voi_headroom` lam gate vi Phase 10 da thay metric nay phu thuoc OSPF
 va bi cancellation. Gate dung `cost_of_blindness_max / std_agent` vi no do
 tin hieu staleness tren nhieu nen agent.
 
+**Ghi chu nhat quan load:** `SNR=7.29` dung cap so do tren `LOAD_CFG_SWEEP`:
+tin hieu `cost_of_blindness_max=0.3283` va nhieu `std_agent=0.0450` cung den tu
+load sweep co drift. Phase 11 train tren `LOAD_CFG_ABLATION`, la mix rong hon
+gom S1-S4 tinh va S5-S6 dong. Gate van duoc giu theo cap `LOAD_CFG_SWEEP` vi no
+la phep go/no-go, khong phai uoc luong hieu ung cuoi cung; bien an toan lon
+(`7.29 >> 3`). Khong ghep `0.3283` voi `std_agent=0.0312` cua load tinh vi do
+la ghep tin hieu va nhieu khac dieu kien.
+
 ## 4. Ky luat Muc 3
 
 - Ca 10 run (`2 nhanh x 5 seed`) khoa cung
@@ -89,14 +97,20 @@ rieng de tranh lam mo ranh gioi tinh/dong.
 ## 5. Ngan sach
 
 Frozen config that ghi `train.episodes = 2000`. Phase 11 tam lay cung muc nay
-cho moi run cho den khi Lesson 11.2 do toc do that.
+cho moi run.
 
 Cong thuc ngan sach:
 
 `total_time ~= 2000 episodes x T_giay/episode x 10 run`.
 
-`T_giay/episode` se do o Lesson 11.2 truoc khi bam train hang loat. Khong dung
-uoc luong 500 episode trong plan cu de lap lich may.
+Pilot pipeline 200 episode cho thay toc do co bac do `~14-20 ms/episode`
+(khac nhau tuy lay timer noi bo hay shell `time`). Ngan sach uoc tinh:
+
+- optimistic: `0.014 x 2000 x 10 ~= 280s` (<5 phut)
+- conservative: `0.020 x 2000 x 10 ~= 400s` (~7 phut)
+
+Neu lan pilot moi cua may cho toc do khac, dung so moi do de cap nhat ngan sach
+truoc khi bam 10 run. Khong dung uoc luong 500 episode trong plan cu.
 
 ## 6. Validation gate truoc khi train
 

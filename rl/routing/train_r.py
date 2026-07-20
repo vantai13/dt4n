@@ -82,6 +82,24 @@ def config_hash(cfg):
     return hashlib.sha256(blob).hexdigest()[:7]
 
 
+def file_sha256(path):
+    """Return sha256 for a local file."""
+    h = hashlib.sha256()
+    with open(path, 'rb') as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b''):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def read_text_or_none(path):
+    """Read a small text file if present."""
+    try:
+        with open(path, encoding='utf-8') as fh:
+            return fh.read().strip()
+    except OSError:
+        return None
+
+
 def make_run_dir(cfg, seed, root='results/train'):
     run_id = f'r_seed{int(seed)}_{git_hash()}_{config_hash(cfg)}'
     path = os.path.join(root, run_id)
@@ -409,6 +427,11 @@ def main(argv=None):
         'val_seeds': val_seeds,
         'state_dim': R_STATE_DIM,
         'action_dim': 2,
+        'config_version': cfg.get('version'),
+        'link_model_sha256': file_sha256('rl/routing/link_model.py'),
+        'link_model_version': read_text_or_none(
+            'frozen_policies/v1/link_model_version.txt'
+        ),
         'z_steps_choices': cfg['train']['z_steps_choices'],
         'mask_aoi': bool(cfg['train'].get('mask_aoi', False)),
         'config': cfg,

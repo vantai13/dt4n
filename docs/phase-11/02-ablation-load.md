@@ -118,3 +118,10 @@ Tinh ngan sach:
 `Tong Phase 11 ~= T_moi_episode x 2000 x 10 run`
 
 Ghi lai con so nay truoc khi train that 10 run.
+
+Ghi chu doc log:
+
+- `loss=n/a` o cac moc dau la binh thuong vi `warmup_steps=500`; moi episode chi
+  co vai transition, nen phai den khoang ep 150 moi thuong thay loss.
+- `baseline(end) drift: 0.0000` hoac rat nho nghia la eval baseline on dinh,
+  khong leak state giua dau/cuoi train.
