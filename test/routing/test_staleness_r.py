@@ -10,7 +10,7 @@ sys.path.insert(0, '.')
 from rl.routing.route_env import RouteEnv
 from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import AOI_DIMS
-from rl.routing.topology_r import TOPO
+from rl.routing.topology_r import OFFERED_LOAD_MIN, SCENARIOS_DYNAMIC, TOPO
 
 
 def _rollout(env, seed, actions):
@@ -150,6 +150,37 @@ def test_observed_utils_belong_to_current_node():
     assert set(snap_seen_by_agent) == set(offered_seen_by_oracle)
 
 
+def test_fixed_z_reaches_decision_node_with_matching_aoi():
+    for z in (0, 2, 4, 6):
+        env = StalenessWrapper(RouteEnv(TOPO, seed=0), z_steps_choices=(z,))
+        obs, info = env.reset(seed=9)
+        obs, _reward, _terminated, _truncated, info = env.step(0)
+        obs, _reward, _terminated, _truncated, info = env.step(0)
+
+        expected_aoi_s = z * RouteEnv.STEP_DURATION_S
+        assert info['current_node'] == 'C'
+        assert info['z_steps'] == z
+        assert info['aoi_measured_s'] == expected_aoi_s
+        assert np.isclose(obs[AOI_DIMS[0]], min(expected_aoi_s / 6.0, 1.0))
+
+
+def test_warmup_uses_normal_offered_load_floor():
+    load_cfg = {
+        'scenarios': {'S5_E_rising': SCENARIOS_DYNAMIC['S5_E_rising']},
+        'scenario_mix': ('S5_E_rising',),
+    }
+    env = StalenessWrapper(
+        RouteEnv(TOPO, load_cfg=load_cfg, seed=0),
+        z_steps_choices=(6,),
+    )
+    _obs, _info = env.reset(seed=42)
+    _obs, _reward, _terminated, _truncated, _info = env.step(0)
+    _obs, _reward, _terminated, _truncated, info = env.step(0)
+
+    assert info['current_node'] == 'C'
+    assert min(info['rho_offered_snapshot_observed'].values()) >= OFFERED_LOAD_MIN
+
+
 def _run_as_script():
     tests = [
         test_zero_divergence,
@@ -162,6 +193,8 @@ def _run_as_script():
         test_mask_only_touches_aoi_dims,
         test_z_is_deterministic_from_seed,
         test_observed_utils_belong_to_current_node,
+        test_fixed_z_reaches_decision_node_with_matching_aoi,
+        test_warmup_uses_normal_offered_load_floor,
     ]
     passed = 0
     for test in tests:

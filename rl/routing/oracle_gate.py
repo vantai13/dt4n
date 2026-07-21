@@ -23,15 +23,17 @@ from rl.routing.reward_r import (
     step_reward,
 )
 from rl.routing.topology_r import (
+    DIRECT_F_LINKS,
     LOAD_CFG_TRAIN,
+    OFFERED_LOAD_MIN,
     TOPO_V2,
+    VIA_E_LINKS,
     default_offered_load_max,
     sample_offered_load,
 )
 
 
 DEFAULT_DRIFT_STEPS = 2
-OFFERED_MIN = 0.02
 
 
 @dataclass
@@ -79,6 +81,15 @@ def _offered_max(load_cfg):
     return default_offered_load_max(load_cfg)
 
 
+def _drift_trend(active_cfg, link):
+    """Match RouteEnv's directed drift trend for offline oracle sampling."""
+    if link in VIA_E_LINKS:
+        return float(active_cfg.get('e_trend', 0.0))
+    if link in DIRECT_F_LINKS:
+        return float(active_cfg.get('direct_trend', active_cfg.get('f_trend', 0.0)))
+    return float(active_cfg.get('base_trend', 0.0))
+
+
 def _sample_rho_offered_after_drift(rng, edges, load_cfg, drift_steps):
     """Sample one RouteEnv-shaped offered-load snapshot at the C/D decision."""
     rho_off, _scenario_name, active_cfg = sample_offered_load(
@@ -87,16 +98,17 @@ def _sample_rho_offered_after_drift(rng, edges, load_cfg, drift_steps):
         rng,
     )
     sigma = float(active_cfg.get('drift_sigma', load_cfg.get('drift_sigma', 0.15)))
-    hi_clip = _offered_max(load_cfg)
+    hi_clip = float(active_cfg.get('offered_load_max', _offered_max(load_cfg)))
 
     # RouteEnv samples load at reset, then calls _drift() after each traversed
     # hop. The C/D branch decision sees this post-drift distribution.
     for link in rho_off:
         value = rho_off[link]
+        trend = _drift_trend(active_cfg, link)
         for _ in range(int(drift_steps)):
             value = float(np.clip(
-                value + rng.normal(0.0, sigma),
-                OFFERED_MIN,
+                value + trend + rng.normal(0.0, sigma),
+                OFFERED_LOAD_MIN,
                 hi_clip,
             ))
         rho_off[link] = value

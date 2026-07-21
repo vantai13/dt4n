@@ -14,12 +14,21 @@ for name, scen in ALL_SCENARIOS.items():
     env = RouteEnv(TOPO, load_cfg=load_cfg, max_steps=15, seed=7)
     env.reset(seed=7)
     sigma = env._drift_sigma()
+    active = env._active_load_cfg
     ce0, cf0 = env._rho_offered[CE], env._rho_offered[CF]
     # mô phỏng 5 bước drift để xem tải có đổi trong episode không
     traj_ce = [env._rho_offered[CE]]
+    traj_cf = [env._rho_offered[CF]]
     for _ in range(5):
         env._drift()
         traj_ce.append(env._rho_offered[CE])
+        traj_cf.append(env._rho_offered[CF])
     dong = "ĐỘNG" if sigma > 0 else "tĩnh"
-    print(f"{name:18s} [{dong}] drift={sigma:.2f} | C→E khởi đầu={ce0:.3f} C→F={cf0:.3f}")
+    print(
+        f"{name:18s} [{dong}] drift={sigma:.2f} "
+        f"e_trend={active.get('e_trend', 0.0):.3f} "
+        f"f_trend={active.get('f_trend', 0.0):.3f} | "
+        f"C→E khởi đầu={ce0:.3f} C→F={cf0:.3f}"
+    )
     print(f"    quỹ đạo C→E qua 5 bước: {[round(x,3) for x in traj_ce]}")
+    print(f"    quỹ đạo C→F qua 5 bước: {[round(x,3) for x in traj_cf]}")

@@ -22,6 +22,7 @@ import numpy as np
 
 from rl.routing.link_model import loss_rate, rho_measured_from_offered
 from rl.routing.state_r import build_route_state, mask_aoi
+from rl.routing.topology_r import OFFERED_LOAD_MIN
 
 
 DITTO_AOI_CALIBRATION = {
@@ -109,7 +110,7 @@ class DittoStalenessWrapper:
         offered = {
             link: float(np.clip(
                 rho + rng.normal(0.0, sigma),
-                0.02,
+                OFFERED_LOAD_MIN,
                 self.env._offered_max(),
             ))
             for link, rho in self.env._rho_offered.items()

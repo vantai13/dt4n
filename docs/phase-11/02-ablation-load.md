@@ -29,8 +29,11 @@ staleness co the lam thong tin cu khac su that trong episode.
 - `SCENARIOS_TRAIN`: S1-S4 tinh
 - `SCENARIOS_DYNAMIC`: S5-S6 dong
 
-Khong dat `drift_sigma` o cap cha. Moi scenario tu giu `drift_sigma` rieng:
-S1-S4 = 0, S5-S6 = 0.20.
+Khong dat `drift_sigma` o cap cha. Moi scenario tu giu trend/drift rieng:
+S1-S4 co `drift_sigma=0.0`; S5-S6 co rising side `0.88-0.93`, safe side
+`0.20-0.40`, trend co huong duoc sample moi episode trong `0.12-0.35`,
+`drift_sigma=0.02`, per-scenario `offered_load_max=1.60`, va offered-load
+floor `0.15`.
 
 Kiem tra:
 

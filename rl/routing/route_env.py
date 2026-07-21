@@ -60,7 +60,13 @@ from rl.routing.link_model import (
 )
 from rl.routing.reward_r import REWARD_VERSION, step_reward
 from rl.routing.state_r import MAX_NEIGHBORS, R_STATE_DIM, build_route_state
-from rl.routing.topology_r import default_offered_load_max, sample_offered_load
+from rl.routing.topology_r import (
+    DIRECT_F_LINKS,
+    OFFERED_LOAD_MIN,
+    VIA_E_LINKS,
+    default_offered_load_max,
+    sample_offered_load,
+)
 
 
 class RouteEnv(gym.Env):
@@ -119,6 +125,8 @@ class RouteEnv(gym.Env):
         return default_offered_load_max(self.load_cfg)
 
     def _offered_max(self):
+        if self._active_load_cfg.get('offered_load_max') is not None:
+            return float(self._active_load_cfg['offered_load_max'])
         if self.load_cfg.get('offered_load_max') is not None:
             return float(self.load_cfg['offered_load_max'])
         return self._default_offered_max()
@@ -128,6 +136,30 @@ class RouteEnv(gym.Env):
             'drift_sigma',
             self.load_cfg.get('drift_sigma', 0.05),
         ))
+
+    def _drift_trend(self, link):
+        """Return the directed offered-load trend for one link."""
+        cfg = self._active_load_cfg
+        if link in VIA_E_LINKS:
+            return float(cfg.get('e_trend', 0.0))
+        if link in DIRECT_F_LINKS:
+            return float(cfg.get('direct_trend', cfg.get('f_trend', 0.0)))
+        return float(cfg.get('base_trend', 0.0))
+
+    def _drift_offered_snapshot(self, offered, rng, direction=1.0):
+        """Return a drifted offered-load snapshot without mutating env state."""
+        sigma = self._drift_sigma()
+        hi = self._offered_max()
+        sign = float(direction)
+        return {
+            link: float(np.clip(
+                rho + sign * self._drift_trend(link)
+                + rng.normal(0.0, sigma),
+                OFFERED_LOAD_MIN,
+                hi,
+            ))
+            for link, rho in offered.items()
+        }
 
     def _sync_observed_link_metrics(self):
         """Refresh deployable measured util/loss from offered load."""
@@ -157,27 +189,18 @@ class RouteEnv(gym.Env):
         return rho
 
     def _drift(self):
-        """Move congestion slightly so stale observations can become wrong."""
-        sigma = self._drift_sigma()
-        hi = self._offered_max()
-        for link in self._rho_offered:
-            self._rho_offered[link] = float(np.clip(
-                self._rho_offered[link] + self._rng.normal(0.0, sigma),
-                0.02,
-                hi,
-            ))
+        """Move congestion so stale observations can become directionally wrong."""
+        self._rho_offered = self._drift_offered_snapshot(
+            self._rho_offered,
+            self._rng,
+        )
         self._sync_observed_link_metrics()
 
     def peek_next_rho_offered(self):
         """Return the next offered-load snapshot without consuming env RNG."""
-        sigma = self._drift_sigma()
-        hi = self._offered_max()
         rng = np.random.default_rng()
         rng.bit_generator.state = copy.deepcopy(self._rng.bit_generator.state)
-        return {
-            link: float(np.clip(rho + rng.normal(0.0, sigma), 0.02, hi))
-            for link, rho in self._rho_offered.items()
-        }
+        return self._drift_offered_snapshot(self._rho_offered, rng)
 
     def peek_next_rho(self):
         """Return the next measured rho snapshot without consuming env RNG.

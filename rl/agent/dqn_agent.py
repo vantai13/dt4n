@@ -114,6 +114,10 @@ class DQNAgent:
         probs = exp_q / (np.sum(exp_q) + 1e-10)
         return int(np.random.choice(self.action_size, p=probs))
 
+    def q_values(self, state: np.ndarray) -> np.ndarray:
+        """Return raw Q-values for hand-tracing/debug output."""
+        return self.main_net.get_action_values(state, self.device).cpu().numpy()
+
     # ==================================================================
     # REMEMBER
     # ==================================================================

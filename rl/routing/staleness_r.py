@@ -15,6 +15,7 @@ import numpy as np
 
 from rl.routing.link_model import loss_rate, rho_measured_from_offered
 from rl.routing.state_r import build_route_state, mask_aoi
+from rl.routing.topology_r import OFFERED_LOAD_MIN
 
 
 class StalenessWrapper:
@@ -82,23 +83,27 @@ class StalenessWrapper:
         if self._z_steps <= 0:
             return
 
-        if hasattr(self.env, '_drift_sigma'):
-            sigma = self.env._drift_sigma()
-        else:
-            sigma = float(self.env.load_cfg.get('drift_sigma', 0.05))
         rng = np.random.default_rng((int(self._episode_seed) + 555_111) % (2**32))
         depth = max(self.z_choices)
         past = dict(self.env._rho_offered)
         chain = []
         for _ in range(depth):
-            past = {
-                link: float(np.clip(
-                    rho + rng.normal(0.0, sigma),
-                    0.02,
-                    self.env._offered_max(),
-                ))
-                for link, rho in past.items()
-            }
+            if hasattr(self.env, '_drift_offered_snapshot'):
+                past = self.env._drift_offered_snapshot(
+                    past,
+                    rng,
+                    direction=-1.0,
+                )
+            else:
+                sigma = float(self.env.load_cfg.get('drift_sigma', 0.05))
+                past = {
+                    link: float(np.clip(
+                        rho + rng.normal(0.0, sigma),
+                        OFFERED_LOAD_MIN,
+                        self.env._offered_max(),
+                    ))
+                    for link, rho in past.items()
+                }
             chain.append(dict(past))
 
         # _observed_snapshot indexes positionally with len(hist)-1-z, so the

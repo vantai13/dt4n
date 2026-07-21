@@ -42,12 +42,16 @@ TOPO = TOPO_V2
 
 VIA_E_LINKS = (('C', 'E'), ('D', 'E'))
 DIRECT_F_LINKS = (('C', 'F'), ('D', 'F'))
+OFFERED_LOAD_MIN = 0.15
 
 # Load bands around the rev5 cliff ~= 0.9275. FREE is below the cliff; BUSY is
 # above it.
 _SCEN_BASE = (0.30, 0.50)
 BASE_LOAD = _SCEN_BASE
 FREE_LOAD = (0.40, 0.75)
+SAFE_LOAD = (0.20, 0.40)
+NEAR_CLIFF_LOAD = (0.88, 0.93)
+DYNAMIC_TREND_RANGE = (0.12, 0.35)
 BUSY_LOAD = (0.95, 1.15)
 BORDERLINE_LOAD = (0.925, 0.935)
 
@@ -109,15 +113,21 @@ SCENARIOS_TRAIN = {
 SCENARIOS_DYNAMIC = {
     'S5_E_rising': {
         'base_load': _SCEN_BASE,
-        'e_load': FREE_LOAD,
-        'f_load': FREE_LOAD,
-        'drift_sigma': 0.20,
+        'e_load': NEAR_CLIFF_LOAD,
+        'f_load': SAFE_LOAD,
+        'e_trend_range': DYNAMIC_TREND_RANGE,
+        'f_trend': 0.0,
+        'drift_sigma': 0.02,
+        'offered_load_max': 1.60,
     },
     'S6_F_rising': {
         'base_load': _SCEN_BASE,
-        'e_load': FREE_LOAD,
-        'f_load': FREE_LOAD,
-        'drift_sigma': 0.20,
+        'e_load': SAFE_LOAD,
+        'f_load': NEAR_CLIFF_LOAD,
+        'e_trend': 0.0,
+        'f_trend_range': DYNAMIC_TREND_RANGE,
+        'drift_sigma': 0.02,
+        'offered_load_max': 1.60,
     },
 }
 
@@ -158,9 +168,10 @@ LOAD_CFG_TRAIN = {
 # [11.2] Phase-11 ablation training load: S1-S4 static + S5-S6 dynamic.
 #
 # Keep drift_sigma owned by each child scenario. S1-S4 stay static
-# (drift_sigma=0.0), while S5-S6 remain dynamic (drift_sigma=0.20). Do not put
-# a parent drift_sigma here, otherwise it would be mixed into every scenario and
-# blur the static/dynamic split this ablation is meant to expose.
+# (drift_sigma=0.0), while S5-S6 remain dynamic (directed trend sampled once
+# per episode, drift_sigma=0.02, and per-scenario offered_load_max=1.60). Do
+# not put a parent drift_sigma here, otherwise it would be mixed into every
+# scenario and blur the static/dynamic split this ablation is meant to expose.
 LOAD_CFG_ABLATION = {
     'base_load': BASE_LOAD,
     'scenarios': {**SCENARIOS_TRAIN, **SCENARIOS_DYNAMIC},
@@ -196,6 +207,24 @@ def _load_pair(cfg, key, default):
     value = cfg.get(key, default)
     lo, hi = value
     return float(lo), float(hi)
+
+
+def _trend_value(cfg, rng, key):
+    range_key = f'{key}_range'
+    if range_key in cfg:
+        lo, hi = cfg[range_key]
+        return float(rng.uniform(float(lo), float(hi)))
+    return float(cfg.get(key, 0.0))
+
+
+def _resolve_episode_trends(cfg, rng):
+    """Sample per-episode scalar trends from optional ``*_trend_range`` keys."""
+    cfg = dict(cfg)
+    for key in ('base_trend', 'e_trend', 'f_trend', 'direct_trend'):
+        range_key = f'{key}_range'
+        if range_key in cfg:
+            cfg[key] = _trend_value(cfg, rng, key)
+    return cfg
 
 
 def _direct_load_pair(cfg, default):
@@ -275,6 +304,8 @@ def default_offered_load_max(load_cfg):
     """Return RouteEnv's default clipping ceiling for offered load."""
     hi_values = [1.30]
     for cfg in _iter_effective_load_cfgs(load_cfg or {}):
+        if cfg.get('offered_load_max') is not None:
+            hi_values.append(float(cfg['offered_load_max']))
         _base_lo, base_hi = _load_pair(cfg, 'base_load', (0.25, 0.40))
         _e_lo, e_hi = _load_pair(cfg, 'e_load', (0.60, 0.95))
         _direct_lo, direct_hi = _direct_load_pair(
@@ -293,6 +324,7 @@ def sample_offered_load(link_keys, load_cfg, rng):
     so the two competing route families are pinched independently.
     """
     cfg, scenario_name = choose_load_scenario(load_cfg, rng)
+    cfg = _resolve_episode_trends(cfg, rng)
     if 'offered_load_max' in cfg:
         hi_clip = float(cfg['offered_load_max'])
     elif (load_cfg or {}).get('offered_load_max') is not None:
@@ -305,16 +337,20 @@ def sample_offered_load(link_keys, load_cfg, rng):
 
     links = list(link_keys)
     rho = {
-        link: _clip(rng.uniform(base_lo, base_hi), 0.02, hi_clip)
+        link: _clip(rng.uniform(base_lo, base_hi), OFFERED_LOAD_MIN, hi_clip)
         for link in links
     }
 
-    e_level = _clip(rng.uniform(e_lo, e_hi), 0.02, hi_clip)
+    e_level = _clip(rng.uniform(e_lo, e_hi), OFFERED_LOAD_MIN, hi_clip)
     for link in VIA_E_LINKS:
         if link in rho:
             rho[link] = e_level
 
-    direct_level = _clip(rng.uniform(direct_lo, direct_hi), 0.02, hi_clip)
+    direct_level = _clip(
+        rng.uniform(direct_lo, direct_hi),
+        OFFERED_LOAD_MIN,
+        hi_clip,
+    )
     for link in DIRECT_F_LINKS:
         if link in rho:
             rho[link] = direct_level

@@ -27,9 +27,14 @@ from rl.routing.state_r import (
 from rl.routing.topology_r import (
     BUSY_LOAD,
     DIRECT_F_LINKS,
+    DYNAMIC_TREND_RANGE,
     FREE_LOAD,
     LOAD_PRESETS,
+    NEAR_CLIFF_LOAD,
+    OFFERED_LOAD_MIN,
+    SAFE_LOAD,
     SCENARIOS,
+    SCENARIOS_DYNAMIC,
     SCENARIOS_TRAIN,
     TOPO,
     TRAIN_SCENARIO_MIX,
@@ -205,6 +210,115 @@ def test_route_env_accepts_f_load_alias_for_direct_path():
     assert offered[('D', 'F')] == 1.10
 
 
+def test_route_env_applies_directed_dynamic_trends_to_decision_links():
+    assert SCENARIOS_DYNAMIC['S5_E_rising']['e_trend_range'] == DYNAMIC_TREND_RANGE
+    assert SCENARIOS_DYNAMIC['S5_E_rising']['f_trend'] == 0.0
+    assert SCENARIOS_DYNAMIC['S6_F_rising']['e_trend'] == 0.0
+    assert SCENARIOS_DYNAMIC['S6_F_rising']['f_trend_range'] == DYNAMIC_TREND_RANGE
+    assert SCENARIOS_DYNAMIC['S5_E_rising']['e_load'] == NEAR_CLIFF_LOAD
+    assert SCENARIOS_DYNAMIC['S6_F_rising']['f_load'] == NEAR_CLIFF_LOAD
+    assert SCENARIOS_DYNAMIC['S5_E_rising']['f_load'] == SAFE_LOAD
+    assert SCENARIOS_DYNAMIC['S6_F_rising']['e_load'] == SAFE_LOAD
+    assert SCENARIOS_DYNAMIC['S5_E_rising']['offered_load_max'] == 1.60
+    assert SCENARIOS_DYNAMIC['S6_F_rising']['offered_load_max'] == 1.60
+
+    load_cfg = {
+        'scenarios': {
+            'trend_probe': {
+                'base_load': (0.30, 0.30),
+                'e_load': (0.40, 0.40),
+                'f_load': (0.50, 0.50),
+                'e_trend': 0.10,
+                'f_trend': 0.20,
+                'drift_sigma': 0.0,
+            },
+        },
+        'scenario_mix': ('trend_probe',),
+    }
+    env = RouteEnv(TOPO, load_cfg=load_cfg, seed=0)
+    env.reset(seed=0)
+    before = dict(env._rho_offered)
+    env._drift()
+
+    assert np.isclose(env._rho_offered[('C', 'E')], before[('C', 'E')] + 0.10)
+    assert np.isclose(env._rho_offered[('D', 'E')], before[('D', 'E')] + 0.10)
+    assert np.isclose(env._rho_offered[('C', 'F')], before[('C', 'F')] + 0.20)
+    assert np.isclose(env._rho_offered[('D', 'F')], before[('D', 'F')] + 0.20)
+    assert np.isclose(env._rho_offered[('E', 'F')], before[('E', 'F')])
+
+
+def test_route_env_samples_episode_trend_from_range():
+    load_cfg = {
+        'scenarios': {
+            'trend_range_probe': {
+                'base_load': (0.30, 0.30),
+                'e_load': (0.90, 0.90),
+                'f_load': (0.30, 0.30),
+                'e_trend_range': (0.05, 0.30),
+                'f_trend': 0.0,
+                'drift_sigma': 0.0,
+            },
+        },
+        'scenario_mix': ('trend_range_probe',),
+    }
+    env0 = RouteEnv(TOPO, load_cfg=load_cfg, seed=0)
+    env1 = RouteEnv(TOPO, load_cfg=load_cfg, seed=1)
+    env0.reset(seed=0)
+    env1.reset(seed=1)
+
+    t0 = env0._active_load_cfg['e_trend']
+    t1 = env1._active_load_cfg['e_trend']
+    assert 0.05 <= t0 <= 0.30
+    assert 0.05 <= t1 <= 0.30
+    assert t0 != t1
+    assert np.isclose(env0._drift_trend(('C', 'E')), t0)
+
+
+def test_route_env_uses_normal_floor_for_drift():
+    load_cfg = {
+        'scenarios': {
+            'floor_probe': {
+                'base_load': (0.30, 0.30),
+                'e_load': (0.20, 0.20),
+                'f_load': (0.20, 0.20),
+                'e_trend': -1.0,
+                'f_trend': -1.0,
+                'drift_sigma': 0.0,
+            },
+        },
+        'scenario_mix': ('floor_probe',),
+    }
+    env = RouteEnv(TOPO, load_cfg=load_cfg, seed=0)
+    env.reset(seed=0)
+    env._drift()
+
+    assert env._rho_offered[('C', 'E')] == OFFERED_LOAD_MIN
+    assert env._rho_offered[('C', 'F')] == OFFERED_LOAD_MIN
+
+
+def test_route_env_uses_active_scenario_offered_load_cap_for_drift():
+    load_cfg = {
+        'scenarios': {
+            'cap_probe': {
+                'base_load': (0.30, 0.30),
+                'e_load': (0.90, 0.90),
+                'f_load': (0.20, 0.20),
+                'e_trend': 1.0,
+                'f_trend': 0.0,
+                'drift_sigma': 0.0,
+                'offered_load_max': 1.60,
+            },
+        },
+        'scenario_mix': ('cap_probe',),
+    }
+    env = RouteEnv(TOPO, load_cfg=load_cfg, seed=0)
+    env.reset(seed=0)
+    env._drift()
+
+    assert env._rho_offered[('C', 'E')] == 1.60
+    assert env._rho_offered[('D', 'E')] == 1.60
+
+
 def test_terminated_is_real():
     env = RouteEnv(TOPO, seed=0)
     _obs, info = env.reset(seed=0)
@@ -258,6 +372,10 @@ def _run_as_script():
         test_route_env_splits_offered_measured_and_loss,
         test_route_env_samples_direct_load_separately_from_via_e,
         test_route_env_accepts_f_load_alias_for_direct_path,
+        test_route_env_applies_directed_dynamic_trends_to_decision_links,
+        test_route_env_samples_episode_trend_from_range,
+        test_route_env_uses_normal_floor_for_drift,
+        test_route_env_uses_active_scenario_offered_load_cap_for_drift,
         test_topology_v2_flips_on_measured_queue_cliff_at_c,
         test_topology_v2_link_budget_and_degree,
     ]
