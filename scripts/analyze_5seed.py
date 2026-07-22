@@ -21,6 +21,7 @@ from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import R_STATE_DIM
 from rl.routing.oracle_gate import DEFAULT_DRIFT_STEPS, estimate_oracle_headroom
 from rl.routing.topology_r import (
+    LOAD_CFG_ASYM,
     LOAD_CFG_TRAIN,
     LOAD_CFG_V1,
     LOAD_PRESETS,
@@ -63,6 +64,8 @@ def _cfg_load_cfg(cfg):
         return LOAD_CFG_TRAIN
     if value == 'LOAD_CFG_V1':
         return LOAD_CFG_V1
+    if value == 'LOAD_CFG_ASYM':
+        return LOAD_CFG_ASYM
     if value == 'SCENARIOS_TRAIN':
         return {
             'scenarios': SCENARIOS_TRAIN,

@@ -16,6 +16,7 @@ from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import R_DIM_NAMES, R_STATE_DIM
 from rl.routing.topology_r import (
     LOAD_CFG_ABLATION,
+    LOAD_CFG_ASYM,
     SCENARIOS_DYNAMIC,
     SCENARIOS_TRAIN,
     TOPO,
@@ -68,6 +69,8 @@ def build_load_cfg(kind):
             'scenarios': SCENARIOS_TRAIN,
             'scenario_mix': tuple(SCENARIOS_TRAIN),
         }
+    if kind == 'asym':
+        return LOAD_CFG_ASYM
     return LOAD_CFG_ABLATION
 
 
@@ -102,7 +105,7 @@ def main(argv=None):
     parser.add_argument('--seed', type=int, default=0)
     parser.add_argument('--episodes', type=int, default=5)
     parser.add_argument('--z', type=int, default=4)
-    parser.add_argument('--scenario', choices=['dynamic', 'static', 'mix'],
+    parser.add_argument('--scenario', choices=['dynamic', 'static', 'mix', 'asym'],
                         default='dynamic')
     parser.add_argument('--mask-aoi', '--mask_aoi', action='store_true',
                         dest='mask_aoi')

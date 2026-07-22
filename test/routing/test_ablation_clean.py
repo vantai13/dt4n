@@ -13,12 +13,14 @@ import yaml
 
 from rl.agent.dqn_agent import DQNAgent
 from rl.routing.state_r import AOI_DIMS, R_STATE_DIM
-from rl.routing.topology_r import LOAD_CFG_ABLATION
+from rl.routing.topology_r import LOAD_CFG_ABLATION, LOAD_CFG_ASYM
 from rl.routing.train_r import make_eval_env, make_train_env
 
 
 CFG_AOI_PATH = Path("rl/routing/configs/train_r_ablation_aoi.yaml")
 CFG_NOAOI_PATH = Path("rl/routing/configs/train_r_ablation_mask.yaml")
+CFG_ASYM_AOI_PATH = Path("rl/routing/configs/train_r_asym_aoi.yaml")
+CFG_ASYM_NOAOI_PATH = Path("rl/routing/configs/train_r_asym_mask.yaml")
 EXPECTED_Z_CHOICES = {0, 1, 3, 5, 8, 12}
 EXPECTED_SCENARIOS = {
     "S1_viaE_better",
@@ -27,6 +29,12 @@ EXPECTED_SCENARIOS = {
     "S4_both_busy",
     "S5_E_rising",
     "S6_F_rising",
+}
+EXPECTED_ASYM_SCENARIOS = {
+    "A1_E_default",
+    "A2_E_congested",
+    "A3_both_busy",
+    "A4_both_free",
 }
 EXPECTED_PARAM_COUNT = 4037
 
@@ -49,6 +57,20 @@ def test_ablation_load_cfg_has_static_and_dynamic_scenarios():
     assert all(float(scenarios[name]["drift_sigma"]) > 0.0 for name in mix[4:])
 
 
+def test_asym_load_cfg_has_weighted_parent_drift_scenarios():
+    """The asymmetric ablation load must use A1-A4 with parent-owned drift."""
+    mix = tuple(LOAD_CFG_ASYM["scenario_mix"])
+    scenarios = LOAD_CFG_ASYM["scenarios"]
+
+    assert set(mix) == EXPECTED_ASYM_SCENARIOS
+    assert len(mix) == 4
+    assert LOAD_CFG_ASYM["drift_sigma"] == 0.15
+    assert LOAD_CFG_ASYM["offered_load_max"] == 1.60
+    assert all("drift_sigma" not in scenarios[name] for name in mix)
+    assert LOAD_CFG_ASYM["scenario_weights"]["A2_E_congested"] == 2.0
+    assert LOAD_CFG_ASYM["scenario_weights"]["A3_both_busy"] == 2.0
+
+
 def test_mask_config_diff_is_only_version_and_mask_aoi():
     """The no-AoI branch must differ by exactly one experimental variable."""
     cfg_aoi = load_cfg(CFG_AOI_PATH)
@@ -60,6 +82,24 @@ def test_mask_config_diff_is_only_version_and_mask_aoi():
     assert cfg_noaoi["train"]["mask_aoi"] is True
     assert cfg_aoi["env"]["load_cfg"] == "LOAD_CFG_ABLATION"
     assert cfg_noaoi["env"]["load_cfg"] == "LOAD_CFG_ABLATION"
+
+    normalized = deepcopy(cfg_noaoi)
+    normalized["version"] = cfg_aoi["version"]
+    normalized["train"]["mask_aoi"] = cfg_aoi["train"]["mask_aoi"]
+    assert normalized == cfg_aoi
+
+
+def test_asym_mask_config_diff_is_only_version_and_mask_aoi():
+    """The asymmetric pair must differ by exactly the ablated variable."""
+    cfg_aoi = load_cfg(CFG_ASYM_AOI_PATH)
+    cfg_noaoi = load_cfg(CFG_ASYM_NOAOI_PATH)
+
+    assert cfg_aoi["version"] == "train_r_asym_aoi"
+    assert cfg_noaoi["version"] == "train_r_asym_mask"
+    assert cfg_aoi["train"]["mask_aoi"] is False
+    assert cfg_noaoi["train"]["mask_aoi"] is True
+    assert cfg_aoi["env"]["load_cfg"] == "LOAD_CFG_ASYM"
+    assert cfg_noaoi["env"]["load_cfg"] == "LOAD_CFG_ASYM"
 
     normalized = deepcopy(cfg_noaoi)
     normalized["version"] = cfg_aoi["version"]

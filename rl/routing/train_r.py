@@ -33,6 +33,7 @@ from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import R_STATE_DIM
 from rl.routing.topology_r import (
     LOAD_CFG_ABLATION,
+    LOAD_CFG_ASYM,
     LOAD_CFG_TRAIN,
     LOAD_CFG_V1,
     LOAD_PRESETS,
@@ -117,6 +118,8 @@ def _load_cfg(cfg):
         return LOAD_CFG_V1
     if value == 'LOAD_CFG_ABLATION':
         return LOAD_CFG_ABLATION
+    if value == 'LOAD_CFG_ASYM':
+        return LOAD_CFG_ASYM
     if value == 'SCENARIOS_TRAIN':
         # Independent-congestion training mix. RouteEnv picks one named
         # scenario per episode from topology_r.SCENARIOS_TRAIN.

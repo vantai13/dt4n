@@ -22,6 +22,7 @@ from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import R_STATE_DIM
 from rl.routing.topology_r import (
     LOAD_CFG_ABLATION,
+    LOAD_CFG_ASYM,
     SCENARIOS_DYNAMIC,
     SCENARIOS_TRAIN,
     TOPO,
@@ -97,6 +98,8 @@ def build_load_cfg(kind: str) -> dict:
             'scenarios': SCENARIOS_TRAIN,
             'scenario_mix': tuple(SCENARIOS_TRAIN),
         }
+    if kind == 'asym':
+        return LOAD_CFG_ASYM
     return LOAD_CFG_ABLATION
 
 
@@ -246,7 +249,7 @@ def write_baseline_csv(path: str | None, rows: list[dict]) -> None:
 def parse_args(argv=None):
     parser = argparse.ArgumentParser()
     parser.add_argument('--policies', nargs='*', default=[])
-    parser.add_argument('--scenario', choices=['dynamic', 'static', 'mix'],
+    parser.add_argument('--scenario', choices=['dynamic', 'static', 'mix', 'asym'],
                         default='dynamic')
     parser.add_argument('--eval-seeds', '--eval_seeds', type=int, default=50,
                         dest='eval_seeds')

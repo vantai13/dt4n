@@ -28,17 +28,27 @@ from rl.routing.topology_r import (
     BUSY_LOAD,
     DIRECT_F_LINKS,
     DYNAMIC_TREND_RANGE,
+    E_BUSY_LOAD,
+    E_FREE_LOAD,
+    F_BUSY_LOAD,
+    F_FREE_LOAD,
     FREE_LOAD,
+    LOAD_CFG_ASYM,
     LOAD_PRESETS,
     NEAR_CLIFF_LOAD,
     OFFERED_LOAD_MIN,
     SAFE_LOAD,
     SCENARIOS,
+    SCENARIOS_ASYM,
+    SCENARIOS_ASYM_DRIFT,
     SCENARIOS_DYNAMIC,
     SCENARIOS_TRAIN,
     TOPO,
+    ASYM_SCENARIO_MIX,
+    ASYM_SCENARIO_WEIGHTS,
     TRAIN_SCENARIO_MIX,
     VIA_E_LINKS,
+    choose_load_scenario,
 )
 
 
@@ -86,6 +96,50 @@ def test_load_scenarios_pinch_decision_links_independently():
     assert LOAD_PRESETS['S1_viaE_better'] == SCENARIOS_TRAIN['S1_viaE_better']
     assert LOAD_PRESETS['borderline']['e_load'][0] <= LOW_TO_CRITICAL_RHO_OFFERED
     assert LOAD_PRESETS['borderline']['e_load'][1] >= CRITICAL_TO_FULL_RHO_OFFERED
+
+
+def test_asymmetric_scenarios_keep_f_as_safe_backup():
+    assert SCENARIOS_ASYM['A1_E_default']['e_load'] == E_FREE_LOAD
+    assert SCENARIOS_ASYM['A1_E_default']['f_load'] == F_FREE_LOAD
+    assert SCENARIOS_ASYM['A2_E_congested']['e_load'] == E_BUSY_LOAD
+    assert SCENARIOS_ASYM['A2_E_congested']['f_load'] == F_FREE_LOAD
+    assert SCENARIOS_ASYM['A3_both_busy']['e_load'] == E_BUSY_LOAD
+    assert SCENARIOS_ASYM['A3_both_busy']['f_load'] == F_BUSY_LOAD
+    assert E_FREE_LOAD[1] < LOW_TO_CRITICAL_RHO_OFFERED
+    assert E_BUSY_LOAD[0] > CRITICAL_TO_FULL_RHO_OFFERED
+    assert F_BUSY_LOAD[1] < LOW_TO_CRITICAL_RHO_OFFERED
+
+
+def test_load_cfg_asym_uses_parent_drift_and_weights():
+    assert LOAD_CFG_ASYM['scenario_mix'] == ASYM_SCENARIO_MIX
+    assert LOAD_CFG_ASYM['scenarios'] == SCENARIOS_ASYM_DRIFT
+    assert LOAD_CFG_ASYM['scenario_weights'] == ASYM_SCENARIO_WEIGHTS
+    assert LOAD_CFG_ASYM['drift_sigma'] == 0.15
+    assert LOAD_CFG_ASYM['offered_load_max'] == 1.60
+    assert all('drift_sigma' not in cfg
+               for cfg in LOAD_CFG_ASYM['scenarios'].values())
+
+    resolved, name = choose_load_scenario(
+        LOAD_CFG_ASYM,
+        np.random.default_rng(0),
+    )
+    assert name in ASYM_SCENARIO_MIX
+    assert resolved['drift_sigma'] == LOAD_CFG_ASYM['drift_sigma']
+
+
+def test_weighted_scenario_sampler_can_bias_episode_mix():
+    load_cfg = {
+        'scenarios': SCENARIOS_ASYM,
+        'scenario_mix': tuple(SCENARIOS_ASYM),
+        'scenario_weights': {
+            'A1_E_default': 0.0,
+            'A2_E_congested': 1.0,
+            'A3_both_busy': 0.0,
+            'A4_both_free': 0.0,
+        },
+    }
+    _cfg, name = choose_load_scenario(load_cfg, np.random.default_rng(0))
+    assert name == 'A2_E_congested'
 
 
 def test_mask_touches_only_aoi():
@@ -363,6 +417,9 @@ def _run_as_script():
         test_aoi_norm_not_saturated_in_range,
         test_dim,
         test_load_scenarios_pinch_decision_links_independently,
+        test_asymmetric_scenarios_keep_f_as_safe_backup,
+        test_load_cfg_asym_uses_parent_drift_and_weights,
+        test_weighted_scenario_sampler_can_bias_episode_mix,
         test_mask_does_not_mutate,
         test_mask_touches_only_aoi,
         test_calibrated_delay_has_rev5_cliff_and_finite_ceiling,

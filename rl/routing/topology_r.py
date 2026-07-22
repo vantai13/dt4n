@@ -15,6 +15,8 @@ Scenario load therefore pinches C/D->E and C/D->F independently. Pinching F
 itself would affect every path and would not create a learnable branch choice.
 """
 
+import numpy as np
+
 TOPO_V2 = {
     'nodes': ['SRC', 'A', 'B', 'C', 'D', 'E', 'F', 'DST'],
     # [from, to, base_delay_ms, base_bw_mbps]
@@ -53,6 +55,12 @@ SAFE_LOAD = (0.20, 0.40)
 NEAR_CLIFF_LOAD = (0.88, 0.93)
 DYNAMIC_TREND_RANGE = (0.12, 0.35)
 BUSY_LOAD = (0.95, 1.15)
+# [Phase 11 Goldilocks] Make the always-F fallback costly when E is truly
+# free, while keeping F below the calibrated cliff as the safer retreat.
+E_FREE_LOAD = (0.15, 0.30)
+E_BUSY_LOAD = (0.98, 1.18)
+F_FREE_LOAD = (0.45, 0.60)
+F_BUSY_LOAD = (0.80, 0.90)
 BORDERLINE_LOAD = (0.925, 0.935)
 
 SCENARIOS = {
@@ -79,6 +87,33 @@ SCENARIOS = {
         'base_load': BASE_LOAD,
         'e_load': BUSY_LOAD,
         'direct_load': BUSY_LOAD,
+        'drift_sigma': 0.0,
+    },
+}
+
+SCENARIOS_ASYM = {
+    'A1_E_default': {
+        'base_load': _SCEN_BASE,
+        'e_load': E_FREE_LOAD,
+        'f_load': F_FREE_LOAD,
+        'drift_sigma': 0.0,
+    },
+    'A2_E_congested': {
+        'base_load': _SCEN_BASE,
+        'e_load': E_BUSY_LOAD,
+        'f_load': F_FREE_LOAD,
+        'drift_sigma': 0.0,
+    },
+    'A3_both_busy': {
+        'base_load': _SCEN_BASE,
+        'e_load': E_BUSY_LOAD,
+        'f_load': F_BUSY_LOAD,
+        'drift_sigma': 0.0,
+    },
+    'A4_both_free': {
+        'base_load': _SCEN_BASE,
+        'e_load': E_FREE_LOAD,
+        'f_load': F_BUSY_LOAD,
         'drift_sigma': 0.0,
     },
 }
@@ -132,6 +167,13 @@ SCENARIOS_DYNAMIC = {
 }
 
 TRAIN_SCENARIO_MIX = tuple(SCENARIOS_TRAIN)
+ASYM_SCENARIO_MIX = tuple(SCENARIOS_ASYM)
+ASYM_SCENARIO_WEIGHTS = {
+    'A1_E_default': 1.0,
+    'A2_E_congested': 2.0,
+    'A3_both_busy': 2.0,
+    'A4_both_free': 1.0,
+}
 
 # Named deterministic evaluation slices. S1-S4 are the corrected branch-choice
 # probes. The legacy names are kept as aliases for older analysis scripts.
@@ -178,6 +220,24 @@ LOAD_CFG_ABLATION = {
     'scenario_mix': tuple(SCENARIOS_TRAIN) + tuple(SCENARIOS_DYNAMIC),
 }
 
+# [11.3] Phase-11 asymmetric ablation load. SCENARIOS_ASYM itself remains a
+# static design block for probes; this load removes child drift_sigma so the
+# parent drift creates stale-vs-fresh divergence during training/evaluation.
+SCENARIOS_ASYM_DRIFT = {
+    name: {key: value for key, value in scenario.items()
+           if key != 'drift_sigma'}
+    for name, scenario in SCENARIOS_ASYM.items()
+}
+
+LOAD_CFG_ASYM = {
+    'base_load': BASE_LOAD,
+    'scenarios': SCENARIOS_ASYM_DRIFT,
+    'scenario_mix': ASYM_SCENARIO_MIX,
+    'scenario_weights': ASYM_SCENARIO_WEIGHTS,
+    'drift_sigma': 0.15,
+    'offered_load_max': 1.60,
+}
+
 # [10.1] Phase-10 sweep load: reuse the calibrated S1-S4 branch-choice
 # scenarios, but let the parent load config own drift. Child scenarios must not
 # carry drift_sigma here, otherwise resolve_load_scenario() would shadow the
@@ -196,7 +256,7 @@ LOAD_CFG_SWEEP = {
 }
 
 
-_LOAD_META_KEYS = {'scenarios', 'scenario_mix'}
+_LOAD_META_KEYS = {'scenarios', 'scenario_mix', 'scenario_weights'}
 
 
 def _clip(value, lo, hi):
@@ -262,12 +322,18 @@ def resolve_load_scenario(load_cfg, scenario=None):
 
     child.pop('scenarios', None)
     child.pop('scenario_mix', None)
+    child.pop('scenario_weights', None)
     base.update(child)
     return base, name
 
 
 def choose_load_scenario(load_cfg, rng):
-    """Choose and resolve one episode scenario from ``load_cfg``."""
+    """Choose and resolve one episode scenario from ``load_cfg``.
+
+    ``scenario_weights`` biases how often each named scenario appears. This
+    changes the episode distribution only; reward and link physics stay
+    untouched.
+    """
     scenarios = (load_cfg or {}).get('scenarios')
     mix = (load_cfg or {}).get('scenario_mix')
     if not mix and isinstance(scenarios, dict):
@@ -277,7 +343,16 @@ def choose_load_scenario(load_cfg, rng):
         return resolve_load_scenario(load_cfg, scenarios[idx])
     if not mix:
         return resolve_load_scenario(load_cfg)
-    idx = int(rng.integers(0, len(mix)))
+    weights = (load_cfg or {}).get('scenario_weights')
+    if weights is None:
+        idx = int(rng.integers(0, len(mix)))
+    else:
+        w = np.asarray([float(weights.get(name, 1.0)) for name in mix])
+        total = float(w.sum())
+        if total <= 0.0:
+            raise ValueError('scenario_weights must sum to a positive value')
+        p = w / total
+        idx = int(rng.choice(len(mix), p=p))
     return resolve_load_scenario(load_cfg, mix[idx])
 
 

@@ -15,6 +15,7 @@ from rl.routing.staleness_r import StalenessWrapper
 from rl.routing.state_r import AOI_DIMS
 from rl.routing.topology_r import (
     LOAD_CFG_ABLATION,
+    LOAD_CFG_ASYM,
     SCENARIOS_DYNAMIC,
     SCENARIOS_TRAIN,
     TOPO,
@@ -42,6 +43,8 @@ def build_load_cfg(kind: str) -> dict:
             'scenarios': SCENARIOS_TRAIN,
             'scenario_mix': tuple(SCENARIOS_TRAIN),
         }
+    if kind == 'asym':
+        return LOAD_CFG_ASYM
     return LOAD_CFG_ABLATION
 
 
@@ -66,7 +69,7 @@ def fmt(values) -> str:
 
 def parse_args(argv=None):
     parser = argparse.ArgumentParser()
-    parser.add_argument('--scenario', choices=['dynamic', 'static', 'mix'],
+    parser.add_argument('--scenario', choices=['dynamic', 'static', 'mix', 'asym'],
                         default='dynamic')
     parser.add_argument('--seed', type=int, default=42)
     parser.add_argument('--z-values', '--z_values', default='0,2,4,6',
