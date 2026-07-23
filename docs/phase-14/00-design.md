@@ -110,4 +110,33 @@ phai sua thuoc truoc khi di tiep.
 
 ---
 
+## PHU LUC - Dieu kien bo sung sau negative control (exploratory)
+
+Muc nay duoc them ngay 2026-07-23, SAU khi quan sat ket qua negative control
+tren `routing_2path`. No KHONG phai tieu chi tien nghiem da ky o tren.
+
+Dieu kien bo sung 6:
+
+    q_margin phai GIAM theo z
+    Chan doan toi thieu: q_margin(z=12) < q_margin(z=0)
+
+Ly do: negative control cho thay voi trend don dieu, q_margin tang manh theo
+z. Khi do staleness lam bai toan ro rang hon, khong phai kho hon, va
+`gap_marginalized` suy sup ve gan 0. Gia tri AoI chi con nam o truong hop
+z=0, noi agent biet minh co anh tuoi va co the bo hedge.
+
+Cach dung trung thuc:
+
+    Dieu kien 5 (`gap_marginalized`, mean - ci95 >= 0.10) GIU NGUYEN la gate
+    chinh.
+
+    Dieu kien bo sung 6 chi la chan doan ho tro de thiet ke topology moi va
+    giai thich vi sao mot topology FAIL. Khong duoc viet nhu the no da duoc
+    chot truoc negative control.
+
+He qua cho topology moi: drift nen la khuech tan/su kien ngau nhien vo huong,
+khong phai trend co huong don dieu.
+
+---
+
 Ky: ________________    Ngay: 2026-07-23

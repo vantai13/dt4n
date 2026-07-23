@@ -1,0 +1,200 @@
+#!/usr/bin/env python3
+"""Regression tests for the marginalized AoI headroom meter."""
+
+import sys
+import json
+import tempfile
+from contextlib import redirect_stdout
+from io import StringIO
+from pathlib import Path
+
+import numpy as np
+
+sys.path.insert(0, ".")
+
+from measurements.pilot_marginalized import gap_one_case, main  # noqa: E402
+from measurements.samplers import Sampler2Path  # noqa: E402
+from rl.routing_2path.route_env import RouteEnv  # noqa: E402
+from rl.routing_2path.topology_r import LOAD_CFG_DYNAMIC, TOPO_V2  # noqa: E402
+
+
+class FakeSampler:
+    actions = ("A", "B")
+
+    def __init__(self, q):
+        self.q = q
+
+    def roll_forward(self, obs, z, rng):
+        return {"z": int(z)}
+
+    def reward_of(self, action, true_world):
+        return float(self.q[action][true_world["z"]])
+
+
+def test_gap_scores_marginal_action_at_true_z():
+    sampler = FakeSampler({
+        "A": {0: 2.0, 1: 0.0},
+        "B": {0: 0.0, 1: 1.0},
+    })
+    z_choices = (0, 1)
+    p_z = {0: 0.5, 1: 0.5}
+
+    gap, detail = gap_one_case(
+        sampler,
+        obs={},
+        z_true=1,
+        z_choices=z_choices,
+        p_z=p_z,
+        actions=sampler.actions,
+        n_mc=1,
+        rng=np.random.default_rng(0),
+    )
+
+    assert detail["a_star_z"] == "B"
+    assert detail["a_star_marg"] == "A"
+    assert gap == 1.0
+    assert detail["q_margin"] == 1.0
+
+
+def test_sampler2path_reward_signature_blocks_obs_and_z_leakage():
+    sampler = Sampler2Path()
+    arg_names = Sampler2Path.reward_of.__code__.co_varnames[
+        :Sampler2Path.reward_of.__code__.co_argcount
+    ]
+
+    assert arg_names == ("self", "action", "true_world")
+    assert sampler.actions == ("E", "F")
+
+
+def test_sampler2path_public_observation_excludes_hidden_context():
+    sampler = Sampler2Path()
+    obs, z_true = sampler.sample_observation(
+        (0, 1, 3),
+        np.random.default_rng(0),
+    )
+
+    assert set(obs) == {"rho"}
+    assert "cfg" not in obs
+    assert "scenario" not in obs
+    assert z_true in {0, 1, 3}
+
+
+def test_sampler2path_drift_matches_route_env_snapshot_drift():
+    sampler = Sampler2Path()
+    rho = {
+        (src, dst): 0.30
+        for src, dst, *_rest in TOPO_V2["edges"]
+    }
+    rho[("C", "E")] = 0.90
+    rho[("D", "E")] = 0.90
+    rho[("C", "F")] = 0.40
+    rho[("D", "F")] = 0.40
+    cfg = {
+        "drift_sigma": 0.02,
+        "e_trend": 0.10,
+        "f_trend": 0.0,
+        "offered_load_max": 1.60,
+    }
+
+    got = sampler._roll_forward_with_cfg(
+        {"rho": dict(rho)},
+        z=2,
+        cfg=cfg,
+        rng=np.random.default_rng(123),
+    )["rho"]
+
+    env = RouteEnv(TOPO_V2, load_cfg=LOAD_CFG_DYNAMIC, seed=0)
+    env._active_load_cfg = dict(cfg)
+    expected = dict(rho)
+    rng = np.random.default_rng(123)
+    for _ in range(2):
+        expected = env._drift_offered_snapshot(expected, rng)
+
+    for link in expected:
+        assert np.isclose(got[link], expected[link])
+
+
+def test_main_returns_zero_for_gate_fail():
+    stdout = StringIO()
+    with redirect_stdout(stdout):
+        code = main([
+            "--topology",
+            "routing_2path",
+            "--cases",
+            "2",
+            "--mc-samples",
+            "1",
+            "--seed",
+            "0",
+        ])
+
+    assert code == 0
+    assert "GATE" in stdout.getvalue()
+
+
+def test_main_strict_returns_one_for_gate_fail():
+    stdout = StringIO()
+    with redirect_stdout(stdout):
+        code = main([
+            "--topology",
+            "routing_2path",
+            "--cases",
+            "2",
+            "--mc-samples",
+            "1",
+            "--seed",
+            "0",
+            "--strict",
+        ])
+
+    assert code == 1
+    assert "GATE              : FAIL" in stdout.getvalue()
+
+
+def test_main_writes_provenance_and_action_counts():
+    with tempfile.TemporaryDirectory() as tmp:
+        out_path = Path(tmp) / "result.json"
+        stdout = StringIO()
+        with redirect_stdout(stdout):
+            code = main([
+                "--topology",
+                "routing_2path",
+                "--cases",
+                "2",
+                "--mc-samples",
+                "1",
+                "--seed",
+                "0",
+                "--out",
+                str(out_path),
+            ])
+
+        assert code == 0
+        payload = json.loads(out_path.read_text())
+        assert payload["load_cfg"] == "LOAD_CFG_DYNAMIC"
+        assert payload["link_model_path"] == "rl/routing_2path/link_model.py"
+        assert len(payload["link_model_sha"]) == 12
+        assert payload["reward_model_path"] == "rl/routing_2path/reward_r.py"
+        assert len(payload["reward_model_sha"]) == 12
+        assert "0" in payload["action_counts_by_z"]
+        assert "a_star_z" in payload["action_counts_by_z"]["0"]
+
+
+def _run_as_script():
+    tests = [
+        test_gap_scores_marginal_action_at_true_z,
+        test_sampler2path_reward_signature_blocks_obs_and_z_leakage,
+        test_sampler2path_public_observation_excludes_hidden_context,
+        test_sampler2path_drift_matches_route_env_snapshot_drift,
+        test_main_returns_zero_for_gate_fail,
+        test_main_strict_returns_one_for_gate_fail,
+        test_main_writes_provenance_and_action_counts,
+    ]
+    for test in tests:
+        test()
+        print(f"  PASS  {test.__name__}")
+    print(f"\n{len(tests)}/{len(tests)} passed")
+
+
+if __name__ == "__main__":
+    _run_as_script()
