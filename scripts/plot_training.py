@@ -29,9 +29,9 @@ import matplotlib.pyplot as plt  # noqa: E402
 sys.path.insert(0, '.')
 
 from rl.agent.dqn_agent import DQNAgent  # noqa: E402
-from rl.routing.route_env import RouteEnv  # noqa: E402
-from rl.routing.state_r import MAX_NEIGHBORS, R_STATE_DIM  # noqa: E402
-from rl.routing.topology_r import SCENARIOS_TRAIN, TOPO_V2  # noqa: E402
+from rl.routing_2path.route_env import RouteEnv  # noqa: E402
+from rl.routing_2path.state_r import MAX_NEIGHBORS, R_STATE_DIM  # noqa: E402
+from rl.routing_2path.topology_r import SCENARIOS_TRAIN, TOPO_V2  # noqa: E402
 
 
 def read_csv(path):

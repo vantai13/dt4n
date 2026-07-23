@@ -8,9 +8,9 @@ import torch
 sys.path.insert(0, '.')
 
 from rl.agent.dqn_agent import DQNAgent
-from rl.routing.route_env import RouteEnv
-from rl.routing.state_r import R_STATE_DIM
-from rl.routing.topology_r import LOAD_CFG_V1, TOPO
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.state_r import R_STATE_DIM
+from rl.routing_2path.topology_r import LOAD_CFG_V1, TOPO
 
 
 def _cfg(**overrides):

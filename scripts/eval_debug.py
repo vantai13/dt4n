@@ -11,10 +11,10 @@ import torch
 sys.path.insert(0, '.')
 
 from rl.agent.dqn_agent import DQNAgent
-from rl.routing.route_env import RouteEnv
-from rl.routing.staleness_r import StalenessWrapper
-from rl.routing.state_r import R_DIM_NAMES, R_STATE_DIM
-from rl.routing.topology_r import (
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.staleness_r import StalenessWrapper
+from rl.routing_2path.state_r import R_DIM_NAMES, R_STATE_DIM
+from rl.routing_2path.topology_r import (
     LOAD_CFG_ABLATION,
     LOAD_CFG_ASYM,
     SCENARIOS_DYNAMIC,

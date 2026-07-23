@@ -8,7 +8,7 @@ import torch
 
 sys.path.insert(0, '.')
 
-from rl.routing.train_r import config_hash, git_hash, set_global_seed
+from rl.routing_2path.train_r import config_hash, git_hash, set_global_seed
 
 
 def test_set_global_seed_covers_all_four():
@@ -43,7 +43,7 @@ def test_random_seed_not_forgotten():
 def test_agent_init_deterministic():
     """Calling set_global_seed before DQNAgent makes initial weights stable."""
     from rl.agent.dqn_agent import DQNAgent
-    from rl.routing.state_r import R_STATE_DIM
+    from rl.routing_2path.state_r import R_STATE_DIM
 
     cfg = {'agent': {
         'gamma': 0.95,
@@ -110,10 +110,10 @@ def test_dirty_flag_detected():
 
 def test_aoi_dims_alive_under_random_z():
     """Randomized z keeps AoI dimensions non-constant for Phase 11 ablation."""
-    from rl.routing.route_env import RouteEnv
-    from rl.routing.staleness_r import StalenessWrapper
-    from rl.routing.state_r import AOI_DIMS
-    from rl.routing.topology_r import LOAD_CFG_V1, TOPO
+    from rl.routing_2path.route_env import RouteEnv
+    from rl.routing_2path.staleness_r import StalenessWrapper
+    from rl.routing_2path.state_r import AOI_DIMS
+    from rl.routing_2path.topology_r import LOAD_CFG_V1, TOPO
 
     def collect(z_choices, n=100):
         values = []

@@ -9,8 +9,8 @@ without guessing one edit at a time.
 
 import argparse
 
-from rl.routing.oracle_gate import evaluate_config
-from rl.routing.reward_r import W_LOSS
+from rl.routing_2path.oracle_gate import evaluate_config
+from rl.routing_2path.reward_r import W_LOSS
 
 
 DEFAULT_BASE_HIS = (0.90, 0.95)

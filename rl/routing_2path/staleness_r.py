@@ -13,9 +13,9 @@ from collections import deque
 
 import numpy as np
 
-from rl.routing.link_model import loss_rate, rho_measured_from_offered
-from rl.routing.state_r import build_route_state, mask_aoi
-from rl.routing.topology_r import OFFERED_LOAD_MIN
+from rl.routing_2path.link_model import loss_rate, rho_measured_from_offered
+from rl.routing_2path.state_r import build_route_state, mask_aoi
+from rl.routing_2path.topology_r import OFFERED_LOAD_MIN
 
 
 class StalenessWrapper:

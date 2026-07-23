@@ -53,14 +53,14 @@ except ImportError:
     gym = _Gym()
     spaces = _Spaces()
 
-from rl.routing.link_model import (
+from rl.routing_2path.link_model import (
     loss_rate,
     rho_measured_from_offered,
     total_delay_ms,
 )
-from rl.routing.reward_r import REWARD_VERSION, step_reward
-from rl.routing.state_r import MAX_NEIGHBORS, R_STATE_DIM, build_route_state
-from rl.routing.topology_r import (
+from rl.routing_2path.reward_r import REWARD_VERSION, step_reward
+from rl.routing_2path.state_r import MAX_NEIGHBORS, R_STATE_DIM, build_route_state
+from rl.routing_2path.topology_r import (
     DIRECT_F_LINKS,
     OFFERED_LOAD_MIN,
     VIA_E_LINKS,

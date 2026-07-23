@@ -36,7 +36,7 @@ def run_short(tag: str) -> list[str]:
         [
             sys.executable,
             "-m",
-            "rl.routing.train_r",
+            "rl.routing_2path.train_r",
             "--config",
             CFG,
             "--seed",

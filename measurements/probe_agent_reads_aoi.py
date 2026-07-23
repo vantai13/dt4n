@@ -21,7 +21,7 @@ if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
 from measurements.measure_baseline_v2 import load_agent
-from rl.routing.state_r import R_STATE_DIM, build_route_state, mask_aoi
+from rl.routing_2path.state_r import R_STATE_DIM, build_route_state, mask_aoi
 
 
 DEFAULT_CKPT = "frozen_policies/huong_a/policy_aoi_s0.pt"

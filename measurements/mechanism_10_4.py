@@ -9,7 +9,7 @@ Products:
   3. A hand-traced episode where blind_dijkstra diverges from clairvoyance.
 
 This script is diagnostic/reporting code only. It does not modify the frozen
-policies or rl.routing.metrics_r.
+policies or rl.routing_2path.metrics_r.
 """
 
 from __future__ import annotations
@@ -21,15 +21,15 @@ from pathlib import Path
 
 import numpy as np
 
-from rl.routing.metrics_r import (
+from rl.routing_2path.metrics_r import (
     SAFE_HOP,
     _valid_action,
     evaluate_z,
     make_env,
     run_episode,
 )
-from rl.routing.oracles import blind_dijkstra, clairvoyant_dijkstra, posthoc_dijkstra
-from rl.routing.topology_r import LOAD_CFG_SWEEP, LOAD_PRESETS
+from rl.routing_2path.oracles import blind_dijkstra, clairvoyant_dijkstra, posthoc_dijkstra
+from rl.routing_2path.topology_r import LOAD_CFG_SWEEP, LOAD_PRESETS
 
 
 Z_VALUES = (0, 1, 2, 3, 5, 8, 12, 20)

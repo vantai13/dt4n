@@ -12,9 +12,9 @@ import numpy as np
 import yaml
 
 from rl.agent.dqn_agent import DQNAgent
-from rl.routing.state_r import AOI_DIMS, R_STATE_DIM
-from rl.routing.topology_r import LOAD_CFG_ABLATION, LOAD_CFG_ASYM
-from rl.routing.train_r import make_eval_env, make_train_env
+from rl.routing_2path.state_r import AOI_DIMS, R_STATE_DIM
+from rl.routing_2path.topology_r import LOAD_CFG_ABLATION, LOAD_CFG_ASYM
+from rl.routing_2path.train_r import make_eval_env, make_train_env
 
 
 CFG_AOI_PATH = Path("rl/routing/configs/train_r_ablation_aoi.yaml")

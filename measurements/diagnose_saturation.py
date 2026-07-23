@@ -27,8 +27,8 @@ from pathlib import Path
 import numpy as np
 from scipy.optimize import curve_fit
 
-from rl.routing.metrics_r import evaluate_z
-from rl.routing.topology_r import LOAD_CFG_SWEEP
+from rl.routing_2path.metrics_r import evaluate_z
+from rl.routing_2path.topology_r import LOAD_CFG_SWEEP
 
 
 OUT_DIR = Path("measurements/out")

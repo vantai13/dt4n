@@ -2,8 +2,8 @@
 """Lesson 11.2 bước 0 — xem 6 scenario: tải thế nào, cái nào động (drift)."""
 import sys; sys.path.insert(0, '.')
 import numpy as np
-from rl.routing.route_env import RouteEnv
-from rl.routing.topology_r import TOPO, SCENARIOS_TRAIN, SCENARIOS_DYNAMIC
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.topology_r import TOPO, SCENARIOS_TRAIN, SCENARIOS_DYNAMIC
 
 ALL_SCENARIOS = {**SCENARIOS_TRAIN, **SCENARIOS_DYNAMIC}
 CE, CF = ('C', 'E'), ('C', 'F')   # hai link quyết định tại node C

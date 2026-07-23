@@ -10,8 +10,8 @@ they are allowed to see. Their gap is the isolated cost of stale twin state.
 
 import heapq
 
-from rl.routing.link_model import loss_rate, total_delay_ms
-from rl.routing.reward_r import DELAY_CLIP, DELAY_NORM_MS, W_HOP, W_LOSS
+from rl.routing_2path.link_model import loss_rate, total_delay_ms
+from rl.routing_2path.reward_r import DELAY_CLIP, DELAY_NORM_MS, W_HOP, W_LOSS
 
 
 def edge_cost(base_delay_ms, rho_offered, loss=None, bw_mbps=None, queue_pkts=None):

@@ -10,7 +10,7 @@ import sys
 
 sys.path.insert(0, '.')
 
-from rl.routing.oracle_gate import evaluate_config
+from rl.routing_2path.oracle_gate import evaluate_config
 
 
 REV5_STD_AGENT = 0.07988327839856281

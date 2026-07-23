@@ -7,11 +7,11 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.ditto_staleness_r import DittoStalenessWrapper
-from rl.routing.metrics_r import evaluate_sync_period
-from rl.routing.route_env import RouteEnv
-from rl.routing.state_r import AOI_DIMS
-from rl.routing.topology_r import TOPO
+from rl.routing_2path.ditto_staleness_r import DittoStalenessWrapper
+from rl.routing_2path.metrics_r import evaluate_sync_period
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.state_r import AOI_DIMS
+from rl.routing_2path.topology_r import TOPO
 
 
 def _rollout(env, seed, actions):

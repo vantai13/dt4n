@@ -8,8 +8,8 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.metrics_r import evaluate_sync_range
-from rl.routing.topology_r import LOAD_CFG_V1
+from rl.routing_2path.metrics_r import evaluate_sync_range
+from rl.routing_2path.topology_r import LOAD_CFG_V1
 
 
 def parse_args():

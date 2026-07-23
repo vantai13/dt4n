@@ -5,18 +5,18 @@ import sys
 
 sys.path.insert(0, '.')
 
-from rl.routing.baselines import expected_ospf_weights, ospf_calibrated, ospf_reactive
-from rl.routing.metrics_r import evaluate_z
-from rl.routing.oracles import (
+from rl.routing_2path.baselines import expected_ospf_weights, ospf_calibrated, ospf_reactive
+from rl.routing_2path.metrics_r import evaluate_z
+from rl.routing_2path.oracles import (
     blind_dijkstra,
     clairvoyant_dijkstra,
     dijkstra_next_hop,
     posthoc_dijkstra,
 )
-from rl.routing.route_env import RouteEnv
-from rl.routing.reward_r import W_HOP
-from rl.routing.topology_r import TOPO
-from rl.routing.link_model import loss_rate
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.reward_r import W_HOP
+from rl.routing_2path.topology_r import TOPO
+from rl.routing_2path.link_model import loss_rate
 
 
 def _view_from_offered(offered):

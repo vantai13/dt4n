@@ -15,7 +15,7 @@ from measurements.probe_aoi_dependence import (  # noqa: E402
     fresh_action,
     measure_gap,
 )
-from rl.routing.topology_r import LOAD_CFG_TRAIN, TOPO_V2  # noqa: E402
+from rl.routing_2path.topology_r import LOAD_CFG_TRAIN, TOPO_V2  # noqa: E402
 
 
 def _rho_snapshot(base=0.30, e_load=0.90, f_load=0.30):

@@ -12,17 +12,17 @@ from dataclasses import dataclass
 
 import numpy as np
 
-from rl.routing.link_model import (
+from rl.routing_2path.link_model import (
     loss_rate,
     total_delay_ms,
 )
-from rl.routing.reward_r import (
+from rl.routing_2path.reward_r import (
     DELAY_CLIP,
     DELAY_NORM_MS,
     W_HOP,
     step_reward,
 )
-from rl.routing.topology_r import (
+from rl.routing_2path.topology_r import (
     DIRECT_F_LINKS,
     LOAD_CFG_TRAIN,
     OFFERED_LOAD_MIN,

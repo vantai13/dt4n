@@ -11,10 +11,10 @@ Chay:
 from pathlib import Path
 import sys, yaml
 
-from rl.routing.topology_r import TOPO_V2, LOAD_PRESETS
-from rl.routing.route_env import RouteEnv
+from rl.routing_2path.topology_r import TOPO_V2, LOAD_PRESETS
+from rl.routing_2path.route_env import RouteEnv
 from rl.agent.dqn_agent import DQNAgent
-from rl.routing.state_r import R_STATE_DIM, MAX_NEIGHBORS
+from rl.routing_2path.state_r import R_STATE_DIM, MAX_NEIGHBORS
 
 
 def load_agent(model_path, cfg_path):

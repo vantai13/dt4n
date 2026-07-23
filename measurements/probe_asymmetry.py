@@ -22,9 +22,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from rl.routing.link_model import CLIFF_RHO_OFFERED, loss_rate, total_delay_ms
-from rl.routing.reward_r import DELAY_CLIP, DELAY_NORM_MS, W_HOP, W_LOSS
-from rl.routing.topology_r import SCENARIOS_ASYM, TOPO_V2
+from rl.routing_2path.link_model import CLIFF_RHO_OFFERED, loss_rate, total_delay_ms
+from rl.routing_2path.reward_r import DELAY_CLIP, DELAY_NORM_MS, W_HOP, W_LOSS
+from rl.routing_2path.topology_r import SCENARIOS_ASYM, TOPO_V2
 
 
 PATH_VIA_E = ("C", "E", "F", "DST")

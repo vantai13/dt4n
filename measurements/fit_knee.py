@@ -6,8 +6,8 @@ knee = tau (điểm gãy, 63% trần). Báo cáo cả 2.3*tau (90% trần).
 """
 import numpy as np
 from scipy.optimize import curve_fit
-from rl.routing.metrics_r import evaluate_z
-from rl.routing.topology_r import LOAD_CFG_SWEEP
+from rl.routing_2path.metrics_r import evaluate_z
+from rl.routing_2path.topology_r import LOAD_CFG_SWEEP
 
 
 def saturating(aoi, A, tau):

@@ -20,9 +20,9 @@ from pathlib import Path
 import numpy as np
 
 from rl.agent.dqn_agent import DQNAgent
-from rl.routing.oracles import posthoc_dijkstra
-from rl.routing.state_r import R_STATE_DIM
-from rl.routing.train_r import make_eval_env, run_agent_episode
+from rl.routing_2path.oracles import posthoc_dijkstra
+from rl.routing_2path.state_r import R_STATE_DIM
+from rl.routing_2path.train_r import make_eval_env, run_agent_episode
 
 
 BRANCHES = ("aoi", "mask")

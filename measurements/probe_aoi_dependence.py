@@ -25,9 +25,9 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from rl.routing.oracles import edge_cost
-from rl.routing.reward_r import W_HOP
-from rl.routing.topology_r import (
+from rl.routing_2path.oracles import edge_cost
+from rl.routing_2path.reward_r import W_HOP
+from rl.routing_2path.topology_r import (
     DIRECT_F_LINKS,
     DYNAMIC_TREND_RANGE,
     LOAD_CFG_ABLATION,

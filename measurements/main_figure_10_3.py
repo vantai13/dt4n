@@ -1,7 +1,7 @@
 #!/usr/bin/env python3
 """Phase 10.3 main figure with paired CI95.
 
-This script is deliberately external to ``rl.routing.metrics_r``: the core
+This script is deliberately external to ``rl.routing_2path.metrics_r``: the core
 measurement helpers return means, while the thesis figure needs per-seed rows
 to compute paired confidence intervals.
 
@@ -22,10 +22,10 @@ from pathlib import Path
 import numpy as np
 from scipy.optimize import curve_fit
 
-from rl.routing.baselines import ospf_calibrated
-from rl.routing.metrics_r import make_env, run_episode
-from rl.routing.oracles import blind_dijkstra, clairvoyant_dijkstra, posthoc_dijkstra
-from rl.routing.topology_r import LOAD_CFG_SWEEP
+from rl.routing_2path.baselines import ospf_calibrated
+from rl.routing_2path.metrics_r import make_env, run_episode
+from rl.routing_2path.oracles import blind_dijkstra, clairvoyant_dijkstra, posthoc_dijkstra
+from rl.routing_2path.topology_r import LOAD_CFG_SWEEP
 
 
 Z_VALUES = (0, 1, 2, 3, 5, 8, 12, 20)

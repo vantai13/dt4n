@@ -10,7 +10,7 @@ sys.path.insert(0, '.')
 sys.path.insert(0, 'scripts')
 
 from diag_decision_balance import frac_E_better
-from rl.routing.metrics_r import evaluate_z_range
+from rl.routing_2path.metrics_r import evaluate_z_range
 
 
 GATE_BALANCE = (0.20, 0.80)

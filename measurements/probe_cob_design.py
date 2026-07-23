@@ -17,12 +17,12 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.link_model import CRITICAL_TO_FULL_RHO_OFFERED
-from rl.routing.metrics_r import run_episode, summarize_episode_stats
-from rl.routing.oracles import blind_dijkstra, clairvoyant_dijkstra, posthoc_dijkstra
-from rl.routing.route_env import RouteEnv
-from rl.routing.staleness_r import StalenessWrapper
-from rl.routing.topology_r import FREE_LOAD, TOPO, _SCEN_BASE
+from rl.routing_2path.link_model import CRITICAL_TO_FULL_RHO_OFFERED
+from rl.routing_2path.metrics_r import run_episode, summarize_episode_stats
+from rl.routing_2path.oracles import blind_dijkstra, clairvoyant_dijkstra, posthoc_dijkstra
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.staleness_r import StalenessWrapper
+from rl.routing_2path.topology_r import FREE_LOAD, TOPO, _SCEN_BASE
 
 
 DEFAULT_NEAR_CLIFFS = (

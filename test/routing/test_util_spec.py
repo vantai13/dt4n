@@ -5,13 +5,13 @@ import sys
 
 sys.path.insert(0, '.')
 
-from rl.routing.util_spec import (  # noqa: E402
+from rl.routing_2path.util_spec import (  # noqa: E402
     UTIL_MAX,
     utilization_from_ditto_link,
     utilization_from_rate,
 )
-from rl.routing.route_env import RouteEnv  # noqa: E402
-from rl.routing.topology_r import TOPO  # noqa: E402
+from rl.routing_2path.route_env import RouteEnv  # noqa: E402
+from rl.routing_2path.topology_r import TOPO  # noqa: E402
 
 
 def test_bytes_per_second_to_mbps_capacity():

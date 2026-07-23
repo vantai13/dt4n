@@ -25,8 +25,8 @@ from pathlib import Path
 import numpy as np
 from scipy.optimize import curve_fit
 
-from rl.routing.metrics_r import evaluate_z_range
-from rl.routing.topology_r import LOAD_CFG_SWEEP
+from rl.routing_2path.metrics_r import evaluate_z_range
+from rl.routing_2path.topology_r import LOAD_CFG_SWEEP
 
 
 Z_VALUES = (0, 1, 2, 3, 5, 8, 12, 20)

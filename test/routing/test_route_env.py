@@ -8,15 +8,15 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.link_model import (
+from rl.routing_2path.link_model import (
     CRITICAL_TO_FULL_RHO_OFFERED,
     LOW_TO_CRITICAL_RHO_OFFERED,
     loss_rate,
     total_delay_ms,
 )
-from rl.routing.reward_r import step_reward
-from rl.routing.route_env import RouteEnv
-from rl.routing.state_r import (
+from rl.routing_2path.reward_r import step_reward
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.state_r import (
     AOI_DIMS,
     AOI_NORM_DIVISOR_S,
     R_STATE_DIM,
@@ -24,7 +24,7 @@ from rl.routing.state_r import (
     build_route_state,
     mask_aoi,
 )
-from rl.routing.topology_r import (
+from rl.routing_2path.topology_r import (
     BUSY_LOAD,
     DIRECT_F_LINKS,
     DYNAMIC_TREND_RANGE,

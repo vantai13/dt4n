@@ -3,7 +3,7 @@
 
 import sys
 
-from rl.routing.oracle_gate import main
+from rl.routing_2path.oracle_gate import main
 
 
 if __name__ == '__main__':

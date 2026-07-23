@@ -5,12 +5,12 @@ from dataclasses import asdict, dataclass, field
 
 import numpy as np
 
-from rl.routing.baselines import ospf_calibrated, ospf_reactive
-from rl.routing.ditto_staleness_r import DittoStalenessWrapper
-from rl.routing.oracles import clairvoyant_dijkstra, posthoc_dijkstra
-from rl.routing.route_env import RouteEnv
-from rl.routing.staleness_r import StalenessWrapper
-from rl.routing.topology_r import TOPO
+from rl.routing_2path.baselines import ospf_calibrated, ospf_reactive
+from rl.routing_2path.ditto_staleness_r import DittoStalenessWrapper
+from rl.routing_2path.oracles import clairvoyant_dijkstra, posthoc_dijkstra
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.staleness_r import StalenessWrapper
+from rl.routing_2path.topology_r import TOPO
 
 
 SAFE_HOP = 'F'
@@ -157,7 +157,7 @@ def evaluate_policy_sync(policy_fn, sync_period_s, seeds, load_cfg=None,
 def evaluate_z(z_steps, seeds, load_cfg=None, blind_policy=None,
                baseline_policy=None):
     """Evaluate clairvoyant, blind, and OSPF for one z."""
-    from rl.routing.oracles import blind_dijkstra
+    from rl.routing_2path.oracles import blind_dijkstra
 
     blind_policy = blind_policy or blind_dijkstra
     baseline_policy = baseline_policy or ospf_calibrated
@@ -186,7 +186,7 @@ def evaluate_z(z_steps, seeds, load_cfg=None, blind_policy=None,
 def evaluate_sync_period(sync_period_s, seeds, load_cfg=None, blind_policy=None,
                          baseline_policy=None, phase_s=None):
     """Evaluate clairvoyant, blind, and OSPF for one Ditto sync period."""
-    from rl.routing.oracles import blind_dijkstra
+    from rl.routing_2path.oracles import blind_dijkstra
 
     blind_policy = blind_policy or blind_dijkstra
     baseline_policy = baseline_policy or ospf_calibrated

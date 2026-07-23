@@ -10,11 +10,11 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.metrics_r import evaluate_policy
-from rl.routing.oracles import clairvoyant_dijkstra, edge_cost
-from rl.routing.reward_r import W_HOP
-from rl.routing.route_env import RouteEnv
-from rl.routing.topology_r import TOPO
+from rl.routing_2path.metrics_r import evaluate_policy
+from rl.routing_2path.oracles import clairvoyant_dijkstra, edge_cost
+from rl.routing_2path.reward_r import W_HOP
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.topology_r import TOPO
 
 
 def frac_E_better(load_cfg, n=400):

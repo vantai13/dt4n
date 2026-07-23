@@ -20,10 +20,10 @@ ROOT = Path(__file__).resolve().parents[1]
 if str(ROOT) not in sys.path:
     sys.path.insert(0, str(ROOT))
 
-from rl.routing.baselines import ospf_calibrated
-from rl.routing.metrics_r import make_env, run_episode
-from rl.routing.oracles import blind_dijkstra, clairvoyant_dijkstra, posthoc_dijkstra
-from rl.routing.topology_r import ASYM_SCENARIO_WEIGHTS, LOAD_CFG_ASYM
+from rl.routing_2path.baselines import ospf_calibrated
+from rl.routing_2path.metrics_r import make_env, run_episode
+from rl.routing_2path.oracles import blind_dijkstra, clairvoyant_dijkstra, posthoc_dijkstra
+from rl.routing_2path.topology_r import ASYM_SCENARIO_WEIGHTS, LOAD_CFG_ASYM
 
 
 DEFAULT_Z_VALUES = (0, 1, 3, 5, 8, 12)

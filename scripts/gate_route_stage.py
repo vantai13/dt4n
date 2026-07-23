@@ -12,11 +12,11 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.metrics_r import evaluate_z_range
-from rl.routing.route_env import RouteEnv
-from rl.routing.staleness_r import StalenessWrapper
-from rl.routing.state_r import UTIL_DIMS
-from rl.routing.topology_r import LOAD_CFG_V1, TOPO
+from rl.routing_2path.metrics_r import evaluate_z_range
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.staleness_r import StalenessWrapper
+from rl.routing_2path.state_r import UTIL_DIMS
+from rl.routing_2path.topology_r import LOAD_CFG_V1, TOPO
 
 
 DEFAULT_LOAD_CFG = LOAD_CFG_V1

@@ -8,7 +8,7 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.metrics_r import evaluate_z_range
+from rl.routing_2path.metrics_r import evaluate_z_range
 
 
 def parse_args():

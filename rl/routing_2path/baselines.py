@@ -3,14 +3,14 @@
 
 import numpy as np
 
-from rl.routing.link_model import loss_rate
-from rl.routing.oracles import (
+from rl.routing_2path.link_model import loss_rate
+from rl.routing_2path.oracles import (
     _hop_to_action,
     dijkstra_next_hop,
     dijkstra_next_hop_by_weight,
     edge_cost,
 )
-from rl.routing.topology_r import sample_offered_load
+from rl.routing_2path.topology_r import sample_offered_load
 
 
 _EXPECTED_WEIGHT_SAMPLES = 2_000

@@ -7,8 +7,8 @@ sys.path.insert(0, '.')
 sys.path.insert(0, 'scripts')
 
 from diag_decision_balance import frac_E_better
-from rl.routing.oracle_gate import evaluate_oracle_gate
-from rl.routing.topology_r import (
+from rl.routing_2path.oracle_gate import evaluate_oracle_gate
+from rl.routing_2path.topology_r import (
     LOAD_CFG_TRAIN,
     LOAD_CFG_SWEEP,
     LOAD_CFG_V1,

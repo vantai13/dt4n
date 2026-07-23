@@ -14,13 +14,13 @@ import yaml
 sys.path.insert(0, '.')
 
 from rl.agent.dqn_agent import DQNAgent
-from rl.routing.metrics_r import summarize_episode_stats
-from rl.routing.oracles import posthoc_dijkstra
-from rl.routing.route_env import RouteEnv
-from rl.routing.staleness_r import StalenessWrapper
-from rl.routing.state_r import R_STATE_DIM
-from rl.routing.oracle_gate import DEFAULT_DRIFT_STEPS, estimate_oracle_headroom
-from rl.routing.topology_r import (
+from rl.routing_2path.metrics_r import summarize_episode_stats
+from rl.routing_2path.oracles import posthoc_dijkstra
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.staleness_r import StalenessWrapper
+from rl.routing_2path.state_r import R_STATE_DIM
+from rl.routing_2path.oracle_gate import DEFAULT_DRIFT_STEPS, estimate_oracle_headroom
+from rl.routing_2path.topology_r import (
     LOAD_CFG_ASYM,
     LOAD_CFG_TRAIN,
     LOAD_CFG_V1,
@@ -28,7 +28,7 @@ from rl.routing.topology_r import (
     SCENARIOS_TRAIN,
     TOPO,
 )
-from rl.routing.train_r import make_eval_env, run_agent_episode
+from rl.routing_2path.train_r import make_eval_env, run_agent_episode
 
 
 GATE_SAFE_DELTA = 0.20

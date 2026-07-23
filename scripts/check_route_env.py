@@ -8,15 +8,15 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.link_model import (
+from rl.routing_2path.link_model import (
     loss_rate,
     rho_measured_from_offered,
     total_delay_ms,
 )
-from rl.routing.reward_r import step_reward
-from rl.routing.route_env import RouteEnv
-from rl.routing.state_r import R_STATE_DIM
-from rl.routing.topology_r import TOPO
+from rl.routing_2path.reward_r import step_reward
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.state_r import R_STATE_DIM
+from rl.routing_2path.topology_r import TOPO
 
 
 def _base_delay(topo, src, dst):

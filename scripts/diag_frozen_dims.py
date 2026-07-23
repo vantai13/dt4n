@@ -7,9 +7,9 @@ import numpy as np
 
 sys.path.insert(0, '.')
 
-from rl.routing.route_env import RouteEnv
-from rl.routing.state_r import R_DIM_NAMES
-from rl.routing.topology_r import TOPO
+from rl.routing_2path.route_env import RouteEnv
+from rl.routing_2path.state_r import R_DIM_NAMES
+from rl.routing_2path.topology_r import TOPO
 
 
 def main():
