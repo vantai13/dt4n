@@ -220,6 +220,24 @@ LOAD_CFG_ABLATION = {
     'scenario_mix': tuple(SCENARIOS_TRAIN) + tuple(SCENARIOS_DYNAMIC),
 }
 
+# [Phase 11 rev] Dynamic-heavy ablation load. Static scenarios have no
+# AoI-dependence by construction: with drift_sigma=0, stale snapshots still
+# equal the truth. The drifting S5/S6 scenarios are where AoI can matter, so
+# this mix weights them up while keeping static calibration cases present.
+LOAD_CFG_DYNAMIC = {
+    'base_load': BASE_LOAD,
+    'scenarios': {**SCENARIOS_TRAIN, **SCENARIOS_DYNAMIC},
+    'scenario_mix': tuple(SCENARIOS_TRAIN) + tuple(SCENARIOS_DYNAMIC),
+    'scenario_weights': {
+        'S1_viaE_better': 0.5,
+        'S2_direct_better': 0.5,
+        'S3_both_free': 0.5,
+        'S4_both_busy': 0.5,
+        'S5_E_rising': 3.0,
+        'S6_F_rising': 3.0,
+    },
+}
+
 # [11.3] Phase-11 asymmetric ablation load. SCENARIOS_ASYM itself remains a
 # static design block for probes; this load removes child drift_sigma so the
 # parent drift creates stale-vs-fresh divergence during training/evaluation.

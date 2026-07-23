@@ -1,8 +1,11 @@
 #!/usr/bin/env bash
-# Phase 11.2 - train 2 branches x 5 paired seeds = 10 runs.
+# Phase 11.2/11 rev - train 2 branches x 5 paired seeds = 10 runs.
 set -euo pipefail
 
 cd "$(dirname "$0")/.."
+
+CONFIG_PREFIX="${1:-train_r_ablation}"
+OUT_ROOT="${2:-results/ablation}"
 
 LINK_SHA="$(
   python3 - <<'PY'
@@ -16,10 +19,12 @@ GIT="$(git rev-parse --short HEAD 2>/dev/null || echo nogit)"
 echo "git = ${GIT}"
 echo "link_model_version = ${LINK_VERSION}"
 echo "link_model_sha256 = ${LINK_SHA}"
+echo "config_prefix = ${CONFIG_PREFIX}"
+echo "out_root = ${OUT_ROOT}"
 
 for BRANCH in aoi mask; do
-  CFG="rl/routing/configs/train_r_ablation_${BRANCH}.yaml"
-  OUT="results/ablation/${BRANCH}"
+  CFG="rl/routing/configs/${CONFIG_PREFIX}_${BRANCH}.yaml"
+  OUT="${OUT_ROOT}/${BRANCH}"
   for SEED in 0 1 2 3 4; do
     echo "=== TRAIN branch=${BRANCH} seed=${SEED} ==="
     python3 -m rl.routing.train_r \

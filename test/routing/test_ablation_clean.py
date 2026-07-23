@@ -21,6 +21,8 @@ CFG_AOI_PATH = Path("rl/routing/configs/train_r_ablation_aoi.yaml")
 CFG_NOAOI_PATH = Path("rl/routing/configs/train_r_ablation_mask.yaml")
 CFG_ASYM_AOI_PATH = Path("rl/routing/configs/train_r_asym_aoi.yaml")
 CFG_ASYM_NOAOI_PATH = Path("rl/routing/configs/train_r_asym_mask.yaml")
+CFG_DYN_AOI_PATH = Path("rl/routing/configs/train_r_dyn_aoi.yaml")
+CFG_DYN_NOAOI_PATH = Path("rl/routing/configs/train_r_dyn_mask.yaml")
 EXPECTED_Z_CHOICES = {0, 1, 3, 5, 8, 12}
 EXPECTED_SCENARIOS = {
     "S1_viaE_better",
@@ -100,6 +102,24 @@ def test_asym_mask_config_diff_is_only_version_and_mask_aoi():
     assert cfg_noaoi["train"]["mask_aoi"] is True
     assert cfg_aoi["env"]["load_cfg"] == "LOAD_CFG_ASYM"
     assert cfg_noaoi["env"]["load_cfg"] == "LOAD_CFG_ASYM"
+
+    normalized = deepcopy(cfg_noaoi)
+    normalized["version"] = cfg_aoi["version"]
+    normalized["train"]["mask_aoi"] = cfg_aoi["train"]["mask_aoi"]
+    assert normalized == cfg_aoi
+
+
+def test_dynamic_mask_config_diff_is_only_version_and_mask_aoi():
+    """The dynamic-heavy pair must differ by exactly the ablated variable."""
+    cfg_aoi = load_cfg(CFG_DYN_AOI_PATH)
+    cfg_noaoi = load_cfg(CFG_DYN_NOAOI_PATH)
+
+    assert cfg_aoi["version"] == "train_r_dyn_aoi"
+    assert cfg_noaoi["version"] == "train_r_dyn_mask"
+    assert cfg_aoi["train"]["mask_aoi"] is False
+    assert cfg_noaoi["train"]["mask_aoi"] is True
+    assert cfg_aoi["env"]["load_cfg"] == "LOAD_CFG_DYNAMIC"
+    assert cfg_noaoi["env"]["load_cfg"] == "LOAD_CFG_DYNAMIC"
 
     normalized = deepcopy(cfg_noaoi)
     normalized["version"] = cfg_aoi["version"]

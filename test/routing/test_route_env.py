@@ -34,6 +34,7 @@ from rl.routing.topology_r import (
     F_FREE_LOAD,
     FREE_LOAD,
     LOAD_CFG_ASYM,
+    LOAD_CFG_DYNAMIC,
     LOAD_PRESETS,
     NEAR_CLIFF_LOAD,
     OFFERED_LOAD_MIN,
@@ -140,6 +141,23 @@ def test_weighted_scenario_sampler_can_bias_episode_mix():
     }
     _cfg, name = choose_load_scenario(load_cfg, np.random.default_rng(0))
     assert name == 'A2_E_congested'
+
+
+def test_dynamic_load_cfg_weights_dynamic_scenarios_to_75_percent():
+    weights = LOAD_CFG_DYNAMIC['scenario_weights']
+    mix = LOAD_CFG_DYNAMIC['scenario_mix']
+    total = sum(float(weights[name]) for name in mix)
+
+    assert total == 8.0
+    assert weights['S5_E_rising'] / total == 0.375
+    assert weights['S6_F_rising'] / total == 0.375
+    for name in (
+        'S1_viaE_better',
+        'S2_direct_better',
+        'S3_both_free',
+        'S4_both_busy',
+    ):
+        assert weights[name] / total == 0.0625
 
 
 def test_mask_touches_only_aoi():
@@ -420,6 +438,7 @@ def _run_as_script():
         test_asymmetric_scenarios_keep_f_as_safe_backup,
         test_load_cfg_asym_uses_parent_drift_and_weights,
         test_weighted_scenario_sampler_can_bias_episode_mix,
+        test_dynamic_load_cfg_weights_dynamic_scenarios_to_75_percent,
         test_mask_does_not_mutate,
         test_mask_touches_only_aoi,
         test_calibrated_delay_has_rev5_cliff_and_finite_ceiling,

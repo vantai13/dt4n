@@ -3,6 +3,7 @@
 
 from __future__ import annotations
 
+import argparse
 import glob
 import json
 from collections import defaultdict
@@ -13,10 +14,10 @@ EXPECTED_BRANCHES = {"aoi", "mask"}
 EXPECTED_SEEDS = {0, 1, 2, 3, 4}
 
 
-def load_runs() -> list[dict]:
+def load_runs(root: Path) -> list[dict]:
     """Load all Phase 11 ablation train.json files."""
     rows = []
-    for path in sorted(glob.glob("results/ablation/*/r_seed*/train.json")):
+    for path in sorted(glob.glob(str(root / "*" / "r_seed*" / "train.json"))):
         with open(path) as handle:
             payload = json.load(handle)
         payload["_path"] = path
@@ -24,8 +25,17 @@ def load_runs() -> list[dict]:
     return rows
 
 
-def main() -> int:
-    rows = load_runs()
+def parse_args(argv=None):
+    parser = argparse.ArgumentParser()
+    parser.add_argument("--root", default="results/ablation")
+    return parser.parse_args(argv)
+
+
+def main(argv=None) -> int:
+    args = parse_args(argv)
+    root = Path(args.root)
+    rows = load_runs(root)
+    print(f"root: {root}")
     print(f"found train.json files: {len(rows)}")
     if len(rows) != 10:
         raise AssertionError("expected exactly 10 train.json files")

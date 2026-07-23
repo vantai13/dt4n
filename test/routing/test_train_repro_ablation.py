@@ -12,18 +12,23 @@ from __future__ import annotations
 
 import csv
 import glob
+import os
 import shutil
 import subprocess
 import sys
 from pathlib import Path
 
 
-CFG = "rl/routing/configs/train_r_ablation_aoi.yaml"
+CFG = os.environ.get(
+    "ROUTE_REPRO_CONFIG",
+    "rl/routing/configs/train_r_ablation_aoi.yaml",
+)
+ROOT_PREFIX = os.environ.get("ROUTE_REPRO_ROOT_PREFIX", "results/repro")
 
 
 def run_short(tag: str) -> list[str]:
     """Run a 30-episode training smoke test and return train_return values."""
-    out = Path(f"results/repro_{tag}")
+    out = Path(f"{ROOT_PREFIX}_{tag}")
     if out.exists():
         shutil.rmtree(out)
 

@@ -28,6 +28,7 @@ from rl.routing.state_r import AOI_DIMS, R_STATE_DIM
 from rl.routing.topology_r import (
     LOAD_CFG_ABLATION,
     LOAD_CFG_ASYM,
+    LOAD_CFG_DYNAMIC,
     SCENARIOS_DYNAMIC,
     SCENARIOS_TRAIN,
     TOPO,
@@ -120,6 +121,8 @@ def build_load_cfg(kind: str) -> dict:
         }
     if kind == 'asym':
         return LOAD_CFG_ASYM
+    if kind == 'dynamic_heavy':
+        return LOAD_CFG_DYNAMIC
     return LOAD_CFG_ABLATION
 
 
@@ -388,7 +391,8 @@ def parse_args(argv=None):
     parser.add_argument('--n-ep', '--n_ep', type=int, default=50, dest='n_ep')
     parser.add_argument('--z-values', '--z_values', default='0,2,4,6',
                         dest='z_values')
-    parser.add_argument('--scenario', choices=['dynamic', 'static', 'mix', 'asym'],
+    parser.add_argument('--scenario',
+                        choices=['dynamic', 'static', 'mix', 'asym', 'dynamic_heavy'],
                         default='dynamic')
     parser.add_argument('--mode', choices=['probe', 'free', 'all'], default='probe')
     parser.add_argument('--probe-node', choices=['C', 'D', 'both'], default='both')
