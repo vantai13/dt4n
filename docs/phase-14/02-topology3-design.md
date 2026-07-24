@@ -397,3 +397,32 @@ hon threshold 0.10 khoang 8 lan. Ket luan: risk-sensitive objective la gia
 thuyet co tin hieu, nhung chua du manh de doi de tai hoac sang train. Neu muon
 theo huong nay, can ghi ro day la exploratory sau khi thay so, va phai hieu
 chuan lai threshold/objective trong design rieng.
+
+## Noise-floor calibration attempt
+
+Sau khi ghi cam ket truoc vao `00-design.md`, them
+`measurements/noise_floor.py` de do seed-to-seed noise cua
+Bayes-marginalized policy ma khong train.
+
+Kiem dinh cong cu tren anchor `routing_2path` / `mean`, `seeds=10`,
+`cases=200`, `mc=100`:
+
+```text
+performance mean  : 4.4770
+noise_floor       : 0.0095
+threshold = 2x    : 0.0191
+reference         : Phase 9 std_agent=0.045, old threshold=0.10
+```
+
+Ket qua nay lech xa anchor Phase 9 `std_agent=0.045`. Theo cam ket trong
+`00-design.md`, khong duoc dung cong cu nay de hieu chuan lai threshold cho
+routing3.
+
+Chan doan: cong cu dang do seed-to-seed variance cua Bayes oracle/evaluation
+sampling, khong do training-seed variance cua agent trong Phase 9. Oracle loai
+bo training instability, nen noise floor thap hon la hop ly, nhung no khong
+cung dai luong voi `std_agent` da neo threshold cu.
+
+Ket luan: khong doi gate dua tren `noise_floor.py`. Neu can hieu chuan threshold
+that su cho routing3/CVaR, phai do bang agent training seeds tren objective moi,
+hoac ghi ro day la mot proxy khac va xin phe duyet truoc.
