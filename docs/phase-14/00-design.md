@@ -140,3 +140,28 @@ khong phai trend co huong don dieu.
 ---
 
 Ky: ________________    Ngay: 2026-07-23
+
+## PHU LUC B - Hieu chuan lai nguong (ghi TRUOC khi do, 2026-07-24)
+
+Nguong 0.10 = 2 x std_agent, voi std_agent = 0.045 do o Phase 9 tren:
+
+- topology 2-duong
+- reward cu
+- objective ky vong
+
+Ba thu do deu da doi trong exploratory routing3/CVaR. Ap nguong cu truc tiep
+la so hai don vi khac nhau, giong loi da phat hien o vong reward-audit.
+
+Cam ket truoc khi do:
+
+- dung nguong = 2 x san_nhieu(routing3), bat ke con so do la bao nhieu;
+- giu nguyen cong thuc 2x nhu da ky;
+- chi cap nhat tham so san_nhieu theo san khau moi;
+- khong doi cong thuc thanh 1.5x hay mot he so khac sau khi nhin so.
+
+San nhieu se duoc do bang Bayes-marginalized policy tren nhieu seed, khong can
+train, de giu nguyen tac Phase 14 khong train.
+
+Kiem dinh cong cu: chay tren `routing_2path` voi objective `mean` truoc. Neu
+ket qua lech xa neo Phase 9 hoac khong giai thich duoc, khong duoc dung ket
+qua routing3 de doi nguong.
