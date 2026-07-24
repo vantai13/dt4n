@@ -317,3 +317,83 @@ Ket luan: FAIL cua routing3 khong con la loi code cuc bo. No den tu viec hai
 dieu kien can kho dong thoi: AoI phai lam doi action thuong xuyen, va quyet
 dinh sai phai ton reward lon. Cac cau hinh hien tai chi dat mot trong hai dieu
 kien moi lan.
+
+## Phat hien chinh: dinh luat danh doi headroom
+
+Quan sat qua bon vong va sweep:
+
+| cau hinh | disagree | regret | q_margin | gap |
+|---|---:|---:|---:|---:|
+| 2path hop-by-hop | 0.053 | 0.106 | ~1.0 | 0.0056 |
+| 3path v3 duoi cliff | 0.283 | 0.028 | 0.031 | 0.0079 |
+| 3path v4 quanh cliff | 0.023 | 0.018 | 0.358 | 0.0004 |
+| 3path bias=6 | 0.008 | 0.008 | 0.086 | 0.0001 |
+
+Sweep `CRASH_BIAS_TEMP`:
+
+```text
+temp:  0.0    0.5    1.0    2.0    4.0    6.0
+gap:   .0079  .0044  .0023  .0005  .0001  .0001
+```
+
+Ba can thiep khac nhau, gom bias theo tai, dich vung tai len cliff, va doi do
+rong band, deu cho cung hanh vi:
+
+```text
+q_margin tang  ->  disagree giam
+```
+
+Phat bieu:
+
+```text
+gap = disagree_rate x decision_regret
+
+disagree_rate  ~ P(|anh huong cua z| > q_margin)
+decision_regret <= q_margin tai vung bien
+```
+
+Ly do regret bi chan: disagreement chi xay ra khi hai action gan nhau ve Q.
+Neu chung cach xa, z khong lat duoc argmax. Nen thiet hai khi lat bi chi phoi
+boi do rong vung bien, khong phai khoang cach toan cuc giua cac duong.
+
+Bang chung: regret nam trong 0.016-0.030 qua cac vong, du `q_margin` thay doi
+tu 0.031 den 0.358. Hai thua so keo nguoc nhau, nen gap bi ep nho tu ca hai
+phia.
+
+Gia thuyet cuoi: ham muc tieu hien tai la risk-neutral. Phase 14 dang tim hanh
+vi hedge, nhung Bayes-optimal voi `E[R]` chi chon ky vong cao nhat. Hedge chi
+noi len khi objective phat phuong sai hoac duoi xau. Vi vay them thang do
+exploratory `CVaR_alpha` vao meter, khong sua `reward3.py`, de kiem tra risk
+sensitive objective truoc khi quyet dinh doi huong de tai.
+
+## Exploratory: CVaR objective trong meter
+
+Them `--objective {mean,cvar}` va `--cvar-alpha` vao
+`measurements/pilot_marginalized.py`. Default van la `mean`, nen thang do da
+pre-register khong doi. `cvar` chi gom cac reward sample bang trung binh cua
+`alpha` phan ket qua te nhat, va khong sua `reward3.py`.
+
+Ket qua voi routing3 v4 `cliffband`, `EVENT_RATE=0.12`,
+`CRASH_BIAS_TEMP=0.0`, `cases=400`, `mc=200`, `seed=0`:
+
+| run | objective | alpha | gap | lower CI95 | disagree | regret | q_margin | verdict |
+|---|---|---:|---:|---:|---:|---:|---:|:---:|
+| routing3 | cvar | 0.1 | 0.0123 | 0.0101 | 0.4250 | 0.0289 | 0.1716 | FAIL |
+| routing3 | cvar | 0.2 | 0.0121 | 0.0096 | 0.2800 | 0.0433 | 0.2589 | FAIL |
+| routing3 | cvar | 0.3 | 0.0057 | 0.0039 | 0.1550 | 0.0365 | 0.3316 | FAIL |
+| 2path negative control | cvar | 0.2 | 0.0056 | 0.0032 | 0.0525 | 0.1063 | 1.1612 | FAIL |
+
+Doc ket qua:
+
+```text
+mean v4 cliffband: gap=0.0004
+CVaR alpha=0.1:   gap=0.0123
+CVaR alpha=0.2:   gap=0.0121
+```
+
+CVaR lam routing3 tang headroom ro so voi mean v4, va negative control 2path
+van FAIL, nen no khong tu tao gap gia tren moi topology. Nhung `gap` van thap
+hon threshold 0.10 khoang 8 lan. Ket luan: risk-sensitive objective la gia
+thuyet co tin hieu, nhung chua du manh de doi de tai hoac sang train. Neu muon
+theo huong nay, can ghi ro day la exploratory sau khi thay so, va phai hieu
+chuan lai threshold/objective trong design rieng.

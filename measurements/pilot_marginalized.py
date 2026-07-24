@@ -26,7 +26,32 @@ Z_CHOICES = (0, 1, 3, 5, 8, 12)
 GATE_THRESHOLD = 0.10
 
 
-def estimate_q_for_z(sampler, obs, z, actions, n_mc, rng):
+def objective_value(rewards, objective="mean", cvar_alpha=0.2):
+    """Collapse sampled rewards into a decision objective."""
+    values = np.asarray(rewards, dtype=np.float64)
+    if values.size <= 0:
+        raise ValueError("rewards must be non-empty")
+    if objective == "mean":
+        return float(values.mean())
+    if objective == "cvar":
+        alpha = float(cvar_alpha)
+        if not (0.0 < alpha <= 1.0):
+            raise ValueError("--cvar-alpha must be in (0, 1]")
+        k = max(1, int(alpha * values.size))
+        return float(np.sort(values)[:k].mean())
+    raise ValueError(f"unknown objective: {objective!r}")
+
+
+def estimate_q_for_z(
+    sampler,
+    obs,
+    z,
+    actions,
+    n_mc,
+    rng,
+    objective="mean",
+    cvar_alpha=0.2,
+):
     """Estimate Q(a, o, z) for all actions with common random worlds."""
     rewards = {
         action: np.empty(int(n_mc), dtype=np.float64)
@@ -37,16 +62,36 @@ def estimate_q_for_z(sampler, obs, z, actions, n_mc, rng):
         for action in actions:
             rewards[action][idx] = sampler.reward_of(action, true_world)
     return {
-        action: float(values.mean())
+        action: objective_value(values, objective, cvar_alpha)
         for action, values in rewards.items()
     }
 
 
-def gap_one_case(sampler, obs, z_true, z_choices, p_z, actions, n_mc, rng):
+def gap_one_case(
+    sampler,
+    obs,
+    z_true,
+    z_choices,
+    p_z,
+    actions,
+    n_mc,
+    rng,
+    objective="mean",
+    cvar_alpha=0.2,
+):
     """Return one marginalized-gap sample and diagnostic detail."""
     q = {action: {} for action in actions}
     for z in z_choices:
-        q_for_z = estimate_q_for_z(sampler, obs, z, actions, n_mc, rng)
+        q_for_z = estimate_q_for_z(
+            sampler,
+            obs,
+            z,
+            actions,
+            n_mc,
+            rng,
+            objective,
+            cvar_alpha,
+        )
         for action, value in q_for_z.items():
             q[action][z] = value
 
@@ -119,6 +164,10 @@ def parse_args(argv=None):
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--out", default=None,
                         help="optional JSON result path")
+    parser.add_argument("--objective", default="mean", choices=("mean", "cvar"),
+                        help="decision objective for sampled rewards")
+    parser.add_argument("--cvar-alpha", type=float, default=0.2,
+                        help="tail fraction for --objective cvar")
     parser.add_argument("--strict", action="store_true",
                         help="return exit code 1 when the gate fails")
     return parser.parse_args(argv)
@@ -130,6 +179,8 @@ def main(argv=None):
         raise ValueError("--cases must be positive")
     if args.mc_samples <= 0:
         raise ValueError("--mc-samples must be positive")
+    if not (0.0 < float(args.cvar_alpha) <= 1.0):
+        raise ValueError("--cvar-alpha must be in (0, 1]")
 
     rng = np.random.default_rng(int(args.seed))
     sampler_kwargs = {}
@@ -172,6 +223,8 @@ def main(argv=None):
             actions,
             int(args.mc_samples),
             rng,
+            args.objective,
+            float(args.cvar_alpha),
         )
         gaps[idx] = gap
         agree = bool(detail["agree"])
@@ -231,6 +284,9 @@ def main(argv=None):
     print("=" * 62)
     print(f"topology          : {args.topology}")
     print(f"load_cfg          : {load_cfg_name}")
+    print(f"objective         : {args.objective}")
+    if args.objective == "cvar":
+        print(f"cvar_alpha        : {float(args.cvar_alpha):g}")
     print(f"actions           : {actions}")
     print(f"cases             : {args.cases}   (MC {args.mc_samples}/cell)")
     print(f"seed              : {args.seed}    git: {git_hash()}")
@@ -273,6 +329,8 @@ def main(argv=None):
             "git_hash": git_hash(),
             "topology": args.topology,
             "load_cfg": load_cfg_name,
+            "objective": args.objective,
+            "cvar_alpha": float(args.cvar_alpha),
             "link_model_path": link_model_path,
             "link_model_sha": file_sha(link_model_path) if link_model_path else None,
             "reward_model_path": reward_model_path,

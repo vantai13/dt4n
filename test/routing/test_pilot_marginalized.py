@@ -12,7 +12,11 @@ import numpy as np
 
 sys.path.insert(0, ".")
 
-from measurements.pilot_marginalized import gap_one_case, main  # noqa: E402
+from measurements.pilot_marginalized import (  # noqa: E402
+    gap_one_case,
+    main,
+    objective_value,
+)
 from measurements.samplers import Sampler2Path  # noqa: E402
 from rl.routing_2path.route_env import RouteEnv  # noqa: E402
 from rl.routing_2path.topology_r import LOAD_CFG_DYNAMIC, TOPO_V2  # noqa: E402
@@ -54,6 +58,13 @@ def test_gap_scores_marginal_action_at_true_z():
     assert detail["a_star_marg"] == "A"
     assert gap == 1.0
     assert detail["q_margin"] == 1.0
+
+
+def test_cvar_objective_uses_lower_tail_rewards():
+    rewards = np.asarray([10.0, 3.0, -5.0, 1.0, -1.0])
+
+    assert objective_value(rewards, "mean") == float(rewards.mean())
+    assert objective_value(rewards, "cvar", cvar_alpha=0.4) == -3.0
 
 
 def test_sampler2path_reward_signature_blocks_obs_and_z_leakage():
@@ -172,6 +183,8 @@ def test_main_writes_provenance_and_action_counts():
         assert code == 0
         payload = json.loads(out_path.read_text())
         assert payload["load_cfg"] == "LOAD_CFG_DYNAMIC"
+        assert payload["objective"] == "mean"
+        assert payload["cvar_alpha"] == 0.2
         assert payload["link_model_path"] == "rl/routing_2path/link_model.py"
         assert len(payload["link_model_sha"]) == 12
         assert payload["reward_model_path"] == "rl/routing_2path/reward_r.py"
@@ -183,6 +196,7 @@ def test_main_writes_provenance_and_action_counts():
 def _run_as_script():
     tests = [
         test_gap_scores_marginal_action_at_true_z,
+        test_cvar_objective_uses_lower_tail_rewards,
         test_sampler2path_reward_signature_blocks_obs_and_z_leakage,
         test_sampler2path_public_observation_excludes_hidden_context,
         test_sampler2path_drift_matches_route_env_snapshot_drift,
