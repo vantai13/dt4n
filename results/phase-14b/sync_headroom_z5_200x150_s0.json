@@ -1,0 +1,54 @@
+{
+  "cases_per_z": 200,
+  "cvar_alpha": 0.1,
+  "dynamics_source_path": "rl/routing3/topology3.py",
+  "dynamics_source_sha": "5b9539665e4c",
+  "estimator": "honest",
+  "git_hash": "ccec7d4",
+  "link_model_path": "rl/routing3/link_model.py",
+  "link_model_sha": "fd9f9f1de49a",
+  "load_cfg": "EVENT_3PATH_V4_RATE_0.12_PROFILE_cliffband_BIAS_0",
+  "mc_samples": 150,
+  "objective": "cvar",
+  "overall_gap_ci95": 0.009500128872748169,
+  "overall_gap_distribution": {
+    "max": 1.2061638427527486,
+    "p50": 1.1381670340359105,
+    "p90": 1.1664776545884143,
+    "p95": 1.1740968102748495,
+    "p99": 1.190596616510664
+  },
+  "overall_gap_mean": 1.1229480061807249,
+  "reward_model": "r_v2",
+  "reward_model_path": "rl/routing3/reward3.py",
+  "reward_model_sha": "5164640c6c72",
+  "rows": [
+    {
+      "a_stale_counts": {
+        "P1": 60,
+        "P2": 66,
+        "P3": 74
+      },
+      "cases": 200,
+      "disagree_fresh": 0.6727333333333334,
+      "gap_ci95": 0.009500128872748169,
+      "gap_distribution": {
+        "max": 1.2061638427527486,
+        "p50": 1.1381670340359105,
+        "p90": 1.1664776545884143,
+        "p95": 1.1740968102748495,
+        "p99": 1.190596616510664
+      },
+      "gap_lower": 1.1134478773079768,
+      "gap_mean": 1.1229480061807249,
+      "sync_regret_when_disagree": 1.669231998088482,
+      "z": 5
+    }
+  ],
+  "seed": 0,
+  "timestamp": "2026-07-25T13:13:22.197451",
+  "topology": "routing3",
+  "z_values": [
+    5
+  ]
+}
