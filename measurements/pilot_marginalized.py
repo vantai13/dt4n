@@ -316,6 +316,29 @@ def summarize_gaps(gaps):
     return mean, ci95
 
 
+def _share_by_z(per_z, z_choices):
+    """Return signed and absolute contribution shares for each z bucket."""
+    sums = {
+        z: float(np.sum(values)) if values else 0.0
+        for z, values in per_z.items()
+    }
+    total = float(sum(sums.values()))
+    abs_total = float(sum(abs(value) for value in sums.values()))
+    contribution_by_z = {
+        str(z): sums[z] / float(sum(len(values) for values in per_z.values()))
+        for z, values in per_z.items()
+    }
+    share_by_z = {
+        str(z): (sums[z] / total if abs(total) > 1e-12 else None)
+        for z in z_choices
+    }
+    abs_share_by_z = {
+        str(z): (abs(sums[z]) / abs_total if abs_total > 1e-12 else None)
+        for z in z_choices
+    }
+    return contribution_by_z, share_by_z, abs_share_by_z
+
+
 def parse_args(argv=None):
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cases", type=int, default=400,
@@ -449,6 +472,7 @@ def main(argv=None):
         str(z): float(np.mean(values)) if values else None
         for z, values in per_z.items()
     }
+    contribution_by_z, share_by_z, abs_share_by_z = _share_by_z(per_z, z_choices)
     disagree_rate_by_z = {
         str(z): (
             float(disagree_by_z[z] / len(per_z[z])) if per_z[z] else None
@@ -466,6 +490,22 @@ def main(argv=None):
         }
         for z in z_choices
     }
+
+    stochastic_disagreement_z = [
+        z for z in z_choices
+        if z != 0 and disagree_by_z[z] > 0
+    ]
+    if (
+        args.estimator == "honest"
+        and int(args.cases) > 20
+        and n_disagree > 0
+        and stochastic_disagreement_z
+        and abs(selection_bias_mean) <= 1e-12
+    ):
+        raise AssertionError(
+            "selection_bias == 0 with disagreements at stochastic z values; "
+            "split-sample scoring may not be wired for this topology"
+        )
 
     print("=" * 62)
     print("  gap_marginalized = Bayes(obs+z) - Bayes(obs, marginalize z)")
@@ -510,6 +550,7 @@ def main(argv=None):
             print(
                 f"  z={z:<3d} n={len(values):<4d} "
                 f"gap={np.mean(values):+.4f} "
+                f"share={share_by_z[str(z)] if share_by_z[str(z)] is not None else 0.0:+.3f} "
                 f"disagree={disagree_rate_by_z[str(z)]:.3f} "
                 f"q_margin={q_margin_by_z_mean[str(z)]:.4f} "
                 f"a*z={counts_z} amarg={counts_marg}"
@@ -557,6 +598,9 @@ def main(argv=None):
             "q_margin": q_margin,
             "q_margin_marginalized": q_margin_marginalized,
             "gap_by_z": gap_by_z,
+            "contribution_by_z": contribution_by_z,
+            "share_by_z": share_by_z,
+            "abs_share_by_z": abs_share_by_z,
             "disagree_rate_by_z": disagree_rate_by_z,
             "q_margin_by_z": q_margin_by_z_mean,
             "action_counts_by_z": action_counts_by_z,

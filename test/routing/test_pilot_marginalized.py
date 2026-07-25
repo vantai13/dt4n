@@ -294,6 +294,10 @@ def test_main_writes_provenance_and_action_counts():
         assert len(payload["reward_model_sha"]) == 12
         assert "0" in payload["action_counts_by_z"]
         assert "a_star_z" in payload["action_counts_by_z"]["0"]
+        assert "0" in payload["gap_by_z"]
+        assert "0" in payload["contribution_by_z"]
+        assert "0" in payload["share_by_z"]
+        assert "0" in payload["abs_share_by_z"]
 
 
 def _run_as_script():

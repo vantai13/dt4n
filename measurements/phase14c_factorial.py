@@ -40,6 +40,8 @@ def run_one(sampler, cases, n_mc, seed, objective, alpha, estimator):
     naive_gaps = np.empty(int(cases), dtype=np.float64)
     selection_biases = np.empty(int(cases), dtype=np.float64)
     disagreement_gaps = []
+    per_z = {z: [] for z in z_choices}
+    disagree_by_z = {z: 0 for z in z_choices}
     for idx in range(int(cases)):
         obs, z_true = sampler.sample_observation(z_choices, rng)
         gap, detail = gap_fn(
@@ -59,6 +61,8 @@ def run_one(sampler, cases, n_mc, seed, objective, alpha, estimator):
         selection_biases[idx] = float(detail.get("selection_bias", 0.0))
         if not detail["agree"]:
             disagreement_gaps.append(float(gap))
+            disagree_by_z[int(z_true)] += 1
+        per_z[int(z_true)].append(float(gap))
 
     mean = float(gaps.mean())
     ci95 = float(1.96 * gaps.std(ddof=1) / np.sqrt(int(cases)))
@@ -68,6 +72,41 @@ def run_one(sampler, cases, n_mc, seed, objective, alpha, estimator):
     decision_regret = (
         float(np.mean(disagreement_gaps)) if disagreement_gaps else 0.0
     )
+    sums_by_z = {
+        z: float(np.sum(values)) if values else 0.0
+        for z, values in per_z.items()
+    }
+    total_sum = float(sum(sums_by_z.values()))
+    abs_total_sum = float(sum(abs(value) for value in sums_by_z.values()))
+    gap_by_z = {
+        str(z): float(np.mean(per_z[z])) if per_z[z] else None
+        for z in z_choices
+    }
+    contribution_by_z = {
+        str(z): sums_by_z[z] / float(cases)
+        for z in z_choices
+    }
+    share_by_z = {
+        str(z): (sums_by_z[z] / total_sum if abs(total_sum) > 1e-12 else None)
+        for z in z_choices
+    }
+    abs_share_by_z = {
+        str(z): (
+            abs(sums_by_z[z]) / abs_total_sum
+            if abs_total_sum > 1e-12 else None
+        )
+        for z in z_choices
+    }
+    disagree_rate_by_z = {
+        str(z): (
+            float(disagree_by_z[z] / len(per_z[z])) if per_z[z] else None
+        )
+        for z in z_choices
+    }
+    n_by_z = {
+        str(z): len(per_z[z])
+        for z in z_choices
+    }
     return {
         "gap": mean,
         "ci95": ci95,
@@ -78,6 +117,12 @@ def run_one(sampler, cases, n_mc, seed, objective, alpha, estimator):
         "selection_bias": bias_mean,
         "disagree_rate": disagree_rate,
         "decision_regret": decision_regret,
+        "n_by_z": n_by_z,
+        "gap_by_z": gap_by_z,
+        "contribution_by_z": contribution_by_z,
+        "share_by_z": share_by_z,
+        "abs_share_by_z": abs_share_by_z,
+        "disagree_rate_by_z": disagree_rate_by_z,
     }
 
 
