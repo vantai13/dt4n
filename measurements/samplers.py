@@ -22,15 +22,27 @@ class Sampler2Path:
 
     actions = ("E", "F")
 
-    def __init__(self, load_cfg_name="LOAD_CFG_DYNAMIC"):
+    def __init__(self, load_cfg_name="LOAD_CFG_DYNAMIC", reward_model="default"):
         from rl.routing_2path import topology_r as topology
         from rl.routing_2path.link_model import loss_rate, total_delay_ms
-        from rl.routing_2path.reward_r import step_reward
+
+        reward_model = "r_v2" if reward_model == "default" else str(reward_model)
+        if reward_model == "r_v2":
+            from rl.routing_2path.reward_r import step_reward
+
+            reward_model_path = "rl/routing_2path/reward_r.py"
+        elif reward_model == "r_v3":
+            from rl.routing3.reward3_v3 import step_reward
+
+            reward_model_path = "rl/routing3/reward3_v3.py"
+        else:
+            raise ValueError(f"unknown reward_model: {reward_model!r}")
 
         self.topology = topology
         self.load_cfg_name = load_cfg_name
         self.link_model_path = "rl/routing_2path/link_model.py"
-        self.reward_model_path = "rl/routing_2path/reward_r.py"
+        self.reward_model = reward_model
+        self.reward_model_path = reward_model_path
         self.dynamics_source_path = "rl/routing_2path/route_env.py"
         self.loss_rate = loss_rate
         self.step_reward = step_reward

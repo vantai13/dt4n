@@ -11,6 +11,7 @@ import numpy as np
 
 from rl.routing3 import link_model as link_model
 from rl.routing3 import reward3
+from rl.routing3 import reward3_v3
 from rl.routing3 import topology3 as T3
 
 
@@ -19,11 +20,21 @@ class Sampler3Path:
 
     actions = T3.PATH_NAMES
 
-    def __init__(self, episode_len=T3.EPISODE_LEN):
+    def __init__(self, episode_len=T3.EPISODE_LEN, reward_model="default"):
         self.episode_len = int(episode_len)
         self.link_cfg = T3.link_cfg()
+        reward_model = "r_v2" if reward_model == "default" else str(reward_model)
+        if reward_model == "r_v2":
+            self.reward_module = reward3
+            reward_model_path = "rl/routing3/reward3.py"
+        elif reward_model == "r_v3":
+            self.reward_module = reward3_v3
+            reward_model_path = "rl/routing3/reward3_v3.py"
+        else:
+            raise ValueError(f"unknown reward_model: {reward_model!r}")
         self.link_model_path = "rl/routing3/link_model.py"
-        self.reward_model_path = "rl/routing3/reward3.py"
+        self.reward_model = reward_model
+        self.reward_model_path = reward_model_path
         self.dynamics_source_path = "rl/routing3/topology3.py"
         self.load_cfg_name = (
             f"EVENT_3PATH_V4_RATE_{T3.EVENT_RATE:g}"
@@ -64,7 +75,7 @@ class Sampler3Path:
                 bw_mbps=meta["base_bw"],
                 queue_pkts=meta["queue_pkts"],
             )
-            total += reward3.step_reward(
+            total += self.reward_module.step_reward(
                 delay_ms,
                 link_model.loss_rate(rho_offered),
                 arrived=(idx == last_idx),
