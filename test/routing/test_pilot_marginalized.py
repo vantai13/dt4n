@@ -14,10 +14,13 @@ sys.path.insert(0, ".")
 
 from measurements.pilot_marginalized import (  # noqa: E402
     gap_one_case,
+    gap_one_case_honest,
     main,
     objective_value,
+    Z_CHOICES,
 )
 from measurements.samplers import Sampler2Path  # noqa: E402
+from measurements.samplers3 import Sampler3Path  # noqa: E402
 from rl.routing_2path.route_env import RouteEnv  # noqa: E402
 from rl.routing_2path.topology_r import LOAD_CFG_DYNAMIC, TOPO_V2  # noqa: E402
 
@@ -67,6 +70,58 @@ def test_cvar_objective_uses_lower_tail_rewards():
     assert objective_value(rewards, "cvar", cvar_alpha=0.4) == -3.0
 
 
+def _run_meter(sampler, estimator, objective, alpha, cases, n_mc, seed):
+    rng = np.random.default_rng(seed)
+    z_choices = tuple(Z_CHOICES)
+    p_z = {z: 1.0 / len(z_choices) for z in z_choices}
+    actions = tuple(sampler.actions)
+    gap_fn = gap_one_case_honest if estimator == "honest" else gap_one_case
+    gaps = []
+    for _idx in range(int(cases)):
+        obs, z_true = sampler.sample_observation(z_choices, rng)
+        gap, _detail = gap_fn(
+            sampler,
+            obs,
+            z_true,
+            z_choices,
+            p_z,
+            actions,
+            int(n_mc),
+            rng,
+            objective,
+            float(alpha),
+        )
+        gaps.append(float(gap))
+    return float(np.mean(gaps))
+
+
+def test_honest_estimator_kills_the_symmetric_cvar_artifact():
+    """Symmetric CVaR should not keep a positive gap after sample splitting."""
+    sampler = Sampler3Path()
+
+    naive = _run_meter(
+        sampler,
+        estimator="naive",
+        objective="cvar",
+        alpha=0.1,
+        cases=150,
+        n_mc=200,
+        seed=0,
+    )
+    honest = _run_meter(
+        sampler,
+        estimator="honest",
+        objective="cvar",
+        alpha=0.1,
+        cases=150,
+        n_mc=200,
+        seed=0,
+    )
+
+    assert naive > 0.008, "could not reproduce old symmetric-CVaR artifact"
+    assert honest < 0.005, "honest estimator still shows positive artifact"
+
+
 def test_sampler2path_reward_signature_blocks_obs_and_z_leakage():
     sampler = Sampler2Path()
     arg_names = Sampler2Path.reward_of.__code__.co_varnames[
@@ -75,6 +130,16 @@ def test_sampler2path_reward_signature_blocks_obs_and_z_leakage():
 
     assert arg_names == ("self", "action", "true_world")
     assert sampler.actions == ("E", "F")
+
+
+def test_sampler2path_can_use_reward3_v3_without_replacing_default():
+    default_sampler = Sampler2Path()
+    v3_sampler = Sampler2Path(reward_model="r_v3")
+
+    assert default_sampler.reward_model == "r_v2"
+    assert default_sampler.reward_model_path == "rl/routing_2path/reward_r.py"
+    assert v3_sampler.reward_model == "r_v3"
+    assert v3_sampler.reward_model_path == "rl/routing3/reward3_v3.py"
 
 
 def test_sampler2path_public_observation_excludes_hidden_context():
@@ -184,6 +249,7 @@ def test_main_writes_provenance_and_action_counts():
         payload = json.loads(out_path.read_text())
         assert payload["load_cfg"] == "LOAD_CFG_DYNAMIC"
         assert payload["objective"] == "mean"
+        assert payload["estimator"] == "honest"
         assert payload["cvar_alpha"] == 0.2
         assert payload["link_model_path"] == "rl/routing_2path/link_model.py"
         assert len(payload["link_model_sha"]) == 12
@@ -197,7 +263,9 @@ def _run_as_script():
     tests = [
         test_gap_scores_marginal_action_at_true_z,
         test_cvar_objective_uses_lower_tail_rewards,
+        test_honest_estimator_kills_the_symmetric_cvar_artifact,
         test_sampler2path_reward_signature_blocks_obs_and_z_leakage,
+        test_sampler2path_can_use_reward3_v3_without_replacing_default,
         test_sampler2path_public_observation_excludes_hidden_context,
         test_sampler2path_drift_matches_route_env_snapshot_drift,
         test_main_returns_zero_for_gate_fail,

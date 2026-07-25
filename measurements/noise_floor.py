@@ -52,6 +52,7 @@ def eval_bayes_marginalized_policy(
     rng,
     objective,
     cvar_alpha,
+    estimator="honest",
 ):
     """Evaluate the z-blind Bayes policy on sampled true z values."""
     actions = tuple(sampler.actions)
@@ -76,7 +77,23 @@ def eval_bayes_marginalized_policy(
             return sum(float(p_z[z]) * q_by_z[z][action] for z in z_choices)
 
         a_marg = max(actions, key=ev_marginal)
-        returns[idx] = q_by_z[int(z_true)][a_marg]
+        if estimator == "naive":
+            returns[idx] = q_by_z[int(z_true)][a_marg]
+            continue
+
+        q_score_by_z = {}
+        for z in z_choices:
+            q_score_by_z[z] = estimate_q_for_z(
+                sampler,
+                obs,
+                z,
+                actions,
+                int(n_mc),
+                rng,
+                objective,
+                cvar_alpha,
+            )
+        returns[idx] = q_score_by_z[int(z_true)][a_marg]
 
     return float(returns.mean())
 
@@ -92,6 +109,12 @@ def parse_args(argv=None):
     parser.add_argument("--mc-samples", type=int, default=100)
     parser.add_argument("--objective", default="mean", choices=("mean", "cvar"))
     parser.add_argument("--cvar-alpha", type=float, default=0.2)
+    parser.add_argument("--reward-model", default="default",
+                        choices=("default", "r_v2", "r_v3"),
+                        help="reward module for sampler scoring")
+    parser.add_argument("--estimator", default="honest",
+                        choices=("naive", "honest"),
+                        help="honest split-sample estimator or old naive meter")
     parser.add_argument("--out", default=None,
                         help="optional JSON result path")
     return parser.parse_args(argv)
@@ -121,10 +144,13 @@ def main(argv=None):
         sampler_kwargs = {}
         if args.load_cfg:
             sampler_kwargs["load_cfg_name"] = args.load_cfg
+        if args.reward_model != "default":
+            sampler_kwargs["reward_model"] = args.reward_model
         sampler = build_sampler(args.topology, **sampler_kwargs)
         load_cfg_name = getattr(sampler, "load_cfg_name", load_cfg_name)
         link_model_path = getattr(sampler, "link_model_path", None)
         reward_model_path = getattr(sampler, "reward_model_path", None)
+        reward_model_name = getattr(sampler, "reward_model", args.reward_model)
         dynamics_source_path = getattr(sampler, "dynamics_source_path", None)
         perf.append(
             eval_bayes_marginalized_policy(
@@ -136,6 +162,7 @@ def main(argv=None):
                 rng,
                 args.objective,
                 float(args.cvar_alpha),
+                args.estimator,
             )
         )
 
@@ -153,6 +180,8 @@ def main(argv=None):
     print(f"topology          : {args.topology}")
     print(f"load_cfg          : {load_cfg_name}")
     print(f"objective         : {objective_label}")
+    print(f"estimator         : {args.estimator}")
+    print(f"reward_model      : {reward_model_name}")
     print(f"seeds             : {args.seeds}")
     print(f"cases             : {args.cases}   (MC {args.mc_samples}/cell)")
     print(f"git               : {git_hash()}")
@@ -174,7 +203,9 @@ def main(argv=None):
             "topology": args.topology,
             "load_cfg": load_cfg_name,
             "objective": args.objective,
+            "estimator": args.estimator,
             "cvar_alpha": float(args.cvar_alpha),
+            "reward_model": reward_model_name,
             "seeds": int(args.seeds),
             "cases": int(args.cases),
             "mc_samples": int(args.mc_samples),

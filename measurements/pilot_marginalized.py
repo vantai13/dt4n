@@ -120,6 +120,89 @@ def gap_one_case(
         "a_star_marg": a_star_marg,
         "agree": a_star_z == a_star_marg,
         "gap": float(gap),
+        "gap_naive": float(gap),
+        "selection_bias": 0.0,
+        "q_margin": float(q_margin_true),
+        "q_margin_marginalized": float(q_margin_marg),
+    }
+
+
+def gap_one_case_honest(
+    sampler,
+    obs,
+    z_true,
+    z_choices,
+    p_z,
+    actions,
+    n_mc,
+    rng,
+    objective="mean",
+    cvar_alpha=0.2,
+):
+    """Return one split-sample marginalized-gap estimate.
+
+    ``gap_one_case`` uses the same Monte Carlo estimates to choose an argmax and
+    score that chosen action. This can create winner's curse / maximization
+    bias, especially when the true action values are close. The honest estimator
+    chooses actions with sample A and scores them with an independent sample B.
+    """
+    q_a = {action: {} for action in actions}
+    q_b = {action: {} for action in actions}
+    for z in z_choices:
+        q_for_z_a = estimate_q_for_z(
+            sampler,
+            obs,
+            z,
+            actions,
+            n_mc,
+            rng,
+            objective,
+            cvar_alpha,
+        )
+        q_for_z_b = estimate_q_for_z(
+            sampler,
+            obs,
+            z,
+            actions,
+            n_mc,
+            rng,
+            objective,
+            cvar_alpha,
+        )
+        for action, value in q_for_z_a.items():
+            q_a[action][z] = value
+        for action, value in q_for_z_b.items():
+            q_b[action][z] = value
+
+    a_star_z = max(actions, key=lambda action: q_a[action][z_true])
+
+    def ev_marginal_a(action):
+        return sum(p_z[z] * q_a[action][z] for z in z_choices)
+
+    a_star_marg = max(actions, key=ev_marginal_a)
+
+    gap = q_b[a_star_z][z_true] - q_b[a_star_marg][z_true]
+    gap_naive = q_a[a_star_z][z_true] - q_a[a_star_marg][z_true]
+    q_true_values = sorted((q_b[action][z_true] for action in actions), reverse=True)
+    q_marg_b = {
+        action: sum(p_z[z] * q_b[action][z] for z in z_choices)
+        for action in actions
+    }
+    q_marg_values = sorted(q_marg_b.values(), reverse=True)
+    q_margin_true = (
+        q_true_values[0] - q_true_values[1] if len(q_true_values) > 1 else 0.0
+    )
+    q_margin_marg = (
+        q_marg_values[0] - q_marg_values[1] if len(q_marg_values) > 1 else 0.0
+    )
+    return float(gap), {
+        "z_true": int(z_true),
+        "a_star_z": a_star_z,
+        "a_star_marg": a_star_marg,
+        "agree": a_star_z == a_star_marg,
+        "gap": float(gap),
+        "gap_naive": float(gap_naive),
+        "selection_bias": float(gap_naive - gap),
         "q_margin": float(q_margin_true),
         "q_margin_marginalized": float(q_margin_marg),
     }
@@ -168,6 +251,13 @@ def parse_args(argv=None):
                         help="decision objective for sampled rewards")
     parser.add_argument("--cvar-alpha", type=float, default=0.2,
                         help="tail fraction for --objective cvar")
+    parser.add_argument("--reward-model", default="default",
+                        choices=("default", "r_v2", "r_v3"),
+                        help="reward module for sampler scoring")
+    parser.add_argument("--estimator", default="honest",
+                        choices=("naive", "honest"),
+                        help="honest split-sample estimator removes winner's "
+                             "curse; naive preserves old Phase 14A meter")
     parser.add_argument("--strict", action="store_true",
                         help="return exit code 1 when the gate fails")
     return parser.parse_args(argv)
@@ -186,17 +276,22 @@ def main(argv=None):
     sampler_kwargs = {}
     if args.load_cfg:
         sampler_kwargs["load_cfg_name"] = args.load_cfg
+    if args.reward_model != "default":
+        sampler_kwargs["reward_model"] = args.reward_model
     sampler = build_sampler(args.topology, **sampler_kwargs)
     actions = tuple(sampler.actions)
     load_cfg_name = getattr(sampler, "load_cfg_name", args.load_cfg)
     link_model_path = getattr(sampler, "link_model_path", None)
     reward_model_path = getattr(sampler, "reward_model_path", None)
+    reward_model_name = getattr(sampler, "reward_model", args.reward_model)
     dynamics_source_path = getattr(sampler, "dynamics_source_path", None)
 
     z_choices = tuple(Z_CHOICES)
     p_z = {z: 1.0 / len(z_choices) for z in z_choices}
 
     gaps = np.empty(int(args.cases), dtype=np.float64)
+    gap_naive_samples = np.empty(int(args.cases), dtype=np.float64)
+    selection_bias_samples = np.empty(int(args.cases), dtype=np.float64)
     n_agree = 0
     per_z = {z: [] for z in z_choices}
     disagree_by_z = {z: 0 for z in z_choices}
@@ -212,9 +307,11 @@ def main(argv=None):
         for z in z_choices
     }
 
+    gap_fn = gap_one_case_honest if args.estimator == "honest" else gap_one_case
+
     for idx in range(int(args.cases)):
         obs, z_true = sampler.sample_observation(z_choices, rng)
-        gap, detail = gap_one_case(
+        gap, detail = gap_fn(
             sampler,
             obs,
             z_true,
@@ -227,6 +324,8 @@ def main(argv=None):
             float(args.cvar_alpha),
         )
         gaps[idx] = gap
+        gap_naive_samples[idx] = float(detail.get("gap_naive", gap))
+        selection_bias_samples[idx] = float(detail.get("selection_bias", 0.0))
         agree = bool(detail["agree"])
         n_agree += int(agree)
         if not agree:
@@ -241,6 +340,8 @@ def main(argv=None):
         )
 
     mean, ci95 = summarize_gaps(gaps)
+    gap_naive_mean, gap_naive_ci95 = summarize_gaps(gap_naive_samples)
+    selection_bias_mean, selection_bias_ci95 = summarize_gaps(selection_bias_samples)
     lower = mean - ci95
     verdict = "PASS" if lower >= GATE_THRESHOLD else "FAIL"
     agree_rate = n_agree / float(args.cases)
@@ -285,6 +386,8 @@ def main(argv=None):
     print(f"topology          : {args.topology}")
     print(f"load_cfg          : {load_cfg_name}")
     print(f"objective         : {args.objective}")
+    print(f"estimator         : {args.estimator}")
+    print(f"reward_model      : {reward_model_name}")
     if args.objective == "cvar":
         print(f"cvar_alpha        : {float(args.cvar_alpha):g}")
     print(f"actions           : {actions}")
@@ -292,6 +395,11 @@ def main(argv=None):
     print(f"seed              : {args.seed}    git: {git_hash()}")
     print("-" * 62)
     print(f"gap_marginalized  : {mean:.4f} +/- {ci95:.4f}")
+    print(f"gap_naive_ref     : {gap_naive_mean:.4f} +/- {gap_naive_ci95:.4f}")
+    print(
+        f"selection_bias    : {selection_bias_mean:+.4f} "
+        f"+/- {selection_bias_ci95:.4f}"
+    )
     print(f"  lower CI95      : {lower:.4f}")
     print(f"  threshold       : {GATE_THRESHOLD:.2f}")
     print(f"GATE              : {verdict}")
@@ -330,7 +438,9 @@ def main(argv=None):
             "topology": args.topology,
             "load_cfg": load_cfg_name,
             "objective": args.objective,
+            "estimator": args.estimator,
             "cvar_alpha": float(args.cvar_alpha),
+            "reward_model": reward_model_name,
             "link_model_path": link_model_path,
             "link_model_sha": file_sha(link_model_path) if link_model_path else None,
             "reward_model_path": reward_model_path,
@@ -345,6 +455,11 @@ def main(argv=None):
             "gap_mean": mean,
             "gap_ci95": ci95,
             "gap_lower": lower,
+            "gap_honest": mean if args.estimator == "honest" else None,
+            "gap_naive": gap_naive_mean,
+            "gap_naive_ci95": gap_naive_ci95,
+            "selection_bias": selection_bias_mean,
+            "selection_bias_ci95": selection_bias_ci95,
             "threshold": GATE_THRESHOLD,
             "verdict": verdict,
             "agree_rate": agree_rate,
