@@ -38,6 +38,9 @@ def test_sync_regret_is_not_bounded_by_phase14a_margin_regret():
         phase14a_regret = 0.028867
         assert row["sync_regret_when_disagree"] > 10.0 * phase14a_regret
         assert row["gap_mean"] > 0.5
+        assert payload["budget_upper"]
+        assert payload["overall_gap_histogram"]
+        assert payload["budget_upper"][0]["g_aoi_upper"] >= 0.0
 
 
 def test_sync_headroom_z0_is_zero_for_current_snapshot():

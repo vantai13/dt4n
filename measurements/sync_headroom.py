@@ -158,6 +158,63 @@ def quantiles(values):
     }
 
 
+def histogram(values, bins=12):
+    arr = np.asarray(values, dtype=np.float64)
+    if arr.size == 0:
+        return []
+    counts, edges = np.histogram(arr, bins=int(bins))
+    return [
+        {
+            "lo": float(edges[idx]),
+            "hi": float(edges[idx + 1]),
+            "count": int(count),
+        }
+        for idx, count in enumerate(counts)
+    ]
+
+
+def parse_float_values(raw):
+    values = []
+    for item in str(raw).split(","):
+        item = item.strip()
+        if not item:
+            continue
+        value = float(item)
+        if not (0.0 < value <= 1.0):
+            raise ValueError("budget fractions must be in (0, 1]")
+        values.append(value)
+    if not values:
+        raise ValueError("at least one budget fraction is required")
+    return tuple(values)
+
+
+def budget_upper_rows(values, fractions):
+    """Upper bound for adaptive sync at fixed sync budget.
+
+    A periodic policy samples states uniformly, so its expected gross value is
+    E[all]. An adaptive oracle with budget fraction b can spend syncs on the top
+    b fraction of states, giving E[top b] - E[all] before costs.
+    """
+    arr = np.sort(np.asarray(values, dtype=np.float64))[::-1]
+    if arr.size == 0:
+        return []
+    all_mean = float(arr.mean())
+    rows = []
+    for frac in fractions:
+        k = max(1, int(np.ceil(float(frac) * arr.size)))
+        top = arr[:k]
+        top_mean = float(top.mean())
+        rows.append({
+            "budget_frac": float(frac),
+            "n_sync": int(k),
+            "all_mean": all_mean,
+            "top_mean": top_mean,
+            "g_aoi_upper": top_mean - all_mean,
+            "top_threshold": float(top[-1]),
+        })
+    return rows
+
+
 def parse_z_values(raw):
     if raw is None:
         return tuple(Z_CHOICES)
@@ -187,6 +244,9 @@ def parse_args(argv=None):
     parser.add_argument("--seed", type=int, default=0)
     parser.add_argument("--z-values", default=None,
                         help="comma-separated z values; default Z_CHOICES")
+    parser.add_argument("--budget-fracs", default="0.1,0.2,0.3",
+                        help="comma-separated sync budget fractions")
+    parser.add_argument("--hist-bins", type=int, default=12)
     parser.add_argument("--out", default=None)
     return parser.parse_args(argv)
 
@@ -208,6 +268,7 @@ def main(argv=None):
     sampler = build_sampler(args.topology, **sampler_kwargs)
     actions = tuple(sampler.actions)
     z_values = parse_z_values(args.z_values)
+    budget_fracs = parse_float_values(args.budget_fracs)
     rng = np.random.default_rng(int(args.seed))
 
     all_gaps = []
@@ -276,6 +337,8 @@ def main(argv=None):
         "overall_gap_mean": overall_mean,
         "overall_gap_ci95": overall_ci95,
         "overall_gap_distribution": quantiles(all_gaps),
+        "overall_gap_histogram": histogram(all_gaps, args.hist_bins),
+        "budget_upper": budget_upper_rows(all_gaps, budget_fracs),
         "rows": rows,
     }
 
@@ -309,6 +372,17 @@ def main(argv=None):
     )
     print(f"overall p90/p99   : {payload['overall_gap_distribution']['p90']:.4f} / "
           f"{payload['overall_gap_distribution']['p99']:.4f}")
+    print("-" * 78)
+    print(f"{'budget':>8} {'n_sync':>8} {'E[top]':>10} {'E[all]':>10} {'G_AoI_ub':>10} {'thr':>10}")
+    for row in payload["budget_upper"]:
+        print(
+            f"{row['budget_frac']:>8.3f}"
+            f"{row['n_sync']:>8d}"
+            f"{row['top_mean']:>10.4f}"
+            f"{row['all_mean']:>10.4f}"
+            f"{row['g_aoi_upper']:>10.4f}"
+            f"{row['top_threshold']:>10.4f}"
+        )
     print("=" * 78)
 
     if args.out:

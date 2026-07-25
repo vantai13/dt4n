@@ -92,6 +92,17 @@ G_AoI_upper(B/N) = E[G_sync | top B/N states] - E[G_sync]
 for sync budgets such as `B/N = 0.1, 0.2, 0.3`. This must be compared against
 the best periodic or threshold baseline at the same sync budget.
 
+Measured on the same `200 x 150` artifact with a uniform z-grid:
+
+| budget B/N | n_sync | E[top] | E[all] | G_AoI_upper | threshold |
+|---:|---:|---:|---:|---:|---:|
+| 0.100 | 120 | 1.193601 | 0.838786 | 0.354815 | 1.184684 |
+| 0.200 | 240 | 1.185466 | 0.838786 | 0.346679 | 1.170533 |
+| 0.300 | 360 | 1.177875 | 0.838786 | 0.339088 | 1.154418 |
+
+This is only an adaptive-oracle upper bound. The next required comparison is
+against best periodic and best threshold sync at the same budget.
+
 ## 6. Re-run Commands
 
 ```bash
