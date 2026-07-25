@@ -1,0 +1,122 @@
+{
+  "action_counts_by_z": {
+    "0": {
+      "a_star_marg": {
+        "E": 32,
+        "F": 40
+      },
+      "a_star_z": {
+        "E": 62,
+        "F": 10
+      }
+    },
+    "1": {
+      "a_star_marg": {
+        "E": 45,
+        "F": 53
+      },
+      "a_star_z": {
+        "E": 45,
+        "F": 53
+      }
+    },
+    "12": {
+      "a_star_marg": {
+        "E": 47,
+        "F": 35
+      },
+      "a_star_z": {
+        "E": 47,
+        "F": 35
+      }
+    },
+    "3": {
+      "a_star_marg": {
+        "E": 43,
+        "F": 40
+      },
+      "a_star_z": {
+        "E": 43,
+        "F": 40
+      }
+    },
+    "5": {
+      "a_star_marg": {
+        "E": 42,
+        "F": 45
+      },
+      "a_star_z": {
+        "E": 42,
+        "F": 45
+      }
+    },
+    "8": {
+      "a_star_marg": {
+        "E": 44,
+        "F": 34
+      },
+      "a_star_z": {
+        "E": 44,
+        "F": 34
+      }
+    }
+  },
+  "agree_rate": 0.94,
+  "cases": 500,
+  "cvar_alpha": 0.1,
+  "decision_regret": 0.10482030301486824,
+  "disagree_rate": 0.06000000000000005,
+  "disagree_rate_by_z": {
+    "0": 0.4166666666666667,
+    "1": 0.0,
+    "12": 0.0,
+    "3": 0.0,
+    "5": 0.0,
+    "8": 0.0
+  },
+  "dynamics_source_path": "rl/routing_2path/route_env.py",
+  "dynamics_source_sha": "3e33b80b08bb",
+  "estimator": "honest",
+  "gap_by_z": {
+    "0": 0.0436751262561951,
+    "1": 0.0,
+    "12": 0.0,
+    "3": 0.0,
+    "5": 0.0,
+    "8": 0.0
+  },
+  "gap_ci95": 0.0022209555502914666,
+  "gap_honest": 0.006289218180892094,
+  "gap_lower": 0.004068262630600627,
+  "gap_mean": 0.006289218180892094,
+  "gap_naive": 0.006289218180892094,
+  "gap_naive_ci95": 0.0022209555502914666,
+  "gap_placebo": null,
+  "git_hash": "5b6bb5c",
+  "link_model_path": "rl/routing_2path/link_model.py",
+  "link_model_sha": "fd9f9f1de49a",
+  "load_cfg": "LOAD_CFG_DYNAMIC",
+  "mc_samples": 200,
+  "n_disagree": 30,
+  "objective": "cvar",
+  "q_margin": 1.114704674719445,
+  "q_margin_by_z": {
+    "0": 0.3256264623379941,
+    "1": 1.0614235712840794,
+    "12": 1.2893643467043319,
+    "3": 1.2628363351493288,
+    "5": 1.3567797763524474,
+    "8": 1.2987767858427512
+  },
+  "q_margin_marginalized": 1.0978273642758858,
+  "reward_model": "r_v2",
+  "reward_model_path": "rl/routing_2path/reward_r.py",
+  "reward_model_sha": "5164640c6c72",
+  "seed": 0,
+  "selection_bias": 0.0,
+  "selection_bias_ci95": 0.0,
+  "threshold": 0.1,
+  "timestamp": "2026-07-25T05:21:58.022575",
+  "topology": "routing_2path",
+  "verdict": "FAIL"
+}

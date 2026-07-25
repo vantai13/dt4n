@@ -18,6 +18,7 @@ from measurements.pilot_marginalized import (
     Z_CHOICES,
     gap_one_case,
     gap_one_case_honest,
+    gap_one_case_placebo,
 )
 from measurements.samplers3 import Sampler3Path
 from measurements.samplers3_hetero import Sampler3PathHetero
@@ -28,7 +29,12 @@ def run_one(sampler, cases, n_mc, seed, objective, alpha, estimator):
     z_choices = tuple(Z_CHOICES)
     p_z = {z: 1.0 / len(z_choices) for z in z_choices}
     actions = tuple(sampler.actions)
-    gap_fn = gap_one_case_honest if estimator == "honest" else gap_one_case
+    if estimator == "honest":
+        gap_fn = gap_one_case_honest
+    elif estimator == "placebo":
+        gap_fn = gap_one_case_placebo
+    else:
+        gap_fn = gap_one_case
 
     gaps = np.empty(int(cases), dtype=np.float64)
     naive_gaps = np.empty(int(cases), dtype=np.float64)
@@ -67,6 +73,7 @@ def run_one(sampler, cases, n_mc, seed, objective, alpha, estimator):
         "ci95": ci95,
         "lower_ci95": mean - ci95,
         "gap_honest": mean if estimator == "honest" else None,
+        "gap_placebo": mean if estimator == "placebo" else None,
         "gap_naive": naive_mean,
         "selection_bias": bias_mean,
         "disagree_rate": disagree_rate,
@@ -74,8 +81,8 @@ def run_one(sampler, cases, n_mc, seed, objective, alpha, estimator):
     }
 
 
-def build_grid():
-    return [
+def build_grid(include_isochurn=False):
+    grid = [
         ("SYM x mean", Sampler3Path(), "mean", 0.2),
         ("SYM x CVaR0.1", Sampler3Path(), "cvar", 0.1),
         (
@@ -91,6 +98,16 @@ def build_grid():
             0.1,
         ),
     ]
+    if include_isochurn:
+        grid.append(
+            (
+                "C1_ISOCHURN x CVaR0.1",
+                Sampler3PathHetero((0.15, 0.15, 0.15), "by_load"),
+                "cvar",
+                0.1,
+            )
+        )
+    return grid
 
 
 def parse_args(argv=None):
@@ -99,8 +116,11 @@ def parse_args(argv=None):
     parser.add_argument("--mc-samples", type=int, default=200)
     parser.add_argument("--seeds", type=int, nargs="+", default=[0, 1, 2])
     parser.add_argument("--estimator", default="honest",
-                        choices=("naive", "honest"),
-                        help="honest split-sample estimator or old naive meter")
+                        choices=("naive", "honest", "placebo"),
+                        help="honest split-sample estimator, placebo fake-z "
+                             "control, or old naive meter")
+    parser.add_argument("--include-isochurn", action="store_true",
+                        help="include symmetric iso-churn control C1")
     parser.add_argument(
         "--out",
         default=None,
@@ -124,7 +144,7 @@ def main(argv=None):
         f"{'naive':>10}{'bias':>9}{'disagr':>8}{'regret':>9}"
     )
     print("-" * 89)
-    for name, sampler, objective, alpha in build_grid():
+    for name, sampler, objective, alpha in build_grid(args.include_isochurn):
         for seed in args.seeds:
             result = run_one(
                 sampler,

@@ -208,6 +208,88 @@ def gap_one_case_honest(
     }
 
 
+def gap_one_case_placebo(
+    sampler,
+    obs,
+    z_true,
+    z_choices,
+    p_z,
+    actions,
+    n_mc,
+    rng,
+    objective="mean",
+    cvar_alpha=0.2,
+):
+    """Return one fake-z placebo estimate.
+
+    The z-aware branch is deliberately given an independently sampled fake age,
+    then both branches are scored at the true z. Any positive gap here would be
+    a pipeline artifact rather than value of information.
+    """
+    q_a = {action: {} for action in actions}
+    q_b = {action: {} for action in actions}
+    for z in z_choices:
+        q_for_z_a = estimate_q_for_z(
+            sampler,
+            obs,
+            z,
+            actions,
+            n_mc,
+            rng,
+            objective,
+            cvar_alpha,
+        )
+        q_for_z_b = estimate_q_for_z(
+            sampler,
+            obs,
+            z,
+            actions,
+            n_mc,
+            rng,
+            objective,
+            cvar_alpha,
+        )
+        for action, value in q_for_z_a.items():
+            q_a[action][z] = value
+        for action, value in q_for_z_b.items():
+            q_b[action][z] = value
+
+    z_fake = int(rng.choice(tuple(z_choices)))
+    a_star_z = max(actions, key=lambda action: q_a[action][z_fake])
+
+    def ev_marginal_a(action):
+        return sum(p_z[z] * q_a[action][z] for z in z_choices)
+
+    a_star_marg = max(actions, key=ev_marginal_a)
+
+    gap = q_b[a_star_z][z_true] - q_b[a_star_marg][z_true]
+    gap_naive = q_a[a_star_z][z_true] - q_a[a_star_marg][z_true]
+    q_true_values = sorted((q_b[action][z_true] for action in actions), reverse=True)
+    q_marg_b = {
+        action: sum(p_z[z] * q_b[action][z] for z in z_choices)
+        for action in actions
+    }
+    q_marg_values = sorted(q_marg_b.values(), reverse=True)
+    q_margin_true = (
+        q_true_values[0] - q_true_values[1] if len(q_true_values) > 1 else 0.0
+    )
+    q_margin_marg = (
+        q_marg_values[0] - q_marg_values[1] if len(q_marg_values) > 1 else 0.0
+    )
+    return float(gap), {
+        "z_true": int(z_true),
+        "z_fake": int(z_fake),
+        "a_star_z": a_star_z,
+        "a_star_marg": a_star_marg,
+        "agree": a_star_z == a_star_marg,
+        "gap": float(gap),
+        "gap_naive": float(gap_naive),
+        "selection_bias": float(gap_naive - gap),
+        "q_margin": float(q_margin_true),
+        "q_margin_marginalized": float(q_margin_marg),
+    }
+
+
 def git_hash():
     try:
         return subprocess.check_output(
@@ -255,9 +337,9 @@ def parse_args(argv=None):
                         choices=("default", "r_v2", "r_v3"),
                         help="reward module for sampler scoring")
     parser.add_argument("--estimator", default="honest",
-                        choices=("naive", "honest"),
+                        choices=("naive", "honest", "placebo"),
                         help="honest split-sample estimator removes winner's "
-                             "curse; naive preserves old Phase 14A meter")
+                             "curse; placebo uses an independent fake z")
     parser.add_argument("--strict", action="store_true",
                         help="return exit code 1 when the gate fails")
     return parser.parse_args(argv)
@@ -307,7 +389,12 @@ def main(argv=None):
         for z in z_choices
     }
 
-    gap_fn = gap_one_case_honest if args.estimator == "honest" else gap_one_case
+    if args.estimator == "honest":
+        gap_fn = gap_one_case_honest
+    elif args.estimator == "placebo":
+        gap_fn = gap_one_case_placebo
+    else:
+        gap_fn = gap_one_case
 
     for idx in range(int(args.cases)):
         obs, z_true = sampler.sample_observation(z_choices, rng)
@@ -456,6 +543,7 @@ def main(argv=None):
             "gap_ci95": ci95,
             "gap_lower": lower,
             "gap_honest": mean if args.estimator == "honest" else None,
+            "gap_placebo": mean if args.estimator == "placebo" else None,
             "gap_naive": gap_naive_mean,
             "gap_naive_ci95": gap_naive_ci95,
             "selection_bias": selection_bias_mean,

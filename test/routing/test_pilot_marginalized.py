@@ -15,12 +15,14 @@ sys.path.insert(0, ".")
 from measurements.pilot_marginalized import (  # noqa: E402
     gap_one_case,
     gap_one_case_honest,
+    gap_one_case_placebo,
     main,
     objective_value,
     Z_CHOICES,
 )
 from measurements.samplers import Sampler2Path  # noqa: E402
 from measurements.samplers3 import Sampler3Path  # noqa: E402
+from measurements.samplers3_hetero import Sampler3PathHetero  # noqa: E402
 from rl.routing_2path.route_env import RouteEnv  # noqa: E402
 from rl.routing_2path.topology_r import LOAD_CFG_DYNAMIC, TOPO_V2  # noqa: E402
 
@@ -75,7 +77,12 @@ def _run_meter(sampler, estimator, objective, alpha, cases, n_mc, seed):
     z_choices = tuple(Z_CHOICES)
     p_z = {z: 1.0 / len(z_choices) for z in z_choices}
     actions = tuple(sampler.actions)
-    gap_fn = gap_one_case_honest if estimator == "honest" else gap_one_case
+    if estimator == "honest":
+        gap_fn = gap_one_case_honest
+    elif estimator == "placebo":
+        gap_fn = gap_one_case_placebo
+    else:
+        gap_fn = gap_one_case
     gaps = []
     for _idx in range(int(cases)):
         obs, z_true = sampler.sample_observation(z_choices, rng)
@@ -120,6 +127,36 @@ def test_honest_estimator_kills_the_symmetric_cvar_artifact():
 
     assert naive > 0.008, "could not reproduce old symmetric-CVaR artifact"
     assert honest < 0.005, "honest estimator still shows positive artifact"
+
+
+def test_placebo_gap_is_not_positive():
+    """Fake z should not create positive value of information."""
+    gap = _run_meter(
+        Sampler3PathHetero(),
+        estimator="placebo",
+        objective="cvar",
+        alpha=0.1,
+        cases=200,
+        n_mc=150,
+        seed=0,
+    )
+
+    assert gap < 0.02, f"placebo gave positive gap {gap:.4f}"
+
+
+def test_isochurn_control_is_near_zero():
+    """Same churn budget but symmetric volatility should not pass the gate."""
+    gap = _run_meter(
+        Sampler3PathHetero(rates=(0.15, 0.15, 0.15)),
+        estimator="honest",
+        objective="cvar",
+        alpha=0.1,
+        cases=200,
+        n_mc=150,
+        seed=0,
+    )
+
+    assert gap < 0.05, f"iso-churn control gave gap {gap:.4f}"
 
 
 def test_sampler2path_reward_signature_blocks_obs_and_z_leakage():
@@ -264,6 +301,8 @@ def _run_as_script():
         test_gap_scores_marginal_action_at_true_z,
         test_cvar_objective_uses_lower_tail_rewards,
         test_honest_estimator_kills_the_symmetric_cvar_artifact,
+        test_placebo_gap_is_not_positive,
+        test_isochurn_control_is_near_zero,
         test_sampler2path_reward_signature_blocks_obs_and_z_leakage,
         test_sampler2path_can_use_reward3_v3_without_replacing_default,
         test_sampler2path_public_observation_excludes_hidden_context,
