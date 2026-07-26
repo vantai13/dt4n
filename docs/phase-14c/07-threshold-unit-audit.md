@@ -48,15 +48,34 @@ must not be used to lower the official gate.
 ## Tool availability check
 
 `measurements.measure_std_agent` imports `torch` and evaluates frozen DQN
-policies. In the current environment, `torch` is not installed, so the true
-agent-training std cannot be measured here:
+policies. In the original audit environment, `torch` was not installed, so the
+true agent-training std could not be measured there:
 
 ```text
 ModuleNotFoundError: No module named 'torch'
 ```
 
-That blocks replacing the official gate with a true `std_agent(r_v3)` value in
-this environment.
+2026-07-25 update: `torch 2.13.0+cpu` and `PyYAML 6.0.3` were installed, and
+the existing frozen-policy script now runs. However, that script is still the
+Phase 9/10 `routing_2path` evaluator, not a `routing3` evaluator.
+
+Command:
+
+```bash
+python -m measurements.measure_std_agent
+```
+
+Observed output:
+
+| load | mean_return | std_agent | ci95 |
+|---|---:|---:|---:|
+| `SCENARIOS_TRAIN` | 3.8172 | 0.0312 | 0.0273 |
+| `LOAD_CFG_TRAIN` | 3.8172 | 0.0312 | 0.0273 |
+| `LOAD_CFG_SWEEP` | 3.8849 | 0.0444 | 0.0389 |
+
+Therefore the true `std_agent(routing3, CVaR alpha=0.1, r_v2)` value remains
+blocked by missing `routing3` DQN train/eval harness and five matching trained
+checkpoints, not by missing `torch`.
 
 ## Proxy measurement plan
 
@@ -130,5 +149,6 @@ best lower CI95 = 0.02027
 Therefore the threshold-unit audit does not convert the Phase 14C reward-only
 pilot into a PASS. The correct status remains FAIL.
 
-The true `std_agent(r_v3)` question remains blocked in this environment because
-the agent-evaluation path requires `torch`.
+The true `std_agent(r_v3)` question remains blocked until there is a matching
+`routing3` DQN train/eval harness and five trained checkpoints for the new
+stage/reward/objective.

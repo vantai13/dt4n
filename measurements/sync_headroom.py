@@ -215,6 +215,57 @@ def budget_upper_rows(values, fractions):
     return rows
 
 
+def budget_decomposition_rows(values_by_z, fractions):
+    """Split pooled adaptive headroom into between-z and within-z terms.
+
+    The pooled top-budget oracle can mostly select high-z states. That is a
+    threshold/periodic effect, not state-adaptive value. The within-z term
+    keeps each age group fixed and only ranks states inside the same z bucket.
+    """
+    groups = [
+        (int(z), np.asarray(values, dtype=np.float64))
+        for z, values in values_by_z.items()
+        if len(values) > 0
+    ]
+    if not groups:
+        return []
+
+    all_values = np.concatenate([values for _z, values in groups])
+    total_n = int(all_values.size)
+    pooled_by_frac = {
+        row["budget_frac"]: row
+        for row in budget_upper_rows(all_values, fractions)
+    }
+
+    rows = []
+    for frac in fractions:
+        frac = float(frac)
+        components = []
+        within_z_upper = 0.0
+        for z, values in groups:
+            z_row = budget_upper_rows(values, (frac,))[0]
+            weight = float(values.size) / float(total_n)
+            within_z_upper += weight * float(z_row["g_aoi_upper"])
+            components.append({
+                "z": int(z),
+                "weight": weight,
+                **z_row,
+            })
+
+        pooled = pooled_by_frac[frac]
+        pooled_upper = float(pooled["g_aoi_upper"])
+        between_z_upper = pooled_upper - within_z_upper
+        rows.append({
+            "budget_frac": frac,
+            "pooled_n_sync": int(pooled["n_sync"]),
+            "pooled_upper": pooled_upper,
+            "within_z_upper": float(within_z_upper),
+            "between_z_upper": float(between_z_upper),
+            "within_z_components": components,
+        })
+    return rows
+
+
 def parse_z_values(raw):
     if raw is None:
         return tuple(Z_CHOICES)
@@ -272,6 +323,7 @@ def main(argv=None):
     rng = np.random.default_rng(int(args.seed))
 
     all_gaps = []
+    gaps_by_z = {}
     rows = []
     for z in z_values:
         gaps = []
@@ -295,6 +347,7 @@ def main(argv=None):
             disagrees.append(float(detail["disagree"]))
             action_counts[detail["a_stale"]] += 1
 
+        gaps_by_z[int(z)] = list(gaps)
         mean, ci95 = summarize(gaps)
         disagree_mean = float(np.mean(disagrees)) if disagrees else 0.0
         row = {
@@ -308,11 +361,14 @@ def main(argv=None):
                 mean / disagree_mean if disagree_mean > 1e-12 else 0.0
             ),
             "gap_distribution": quantiles(gaps),
+            "budget_upper": budget_upper_rows(gaps, budget_fracs),
             "a_stale_counts": action_counts,
         }
         rows.append(row)
 
     overall_mean, overall_ci95 = summarize(all_gaps)
+    budget_upper = budget_upper_rows(all_gaps, budget_fracs)
+    budget_decomposition = budget_decomposition_rows(gaps_by_z, budget_fracs)
     payload = {
         "timestamp": datetime.now().isoformat(),
         "git_hash": git_hash(),
@@ -338,7 +394,8 @@ def main(argv=None):
         "overall_gap_ci95": overall_ci95,
         "overall_gap_distribution": quantiles(all_gaps),
         "overall_gap_histogram": histogram(all_gaps, args.hist_bins),
-        "budget_upper": budget_upper_rows(all_gaps, budget_fracs),
+        "budget_upper": budget_upper,
+        "budget_decomposition": budget_decomposition,
         "rows": rows,
     }
 
@@ -382,6 +439,15 @@ def main(argv=None):
             f"{row['all_mean']:>10.4f}"
             f"{row['g_aoi_upper']:>10.4f}"
             f"{row['top_threshold']:>10.4f}"
+        )
+    print("-" * 78)
+    print(f"{'budget':>8} {'pooled':>10} {'within-z':>10} {'between-z':>10}")
+    for row in payload["budget_decomposition"]:
+        print(
+            f"{row['budget_frac']:>8.3f}"
+            f"{row['pooled_upper']:>10.4f}"
+            f"{row['within_z_upper']:>10.4f}"
+            f"{row['between_z_upper']:>10.4f}"
         )
     print("=" * 78)
 

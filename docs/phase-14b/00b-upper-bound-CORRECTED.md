@@ -1,7 +1,7 @@
 # Lesson 14B.0 (CORRECTED) - Direct G_sync Headroom
 
 Ngay tao: 2026-07-25
-Current Git at measurement: `ccec7d4`
+Current Git at measurement: `76a9cd2`
 Corrected artifact: `results/phase-14b/sync_headroom_corrected_200x150_s0.json`
 
 ## 1. Retraction
@@ -100,10 +100,73 @@ Measured on the same `200 x 150` artifact with a uniform z-grid:
 | 0.200 | 240 | 1.185466 | 0.838786 | 0.346679 | 1.170533 |
 | 0.300 | 360 | 1.177875 | 0.838786 | 0.339088 | 1.154418 |
 
-This is only an adaptive-oracle upper bound. The next required comparison is
-against best periodic and best threshold sync at the same budget.
+This pooled number is only an adaptive-oracle upper bound, and it must not be
+read as the adaptive-state contribution. Because the z-grid is pooled, the top
+states are dominated by large-z cases. That is exactly what a periodic or
+threshold policy can already exploit.
 
-## 6. Re-run Commands
+## 6. Between-z / Within-z Decomposition
+
+The correct decomposition for the same artifact is:
+
+```text
+pooled upper = between-z upper + within-z upper
+```
+
+| budget B/N | pooled upper | within-z upper | between-z upper | within share |
+|---:|---:|---:|---:|---:|
+| 0.100 | 0.354815 | 0.108381 | 0.246434 | 30.5% |
+| 0.200 | 0.346679 | 0.089617 | 0.257062 | 25.9% |
+| 0.300 | 0.339088 | 0.074786 | 0.264302 | 22.1% |
+
+For `B/N = 0.1`, the headline number is therefore:
+
+```text
+0.354815 = 0.246434 + 0.108381
+             ^          ^
+             |          within-z: adaptive-state upper contribution
+             between-z: age/threshold effect already available to baseline
+```
+
+The top-10% within-z values are:
+
+| z | G_sync mean | E[top 10% within z] | within-z upper |
+|---:|---:|---:|---:|
+| 0 | 0.000000 | 0.000000 | 0.000000 |
+| 1 | 0.543952 | 0.954944 | 0.410991 |
+| 3 | 1.047122 | 1.153346 | 0.106224 |
+| 5 | 1.115858 | 1.175193 | 0.059335 |
+| 8 | 1.159938 | 1.196354 | 0.036416 |
+| 12 | 1.165848 | 1.203167 | 0.037320 |
+
+Interpretation: adaptive value concentrates at short ages, especially `z=1`.
+At long ages, almost every state is already stale enough that threshold or
+periodic sync should collect most of the value.
+
+## 7. Required Warnings
+
+1. The current fresh branch is clairvoyant:
+
+   ```text
+   a_fresh = argmax_a R(a, w)
+   ```
+
+   A deployable sync policy gets a fresh noisy observation, not the hidden true
+   world. The realistic fresh-observation version must be measured separately.
+
+2. All values here are gross benefits before subtracting `c_sync`.
+
+3. The old gate `0.10 = 2 x std_agent` is not valid for this stage. It was
+   measured on `routing_2path`, mean objective, `r_v2`. Phase 14B/14C now uses
+   `routing3`, `CVaR alpha=0.1`, `r_v2`/`r_v3`, so `std_agent` must be
+   re-measured before declaring PASS/FAIL.
+
+4. The pooled top-budget oracle is not trajectory-consistent. The age `z` is
+   endogenous: to reach a large `z`, a policy must already have skipped syncs
+   earlier. The decisive RQ0' test must simulate full trajectories under the
+   same sync budget.
+
+## 8. Re-run Commands
 
 ```bash
 python -m measurements.sync_headroom \

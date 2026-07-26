@@ -1,4 +1,63 @@
 {
+  "budget_decomposition": [
+    {
+      "between_z_upper": 0.0,
+      "budget_frac": 0.1,
+      "pooled_n_sync": 20,
+      "pooled_upper": 0.055065185916808534,
+      "within_z_components": [
+        {
+          "all_mean": 1.1229480061807247,
+          "budget_frac": 0.1,
+          "g_aoi_upper": 0.055065185916808534,
+          "n_sync": 20,
+          "top_mean": 1.1780131920975332,
+          "top_threshold": 1.1669612932507034,
+          "weight": 1.0,
+          "z": 5
+        }
+      ],
+      "within_z_upper": 0.055065185916808534
+    },
+    {
+      "between_z_upper": 0.0,
+      "budget_frac": 0.2,
+      "pooled_n_sync": 40,
+      "pooled_upper": 0.04738343327344818,
+      "within_z_components": [
+        {
+          "all_mean": 1.1229480061807247,
+          "budget_frac": 0.2,
+          "g_aoi_upper": 0.04738343327344818,
+          "n_sync": 40,
+          "top_mean": 1.1703314394541728,
+          "top_threshold": 1.1585943208208191,
+          "weight": 1.0,
+          "z": 5
+        }
+      ],
+      "within_z_upper": 0.04738343327344818
+    },
+    {
+      "between_z_upper": 0.0,
+      "budget_frac": 0.3,
+      "pooled_n_sync": 60,
+      "pooled_upper": 0.0423818274766703,
+      "within_z_components": [
+        {
+          "all_mean": 1.1229480061807247,
+          "budget_frac": 0.3,
+          "g_aoi_upper": 0.0423818274766703,
+          "n_sync": 60,
+          "top_mean": 1.165329833657395,
+          "top_threshold": 1.15267629521139,
+          "weight": 1.0,
+          "z": 5
+        }
+      ],
+      "within_z_upper": 0.0423818274766703
+    }
+  ],
   "budget_upper": [
     {
       "all_mean": 1.1229480061807247,
@@ -30,7 +89,7 @@
   "dynamics_source_path": "rl/routing3/topology3.py",
   "dynamics_source_sha": "5b9539665e4c",
   "estimator": "honest",
-  "git_hash": "1767b58",
+  "git_hash": "76a9cd2",
   "link_model_path": "rl/routing3/link_model.py",
   "link_model_sha": "fd9f9f1de49a",
   "load_cfg": "EVENT_3PATH_V4_RATE_0.12_PROFILE_cliffband_BIAS_0",
@@ -117,6 +176,32 @@
         "P2": 66,
         "P3": 74
       },
+      "budget_upper": [
+        {
+          "all_mean": 1.1229480061807247,
+          "budget_frac": 0.1,
+          "g_aoi_upper": 0.055065185916808534,
+          "n_sync": 20,
+          "top_mean": 1.1780131920975332,
+          "top_threshold": 1.1669612932507034
+        },
+        {
+          "all_mean": 1.1229480061807247,
+          "budget_frac": 0.2,
+          "g_aoi_upper": 0.04738343327344818,
+          "n_sync": 40,
+          "top_mean": 1.1703314394541728,
+          "top_threshold": 1.1585943208208191
+        },
+        {
+          "all_mean": 1.1229480061807247,
+          "budget_frac": 0.3,
+          "g_aoi_upper": 0.0423818274766703,
+          "n_sync": 60,
+          "top_mean": 1.165329833657395,
+          "top_threshold": 1.15267629521139
+        }
+      ],
       "cases": 200,
       "disagree_fresh": 0.6727333333333334,
       "gap_ci95": 0.009500128872748169,
@@ -134,7 +219,7 @@
     }
   ],
   "seed": 0,
-  "timestamp": "2026-07-25T13:18:02.152891",
+  "timestamp": "2026-07-25T13:42:44.060481",
   "topology": "routing3",
   "z_values": [
     5
