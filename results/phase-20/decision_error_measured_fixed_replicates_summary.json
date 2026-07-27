@@ -1,0 +1,178 @@
+{
+  "d_sla": {
+    "between_over_within_se": 1.7294116592359967,
+    "between_trace_sd": 0.006819725636781921,
+    "ci95_mean_t": {
+      "df": 4,
+      "hi": 0.08077876911202939,
+      "lo": 0.06121573975639335
+    },
+    "ci95_single_measurement_normal": {
+      "hi": 0.08643763830316292,
+      "lo": 0.055556870565259826
+    },
+    "ci95_total": {
+      "hi": 0.08643763830316292,
+      "lo": 0.055556870565259826
+    },
+    "lower_ge_threshold": true,
+    "mean_t_lower_ge_threshold": true,
+    "point_mean": 0.07099725443421137,
+    "points": [
+      0.06418181594907271,
+      0.08219017333398175,
+      0.07114213765889277,
+      0.07016017201601721,
+      0.06731197321309237
+    ],
+    "sd_between_ci95_chi_square": {
+      "df": 4,
+      "hi": 0.01959686102644236,
+      "level": 0.95,
+      "lo": 0.00408592362879873
+    },
+    "se_mean": 0.003523035503027231,
+    "se_single_measurement": 0.007877746871914055,
+    "se_total": 0.007877746871914055,
+    "single_measurement_lower_ge_threshold": true,
+    "t_crit_975": 2.7764451051977987,
+    "threshold": 0.03,
+    "within_trace_se_rms": 0.0039433790100586435
+  },
+  "err": {
+    "between_over_within_se": 1.144442326332906,
+    "between_trace_sd": 0.009308752457537924,
+    "ci95_mean_t": {
+      "df": 4,
+      "hi": 0.18302818375223345,
+      "lo": 0.15232990841816924
+    },
+    "ci95_single_measurement_normal": {
+      "hi": 0.19190807251336864,
+      "lo": 0.14345001965703405
+    },
+    "ci95_total": {
+      "hi": 0.19190807251336864,
+      "lo": 0.14345001965703405
+    },
+    "point_mean": 0.16767904608520134,
+    "points": [
+      0.1570614040593579,
+      0.18265331969302495,
+      0.16698482386129593,
+      0.16695683449512638,
+      0.16473884831720154
+    ],
+    "sd_between_ci95_chi_square": {
+      "df": 4,
+      "hi": 0.026749218070597568,
+      "level": 0.95,
+      "lo": 0.0055771820813073445
+    },
+    "se_mean": 0.005528341849185817,
+    "se_single_measurement": 0.012361748177636378,
+    "se_total": 0.012361748177636378,
+    "t_crit_975": 2.7764451051977987,
+    "within_trace_se_rms": 0.008133876424656203
+  },
+  "gates": {
+    "G1_err_mean_t_ci_inside_005_040": true,
+    "G1_err_single_measurement_ci_inside_005_040": true,
+    "G2_d_sla_mean_t_lower_ge_003": true,
+    "G2_d_sla_single_measurement_lower_ge_003": true
+  },
+  "n_traces": 5,
+  "run_seed": "100",
+  "traces": [
+    {
+      "calibration_mode": "frozen",
+      "d_sla": 0.06418181594907271,
+      "d_sla_ci95_within": {
+        "hi": 0.07220292094809394,
+        "lo": 0.05666715632354229
+      },
+      "d_sla_within_se": 0.0038956088575124487,
+      "err": 0.1570614040593579,
+      "err_ci95_within": {
+        "hi": 0.17245409688868235,
+        "lo": 0.14023588349124635
+      },
+      "err_within_se": 0.008245856720304558,
+      "path": "results/phase-20/decision_error_measured_fixed_trace_s0.json",
+      "run_seed": 100,
+      "trace": "results/phase-20/rho_measured_long.csv"
+    },
+    {
+      "calibration_mode": "frozen",
+      "d_sla": 0.08219017333398175,
+      "d_sla_ci95_within": {
+        "hi": 0.09091652261830359,
+        "lo": 0.0739545331786901
+      },
+      "d_sla_within_se": 0.004388341608983887,
+      "err": 0.18265331969302495,
+      "err_ci95_within": {
+        "hi": 0.19990902003740701,
+        "lo": 0.16631534389945918
+      },
+      "err_within_se": 0.008605900122541341,
+      "path": "results/phase-20/decision_error_measured_fixed_trace_s1.json",
+      "run_seed": 100,
+      "trace": "results/phase-20/rho_measured_long_s1.csv"
+    },
+    {
+      "calibration_mode": "frozen",
+      "d_sla": 0.07114213765889277,
+      "d_sla_ci95_within": {
+        "hi": 0.07990118726101593,
+        "lo": 0.06348526583587366
+      },
+      "d_sla_within_se": 0.00433752315115687,
+      "err": 0.16698482386129593,
+      "err_ci95_within": {
+        "hi": 0.1855152094675901,
+        "lo": 0.1502403749041809
+      },
+      "err_within_se": 0.009075908011231943,
+      "path": "results/phase-20/decision_error_measured_fixed_trace_s2.json",
+      "run_seed": 100,
+      "trace": "results/phase-20/rho_measured_long_s2.csv"
+    },
+    {
+      "calibration_mode": "frozen",
+      "d_sla": 0.07016017201601721,
+      "d_sla_ci95_within": {
+        "hi": 0.07637565432071752,
+        "lo": 0.06419341414240633
+      },
+      "d_sla_within_se": 0.0031021892789957844,
+      "err": 0.16695683449512638,
+      "err_ci95_within": {
+        "hi": 0.17932836343823946,
+        "lo": 0.15501246027187082
+      },
+      "err_within_se": 0.006309652664338021,
+      "path": "results/phase-20/decision_error_measured_fixed_trace_s3.json",
+      "run_seed": 100,
+      "trace": "results/phase-20/rho_measured_long_s3.csv"
+    },
+    {
+      "calibration_mode": "frozen",
+      "d_sla": 0.06731197321309237,
+      "d_sla_ci95_within": {
+        "hi": 0.07435903707342582,
+        "lo": 0.0591598234264001
+      },
+      "d_sla_within_se": 0.003857485479875262,
+      "err": 0.16473884831720154,
+      "err_ci95_within": {
+        "hi": 0.17990397723161416,
+        "lo": 0.1480921981242816
+      },
+      "err_within_se": 0.008158445655516058,
+      "path": "results/phase-20/decision_error_measured_fixed_trace_s4.json",
+      "run_seed": 100,
+      "trace": "results/phase-20/rho_measured_long_s4.csv"
+    }
+  ]
+}

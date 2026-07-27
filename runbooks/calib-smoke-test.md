@@ -204,7 +204,7 @@ Mac dinh moi lenh se quet queue targets `5,15,40` ms.
 Ban dang de du lieu phan xu M/M/1, M/D/1, va free-form.
 
 ```bash
-python3 -m rl.routing.link_model_fit \
+python3 -m twin.link_model_fit \
   --csv results/calib/raw_sweep_2node.csv \
   --out-json results/calib/link_profiles.json \
   --out-report results/calib/fit_report.md

@@ -11,13 +11,20 @@ import os
 import time
 import uuid
 
-import requests
+import pytest
+
+requests = pytest.importorskip('requests')
 
 from bridge.ditto_common import DITTO_BASE_URL, DITTO_AUTH, NAMESPACE
 
 CONTROLLER = '%s:controller' % NAMESPACE
 AUDIT_PATH = os.environ.get('DT4N_COMMAND_AUDIT',
                             'logs/command_agent_audit.log')
+
+pytestmark = pytest.mark.skipif(
+    os.environ.get('DT4N_LIVE_COMMAND_TESTS') != '1',
+    reason='requires live Ditto + Mininet + Command Agent; set DT4N_LIVE_COMMAND_TESTS=1',
+)
 
 
 def _send(subject, body):

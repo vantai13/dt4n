@@ -20,7 +20,7 @@ import os
 
 import numpy as np
 
-from rl.routing3.link_model import CLIFF_RHO_OFFERED
+from twin.link_model import CLIFF_RHO_OFFERED
 
 
 N_PATHS = 3

@@ -57,16 +57,48 @@ docs/phase-4.5/raw/*.log
 docs/phase-4.5/raw/*.txt
 !docs/phase-4.5/raw/.gitkeep
 
-# --- Phase 9+: chống rác quay lại ---
-# Experiment outputs are local/regenerable. Commit only frozen_policies/ when a
-# policy is officially frozen with provenance.
-results/
+# --- Ket qua thi nghiem: NT33 / provenance ---
+# Mac dinh bo qua results/ vi co the co file nang (pcap, model, raw dump).
+# Nhung moi ket qua co the trich dan trong paper phai commit duoc.
+results/*
+results/**/*
+!results/**/
+!results/calib/**
+!results/phase-*/**/*.json
+!results/phase-*/**/*.md
+!results/phase-*/**/*.csv
+!results/phase-*/**/*.png
+!results/phase-*/*.json
+!results/phase-*/*.md
+!results/phase-*/*.csv
+!results/phase-*/*.png
+
+# Raw/generated experiment payloads stay local. Commit compact summaries,
+# diagnostics, and docs instead of large traces/log folders.
+results/phase-14/
+results/phase-14b/*.json
+results/phase-14c/*.json
+results/phase-20/flow_logs*/
+results/phase-20/rho_*.csv
+results/phase-20/rho_trace*.csv
+results/phase-20/rho_trace*_meta.json
+results/phase-20/tau_summary.json
+results/phase-20/tau_summary_*_fixed.json
+results/phase-20/tau_summary_smoke.json
+results/phase-20/estimator_compare_smoke.json
+
 runs/
 !frozen_policies/**
 
-# Hình phải sinh từ CSV bằng script, không commit hình vẽ tay
+# --- Kho luu tru code cu: phai duoc tracked ---
+# legacy/ co y KHONG nam trong danh sach ignore.
+# _legacy/ va _graveyard/ ben duoi chi la thu muc tam cu, dung dung cho archive.
+
+# Hinh phai sinh tu CSV bang script, khong commit hinh ve tay.
 *.png
-!docs/**/*.png        # trừ hình trong docs (dùng cho luận văn)
+!docs/**/*.png
+!results/phase-*/**/*.png
+!results/phase-*/*.png
 
 # Thư mục làm việc tạm
 _graveyard/

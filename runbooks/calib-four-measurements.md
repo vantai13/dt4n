@@ -65,7 +65,7 @@ sudo -E env PYTHONPATH="$PWD" PYTHONPYCACHEPREFIX=/tmp/dt4n-pycache \
 Fit/report:
 
 ```bash
-python3 -m rl.routing.link_model_fit \
+python3 -m twin.link_model_fit \
   --csv results/calib/raw_sweep_2node.csv \
   --out-json results/calib/link_profiles.json \
   --out-report results/calib/fit_report.md

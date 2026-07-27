@@ -463,4 +463,11 @@ check('stdout được trả về để parse ping', 'packet loss' in out)
 
 print('\n' + '=' * 50)
 print('KET QUA: %d pass, %d fail' % (passed, failed))
-sys.exit(0 if failed == 0 else 1)
+
+
+def test_phase2_5_script_checks_passed():
+    assert failed == 0
+
+
+if __name__ == '__main__':
+    sys.exit(0 if failed == 0 else 1)

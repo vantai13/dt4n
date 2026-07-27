@@ -13,7 +13,7 @@ from typing import Optional, Tuple
 
 from bridge.ditto_common import make_thing_id_link
 from bridge.ditto_reader import _get_one, compute_aoi, extract_t_source
-from rl.routing_2path.util_spec import UTIL_DIRECTION, utilization_from_rate
+from twin.util_spec import UTIL_DIRECTION, utilization_from_rate
 
 
 PROC_NET_DEV = "/proc/net/dev"

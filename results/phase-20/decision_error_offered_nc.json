@@ -1,0 +1,84 @@
+{
+  "config": {
+    "calibration": {
+      "delay_percentile": 85.0,
+      "history": [
+        {
+          "action_change": null,
+          "optimal_violation": 0.14999305555555556,
+          "round": 0,
+          "t_delay_ms": 14.513765784675,
+          "tie_rate": 0.0,
+          "w_loss_input": 2500.0,
+          "w_loss_next": 1451.3765784675
+        },
+        {
+          "action_change": 2.777777777777778e-05,
+          "optimal_violation": 0.14999305555555556,
+          "round": 1,
+          "t_delay_ms": 14.513765784675,
+          "tie_rate": 0.0,
+          "w_loss_input": 1451.3765784675,
+          "w_loss_next": 1451.3765784675
+        }
+      ],
+      "optimal_violation": 0.14999305555555556,
+      "t_delay_ms": 14.513765784675,
+      "t_loss": 0.01,
+      "tie_rate": 0.0,
+      "w_loss": 1451.3765784675
+    },
+    "d_sync_s": 0.051,
+    "dt_s": 0.01,
+    "n_after_warmup": 144000,
+    "n_boot": 2000,
+    "n_raw": 180000,
+    "sync_period_s": 0.5,
+    "tau_core_s": 2.87,
+    "trace": "results/phase-20/rho_offered_long.csv",
+    "warmup_frac": 0.2,
+    "z_list_s": [
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.298,
+      0.5,
+      1.0,
+      2.0,
+      4.0
+    ]
+  },
+  "nc_only": true,
+  "runs": {
+    "100": {
+      "negative_controls": {
+        "NC1_zero_age": {
+          "err": 0.0,
+          "expect": 0.0,
+          "pass": true
+        },
+        "NC2_tiny_noise": {
+          "err": 0.0,
+          "expect": 0.0,
+          "pass": true
+        },
+        "NC3_block_permute": {
+          "block_len_samples": 1435,
+          "err": 0.6108850174216028,
+          "err_independent_expected": 0.6234830627893518,
+          "n_blocks": 100,
+          "pass": true
+        },
+        "NC4_random_twin": {
+          "err": 0.7494166666666666,
+          "expect_approx": 0.75,
+          "expect_exact": 0.75,
+          "pass": true
+        },
+        "all_pass": true
+      },
+      "seed": 100
+    }
+  }
+}

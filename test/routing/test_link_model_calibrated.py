@@ -7,7 +7,7 @@ import numpy as np
 
 sys.path.insert(0, ".")
 
-from rl.routing_2path.link_model import (  # noqa: E402
+from twin.link_model import (  # noqa: E402
     CRITICAL_CEILING_FRACTION,
     CRITICAL_TO_FULL_RHO_OFFERED,
     LOW_TO_CRITICAL_RHO_OFFERED,

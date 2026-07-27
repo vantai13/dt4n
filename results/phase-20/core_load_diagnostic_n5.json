@@ -1,0 +1,105 @@
+{
+  "core_links": [
+    "ac",
+    "ad",
+    "bc",
+    "bd"
+  ],
+  "corr_raw_core_mean_vs_d_sla": 0.1713973638183196,
+  "corr_raw_core_mean_vs_d_sla_ci95": {
+    "hi": 0.9152640246746004,
+    "lo": -0.8375243965544226,
+    "method": "fisher_z",
+    "n": 5
+  },
+  "corr_raw_core_mean_vs_err": 0.34466019237629775,
+  "corr_raw_core_mean_vs_err_ci95": {
+    "hi": 0.9408383233582095,
+    "lo": -0.7725241609585716,
+    "method": "fisher_z",
+    "n": 5
+  },
+  "corr_warm_core_mean_vs_d_sla": 0.18347546634850145,
+  "corr_warm_core_mean_vs_d_sla_ci95": {
+    "hi": 0.9172650063904716,
+    "lo": -0.8337620709714387,
+    "method": "fisher_z",
+    "n": 5
+  },
+  "corr_warm_core_mean_vs_err": 0.39584448250132886,
+  "corr_warm_core_mean_vs_err_ci95": {
+    "hi": 0.9472845116031019,
+    "lo": -0.7474790679905711,
+    "method": "fisher_z",
+    "n": 5
+  },
+  "d_sla_points": [
+    0.07286908077994428,
+    0.08552228412256269,
+    0.0843941504178273,
+    0.08222144846796656,
+    0.07193593314763232
+  ],
+  "diagnosis": "inconclusive_with_n5_trace_level; absence of evidence is not evidence of absence; use block-level crossing-rate diagnostic for a powered mechanism check",
+  "err_points": [
+    0.17285515320334263,
+    0.19047353760445682,
+    0.1852158774373259,
+    0.18608635097493037,
+    0.17701949860724234
+  ],
+  "rho_core_mean_after_warmup": [
+    0.9209370576053645,
+    0.9260997906659548,
+    0.9167776109992187,
+    0.925475013561354,
+    0.9216990153664236
+  ],
+  "rho_core_mean_after_warmup_by_link": [
+    {
+      "ac": 0.9188059329465973,
+      "ad": 0.9300280016983332,
+      "bc": 0.909898755376389,
+      "bd": 0.9250155404001388
+    },
+    {
+      "ac": 0.9232381490515972,
+      "ad": 0.941840800453264,
+      "bc": 0.9103350031002778,
+      "bd": 0.9289852100586807
+    },
+    {
+      "ac": 0.9155803894069443,
+      "ad": 0.931671818955625,
+      "bc": 0.9014631907349305,
+      "bd": 0.9183950448993751
+    },
+    {
+      "ac": 0.9210813706588887,
+      "ad": 0.9258300477352083,
+      "bc": 0.9159557529911112,
+      "bd": 0.9390328828602083
+    },
+    {
+      "ac": 0.9213965126202085,
+      "ad": 0.9384647550372223,
+      "bc": 0.9105239830490973,
+      "bd": 0.9164108107591665
+    }
+  ],
+  "rho_core_mean_raw": [
+    0.9229285039719444,
+    0.9268141209445137,
+    0.9180118969862778,
+    0.9270070302841111,
+    0.9221491867663751
+  ],
+  "trace_paths": [
+    "results/phase-20/rho_offered_long.csv",
+    "results/phase-20/rho_offered_long_s1.csv",
+    "results/phase-20/rho_offered_long_s2.csv",
+    "results/phase-20/rho_offered_long_s3.csv",
+    "results/phase-20/rho_offered_long_s4.csv"
+  ],
+  "warmup_frac": 0.2
+}

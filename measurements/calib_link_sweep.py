@@ -2,7 +2,7 @@
 """Sweep delay(rho) and loss(rho) on one real shaped Mininet link.
 
 This is the raw-data side of Lesson 9.0. It deliberately does not fit or
-interpret the data; ``rl.routing_2path.link_model_fit`` does that later.
+interpret the data; ``twin.link_model_fit`` does that later.
 """
 
 from __future__ import annotations

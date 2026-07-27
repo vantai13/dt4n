@@ -182,4 +182,11 @@ finally:
 
 print("\n" + "="*50)
 print("KẾT QUẢ: %d pass, %d fail" % (passed, failed))
-sys.exit(0 if failed == 0 else 1)
+
+
+def test_collector_logic_script_checks_passed():
+    assert failed == 0
+
+
+if __name__ == "__main__":
+    sys.exit(0 if failed == 0 else 1)
