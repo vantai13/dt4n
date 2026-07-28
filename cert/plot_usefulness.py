@@ -34,7 +34,16 @@ def _polyline(points: Iterable[tuple[float, float]], color: str, sx, sy) -> str:
     return f'<polyline points="{encoded}" fill="none" stroke="{color}" stroke-width="2.5"/>'
 
 
-def render_svg(report: dict, title: str) -> str:
+def _recommended_coverage(rows: list[dict], eps_max: float) -> float:
+    coverage = [
+        float(row["adaptive"]["coverage"])
+        for row in rows
+        if float(row["eps_ms"]) <= float(eps_max)
+    ]
+    return max(coverage) if coverage else 0.0
+
+
+def render_svg(report: dict, title: str, recommended_eps_max: float = 50.0) -> str:
     rows = report["frontier"]
     all_points = []
     for key, _label, _color in SERIES:
@@ -56,6 +65,8 @@ def render_svg(report: dict, title: str) -> str:
     def sy(y: float) -> float:
         return top + (1.0 - y / y_max) * plot_h
 
+    rec_cov = _recommended_coverage(rows, recommended_eps_max)
+    rec_x = sx(rec_cov)
     parts = [
         f'<svg xmlns="http://www.w3.org/2000/svg" width="{width}" height="{height}" viewBox="0 0 {width} {height}">',
         "<style>",
@@ -65,6 +76,18 @@ def render_svg(report: dict, title: str) -> str:
         "</style>",
         '<rect x="0" y="0" width="900" height="560" fill="#ffffff"/>',
         f'<text class="title" x="{left}" y="30">{escape(title)}</text>',
+        (
+            f'<rect x="{left}" y="{top}" width="{max(0.0, rec_x - left):.1f}" '
+            f'height="{plot_h}" fill="#e8f3ff" opacity="0.55"/>'
+        ),
+        (
+            f'<line x1="{rec_x:.1f}" y1="{top}" x2="{rec_x:.1f}" y2="{height-bottom}" '
+            'stroke="#2563eb" stroke-width="1.4" stroke-dasharray="5 5"/>'
+        ),
+        (
+            f'<text class="legend" x="{rec_x-8:.1f}" y="{top+18}" text-anchor="end">'
+            f'recommended eps&lt;={recommended_eps_max:.0f}, cov&lt;={rec_cov:.2f}</text>'
+        ),
     ]
 
     for i in range(6):
@@ -114,11 +137,12 @@ def main() -> None:
     parser.add_argument("--json", required=True)
     parser.add_argument("--out-svg", required=True)
     parser.add_argument("--title", default="Figure 3. Phase 21.4 risk-coverage frontier")
+    parser.add_argument("--recommended-eps-max", type=float, default=50.0)
     args = parser.parse_args()
 
     with open(args.json, "r", encoding="utf-8") as fh:
         report = json.load(fh)
-    svg = render_svg(report, args.title)
+    svg = render_svg(report, args.title, args.recommended_eps_max)
     os.makedirs(os.path.dirname(args.out_svg) or ".", exist_ok=True)
     with open(args.out_svg, "w", encoding="utf-8") as fh:
         fh.write(svg)

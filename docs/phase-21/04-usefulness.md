@@ -63,11 +63,38 @@ Ket qua chinh:
 
 ```text
 adaptive thang chac chan o 9/13 muc eps
+adaptive TROI HOAN TOAN o 8/11 muc eps khong suy bien:
+  eps = 0, 2, 5, 10, 15, 20, 40, 50
 ```
 
 Dieu nay tra loi cau hoi reviewer: dieu kien-theo-tuoi `q_hat(z)` khong phai
 trang tri. No giam `err|accept` so voi threshold hang so o hau het vung coverage
 van hanh quan trong.
+
+Dang manh hon cua ket qua la "troi hoan toan": tai 8/11 diem van hanh khong
+suy bien, adaptive gate co coverage cao hon va `err|accept` thap hon cung luc.
+Do khong chi la mot danh doi tot hon tren cung mot duong cong.
+
+So tai coverage khop, noi suy tu duong constant threshold:
+
+```text
+coverage   err_adaptive   err_constant@coverage   ti le
+ 0.0573       0.0339             0.0639           1.88x
+ 0.0644       0.0405             0.0668           1.65x
+ 0.0838       0.0593             0.0878           1.48x
+ 0.1166       0.0912             0.1096           1.20x
+```
+
+Cau tom tat cho paper:
+
+```text
+At matched coverage the age-conditional certificate reduces decision error by
+1.9x relative to a constant confidence-margin threshold calibrated to the same
+acceptance rate: 3.4% vs 6.4% at 5.7% coverage. The paired block-bootstrap
+CI95 for the error difference is [+0.020, +0.041]. Adaptive q_hat(z) strictly
+dominates the constant threshold at 8 of 11 pre-registered non-degenerate
+operating points.
+```
 
 ### 2.2. Bon Duong Co So
 
@@ -106,6 +133,60 @@ eps   coverage   exploited headroom
 
 O vung coverage thap, adaptive gate khai thac 64.6-81.6% du dia giua random va
 oracle. Day la dong gop hieu nang, khong chi la bao dam hinh thuc.
+
+### 2.4. Dao Chieu O Epsilon Lon
+
+Khong cat bang tai `eps=50`. Ket qua co mot hien tuong co co che ro:
+
+```text
+eps = 100: adaptive err 0.1704 | constant err 0.1588
+           delta -0.0114, CI95 [-0.0174,-0.0052]
+```
+
+Cong constant thang co y nghia o `eps=100`. Day la khiem khuyet cua ho tham so
+hoa dang cong, khong phai bang chung chong lai dieu kien-theo-tuoi. Nguong hieu
+dung la `max(q_hat(z) - eps, 0)` vi `gap_twin` khong am:
+
+```text
+eps =  40: [24.1, 48.8, 65.9, 80.2, 93.2] -> 0/5 bin thoai hoa
+eps =  50: [14.1, 38.8, 55.9, 70.2, 83.2] -> 0/5 bin thoai hoa
+eps =  70: [ 0.0, 18.8, 35.9, 50.2, 63.2] -> 1/5 bin thoai hoa
+eps = 100: [ 0.0,  0.0,  5.9, 20.2, 33.2] -> 2/5 bin thoai hoa
+```
+
+Khi `q_hat(z) - eps <= 0`, bin do accept moi hang, ke ca `gap_twin ~= 0`, noi
+hai hanh dong gan hoa va twin de chon sai nhat. Cong adaptive khi do vut bo tin
+hieu bien do trong cac bin cham 0, trong khi constant threshold van giu tin
+hieu `gap_twin`.
+
+Pham vi van hanh khuyen nghi:
+
+```text
+eps <= 50 ms, tuong ung coverage <= 0.17 tren offered OOS
+```
+
+Trong vung nay adaptive gate troi hoan toan hoac thang co y nghia, va chua co
+bin nao thoai hoa.
+
+### 2.5. Exploratory Cho Phase 23
+
+Quan sat hau nghiem nay de xuat mot ho tham so hoa nhan:
+
+```text
+gap_twin >= lambda * q_hat(z),  lambda in [0, 1]
+```
+
+Ho nhan giu nguyen thu tu giua cac bin va khong lam bin tuoi tre cham nguong 0
+som hon bin tuoi gia:
+
+```text
+lambda = 0.9: [57.7, 79.9, 95.3, 108.2, 119.9]
+lambda = 0.5: [32.1, 44.4, 53.0,  60.1,  66.6]
+lambda = 0.1: [ 6.4,  8.9, 10.6,  12.0,  13.3]
+```
+
+Khong chay ho nhan trong Phase 21. Day la exploratory/future work va can duoc
+pre-register o dau Phase 23 truoc khi do.
 
 ## 3. Measured Robustness
 
@@ -150,6 +231,16 @@ Du dia oracle khai thac o 6 muc eps dau:
 
 Measured la robustness only. No ung ho dong gop cua dieu kien-theo-tuoi o vung
 coverage thap, nhung khong manh bang offered va khong thay the source chinh.
+Day la internal consistency check dung huong: measured chi co 2 bin tuoi nen
+loi ich dieu kien hoa giam so voi offered 5 bin.
+
+```text
+offered : 5 bin, thang 9/13, delta eps=0 +0.0298, exploited headroom 81.6%
+measured: 2 bin, thang 6/13, delta eps=0 +0.0141, exploited headroom 68.5%
+```
+
+Dao chieu xuat hien som hon tren measured (`eps=40`) vi chi co 2 bin tuoi va ho
+dang cong nhanh lam bin tre thoai hoa.
 
 ## 4. Ket Luan Lesson 21.4
 
@@ -160,9 +251,11 @@ Amendment 4 truoc khi do                         PASS
 B2 ablation co CI95 cua hieu                     PASS
 Bon duong co so                                  PASS
 Figure 3 cung truc risk-coverage                 PASS
+Figure 3 co du 4 duong va vung eps<=50           PASS
 offered adaptive thang >= 6/13 muc eps           PASS (9/13)
+offered troi hoan toan tren diem khong suy bien  PASS (8/11)
 measured robustness                              PASS (6/13)
-pytest                                           PASS (2 tests)
+pytest                                           PASS (84 passed, 4 skipped)
 ```
 
 Ket luan dua vao Gate 21: Phase 21 co dong gop phuong phap. Conformal gate
