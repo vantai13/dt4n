@@ -1,8 +1,8 @@
 # GATE 21 - QUYET DINH
 
 Ngay: 2026-07-28
-Tag de xuat: `phase-21-complete` (cho owner review truoc khi tao tag)
-Commit: pending owner review
+Tag: `phase-21-complete`
+Commit: xem tag `phase-21-complete`
 Tien de: Phase 20 PASS (`phase-20-complete`)
 Tien dang ky: `docs/phase-21/00-preregistration.md` (`phase-21-start`)
 Sua doi: `00b-amendment-1.md` .. `00e-amendment-4.md`
@@ -162,15 +162,17 @@ nen `rho` co the nhay nhieu sigma trong mot buoc; `u` du bao kem:
 uoc luong phi tham so `P(vuot nguong | rho_hat, z)`.
 
 L6. `link_model` hieu chuan payload 1470 B, Phase 20/21 chay 1400 B. Xem
-`docs/phase-20/99b-erratum.md` E6 va cac kiem chung do nhay.
+`docs/phase-20/99b-erratum.md` E6 va quy tac do nhay da ghi truoc tai
+`docs/phase-21/05-sensitivity.md`.
 
 L7. `CRITICAL_CEILING_FRACTION = 0.71` do o mot cau hinh `(bw=4, q=13)`; ba
 cau hinh dung trong `topology_v7` chua duoc do truc tiep. `rho` nam trong dai
-toi han khoang 25% thoi gian. Xem sensitivity Phase 20.
+toi han khoang 25% thoi gian. Xem `docs/phase-20/99b-erratum.md` E7 va khung
+do Buoc 2 tai `docs/phase-21/06-critical-band.md`.
 
 L8. HTB va netem duoc hieu chuan tren cung interface Mininet TCLink. Anh huong
 quan sat duoc da duoc `link_model` dien giai dung; anh huong con lai chua danh
-gia rieng.
+gia rieng. Xem `docs/phase-20/99b-erratum.md` E8.
 
 L9. Bao dam phat bieu o muc block dai `5*tau = 14.35 s`, khong o muc sample.
 Phu thuoc trong block khong kha hoan doi.
@@ -199,6 +201,9 @@ Ngan sach lap: 0/2
 pytest: 84 passed, 4 skipped
 JSON: co provenance git_hash, git_dirty, timestamp, argv, seed, hang so
 Figure 3: 4 duong adaptive/constant/random/oracle va vung eps<=50
+Erratum: docs/phase-20/99b-erratum.md dong E6-E8
+Sensitivity rule: docs/phase-21/05-sensitivity.md ghi truoc khi chay
+Critical-band plan: docs/phase-21/06-critical-band.md la stub cho Buoc 2
 ```
 
 ## 7. Ket Luan Mot Cau
