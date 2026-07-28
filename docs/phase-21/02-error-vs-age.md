@@ -56,6 +56,11 @@ Spearman = 1.0000 PASS
 Ket luan: tuoi `z` la bien dieu kien chinh hop le. `u` co them mot it thong tin
 nhung khong du manh de thay thiet ke confirmatory.
 
+Luu y truoc Lesson 21.3: bang risk-coverage trong file nay la IN-SAMPLE, vi
+`q_hat` duoc fit tren toan bo 495 block roi danh gia tren chinh cac block do.
+Con so dua vao paper phai la OUT-OF-SAMPLE: fit `q_hat` tren `D_calib`, danh
+gia tren `D_test`.
+
 ## 2. Sensitivity Scores
 
 `s_range`:
@@ -96,5 +101,14 @@ eta^2(s | z_bin*u_bin) raw=0.0885
 ```
 
 Measured xac nhan xu huong q_hat tang theo tuoi, nhung do phan giai tuoi 200 ms
-qua tho nen H2 khong dat nguong confirmatory. Dung measured nhu robustness
+qua tho nen H2 khong dat nguong confirmatory. Day la artifact cua do phan giai,
+khong phai bang chung chong lai gia thuyet tuoi:
+
+```text
+offered eta2(z)/(k-1)  = 0.1239 / 4 = 0.0310
+measured eta2(z)/(k-1) = 0.0448 / 1 = 0.0448
+```
+
+Tren moi bac tu do, measured `z` con manh hon offered. Khong ha nguong H2; ghi
+FAIL nhe va dien giai bang artifact aliasing tuoi. Dung measured nhu robustness
 check, khong dung de hieu chuan certificate chinh.

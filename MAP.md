@@ -14,6 +14,7 @@ Cap nhat: 2026-07-28 | Nhanh lam viec: `main`
 | Lam Phase 21 conformal | `docs/phase-21/00-preregistration.md`, `docs/phase-21/00-conformal-foundation.md`, `cert/` |
 | Xay tap calib Phase 21 | `cert/build_calib_set.py`, `docs/phase-21/00b-amendment-1.md`, `results/phase-21/` |
 | Phan tich error-vs-age Phase 21 | `cert/error_vs_age.py`, `docs/phase-21/02-error-vs-age.md`, `results/phase-21/error_vs_age_*.json` |
+| Kiem coverage conformal Phase 21 | `cert/conformal_age.py`, `docs/phase-21/00d-amendment-3.md`, `results/phase-21/conformal_*.json` |
 | Xem san khau Q7=B | `twin/topology_v7.py` |
 | Do tau/sigma va decision error Phase 20 | `tools/phase20_smoke.sh`, `mininet/run_sync_v7.py`, `measurements/measure_tau.py`, `measurements/compare_estimators.py`, `measurements/decision_error.py`, `measurements/summarize_decision_error_replicates.py`, `measurements/phase20_core_load_diagnostic.py`, `measurements/phase20_block_crossing_diagnostic.py`, `measurements/phase20_measured_crosscheck_diagnostic.py`, `runbooks/phase-20-traffic-v7-tmux.md` |
 | Fit lai profile calibration | `twin/link_model_fit.py` |
