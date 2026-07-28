@@ -66,9 +66,26 @@ Preview `q_hat` theo `z_bin`, `alpha=0.10`:
      4    495            316.206        160.675        132.657        2.38x         1.145
 ```
 
-Dien giai nhanh: so voi pilot AR(1), trace flow-level that co duoi nang hon rat
-nhieu. `q_hat` lon hon `gap_twin p50` khoang 56-116 lan, nen Lesson 21.3-21.4
-can dac biet chu y risk-coverage theo `eps` va cac o `(z,u)`.
+Dien giai dung: khong doc `q_hat` mot minh, va khong so voi `gap_twin p50`.
+Gate ACCEPT khi gap lon, nen thang doi chieu dung la duoi tren cua `gap_twin`.
+Trace flow-level that co duoi gap nang hon pilot AR(1): `gap_twin p90 = 72.5`
+ms, trong khi `q_hat_vs_a1(z0) = 63.9` ms. Vi vay trace that de hon pilot o
+nghia co nhieu quyet dinh co gap du lon de gate co viec lam.
+
+Risk-coverage preview chinh xac tu parquet:
+
+```text
+ eps(ms)  coverage   err|acc  d_sla|acc  regret|acc
+       0    0.0543    0.0333    0.01120       0.436
+       5    0.0613    0.0401    0.01538       0.573
+      10    0.0677    0.0463    0.01829       0.640
+      20    0.0872    0.0639    0.02583       0.936
+      30    0.1118    0.0901    0.03811       1.285
+      50    0.1587    0.1348    0.05767       2.165
+      70    0.3487    0.1444    0.06196       2.998
+     100    0.5479    0.1668    0.07258       4.270
+  ANCHOR    1.0000    0.1820    0.07941       6.074
+```
 
 ## 2. Measured Trace - Cross-Check Phu
 
@@ -88,22 +105,26 @@ python -m cert.build_calib_set \
 Ket qua:
 
 ```text
-BANG: 34,000 hang | 30 block (20 block DAY) | 5 trace
+BANG: 30,156 hang | 500 block (495 block DAY) | 5 trace
 SELF-CHECK: TAT CA PASS
 
-err        = 0.14400
-d_sla      = 0.06229
-regret|err = 30.072 ms
+err        = 0.16929
+d_sla      = 0.07276
+regret|err = 29.855 ms
 ```
 
-Canh bao quan trong: `dt=0.2s`, tuoi rang cua chi con 3 muc khac nhau va co
-clip bin tuoi. Vi vay measured chi la robustness/cross-check, khong lam nguon
-gate chinh cho Phase 21.
+Canh bao quan trong: `dt=0.2s`, tuoi rang cua measured chi co do phan giai
+thap. Sau Amendment 2, cac hang `z=0` bi loai va measured dung 2 bin tuoi:
+`[0.10,0.30)` va `[0.30,0.70)`. Vi vay measured chi la robustness/cross-check,
+khong lam nguon gate chinh cho Phase 21.
 
-O sparse tren measured:
+So block moi o measured:
 
 ```text
-{'4_0': 4, '4_1': 4, '4_2': 4, '4_3': 4}
+u_bin    0    1    2    3
+z_bin
+0      495  336  431  495
+1      495  438  452  495
 ```
 
 ## 3. Artifacts
@@ -112,12 +133,12 @@ Parquet khong version hoa:
 
 ```text
 cert/calib_set_offered.parquet   24.6 MB
-cert/calib_set_measured.parquet   2.5 MB
+cert/calib_set_measured.parquet   2.4 MB
 ```
 
 Checksums:
 
 ```text
 83ab9f4c9701fc275c698c43ac92ca7225efba5c1da6ae996e1dfed1cb3726f2  cert/calib_set_offered.parquet
-139fa884772926c169347f50d27b8d1c8d60a29cc565f27e4abc9630c3bf666b  cert/calib_set_measured.parquet
+5274f0dcfeed1e67c245b98cfae3baaabd155aa3ce538d222963980dd3b23627  cert/calib_set_measured.parquet
 ```
