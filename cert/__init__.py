@@ -9,4 +9,8 @@ The analysis unit for this package is a block:
 
 Samples spaced by 10 ms are strongly correlated, so conformal coverage is
 claimed at block granularity, not sample granularity.
+
+Cost, age, and SLA-violation logic is imported from
+``measurements.decision_error``. Do not copy those definitions here; otherwise
+the internal Phase 20 reproduction check becomes circular.
 """

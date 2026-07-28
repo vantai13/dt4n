@@ -12,6 +12,7 @@ Cap nhat: 2026-07-28 | Nhanh lam viec: `main`
 | Chay phu luc/audit Phase 20 mot lan | `tools/phase20_appendix_once.sh`, `runbooks/phase-20-appendix-once.md` |
 | Nen Phase 21 conformal | `docs/phase-21/00-conformal-foundation.md`, `docs/phase-21/PHASE_21.md` |
 | Lam Phase 21 conformal | `docs/phase-21/00-preregistration.md`, `docs/phase-21/00-conformal-foundation.md`, `cert/` |
+| Xay tap calib Phase 21 | `cert/build_calib_set.py`, `docs/phase-21/00b-amendment-1.md`, `results/phase-21/` |
 | Xem san khau Q7=B | `twin/topology_v7.py` |
 | Do tau/sigma va decision error Phase 20 | `tools/phase20_smoke.sh`, `mininet/run_sync_v7.py`, `measurements/measure_tau.py`, `measurements/compare_estimators.py`, `measurements/decision_error.py`, `measurements/summarize_decision_error_replicates.py`, `measurements/phase20_core_load_diagnostic.py`, `measurements/phase20_block_crossing_diagnostic.py`, `measurements/phase20_measured_crosscheck_diagnostic.py`, `runbooks/phase-20-traffic-v7-tmux.md` |
 | Fit lai profile calibration | `twin/link_model_fit.py` |
