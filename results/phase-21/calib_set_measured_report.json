@@ -1,0 +1,275 @@
+{
+  "blocks_per_cell": {
+    "0_3": 16,
+    "1_0": 20,
+    "1_1": 20,
+    "1_2": 20,
+    "1_3": 20,
+    "3_0": 20,
+    "3_1": 20,
+    "3_2": 20,
+    "3_3": 20,
+    "4_0": 4,
+    "4_1": 4,
+    "4_2": 4,
+    "4_3": 4
+  },
+  "gap": {
+    "gap_true": {
+      "p10": 0.32157284021377563,
+      "p25": 0.7904514074325562,
+      "p50": 1.1328554153442383,
+      "p75": 2.358628749847412,
+      "p90": 65.47144317626953,
+      "p99": 128.20201110839844
+    },
+    "gap_twin": {
+      "p10": 0.3236669600009918,
+      "p25": 0.7904396653175354,
+      "p50": 1.1378371715545654,
+      "p75": 2.3380744457244873,
+      "p90": 65.43064880371094,
+      "p99": 128.25123596191406
+    }
+  },
+  "internal_check": {
+    "d_sla": 0.06229411764705882,
+    "d_sla_abs_diff_from_phase20": 0.017095882352941183,
+    "err": 0.144,
+    "err_abs_diff_from_phase20": 0.03833,
+    "mean_regret_ms": 4.33043098449707,
+    "regret_on_error_ms": 30.07243537902832
+  },
+  "provenance": {
+    "argv": [
+      "/home/ubuntu/dt4n/cert/build_calib_set.py",
+      "--traces",
+      "results/phase-20/rho_measured_long.csv",
+      "results/phase-20/rho_measured_long_s1.csv",
+      "results/phase-20/rho_measured_long_s2.csv",
+      "results/phase-20/rho_measured_long_s3.csv",
+      "results/phase-20/rho_measured_long_s4.csv",
+      "--out",
+      "cert/calib_set_measured.parquet",
+      "--report-json",
+      "results/phase-21/calib_set_measured_report.json"
+    ],
+    "constants": {
+      "age_edges": [
+        0.06,
+        0.16,
+        0.26,
+        0.36,
+        0.46,
+        0.56
+      ],
+      "b_block": 1435,
+      "sigma_rho": 0.01,
+      "t0_steps": 400,
+      "t_delay_ms": 14.513765784675,
+      "t_loss": 0.01,
+      "tau_core_s": 2.87,
+      "u_edges": [
+        0.0,
+        1.0,
+        2.0,
+        3.0,
+        "inf"
+      ],
+      "w_loss": 1451.3765784675,
+      "warmup_frac": 0.2
+    },
+    "git_dirty": false,
+    "git_hash": "e50d9ba63e99a1c97543ef06bc1683c2dc46cd56",
+    "script": "cert/build_calib_set.py",
+    "timestamp_utc": "2026-07-28T04:05:02.868809+00:00"
+  },
+  "qhat_preview": {
+    "0": {
+      "gap_twin_p50": 1.1483192443847656,
+      "n_blocks": 16,
+      "q_range": 0.0,
+      "q_vs_a1": 0.0,
+      "tightening_ratio": Infinity,
+      "two_q_bonf": Infinity
+    },
+    "1": {
+      "gap_twin_p50": 1.1328270435333252,
+      "n_blocks": 20,
+      "q_range": 98.36968231201172,
+      "q_vs_a1": 86.43211364746094,
+      "tightening_ratio": Infinity,
+      "two_q_bonf": Infinity
+    },
+    "3": {
+      "gap_twin_p50": 1.1328773498535156,
+      "n_blocks": 20,
+      "q_range": 133.21286010742188,
+      "q_vs_a1": 126.75707244873047,
+      "tightening_ratio": Infinity,
+      "two_q_bonf": Infinity
+    },
+    "4": {
+      "gap_twin_p50": 1.1094160079956055,
+      "n_blocks": 4,
+      "q_range": Infinity,
+      "q_vs_a1": Infinity,
+      "tightening_ratio": NaN,
+      "two_q_bonf": Infinity
+    }
+  },
+  "s_vs_a1_percentiles": {
+    "0": {
+      "p50": 1e-09,
+      "p75": 0.0,
+      "p90": 0.0,
+      "p90_over_p50": 0.0,
+      "p99": 0.0
+    },
+    "1": {
+      "p50": 24.51395034790039,
+      "p75": 46.72291946411133,
+      "p90": 68.08317565917969,
+      "p90_over_p50": 2.7773237153925696,
+      "p99": 127.90796661376953
+    },
+    "3": {
+      "p50": 41.49919509887695,
+      "p75": 67.75135803222656,
+      "p90": 102.25999450683594,
+      "p90_over_p50": 2.4641440457625476,
+      "p99": 153.7808074951172
+    },
+    "4": {
+      "p50": 46.947540283203125,
+      "p75": 86.34231567382812,
+      "p90": 126.86447143554688,
+      "p90_over_p50": 2.702260239200144,
+      "p99": 168.40211486816406
+    }
+  },
+  "self_check": [],
+  "sparse_cells_lt_9_blocks": {
+    "4_0": 4,
+    "4_1": 4,
+    "4_2": 4,
+    "4_3": 4
+  },
+  "trace_diagnostics": [
+    {
+      "dt_s": 0.19999973,
+      "n_after_warmup": 7200,
+      "n_rows": 6800,
+      "t0": 400,
+      "trace_id": 0,
+      "u_bin_diag": {
+        "max_value": 356678875520257.5,
+        "min_value": 4.054974027252316e-05,
+        "n_bins": 4,
+        "n_high": 0,
+        "n_low": 0,
+        "n_unique_values": 6778
+      },
+      "z_bin_diag": {
+        "max_value": 0.39999946,
+        "min_value": 0.0,
+        "n_bins": 5,
+        "n_high": 0,
+        "n_low": 1360,
+        "n_unique_values": 3
+      }
+    },
+    {
+      "dt_s": 0.19999978,
+      "n_after_warmup": 7200,
+      "n_rows": 6800,
+      "t0": 400,
+      "trace_id": 1,
+      "u_bin_diag": {
+        "max_value": 442700645814784.5,
+        "min_value": 1.8247381145984277e-05,
+        "n_bins": 4,
+        "n_high": 0,
+        "n_low": 0,
+        "n_unique_values": 6752
+      },
+      "z_bin_diag": {
+        "max_value": 0.39999956,
+        "min_value": 0.0,
+        "n_bins": 5,
+        "n_high": 0,
+        "n_low": 1360,
+        "n_unique_values": 3
+      }
+    },
+    {
+      "dt_s": 0.19999969,
+      "n_after_warmup": 7200,
+      "n_rows": 6800,
+      "t0": 400,
+      "trace_id": 2,
+      "u_bin_diag": {
+        "max_value": 433889443215826.5,
+        "min_value": 3.243979503535931e-05,
+        "n_bins": 4,
+        "n_high": 0,
+        "n_low": 0,
+        "n_unique_values": 6746
+      },
+      "z_bin_diag": {
+        "max_value": 0.39999938,
+        "min_value": 0.0,
+        "n_bins": 5,
+        "n_high": 0,
+        "n_low": 1360,
+        "n_unique_values": 3
+      }
+    },
+    {
+      "dt_s": 0.19999998,
+      "n_after_warmup": 7200,
+      "n_rows": 6800,
+      "t0": 400,
+      "trace_id": 3,
+      "u_bin_diag": {
+        "max_value": 346344645599315.5,
+        "min_value": 1.2164915482420534e-05,
+        "n_bins": 4,
+        "n_high": 0,
+        "n_low": 0,
+        "n_unique_values": 6747
+      },
+      "z_bin_diag": {
+        "max_value": 0.39999996,
+        "min_value": 0.0,
+        "n_bins": 5,
+        "n_high": 0,
+        "n_low": 1360,
+        "n_unique_values": 3
+      }
+    },
+    {
+      "dt_s": 0.20000002,
+      "n_after_warmup": 7200,
+      "n_rows": 6800,
+      "t0": 400,
+      "trace_id": 4,
+      "u_bin_diag": {
+        "max_value": 27.26803485559095,
+        "min_value": 1.621988590347784e-05,
+        "n_bins": 4,
+        "n_high": 0,
+        "n_low": 0,
+        "n_unique_values": 6782
+      },
+      "z_bin_diag": {
+        "max_value": 0.60000006,
+        "min_value": 0.20000002,
+        "n_bins": 5,
+        "n_high": 1360,
+        "n_low": 0,
+        "n_unique_values": 3
+      }
+    }
+  ]
+}
