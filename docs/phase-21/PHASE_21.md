@@ -1,9 +1,14 @@
 # PHASE 21 - PRE-REGISTRATION: CONFORMAL TRUST GATE
 
 Ngay: 2026-07-27
-Trang thai: draft de owner ky truoc khi viet code Phase 22
+Trang thai: superseded. Ban chot de ky la
+`docs/phase-21/00-preregistration.md` ngay 2026-07-28.
 Phu thuoc: `phase-20-complete`
 Executor: DT4N owner + Codex
+
+Ghi chu: file nay la ban nhap nen ly thuyet/ke hoach ban dau. Cac quyet dinh
+P1-P8, score tren hieu, Mondrian 2 chieu `(z,u)`, va ho tieu chi theo `eps`
+duoc chot trong `00-preregistration.md`.
 
 Phase 20 da chung minh tin hieu quyet dinh ton tai. Phase 21 chot luat cho
 bo du doan bat dinh va tap hieu chuan, truoc khi Phase 22 do coverage va

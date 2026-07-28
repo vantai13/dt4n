@@ -163,8 +163,12 @@ coverage is claimed for exchangeable blocks of length 5 tau,
 not for individual time samples inside a block.
 ```
 
-Voi 5 trace, moi trace co khoang 100 block, tong khoang 500 block. Voi 5 bin
-tuoi, ky vong khoang 100 block/bin.
+Voi 5 trace, moi trace co khoang 100 block, tong khoang 500 block. Chu ky
+rang cua AoI la 0.5 s = 50 mau, trong khi mot block dai 1435 mau = 28.7 chu ky.
+Vi vay moi block chua ca 50 gia tri tuoi va dong gop vao ca 5 bin tuoi.
+Theo chieu tuoi, `n_g` hieu dung la so block: khoang 500 block/bin truoc split,
+khoang 250 block/bin voi split 50/50. Cac bin khong doc lap voi nhau vi cung
+mot block dong gop vao nhieu bin.
 
 ## 9. Validation Bat Buoc Cho Phase 22
 
@@ -208,3 +212,56 @@ coverage_gate(z) ~= P(cost_gap > 2 * q_hat_Bonf(z))
 Cost gap Phase 20 co median khoang `1.08 ms`, p10 khoang `0.94 ms`. Neu
 `q_hat(0.298) ~= 0.5 ms`, coverage gate co the quanh 50%. Neu
 `q_hat(0.298) ~= 2 ms`, gate se rat bao thu va coverage thap.
+
+## 11. Chan Tren Regret Va Ho Tieu Chi Theo eps
+
+Dat:
+
+```text
+Delta(a,b) = c(a) - c(b)
+a_hat      = argmin_a c_hat(a)
+gap_twin   = min_{a != a_hat} c_hat(a) - c_hat(a_hat) >= 0
+```
+
+Khoang conformal tren hieu cho, voi xac suat `>= 1 - alpha`, dong thoi moi cap:
+
+```text
+Delta_true(a, a_hat) in [Delta_hat(a, a_hat) - q_diff,
+                         Delta_hat(a, a_hat) + q_diff]
+```
+
+Regret cua viec chon `a_hat`:
+
+```text
+regret(a_hat) = c(a_hat) - min_a c(a)
+              = max_a [c(a_hat) - c(a)]
+              = max_a [-Delta_true(a, a_hat)]
+             <= max_a [q_diff - Delta_hat(a, a_hat)]
+              = q_diff - min_{a != a_hat} Delta_hat(a, a_hat)
+              = q_diff - gap_twin
+
+=> regret(a_hat) <= max(0, q_diff(g) - gap_twin)
+```
+
+Tieu chi ACCEPT voi ngan sach regret `eps`:
+
+```text
+ACCEPT <=> q_diff(g) - gap_twin <= eps
+       <=> gap_twin >= q_diff(g) - eps
+```
+
+`eps = 0` la tieu chi khoang tach roi. `eps > 0` noi long co kiem soat. Duong
+risk-coverage cua Fig 3 duoc quet bang `eps`, khong bang `alpha`: quet `alpha`
+sau khi thay ket qua se pha bao dam; `eps` la tham so van hanh dat truoc, moi
+gia tri `eps` cho mot bao dam hop le rieng.
+
+Loi da phat hien trong ban nhap Lesson 21.4:
+
+```text
+ub_regret = (c[chosen] + q) - (c.min() - q)
+```
+
+Cong thuc nay thoai hoa thanh `2*q`, vi `chosen = argmin` nen
+`c[chosen] = c.min()`. Do do no la hang so trong moi bin, khong mang thong tin
+theo tung quyet dinh. Ngoai ra no dung `c` that thay vi `c_hat` twin, nen
+khong kha thi tai thoi diem controller quyet dinh.

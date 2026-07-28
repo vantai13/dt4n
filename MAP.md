@@ -1,6 +1,6 @@
 # MAP - Ban do repo DT4N
 
-Cap nhat: 2026-07-26 | Nhanh lam viec: `main`
+Cap nhat: 2026-07-28 | Nhanh lam viec: `main`
 
 ## Di dau truoc
 
@@ -11,6 +11,7 @@ Cap nhat: 2026-07-26 | Nhanh lam viec: `main`
 | Chay lai Gate 20 day du n=5 | `tools/phase20_full5_rerun.sh`, `runbooks/phase-20-full5-rerun.md` |
 | Chay phu luc/audit Phase 20 mot lan | `tools/phase20_appendix_once.sh`, `runbooks/phase-20-appendix-once.md` |
 | Nen Phase 21 conformal | `docs/phase-21/00-conformal-foundation.md`, `docs/phase-21/PHASE_21.md` |
+| Lam Phase 21 conformal | `docs/phase-21/00-preregistration.md`, `docs/phase-21/00-conformal-foundation.md`, `cert/` |
 | Xem san khau Q7=B | `twin/topology_v7.py` |
 | Do tau/sigma va decision error Phase 20 | `tools/phase20_smoke.sh`, `mininet/run_sync_v7.py`, `measurements/measure_tau.py`, `measurements/compare_estimators.py`, `measurements/decision_error.py`, `measurements/summarize_decision_error_replicates.py`, `measurements/phase20_core_load_diagnostic.py`, `measurements/phase20_block_crossing_diagnostic.py`, `measurements/phase20_measured_crosscheck_diagnostic.py`, `runbooks/phase-20-traffic-v7-tmux.md` |
 | Fit lai profile calibration | `twin/link_model_fit.py` |
@@ -36,7 +37,7 @@ Cap nhat: 2026-07-26 | Nhanh lam viec: `main`
 | Measurement song | `measurements/` | Script do Mininet/Ditto that |
 | Test song | `test/` | Pytest cho infra/twin dang con dung |
 | Evidence cu | `legacy/` | RL Phase 5-14 va artifact da dong |
-| Chung nhan | `cert/` | Cho Phase 22-23, hien chua co logic |
+| Chung nhan | `cert/` | Phase 21: q_hat(z); Phase 22-23: trust gate |
 
 ## Ba con so calibration can bao ve
 
