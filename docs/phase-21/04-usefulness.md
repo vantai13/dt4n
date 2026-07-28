@@ -29,7 +29,7 @@ bootstrap tren test block voi common random numbers.
 Provenance:
 
 ```text
-git_hash  = f3547e8e1d458288f1a44058e225228d32cc7d12
+git_hash  = 7fc60a665a88b5385acddc26b63ff7b3b6bc9ed9
 git_dirty = false
 q_hat(z)  = [64.11, 88.80, 105.90, 120.17, 133.20]
 anchor    = cov 1.0000, err 0.1868, d_sla 0.08100, regret 6.280 ms
