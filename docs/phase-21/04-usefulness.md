@@ -193,7 +193,7 @@ pre-register o dau Phase 23 truoc khi do.
 Provenance:
 
 ```text
-git_hash  = 87d4e1c48190babe8007afb9043850d064e0fe7d
+git_hash  = 6e1fa9178d04703c12c526eb581482b895c937af
 git_dirty = false
 q_hat(z)  = [68.63, 103.02]
 anchor    = cov 1.0000, err 0.1722, d_sla 0.07337, regret 5.316 ms
