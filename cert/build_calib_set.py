@@ -5,8 +5,8 @@ One row is one routing-decision time, not one ``(time, action)`` pair. This
 keeps the effective sample size tied to blocks and makes the gate quantities
 (``gap_twin``, signed-error scores, and ``u``) first-class columns.
 
-The analysis unit is a block:
-1435 samples = 14.35 s = 5*tau_core.
+The analysis unit is a physical block:
+14.35 s = 5*tau_core. It is converted to samples per trace from dt_s.
 """
 
 from __future__ import annotations
@@ -38,15 +38,31 @@ W_LOSS = 1451.3765784675
 T_DELAY = 14.513765784675
 T_LOSS = 0.010
 TAU_CORE = 2.87
-B_BLOCK = 1435
+B_BLOCK_S = 14.35
 WARMUP = 0.20
-T0_STEPS = 400
+T0_S = 4.0
 SIGMA_RHO = 0.010
 EPS_REG = 1e-9
 
 # Pre-registered Phase 21 bins.
 AGE_EDGES = (0.06, 0.16, 0.26, 0.36, 0.46, 0.56)
+MEASURED_AGE_EDGES = (0.10, 0.30, 0.70)
 U_EDGES = (0.0, 1.0, 2.0, 3.0, np.inf)
+
+
+def block_len_samples(dt_s: float) -> int:
+    """Return the 5*tau block length in samples for this trace grid."""
+    return max(1, int(round(B_BLOCK_S / float(dt_s))))
+
+
+def t0_steps(dt_s: float) -> int:
+    """Return the common Phase 20 window start in samples for this trace grid."""
+    return max(1, int(round(T0_S / float(dt_s))))
+
+
+def age_edges_for_dt(dt_s: float) -> tuple[float, ...]:
+    """Use reduced measured-telemetry age bins when dt aliases the sawtooth."""
+    return MEASURED_AGE_EDGES if float(dt_s) >= 0.05 else AGE_EDGES
 
 
 def _sh(*cmd: str) -> str:
@@ -69,11 +85,12 @@ def provenance(argv: Sequence[str]) -> dict:
             "t_delay_ms": T_DELAY,
             "t_loss": T_LOSS,
             "tau_core_s": TAU_CORE,
-            "b_block": B_BLOCK,
+            "b_block_s": B_BLOCK_S,
             "warmup_frac": WARMUP,
-            "t0_steps": T0_STEPS,
+            "t0_s": T0_S,
             "sigma_rho": SIGMA_RHO,
             "age_edges": list(AGE_EDGES),
+            "measured_age_edges": list(MEASURED_AGE_EDGES),
             "u_edges": ["inf" if not np.isfinite(x) else x for x in U_EDGES],
         },
     }
@@ -109,10 +126,22 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
     opt_all, _tie = decide(cost)
 
     age = sawtooth_age_steps(n, dt_s)
-    t0 = max(T0_STEPS, int(age.max()))
+    t0 = max(t0_steps(dt_s), int(age.max()))
     if t0 >= n:
         raise ValueError("trace is too short after warm-up and common-window cut")
-    rows = np.arange(t0, n)
+    all_rows = np.arange(t0, n)
+    local_block_all = all_rows // block_len_samples(dt_s)
+    block_counts_all = np.bincount(local_block_all)
+    physical_block_full_all = block_counts_all[local_block_all] == block_len_samples(dt_s)
+
+    z_zero = age[all_rows] == 0
+    if z_zero.any():
+        print(
+            "  [CANH BAO] %d hang co z=0 (twin = su that); loai khoi tap calib"
+            % int(z_zero.sum())
+        )
+    rows = all_rows[~z_zero]
+    physical_block_full = physical_block_full_all[~z_zero]
     src = rows - age[rows]
     if (src < 0).any():
         raise ValueError("computed negative source indices")
@@ -141,7 +170,6 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
 
     z_s = age[rows] * float(dt_s)
     sig_z = SIGMA_RHO * np.sqrt(1.0 - np.exp(-2.0 * z_s / TAU_CORE))
-    sig_z = np.maximum(sig_z, np.finfo(float).eps)
     dist = np.min(
         np.abs(rho[src][:, :, None] - np.asarray(JUMPS, dtype=float)[None, None, :]),
         axis=2,
@@ -149,9 +177,10 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
     dist_min = dist.min(axis=1)
     u = dist_min / sig_z
 
-    z_bin, z_diag = _bin_with_edge_warnings(z_s, AGE_EDGES)
+    age_edges = age_edges_for_dt(dt_s)
+    z_bin, z_diag = _bin_with_edge_warnings(z_s, age_edges)
     u_bin, u_diag = _bin_with_edge_warnings(u, U_EDGES)
-    if z_diag["n_unique_values"] < len(AGE_EDGES) - 1:
+    if z_diag["n_unique_values"] < len(age_edges) - 1:
         print(
             "  [CANH BAO] chi %d muc tuoi khac nhau (dt=%.6gs) - co the bi aliasing"
             % (z_diag["n_unique_values"], float(dt_s))
@@ -162,14 +191,12 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
             % (z_diag["n_low"], z_diag["n_high"])
         )
 
-    local_block = rows // B_BLOCK
-    block_counts = np.bincount(local_block)
-    block_full = block_counts[local_block] == B_BLOCK
+    local_block = rows // block_len_samples(dt_s)
 
     data = {
         "trace_id": np.full(len(rows), int(trace_id), dtype=np.int8),
         "block_id": (int(trace_id) * 100_000 + local_block).astype(np.int32),
-        "block_full": block_full,
+        "block_full": physical_block_full,
         "t_idx": rows.astype(np.int32),
         "z_s": z_s.astype(np.float32),
         "z_bin": z_bin,
@@ -197,7 +224,11 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
         "n_after_warmup": n,
         "dt_s": float(dt_s),
         "t0": int(t0),
+        "block_len_samples": int(block_len_samples(dt_s)),
+        "block_len_s": float(block_len_samples(dt_s) * float(dt_s)),
+        "n_z_zero_excluded": int(z_zero.sum()),
         "n_rows": int(len(rows)),
+        "age_edges": list(age_edges),
         "z_bin_diag": z_diag,
         "u_bin_diag": u_diag,
     }
@@ -241,6 +272,13 @@ def self_check(df: pd.DataFrame) -> list[str]:
         failures.append("z_bin ngoai mien hop le")
     if (df.u_bin < 0).any() or (df.u_bin > len(U_EDGES) - 2).any():
         failures.append("u_bin ngoai mien hop le")
+    if (df.groupby("z_bin")["s_vs_a1"].max() == 0).any():
+        failures.append("mot bin co toan bo score = 0 -> nghi tron z=0 vao calib")
+    u_finite = df.loc[df.u.notna(), "u"]
+    if not np.isfinite(u_finite).all():
+        failures.append("u co gia tri vo han -> sig_z = 0 (z=0?)")
+    if len(u_finite) and float(u_finite.max()) > 1e3:
+        failures.append("u_max = %.2e qua lon -> nghi chia cho gan 0" % float(u_finite.max()))
     return failures
 
 
