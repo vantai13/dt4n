@@ -1,0 +1,134 @@
+{
+  "checks": {
+    "V-L3": {
+      "loss": 0.0,
+      "mean_ms": 0.17646190944227655,
+      "n_foreign_packets": 0,
+      "p99_ms": 0.3008109997608699,
+      "pass": true,
+      "socket_drops": 0
+    },
+    "V-L4": {
+      "rows": {
+        "cbr": {
+          "ca_actual": 0.06962617125018469,
+          "ca_aggregate": 0.17148730626632677,
+          "ca_design": 0.0,
+          "ca_schedule": 5.056585845221334e-14,
+          "loss": 0.0,
+          "max_late_ms": 17.52473198939697,
+          "n_foreign_packets": 0,
+          "n_late": 8,
+          "n_late_ratio": 0.0004300844040642976,
+          "pass": true,
+          "probe_mean_ms": 0.11699690911231968,
+          "q_mean_ms": 0.16708328082605112,
+          "q_p95_ms": 0.2333129996259231,
+          "rate_ratio": 0.9999965758725282,
+          "rho_actual": 0.8999969275271398,
+          "socket_drops": 0,
+          "steady_state_spread_ms": 0.28758382034986096
+        },
+        "h2": {
+          "ca_actual": 2.0151422343183327,
+          "ca_aggregate": 1.8631908639814851,
+          "ca_design": 2.0,
+          "ca_schedule": 2.015081422981689,
+          "loss": 0.0691904047976012,
+          "max_late_ms": 0.0,
+          "n_foreign_packets": 0,
+          "n_late": 0,
+          "n_late_ratio": 0.0,
+          "pass": true,
+          "probe_mean_ms": 9.60030389440452,
+          "q_mean_ms": 10.796410881210432,
+          "q_p95_ms": 24.715838000702206,
+          "rate_ratio": 0.9999965291227145,
+          "rho_actual": 0.8999968854523069,
+          "socket_drops": 0,
+          "steady_state_spread_ms": 2.5910157784707586
+        },
+        "onoff": {
+          "ca_actual": 1.5056196482109083,
+          "ca_aggregate": 1.1273082437271407,
+          "ca_design": null,
+          "ca_schedule": 1.505555665768528,
+          "loss": 0.009096376484739137,
+          "max_late_ms": 0.0,
+          "n_foreign_packets": 0,
+          "n_late": 0,
+          "n_late_ratio": 0.0,
+          "pass": true,
+          "probe_mean_ms": 5.5109035571031155,
+          "q_mean_ms": 5.822386111681826,
+          "q_p95_ms": 23.913119999633636,
+          "rate_ratio": 0.999996569747558,
+          "rho_actual": 0.8999969220146665,
+          "socket_drops": 0,
+          "steady_state_spread_ms": 4.219448833275607
+        },
+        "poisson": {
+          "ca_actual": 1.0098223992083293,
+          "ca_aggregate": 1.0057061438487478,
+          "ca_design": 1.0,
+          "ca_schedule": 1.0097391561305127,
+          "loss": 0.005914058990866896,
+          "max_late_ms": 0.0,
+          "n_foreign_packets": 0,
+          "n_late": 0,
+          "n_late_ratio": 0.0,
+          "pass": true,
+          "probe_mean_ms": 6.216137855608082,
+          "q_mean_ms": 6.0743996788208605,
+          "q_p95_ms": 20.10079899991979,
+          "rate_ratio": 0.9999965664725703,
+          "rho_actual": 0.8999969190671776,
+          "socket_drops": 0,
+          "steady_state_spread_ms": 2.390896051884469
+        }
+      },
+      "smoke_order_pass": true
+    },
+    "V-L7": {
+      "max_dev_le20": 0.029350123985047827,
+      "pass": false,
+      "sweep": [
+        {
+          "loss": 0.005374738727978501,
+          "probe_pps": 0.0,
+          "q_mean_ms": 6.258185232810161,
+          "rate_ratio": 0.9999919909250891,
+          "rho_actual": 0.8999927918325802,
+          "socket_drops": 0
+        },
+        {
+          "loss": 0.009046728971962617,
+          "probe_pps": 10.0,
+          "q_mean_ms": 6.144339834390047,
+          "rate_ratio": 0.9999941941668526,
+          "rho_actual": 0.8999947827192236,
+          "socket_drops": 0
+        },
+        {
+          "loss": 0.005914058990866896,
+          "probe_pps": 20.0,
+          "q_mean_ms": 6.074506720305787,
+          "rate_ratio": 0.9999965433476599,
+          "rho_actual": 0.899996898254758,
+          "socket_drops": 0
+        },
+        {
+          "loss": 0.006236850015028554,
+          "probe_pps": 40.0,
+          "q_mean_ms": 5.967257941478812,
+          "rate_ratio": 0.9999444022005228,
+          "rho_actual": 0.8999502721398627,
+          "socket_drops": 0
+        }
+      ]
+    }
+  },
+  "pass": false,
+  "raw_prefix": "0729_0955",
+  "timestamp_utc": "2026-07-29T09:55:18Z"
+}

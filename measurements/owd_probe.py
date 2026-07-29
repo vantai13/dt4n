@@ -69,10 +69,16 @@ def udp_socket_drops(port: int) -> int:
 def run_recv(
     port: int,
     duration_s: float,
-    out_path: str,
+    out_path: Optional[str] = None,
+    out_prefix: Optional[str] = None,
     rcvbuf: int = 8 << 20,
     flush_every: int = 4096,
 ) -> dict:
+    if (out_path is None) == (out_prefix is None):
+        raise ValueError("dung dung mot trong hai: out_path hoac out_prefix")
+    if out_prefix is not None:
+        return run_recv_split(port, duration_s, out_prefix, rcvbuf, flush_every)
+
     os.makedirs(os.path.dirname(os.path.abspath(out_path)) or ".", exist_ok=True)
 
     sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
@@ -129,6 +135,82 @@ def run_recv(
         "record_struct": "<Qdd",
     }
     with open(out_path + ".meta.json", "w", encoding="utf-8") as g:
+        json.dump(meta, g, indent=2, sort_keys=True)
+    return meta
+
+
+def run_recv_split(
+    port: int,
+    duration_s: float,
+    out_prefix: str,
+    rcvbuf: int = 8 << 20,
+    flush_every: int = 4096,
+) -> dict:
+    """Receive one UDP stream and split raw records by packet kind."""
+    os.makedirs(os.path.dirname(os.path.abspath(out_prefix)) or ".", exist_ok=True)
+
+    sock = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_REUSEADDR, 1)
+    sock.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, int(rcvbuf))
+    got = sock.getsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF)
+    sock.bind(("0.0.0.0", int(port)))
+    sock.settimeout(0.25)
+
+    drops0 = udp_socket_drops(port)
+    buf = bytearray(65535)
+    pending = {KIND_BG: [], KIND_PROBE: []}
+    files = {
+        KIND_BG: open(out_prefix + "_bg.bin", "wb", buffering=1 << 20),
+        KIND_PROBE: open(out_prefix + "_probe.bin", "wb", buffering=1 << 20),
+    }
+    counts = {KIND_BG: 0, KIND_PROBE: 0}
+    n_bad = 0
+    run_ids = set()
+    t_end = time.monotonic() + float(duration_s)
+
+    try:
+        while time.monotonic() < t_end:
+            try:
+                nbytes, _addr = sock.recvfrom_into(buf)
+            except socket.timeout:
+                continue
+            t_recv = time.monotonic()
+
+            info = unpack_packet(memoryview(buf)[:nbytes])
+            if info is None:
+                n_bad += 1
+                continue
+            kind, seq, t_send, run_id = info
+            if kind not in pending:
+                n_bad += 1
+                continue
+            run_ids.add(run_id)
+            pending[kind].append(REC_RX.pack(seq, t_send, t_recv))
+            counts[kind] += 1
+            if len(pending[kind]) >= flush_every:
+                files[kind].write(b"".join(pending[kind]))
+                pending[kind].clear()
+        for kind in files:
+            if pending[kind]:
+                files[kind].write(b"".join(pending[kind]))
+    finally:
+        for f in files.values():
+            f.close()
+        sock.close()
+
+    meta = {
+        "role": "recv",
+        "port": int(port),
+        "out_prefix": out_prefix,
+        "n_bg": counts[KIND_BG],
+        "n_probe": counts[KIND_PROBE],
+        "n_foreign_packets": n_bad,
+        "run_ids_seen": sorted(run_ids),
+        "socket_rcvbuf_bytes": got,
+        "socket_drops_delta": udp_socket_drops(port) - drops0,
+        "record_struct": "<Qdd",
+    }
+    with open(out_prefix + "_rx.meta.json", "w", encoding="utf-8") as g:
         json.dump(meta, g, indent=2, sort_keys=True)
     return meta
 
@@ -224,7 +306,9 @@ def main() -> None:
     recv = sub.add_parser("recv")
     recv.add_argument("--port", type=int, required=True)
     recv.add_argument("--duration", type=float, required=True)
-    recv.add_argument("--out", required=True)
+    recv_out = recv.add_mutually_exclusive_group(required=True)
+    recv_out.add_argument("--out")
+    recv_out.add_argument("--out-prefix")
 
     send = sub.add_parser("send")
     send.add_argument("--dst", required=True)
@@ -241,7 +325,7 @@ def main() -> None:
 
     args = ap.parse_args()
     if args.cmd == "recv":
-        meta = run_recv(args.port, args.duration, args.out)
+        meta = run_recv(args.port, args.duration, args.out, args.out_prefix)
     else:
         meta = run_send(
             args.dst,
