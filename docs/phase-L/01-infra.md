@@ -95,6 +95,32 @@ Chieu VE chi co `netem delay 3ms`, khong co `htb`.
 
 Tran buffer ly thuyet cho cau hinh kiem: 26.21 ms (= 19656 B x 8 / 6 Mbps).
 
+## 4b. Rerun sau Amendment 1
+
+Output JSON moi: results/phase-L/l1_infra_0729_0746.json.
+
+Thay doi so voi run dau:
+
+- Them kiem `direct_packets_stat == 0`: PASS.
+- Them kiem hidden queue cho `h2-eth0` va `s2-eth1`: PASS, deu `noqueue`.
+- Backlog trong blast duoc lay mau 20 ms/lau trong khi tai dang chay, bao cao
+  p95 va peak thay vi doc sau khi blast ket thuc.
+
+Ket qua chinh:
+
+```text
+direct_packets_stat = 0
+h1-eth0: noqueue
+s1-eth1: noqueue
+h2-eth0: noqueue
+s2-eth1: noqueue
+burst_chosen = 1600 B
+proof rate = 5.995 Mbps
+p95_backlog = 19656 B
+peak_backlog = 19656 B
+V-L4 ratio = 0.385, expected = 0.385, PASS
+```
+
 ## 5. Ping: netem chieu ve hoat dong
 
 ```text

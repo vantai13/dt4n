@@ -1,0 +1,49 @@
+{
+  "arrival": {
+    "c_a_measured": 1.7389061168765654,
+    "c_s_measured": 0.0,
+    "rate_pps_actual": 95098.84352831941
+  },
+  "counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 8,
+    "n_recv_unique": 8,
+    "n_reorder": 0,
+    "n_sent": 8
+  },
+  "inputs": {
+    "rx": "results/phase-L/raw/0729_0752_vl2b_bw6_r0_rx.bin",
+    "tx": "results/phase-L/raw/0729_0752_vl2b_bw6_r0_tx.bin"
+  },
+  "loss_rate": 0.0,
+  "owd_ms": {
+    "max": 12.399331999858987,
+    "mean": 5.712715750007646,
+    "min": 0.715305000085209,
+    "p50": 4.346675000306277,
+    "p90": 12.399331999858987,
+    "p95": 12.399331999858987,
+    "p99": 12.399331999858987,
+    "percentile_method": "nearest-rank",
+    "sd": 4.420910689124051
+  },
+  "steady_state": {
+    "block_means_ms": [
+      0.7402819996968901,
+      null,
+      null,
+      null,
+      2.478625333575716,
+      8.37541199992605
+    ],
+    "spread_ms": 7.635130000229159
+  },
+  "window": {
+    "cut_on": "t_send",
+    "t_hi": 3103.687768447,
+    "t_lo": 3103.687684324,
+    "tail_s": 0.0,
+    "warmup_s": 0.0
+  }
+}

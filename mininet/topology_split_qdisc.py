@@ -199,6 +199,8 @@ def parse_qdisc_tree(text: str) -> List[Dict[str, Any]]:
                 "limit_bytes": limit_bytes,
                 "limit_pkts": from_head(r"limit\s+(\d+)p\b", int),
                 "delay_ms": from_head(r"delay\s+([0-9.]+)ms"),
+                "direct_packets_stat": from_head(r"direct_packets_stat\s+(\d+)", int),
+                "direct_qlen": from_head(r"direct_qlen\s+(\d+)", int),
                 "backlog_bytes": _parse_bytes_token(block, "backlog"),
                 "backlog_pkts": from_block(r"backlog\s+\d+\s*(?:b|bytes?)\s+(\d+)p\b", int),
                 "sent_bytes": from_block(r"Sent\s+(\d+)\s+bytes", int),
@@ -241,6 +243,10 @@ def assert_measure_qdisc(
     htb = find_layer(layers, "htb")
     assert htb is not None, "V-L1a FAIL: khong thay qdisc htb tren %s\n%s" % (ifname, qtext)
     assert htb["is_root"], "V-L1a FAIL: htb khong o root tren %s\n%s" % (ifname, qtext)
+    assert htb["direct_packets_stat"] in (0, None), (
+        "V-L1a FAIL: direct_packets_stat=%s tren %s. Co goi di duong tat "
+        "bo qua class HTB.\n%s" % (htb["direct_packets_stat"], ifname, qtext)
+    )
 
     assert "netem" not in kinds, (
         "V-L1b FAIL: CO netem tren chieu DO (%s). Day la loi E8 quay lai.\n%s"
@@ -267,6 +273,8 @@ def assert_measure_qdisc(
         "qdisc_raw": qtext,
         "class_raw": ctext,
         "kinds": kinds,
+        "direct_packets_stat": htb["direct_packets_stat"],
+        "direct_qlen": htb["direct_qlen"],
         "bfifo_limit_bytes": bfifo["limit_bytes"],
         "ceiling_ms": queue_ceiling_ms(queue_pkts, bw_mbps, frame_bytes),
     }

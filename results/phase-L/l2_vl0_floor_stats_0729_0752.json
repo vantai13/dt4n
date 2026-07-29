@@ -1,0 +1,49 @@
+{
+  "arrival": {
+    "c_a_measured": 0.9836354947112885,
+    "c_s_measured": 0.0,
+    "rate_pps_actual": 98.721320594155
+  },
+  "counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 1776,
+    "n_recv_unique": 1776,
+    "n_reorder": 0,
+    "n_sent": 1776
+  },
+  "inputs": {
+    "rx": "results/phase-L/raw/0729_0752_vl0_floor_rx.bin",
+    "tx": "results/phase-L/raw/0729_0752_vl0_floor_tx.bin"
+  },
+  "loss_rate": 0.0,
+  "owd_ms": {
+    "max": 0.39803299978302675,
+    "mean": 0.14427934234023015,
+    "min": 0.008558999979868531,
+    "p50": 0.16024599972297437,
+    "p90": 0.2243310000267229,
+    "p95": 0.2496060001249134,
+    "p99": 0.30630799983555335,
+    "percentile_method": "nearest-rank",
+    "sd": 0.07135325965492346
+  },
+  "steady_state": {
+    "block_means_ms": [
+      0.1421448923698184,
+      0.14520001678073757,
+      0.1448863914589841,
+      0.15132699340773326,
+      0.1402300103203241,
+      0.14200861586586042
+    ],
+    "spread_ms": 0.011096983087409168
+  },
+  "window": {
+    "cut_on": "t_send",
+    "t_hi": 2986.46836119,
+    "t_lo": 2968.478326319,
+    "tail_s": 0.0,
+    "warmup_s": 2.0
+  }
+}

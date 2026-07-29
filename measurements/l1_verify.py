@@ -108,8 +108,16 @@ def hidden_queue_result(node: Any, ifname: str) -> Dict[str, Any]:
     }
 
 
-def blast(net: Mininet, secs: float, payload: int = 1470) -> Tuple[float, int]:
-    """Oversaturate h1->h2 and return measured shaped rate plus peak backlog."""
+def nearest_rank(values: List[int], q: float) -> int:
+    if not values:
+        return 0
+    data = sorted(values)
+    idx = int((q * len(data) + 0.999999999) // 1) - 1
+    return data[min(max(idx, 0), len(data) - 1)]
+
+
+def blast(net: Mininet, secs: float, payload: int = 1470) -> Tuple[float, Dict[str, Any]]:
+    """Oversaturate h1->h2 and return shaped rate plus in-flight backlog stats."""
     h1, h2 = net.get("h1"), net.get("h2")
     ifname = intf_toward(net.get("s1"), "s2")
 
@@ -125,17 +133,24 @@ def blast(net: Mininet, secs: float, payload: int = 1470) -> Tuple[float, int]:
         ">/dev/null 2>&1 &" % (secs, payload)
     )
     end = t0 + float(secs)
-    peak_backlog = 0
+    samples: List[int] = []
     while time.monotonic() < end:
-        peak_backlog = max(peak_backlog, read_backlog(ifname))
-        time.sleep(0.05)
+        samples.append(read_backlog(ifname))
+        time.sleep(0.02)
     t1 = time.monotonic()
     b1 = read_sent_bytes(ifname)
 
     h1.cmd("pkill -f /tmp/dt4n_blast.py 2>/dev/null")
     h2.cmd("pkill -f /tmp/dt4n_sink.py 2>/dev/null")
     dt = max(t1 - t0, 1e-6)
-    return (b1 - b0) * 8.0 / dt / 1e6, peak_backlog
+    stats = {
+        "n_samples": len(samples),
+        "mean_backlog_bytes": sum(samples) / len(samples) if samples else 0.0,
+        "p95_backlog_bytes": nearest_rank(samples, 0.95),
+        "peak_backlog_bytes": max(samples) if samples else 0,
+        "poll_interval_ms": 20.0,
+    }
+    return (b1 - b0) * 8.0 / dt / 1e6, stats
 
 
 def ping_mean_ms(output: str) -> Optional[float]:
@@ -174,25 +189,35 @@ def main() -> None:
     net.start()
     try:
         s1, s2 = net.get("s1"), net.get("s2")
-        h1 = net.get("h1")
+        h1, h2 = net.get("h1"), net.get("h2")
         if_measure = intf_toward(s1, "s2")
         if_return = intf_toward(s2, "s1")
         if_h1 = intf_toward(h1, "s1")
         if_s1h1 = intf_toward(s1, "h1")
+        if_h2 = intf_toward(h2, "s2")
+        if_s2h2 = intf_toward(s2, "h2")
 
         report["interfaces"] = {
             "measure": if_measure,
             "return": if_return,
             "h1_to_s1": if_h1,
             "s1_to_h1": if_s1h1,
+            "h2_to_s2": if_h2,
+            "s2_to_h2": if_s2h2,
         }
 
         hr("BUOC 1 -- QDISC MAC DINH (truoc khi ta dat bat cu thu gi)")
         print("  Muc dich: biet diem xuat phat. Neu o day da co fq_codel/pfifo_fast")
         print("            thi cac link 'khong gioi han' KHONG he khong gioi han.\n")
         default_qdisc: Dict[str, str] = {}
-        for name in (if_measure, if_return, if_h1, if_s1h1):
-            raw = node_qdisc(h1, name) if name == if_h1 else show_qdisc(name, stats=False).strip()
+        for name in (if_measure, if_return, if_h1, if_s1h1, if_h2, if_s2h2):
+            raw = (
+                node_qdisc(h1, name)
+                if name == if_h1
+                else node_qdisc(h2, name)
+                if name == if_h2
+                else show_qdisc(name, stats=False).strip()
+            )
             default_qdisc[name] = raw
             print("--- %s ---" % name)
             print(raw or "(trong)")
@@ -239,6 +264,10 @@ BAN PHAI TU TRA LOI BON CAU SAU TRUOC KHI DI TIEP:
             % (info["bfifo_limit_bytes"], args.queue, FRAME_BYTES_1470)
         )
         print("  V-L1d  burst = %d b ....................... PASS" % DEFAULT_BURST_BYTES)
+        print(
+            "  V-L1g  direct_packets_stat = %s ............ PASS"
+            % info["direct_packets_stat"]
+        )
 
         ret_layers = parse_qdisc_tree(show_qdisc(if_return))
         assert any(layer["kind"] == "netem" for layer in ret_layers), (
@@ -249,7 +278,12 @@ BAN PHAI TU TRA LOI BON CAU SAU TRUOC KHI DI TIEP:
         )
         print("  V-L1e  chieu VE chi co netem .............. PASS")
 
-        hidden = [hidden_queue_result(h1, if_h1), assert_no_hidden_queue(if_s1h1)]
+        hidden = [
+            hidden_queue_result(h1, if_h1),
+            assert_no_hidden_queue(if_s1h1),
+            hidden_queue_result(h2, if_h2),
+            assert_no_hidden_queue(if_s2h2),
+        ]
         for item in hidden:
             flag = "PASS" if item["ok"] else "* CANH BAO"
             print(
@@ -284,13 +318,13 @@ BAN PHAI TU TRA LOI BON CAU SAU TRUOC KHI DI TIEP:
         for burst in (1600, 2400, 3200, 6400, 15000):
             change_measure_qdisc(if_measure, args.bw, args.queue, burst_bytes=burst)
             time.sleep(0.2)
-            rate, backlog = blast(net, secs=args.blast_secs)
+            rate, backlog_stats = blast(net, secs=args.blast_secs)
             pct = 100.0 * rate / args.bw
             row = {
                 "burst_bytes": burst,
                 "rate_mbps": rate,
                 "pct": pct,
-                "backlog_bytes": backlog,
+                **backlog_stats,
             }
             burst_rows.append(row)
             print(
@@ -308,8 +342,14 @@ BAN PHAI TU TRA LOI BON CAU SAU TRUOC KHI DI TIEP:
             time.sleep(0.2)
             proof_rate, proof_backlog = blast(net, secs=args.blast_secs)
             print(
-                "  Da doi ve burst chot %d B va bom qua tai: rate=%.3f Mbps, peak_backlog=%d B"
-                % (chosen, proof_rate, proof_backlog)
+                "  Da doi ve burst chot %d B va bom qua tai: rate=%.3f Mbps, "
+                "p95_backlog=%d B, peak_backlog=%d B"
+                % (
+                    chosen,
+                    proof_rate,
+                    proof_backlog["p95_backlog_bytes"],
+                    proof_backlog["peak_backlog_bytes"],
+                )
             )
         post_burst_qdisc = show_qdisc(if_measure).strip()
         post_burst_class = show_class(if_measure).strip()
@@ -319,7 +359,7 @@ BAN PHAI TU TRA LOI BON CAU SAU TRUOC KHI DI TIEP:
         print(post_burst_class)
         report["checks"]["raw_after_burst"] = {
             "proof_rate_mbps": proof_rate if chosen is not None else None,
-            "proof_backlog_bytes": proof_backlog if chosen is not None else None,
+            "proof_backlog": proof_backlog if chosen is not None else None,
             "measure_qdisc": post_burst_qdisc,
             "measure_class": post_burst_class,
         }
@@ -331,7 +371,8 @@ BAN PHAI TU TRA LOI BON CAU SAU TRUOC KHI DI TIEP:
         for queue_pkts in (args.queue, 5):
             change_measure_qdisc(if_measure, args.bw, queue_pkts, burst_bytes=chosen or 1600)
             time.sleep(0.2)
-            rate, backlog = blast(net, secs=args.blast_secs)
+            rate, backlog_stats = blast(net, secs=args.blast_secs)
+            backlog = int(backlog_stats["p95_backlog_bytes"])
             ceil_ms = queue_ceiling_ms(queue_pkts, args.bw)
             backlog_ms = backlog * 8.0 / (args.bw * 1e6) * 1000.0
             pos_rows.append(
@@ -341,10 +382,11 @@ BAN PHAI TU TRA LOI BON CAU SAU TRUOC KHI DI TIEP:
                     "ceiling_ms": ceil_ms,
                     "backlog_bytes": backlog,
                     "backlog_ms": backlog_ms,
+                    "backlog_stats": backlog_stats,
                 }
             )
             print(
-                "  q=%2d goi  tran ly thuyet=%6.2f ms  backlog do=%6d B = %6.2f ms  (%.0f%% tran)"
+                "  q=%2d goi  tran ly thuyet=%6.2f ms  backlog p95=%6d B = %6.2f ms  (%.0f%% tran)"
                 % (
                     queue_pkts,
                     ceil_ms,
