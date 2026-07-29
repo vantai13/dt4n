@@ -100,3 +100,42 @@ Ket qua can doc:
 - Diem bat dau loss >= 1% cho tung mode.
 
 Quyet dinh L.6 dua tren nhung so nay, khong dua tren cam giac.
+
+## Ket Qua Pilot Da Chot
+
+Artifact chinh:
+
+```text
+results/phase-L/l5_pilot_0729_1336.json
+```
+
+Ket qua gate:
+
+| gate | ket qua |
+|---|---|
+| P1 prediction | 17/18 PASS |
+| P2 monotonic | PASS |
+| P3 separated | PASS |
+| P4 power | PASS, 5 seed du |
+| P5 point gates | 42/42 PASS |
+
+Diem P1 duy nhat khong khop la `cbr, rho=1.00`. Day la loi bang du doan
+ban dau, khong phai loi do: du doan da cong probe len tren tai nen, thanh
+`rho*C + 20*106`, tuc vuot tai khoang 0.283%. Code do live da tru probe de
+giu `rho_actual` dung muc tieu.
+
+Vung `rho=1.00` duoc danh dau la vung toi han. Rieng `cbr, rho=1.00` co
+`inflation_factor` khoang 70.47, lon hon han cac diem khac, nen L.6 them khoi
+critical-band `rho in {0.98, 1.00, 1.02}` voi seed rieng.
+
+Ket qua tach PASTA:
+
+| mode | rho | pkt-probe ms | offset ms | admission ms | true PASTA ms |
+|---|---:|---:|---:|---:|---:|
+| poisson | 0.80 | +0.0771 | +0.0215 | -0.0114 | +0.0670 |
+| poisson | 0.95 | -0.2464 | +0.0215 | -0.2522 | -0.0157 |
+| h2 | 0.80 | +1.5320 | +0.0215 | -0.5287 | +2.0392 |
+| h2 | 0.95 | +1.6531 | +0.0215 | -1.1627 | +2.7943 |
+
+Dieu nay la ly do L.6 giu 5 seed va them controls `probe_pps=0`: can tach
+anh huong probe, admission bias, va sai khac PASTA that su.
