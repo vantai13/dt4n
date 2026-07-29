@@ -1,40 +1,40 @@
 #!/usr/bin/env python3
-"""Phase L -- two-node topology with split qdiscs installed by hand.
+"""Phase L -- live two-node topology with split qdiscs.
 
-Each qdisc has exactly one job:
-
-* measured direction s1 -> s2: HTB shapes rate, bfifo owns the byte buffer.
-* return direction s2 -> s1: netem owns propagation delay.
-
-Do not use TCLink params here. Mininet's default HTB burst and netem-backed
-``max_queue_size`` are the artifacts Lesson L.1 is designed to avoid.
+Pure qdisc math/text lives in ``mininet.tc_spec``. This module is the live side:
+Topo construction, subprocess calls, interface discovery, and assertions
+against the running kernel.
 """
 
 from __future__ import annotations
 
 import os
-import re
 import shlex
 import subprocess
 from typing import Any, Dict, List, Optional
 
+from mininet.tc_spec import (
+    CONFIGS,
+    DEFAULT_BURST_BYTES,
+    FRAME_BYTES_1470,
+    H_CLASS,
+    H_LEAF,
+    H_ROOT,
+    capacity_pps,
+    check_measure_text,
+    fit_staircase,
+    measure_cmds,
+    parse_qdisc_tree,
+    queue_bytes,
+    queue_ceiling_ms,
+    return_cmds,
+    staircase_delays_ms,
+)
 from mininet.topo import Topo
 
 
-FRAME_BYTES_1470 = 1512
-DEFAULT_BURST_BYTES = 1600
-
-H_ROOT = "1:"
-H_CLASS = "1:10"
-H_LEAF = "10:"
-
-
 class SplitQdiscTopo(Topo):
-    """h1 --- s1 == measured link == s2 --- h2.
-
-    No TCLink, no bw/delay/max_queue_size params. The qdiscs are installed
-    explicitly after net.start().
-    """
+    """h1 --- s1 == measured link == s2 --- h2."""
 
     def build(self) -> None:
         self.addHost("h1", ip="10.0.0.1/8")
@@ -71,20 +71,6 @@ def intf_toward(node: Any, peer_name: str) -> str:
     raise RuntimeError("khong tim thay interface tu %s toi %s" % (node.name, peer_name))
 
 
-def queue_bytes(queue_pkts: int, frame_bytes: int = FRAME_BYTES_1470) -> int:
-    """Convert the topology language (packets) to the bfifo language (bytes)."""
-    return int(queue_pkts) * int(frame_bytes)
-
-
-def queue_ceiling_ms(
-    queue_pkts: int,
-    bw_mbps: float,
-    frame_bytes: int = FRAME_BYTES_1470,
-) -> float:
-    """Full-buffer delay in ms for the explicit byte buffer."""
-    return queue_bytes(queue_pkts, frame_bytes) * 8.0 / (float(bw_mbps) * 1e6) * 1000.0
-
-
 def setup_measure_qdisc(
     ifname: str,
     bw_mbps: float,
@@ -93,19 +79,14 @@ def setup_measure_qdisc(
     frame_bytes: int = FRAME_BYTES_1470,
 ) -> List[str]:
     """Measured direction: HTB for rate plus bfifo for byte buffer; no netem."""
-    limit_b = queue_bytes(queue_pkts, frame_bytes)
     dev = shlex.quote(ifname)
-    cmds = [
-        "tc qdisc del dev %s root" % dev,
-        "tc qdisc add dev %s root handle %s htb default 10" % (dev, H_ROOT),
-        (
-            "tc class add dev %s parent %s classid %s htb "
-            "rate %gmbit burst %db cburst %db"
-        )
-        % (dev, H_ROOT, H_CLASS, float(bw_mbps), int(burst_bytes), int(burst_bytes)),
-        "tc qdisc add dev %s parent %s handle %s bfifo limit %d"
-        % (dev, H_CLASS, H_LEAF, limit_b),
-    ]
+    cmds = ["tc qdisc del dev %s root" % dev] + measure_cmds(
+        dev,
+        bw_mbps,
+        queue_pkts,
+        burst_bytes=burst_bytes,
+        frame_bytes=frame_bytes,
+    )
     for i, cmd in enumerate(cmds):
         out = sh(cmd + (" 2>/dev/null" if i == 0 else ""))
         if i > 0 and out.strip():
@@ -142,10 +123,7 @@ def change_measure_qdisc(
 def setup_return_qdisc(ifname: str, delay_ms: float) -> List[str]:
     """Return direction: only netem propagation delay."""
     dev = shlex.quote(ifname)
-    cmds = [
-        "tc qdisc del dev %s root" % dev,
-        "tc qdisc add dev %s root handle %s netem delay %gms" % (dev, H_ROOT, float(delay_ms)),
-    ]
+    cmds = ["tc qdisc del dev %s root" % dev] + return_cmds(dev, delay_ms)
     for i, cmd in enumerate(cmds):
         out = sh(cmd + (" 2>/dev/null" if i == 0 else ""))
         if i > 0 and out.strip():
@@ -159,57 +137,6 @@ def show_qdisc(ifname: str, stats: bool = True) -> str:
 
 def show_class(ifname: str, stats: bool = True) -> str:
     return sh("tc %sclass show dev %s" % ("-s " if stats else "", shlex.quote(ifname)))
-
-
-def _parse_bytes_token(text: str, key: str) -> Optional[int]:
-    m = re.search(r"%s\s+(\d+)\s*(?:b|bytes?)\b" % re.escape(key), text)
-    return int(m.group(1)) if m else None
-
-
-def parse_qdisc_tree(text: str) -> List[Dict[str, Any]]:
-    """Split ``tc qdisc show`` output into qdisc blocks.
-
-    Stats such as ``Sent`` and ``backlog`` live on continuation lines, so parse
-    those from the whole block rather than just the headline.
-    """
-    layers: List[Dict[str, Any]] = []
-    for block in re.split(r"\n(?=qdisc\s)", text.strip()):
-        if not block.startswith("qdisc"):
-            continue
-        head = block.splitlines()[0]
-        m = re.match(r"qdisc\s+(\S+)\s+(\S+)\s*(.*)", head)
-        if not m:
-            continue
-        kind, handle, rest = m.group(1), m.group(2), m.group(3)
-
-        def from_head(pat: str, cast: Any = float) -> Optional[Any]:
-            mm = re.search(pat, rest)
-            return cast(mm.group(1)) if mm else None
-
-        def from_block(pat: str, cast: Any = float) -> Optional[Any]:
-            mm = re.search(pat, block)
-            return cast(mm.group(1)) if mm else None
-
-        limit_bytes = _parse_bytes_token(rest, "limit")
-        layers.append(
-            {
-                "kind": kind,
-                "handle": handle,
-                "is_root": " root " in (" " + rest + " ") or rest.startswith("root"),
-                "limit_bytes": limit_bytes,
-                "limit_pkts": from_head(r"limit\s+(\d+)p\b", int),
-                "delay_ms": from_head(r"delay\s+([0-9.]+)ms"),
-                "direct_packets_stat": from_head(r"direct_packets_stat\s+(\d+)", int),
-                "direct_qlen": from_head(r"direct_qlen\s+(\d+)", int),
-                "backlog_bytes": _parse_bytes_token(block, "backlog"),
-                "backlog_pkts": from_block(r"backlog\s+\d+\s*(?:b|bytes?)\s+(\d+)p\b", int),
-                "sent_bytes": from_block(r"Sent\s+(\d+)\s+bytes", int),
-                "dropped": from_block(r"dropped\s+(\d+)", int),
-                "overlimits": from_block(r"overlimits\s+(\d+)", int),
-                "raw": block,
-            }
-        )
-    return layers
 
 
 def read_sysfs_tx_bytes(ifname: str) -> Optional[int]:
@@ -237,42 +164,24 @@ def assert_measure_qdisc(
     """Assert that the measured direction matches the Phase L design."""
     qtext = show_qdisc(ifname)
     ctext = show_class(ifname)
+    errs = check_measure_text(
+        qtext,
+        ctext,
+        queue_pkts=queue_pkts,
+        burst_bytes=burst_bytes,
+        frame_bytes=frame_bytes,
+    )
+    assert not errs, "V-L1 FAIL tren %s:\n%s\n\n%s" % (ifname, "\n".join(errs), qtext)
+
     layers = parse_qdisc_tree(qtext)
-    kinds = [layer["kind"] for layer in layers]
-
     htb = find_layer(layers, "htb")
-    assert htb is not None, "V-L1a FAIL: khong thay qdisc htb tren %s\n%s" % (ifname, qtext)
-    assert htb["is_root"], "V-L1a FAIL: htb khong o root tren %s\n%s" % (ifname, qtext)
-    assert htb["direct_packets_stat"] in (0, None), (
-        "V-L1a FAIL: direct_packets_stat=%s tren %s. Co goi di duong tat "
-        "bo qua class HTB.\n%s" % (htb["direct_packets_stat"], ifname, qtext)
-    )
-
-    assert "netem" not in kinds, (
-        "V-L1b FAIL: CO netem tren chieu DO (%s). Day la loi E8 quay lai.\n%s"
-        % (ifname, qtext)
-    )
-
     bfifo = find_layer(layers, "bfifo")
-    assert bfifo is not None, (
-        "V-L1c FAIL: khong co bfifo. HTB co the dang dung leaf mac dinh "
-        "pfifo limit=txqueuelen=1000 goi = 2016 ms dem o 6 Mbps.\n%s" % qtext
-    )
-    want_b = queue_bytes(queue_pkts, frame_bytes)
-    assert bfifo["limit_bytes"] == want_b, (
-        "V-L1c FAIL: bfifo limit = %s b, mong doi %d b (= %d goi x %d B)\n%s"
-        % (bfifo["limit_bytes"], want_b, queue_pkts, frame_bytes, qtext)
-    )
-
-    assert re.search(r"burst\s+%d[bB]?\b" % int(burst_bytes), ctext) or re.search(
-        r"burst\s+%db" % int(burst_bytes), ctext
-    ), "V-L1d FAIL: khong thay burst %db trong class.\n%s" % (int(burst_bytes), ctext)
-
+    assert htb is not None and bfifo is not None
     return {
         "ifname": ifname,
         "qdisc_raw": qtext,
         "class_raw": ctext,
-        "kinds": kinds,
+        "kinds": [layer["kind"] for layer in layers],
         "direct_packets_stat": htb["direct_packets_stat"],
         "direct_qlen": htb["direct_qlen"],
         "bfifo_limit_bytes": bfifo["limit_bytes"],

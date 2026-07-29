@@ -25,6 +25,7 @@ from mininet.topology_split_qdisc import (
     DEFAULT_BURST_BYTES,
     FRAME_BYTES_1470,
     SplitQdiscTopo,
+    fit_staircase,
     intf_toward,
     setup_measure_qdisc,
     setup_return_qdisc,
@@ -264,6 +265,12 @@ def main() -> None:
                     )
                 )
             okb = meta_pass and max(errs[2:] if len(errs) >= 3 else errs) < 0.3
+            fit = fit_staircase(measured)
+            fit_ok = (
+                abs(fit["C_mbps"] - bw) / bw < 0.01
+                and abs(fit["burst_bytes"] - DEFAULT_BURST_BYTES) / DEFAULT_BURST_BYTES < 0.10
+                and fit["r2"] > 0.999
+            )
             total_socket_drops = sum(int(rep["rx_meta"]["socket_drops_delta"]) for rep in reps)
             total_foreign = sum(int(rep["rx_meta"]["n_foreign_packets"]) for rep in reps)
             print(
@@ -271,16 +278,22 @@ def main() -> None:
                 % (STAIR_REPS, total_socket_drops, total_foreign)
             )
             print(
-                "     V-L2b %s  (nguong median |err| < 0.3 ms cho k>=3)"
-                % ("PASS" if okb else "* FAIL")
+                "     fit: C=%.4f Mbps, burst=%.1f B, R2=%.6f  %s"
+                % (fit["C_mbps"], fit["burst_bytes"], fit["r2"], "PASS" if fit_ok else "* FAIL")
+            )
+            print(
+                "     V-L2b %s  (|err| < 0.3 ms, |dC|<1%%, |dB|<10%%, R2>0.999)"
+                % ("PASS" if (okb and fit_ok) else "* FAIL")
             )
             report["checks"].setdefault("V-L2b", {})["bw%g" % bw] = {
                 "measured_ms": measured,
                 "predicted_ms": pred,
                 "reps": reps,
                 "max_abs_err_ms_k_ge_3": float(max(errs[2:])) if len(errs) >= 3 else None,
+                "fit": fit,
+                "fit_pass": bool(fit_ok),
                 "n_reps": STAIR_REPS,
-                "pass": bool(okb),
+                "pass": bool(okb and fit_ok),
             }
     finally:
         try:

@@ -1,0 +1,352 @@
+{
+  "checks": {
+    "V-L0_floor": {
+      "max_ms": 4.02802899998278,
+      "mean_ms": 0.1321388677014176,
+      "n": 1988,
+      "p50_ms": 0.150574000144843,
+      "p99_ms": 0.2874589999919408,
+      "pass": true,
+      "rx": "results/phase-L/raw/0729_0748_vl0_floor_rx.bin",
+      "rx_meta": {
+        "n_foreign_packets": 0,
+        "n_records": 1988,
+        "out": "results/phase-L/raw/0729_0748_vl0_floor_rx.bin",
+        "port": 5555,
+        "record_struct": "<Qdd",
+        "role": "recv",
+        "run_ids_seen": [
+          100
+        ],
+        "socket_drops_delta": 0,
+        "socket_rcvbuf_bytes": 16777216
+      },
+      "sd_ms": 0.1237513353609743,
+      "tx": "results/phase-L/raw/0729_0748_vl0_floor_tx.bin",
+      "tx_meta": {
+        "duration_s_actual": 19.990071609000097,
+        "frame_bytes_on_wire": 106,
+        "kind": 1,
+        "mode": "poisson",
+        "n_sent": 1988,
+        "out": "results/phase-L/raw/0729_0748_vl0_floor_tx.bin",
+        "rate_pps_actual": 99.44936861081308,
+        "rate_pps_nominal": 100.0,
+        "record_struct": "<Qd",
+        "role": "send",
+        "run_id": 100,
+        "seed": 1,
+        "size_bytes": 64
+      }
+    },
+    "V-L2": {
+      "bw4": {
+        "delta_floor_ms": 0.0019452117320172824,
+        "mean_ms": 0.13019365596940033,
+        "pass": true,
+        "rx": "results/phase-L/raw/0729_0748_vl2_bw4_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 1465,
+          "out": "results/phase-L/raw/0729_0748_vl2_bw4_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            204
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "sd_ms": 0.07391766535385888,
+        "tx": "results/phase-L/raw/0729_0748_vl2_bw4_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 14.994250512000235,
+          "frame_bytes_on_wire": 106,
+          "kind": 1,
+          "mode": "poisson",
+          "n_sent": 1465,
+          "out": "results/phase-L/raw/0729_0748_vl2_bw4_tx.bin",
+          "rate_pps_actual": 97.70411657638557,
+          "rate_pps_nominal": 100.0,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 204,
+          "seed": 1,
+          "size_bytes": 64
+        }
+      },
+      "bw6": {
+        "delta_floor_ms": 0.0029463857942630123,
+        "mean_ms": 0.1291924819071546,
+        "pass": true,
+        "rx": "results/phase-L/raw/0729_0748_vl2_bw6_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 1465,
+          "out": "results/phase-L/raw/0729_0748_vl2_bw6_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            206
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "sd_ms": 0.0692544132562081,
+        "tx": "results/phase-L/raw/0729_0748_vl2_bw6_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 14.994242431000202,
+          "frame_bytes_on_wire": 106,
+          "kind": 1,
+          "mode": "poisson",
+          "n_sent": 1465,
+          "out": "results/phase-L/raw/0729_0748_vl2_bw6_tx.bin",
+          "rate_pps_actual": 97.70416923306182,
+          "rate_pps_nominal": 100.0,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 206,
+          "seed": 1,
+          "size_bytes": 64
+        }
+      },
+      "bw8": {
+        "delta_floor_ms": 0.002239240150797378,
+        "mean_ms": 0.134378107852215,
+        "pass": true,
+        "rx": "results/phase-L/raw/0729_0748_vl2_bw8_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 1465,
+          "out": "results/phase-L/raw/0729_0748_vl2_bw8_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            208
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "sd_ms": 0.0723785701637271,
+        "tx": "results/phase-L/raw/0729_0748_vl2_bw8_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 14.994239373000255,
+          "frame_bytes_on_wire": 106,
+          "kind": 1,
+          "mode": "poisson",
+          "n_sent": 1465,
+          "out": "results/phase-L/raw/0729_0748_vl2_bw8_tx.bin",
+          "rate_pps_actual": 97.7041891593373,
+          "rate_pps_nominal": 100.0,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 208,
+          "seed": 1,
+          "size_bytes": 64
+        }
+      }
+    },
+    "V-L2b": {
+      "bw4": {
+        "max_abs_err_ms_k_ge_3": 3.425112132554627,
+        "measured_ms": [
+          0.6206561324517105,
+          0.6002881323012269,
+          3.158515132309855,
+          6.217297132462715,
+          9.297112132554627,
+          12.113006132477619,
+          15.141438132087512,
+          18.279353132112316
+        ],
+        "n_recv": 8,
+        "pass": false,
+        "predicted_ms": [
+          0.0,
+          0.0,
+          -0.176,
+          2.848,
+          5.872,
+          8.895999999999999,
+          11.92,
+          14.944
+        ],
+        "rx": "results/phase-L/raw/0729_0748_vl2b_bw4_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 8,
+          "out": "results/phase-L/raw/0729_0748_vl2b_bw4_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            304
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "seq": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "tx": "results/phase-L/raw/0729_0748_vl2b_bw4_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 7.947699987198575e-05,
+          "frame_bytes_on_wire": 1512,
+          "kind": 1,
+          "mode": "burst",
+          "n_sent": 8,
+          "out": "results/phase-L/raw/0729_0748_vl2b_bw4_tx.bin",
+          "rate_pps_actual": 100658.05217717911,
+          "rate_pps_nominal": null,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 304,
+          "seed": 1,
+          "size_bytes": 1470
+        }
+      },
+      "bw6": {
+        "max_abs_err_ms_k_ge_3": 2.4273914657082405,
+        "measured_ms": [
+          0.6435161321688946,
+          0.650343132275463,
+          2.172465132372178,
+          4.326058132374907,
+          6.184192132405894,
+          8.200364132318224,
+          10.186967132523147,
+          12.323477132196
+        ],
+        "n_recv": 8,
+        "pass": false,
+        "predicted_ms": [
+          0.0,
+          0.0,
+          -0.11733333333333333,
+          1.8986666666666667,
+          3.914666666666667,
+          5.930666666666666,
+          7.946666666666666,
+          9.962666666666667
+        ],
+        "rx": "results/phase-L/raw/0729_0748_vl2b_bw6_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 8,
+          "out": "results/phase-L/raw/0729_0748_vl2b_bw6_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            306
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "seq": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "tx": "results/phase-L/raw/0729_0748_vl2b_bw6_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 8.523299993612454e-05,
+          "frame_bytes_on_wire": 1512,
+          "kind": 1,
+          "mode": "burst",
+          "n_sent": 8,
+          "out": "results/phase-L/raw/0729_0748_vl2b_bw6_tx.bin",
+          "rate_pps_actual": 93860.35932086602,
+          "rate_pps_nominal": null,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 306,
+          "seed": 1,
+          "size_bytes": 1470
+        }
+      },
+      "bw8": {
+        "max_abs_err_ms_k_ge_3": 1.5664371324699466,
+        "measured_ms": [
+          0.2558071318900482,
+          0.24099713207864334,
+          1.4711451321828797,
+          2.966510132392738,
+          4.502437132469947,
+          5.991205132414631,
+          7.52584513245996,
+          9.03754213230162
+        ],
+        "n_recv": 8,
+        "pass": false,
+        "predicted_ms": [
+          0.0,
+          0.0,
+          -0.088,
+          1.424,
+          2.936,
+          4.4479999999999995,
+          5.96,
+          7.472
+        ],
+        "rx": "results/phase-L/raw/0729_0748_vl2b_bw8_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 8,
+          "out": "results/phase-L/raw/0729_0748_vl2b_bw8_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            308
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "seq": [
+          0,
+          1,
+          2,
+          3,
+          4,
+          5,
+          6,
+          7
+        ],
+        "tx": "results/phase-L/raw/0729_0748_vl2b_bw8_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 7.687900006203563e-05,
+          "frame_bytes_on_wire": 1512,
+          "kind": 1,
+          "mode": "burst",
+          "n_sent": 8,
+          "out": "results/phase-L/raw/0729_0748_vl2b_bw8_tx.bin",
+          "rate_pps_actual": 104059.62608182462,
+          "rate_pps_nominal": null,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 308,
+          "seed": 1,
+          "size_bytes": 1470
+        }
+      }
+    }
+  },
+  "raw_prefix": "0729_0748",
+  "timestamp_utc": "2026-07-29T07:48:27Z"
+}

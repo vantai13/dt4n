@@ -41,7 +41,7 @@ def load(path: str, rec: struct.Struct) -> List[Tuple]:
     with open(path, "rb") as f:
         raw = f.read()
     if len(raw) % rec.size:
-        raise ValueError("%s: kich thuoc khong chia het cho %d byte" % (path, rec.size))
+        raise ValueError("%s: kich thuoc khong chia het cho %d byte -- file HONG" % (path, rec.size))
     return [rec.unpack_from(raw, i * rec.size) for i in range(len(raw) // rec.size)]
 
 

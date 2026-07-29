@@ -73,6 +73,10 @@ results/**/*
 !results/phase-*/*.csv
 !results/phase-*/*.png
 
+# Phase L raw binary traces stay outside git; commit manifest + metadata.
+results/phase-L/raw/*.bin
+!results/phase-L/raw/MANIFEST.sha256.json
+
 # Raw/generated experiment payloads stay local. Commit compact summaries,
 # diagnostics, and docs instead of large traces/log folders.
 results/phase-14/
