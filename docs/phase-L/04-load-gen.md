@@ -89,9 +89,9 @@ python3 -m measurements.load_gen --dst 10.0.0.2 --port 5555 \
 |---|---|
 | V-L3 | rho thap: loss=0, socket_drops=0, foreign=0 |
 | V-L4a | c_a actual khop design trong 10% cho poisson/h2; cbr gan 0 |
-| V-L4b | rate_ratio gan 1, khong thap hon 0.97 |
-| V-L4c | rho_actual lech rho_nominal < 2% |
-| V-L4d | socket_drops=0, foreign=0, n_late < 1% |
+| V-L4b | `abs(rate_ratio - 1) < 0.001` |
+| V-L4c | `abs(rho_actual - rho_nominal) < 0.002` |
+| V-L4d | socket_drops=0, foreign=0, n_late_ratio < 0.001, max_late_ms < 50 |
 | V-L7 | probe <=20 pps lam q_delay lech < 2% |
 
 Smoke khong dung de HARK: tai rho=0.90 ky vong `cbr < poisson < h2`.

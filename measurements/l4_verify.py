@@ -83,11 +83,12 @@ def _pass_vl4(mode: str, row: Dict[str, Any]) -> bool:
         elif abs(row["ca_actual"] - target) / target > 0.10:
             return False
     return (
-        0.97 <= row["rate_ratio"] <= 1.01
-        and abs(row["rho_actual"] - 0.90) <= 0.02
+        abs(row["rate_ratio"] - 1.0) < 0.001
+        and abs(row["rho_actual"] - 0.90) < 0.002
         and row["socket_drops"] == 0
         and row["n_foreign_packets"] == 0
-        and row["n_late_ratio"] < 0.01
+        and row["n_late_ratio"] < 0.001
+        and row["max_late_ms"] < 50.0
     )
 
 

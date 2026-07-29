@@ -48,10 +48,18 @@ def load(path: str, rec: struct.Struct) -> List[Tuple]:
 def _blocks(rx_w: Iterable[Tuple[int, float, float]], lo: float, hi: float, k: int) -> dict:
     rx_list = list(rx_w)
     if not rx_list:
-        return {"block_means_ms": [], "spread_ms": None}
+        return {
+            "block_means_ms": [],
+            "spread_ms": None,
+            "se_batch_means_ms": None,
+            "se_naive_ms": None,
+            "inflation_factor": None,
+            "n_blocks": 0,
+        }
     width = (hi - lo) / float(k)
     edges = [lo + i * width for i in range(k + 1)]
     means = []
+    all_owd = [(row[2] - row[1]) * 1000.0 for row in rx_list]
     for i in range(k):
         vals = [
             (r[2] - r[1]) * 1000.0
@@ -60,9 +68,20 @@ def _blocks(rx_w: Iterable[Tuple[int, float, float]], lo: float, hi: float, k: i
         ]
         means.append(mean(vals) if vals else None)
     finite = [m for m in means if m is not None and math.isfinite(m)]
+    se_batch = sd(finite) / math.sqrt(len(finite)) if len(finite) > 1 else None
+    se_naive = sd(all_owd) / math.sqrt(len(all_owd)) if len(all_owd) > 1 else None
+    inflation = (
+        se_batch / se_naive
+        if se_batch is not None and se_naive is not None and se_naive > 0
+        else None
+    )
     return {
         "block_means_ms": means,
         "spread_ms": (max(finite) - min(finite)) if finite else None,
+        "se_batch_means_ms": se_batch,
+        "se_naive_ms": se_naive,
+        "inflation_factor": inflation,
+        "n_blocks": len(finite),
     }
 
 

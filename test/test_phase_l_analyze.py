@@ -3,7 +3,7 @@
 
 import pytest
 
-from measurements.owd_analyze import REC_RX, REC_TX, analyze, pctl
+from measurements.owd_analyze import REC_RX, REC_TX, _blocks, analyze, pctl
 
 
 def _write(tmp_path, sent, received):
@@ -100,3 +100,20 @@ def test_file_tho_hong_bi_bat_ngay(tmp_path):
         f.write(b"\x00" * 7)
     with pytest.raises(ValueError, match="HONG"):
         analyze(rx, tx, warmup_s=10.0)
+
+
+def test_batch_means_bao_cao_se_va_inflation_factor():
+    rows = []
+    for block in range(6):
+        delay_ms = float(block + 1)
+        for j in range(10):
+            t_send = block * 10.0 + j + 0.5
+            rows.append((len(rows), t_send, t_send + delay_ms / 1000.0))
+
+    steady = _blocks(rows, lo=0.0, hi=60.0, k=6)
+    assert steady["block_means_ms"] == pytest.approx([1, 2, 3, 4, 5, 6])
+    assert steady["spread_ms"] == pytest.approx(5.0)
+    assert steady["se_batch_means_ms"] == pytest.approx(0.7637626, rel=1e-6)
+    assert steady["se_naive_ms"] < steady["se_batch_means_ms"]
+    assert steady["inflation_factor"] > 3.0
+    assert steady["n_blocks"] == 6
