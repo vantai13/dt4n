@@ -48,10 +48,26 @@ def test_build_links_uses_individual_runs_for_residual_band_and_excludes_control
         rows.append(_row("poisson", 6.0, 13, rho, 99, 999.0, block="D", probe=0.0))
     links, report = build_links(rows)
     link = links["poisson|6|13"]
-    assert link["resid_n"] == len(rhos) * 3
+    assert link["resid_n_cv"] == (len(rhos) - 2) * 3
+    assert link["resid_n_cv_edge"] == 2 * 3
     assert link["sigma_train"][0] == pytest.approx(0.2)
+    assert link["noise_rms_ms"] == pytest.approx(((len(rhos) - 2) * 0.08 / ((len(rhos) - 2) * 3 - 1)) ** 0.5)
+    assert "0.9" in link["sigma_by_rho"]
     assert 1.05 in link["heldout_extrapolated_rho"]
     assert len(report) == 1
+
+
+def test_build_links_residual_band_contains_loo_model_bias():
+    rows = []
+    rhos = [0.50, 0.60, 0.70, 0.80, 0.85, 0.90, 0.925, 0.95, 0.98, 1.00, 1.02, 1.05]
+    for rho in rhos:
+        for seed, jitter in [(11, -0.003), (12, 0.0), (13, 0.003)]:
+            rows.append(_row("poisson", 6.0, 13, rho, seed, 100.0 * rho * rho + jitter))
+    links, _report = build_links(rows)
+    link = links["poisson|6|13"]
+    assert link["bias_rms_interior_ms"] > 0.0
+    assert link["resid_sd_cv_interior_ms"] > link["noise_rms_ms"]
+    assert link["model_efficiency"] < 0.9999
 
 
 def test_reich_workload_for_cbr_equals_one_service_time_after_arrival():

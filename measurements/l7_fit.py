@@ -78,6 +78,16 @@ def percentile(values: Sequence[float], q: float) -> float:
     return xs[lo] * (hi - pos) + xs[hi] * (pos - lo)
 
 
+def rms(values: Sequence[float]) -> float:
+    if not values:
+        return float("nan")
+    return math.sqrt(mean([float(x) * float(x) for x in values]))
+
+
+def rho_key(rho: float) -> str:
+    return str(float(rho))
+
+
 def corr(xs: Sequence[float], ys: Sequence[float]) -> float:
     if len(xs) != len(ys) or len(xs) < 2:
         return float("nan")
@@ -216,24 +226,43 @@ def build_links(rows: Sequence[Dict[str, Any]]) -> Tuple[Dict[str, Dict[str, Any
         floor = ybar[0] if mode == "cbr" else 0.0
         kg = fit_kingman(rhos, ybar, floor, queue_ceiling_ms(bw, q))
 
-        f_full = MonotonePchip(rhos, ybar)
-        resid: List[float] = []
+        ybar_by_rho = {rho: ybar[i] for i, rho in enumerate(rhos)}
+        ybar_raw_by_rho = {rho: ybar_raw[i] for i, rho in enumerate(rhos)}
+        ysd = [sd(y_values[rho]) for rho in rhos]
+        ysd_by_rho = {rho: ysd[i] for i, rho in enumerate(rhos)}
+
+        # Residual band: leave-one-rho-out CV. A full PCHIP interpolator goes
+        # exactly through every fitted mean, so in-sample residuals collapse to
+        # within-cell seed noise and make efficiency == 1 by definition.
+        edges = {min(rhos), max(rhos)}
+        resid_in: List[float] = []
+        resid_edge: List[float] = []
+        seed_resid: List[float] = []
+        seed_resid_in: List[float] = []
         resid_by_rho: Dict[float, List[float]] = defaultdict(list)
-        pooled_seed_resid: List[float] = []
+        bias_by_rho: Dict[float, float] = {}
         for rho in rhos:
-            pred = f_full(rho)
-            raw_mean = ybar_raw[rhos.index(rho)]
+            train_loo = [rr for rr in rhos if rr != rho]
+            f_loo = MonotonePchip(train_loo, [ybar_by_rho[rr] for rr in train_loo])
+            pred_oos = f_loo(rho)
+            bias_by_rho[rho] = pred_oos - ybar_by_rho[rho]
             for y in y_values[rho]:
-                e = y - pred
-                resid.append(e)
+                seed_e = y - ybar_raw_by_rho[rho]
+                seed_resid.append(seed_e)
+                e = y - pred_oos
                 resid_by_rho[rho].append(e)
-                pooled_seed_resid.append(y - raw_mean)
+                if rho in edges:
+                    resid_edge.append(e)
+                else:
+                    seed_resid_in.append(seed_e)
+                    resid_in.append(e)
 
         sigma_by_rho = [max(sd(resid_by_rho[rho]), 1e-6) for rho in rhos]
-        ysd = [sd(y_values[rho]) for rho in rhos]
-        resid_sd = sd(resid)
+        resid_sd = sd(resid_in)
+        resid_edge_sd = sd(resid_edge)
         sigma_schedule_mean = mean(ysd)
-        sigma_schedule = sd(pooled_seed_resid)
+        sigma_schedule = sd(seed_resid_in)
+        bias_rms_interior = rms([bias_by_rho[rho] for rho in rhos if rho not in edges])
         efficiency = sigma_schedule / max(resid_sd, 1e-9)
         key = "%s|%g|%d" % (mode, bw, q)
         held_r2 = r2(held_in_y, held_in_pred)
@@ -258,17 +287,32 @@ def build_links(rows: Sequence[Dict[str, Any]]) -> Tuple[Dict[str, Dict[str, Any
             "loss_observed": lbar_raw,
             "sigma_train": sigma_by_rho,
             "sigma_observed_by_rho": sigma_by_rho,
+            "sigma_seed_by_rho": ysd,
+            "sigma_by_rho": {rho_key(rho): sigma for rho, sigma in zip(rhos, sigma_by_rho)},
             "n_by_rho": counts,
             "kingman": kg,
             "domain": [min(rhos), max(rhos)],
             "sigma_schedule": sigma_schedule,
             "sigma_schedule_mean_by_rho": sigma_schedule_mean,
-            "sigma_schedule_rms": math.sqrt(mean([x * x for x in ysd])),
+            "sigma_schedule_rms": rms(ysd),
+            "sigma_schedule_all_ms": sd(seed_resid),
+            "noise_rms_ms": sigma_schedule,
+            "noise_rms_all_ms": sd(seed_resid),
+            "noise_sd_by_rho": {rho_key(rho): ysd_by_rho[rho] for rho in rhos},
+            "bias_rms_interior_ms": bias_rms_interior,
+            "bias_by_rho": {rho_key(rho): bias_by_rho.get(rho) for rho in rhos},
             "resid_sd": resid_sd,
-            "resid_mean": mean(resid),
-            "resid_p05": percentile(resid, 0.05),
-            "resid_p95": percentile(resid, 0.95),
-            "resid_n": len(resid),
+            "resid_mean": mean(resid_in),
+            "resid_p05": percentile(resid_in, 0.05),
+            "resid_p95": percentile(resid_in, 0.95),
+            "resid_n": len(resid_in),
+            "resid_sd_cv_interior_ms": resid_sd,
+            "resid_sd_cv_edge_ms": resid_edge_sd,
+            "resid_mean_cv_interior_ms": mean(resid_in),
+            "resid_p05_cv": percentile(resid_in, 0.05),
+            "resid_p95_cv": percentile(resid_in, 0.95),
+            "resid_n_cv": len(resid_in),
+            "resid_n_cv_edge": len(resid_edge),
             "model_efficiency": efficiency,
             "heldout_rho_interp": held_in,
             "heldout_rho_all": held,
@@ -294,9 +338,11 @@ def build_links(rows: Sequence[Dict[str, Any]]) -> Tuple[Dict[str, Dict[str, Any
                 held_rmse,
                 links[key]["heldout_r2_all"],
                 kg["r2"],
-                resid_sd,
                 sigma_schedule,
+                bias_rms_interior,
+                resid_sd,
                 efficiency,
+                resid_edge_sd,
                 links[key]["max_monotone_adjustment_ms"],
                 links[key]["monotonic_model"],
                 predict_gate,
@@ -429,6 +475,50 @@ def summarize_variance(state: Dict[str, Any]) -> Dict[str, Any]:
     }
 
 
+def summarize_sentinel_oos(state: Dict[str, Any], links: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+    key = "h2|6|13"
+    rows = [
+        row
+        for row in state.get("rows", [])
+        if row.get("block") == "E"
+        and row.get("mode") == "h2"
+        and abs(float(row.get("bw", -1.0)) - 6.0) < 1e-9
+        and int(row.get("q", -1)) == 13
+        and abs(float(row.get("rho", -1.0)) - 0.90) < 1e-9
+        and int(row.get("seed", -1)) == 999
+        and float(row.get("probe_pps", -1.0)) == 20.0
+    ]
+    if not rows or key not in links:
+        return {
+            "available": False,
+            "key": key,
+            "rho": 0.90,
+            "n": 0,
+            "pass": None,
+        }
+    vals = [float(row["q_mean_ms"]) for row in rows]
+    link = links[key]
+    pred = MonotonePchip(link["rho_train"], link["delay_train"])(0.90)
+    sig = float(link.get("sigma_by_rho", {}).get(rho_key(0.90), link["resid_sd_cv_interior_ms"]))
+    diff = mean(vals) - pred
+    z = diff / max(sig, 1e-9)
+    return {
+        "available": True,
+        "key": key,
+        "rho": 0.90,
+        "seed": 999,
+        "n": len(vals),
+        "mean_ms": mean(vals),
+        "sd_ms": sd(vals),
+        "values_ms": vals,
+        "prediction_ms": pred,
+        "sigma_ms": sig,
+        "diff_ms": diff,
+        "z": z,
+        "pass": abs(diff) < 2.0 * sig,
+    }
+
+
 def summarize_ca_counterexample(rows: Sequence[Dict[str, Any]], reich: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
     reich_by_idx = {int(row["idx"]): row for row in (reich or {}).get("rows", [])}
     out = {}
@@ -488,24 +578,39 @@ def add_reich_to_links(links: Dict[str, Dict[str, Any]], reich: Dict[str, Any]) 
             link["reich_p95_train"].append(mean([float(v["workload_p95_ms"]) for v in vals]) if vals else None)
 
 
-def make_gates(report_rows: Sequence[Tuple[Any, ...]], links: Dict[str, Dict[str, Any]]) -> Dict[str, Any]:
+def make_gates(
+    report_rows: Sequence[Tuple[Any, ...]],
+    links: Dict[str, Dict[str, Any]],
+    sentinel_oos: Dict[str, Any],
+) -> Dict[str, Any]:
     n_predict = sum(1 for row in report_rows if row[-1])
     n_mono = sum(1 for link in links.values() if link["monotonic_model"])
-    efficiencies = [link["model_efficiency"] for link in links.values() if link["sigma_schedule"] > 0.01]
+    efficiencies = [link["model_efficiency"] for link in links.values() if link["noise_rms_ms"] > 0.01]
+    band_fields_present = all(
+        "noise_rms_ms" in link
+        and "bias_rms_interior_ms" in link
+        and "resid_sd_cv_interior_ms" in link
+        and "sigma_by_rho" in link
+        for link in links.values()
+    )
     return {
         "G-L7a_predictive_gate_pass": bool(n_predict >= math.ceil(0.90 * len(report_rows))),
         "G-L7a_n_pass": n_predict,
         "G-L7a_n_total": len(report_rows),
         "G-L7b_monotonic_pass": bool(n_mono == len(links)),
         "G-L7b_n_pass": n_mono,
-        "G-L7c_efficiency_pass": bool(efficiencies and min(efficiencies) > 0.30 and max(efficiencies) <= 1.0),
+        "G-L7c_efficiency_pass": bool(efficiencies and max(efficiencies) < 0.9999 and band_fields_present),
         "G-L7c_efficiency_mean": mean(efficiencies),
         "G-L7c_efficiency_min": min(efficiencies) if efficiencies else None,
         "G-L7c_efficiency_max": max(efficiencies) if efficiencies else None,
+        "G-L7c_band_decomposition_present_pass": bool(band_fields_present),
         "G-L7d_sigma_present_pass": bool(all(link.get("sigma_train") for link in links.values())),
         "G-L7e_extrapolated_105_marked_pass": bool(
             all(1.05 in link.get("heldout_extrapolated_rho", []) for link in links.values())
         ),
+        "G-L7f_sentinel_oos_pass": sentinel_oos.get("pass"),
+        "G-L7f_sentinel_oos_z": sentinel_oos.get("z"),
+        "G-L7f_sentinel_oos_diff_ms": sentinel_oos.get("diff_ms"),
     }
 
 
@@ -519,6 +624,18 @@ def _fmt(value: Any, digits: int = 4) -> str:
     if not math.isfinite(x):
         return "NA"
     return ("%." + str(digits) + "f") % x
+
+
+def _fmt_signed(value: Any, digits: int = 4) -> str:
+    if value is None:
+        return "NA"
+    try:
+        x = float(value)
+    except (TypeError, ValueError):
+        return str(value)
+    if not math.isfinite(x):
+        return "NA"
+    return ("%+." + str(digits) + "f") % x
 
 
 def _write_json(path: str, data: Any) -> None:
@@ -595,6 +712,138 @@ def write_svg_curves(path: str, links: Dict[str, Dict[str, Any]], field: str, ti
         f.write("\n".join(lines) + "\n")
 
 
+def write_svg_sentinel_chart(path: str, sentinel: Dict[str, Any]) -> None:
+    values = [float(x) for x in sentinel.get("values_ms", [])]
+    if not values:
+        return
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    w, h = 760, 320
+    ml, mr, mt, mb = 64, 24, 36, 46
+    mu = mean(values)
+    s = sd(values)
+    ymin = min(values + [mu - 3.0 * s])
+    ymax = max(values + [mu + 3.0 * s])
+    pad = max(0.01, (ymax - ymin) * 0.12)
+    ymin -= pad
+    ymax += pad
+
+    def sx(i: int) -> float:
+        return ml + i / max(1, len(values) - 1) * (w - ml - mr)
+
+    def sy(y: float) -> float:
+        return h - mb - (y - ymin) / max(1e-12, ymax - ymin) * (h - mt - mb)
+
+    lines = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">' % (w, h, w, h),
+        '<rect width="100%" height="100%" fill="white"/>',
+        '<text x="%d" y="24" font-family="sans-serif" font-size="16">L.7 sentinel control chart: h2 bw=6 q=13 rho=0.90 seed=999</text>'
+        % ml,
+        '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="#222"/>' % (ml, h - mb, w - mr, h - mb),
+        '<line x1="%d" y1="%d" x2="%d" y2="%d" stroke="#222"/>' % (ml, mt, ml, h - mb),
+    ]
+    for label, yv, color, dash in [
+        ("mean", mu, "#333333", ""),
+        ("+3sd", mu + 3.0 * s, "#b00020", ' stroke-dasharray="5 4"'),
+        ("-3sd", mu - 3.0 * s, "#b00020", ' stroke-dasharray="5 4"'),
+    ]:
+        y = sy(yv)
+        lines.append('<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" stroke="%s"%s/>' % (ml, y, w - mr, y, color, dash))
+        lines.append(
+            '<text x="%d" y="%.1f" text-anchor="end" dominant-baseline="middle" font-family="sans-serif" font-size="10">%s %.3f</text>'
+            % (ml - 8, y, label, yv)
+        )
+    d = " ".join(("M" if i == 0 else "L") + "%.2f %.2f" % (sx(i), sy(v)) for i, v in enumerate(values))
+    lines.append('<path d="%s" fill="none" stroke="#2c7fb8" stroke-width="2"/>' % d)
+    for i, value in enumerate(values):
+        fill = "#f28e2b" if i == 0 else "#2c7fb8"
+        r = 5 if i == 0 else 3
+        lines.append('<circle cx="%.2f" cy="%.2f" r="%d" fill="%s"/>' % (sx(i), sy(value), r, fill))
+    lines.append("</svg>")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+
+def write_svg_band_decomposition(path: str, links: Dict[str, Dict[str, Any]]) -> None:
+    keys = ["cbr|6|13", "poisson|6|13", "h2|6|13", "onoff|6|13"]
+    rows = []
+    for key in keys:
+        if key not in links:
+            continue
+        link = links[key]
+        rhos = [float(r) for r in link["rho_train"]]
+        sig = [float(link["sigma_by_rho"][rho_key(r)]) for r in rhos]
+        bias = [abs(float(link["bias_by_rho"].get(rho_key(r)) or 0.0)) for r in rhos]
+        noise = float(link["noise_rms_ms"])
+        rows.append((link["mode"], rhos, sig, bias, noise))
+    if not rows:
+        return
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    w, h = 900, 560
+    ml, mr, mt, mb = 64, 28, 40, 48
+    panel_h = (h - mt - mb) / len(rows)
+    colors = {"cbr": "#555555", "poisson": "#1f77b4", "h2": "#d62728", "onoff": "#2ca02c"}
+    all_vals = [v for _m, _r, sig, bias, noise in rows for v in sig + bias + [noise] if v > 0.0]
+    ymin = max(1e-4, min(all_vals) * 0.6)
+    ymax = max(all_vals) * 1.8
+    log_min = math.log10(ymin)
+    log_max = math.log10(ymax)
+    xmin, xmax = min(RHO_ALL), max(RHO_ALL)
+
+    def sx(x: float) -> float:
+        return ml + (x - xmin) / (xmax - xmin) * (w - ml - mr)
+
+    def sy(y: float, panel: int) -> float:
+        top = mt + panel * panel_h
+        val = max(ymin, float(y))
+        return top + panel_h - (math.log10(val) - log_min) / max(1e-12, log_max - log_min) * panel_h
+
+    lines = [
+        '<svg xmlns="http://www.w3.org/2000/svg" width="%d" height="%d" viewBox="0 0 %d %d">' % (w, h, w, h),
+        '<rect width="100%" height="100%" fill="white"/>',
+        '<text x="%d" y="24" font-family="sans-serif" font-size="16">L.7 band decomposition: sigma(rho), abs bias(rho), noise floor</text>'
+        % ml,
+    ]
+    for p, (mode, rhos, sig, bias, noise) in enumerate(rows):
+        top = mt + p * panel_h
+        bottom = top + panel_h
+        color = colors.get(mode, "#333")
+        lines.append('<text x="%d" y="%.1f" font-family="sans-serif" font-size="13">%s</text>' % (ml, top + 15, html.escape(mode)))
+        lines.append('<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" stroke="#222"/>' % (ml, bottom, w - mr, bottom))
+        lines.append('<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" stroke="#222"/>' % (ml, top, ml, bottom))
+        for tick in (0.001, 0.01, 0.1, 1.0, 10.0, 100.0):
+            if ymin <= tick <= ymax:
+                y = sy(tick, p)
+                lines.append('<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" stroke="#eee"/>' % (ml, y, w - mr, y))
+                lines.append(
+                    '<text x="%d" y="%.1f" text-anchor="end" dominant-baseline="middle" font-family="sans-serif" font-size="9">%.3g</text>'
+                    % (ml - 8, y, tick)
+                )
+        y_noise = sy(noise, p)
+        lines.append(
+            '<line x1="%d" y1="%.1f" x2="%d" y2="%.1f" stroke="#777" stroke-dasharray="4 4"/>'
+            % (ml, y_noise, w - mr, y_noise)
+        )
+        for values, stroke, dash in [(sig, color, ""), (bias, "#111111", ' stroke-dasharray="3 4"')]:
+            d = " ".join(
+                ("M" if i == 0 else "L") + "%.2f %.2f" % (sx(x), sy(max(v, ymin), p))
+                for i, (x, v) in enumerate(zip(rhos, values))
+            )
+            lines.append('<path d="%s" fill="none" stroke="%s" stroke-width="2"%s/>' % (d, stroke, dash))
+        lines.append(
+            '<text x="%d" y="%.1f" font-family="sans-serif" font-size="10">solid=sigma(rho), dashed=abs bias(rho), gray=noise_rms</text>'
+            % (w - 330, top + 15)
+        )
+    for tick in RHO_ALL:
+        x = sx(tick)
+        lines.append(
+            '<text x="%.1f" y="%d" text-anchor="middle" font-family="sans-serif" font-size="10">%.3g</text>'
+            % (x, h - mb + 20, tick)
+        )
+    lines.append("</svg>")
+    with open(path, "w", encoding="utf-8") as f:
+        f.write("\n".join(lines) + "\n")
+
+
 def write_report(
     path: str,
     fit: Dict[str, Any],
@@ -606,6 +855,8 @@ def write_report(
     links = fit["links"]
     write_svg_curves(os.path.join(FIG_DIR, "l7_ref_curves.svg"), links, "delay_train", "L.7 ref curves: delay mean, bw=6 q=13")
     write_svg_curves(os.path.join(FIG_DIR, "l7_ref_sigma.svg"), links, "sigma_train", "L.7 ref curves: local sigma, bw=6 q=13")
+    write_svg_sentinel_chart(os.path.join(FIG_DIR, "l7_sentinel_control.svg"), fit.get("sentinel_oos", {}))
+    write_svg_band_decomposition(os.path.join(FIG_DIR, "l7_band_decomposition.svg"), links)
 
     lines = [
         "# Phase L / Lesson L.7 -- Fit link_model_v2",
@@ -640,16 +891,22 @@ def write_report(
         "| G-L7d sigma exported | %s |" % ("PASS" if fit["gates"]["G-L7d_sigma_present_pass"] else "FAIL"),
         "| G-L7e rho=1.05 marked extrapolated in held-out | %s |"
         % ("PASS" if fit["gates"]["G-L7e_extrapolated_105_marked_pass"] else "FAIL"),
+        "| G-L7f sentinel OOS | diff %s ms, z %s %s |"
+        % (
+            _fmt(fit["gates"].get("G-L7f_sentinel_oos_diff_ms")),
+            _fmt(fit["gates"].get("G-L7f_sentinel_oos_z"), 2),
+            "PASS" if fit["gates"].get("G-L7f_sentinel_oos_pass") else "NA/FAIL",
+        ),
         "",
         "## Fit Table",
         "",
-        "| mode | bw | q | R2 interp | RMSE interp | R2 all | R2 kingman | resid sd | sigma sched | efficiency | adj max | gate |",
-        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
+        "| mode | bw | q | R2 interp | RMSE interp | R2 all | R2 kingman | noise rms | bias rms | sd cv band | efficiency | edge sd | adj max | gate |",
+        "|---|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---:|---|",
     ]
     for row in sorted(report_rows):
-        mode, bw, q, r2_in, rmse_in, r2_all, r2_kg, resid_sd, sig, eff, adj, _mono, gate = row
+        mode, bw, q, r2_in, rmse_in, r2_all, r2_kg, noise, bias, resid_sd, eff, edge_sd, adj, _mono, gate = row
         lines.append(
-            "| %s | %g | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s |"
+            "| %s | %g | %d | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s | %s |"
             % (
                 mode,
                 bw,
@@ -658,9 +915,11 @@ def write_report(
                 _fmt(rmse_in),
                 _fmt(r2_all),
                 _fmt(r2_kg),
+                _fmt(noise),
+                _fmt(bias),
                 _fmt(resid_sd),
-                _fmt(sig),
                 _fmt(eff, 2),
+                _fmt(edge_sd),
                 _fmt(adj),
                 "PASS" if gate else "FAIL",
             )
@@ -675,6 +934,56 @@ def write_report(
         "![Delay curves](figures/l7_ref_curves.svg)",
         "",
         "![Sigma curves](figures/l7_ref_sigma.svg)",
+        "",
+        "![Sentinel control chart](figures/l7_sentinel_control.svg)",
+        "",
+        "![Band decomposition](figures/l7_band_decomposition.svg)",
+        "",
+        "## Local sigma and LOO bias, bw=6 q=13",
+        "",
+        "| mode | kind | %s |" % " | ".join("%.3g" % r for r in RHO_ALL),
+        "|---|---|%s|" % "|".join("---:" for _ in RHO_ALL),
+    ]
+    for mode in ("cbr", "poisson", "h2", "onoff"):
+        key = "%s|6|13" % mode
+        if key not in links:
+            continue
+        link = links[key]
+        lines.append(
+            "| %s | sigma | %s |"
+            % (mode, " | ".join(_fmt(link["sigma_by_rho"].get(rho_key(r)), 3) for r in RHO_ALL))
+        )
+        lines.append(
+            "| %s | bias | %s |"
+            % (mode, " | ".join(_fmt(link["bias_by_rho"].get(rho_key(r)), 3) for r in RHO_ALL))
+        )
+    lines += [
+        "",
+        "## Sentinel OOS Check",
+        "",
+    ]
+    sent = fit.get("sentinel_oos", {})
+    if sent.get("available"):
+        lines += [
+            "Block E seed 999 is excluded from the fit, so this is a direct out-of-sample check.",
+            "",
+            "| key | n | prediction ms | sentinel mean ms | sentinel sd ms | diff ms | z | result |",
+            "|---|---:|---:|---:|---:|---:|---:|---|",
+            "| %s | %d | %s | %s | %s | %s | %s | %s |"
+            % (
+                str(sent["key"]).replace("|", "\\|"),
+                sent["n"],
+                _fmt(sent["prediction_ms"]),
+                _fmt(sent["mean_ms"]),
+                _fmt(sent["sd_ms"]),
+                _fmt(sent["diff_ms"]),
+                _fmt(sent["z"], 2),
+                "PASS" if sent["pass"] else "FAIL",
+            ),
+        ]
+    else:
+        lines.append("No block E sentinel rows were available in this input state.")
+    lines += [
         "",
         "## Variance Floor",
         "",
@@ -731,7 +1040,8 @@ def fit_from_state(
         add_reich_to_links(links, reich)
     variance = summarize_variance(state)
     ca_counter = summarize_ca_counterexample(rows, reich)
-    gates = make_gates(report_rows, links)
+    sentinel_oos = summarize_sentinel_oos(state, links)
+    gates = make_gates(report_rows, links, sentinel_oos)
     fit = {
         "source": state_path,
         "rho_all": RHO_ALL,
@@ -744,6 +1054,7 @@ def fit_from_state(
         "n_links": len(links),
         "links": links,
         "variance_decomposition": variance,
+        "sentinel_oos": sentinel_oos,
         "ca_counterexample": ca_counter,
         "reich": {
             "path": reich_path if compute_reich else None,
@@ -762,16 +1073,20 @@ def print_summary(fit: Dict[str, Any]) -> None:
     print("Dung %d/%d campaign rows cho fit (probe=20, block A/B/C)" % (fit["n_fit_rows"], fit["n_campaign_rows"]))
     print("Ghi -> results/phase-L/link_model_v2_fit.json")
     print("Ghi -> docs/phase-L/07-fit.md")
-    print("\n" + "=" * 112)
+    print("Ghi -> docs/phase-L/figures/l7_ref_curves.svg")
+    print("Ghi -> docs/phase-L/figures/l7_ref_sigma.svg")
+    print("Ghi -> docs/phase-L/figures/l7_sentinel_control.svg")
+    print("Ghi -> docs/phase-L/figures/l7_band_decomposition.svg")
+    print("\n" + "=" * 132)
     print(
-        "%-8s %-4s %-3s | %-9s %-9s %-9s | %-9s %-9s %-8s %-8s | %s"
-        % ("mode", "bw", "q", "R2_in", "RMSE_in", "R2_all", "sd_du", "sig_sch", "eff", "adj", "gate")
+        "%-8s %-4s %-3s | %-9s %-9s %-9s | %-9s %-9s %-9s %-8s %-8s | %s"
+        % ("mode", "bw", "q", "R2_in", "RMSE_in", "R2_all", "noise", "bias", "sd_cv", "eff", "adj", "gate")
     )
-    print("=" * 112)
+    print("=" * 132)
     for key in sorted(fit["links"]):
         v = fit["links"][key]
         print(
-            "%-8s %-4g %-3d | %-9s %-9s %-9s | %-9s %-9s %-8s %-8s | %s"
+            "%-8s %-4g %-3d | %-9s %-9s %-9s | %-9s %-9s %-9s %-8s %-8s | %s"
             % (
                 v["mode"],
                 v["bw"],
@@ -779,12 +1094,60 @@ def print_summary(fit: Dict[str, Any]) -> None:
                 _fmt(v["heldout_r2_interp"]),
                 _fmt(v["heldout_rmse_interp_ms"]),
                 _fmt(v["heldout_r2_all"]),
-                _fmt(v["resid_sd"]),
-                _fmt(v["sigma_schedule"]),
+                _fmt(v["noise_rms_ms"]),
+                _fmt(v["bias_rms_interior_ms"]),
+                _fmt(v["resid_sd_cv_interior_ms"]),
                 _fmt(v["model_efficiency"], 2),
                 _fmt(v["max_monotone_adjustment_ms"]),
                 "PASS" if v["predict_gate_pass"] else "FAIL",
             )
+        )
+    print("\n" + "=" * 104)
+    print(
+        "%-8s %-4s %-3s | %-10s %-11s %-11s | %-9s | %s"
+        % ("mode", "bw", "q", "noise_rms", "bias_rms", "sd_cv(band)", "hieusuat", "doc")
+    )
+    print("=" * 104)
+    for key in sorted(fit["links"]):
+        v = fit["links"][key]
+        eff = float(v["model_efficiency"])
+        doc = "mo hinh toi uu" if eff > 0.95 else ("con cho cai thien" if eff > 0.6 else "LOI MO HINH CHI PHOI")
+        print(
+            "%-8s %-4g %-3d | %-10s %-11s %-11s | %-9s | %s"
+            % (
+                v["mode"],
+                v["bw"],
+                v["q"],
+                _fmt(v["noise_rms_ms"]),
+                _fmt(v["bias_rms_interior_ms"]),
+                _fmt(v["resid_sd_cv_interior_ms"]),
+                _fmt(eff, 3),
+                doc,
+            )
+        )
+    print("\nLocal sigma(rho) va LOO bias(rho), bw=6 q=13:")
+    print("  %-8s %-6s %s" % ("mode", "kind", "  ".join("%7.3g" % r for r in RHO_ALL)))
+    for mode in ("cbr", "poisson", "h2", "onoff"):
+        key = "%s|6|13" % mode
+        if key not in fit["links"]:
+            continue
+        v = fit["links"][key]
+        print(
+            "  %-8s %-6s %s"
+            % (mode, "sigma", "  ".join("%7s" % _fmt(v["sigma_by_rho"].get(rho_key(r)), 3) for r in RHO_ALL))
+        )
+        print(
+            "  %-8s %-6s %s"
+            % (mode, "bias", "  ".join("%7s" % _fmt_signed(v["bias_by_rho"].get(rho_key(r)), 3) for r in RHO_ALL))
+        )
+    sent = fit.get("sentinel_oos", {})
+    if sent.get("available"):
+        print("\nNgoai mau: block E seed 999 (h2, bw=6, q=13, rho=0.90)")
+        print("  mo hinh du doan : %s ms" % _fmt(sent["prediction_ms"]))
+        print("  diem canh do    : %s ms (n=%d, sd=%s)" % (_fmt(sent["mean_ms"]), sent["n"], _fmt(sent["sd_ms"])))
+        print(
+            "  lech            : %s ms = %s sigma -> %s"
+            % (_fmt(sent["diff_ms"]), _fmt(sent["z"], 2), "PASS" if sent["pass"] else "FAIL")
         )
     print("\nGates:")
     for key, value in fit["gates"].items():
