@@ -1,0 +1,138 @@
+{
+  "checks": {
+    "V-L3": {
+      "loss": 0.0,
+      "mean_ms": 0.18267616136239037,
+      "n_foreign_packets": 0,
+      "p99_ms": 0.3305339996586554,
+      "pass": true,
+      "socket_drops": 0
+    },
+    "V-L4": {
+      "rows": {
+        "cbr": {
+          "ca_actual": 0.07351861033410058,
+          "ca_aggregate": 0.17148730626632677,
+          "ca_design": 0.0,
+          "ca_schedule": 5.056585845221334e-14,
+          "loss": 0.0,
+          "max_late_ms": 18.338612844672753,
+          "n_foreign_packets": 0,
+          "n_late": 8,
+          "n_late_ratio": 0.0004300844040642976,
+          "pass": true,
+          "probe_mean_ms": 0.13106220759031856,
+          "q_mean_ms": 0.1865602873446089,
+          "q_p95_ms": 0.2429549986118218,
+          "rate_ratio": 0.9999965446226303,
+          "rho_actual": 0.8999968994022315,
+          "socket_drops": 0,
+          "steady_state_spread_ms": 0.3239555335516733
+        },
+        "h2": {
+          "ca_actual": 2.015176496243152,
+          "ca_aggregate": 1.8631908639814851,
+          "ca_design": 2.0,
+          "ca_schedule": 2.015081422981689,
+          "loss": 0.06934032983508245,
+          "max_late_ms": 0.0,
+          "n_foreign_packets": 0,
+          "n_late": 0,
+          "n_late_ratio": 0.0,
+          "pass": true,
+          "probe_mean_ms": 9.601063019346556,
+          "q_mean_ms": 10.77931629416866,
+          "q_p95_ms": 24.690334001206793,
+          "rate_ratio": 0.9999966011474326,
+          "rho_actual": 0.899996950274554,
+          "socket_drops": 0,
+          "steady_state_spread_ms": 2.61662280740771
+        },
+        "onoff": {
+          "ca_actual": 1.5056191765254607,
+          "ca_aggregate": 1.1273082437271407,
+          "ca_design": null,
+          "ca_schedule": 1.505555665768528,
+          "loss": 0.009096376484739137,
+          "max_late_ms": 0.0,
+          "n_foreign_packets": 0,
+          "n_late": 0,
+          "n_late_ratio": 0.0,
+          "pass": true,
+          "probe_mean_ms": 5.619354356634437,
+          "q_mean_ms": 5.82319012283108,
+          "q_p95_ms": 23.803494999810937,
+          "rate_ratio": 0.9999965598975841,
+          "rho_actual": 0.89999691314969,
+          "socket_drops": 0,
+          "steady_state_spread_ms": 4.213466130352652
+        },
+        "poisson": {
+          "ca_actual": 1.011512086971624,
+          "ca_aggregate": 1.0057061438487478,
+          "ca_design": 1.0,
+          "ca_schedule": 1.0097391561305127,
+          "loss": 0.005988920497080401,
+          "max_late_ms": 18.657809279829962,
+          "n_foreign_packets": 0,
+          "n_late": 9,
+          "n_late_ratio": 0.00048384495457233484,
+          "pass": true,
+          "probe_mean_ms": 6.29385041577006,
+          "q_mean_ms": 6.145997719614209,
+          "q_p95_ms": 20.22920899980818,
+          "rate_ratio": 0.9999964611729371,
+          "rho_actual": 0.8999968242975067,
+          "socket_drops": 0,
+          "steady_state_spread_ms": 2.04205514310471
+        }
+      },
+      "smoke_order_pass": true
+    },
+    "V-L7": {
+      "max_dev_le20": 0.012309908754834757,
+      "pass": true,
+      "sweep": [
+        {
+          "duration_s": 80.0,
+          "loss": 0.004064130052161669,
+          "probe_pps": 0.0,
+          "q_mean_ms": 6.073973087178238,
+          "rate_ratio": 0.9999919927000674,
+          "rho_actual": 0.8999927934300608,
+          "socket_drops": 0
+        },
+        {
+          "duration_s": 80.0,
+          "loss": 0.004326645727837959,
+          "probe_pps": 10.0,
+          "q_mean_ms": 6.0204475210708805,
+          "rate_ratio": 0.9999942873162975,
+          "rho_actual": 0.8999948665537247,
+          "socket_drops": 0
+        },
+        {
+          "duration_s": 80.0,
+          "loss": 0.004429607755023432,
+          "probe_pps": 20.0,
+          "q_mean_ms": 5.9992030326957515,
+          "rate_ratio": 0.9999966303348343,
+          "rho_actual": 0.8999969765432159,
+          "socket_drops": 0
+        },
+        {
+          "duration_s": 40.0,
+          "loss": 0.006236850015028554,
+          "probe_pps": 40.0,
+          "q_mean_ms": 5.9668097768622825,
+          "rate_ratio": 0.9999442783075092,
+          "rho_actual": 0.8999501606361121,
+          "socket_drops": 0
+        }
+      ]
+    }
+  },
+  "pass": true,
+  "raw_prefix": "0729_1020",
+  "timestamp_utc": "2026-07-29T10:20:32Z"
+}

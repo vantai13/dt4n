@@ -1,0 +1,122 @@
+{
+  "checks": {
+    "burst_chosen": 1600,
+    "burst_sweep": [
+      {
+        "backlog_bytes": 19656,
+        "burst_bytes": 1600,
+        "pct": 99.93046072139276,
+        "rate_mbps": 5.995827643283565
+      },
+      {
+        "backlog_bytes": 19656,
+        "burst_bytes": 2400,
+        "pct": 99.9142777736829,
+        "rate_mbps": 5.994856666420974
+      },
+      {
+        "backlog_bytes": 19656,
+        "burst_bytes": 3200,
+        "pct": 99.94681548940821,
+        "rate_mbps": 5.996808929364493
+      },
+      {
+        "backlog_bytes": 19656,
+        "burst_bytes": 6400,
+        "pct": 100.02404072019084,
+        "rate_mbps": 6.001442443211451
+      },
+      {
+        "backlog_bytes": 19656,
+        "burst_bytes": 15000,
+        "pct": 100.25629471895276,
+        "rate_mbps": 6.0153776831371655
+      }
+    ],
+    "default_qdisc": {
+      "h1-eth0": "qdisc noqueue 0: root refcnt 2",
+      "s1-eth1": "qdisc noqueue 0: root refcnt 2",
+      "s1-eth2": "qdisc noqueue 0: root refcnt 2",
+      "s2-eth2": "qdisc noqueue 0: root refcnt 2"
+    },
+    "hidden_queue": [
+      {
+        "ifname": "h1-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "s1-eth1",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      }
+    ],
+    "measure_qdisc_assert": {
+      "bfifo_limit_bytes": 19656,
+      "ceiling_ms": 26.208,
+      "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 0 borrowed: 0 giants: 0\n tokens: 33334 ctokens: 33334\n\n",
+      "ifname": "s1-eth2",
+      "kinds": [
+        "htb",
+        "bfifo"
+      ],
+      "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "ping_output": "PING 10.0.0.2 (10.0.0.2) 56(84) bytes of data.\r\n64 bytes from 10.0.0.2: icmp_seq=1 ttl=64 time=6.71 ms\r\n64 bytes from 10.0.0.2: icmp_seq=2 ttl=64 time=3.07 ms\r\n64 bytes from 10.0.0.2: icmp_seq=3 ttl=64 time=3.06 ms\r\n64 bytes from 10.0.0.2: icmp_seq=4 ttl=64 time=3.07 ms\r\n64 bytes from 10.0.0.2: icmp_seq=5 ttl=64 time=3.14 ms\r\n64 bytes from 10.0.0.2: icmp_seq=6 ttl=64 time=3.06 ms\r\n64 bytes from 10.0.0.2: icmp_seq=7 ttl=64 time=3.06 ms\r\n64 bytes from 10.0.0.2: icmp_seq=8 ttl=64 time=3.21 ms\r\n64 bytes from 10.0.0.2: icmp_seq=9 ttl=64 time=3.05 ms\r\n64 bytes from 10.0.0.2: icmp_seq=10 ttl=64 time=3.07 ms\r\n\r\n--- 10.0.0.2 ping statistics ---\r\n10 packets transmitted, 10 received, 0% packet loss, time 1804ms\r\nrtt min/avg/max/mdev = 3.051/3.448/6.714/1.089 ms",
+    "ping_rtt_ms": 3.448,
+    "positive_control": {
+      "expected": 0.38461538461538464,
+      "pass": true,
+      "ratio": 0.38461538461538464,
+      "rows": [
+        {
+          "backlog_bytes": 19656,
+          "backlog_ms": 26.208,
+          "ceiling_ms": 26.208,
+          "queue_pkts": 13,
+          "rate_mbps": 5.994961192283585
+        },
+        {
+          "backlog_bytes": 7560,
+          "backlog_ms": 10.08,
+          "ceiling_ms": 10.08,
+          "queue_pkts": 5,
+          "rate_mbps": 5.9893379618524705
+        }
+      ]
+    },
+    "raw_after_burst": {
+      "measure_class": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 22654660 bytes 15004 pkt (dropped 17227341, overlimits 14965 requeues 0) \n backlog 1512b 1p requeues 0\n lended: 15004 borrowed: 0 giants: 0\n tokens: -31421 ctokens: -31421",
+      "measure_qdisc": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 22650124 bytes 15001 pkt (dropped 17227341, overlimits 14962 requeues 0) \n backlog 6048b 4p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 22650124 bytes 15001 pkt (dropped 17227341, overlimits 0 requeues 0) \n backlog 6048b 4p requeues 0",
+      "proof_backlog_bytes": 19656,
+      "proof_rate_mbps": 5.994706746783428
+    },
+    "raw_after_setup": {
+      "measure_class": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 0 borrowed: 0 giants: 0\n tokens: 33334 ctokens: 33334",
+      "measure_qdisc": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0",
+      "return_qdisc": "qdisc netem 1: root refcnt 9 limit 1000 delay 3ms\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0"
+    },
+    "tc_commands": [
+      "tc qdisc del dev s1-eth2 root",
+      "tc qdisc add dev s1-eth2 root handle 1: htb default 10",
+      "tc class add dev s1-eth2 parent 1: classid 1:10 htb rate 6mbit burst 1600b cburst 1600b",
+      "tc qdisc add dev s1-eth2 parent 1:10 handle 10: bfifo limit 19656",
+      "tc qdisc del dev s2-eth2 root",
+      "tc qdisc add dev s2-eth2 root handle 1: netem delay 3ms"
+    ]
+  },
+  "config": {
+    "blast_secs": 5.0,
+    "bw": 6.0,
+    "delay": 3.0,
+    "out_dir": "results/phase-L",
+    "queue": 13
+  },
+  "interfaces": {
+    "h1_to_s1": "h1-eth0",
+    "measure": "s1-eth2",
+    "return": "s2-eth2",
+    "s1_to_h1": "s1-eth1"
+  },
+  "timestamp_utc": "2026-07-29T07:27:29Z"
+}

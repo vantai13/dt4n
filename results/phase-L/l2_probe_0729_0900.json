@@ -1,0 +1,1045 @@
+{
+  "checks": {
+    "V-L0_floor": {
+      "max_ms": 4.582866999953694,
+      "mean_ms": 0.14145937727657043,
+      "n": 1988,
+      "p50_ms": 0.15561599957436556,
+      "p99_ms": 0.31345900060841814,
+      "pass": true,
+      "rx": "results/phase-L/raw/0729_0900_vl0_floor_rx.bin",
+      "rx_meta": {
+        "n_foreign_packets": 0,
+        "n_records": 1988,
+        "out": "results/phase-L/raw/0729_0900_vl0_floor_rx.bin",
+        "port": 5555,
+        "record_struct": "<Qdd",
+        "role": "recv",
+        "run_ids_seen": [
+          100
+        ],
+        "socket_drops_delta": 0,
+        "socket_rcvbuf_bytes": 16777216
+      },
+      "sd_ms": 0.14034381607778476,
+      "tx": "results/phase-L/raw/0729_0900_vl0_floor_tx.bin",
+      "tx_meta": {
+        "duration_s_actual": 19.99007730899939,
+        "frame_bytes_on_wire": 106,
+        "kind": 1,
+        "mode": "poisson",
+        "n_sent": 1988,
+        "out": "results/phase-L/raw/0729_0900_vl0_floor_tx.bin",
+        "rate_pps_actual": 99.44934025367759,
+        "rate_pps_nominal": 100.0,
+        "record_struct": "<Qd",
+        "role": "send",
+        "run_id": 100,
+        "seed": 1,
+        "size_bytes": 64
+      }
+    },
+    "V-L2": {
+      "bw4": {
+        "delta_floor_ms": 0.01039207801244782,
+        "mean_ms": 0.15185145528901825,
+        "pass": true,
+        "rx": "results/phase-L/raw/0729_0900_vl2_bw4_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 1465,
+          "out": "results/phase-L/raw/0729_0900_vl2_bw4_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            204
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "sd_ms": 0.07045371184668874,
+        "tx": "results/phase-L/raw/0729_0900_vl2_bw4_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 14.994239823000498,
+          "frame_bytes_on_wire": 106,
+          "kind": 1,
+          "mode": "poisson",
+          "n_sent": 1465,
+          "out": "results/phase-L/raw/0729_0900_vl2_bw4_tx.bin",
+          "rate_pps_actual": 97.70418622708402,
+          "rate_pps_nominal": 100.0,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 204,
+          "seed": 1,
+          "size_bytes": 64
+        }
+      },
+      "bw6": {
+        "delta_floor_ms": 0.0330201101023965,
+        "mean_ms": 0.17447948737896693,
+        "pass": true,
+        "rx": "results/phase-L/raw/0729_0900_vl2_bw6_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 1465,
+          "out": "results/phase-L/raw/0729_0900_vl2_bw6_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            206
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "sd_ms": 0.07892684829844956,
+        "tx": "results/phase-L/raw/0729_0900_vl2_bw6_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 14.994269970999994,
+          "frame_bytes_on_wire": 106,
+          "kind": 1,
+          "mode": "poisson",
+          "n_sent": 1465,
+          "out": "results/phase-L/raw/0729_0900_vl2_bw6_tx.bin",
+          "rate_pps_actual": 97.70398977965691,
+          "rate_pps_nominal": 100.0,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 206,
+          "seed": 1,
+          "size_bytes": 64
+        }
+      },
+      "bw8": {
+        "delta_floor_ms": 0.00869583023308687,
+        "mean_ms": 0.1501552075096573,
+        "pass": true,
+        "rx": "results/phase-L/raw/0729_0900_vl2_bw8_rx.bin",
+        "rx_meta": {
+          "n_foreign_packets": 0,
+          "n_records": 1465,
+          "out": "results/phase-L/raw/0729_0900_vl2_bw8_rx.bin",
+          "port": 5555,
+          "record_struct": "<Qdd",
+          "role": "recv",
+          "run_ids_seen": [
+            208
+          ],
+          "socket_drops_delta": 0,
+          "socket_rcvbuf_bytes": 16777216
+        },
+        "sd_ms": 0.07390314058467544,
+        "tx": "results/phase-L/raw/0729_0900_vl2_bw8_tx.bin",
+        "tx_meta": {
+          "duration_s_actual": 14.994244816999526,
+          "frame_bytes_on_wire": 106,
+          "kind": 1,
+          "mode": "poisson",
+          "n_sent": 1465,
+          "out": "results/phase-L/raw/0729_0900_vl2_bw8_tx.bin",
+          "rate_pps_actual": 97.70415368562448,
+          "rate_pps_nominal": 100.0,
+          "record_struct": "<Qd",
+          "role": "send",
+          "run_id": 208,
+          "seed": 1,
+          "size_bytes": 64
+        }
+      }
+    },
+    "V-L2b": {
+      "bw4": {
+        "fit": {
+          "C_bytes_per_s": 497658.5550785471,
+          "C_mbps": 3.981268440628377,
+          "burst_bytes": 1648.6774979662155,
+          "intercept_s": -0.006351096481135254,
+          "r2": 0.9999125655785931,
+          "slope_s_per_pkt": 0.003038227685569187
+        },
+        "fit_pass": true,
+        "max_abs_err_ms_k_ge_3": 0.13021537803384575,
+        "measured_ms": [
+          -0.02376237732600317,
+          -0.05175037692746742,
+          2.7387936232357415,
+          5.859744623036439,
+          8.866488623267704,
+          11.789784621966154,
+          14.906370622908488,
+          17.99375262255713
+        ],
+        "n_reps": 5,
+        "pass": true,
+        "predicted_ms": [
+          0.0,
+          0.0,
+          2.848,
+          5.872,
+          8.895999999999999,
+          11.92,
+          14.944,
+          17.968
+        ],
+        "reps": [
+          {
+            "measured_ms": [
+              0.34127362307704856,
+              0.3243456229269748,
+              2.9113986227698287,
+              6.021805623119198,
+              8.951729622664478,
+              12.067079622126093,
+              15.104429622466759,
+              18.11924362284704
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw4_r0_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r0_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3040
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw4_r0_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 8.044000060181133e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r0_tx.bin",
+              "rate_pps_actual": 99453.00770944869,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3040,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              -0.025866376903233013,
+              -0.05175037692746742,
+              2.713114622407792,
+              5.859744623036439,
+              8.866488623267704,
+              11.782020622219042,
+              14.80453762253679,
+              17.863191623133805
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw4_r1_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r1_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3041
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw4_r1_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 9.092499931284692e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r1_tx.bin",
+              "rate_pps_actual": 87984.6033594599,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3041,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              -0.03378237686187391,
+              -0.0609323771400716,
+              2.7286856228115166,
+              5.754481622558577,
+              8.859437622801542,
+              11.789784621966154,
+              14.906370622908488,
+              18.005786622622015
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw4_r2_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r2_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3042
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw4_r2_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 8.965899996837834e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r2_tx.bin",
+              "rate_pps_actual": 89226.95995741092,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3042,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              -0.02376237732600317,
+              -0.049034377455919875,
+              2.852325622212865,
+              5.901085622851005,
+              8.878823622423132,
+              11.797423622580444,
+              15.149639622747108,
+              17.99375262255713
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw4_r3_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r3_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3043
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw4_r3_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 8.944300043367548e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r3_tx.bin",
+              "rate_pps_actual": 89442.4377671926,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3043,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              -0.021506377537244825,
+              -0.05412937768918824,
+              2.7387936232357415,
+              5.749566623150221,
+              8.770910622685241,
+              11.758223623316061,
+              14.806881623213902,
+              17.83388462247463
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw4_r4_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r4_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3044
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw4_r4_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 0.00010035499963123584,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw4_r4_tx.bin",
+              "rate_pps_actual": 79717.00492647874,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3044,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          }
+        ]
+      },
+      "bw6": {
+        "fit": {
+          "C_bytes_per_s": 739903.8980897298,
+          "C_mbps": 5.919231184717838,
+          "burst_bytes": 1712.556804572287,
+          "intercept_s": -0.004358075167460785,
+          "r2": 0.9999116900663213,
+          "slope_s_per_pkt": 0.00204350862849034
+        },
+        "fit_pass": false,
+        "max_abs_err_ms_k_ge_3": 0.13291104372970608,
+        "measured_ms": [
+          -0.01659937713479054,
+          -0.050412376525438285,
+          1.7714536223379207,
+          3.781755622936961,
+          5.899148622871925,
+          7.938664622839914,
+          9.897867622227258,
+          11.99844362220252
+        ],
+        "n_reps": 5,
+        "pass": false,
+        "predicted_ms": [
+          0.0,
+          0.0,
+          1.8986666666666667,
+          3.914666666666667,
+          5.930666666666666,
+          7.946666666666666,
+          9.962666666666667,
+          11.978666666666667
+        ],
+        "reps": [
+          {
+            "measured_ms": [
+              0.221787622491737,
+              0.18126262223309708,
+              1.9280116228641953,
+              3.9360476228707366,
+              6.141143622541184,
+              7.987144623099502,
+              10.08758262271518,
+              12.305379622217933
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw6_r0_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r0_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3060
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw6_r0_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 0.00011264300064794952,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r0_tx.bin",
+              "rate_pps_actual": 71020.83532915569,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3060,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              -0.01659937713479054,
+              -0.050412376525438285,
+              1.7838716219798323,
+              3.770702622047301,
+              5.799660622712016,
+              7.808249622782077,
+              9.823137623085548,
+              11.835127622204217
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw6_r1_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r1_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3061
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw6_r1_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 0.00010435399963171221,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r1_tx.bin",
+              "rate_pps_actual": 76662.13109448345,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3061,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              -0.02748637796097797,
+              -0.05370837804870576,
+              1.7714536223379207,
+              3.781755622936961,
+              5.932647622854764,
+              7.938664622839914,
+              9.919955622377946,
+              11.99844362220252
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw6_r2_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r2_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3062
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw6_r2_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 8.821499977784697e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r2_tx.bin",
+              "rate_pps_actual": 90687.52502574968,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3062,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              -0.03353637673493837,
+              -0.05852337760510751,
+              1.7649476229293748,
+              3.7685396226392722,
+              5.788171622795252,
+              7.9503626228201565,
+              9.833998623277202,
+              11.980171622623365
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw6_r3_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r3_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3063
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw6_r3_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 8.797200007393258e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r3_tx.bin",
+              "rate_pps_actual": 90938.02565903602,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3063,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              0.08232262264433188,
+              0.0531366229792718,
+              1.7639176219986064,
+              3.7867386234451796,
+              5.899148622871925,
+              7.936636623368448,
+              9.897867622227258,
+              12.078900623079297
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw6_r4_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r4_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3064
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw6_r4_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 9.310699988418492e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw6_r4_tx.bin",
+              "rate_pps_actual": 85922.64824289408,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3064,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          }
+        ]
+      },
+      "bw8": {
+        "fit": {
+          "C_bytes_per_s": 997770.0067061576,
+          "C_mbps": 7.9821600536492605,
+          "burst_bytes": 1645.8292718432099,
+          "intercept_s": -0.003164886948514166,
+          "r2": 0.9997046011466582,
+          "slope_s_per_pkt": 0.0015153792856446152
+        },
+        "fit_pass": true,
+        "max_abs_err_ms_k_ge_3": 0.12867037760213584,
+        "measured_ms": [
+          0.1367266221008856,
+          0.10237262251981405,
+          1.4285106224874278,
+          2.807329622397864,
+          4.452535623228377,
+          5.924929622621184,
+          7.44701162223142,
+          8.957877622221039
+        ],
+        "n_reps": 5,
+        "pass": true,
+        "predicted_ms": [
+          0.0,
+          0.0,
+          1.424,
+          2.936,
+          4.4479999999999995,
+          5.96,
+          7.472,
+          8.984
+        ],
+        "reps": [
+          {
+            "measured_ms": [
+              0.28803462266883684,
+              0.262022623088759,
+              1.5214216226254018,
+              3.014663623458963,
+              4.4999736226841005,
+              5.999265622291622,
+              7.503522622597719,
+              9.052079622803339
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw8_r0_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r0_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3080
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw8_r0_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 9.720799971546512e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r0_tx.bin",
+              "rate_pps_actual": 82297.7535122272,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3080,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              0.10815662319733632,
+              0.08852162302578903,
+              1.4273826225930486,
+              2.807329622397864,
+              4.454659622594098,
+              5.814056622354164,
+              7.332877623254225,
+              8.824627622585885
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw8_r1_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r1_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3081
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw8_r1_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 9.014100032800343e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r1_tx.bin",
+              "rate_pps_actual": 88749.84713825835,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3081,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              0.047878622196056986,
+              0.006966622846865667,
+              1.4986136228130442,
+              2.938584622667312,
+              4.310337622724964,
+              5.804734622712621,
+              7.44701162223142,
+              8.959972622348195
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw8_r2_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r2_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3082
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw8_r2_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 0.00010777000079542631,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r2_tx.bin",
+              "rate_pps_actual": 74232.16053589854,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3082,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              0.14157462267254117,
+              0.10888062281670385,
+              1.418760622824683,
+              2.793885622692377,
+              4.307942622132449,
+              5.932980623425882,
+              7.496979622216221,
+              8.957877622221039
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw8_r3_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r3_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3083
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw8_r3_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 9.825799952523084e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r3_tx.bin",
+              "rate_pps_actual": 81418.30729970995,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3083,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          },
+          {
+            "measured_ms": [
+              0.1367266221008856,
+              0.10237262251981405,
+              1.4285106224874278,
+              2.8036996234972857,
+              4.452535623228377,
+              5.924929622621184,
+              7.328587622238464,
+              8.841180622609008
+            ],
+            "rx": "results/phase-L/raw/0729_0900_vl2b_bw8_r4_rx.bin",
+            "rx_meta": {
+              "n_foreign_packets": 0,
+              "n_records": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r4_rx.bin",
+              "port": 5555,
+              "record_struct": "<Qdd",
+              "role": "recv",
+              "run_ids_seen": [
+                3084
+              ],
+              "socket_drops_delta": 0,
+              "socket_rcvbuf_bytes": 16777216
+            },
+            "seq": [
+              0,
+              1,
+              2,
+              3,
+              4,
+              5,
+              6,
+              7
+            ],
+            "tx": "results/phase-L/raw/0729_0900_vl2b_bw8_r4_tx.bin",
+            "tx_meta": {
+              "duration_s_actual": 9.97969991658465e-05,
+              "frame_bytes_on_wire": 1512,
+              "kind": 1,
+              "mode": "burst",
+              "n_sent": 8,
+              "out": "results/phase-L/raw/0729_0900_vl2b_bw8_r4_tx.bin",
+              "rate_pps_actual": 80162.73101263588,
+              "rate_pps_nominal": null,
+              "record_struct": "<Qd",
+              "role": "send",
+              "run_id": 3084,
+              "seed": 1,
+              "size_bytes": 1470
+            }
+          }
+        ]
+      }
+    }
+  },
+  "raw_prefix": "0729_0900",
+  "timestamp_utc": "2026-07-29T09:00:10Z"
+}

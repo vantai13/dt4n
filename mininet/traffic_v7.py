@@ -111,7 +111,18 @@ class TrafficConfig:
 
     @property
     def hurst(self) -> float:
-        return (3.0 - self.kappa) / 2.0
+        """Hurst exponent implied by the Pareto M/G/inf traffic model.
+
+        The relation H = (3-kappa)/2 only applies for 1 < kappa < 2, where
+        flow durations have infinite variance and create long-range
+        dependence. For kappa >= 2 the variance is finite, so this model does
+        not imply LRD and the neutral value is H = 0.5.
+        """
+        if 1.0 < self.kappa < 2.0:
+            return (3.0 - self.kappa) / 2.0
+        if self.kappa >= 2.0:
+            return 0.5
+        raise ValueError("kappa <= 1 gives infinite mean flow duration")
 
     def as_dict(self) -> Dict[str, float]:
         return {
