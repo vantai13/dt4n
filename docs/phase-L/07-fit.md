@@ -11,6 +11,7 @@ Output model: `results/phase-L/link_model_v2_fit.json`
 | G-L7a predictive gate | 10/10 PASS |
 | G-L7b monotone model | 10/10 PASS |
 | G-L7c efficiency | mean 0.77, min 0.18, max 0.98 PASS |
+| G-L7c regime decomposition | PASS |
 | G-L7d sigma exported | PASS |
 | G-L7e rho=1.05 marked extrapolated in held-out | PASS |
 | G-L7f sentinel OOS | diff -0.1662 ms, z -0.59 PASS |
@@ -29,6 +30,36 @@ Output model: `results/phase-L/link_model_v2_fit.json`
 | poisson | 4 | 10 | 0.9995 | 0.0943 | 0.9775 | 0.9334 | 0.2187 | 0.0803 | 0.2324 | 0.94 | 1.0815 | 0.0000 | PASS |
 | poisson | 6 | 13 | 0.9996 | 0.0795 | 0.9679 | 0.9455 | 0.2595 | 0.0718 | 0.2680 | 0.97 | 1.1206 | 0.0000 | PASS |
 | poisson | 8 | 18 | 0.9997 | 0.0695 | 0.9617 | 0.9403 | 0.2291 | 0.0674 | 0.2363 | 0.97 | 1.3621 | 0.0000 | PASS |
+
+## Regime Band Decomposition
+
+The grouped efficiency is an audit summary only. Interpret CBR by regime, because the critical transition is not resolved by the 12-point rho grid.
+
+| mode | bw | q | regime | rho | n | noise rms | bias rms | sd cv band | efficiency |
+|---|---:|---:|---|---|---:|---:|---:|---:|---:|
+| cbr | 4 | 10 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.0070 | 0.0005 | 0.0077 | 0.910 |
+| cbr | 4 | 10 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 15 | 2.1708 | 11.2842 | 11.7107 | 0.185 |
+| cbr | 6 | 13 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.0055 | 0.0015 | 0.0063 | 0.872 |
+| cbr | 6 | 13 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 30 | 4.1099 | 8.6431 | 9.6060 | 0.428 |
+| cbr | 8 | 18 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.0186 | 0.0083 | 0.0208 | 0.897 |
+| cbr | 8 | 18 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 15 | 3.2316 | 9.0327 | 9.7896 | 0.330 |
+| h2 | 4 | 10 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.2720 | 0.0956 | 0.2881 | 0.944 |
+| h2 | 4 | 10 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 15 | 0.2673 | 0.0096 | 0.2674 | 0.999 |
+| h2 | 6 | 13 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.2025 | 0.0734 | 0.2151 | 0.941 |
+| h2 | 6 | 13 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 30 | 0.1877 | 0.0135 | 0.1881 | 0.998 |
+| h2 | 8 | 18 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.2410 | 0.0585 | 0.2469 | 0.976 |
+| h2 | 8 | 18 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 15 | 0.1780 | 0.0134 | 0.1784 | 0.997 |
+| onoff | 6 | 13 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.4845 | 0.2224 | 0.5245 | 0.924 |
+| onoff | 6 | 13 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 15 | 0.5022 | 0.0493 | 0.5038 | 0.997 |
+| poisson | 4 | 10 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.1715 | 0.0758 | 0.1827 | 0.939 |
+| poisson | 4 | 10 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 15 | 0.3098 | 0.0900 | 0.3218 | 0.963 |
+| poisson | 6 | 13 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.2151 | 0.0779 | 0.2225 | 0.966 |
+| poisson | 6 | 13 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 30 | 0.3072 | 0.0547 | 0.3107 | 0.989 |
+| poisson | 8 | 18 | subcritical_rho_le_0.95 | 0.6, 0.7, 0.8, 0.85, 0.9, 0.925, 0.95 | 35 | 0.1715 | 0.0757 | 0.1783 | 0.961 |
+| poisson | 8 | 18 | critical_rho_ge_0.98 | 0.98, 1, 1.02 | 15 | 0.3350 | 0.0423 | 0.3373 | 0.993 |
+
+Runtime reliability contract: CBR exports `unreliable_rho_ranges = [[0.95, 1.05]]`; `LinkModelV2.is_reliable()` returns `False` inside that open interval.
+ON/OFF also shows an unresolved threshold near rho ~= 0.75 (`sigma` jumps between 0.70 and 0.80), but L.9 records it as a limitation rather than blocking predictions.
 
 CBR uses held-out RMSE instead of R2 because the curve is nearly flat at the software floor.
 For CBR, the predictive gate is evaluated only on subcritical held-out rho <= 0.90; the critical shoulder is reported separately because Amendment 6 marked rho near 1 as singular.

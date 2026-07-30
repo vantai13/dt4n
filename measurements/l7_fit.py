@@ -35,6 +35,8 @@ R2_GATE = 0.90
 CBR_RMSE_GATE_MS = 0.05
 MTU_BYTES = FRAME_BG
 TX_REC = struct.Struct("<Qd")
+SUBCRITICAL_MAX_RHO = 0.95
+CRITICAL_MIN_RHO = 0.98
 
 
 def mean(values: Sequence[float]) -> float:
@@ -239,6 +241,7 @@ def build_links(rows: Sequence[Dict[str, Any]]) -> Tuple[Dict[str, Dict[str, Any
         resid_edge: List[float] = []
         seed_resid: List[float] = []
         seed_resid_in: List[float] = []
+        seed_resid_by_rho: Dict[float, List[float]] = defaultdict(list)
         resid_by_rho: Dict[float, List[float]] = defaultdict(list)
         bias_by_rho: Dict[float, float] = {}
         for rho in rhos:
@@ -249,6 +252,7 @@ def build_links(rows: Sequence[Dict[str, Any]]) -> Tuple[Dict[str, Dict[str, Any
             for y in y_values[rho]:
                 seed_e = y - ybar_raw_by_rho[rho]
                 seed_resid.append(seed_e)
+                seed_resid_by_rho[rho].append(seed_e)
                 e = y - pred_oos
                 resid_by_rho[rho].append(e)
                 if rho in edges:
@@ -264,6 +268,45 @@ def build_links(rows: Sequence[Dict[str, Any]]) -> Tuple[Dict[str, Dict[str, Any
         sigma_schedule = sd(seed_resid_in)
         bias_rms_interior = rms([bias_by_rho[rho] for rho in rhos if rho not in edges])
         efficiency = sigma_schedule / max(resid_sd, 1e-9)
+        interior_rhos = [rho for rho in rhos if rho not in edges]
+
+        def regime_stats(name: str, regime_rhos: Sequence[float]) -> Dict[str, Any]:
+            regime_rhos = list(regime_rhos)
+            regime_resid = [e for rho in regime_rhos for e in resid_by_rho[rho]]
+            regime_seed = [e for rho in regime_rhos for e in seed_resid_by_rho[rho]]
+            regime_bias = [bias_by_rho[rho] for rho in regime_rhos]
+            resid_regime_sd = sd(regime_resid)
+            noise_regime = sd(regime_seed)
+            return {
+                "name": name,
+                "rho": regime_rhos,
+                "n": len(regime_resid),
+                "noise_rms_ms": noise_regime,
+                "sigma_rms_by_rho_ms": rms([ysd_by_rho[rho] for rho in regime_rhos]),
+                "bias_rms_ms": rms(regime_bias),
+                "resid_sd_cv_ms": resid_regime_sd,
+                "model_efficiency": noise_regime / max(resid_regime_sd, 1e-9),
+                "resid_mean_ms": mean(regime_resid),
+                "resid_p05": percentile(regime_resid, 0.05),
+                "resid_p95": percentile(regime_resid, 0.95),
+            }
+
+        band_by_regime = {
+            "subcritical_rho_le_0.95": regime_stats(
+                "subcritical_rho_le_0.95",
+                [rho for rho in interior_rhos if rho <= SUBCRITICAL_MAX_RHO],
+            ),
+            "critical_rho_ge_0.98": regime_stats(
+                "critical_rho_ge_0.98",
+                [rho for rho in interior_rhos if rho >= CRITICAL_MIN_RHO],
+            ),
+        }
+        unreliable_ranges = [[SUBCRITICAL_MAX_RHO, 1.05]] if mode == "cbr" else []
+        reliability_note = (
+            "cbr critical transition is unresolved; do not rely on point predictions for 0.95 < rho < 1.05"
+            if mode == "cbr"
+            else "measured rho grid is reliable inside the exported domain, subject to local sigma"
+        )
         key = "%s|%g|%d" % (mode, bw, q)
         held_r2 = r2(held_in_y, held_in_pred)
         held_rmse = rmse(held_in_y, held_in_pred)
@@ -301,6 +344,9 @@ def build_links(rows: Sequence[Dict[str, Any]]) -> Tuple[Dict[str, Dict[str, Any
             "noise_sd_by_rho": {rho_key(rho): ysd_by_rho[rho] for rho in rhos},
             "bias_rms_interior_ms": bias_rms_interior,
             "bias_by_rho": {rho_key(rho): bias_by_rho.get(rho) for rho in rhos},
+            "band_by_regime": band_by_regime,
+            "unreliable_rho_ranges": unreliable_ranges,
+            "reliability_note": reliability_note,
             "resid_sd": resid_sd,
             "resid_mean": mean(resid_in),
             "resid_p05": percentile(resid_in, 0.05),
@@ -591,6 +637,12 @@ def make_gates(
         and "bias_rms_interior_ms" in link
         and "resid_sd_cv_interior_ms" in link
         and "sigma_by_rho" in link
+        and "band_by_regime" in link
+        for link in links.values()
+    )
+    regime_fields_present = all(
+        "subcritical_rho_le_0.95" in link.get("band_by_regime", {})
+        and "critical_rho_ge_0.98" in link.get("band_by_regime", {})
         for link in links.values()
     )
     return {
@@ -604,6 +656,7 @@ def make_gates(
         "G-L7c_efficiency_min": min(efficiencies) if efficiencies else None,
         "G-L7c_efficiency_max": max(efficiencies) if efficiencies else None,
         "G-L7c_band_decomposition_present_pass": bool(band_fields_present),
+        "G-L7c_regime_decomposition_present_pass": bool(regime_fields_present),
         "G-L7d_sigma_present_pass": bool(all(link.get("sigma_train") for link in links.values())),
         "G-L7e_extrapolated_105_marked_pass": bool(
             all(1.05 in link.get("heldout_extrapolated_rho", []) for link in links.values())
@@ -888,6 +941,8 @@ def write_report(
             _fmt(fit["gates"]["G-L7c_efficiency_max"], 2),
             "PASS" if fit["gates"]["G-L7c_efficiency_pass"] else "FAIL",
         ),
+        "| G-L7c regime decomposition | %s |"
+        % ("PASS" if fit["gates"]["G-L7c_regime_decomposition_present_pass"] else "FAIL"),
         "| G-L7d sigma exported | %s |" % ("PASS" if fit["gates"]["G-L7d_sigma_present_pass"] else "FAIL"),
         "| G-L7e rho=1.05 marked extrapolated in held-out | %s |"
         % ("PASS" if fit["gates"]["G-L7e_extrapolated_105_marked_pass"] else "FAIL"),
@@ -924,6 +979,42 @@ def write_report(
                 "PASS" if gate else "FAIL",
             )
         )
+
+    lines += [
+        "",
+        "## Regime Band Decomposition",
+        "",
+        "The grouped efficiency is an audit summary only. Interpret CBR by regime, because the critical transition is not resolved by the 12-point rho grid.",
+        "",
+        "| mode | bw | q | regime | rho | n | noise rms | bias rms | sd cv band | efficiency |",
+        "|---|---:|---:|---|---|---:|---:|---:|---:|---:|",
+    ]
+    for key in sorted(links):
+        link = links[key]
+        for regime_key in ("subcritical_rho_le_0.95", "critical_rho_ge_0.98"):
+            reg = link.get("band_by_regime", {}).get(regime_key)
+            if not reg:
+                continue
+            lines.append(
+                "| %s | %g | %d | %s | %s | %d | %s | %s | %s | %s |"
+                % (
+                    link["mode"],
+                    link["bw"],
+                    link["q"],
+                    regime_key,
+                    ", ".join("%.3g" % float(rho) for rho in reg["rho"]),
+                    reg["n"],
+                    _fmt(reg["noise_rms_ms"]),
+                    _fmt(reg["bias_rms_ms"]),
+                    _fmt(reg["resid_sd_cv_ms"]),
+                    _fmt(reg["model_efficiency"], 3),
+                )
+            )
+    lines += [
+        "",
+        "Runtime reliability contract: CBR exports `unreliable_rho_ranges = [[0.95, 1.05]]`; `LinkModelV2.is_reliable()` returns `False` inside that open interval.",
+        "ON/OFF also shows an unresolved threshold near rho ~= 0.75 (`sigma` jumps between 0.70 and 0.80), but L.9 records it as a limitation rather than blocking predictions.",
+    ]
 
     lines += [
         "",
@@ -1125,6 +1216,32 @@ def print_summary(fit: Dict[str, Any]) -> None:
                 doc,
             )
         )
+    print("\nRegime band decomposition (noi suy only; edge da tach rieng):")
+    print(
+        "  %-8s %-4s %-3s %-26s | %-18s %-4s %-9s %-9s %-9s %-8s"
+        % ("mode", "bw", "q", "regime", "rho", "n", "noise", "bias", "sd_cv", "eff")
+    )
+    for key in sorted(fit["links"]):
+        v = fit["links"][key]
+        for regime_key in ("subcritical_rho_le_0.95", "critical_rho_ge_0.98"):
+            reg = v.get("band_by_regime", {}).get(regime_key)
+            if not reg:
+                continue
+            print(
+                "  %-8s %-4g %-3d %-26s | %-18s %-4d %-9s %-9s %-9s %-8s"
+                % (
+                    v["mode"],
+                    v["bw"],
+                    v["q"],
+                    regime_key,
+                    ",".join("%.3g" % float(rho) for rho in reg["rho"]),
+                    reg["n"],
+                    _fmt(reg["noise_rms_ms"]),
+                    _fmt(reg["bias_rms_ms"]),
+                    _fmt(reg["resid_sd_cv_ms"]),
+                    _fmt(reg["model_efficiency"], 3),
+                )
+            )
     print("\nLocal sigma(rho) va LOO bias(rho), bw=6 q=13:")
     print("  %-8s %-6s %s" % ("mode", "kind", "  ".join("%7.3g" % r for r in RHO_ALL)))
     for mode in ("cbr", "poisson", "h2", "onoff"):

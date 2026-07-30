@@ -6,6 +6,8 @@ The model has three runtime outputs:
 * ``predict_delay``: mean q-delay in ms, additive across path links.
 * ``sigma``: local residual scale for normalized conformal prediction.
 * ``domain``: measured rho interval. Strict prediction rejects extrapolation.
+* ``is_reliable``: measured-domain reliability flag for known unresolved
+  transition regions.
 
 Traffic-family conditioning is intentional. Amendment 7 shows that ``c_a`` is
 not sufficient: onoff can have higher ``c_a`` than h2 while producing much less
@@ -155,6 +157,18 @@ class LinkModelV2:
     def sigma(self, mode: str, bw: float, q: int, rho: float, strict: bool = True) -> float:
         self._check_domain(mode, bw, q, rho, strict)
         return max(1e-6, float(self._sigma[self.key(mode, bw, q)](rho)))
+
+    def is_reliable(self, mode: str, bw: float, q: int, rho: float, strict: bool = True) -> bool:
+        self._check_domain(mode, bw, q, rho, strict)
+        rho = float(rho)
+        link = self._link(mode, bw, q)
+        ranges = link.get("unreliable_rho_ranges")
+        if ranges is None and mode == "cbr":
+            ranges = [[0.95, 1.05]]
+        for lo, hi in ranges or []:
+            if float(lo) < rho < float(hi):
+                return False
+        return True
 
     def explain(self, mode: str, bw: float, q: int, rho: float) -> Dict[str, float]:
         params = self._link(mode, bw, q)["kingman"]

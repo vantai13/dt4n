@@ -46,6 +46,7 @@
     "G-L7c_efficiency_mean": 0.7653108663561017,
     "G-L7c_efficiency_min": 0.18350437929740948,
     "G-L7c_efficiency_pass": true,
+    "G-L7c_regime_decomposition_present_pass": true,
     "G-L7d_sigma_present_pass": true,
     "G-L7e_extrapolated_105_marked_pass": true,
     "G-L7f_sentinel_oos_diff_ms": -0.16616476125562762,
@@ -54,6 +55,46 @@
   },
   "links": {
     "cbr|4|10": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 11.28422488550349,
+          "model_efficiency": 0.18536768235880283,
+          "n": 15,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 2.1707820853119615,
+          "resid_mean_ms": 1.933273714814628,
+          "resid_p05": -12.2116542974953,
+          "resid_p95": 16.845339359753062,
+          "resid_sd_cv_ms": 11.710682561753863,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 2.3447126346093197
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.0005420052623721907,
+          "model_efficiency": 0.9102952887404243,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.007002423705527186,
+          "resid_mean_ms": 0.00020274014211944048,
+          "resid_p05": -0.008766432576289687,
+          "resid_p95": 0.011142071307137718,
+          "resid_sd_cv_ms": 0.007692474949767608,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.007716295103681532
+        }
+      },
       "bias_by_rho": {
         "0.5": 0.0,
         "0.6": 0.0,
@@ -239,6 +280,7 @@
         1059.1283088008574,
         3068.7722974674098
       ],
+      "reliability_note": "cbr critical transition is unresolved; do not rely on point predictions for 0.95 < rho < 1.05",
       "resid_mean": 0.5801240325438719,
       "resid_mean_cv_interior_ms": 0.5801240325438719,
       "resid_n": 50,
@@ -324,9 +366,55 @@
         4.060819924380295,
         0.05255905218566879,
         0.04469833896216993
+      ],
+      "unreliable_rho_ranges": [
+        [
+          0.95,
+          1.05
+        ]
       ]
     },
     "cbr|6|13": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 8.643088006500372,
+          "model_efficiency": 0.427850005734446,
+          "n": 30,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 4.109917758484876,
+          "resid_mean_ms": 1.3536468813754927,
+          "resid_p05": -11.238662819930362,
+          "resid_p95": 12.971150787975267,
+          "resid_sd_cv_ms": 9.605978037629809,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 4.259417867823286
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.001482511651679919,
+          "model_efficiency": 0.8716114509819207,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.0055033692566149916,
+          "resid_mean_ms": -0.0006010490493301942,
+          "resid_p05": -0.008825551009924458,
+          "resid_p95": 0.012058993476346178,
+          "resid_sd_cv_ms": 0.006314016699086649,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.006064417555174586
+        }
+      },
       "bias_by_rho": {
         "0.5": 0.0,
         "0.6": 0.0003565428235153545,
@@ -512,6 +600,7 @@
         1154.3240835596303,
         3162.5302664021874
       ],
+      "reliability_note": "cbr critical transition is unresolved; do not rely on point predictions for 0.95 < rho < 1.05",
       "resid_mean": 0.624436457300588,
       "resid_mean_cv_interior_ms": 0.624436457300588,
       "resid_n": 65,
@@ -597,9 +686,55 @@
         7.377044165425579,
         0.028463474150009594,
         0.033801266906552004
+      ],
+      "unreliable_rho_ranges": [
+        [
+          0.95,
+          1.05
+        ]
       ]
     },
     "cbr|8|18": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 9.032697756531116,
+          "model_efficiency": 0.33010483035191535,
+          "n": 15,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 3.23158695134888,
+          "resid_mean_ms": 1.3746974106491272,
+          "resid_p05": -12.14950699259566,
+          "resid_p95": 13.561918826304824,
+          "resid_sd_cv_ms": 9.789577898341498,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 3.4905128460084116
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.008325011125077381,
+          "model_efficiency": 0.8965670502876816,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.018648393283207002,
+          "resid_mean_ms": 0.00030472775431856423,
+          "resid_p05": -0.022906124740964023,
+          "resid_p95": 0.04748496787764752,
+          "resid_sd_cv_ms": 0.020799775406895992,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.020549528539547914
+        }
+      },
       "bias_by_rho": {
         "0.5": 0.0,
         "0.6": 0.0,
@@ -785,6 +920,7 @@
         1199.4463692002348,
         3209.342907399349
       ],
+      "reliability_note": "cbr critical transition is unresolved; do not rely on point predictions for 0.95 < rho < 1.05",
       "resid_mean": 0.41262253262276116,
       "resid_mean_cv_interior_ms": 0.41262253262276116,
       "resid_n": 50,
@@ -870,9 +1006,55 @@
         6.045456220719473,
         0.03716443270342362,
         0.023347911433247957
+      ],
+      "unreliable_rho_ranges": [
+        [
+          0.95,
+          1.05
+        ]
       ]
     },
     "h2|4|10": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 0.00963020605809765,
+          "model_efficiency": 0.9994647826790376,
+          "n": 15,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 0.26730165720837695,
+          "resid_mean_ms": 0.004615151678418646,
+          "resid_p05": -0.32441308103375965,
+          "resid_p95": 0.4103962975623949,
+          "resid_sd_cv_ms": 0.2674447982968267,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 0.2887187881036992
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.09558950225505491,
+          "model_efficiency": 0.9442502010950865,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.2719954829302772,
+          "resid_mean_ms": -0.020012236689377034,
+          "resid_p05": -0.3896017712697585,
+          "resid_p95": 0.43017914770229027,
+          "resid_sd_cv_ms": 0.28805446121677564,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.2997244242021172
+        }
+      },
       "bias_by_rho": {
         "0.5": 2.2799623139738845,
         "0.6": 0.23414696870426877,
@@ -1056,6 +1238,7 @@
         1301.741508879774,
         3197.614494510756
       ],
+      "reliability_note": "measured rho grid is reliable inside the exported domain, subject to local sigma",
       "resid_mean": -0.012624020179038329,
       "resid_mean_cv_interior_ms": -0.012624020179038329,
       "resid_n": 50,
@@ -1141,9 +1324,50 @@
         0.3041323807445521,
         0.2547426492750813,
         0.17863235624146862
-      ]
+      ],
+      "unreliable_rho_ranges": []
     },
     "h2|6|13": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 0.013540930591967008,
+          "model_efficiency": 0.9978781025371777,
+          "n": 30,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 0.187673168373064,
+          "resid_mean_ms": -0.006197287349825586,
+          "resid_p05": -0.17157340710480884,
+          "resid_p95": 0.4397674522556898,
+          "resid_sd_cv_ms": 0.18807223837850667,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 0.1944998643899697
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.07344729177240426,
+          "model_efficiency": 0.9413458887721528,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.20247365710422488,
+          "resid_mean_ms": -0.01664593709288246,
+          "resid_p05": -0.2723596110652036,
+          "resid_p95": 0.35761369905825935,
+          "resid_sd_cv_ms": 0.21508954308848363,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.2231151033755106
+        }
+      },
       "bias_by_rho": {
         "0.5": 1.6553289293943498,
         "0.6": 0.18734787763642036,
@@ -1327,6 +1551,7 @@
         1390.78637488085,
         3224.337647401982
       ],
+      "reliability_note": "measured rho grid is reliable inside the exported domain, subject to local sigma",
       "resid_mean": -0.01182348336531775,
       "resid_mean_cv_interior_ms": -0.01182348336531775,
       "resid_n": 65,
@@ -1412,9 +1637,50 @@
         0.21003442876192932,
         0.17676610493509753,
         0.1937199078300365
-      ]
+      ],
+      "unreliable_rho_ranges": []
     },
     "h2|8|18": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 0.013370484183134131,
+          "model_efficiency": 0.9974721069090794,
+          "n": 15,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 0.17797483858241517,
+          "resid_mean_ms": 0.005360511511479278,
+          "resid_p05": -0.18986072108781488,
+          "resid_p95": 0.2968859674878691,
+          "resid_sd_cv_ms": 0.17842588013204239,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 0.1922347966156046
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.05854032850150956,
+          "model_efficiency": 0.9759416268517201,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.24096032325431643,
+          "resid_mean_ms": -0.024735902224873766,
+          "resid_p05": -0.285795361209593,
+          "resid_p95": 0.4913845347559813,
+          "resid_sd_cv_ms": 0.24690034385727333,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.26552534389502785
+        }
+      },
       "bias_by_rho": {
         "0.5": 1.2834761441751779,
         "0.6": 0.14556718439375782,
@@ -1598,6 +1864,7 @@
         1331.7261898596882,
         3349.521769400143
       ],
+      "reliability_note": "measured rho grid is reliable inside the exported domain, subject to local sigma",
       "resid_mean": -0.01570697810396785,
       "resid_mean_cv_interior_ms": -0.01570697810396785,
       "resid_n": 50,
@@ -1683,9 +1950,50 @@
         0.19538425788316025,
         0.17114770666563062,
         0.130665210952752
-      ]
+      ],
+      "unreliable_rho_ranges": []
     },
     "onoff|6|13": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 0.04925150429534666,
+          "model_efficiency": 0.9968703792806876,
+          "n": 15,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 0.502238013998294,
+          "resid_mean_ms": 0.030743628583624744,
+          "resid_p05": -0.43819573137129025,
+          "resid_p95": 1.0132076233426957,
+          "resid_sd_cv_ms": 0.5038147631196488,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 0.5424790562677134
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.22242828298122735,
+          "model_efficiency": 0.9237719521135017,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.48450040831672897,
+          "resid_mean_ms": -0.10537713588764282,
+          "resid_p05": -0.5427749377468296,
+          "resid_p95": 1.0081104321015637,
+          "resid_sd_cv_ms": 0.5244805357082324,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.5338934468468612
+        }
+      },
       "bias_by_rho": {
         "0.5": 0.0,
         "0.6": 0.0,
@@ -1869,6 +2177,7 @@
         1708.5196806203444,
         3451.9013511983817
       ],
+      "reliability_note": "measured rho grid is reliable inside the exported domain, subject to local sigma",
       "resid_mean": -0.06454090654626254,
       "resid_mean_cv_interior_ms": -0.06454090654626254,
       "resid_n": 50,
@@ -1954,9 +2263,50 @@
         0.5539598041123338,
         0.3949561873916875,
         0.31713234602281126
-      ]
+      ],
+      "unreliable_rho_ranges": []
     },
     "poisson|4|10": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 0.0900488958547072,
+          "model_efficiency": 0.9628495962824034,
+          "n": 15,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 0.3098303904773775,
+          "resid_mean_ms": 0.03258179557244058,
+          "resid_p05": -0.43738987852075417,
+          "resid_p95": 0.4312146381551093,
+          "resid_sd_cv_ms": 0.32178482669945924,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 0.3346550701950566
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.0757766988991336,
+          "model_efficiency": 0.9388894969912182,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.17153483733901168,
+          "resid_mean_ms": -0.04359041839078751,
+          "resid_p05": -0.37343061595433136,
+          "resid_p95": 0.23694029146463702,
+          "resid_sd_cv_ms": 0.18269970842012317,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.18902218447950578
+        }
+      },
       "bias_by_rho": {
         "0.5": 0.4506182243004917,
         "0.6": -0.05209346128268699,
@@ -2140,6 +2490,7 @@
         1166.5192882985434,
         3069.4615345709544
       ],
+      "reliability_note": "measured rho grid is reliable inside the exported domain, subject to local sigma",
       "resid_mean": -0.020738754201819084,
       "resid_mean_cv_interior_ms": -0.020738754201819084,
       "resid_n": 50,
@@ -2225,9 +2576,50 @@
         0.3950442827786036,
         0.32819057908443006,
         0.3747327594956575
-      ]
+      ],
+      "unreliable_rho_ranges": []
     },
     "poisson|6|13": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 0.05471455948090301,
+          "model_efficiency": 0.9886031890716873,
+          "n": 30,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 0.3071607944280229,
+          "resid_mean_ms": 0.029643787478882366,
+          "resid_p05": -0.6055972978097279,
+          "resid_p95": 0.4492541886932452,
+          "resid_sd_cv_ms": 0.3107018041449485,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 0.31833390665311784
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.07794255541250343,
+          "model_efficiency": 0.9664638043339779,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.21506043534748215,
+          "resid_mean_ms": -0.05387803397674075,
+          "resid_p05": -0.3699375152247268,
+          "resid_p95": 0.2770812650471038,
+          "resid_sd_cv_ms": 0.22252301057015517,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.23698505746767864
+        }
+      },
       "bias_by_rho": {
         "0.5": 0.282973804872325,
         "0.6": -0.021018405496903148,
@@ -2411,6 +2803,7 @@
         1211.102284621414,
         3164.0163954709215
       ],
+      "reliability_note": "measured rho grid is reliable inside the exported domain, subject to local sigma",
       "resid_mean": -0.015329500997222387,
       "resid_mean_cv_interior_ms": -0.015329500997222387,
       "resid_n": 65,
@@ -2496,9 +2889,50 @@
         0.3383229111583709,
         0.28604522807767113,
         0.26588978892329684
-      ]
+      ],
+      "unreliable_rho_ranges": []
     },
     "poisson|8|18": {
+      "band_by_regime": {
+        "critical_rho_ge_0.98": {
+          "bias_rms_ms": 0.04231219200366853,
+          "model_efficiency": 0.9930407547404791,
+          "n": 15,
+          "name": "critical_rho_ge_0.98",
+          "noise_rms_ms": 0.33498627605742143,
+          "resid_mean_ms": 0.017810453429372566,
+          "resid_p05": -0.5904823580905866,
+          "resid_p95": 0.36223796622832705,
+          "resid_sd_cv_ms": 0.3373338651594079,
+          "rho": [
+            0.98,
+            1.0,
+            1.02
+          ],
+          "sigma_rms_by_rho_ms": 0.36182653210890364
+        },
+        "subcritical_rho_le_0.95": {
+          "bias_rms_ms": 0.0756863688890966,
+          "model_efficiency": 0.9614862820045942,
+          "n": 35,
+          "name": "subcritical_rho_le_0.95",
+          "noise_rms_ms": 0.17147737373590588,
+          "resid_mean_ms": -0.058259944273843976,
+          "resid_p05": -0.3281366575829285,
+          "resid_p95": 0.2272857031832758,
+          "resid_sd_cv_ms": 0.17834614694490933,
+          "rho": [
+            0.6,
+            0.7,
+            0.8,
+            0.85,
+            0.9,
+            0.925,
+            0.95
+          ],
+          "sigma_rms_by_rho_ms": 0.18895886267295253
+        }
+      },
       "bias_by_rho": {
         "0.5": 0.2148404021906059,
         "0.6": -0.017750971721224862,
@@ -2682,6 +3116,7 @@
         1203.1307197507751,
         3233.244039220176
       ],
+      "reliability_note": "measured rho grid is reliable inside the exported domain, subject to local sigma",
       "resid_mean": -0.03543882496287901,
       "resid_mean_cv_interior_ms": -0.03543882496287901,
       "resid_n": 50,
@@ -2767,7 +3202,8 @@
         0.42180127593260786,
         0.2980161089258084,
         0.3256459591994094
-      ]
+      ],
+      "unreliable_rho_ranges": []
     }
   },
   "n_campaign_rows": 728,

@@ -53,6 +53,7 @@ def test_build_links_uses_individual_runs_for_residual_band_and_excludes_control
     assert link["sigma_train"][0] == pytest.approx(0.2)
     assert link["noise_rms_ms"] == pytest.approx(((len(rhos) - 2) * 0.08 / ((len(rhos) - 2) * 3 - 1)) ** 0.5)
     assert "0.9" in link["sigma_by_rho"]
+    assert "subcritical_rho_le_0.95" in link["band_by_regime"]
     assert 1.05 in link["heldout_extrapolated_rho"]
     assert len(report) == 1
 
@@ -90,6 +91,18 @@ def test_link_model_v2_runtime_api_rejects_outside_domain(tmp_path):
                 "kingman": {"K": 0.1, "w_max": 3.0, "floor": 0.0, "r2": 0.9},
                 "sigma_schedule": 0.2,
                 "resid_sd": 0.25,
+                "unreliable_rho_ranges": [],
+            },
+            "cbr|6|13": {
+                "rho_train": [0.5, 0.95, 1.0, 1.05],
+                "delay_train": [0.1, 0.1, 1.0, 24.0],
+                "loss_train": [0.0, 0.0, 0.05, 0.1],
+                "sigma_train": [0.01, 0.01, 7.0, 0.05],
+                "domain": [0.5, 1.05],
+                "kingman": {"K": 0.1, "w_max": 3.0, "floor": 0.0, "r2": 0.9},
+                "sigma_schedule": 0.2,
+                "resid_sd": 0.25,
+                "unreliable_rho_ranges": [[0.95, 1.05]],
             }
         }
     }
@@ -100,6 +113,10 @@ def test_link_model_v2_runtime_api_rejects_outside_domain(tmp_path):
     assert model.predict_loss("poisson", 6, 13, 1.0) == pytest.approx(0.1)
     assert model.sigma("poisson", 6, 13, 0.8) == pytest.approx(0.2)
     assert model.model_efficiency("poisson", 6, 13) == pytest.approx(0.8)
+    assert model.is_reliable("poisson", 6, 13, 0.98) is True
+    assert model.is_reliable("cbr", 6, 13, 0.95) is True
+    assert model.is_reliable("cbr", 6, 13, 0.98) is False
+    assert model.is_reliable("cbr", 6, 13, 1.05) is True
     assert model.explain("poisson", 6, 13, 2.0)["delay_ms"] == pytest.approx(3.0)
     with pytest.raises(ValueError):
         model.predict_delay("poisson", 6, 13, 1.1)

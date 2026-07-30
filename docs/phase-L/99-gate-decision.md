@@ -8,7 +8,7 @@ Final tag target: `phase-L-done` after user sign-off.
 
 Prerequisite: `docs/phase-L/00-preregistration.md`.
 
-Amendments: `00b` through `00i` (8 amendments). Each amendment records what
+Amendments: `00b` through `00j` (9 amendments). Each amendment records what
 was observed before changing the plan.
 
 ## 1. Question
@@ -30,7 +30,9 @@ The old model failed for structural reasons:
 
 L.7 added a second audited tautology: in-sample PCHIP residuals made
 `efficiency == 1` by definition. Amendment 8 replaced them with
-leave-one-rho-out residuals.
+leave-one-rho-out residuals. Amendment 9 then split CBR efficiency by regime,
+because the grouped value hides a reliable subcritical region and an unreliable
+critical transition.
 
 ## 3. Measurement Infrastructure
 
@@ -134,6 +136,7 @@ Model split:
 | monotone PCHIP | prediction | predictive gate 10/10 PASS |
 | local sigma(rho) | normalized conformal scale | exported and reported |
 | LOO-CV residuals | honest residual band | Amendment 8 |
+| reliability ranges | runtime guard | CBR unreliable for 0.95 < rho < 1.05 |
 
 L.7 gates:
 
@@ -150,7 +153,9 @@ Band decomposition:
 
 | family | efficiency range | read |
 |---|---:|---|
-| cbr | 0.184 to 0.426 | model bias dominates at the critical wall |
+| cbr grouped | 0.184 to 0.426 | audit summary only, not the scientific conclusion |
+| cbr subcritical | 0.872 to 0.910 | model bias is negligible below rho <= 0.95 |
+| cbr critical | 0.185 to 0.428 | point prediction is not reliable for 0.95 < rho < 1.05 |
 | h2 | 0.958 to 0.978 | near noise floor |
 | poisson | 0.941 to 0.969 | near noise floor, small interpolation bias |
 | onoff | 0.937 | good, but less smooth than h2/poisson |
@@ -187,9 +192,21 @@ m.predict_delay(mode, bw, q, rho)  # mean queueing delay in ms
 m.predict_loss(mode, bw, q, rho)   # loss ratio
 m.sigma(mode, bw, q, rho)          # local residual scale
 m.domain(mode, bw, q)              # [0.50, 1.05], strict by default
+m.is_reliable(mode, bw, q, rho)    # False for known unresolved regions
 m.irreducible_floor_ms(mode, bw, q)
 m.model_efficiency(mode, bw, q)
 ```
+
+Reliability rule:
+
+```text
+mode == "cbr" and 0.95 < rho < 1.05  =>  m.is_reliable(...) == False
+otherwise inside measured domain      =>  True
+```
+
+Phase 20R must check this flag before consuming point predictions. The CBR
+critical interval may be handled with a special branch or direct measured-node
+logic, but it must not be treated as an ordinary reliable interpolation region.
 
 Total one-link delay for Phase 20R:
 
@@ -226,6 +243,7 @@ conditioning error.
 | L6 | The pre-signed reference model has a small systematic +0.24 ms bias at h2 bw=6 |
 | L7 | Probe 20 pps changes the measured delay by up to 1.46% at the reference point |
 | L8 | The first about 4% of the long campaign shows a small warm-up effect |
+| L9 | ON/OFF has an under-resolved threshold near rho ~= 0.75; record as a limitation, do not block yet |
 
 ## 11. Reproduction
 
