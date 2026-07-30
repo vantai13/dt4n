@@ -1,0 +1,44 @@
+{
+  "c_a": {
+    "actual_bg": 2.0246720772347166,
+    "aggregate_schedule": 1.9096946570559994,
+    "design_target": 2.0,
+    "schedule_bg": 2.024369920957124
+  },
+  "c_s": 0.0,
+  "config": {
+    "bw_mbps": 8.0,
+    "duration_s": 70.0,
+    "frame_bg": 1512,
+    "frame_probe": 106,
+    "mode": "h2",
+    "onoff_params": null,
+    "payload_bg": 1470,
+    "payload_probe": 64,
+    "probe_pps_nominal": 20.0,
+    "rho_nominal": 0.9,
+    "run_id": 421,
+    "seed": 14
+  },
+  "counts": {
+    "duration_s_actual": 70.00000650799484,
+    "max_late_ms": 1.0909733900916763,
+    "n_bg_sent": 41568,
+    "n_late": 1,
+    "n_probe_sent": 1400
+  },
+  "rates": {
+    "bg_pps_actual": 593.8285162195298,
+    "bg_pps_target": 593.8359788359788,
+    "probe_pps_actual": 19.999998140573076,
+    "rate_ratio": 0.9999874332025761,
+    "rho_actual": 0.8999887163268298
+  },
+  "role": "load_gen",
+  "schedule": {
+    "digest_bg": "003d5223f314bac05f01cbd3875d78fd3c29ebbdabcaadd1277c59ed4af898ce",
+    "digest_probe": "04b3f9a4845084b3735a481fd11d1ef26d08b8c7f3a55494a42c1ae8df3cd259",
+    "n_bg": 41568,
+    "n_probe": 1400
+  }
+}

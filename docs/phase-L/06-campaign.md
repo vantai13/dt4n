@@ -162,3 +162,34 @@ Gates L.6:
 | G4 | cbr < poisson < h2 voi rho >= 0.7 |
 | G5 | cung rho thi q scale gan 1/bw sau khi tru san |
 | G6 | socket_drops/n_foreign bang 0 va digest khong bi trung bat thuong |
+
+## Ket Qua Da Chay
+
+Artifact:
+
+```text
+results/phase-L/campaign_state.json
+```
+
+Ket qua:
+
+| muc | gia tri |
+|---|---:|
+| diem hoan tat | 728/728 |
+| gate fail sau rerun | 0 |
+| socket_drops | 0 moi diem |
+| n_foreign | 0 moi diem |
+| max `abs(rate_ratio - 1)` | 8.15e-05 |
+| sentinel | 23 diem |
+
+Sentinel `h2, rho=0.90, bw=6, q=13, seed=999`:
+
+| tap | mean ms | sd ms | CV |
+|---|---:|---:|---:|
+| tat ca 23 diem | 10.8749 | 0.0122 | 0.112% |
+| bo diem dau | 10.8733 | 0.0096 | 0.088% |
+
+Diem canh dau tien nam ngoai 3-sigma so voi 22 diem sau, nen duoc ghi la hieu
+ung khoi dong may. Ket luan va phan ra phuong sai nam trong
+`docs/phase-L/00h-amendment-7.md`. Fit model tu campaign nam trong
+`docs/phase-L/07-fit.md`.
