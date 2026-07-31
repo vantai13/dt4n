@@ -60,9 +60,9 @@ Clamp vao mien do duoc cua `link_model_v2`: `[0.50, 1.05]`. Moi run phai ghi
 `n_clamped/n_steps`. De V-T3 co the pass truoc khi chay, ap dung rang buoc:
 
 ```text
-sigma_rho <= (1.05 - rho_bar) / 2.58
+sigma_rho <= min(rho_bar - 0.50, 1.05 - rho_bar) / 2.58
 
-rho_bar 0.700 -> sigma_rho <= 0.136
+rho_bar 0.700 -> sigma_rho <= 0.0775
 rho_bar 0.850 -> sigma_rho <= 0.078
 rho_bar 0.925 -> sigma_rho <= 0.048
 rho_bar 0.980 -> sigma_rho <= 0.027
@@ -89,9 +89,10 @@ tc -s qdisc backlog               -> independent queue/backlog view
 Them cho Phase T:
 
 ```text
-rho_thuc_te(t) : dem goi trong cua so 100 ms tu _bgtx.bin
+rho_thuc_te(t) : dem goi trong cua so W tu _bgtx.bin, chi lam V-T6b mo ta
 Reich(t)       : Lindley/Reich workload scan trong tung cua so 1 s
-c_a_window(t)  : CV gap trong tung cua so 100 ms
+gap_u          : Lambda(T_i)-Lambda(T_{i-1}), dung cho V-T4a/V-T6a
+c_a_pooled     : CV gap real-time gop, doi chung duong V-T4b
 q_time_hat     : mean OWD tu goi background voi trong so 1/lambda(t_i)
 ```
 
@@ -141,6 +142,16 @@ Khong gop `d_sampling_ms` vao `err_qs_ms`. Trung binh goi background la
 load-average; khi `lambda(t)` bien thien, no bi keo ve cac vung tai cao. PSA
 chinh phai so voi `q_psa_load_ms`, khong phai `(1/T) integral f dt`.
 
+Amendment 5 chot them: moi tich phan PSA/MOL phai dung `rho(t)` THIET KE tu
+`rho_spec`, khong dung `rho` do lai tu dem goi. `rho_thuc_te(t)` chi dung cho
+V-T6b bias/noise. Dung `rho` do vao ca hai ve la tautology vi `q_i` va
+`rho_hat` cung den tu mot dong goi, co the keo `err_qs` ve gan 0 gia tao.
+
+`err_jensen_ms` va `d_sampling_ms` la dai luong MO HINH vi ca hai ve deu tinh
+tu `f`. Chung khong phai phep do truc tiep; bang chung thuc nghiem cua chung
+la khi `Lambda >> 10`, `err_qs ~ 0` nen `err_total` do duoc phai khop
+`err_jensen + d_sampling`.
+
 --------------------------------------------------------------------
 ## T4. Luoi Do
 
@@ -168,7 +179,7 @@ du dai `Lambda` can thiet.
 Chon bien do tai dong bang ti le khoang trong toi bien mien:
 
 ```text
-sigma_max = (1.05-rho_bar)/2.58
+sigma_max = min(rho_bar-0.50, 1.05-rho_bar)/2.58
 sigma_rho = a * sigma_max
 a in {0.20, 0.90}
 ```
@@ -232,7 +243,8 @@ poisson rho_bar=0.98            -> am
 D-T6. `d_sampling` duong o moi noi, xap xi
 `f'(rho_bar)*sigma_rho^2/rho_bar`.
 
-D-T7. `c_a_window` doc lap voi `(sigma_rho, tau_rho)` trong 10%.
+D-T7. `c_a_operational = CV(gap_u)` doc lap voi `(sigma_rho, tau_rho)`:
+lech tuyet doi < 0.02 va `mean(gap_u)` trong 0.5% quanh 1.0.
 
 D-T8. `c_a_pooled` khop cong thuc time-rescaling trong 5%:
 
@@ -267,7 +279,14 @@ rho_bar <= 0.85  : err_jensen + d_sampling chi phoi
 rho_bar >= 0.925 : err_qs dong chi phoi, J < 0.8
 ```
 
-Neu D-T1 hoac D-T7 sai thi dung lai va sua ha tang truoc khi do tiep.
+D-T13. Hai oracle tong hop cua T.4 phai xanh truoc T.5:
+
+```text
+Oracle 1: q_i = f(rho(t_i))      -> err_qs = 0 trong 3*SE
+Oracle 2: q_i = f(mean(rho))     -> err_qs + err_jensen + d_sampling = 0
+```
+
+Neu D-T1, D-T7, hoac D-T13 sai thi dung lai va sua ha tang truoc khi do tiep.
 
 --------------------------------------------------------------------
 ## T6. Tieu Chi
@@ -281,6 +300,7 @@ sigma_ref = m.sigma(mode, bw, q, rho_bar)
 Quyet dinh:
 
 ```text
+|err_qs| < 2*SE               -> khong phan biet duoc voi 0 o phan giai nay
 |err_qs| / sigma_ref < 0.10  -> bo qua, Phase 20R khong doi
 0.10 .. 1.00                -> cong vao band Phase 21R
 > 1.00                      -> quasi-static khong dung, Phase 20R chuyen MOL
@@ -288,7 +308,8 @@ Quyet dinh:
 
 Khong dung mot nguong tuyet doi duy nhat. `sigma_schedule` thay doi lon giua
 mode/link/rho; Phase 21R cung da chuan hoa nonconformity theo
-`sigma(x)`, nen Phase T phai noi cung don vi.
+`sigma(x)`, nen Phase T phai noi cung don vi. Moi o phai bao cao
+`err_qs ± SE`, voi `SE = sd_lambda[f(rho)]/sqrt(n_goi)`.
 
 --------------------------------------------------------------------
 ## T7. Doi Chung Bat Buoc
@@ -306,19 +327,37 @@ So sanh `sigma_hat` voi ky vong da hieu chinh thien lech huu han, nguong 15%.
 
 V-T3. `n_clamped/n_steps < 1%`.
 
-V-T4a. `c_a` trong cua so 100 ms:
+V-T4a. `c_a` trong thoi gian van hanh `u = Lambda(t)`:
 
 ```text
-|mean(c_a_window) - c_a_design| < 0.10 * max(c_a_design, 0.05)
+|CV(gap_u) - c_a_design| < 0.02
 ```
 
-V-T4b. `c_a_pooled` khop cong thuc time-rescaling trong 5%.
+V-T4b. `c_a_pooled` khop cong thuc time-rescaling trong 5%, chi ap dung khi
+`c_a_predicted > 0.005`.
 
 V-T5. Doi chung am `sigma_rho = 0` tai tao Phase L trong 2%; digest khop khi
-co cung seed.
+co cung seed. Cong digest bit-exact phai chay tren `h2` hoac `poisson`; chi
+chay `cbr` khong du vi `cbr` tra `[mean_gap]*n` va khong phan biet duoc
+mutant tu cai lai duong hang so.
 
-V-T6. `rho_thuc_te(t)` do tu `_bgtx.bin` khop `rho(t)` thiet ke:
-`RMSE < 0.01`.
+V-T6a. Cong ghep hai thang trong thoi gian van hanh:
+
+```text
+mean(gap_u) = 1.000 trong 0.5%
+CV(gap_u)   = c_a_design voi sai so tuyet doi < 0.02
+```
+
+V-T6b. `rho_thuc_te(t)` tren cua so W la mo ta nhieu dem. Bias duoc kiem theo
+noise model cua dao dong renewal tai bien warm-up:
+
+```text
+rho_bias_sd_pred = (FRAME_BG/cap) * sqrt(c_a^2 * Lambda(warm_s) + 1) / meas_s
+abs(rho_bias / rho_bias_sd_pred) < 3
+```
+
+Sau campaign, gate tap hop tren `rho_bias_z` phai co `abs(mean_z) < 3/sqrt(n)`
+va `0.6 < sd_z < 1.6`.
 
 V-T7. `d_sampling` do duoc khop du bao bac hai trong 30%, va `q_probe_ms`
 khop `q_bg_time_ms` trong sai so chuan.
@@ -326,26 +365,40 @@ khop `q_bg_time_ms` trong sai so chuan.
 V-T8. Cong A5-7 giu nguyen: `socket_drops = 0`, `n_foreign = 0`,
 `n_late_ratio < 0.1%`, `|rate_ratio - 1| < 0.001`.
 
+V-T9a. Oracle 1 T.4: he quasi-static hoan hao cho `err_qs` bang 0 trong
+`3*SE`.
+
+V-T9b. Oracle 2 T.4: he tri tre hoan toan cho
+`err_qs + err_jensen + d_sampling = 0` trong sai so so hoc.
+
 --------------------------------------------------------------------
 ## T8. Neu Fail Thi Sua Gi
 
-Nhanh (a), V-T4a fail: kiem time-rescaling vs thinning, kiem nghich dao
-`Lambda(t)` co noi suy dung trong buoc `dt`, va dam bao `normalize_rate` chi
-ap cho base process truoc khi rescale.
+Nhanh (a), V-T4a/V-T6a fail: kiem time-rescaling vs thinning, kiem nghich dao
+`Lambda(t)` co noi suy dung trong buoc `dt`, kiem `u_i=Lambda(T_i)`, va dam
+bao `normalize_rate` chi ap cho base process truoc khi rescale.
 
 Nhanh (b), V-T5 fail: ha tang T lech Phase L. Kiem payload 1470 B, rho co
-tinh probe, qdisc burst/bfifo, va `schedule_digest`.
+tinh probe, qdisc burst/bfifo, va `schedule_digest`. Phai kiem tren
+`h2`/`poisson`; `cbr` khong du de bat mutant reimplementation.
 
 Nhanh (c), `|err_qs| > sigma_ref` o vung binh thuong
 (`rho_bar <= 0.925`, `Lambda >= 10`): truoc khi ket luan, kiem
-`d_sampling` da tach dung. Neu da tach dung thi day la ket qua va Phase 20R
-chuyen MOL.
+1) Oracle 1 xanh, 2) dang dung `rho` THIET KE, khong phai `rho` do,
+3) `|err_qs| > 2*SE`, va 4) `d_sampling` da tach dung. Neu ca bon deu OK thi
+day la ket qua va Phase 20R chuyen MOL.
 
 Nhanh (d), loi lon chi o `cbr,rho_bar=0.98`: ky vong duoc. Ghi hop dong
 `quasistatic_valid() = False` o dai do, khop `is_reliable()`.
 
 Nhanh (e), V-T7 fail: kiem `lambda(t_i)` trong trong so `1/lambda` co dung
 rho thiet ke khong; khong dung rho thuc te nhieu do luong cho trong so nay.
+
+Nhanh (f), Oracle 1 fail: tang phan tich sai. Kiem trong so `lambda` trong
+`q_psa_load_ms` va dinh nghia `rho`/`background_pps`.
+
+Nhanh (g), Oracle 2 fail: kiem dau `err_jensen_ms` va thu tu phan ra ba
+thanh phan.
 
 Ngan sach sua: toi da 2 vong; moi vong sua mot thu va ghi amendment.
 
@@ -371,20 +424,47 @@ truoc.
 RT7. Doi chung M/G/inf co `c_a ~ 0.07`; khai bao no thuoc mode `cbr`, khong
 doc thanh loi.
 
+RT8. Phan giai cua `err_qs` bi chan boi lay mau goi huu han:
+
+```text
+SE(err_qs) = sd_lambda[f(rho)] / sqrt(n_goi)
+```
+
+O `rho_bar=0.70, a=0.90` cua ca `h2` va `poisson`, SE mot seed lon hon nguong
+`0.1*sigma_ref`. Giam nhe bang 5 seed, bao cao median/CI giua seed, bao cao
+SE ky vong canh moi `err_qs`, va neu `|err_qs| < 2*SE` thi phan xu la
+`khong_phan_biet_duoc_o_phan_giai_nay`, khong phai "bang 0".
+
 --------------------------------------------------------------------
 ## T10. Chu Ky
 
-Xac nhan sau Amendment 2, truoc khi sang T.2:
+Xac nhan sau Amendment 8, truoc khi chay G2/G3 T.5:
 
 ```text
 [x] T0 da dien bang so va bang chung code/result Phase L.
 [x] T5 va T8 da dien truoc moi phep do Phase T.
 [x] T4 da duoc thay bang luoi T.1: dt=0.005, sigma_rho=a*sigma_max.
+[x] T.2 da dinh chinh sigma_max thanh min hai phia va them rho_spec.py.
 [x] Da them step response lam nguon T_relax.
 [x] Da them err_mol va D-T10/D-T11/D-T12.
 [x] Da them guardrail khong import link_model v1 cho module Phase T.
 [x] Da sua provenance Hurst cho kappa >= 2.
+[x] T.3 da them rho_schedule.py bang time-rescaling.
+[x] V-T4a/V-T6 da sua thanh operational-time gate + counting-noise description.
+[x] T.4 da them t4_validate.py, synthetic oracle, va mutation tests.
+[x] Da them RT8 va phan loai khong phan biet duoc o phan giai nay.
+[x] Da chot tich phan QS dung rho thiet ke, V-T5 kiem tren h2/poisson.
+[x] T.5 da them rho_gen.py, t5_step.py, t5_campaign.py va packet_player.py.
+[x] Step response dung T_area_v2 va step v2: buoc rong, binw=0.020, hold=0.6.
+[x] Da them runbook tmux va blind discipline cho RUNLOG/UNBLINDING_LOG.
+[x] V-T6b da doi tu nguong tuyet doi 0.002 sang z-score theo renewal boundary.
+[x] T.5 runner chi retry gate transient; deterministic fail thi dung chien dich.
+[x] Campaign state da tach public fields khoi `results/phase-T/sealed/`.
+[x] G1 step v1 bi loai khoi fit truc hoanh; `ensemble_average` da sua nhan A/B.
+[x] Step estimator da them gate bien do `abs(amp) > 5*SE(amp)`.
+[x] Step v2 da doi sang buoc rho rong, 13 diem, `step_v2_state.json`.
+[x] G2/G3 khong dung `ensemble_average`, nen duoc chay sau smoke A7 sach.
 ```
 
 Ky: Codex theo yeu cau owner repo DT4N
-Ngay: 2026-07-30
+Ngay: 2026-07-31

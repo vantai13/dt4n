@@ -8,7 +8,12 @@ import pathlib
 BANNED_NAMES = {"OVERHEAD_FACTOR", "NETEM_OCCUPANCY_COEF", "OFFERED_CLIFF"}
 PHASE_T_FILES = (
     "mininet/rho_spec.py",
+    "mininet/rho_schedule.py",
+    "measurements/packet_player.py",
+    "measurements/t4_validate.py",
     "measurements/rho_gen.py",
+    "measurements/t5_step.py",
+    "measurements/t5_campaign.py",
     "measurements/t5_qs_error.py",
 )
 

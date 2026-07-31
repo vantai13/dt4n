@@ -68,17 +68,18 @@ Cu:
 giai sigma_rho rieng cho J target in {0.1,0.5,2.0}
 ```
 
-Moi:
+Moi theo Amendment 2, sau do duoc Amendment 3 dinh chinh thanh min hai phia:
 
 ```text
-sigma_max = (1.05-rho_bar)/2.58
+sigma_max = min(rho_bar-0.50, 1.05-rho_bar)/2.58
 sigma_rho = a * sigma_max
 a in {0.20, 0.90}
 ```
 
 Ly do: cach cu tao lo hong luoi. Cach moi luon kha thi, khong co o bi clamp qua
-1%, va van tao dai `J` rong khoang `0.07 -> 46`. `J` duoc tinh va ve lam truc
-hinh, khong phai truc thiet ke.
+1%, va van tao dai `J` rong. Amendment 3 dinh chinh lai bang so sau khi sua
+hai bien: `J` trai khoang `0.00 -> 46.4`. `J` duoc tinh va ve lam truc hinh,
+khong phai truc thiet ke.
 
 ### A2.3. Bo `tau_rho = 20 s`
 
@@ -138,6 +139,11 @@ budget ~= 3.1 gio
 ```
 
 Doc `T_relax` bang area method, fit exponential chi la kiem cheo.
+
+Ghi chu sau Amendment 8: synthetic oracle va G1 v1 cho thay cau hinh nay khong
+du SNR va bi bug nhan A/B. Thiet ke dang co hieu luc la step v2 trong
+`00i-amendment-8.md`: buoc rho rong, `hold=0.6 s`, `binw=0.020 s`, `N` theo
+ngan sach nhieu, estimator `T_area_v2` co gate `abs(amp) > 5*SE(amp)`.
 
 ### A2.6. Them `err_mol` vao T3
 

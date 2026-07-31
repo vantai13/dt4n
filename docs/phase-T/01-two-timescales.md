@@ -158,49 +158,49 @@ do q(t)
 lap lai N chu ky va ensemble-average cac doan transition
 ```
 
-Tham so chot:
+Tham so chot sau Amendment 8:
 
 ```text
-T_hold = 3.0 s cho h2/poisson
-N      = 60 chu ky
-bin    = 20 ms
-seeds  = 3 seed
+S-1      h2      0.80 -> 0.80  hold=0.6  N=262  bin=20 ms
+h2       0.60 -> 0.80  hold=0.6  N=262  bin=20 ms  3 seed
+h2       0.80 -> 0.98  hold=0.6  N=398  bin=20 ms  3 seed
+poisson  0.80 -> 0.98  hold=0.6  N=150  bin=20 ms  3 seed
+poisson  0.60 -> 0.80  hold=0.6  N=766  bin=20 ms  3 seed
 ```
 
 Bang buoc do:
 
 ```text
 #  mode      buoc rho        muc dich
-1  h2        0.70 -> 0.85    vung Jensen manh
-2  h2        0.85 -> 0.925   vung chuyen tiep
-3  h2        0.925 -> 0.98   vung tai cao
-4  poisson   0.70 -> 0.85
-5  poisson   0.85 -> 0.925
-6  poisson   0.925 -> 0.98
-7  cbr       0.95 -> 0.98    canh vach, T_hold=30 s, 1 seed
-8  cbr       0.98 -> 1.00    qua vach, T_hold=60 s, N=10, 1 seed
+0  h2        0.80 -> 0.80    S-1, san nhieu/amp=0
+1  h2        0.60 -> 0.80    buoc rong, Jensen thap-trung
+2  h2        0.80 -> 0.98    buoc rong, trung-cao
+3  poisson   0.80 -> 0.98    buoc rong, SNR cao
+4  poisson   0.60 -> 0.80    buoc rong, bu SNR bang N lon
+5  cbr       0.98 -> 1.00    giu raw G1 v1 de xac nhan D-T9
 ```
 
 Budget:
 
 ```text
-1-6: 6 * 6 phut * 3 seed = 108 phut
-7  : 60 phut
-8  : 20 phut
-tong ~ 3.1 gio
+step v2 live: 13 diem, raw 5988 s ~= 1.66 gio, co overhead ~= 1.7 gio
 ```
 
-Doc `T_relax` bang hai cach:
+Doc `T_relax` bang estimator da duoc synthetic-check:
 
 ```text
-primary: area / mean relaxation time
+primary: T_area_v2
 
-T_relax = integral_0^T_hold [qbar(t)-q_inf] dt / [qbar(0)-q_inf]
+T_relax = integral_window [qbar(t)-q_inf] dt / amp_plateau
 
-secondary: fit qbar(t) = q_inf + (q_0-q_inf)*exp(-t/T_exp)
+amp_plateau lay tu hai binh on A va B, khong lay tu bin 0
+cua so dung khi M >= c*T_hat(M), voi c=8
+neu abs(q_a-q_b) <= 5*SE(amp) thi T = NaN
 ```
 
-Bootstrap confidence interval tren chu ky doc lap, khong tren cac bin.
+Fit exponential khong con la phuong phap phu bat buoc, vi synthetic oracle cho
+thay no khong ben voi hoi phuc nhieu mode va nhieu duoi. Bootstrap confidence
+interval tren chu ky doc lap, khong tren cac bin.
 
 Doi chung bat buoc:
 
@@ -350,14 +350,16 @@ Chot `dt=0.005 s`.
 `sigma_rho`:
 
 ```text
-sigma_max = (1.05-rho_bar)/2.58
+sigma_max = min(rho_bar-0.50, 1.05-rho_bar)/2.58
 sigma_rho = a * sigma_max
 a in {0.20, 0.90}
 ```
 
 Ly do: giai `sigma_rho` tu muc `J` tao nhieu o khong dat o tai cao. Cach
-`a*sigma_max` luon kha thi, khong co lo hong, va van tao dai `J` rong:
-`0.07 -> 46`. `J` tro thanh truc cua hinh, khong phai truc thiet ke.
+`a*sigma_max` luon kha thi, khong co lo hong. T.2 dinh chinh `sigma_max` phai
+lay min hai phia vi clamp co ca bien duoi 0.50 va bien tren 1.05; voi cong
+thuc dung, `J` van trai khoang `0.00 -> 46.4`. `J` tro thanh truc cua hinh,
+khong phai truc thiet ke.
 
 Luoi chot:
 
