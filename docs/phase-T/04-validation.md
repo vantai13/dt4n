@@ -151,8 +151,11 @@ SE cua tom tat giua seed khoang `sqrt(5)`.
 V-T0 digest lech       -> provenance/seed/dt sai
 V-T3 clamp > 1%        -> kiem sigma_max_feasible va sigma_from_a
 V-T4a do              -> kiem Lambda^-1 noi suy, thinning, operational time
+V-T4a |z| > 4         -> kiem SE_c_a delta-method va moment generator
 V-T4b do              -> kiem thinning hoac background_pps/lambda
-V-T5 digest lech       -> kiem ha tang Phase L/T; bat buoc h2/poisson
+V-T5a digest lech      -> kiem interpreter/provenance va delegation Phase L
+V-T5b z aggregate do   -> kiem reference_sd_source; khong dung nguong 2% tung diem
+V-T5b same-seed do     -> dung truoc G3; di nhanh T8(b) ha tang T lech Phase L
 V-T6a rate lech        -> kiem n_base va Lambda_total
 V-T6b |rho_bias_z| > 3 -> kiem renewal-boundary sd; neu van fail thi dung
 rho_bias aggregate do  -> kiem drift bo phat nho nhung co he thong

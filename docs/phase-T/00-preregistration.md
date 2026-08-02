@@ -217,8 +217,10 @@ bo sung khoang 3.1 gio, tong khoang 12.6 gio.
 --------------------------------------------------------------------
 ## T5. Du Doan Truoc Khi Do
 
-D-T1. Doi chung `sigma_rho = 0` phai tai tao Phase L trong 2%;
-`schedule_digest` khop cho cung `(mode, rho, seed)`. Neu khong, dung lai.
+D-T1. Doi chung `sigma_rho = 0` phai tai tao Phase L. Sau Amendment 11,
+kiem chinh bang khoi C' cung seed, `duration=70`, `warmup=10`: digest khop
+bit-exact cho `h2/poisson`, va ti so cung-seed khong co lech he thong
+`|mean(r)| < 0.005`, `sd(r) < 0.010`.
 
 D-T2. `err_qs -> 0` khi `Lambda -> infinity`; khi `Lambda >= 10`,
 `|err_qs| < 0.1 * sigma_ref`.
@@ -244,7 +246,8 @@ D-T6. `d_sampling` duong o moi noi, xap xi
 `f'(rho_bar)*sigma_rho^2/rho_bar`.
 
 D-T7. `c_a_operational = CV(gap_u)` doc lap voi `(sigma_rho, tau_rho)`:
-lech tuyet doi < 0.02 va `mean(gap_u)` trong 0.5% quanh 1.0.
+lech nho hon `max(4*SE_c_a(mode,n_gaps),0.005)` va `mean(gap_u)` trong 0.5%
+quanh 1.0.
 
 D-T8. `c_a_pooled` khop cong thuc time-rescaling trong 5%:
 
@@ -330,22 +333,23 @@ V-T3. `n_clamped/n_steps < 1%`.
 V-T4a. `c_a` trong thoi gian van hanh `u = Lambda(t)`:
 
 ```text
-|CV(gap_u) - c_a_design| < 0.02
+|CV(gap_u) - c_a_design| < max(4*SE_c_a(mode, n_gaps), 0.005)
 ```
 
 V-T4b. `c_a_pooled` khop cong thuc time-rescaling trong 5%, chi ap dung khi
 `c_a_predicted > 0.005`.
 
-V-T5. Doi chung am `sigma_rho = 0` tai tao Phase L trong 2%; digest khop khi
-co cung seed. Cong digest bit-exact phai chay tren `h2` hoac `poisson`; chi
-chay `cbr` khong du vi `cbr` tra `[mean_gap]*n` va khong phan biet duoc
-mutant tu cai lai duong hang so.
+V-T5. Doi chung am `sigma_rho = 0` tai tao Phase L. V-T5b 105s cross-seed chi
+la aggregate z diagnostic. Gate chinh sau Amendment 11 la khoi C' cung-seed:
+`duration=70`, `warmup=10`, so `q_T(mode,rho,seed)` voi dung
+`q_L(mode,rho,seed)`. Cong digest bit-exact phai chay tren `h2` hoac
+`poisson`; `cbr@0.98` bao cao nhung khong lam gate vi vung toi han D-T9.
 
 V-T6a. Cong ghep hai thang trong thoi gian van hanh:
 
 ```text
 mean(gap_u) = 1.000 trong 0.5%
-CV(gap_u)   = c_a_design voi sai so tuyet doi < 0.02
+CV(gap_u)   = c_a_design theo gate V-T4a noise-scaled
 ```
 
 V-T6b. `rho_thuc_te(t)` tren cua so W la mo ta nhieu dem. Bias duoc kiem theo
@@ -438,7 +442,7 @@ SE ky vong canh moi `err_qs`, va neu `|err_qs| < 2*SE` thi phan xu la
 --------------------------------------------------------------------
 ## T10. Chu Ky
 
-Xac nhan sau Amendment 8, truoc khi chay G2/G3 T.5:
+Xac nhan sau Amendment 10, truoc khi resume G2/G3 T.5:
 
 ```text
 [x] T0 da dien bang so va bang chung code/result Phase L.
@@ -464,7 +468,14 @@ Xac nhan sau Amendment 8, truoc khi chay G2/G3 T.5:
 [x] Step estimator da them gate bien do `abs(amp) > 5*SE(amp)`.
 [x] Step v2 da doi sang buoc rho rong, 13 diem, `step_v2_state.json`.
 [x] G2/G3 khong dung `ensemble_average`, nen duoc chay sau smoke A7 sach.
+[x] V-T4a da doi tu nguong tuyet doi 0.02 sang `max(4*SE_c_a, 0.005)`.
+[x] Da them `measurements/gate_specs.py` va meta-test false-fail/mutant.
+[x] Quet tinh 315 diem cho V-T4a/V-T6b cho 0 fail gia.
+[x] Da them V-T5a/V-T5b vao `gate_row()` va `measurements/t5_controls_audit.py`.
+[x] Da them `corr_group` va `reference_sd_source` vao GateSpec.
+[x] Amendment 11: bo V-T5b 2% tung diem; G2 105s aggregate z pass, h2@0.70 can C'.
+[x] Da them `controls-samesed` C' cung-seed 45 diem, 70/10, chay truoc G3.
 ```
 
 Ky: Codex theo yeu cau owner repo DT4N
-Ngay: 2026-07-31
+Ngay: 2026-08-01

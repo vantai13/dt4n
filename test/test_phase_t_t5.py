@@ -7,10 +7,12 @@ import pytest
 from measurements import rho_gen
 from measurements.t5_campaign import (
     build_controls_plan,
+    build_controls_sameseed_plan,
     build_main_plan,
     build_plan,
     build_smoke_plan,
     public_row,
+    record_row,
     select_todo,
     sealed_row,
     should_retry,
@@ -109,16 +111,22 @@ def test_amplitude_significant_can_5se():
 def test_t5_campaign_plan_counts_va_tach_controls_khoi_main():
     smoke = build_smoke_plan()
     controls = build_controls_plan()
+    controls_sameseed = build_controls_sameseed_plan()
     main = build_main_plan()
 
     assert len(smoke) == 6
     assert len(controls) == 45
+    assert len(controls_sameseed) == 45
     assert len([p for p in main if p["block"] in ("A", "B")]) == 270
     assert len([p for p in main if p["block"] == "S"]) == 9
     assert len(main) == 279
     assert all(p["a"] == 0.0 for p in controls)
+    assert all(p["duration_s"] == pytest.approx(70.0) for p in controls_sameseed)
+    assert all(p["warmup_s"] == pytest.approx(10.0) for p in controls_sameseed)
+    assert all(p["block"] == "Cprime" for p in controls_sameseed)
     assert all(p["block"] != "C" for p in main)
     assert build_plan("smoke") == smoke
+    assert build_plan("controls-samesed") == controls_sameseed
 
 
 def test_select_todo_resume_va_session():
@@ -150,9 +158,19 @@ def test_public_state_khong_lo_metric_niem_phong():
         "q_p95_ms": 24.0,
         "probe_mean_ms": 8.0,
         "delta_pasta_ms": 1.5,
+        "ca_operational": 2.0,
+        "ca_operational_se": 0.02,
+        "ca_operational_thr": 0.08,
+        "ca_operational_z": 0.0,
         "rho_bias": 0.0,
         "rho_bias_sd_pred": 0.003,
         "rho_bias_z": 0.0,
+        "vt5a_delegation": True,
+        "vt5a_phase_l_digest": True,
+        "vt5b_ref_n": 5,
+        "vt5b_same_seed_gate_exempt": False,
+        "vt5b_same_seed_rel": 0.001,
+        "vt5b_z": 0.4,
         "loss": 0.0,
         "n_recv_unique": 100,
         "gates": {"V-T6b_rho_bias": True},
@@ -162,11 +180,61 @@ def test_public_state_khong_lo_metric_niem_phong():
     sealed = sealed_row(row)
 
     assert "rho_bias_z" in pub
+    assert "ca_operational_thr" in pub
+    assert "vt5b_z" in pub
+    assert "vt5b_same_seed_rel" in pub
     assert "loss" in pub
     assert "q_mean_ms" not in pub
     assert "delta_pasta_ms" not in pub
     assert sealed["q_mean_ms"] == 9.5
     assert sealed["probe_mean_ms"] == 8.0
+
+
+def test_record_row_success_xoa_failed_row_cu(tmp_path):
+    state = {
+        "done_idx": [7],
+        "rows": [{"idx": 7, "pid": "old-success", "gate_fail": []}],
+        "failed_rows": [{"idx": 7, "pid": "old", "gate_fail": ["V-T4a_ca_operational"]}],
+    }
+    row = {
+        "idx": 7,
+        "pid": "new",
+        "gate_fail": [],
+        "q_mean_ms": 1.0,
+        "wall_utc": "2026-07-31T00:00:00Z",
+    }
+    state_path = str(tmp_path / "state.json")
+    sealed_dir = str(tmp_path / "sealed")
+
+    record_row(state, row, state_path, sealed_dir, complete=True)
+
+    assert state["failed_rows"] == []
+    assert state["done_idx"] == [7]
+    assert len(state["rows"]) == 1
+    assert state["rows"][0]["pid"] == "new"
+
+
+def test_record_row_force_rerun_fail_go_bo_done_cu(tmp_path):
+    state = {
+        "done_idx": [7],
+        "rows": [{"idx": 7, "pid": "old-success", "gate_fail": []}],
+        "failed_rows": [],
+    }
+    row = {
+        "idx": 7,
+        "pid": "new-fail",
+        "gate_fail": ["V-T5a_phase_l_digest"],
+        "q_mean_ms": 1.0,
+        "wall_utc": "2026-08-01T00:00:00Z",
+    }
+    state_path = str(tmp_path / "state.json")
+    sealed_dir = str(tmp_path / "sealed")
+
+    record_row(state, row, state_path, sealed_dir, complete=False)
+
+    assert state["rows"] == []
+    assert state["done_idx"] == []
+    assert state["failed_rows"][0]["pid"] == "new-fail"
 
 
 def test_rho_gen_ghi_meta_ou_va_khong_can_socket(monkeypatch, tmp_path):

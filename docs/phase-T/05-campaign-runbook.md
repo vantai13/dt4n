@@ -16,9 +16,10 @@ measurements/t5_campaign.py
 |---|---:|---:|
 | G0 smoke | 6 | 12-15 phut |
 | G2 doi chung am | 45 | 1.4-1.6 gio |
+| G2b C' cung-seed | 45 | ~1.0 gio wall, 52.5 phut traffic |
 | G3 main | 270 + 9 sentinel | 8.4-9.1 gio |
 | G1b step response v2 | 13 | 1.6-1.8 gio |
-| tong con lai sau smoke | 337 | 11.4-12.5 gio |
+| tong con lai sau smoke | 382 | 12.4-13.5 gio |
 
 Dung luong raw du kien khoang vai tram MB. Van nen de san it nhat 5 GB.
 
@@ -28,6 +29,7 @@ State mac dinh:
 results/phase-T/smoke_state.json
 results/phase-T/step_v2_state.json
 results/phase-T/control_state.json
+results/phase-T/control_sameseed_state.json
 results/phase-T/campaign_state.json
 results/phase-T/sealed/{pid}.json
 ```
@@ -38,6 +40,8 @@ Log nen ghi:
 logs/t5_00_smoke.log
 logs/t5_01_step_v2.log
 logs/t5_02_controls.log
+logs/t5_02_controls_A11_audit.log
+logs/t5_02b_controls_sameseed_A11.log
 logs/t5_03_main_s1.log
 logs/t5_03_main_s2.log
 logs/t5_03_main_s3.log
@@ -57,10 +61,11 @@ Chay ngoai tmux cung duoc:
 cd /home/ubuntu/dt4n
 export PYTHONPATH="$PWD"
 mkdir -p logs results/phase-T/raw
-touch results/phase-T/RUNLOG.md results/phase-T/UNBLINDING_LOG.txt
+sudo -v
+sudo -n touch results/phase-T/RUNLOG.md results/phase-T/UNBLINDING_LOG.txt
 df -h .
 test -f results/phase-L/link_model_v2_fit.json
-pytest test/test_phase_t_validate.py test/test_phase_t_t5.py -q
+pytest test/test_phase_t_gate_specs.py test/test_phase_t_validate.py test/test_phase_t_t5.py -q
 pytest -q
 ```
 
@@ -73,6 +78,7 @@ Kiem plan:
 python3 -m measurements.t5_campaign --stage smoke --plan-only
 python3 -m measurements.t5_step --plan-only
 python3 -m measurements.t5_campaign --stage controls --plan-only
+python3 -m measurements.t5_campaign --stage controls-samesed --state results/phase-T/control_sameseed_state.json --plan-only
 python3 -m measurements.t5_campaign --stage main --plan-only
 ```
 
@@ -82,12 +88,31 @@ Ky vong:
 smoke:    6 diem
 step v2: 13 diem, ~1.7 gio
 controls:45 diem, ~1.5 gio
+controls-samesed:45 diem, ~1.0 gio wall
 main:    279 diem, ~9.1 gio
 ```
 
 Neu da chay `results/phase-T/step_state.json` truoc Amendment 8, khong dung
 file do de fit truc hoanh. Giu raw cu de doi chieu D-T9, nhung step live moi
 dung `results/phase-T/step_v2_state.json`.
+
+Neu G2 da dung truoc Amendment 9 tai `V-T4a_ca_operational`, co the resume
+cung `results/phase-T/control_state.json`. Khi idx do pass, runner se xoa
+`failed_rows` cu cua idx.
+
+Sau Amendment 11, G2 phai duoc audit bang cung interpreter voi live runner:
+
+```bash
+sudo -n env PYTHONPATH="$PWD" python3 -m measurements.t5_controls_audit \
+  --state results/phase-T/control_state.json \
+  --sealed-dir results/phase-T/sealed
+```
+
+V-T5b 105s chi la aggregate z diagnostic. Neu aggregate `V-T5b_q_phase_l`
+fail, dung. Neu pass nhung `h2@0.70` con dang nghi, chay khoi C' cung-seed
+truoc G3.
+Khong dung `python3` conda/user-shell de ket luan V-T5a bit-exact digest; live
+runner chay bang `sudo python3`.
 
 Neu da tung chay smoke truoc Amendment 7, archive state cu truoc khi chay lai:
 
@@ -113,8 +138,8 @@ cd /home/ubuntu/dt4n
 export PYTHONPATH="$PWD"
 set -o pipefail
 mkdir -p logs results/phase-T/raw
-touch results/phase-T/RUNLOG.md results/phase-T/UNBLINDING_LOG.txt
 sudo -v
+sudo -n touch results/phase-T/RUNLOG.md results/phase-T/UNBLINDING_LOG.txt
 sudo -n mn -c
 ```
 
@@ -139,13 +164,13 @@ tail -f logs/t5_00_smoke.log
 ## G0 Smoke
 
 ```bash
-printf "%s BAT DAU G0 smoke\n" "$(date -Is)" | tee -a results/phase-T/RUNLOG.md
+printf "%s BAT DAU G0 smoke\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 sudo -n mn -c
 sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
   --stage smoke \
   --state results/phase-T/smoke_state.json \
   2>&1 | tee -a logs/t5_00_smoke.log
-printf "%s XONG G0 smoke\n" "$(date -Is)" | tee -a results/phase-T/RUNLOG.md
+printf "%s XONG G0 smoke\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 ```
 
 Sau khi xong, xem tom tat:
@@ -172,27 +197,78 @@ phong T.6.
 ## G2 Doi Chung Am
 
 ```bash
-printf "%s BAT DAU G2 controls\n" "$(date -Is)" | tee -a results/phase-T/RUNLOG.md
+printf "%s BAT DAU G2 controls\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 sudo -n mn -c
 sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
   --stage controls \
   --state results/phase-T/control_state.json \
   2>&1 | tee -a logs/t5_02_controls.log
-printf "%s XONG G2 controls\n" "$(date -Is)" | tee -a results/phase-T/RUNLOG.md
+printf "%s XONG G2 controls\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 ```
 
 Tom tat:
 
 ```bash
-python3 - <<'PY'
-import json
-from measurements.t5_campaign import build_controls_plan, campaign_summary
-state = json.load(open("results/phase-T/control_state.json"))
-print(json.dumps(campaign_summary(state, build_controls_plan()), indent=2, sort_keys=True))
-PY
+sudo -n env PYTHONPATH="$PWD" python3 -m measurements.t5_controls_audit \
+  --state results/phase-T/control_state.json \
+  --sealed-dir results/phase-T/sealed \
+  --update-state \
+  2>&1 | tee -a logs/t5_02_controls_A11_audit.log
 ```
 
-Neu doi chung am khong tai tao Phase L theo gate, dung lai. Khong chay main.
+Trang thai 2026-08-01 sau Amendment 11: G2 105s co row gates sach va
+`V-T5b_q_phase_l` aggregate pass; `h2@0.70` co sd_z lon nen can C' cung-seed
+truoc G3.
+
+Neu can lam dong nhat provenance cho idx 0 da chay truoc Amendment 9, rerun
+mot diem duy nhat bang `--force-idx`. Runner se thay row cu, khong tao duplicate:
+
+```bash
+sudo -n mn -c
+sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
+  --stage controls \
+  --state results/phase-T/control_state.json \
+  --force-idx 0 \
+  2>&1 | tee -a logs/t5_02_controls_idx0_rerun_A10.log
+sudo -n env PYTHONPATH="$PWD" python3 -m measurements.t5_controls_audit \
+  --state results/phase-T/control_state.json \
+  --sealed-dir results/phase-T/sealed \
+  --update-state
+```
+
+## G2b C' Cung-Seed
+
+Chay truoc G3. Muc tieu la so Phase T voi Phase L cung seed, cung
+duration/warm-up `70/10`, nen lich co the khop bit-exact va do nhay cao hon
+phep so cross-seed.
+
+```bash
+printf "%s BAT DAU G2b controls-samesed A11\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
+sudo -n mn -c
+sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
+  --stage controls-samesed \
+  --state results/phase-T/control_sameseed_state.json \
+  2>&1 | tee -a logs/t5_02b_controls_sameseed_A11.log
+printf "%s XONG G2b controls-samesed A11\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
+```
+
+Audit C':
+
+```bash
+sudo -n env PYTHONPATH="$PWD" python3 -m measurements.t5_controls_audit \
+  --stage controls-samesed \
+  --state results/phase-T/control_sameseed_state.json \
+  --sealed-dir results/phase-T/sealed \
+  --update-state \
+  2>&1 | tee -a logs/t5_02b_controls_sameseed_A11_audit.log
+```
+
+Chi vao G3 neu:
+
+```text
+V-T5a_phase_l_digest fail = 0
+V-T5b_same_seed mean_gate=OK va sd_gate=OK
+```
 
 ## G3 Main
 
@@ -200,9 +276,9 @@ Chay 3 phien lien tiep trong cung tmux. Tong main khoang 8.4-9.1 gio; moi
 phien khoang 2.8-3.1 gio.
 
 ```bash
-printf "%s BAT DAU G3 main\n" "$(date -Is)" | tee -a results/phase-T/RUNLOG.md
+printf "%s BAT DAU G3 main\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 for S in 1 2 3; do
-  printf "%s BAT DAU main session %s\n" "$(date -Is)" "$S" | tee -a results/phase-T/RUNLOG.md
+  printf "%s BAT DAU main session %s\n" "$(date -Is)" "$S" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
   sudo -n mn -c
   sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
     --stage main \
@@ -210,9 +286,9 @@ for S in 1 2 3; do
     --n-sessions 3 \
     --state results/phase-T/campaign_state.json \
     2>&1 | tee -a "logs/t5_03_main_s${S}.log"
-  printf "%s XONG main session %s\n" "$(date -Is)" "$S" | tee -a results/phase-T/RUNLOG.md
+  printf "%s XONG main session %s\n" "$(date -Is)" "$S" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 done
-printf "%s XONG G3 main\n" "$(date -Is)" | tee -a results/phase-T/RUNLOG.md
+printf "%s XONG G3 main\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 ```
 
 Tom tat:
@@ -242,12 +318,12 @@ PY
 Chay sau G3, truoc khi mo niem phong T.6:
 
 ```bash
-printf "%s BAT DAU G1b step_v2\n" "$(date -Is)" | tee -a results/phase-T/RUNLOG.md
+printf "%s BAT DAU G1b step_v2\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 sudo -n mn -c
 sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_step \
   --state results/phase-T/step_v2_state.json \
   2>&1 | tee -a logs/t5_01_step_v2.log
-printf "%s XONG G1b step_v2\n" "$(date -Is)" | tee -a results/phase-T/RUNLOG.md
+printf "%s XONG G1b step_v2\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 ```
 
 Tom tat nhanh:

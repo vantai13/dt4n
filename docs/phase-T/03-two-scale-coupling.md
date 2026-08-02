@@ -177,6 +177,9 @@ V-T6b (mo ta):
   RMSE khop cong thuc nhieu dem trong 20%
 ```
 
+Ghi chu sau Amendment 9: dieu kien CV dung nguong
+`max(4*SE_c_a(mode,n_gaps),0.005)`, khong dung nguong tuyet doi 0.02.
+
 Ghi chu sau Amendment 7: nguong `bias < 0.002` bi thay bang
 `abs(rho_bias_z) < 3`, voi sd du doan tu dao dong renewal tai bien warm-up.
 

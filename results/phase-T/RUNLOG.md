@@ -7,3 +7,7 @@
 2026-07-31T14:45:13+00:00 BAT DAU G1 step
 2026-07-31T14:45:27+00:00 BAT DAU G2 controls
 2026-07-31T14:47:21+00:00 XONG G2 controls
+2026-08-01T00:33:53+00:00 BAT DAU G2 controls after Amendment 9
+2026-08-01T01:56:36+00:00 XONG G2 controls after Amendment 9
+2026-08-02T08:08:39+00:00 BAT DAU G2b controls-samesed A11
+2026-08-02T08:28:56+00:00 XONG G2b controls-samesed A11

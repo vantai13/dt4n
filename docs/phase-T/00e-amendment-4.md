@@ -51,6 +51,10 @@ u_i = Lambda(T_i)
 |CV(u_i - u_{i-1}) - c_design| < 0.02
 ```
 
+Ghi chu sau Amendment 9: nguong `0.02` bi thay bang
+`max(4*SE_c_a(mode,n_gaps), 0.005)` vi CV la uoc luong noisy, dac biet voi
+`h2`.
+
 Trong thoi gian van hanh, thang luong bien mat va chi con thang goi. Day la
 phep kiem dung cho time-rescaling.
 
@@ -73,6 +77,9 @@ V-T6b (mo ta):
   rho_hat window co bias < 0.002
   RMSE khop cong thuc nhieu dem trong 20%
 ```
+
+Ghi chu sau Amendment 9: dieu kien CV nay thuoc V-T4a va dung nguong
+noise-scaled; V-T6a con lai la gate rate/mean operational.
 
 Ghi chu sau Amendment 7: nguong `bias < 0.002` bi thay bang
 `abs(rho_bias_z) < 3`, voi `rho_bias_z` chuan hoa theo dao dong renewal tai

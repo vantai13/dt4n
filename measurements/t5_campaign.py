@@ -11,7 +11,8 @@ import random
 import time
 from typing import Any, Dict, List, Optional, Sequence
 
-from measurements.t4_validate import gate_row
+from measurements.gate_specs import gate_names_by_kind
+from measurements.t4_validate import gate_row, phase_l_q_refs, phase_l_seed_refs
 from mininet.load_spec import (
     FRAME_BG,
     FRAME_PROBE,
@@ -30,6 +31,7 @@ TAUS = (0.2, 1.0, 5.0)
 SEEDS = (11, 12, 13, 14, 15)
 BW, Q = 6.0, 13
 DUR, WARM, DT = 105.0, 15.0, DT_DEFAULT
+PHASE_L_DUR, PHASE_L_WARM = 70.0, 10.0
 PORT = 5555
 RAW = "results/phase-T/raw"
 STATE = "results/phase-T/campaign_state.json"
@@ -47,20 +49,10 @@ SENTINEL = {
 RG = "python3 -m measurements.rho_gen"
 PB = "python3 -m measurements.owd_probe"
 MODEL_PATH = "results/phase-L/link_model_v2_fit.json"
+PHASE_L_STATE = "results/phase-L/campaign_state.json"
 
-GATES_TRANSIENT = {
-    "A5-7_socket_drops",
-    "A5-7_n_late",
-    "A5-7_n_foreign",
-}
-GATES_DETERMINISTIC = {
-    "V-T0_digest_khop",
-    "V-T3_clamp",
-    "V-T4a_ca_operational",
-    "V-T4b_ca_pooled",
-    "V-T6a_rate_ratio",
-    "V-T6b_rho_bias",
-}
+GATES_TRANSIENT = set(gate_names_by_kind("transient"))
+GATES_DETERMINISTIC = set(gate_names_by_kind("deterministic"))
 GATE_FIELDS = {
     "idx",
     "pid",
@@ -83,9 +75,19 @@ GATE_FIELDS = {
     "gate_fail",
     "trajectory_digest",
     "schedule_digest",
+    "ca_operational",
+    "ca_operational_se",
+    "ca_operational_thr",
+    "ca_operational_z",
     "rho_bias",
     "rho_bias_sd_pred",
     "rho_bias_z",
+    "vt5a_delegation",
+    "vt5a_phase_l_digest",
+    "vt5b_ref_n",
+    "vt5b_z",
+    "vt5b_same_seed_gate_exempt",
+    "vt5b_same_seed_rel",
     "socket_drops",
     "n_foreign",
     "n_late_ratio",
@@ -112,13 +114,19 @@ def _pid(point: Point, idx: int, stage: str) -> str:
     )
 
 
-def _finalize(points: List[Point], stage: str) -> List[Point]:
+def _finalize(
+    points: List[Point],
+    stage: str,
+    duration_s: float = DUR,
+    warmup_s: float = WARM,
+) -> List[Point]:
     for idx, point in enumerate(points):
         point["idx"] = idx
         point["pid"] = _pid(point, idx, stage)
         point["bw"] = BW
         point["q"] = Q
-        point["duration_s"] = DUR
+        point["duration_s"] = float(duration_s)
+        point["warmup_s"] = float(warmup_s)
         point["dt"] = DT
     return points
 
@@ -158,6 +166,32 @@ def build_controls_plan() -> List[Point]:
                 )
     random.Random(ORDER_SEED + 1).shuffle(points)
     return _finalize(points, "controls")
+
+
+def build_controls_sameseed_plan() -> List[Point]:
+    """C' controls: Phase-L duration/warm-up for same-seed V-T5."""
+    points: List[Point] = []
+    for mode in ("h2", "poisson", "cbr"):
+        rhos = RHO_BAR if mode != "cbr" else (0.98,)
+        for rho_bar in rhos:
+            for seed in SEEDS:
+                points.append(
+                    {
+                        "mode": mode,
+                        "rho_bar": rho_bar,
+                        "a": 0.0,
+                        "tau_rho": 1.0,
+                        "seed": seed,
+                        "block": "Cprime",
+                    }
+                )
+    random.Random(ORDER_SEED + 2).shuffle(points)
+    return _finalize(
+        points,
+        "controls_sameseed",
+        duration_s=PHASE_L_DUR,
+        warmup_s=PHASE_L_WARM,
+    )
 
 
 def build_main_plan() -> List[Point]:
@@ -205,6 +239,8 @@ def build_plan(stage: str) -> List[Point]:
         return build_smoke_plan()
     if stage == "controls":
         return build_controls_plan()
+    if stage in ("controls-sameseed", "controls-samesed"):
+        return build_controls_sameseed_plan()
     if stage == "main":
         return build_main_plan()
     raise ValueError("stage khong hop le: %s" % stage)
@@ -260,10 +296,19 @@ def record_row(
     complete: bool,
 ) -> None:
     save_sealed_row(row, sealed_dir)
+    idx = int(row["idx"])
+    state["rows"] = [
+        old for old in state.get("rows", []) if int(old.get("idx", -1)) != idx
+    ]
+    state["failed_rows"] = [
+        old for old in state.get("failed_rows", []) if int(old.get("idx", -1)) != idx
+    ]
     target = "rows" if complete else "failed_rows"
     state.setdefault(target, []).append(public_row(row))
     if complete:
-        state.setdefault("done_idx", []).append(row["idx"])
+        done = set(int(i) for i in state.get("done_idx", []))
+        if idx not in done:
+            state.setdefault("done_idx", []).append(idx)
         if row.get("block") == "S":
             state.setdefault("sentinels", []).append(
                 {
@@ -273,6 +318,10 @@ def record_row(
                     "gate_fail": list(row.get("gate_fail", [])),
                 }
             )
+    else:
+        state["done_idx"] = [
+            old for old in state.get("done_idx", []) if int(old) != idx
+        ]
     save_state(state, state_path)
 
 
@@ -303,6 +352,16 @@ def make_traj(point: Point):
         n_steps,
         point["seed"],
         dt=point["dt"],
+    )
+
+
+def load_phase_l_refs(path: str = PHASE_L_STATE):
+    with open(path, "r", encoding="utf-8") as f:
+        phase_l_state = json.load(f)
+    rows = phase_l_state.get("rows", [])
+    return (
+        phase_l_q_refs(rows, BW, Q, PROBE_PPS),
+        phase_l_seed_refs(rows, BW, Q, PROBE_PPS),
     )
 
 
@@ -368,18 +427,20 @@ def campaign_summary(state: State, plan: Sequence[Point]) -> Dict[str, Any]:
     }
 
 
-def measure(net: Any, point: Point, model) -> Dict[str, Any]:
+def measure(net: Any, point: Point, model, phase_l_ref=None, phase_l_seed_ref=None) -> Dict[str, Any]:
     from measurements.owd_analyze import analyze
 
     h1, h2 = net.get("h1"), net.get("h2")
     cwd = os.getcwd()
     prefix = "%s/%s" % (RAW, point["pid"])
+    duration_s = float(point.get("duration_s", DUR))
+    warmup_s = float(point.get("warmup_s", WARM))
     h1.cmd("pkill -f 'measurements.rho_gen' 2>/dev/null")
     h2.cmd("pkill -f 'measurements.owd_probe' 2>/dev/null")
     time.sleep(0.2)
     h2.cmd(
         "cd %s && %s recv --port %d --duration %g --out-prefix %s >/dev/null 2>&1 &"
-        % (cwd, PB, PORT, DUR + 6.0, prefix)
+        % (cwd, PB, PORT, duration_s + 6.0, prefix)
     )
     time.sleep(0.8)
     h1.cmd(
@@ -393,7 +454,7 @@ def measure(net: Any, point: Point, model) -> Dict[str, Any]:
             PORT,
             BW,
             point["mode"],
-            DUR,
+            duration_s,
             point["seed"],
             point["idx"],
             prefix,
@@ -405,10 +466,10 @@ def measure(net: Any, point: Point, model) -> Dict[str, Any]:
     )
     time.sleep(6.5)
 
-    bg = analyze(prefix + "_bg.bin", prefix + "_bgtx.bin", warmup_s=WARM)
+    bg = analyze(prefix + "_bg.bin", prefix + "_bgtx.bin", warmup_s=warmup_s)
     probe = None
     if os.path.getsize(prefix + "_probe.bin") > 0:
-        probe = analyze(prefix + "_probe.bin", prefix + "_prtx.bin", warmup_s=WARM)
+        probe = analyze(prefix + "_probe.bin", prefix + "_prtx.bin", warmup_s=warmup_s)
     with open(prefix + "_tx.meta.json", "r", encoding="utf-8") as f:
         tx = json.load(f)
     with open(prefix + "_rx.meta.json", "r", encoding="utf-8") as f:
@@ -418,11 +479,11 @@ def measure(net: Any, point: Point, model) -> Dict[str, Any]:
     sched = build_varying_schedule(point["mode"], traj, BW, point["seed"])
     row = {
         **point,
-        "warmup_s": WARM,
-        "meas_s": DUR - WARM,
+        "warmup_s": warmup_s,
+        "meas_s": duration_s - warmup_s,
         "trajectory_digest": tx["trajectory"]["trajectory_digest"],
         "schedule_digest": tx["schedule"]["schedule_digest"],
-        "rho_bias": rho_bias_from_bgtx(prefix + "_bgtx.bin", traj, BW),
+        "rho_bias": rho_bias_from_bgtx(prefix + "_bgtx.bin", traj, BW, warmup_s=warmup_s),
         "q_mean_ms": bg["owd_ms"]["mean"],
         "q_sd_ms": bg["owd_ms"]["sd"],
         "q_p50_ms": bg["owd_ms"]["p50"],
@@ -442,7 +503,15 @@ def measure(net: Any, point: Point, model) -> Dict[str, Any]:
         "n_foreign": rx["n_foreign_packets"],
         "wall_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
-    gates = gate_row(row, traj, sched, model, model.sigma(point["mode"], BW, Q, point["rho_bar"]))
+    gates = gate_row(
+        row,
+        traj,
+        sched,
+        model,
+        model.sigma(point["mode"], BW, Q, point["rho_bar"]),
+        phase_l_ref=phase_l_ref,
+        phase_l_seed_ref=phase_l_seed_ref,
+    )
     row["gate_fail"] = [name for name, ok in gates.items() if not ok]
     row["gates"] = gates
     return row
@@ -451,7 +520,15 @@ def measure(net: Any, point: Point, model) -> Dict[str, Any]:
 def run_live(args: argparse.Namespace) -> None:
     plan = build_plan(args.stage)
     state = load_state(args.state)
-    todo = select_todo(plan, state, args.session, args.n_sessions, args.max_points)
+    if args.force_idx is not None:
+        if args.session is not None:
+            raise SystemExit("--force-idx khong di cung --session")
+        by_idx = {int(point["idx"]): point for point in plan}
+        if int(args.force_idx) not in by_idx:
+            raise SystemExit("--force-idx khong co trong plan: %s" % args.force_idx)
+        todo = [by_idx[int(args.force_idx)]]
+    else:
+        todo = select_todo(plan, state, args.session, args.n_sessions, args.max_points)
     print(
         "T5 %s plan %d diem | da xong %d | phien nay %d diem (~%.1f gio)"
         % (
@@ -459,7 +536,7 @@ def run_live(args: argparse.Namespace) -> None:
             len(plan),
             len(set(int(i) for i in state.get("done_idx", []))),
             len(todo),
-            len(todo) * (DUR + 12.0) / 3600.0,
+            sum(float(point.get("duration_s", DUR)) + 12.0 for point in todo) / 3600.0,
         )
     )
     if args.plan_only:
@@ -489,6 +566,11 @@ def run_live(args: argparse.Namespace) -> None:
     )
 
     model = LinkModelV2.load(MODEL_PATH)
+    phase_l_ref = phase_l_seed_ref = None
+    if args.stage in ("controls", "controls-sameseed", "controls-samesed"):
+        phase_l_ref, phase_l_seed_ref = load_phase_l_refs()
+        if args.stage == "controls":
+            phase_l_seed_ref = None
     os.makedirs(RAW, exist_ok=True)
     net = Mininet(topo=SplitQdiscTopo(), link=Link, switch=OVSBridge, controller=None)
     net.start()
@@ -498,7 +580,7 @@ def run_live(args: argparse.Namespace) -> None:
         setup_measure_qdisc(intf_toward(s1, "s2"), BW, Q)
         t0 = time.time()
         for k, point in enumerate(todo, 1):
-            row = measure(net, point, model)
+            row = measure(net, point, model, phase_l_ref=phase_l_ref, phase_l_seed_ref=phase_l_seed_ref)
             row["attempt"] = 1
             if row["gate_fail"]:
                 if should_retry(row["gate_fail"]):
@@ -506,7 +588,13 @@ def run_live(args: argparse.Namespace) -> None:
                         "      * gate fail transient: %s -> chay lai 1 lan"
                         % ",".join(row["gate_fail"])
                     )
-                    row2 = measure(net, point, model)
+                    row2 = measure(
+                        net,
+                        point,
+                        model,
+                        phase_l_ref=phase_l_ref,
+                        phase_l_seed_ref=phase_l_seed_ref,
+                    )
                     row2["attempt"] = 2
                     row2["attempt1_fail"] = row["gate_fail"]
                     row = row2
@@ -562,11 +650,16 @@ def run_live(args: argparse.Namespace) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Phase T / T.5 campaign")
-    parser.add_argument("--stage", choices=("smoke", "controls", "main"), required=True)
+    parser.add_argument(
+        "--stage",
+        choices=("smoke", "controls", "controls-sameseed", "controls-samesed", "main"),
+        required=True,
+    )
     parser.add_argument("--state", default=STATE)
     parser.add_argument("--session", type=int, default=None)
     parser.add_argument("--n-sessions", type=int, default=3)
     parser.add_argument("--max-points", type=int, default=None)
+    parser.add_argument("--force-idx", type=int, default=None)
     parser.add_argument("--plan-only", action="store_true")
     parser.add_argument("--resume", action="store_true")
     parser.add_argument("--sealed-dir", default=SEALED)
