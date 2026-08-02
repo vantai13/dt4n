@@ -25,6 +25,7 @@ class GateSpec:
     must_catch: List[str]
     corr_group: Optional[str]
     reference_sd_source: str
+    relax_policy: str = "threshold"
     notes: str = ""
     max_false_fail: float = 0.01
 
@@ -47,7 +48,9 @@ GATES: Dict[str, GateSpec] = {
         noise_fn=None,
         must_catch=["wrong_seed"],
         corr_group="seed",
-        reference_sd_source="analytic",
+        reference_sd_source="exact",
+        relax_policy="never",
+        max_false_fail=0.0,
     ),
     "V-T3_clamp": GateSpec(
         name="V-T3_clamp",
@@ -83,7 +86,9 @@ GATES: Dict[str, GateSpec] = {
         noise_fn=None,
         must_catch=[],
         corr_group="seed",
-        reference_sd_source="analytic",
+        reference_sd_source="exact",
+        relax_policy="never",
+        max_false_fail=0.0,
     ),
     "V-T5a_phase_l_digest": GateSpec(
         name="V-T5a_phase_l_digest",
@@ -92,7 +97,9 @@ GATES: Dict[str, GateSpec] = {
         noise_fn=None,
         must_catch=[],
         corr_group="seed",
-        reference_sd_source="analytic",
+        reference_sd_source="exact",
+        relax_policy="never",
+        max_false_fail=0.0,
     ),
     "V-T5b_q_phase_l": GateSpec(
         name="V-T5b_q_phase_l",

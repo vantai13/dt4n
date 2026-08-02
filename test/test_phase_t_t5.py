@@ -1,6 +1,8 @@
 """Phase T / T.5 -- pure tests for campaign runners and generators."""
 
+import json
 import math
+import os
 
 import pytest
 
@@ -175,6 +177,7 @@ def test_public_state_khong_lo_metric_niem_phong():
         "n_recv_unique": 100,
         "gates": {"V-T6b_rho_bias": True},
         "gate_fail": [],
+        "env": {"python_executable": "/usr/bin/python3", "git_dirty": False},
     }
     pub = public_row(row)
     sealed = sealed_row(row)
@@ -184,10 +187,27 @@ def test_public_state_khong_lo_metric_niem_phong():
     assert "vt5b_z" in pub
     assert "vt5b_same_seed_rel" in pub
     assert "loss" in pub
+    assert "env" in pub
     assert "q_mean_ms" not in pub
     assert "delta_pasta_ms" not in pub
     assert sealed["q_mean_ms"] == 9.5
     assert sealed["probe_mean_ms"] == 8.0
+
+
+def test_moi_row_cua_chien_dich_co_van_tay_moi_truong():
+    cutoff = "2026-08-02T12:00:00Z"
+    for path in (
+        "results/phase-T/control_sameseed_state.json",
+        "results/phase-T/control_state.json",
+    ):
+        if not os.path.exists(path):
+            continue
+        with open(path, "r", encoding="utf-8") as f:
+            state = json.load(f)
+        for row in state.get("rows", []):
+            if row.get("wall_utc", "") < cutoff:
+                continue
+            assert "env" in row, f"{path} idx={row['idx']} thieu van tay moi truong"
 
 
 def test_record_row_success_xoa_failed_row_cu(tmp_path):

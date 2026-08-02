@@ -12,6 +12,7 @@ import time
 from typing import Any, Dict, List, Optional, Sequence
 
 from measurements.gate_specs import gate_names_by_kind
+from measurements.provenance import env_fingerprint
 from measurements.t4_validate import gate_row, phase_l_q_refs, phase_l_seed_refs
 from mininet.load_spec import (
     FRAME_BG,
@@ -70,6 +71,7 @@ GATE_FIELDS = {
     "meas_s",
     "attempt",
     "attempt1_fail",
+    "env",
     "wall_utc",
     "gates",
     "gate_fail",
@@ -501,6 +503,7 @@ def measure(net: Any, point: Point, model, phase_l_ref=None, phase_l_seed_ref=No
         "max_late_ms": tx["counts"]["max_late_ms"],
         "socket_drops": rx["socket_drops_delta"],
         "n_foreign": rx["n_foreign_packets"],
+        "env": env_fingerprint(),
         "wall_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
     gates = gate_row(

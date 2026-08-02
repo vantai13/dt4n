@@ -475,6 +475,8 @@ Xac nhan sau Amendment 10, truoc khi resume G2/G3 T.5:
 [x] Da them `corr_group` va `reference_sd_source` vao GateSpec.
 [x] Amendment 11: bo V-T5b 2% tung diem; G2 105s aggregate z pass, h2@0.70 can C'.
 [x] Da them `controls-samesed` C' cung-seed 45 diem, 70/10, chay truoc G3.
+[x] Amendment 12: khoa digest bit-exact doc lap interpreter, them env provenance,
+    va danh dau cong bit-exact `relax_policy="never"`.
 ```
 
 Ky: Codex theo yeu cau owner repo DT4N

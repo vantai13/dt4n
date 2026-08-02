@@ -66,6 +66,14 @@ def cv(xs: Sequence[float]) -> float:
     return math.sqrt(sum((x - m) ** 2 for x in xs) / n) / m
 
 
+def _mean_stable(xs: Sequence[float]) -> float:
+    """Mean with explicit sequential summation for bit-exact schedules."""
+    total = 0.0
+    for x in xs:
+        total = total + x
+    return total / len(xs)
+
+
 def h2_params(mean_gap: float, ca: float = H2_TARGET_CA) -> Tuple[float, float, float]:
     """Balanced-means two-phase hyperexponential parameters."""
     mean_gap = float(mean_gap)
@@ -126,7 +134,7 @@ def normalize_rate(gaps: Sequence[float], mean_gap: float) -> List[float]:
     """Scale every gap so the mean rate is exact while c_a is unchanged."""
     if not gaps:
         return []
-    m = sum(gaps) / len(gaps)
+    m = _mean_stable(gaps)
     if m <= 0:
         raise ValueError("khoang cach trung binh <= 0")
     k = float(mean_gap) / m

@@ -41,7 +41,8 @@ logs/t5_00_smoke.log
 logs/t5_01_step_v2.log
 logs/t5_02_controls.log
 logs/t5_02_controls_A11_audit.log
-logs/t5_02b_controls_sameseed_A11.log
+logs/t5_02b_controls_sameseed_A12.log
+logs/t5_02b_controls_sameseed_A12_audit.log
 logs/t5_03_main_s1.log
 logs/t5_03_main_s2.log
 logs/t5_03_main_s3.log
@@ -55,6 +56,16 @@ percentiles, `probe_mean_ms`, `delta_pasta_ms`, SE). Cac truong nay nam trong
 
 ## Kiem Tra Truoc Khi Chay
 
+LUAT: ket luan ve gate/digest/provenance chi hop le khi chay bang live
+interpreter:
+
+```bash
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m pytest
+```
+
+`python3` trong conda/user-shell chi dung de viet code nhanh, khong dung de ket
+luan bit-exact.
+
 Chay ngoai tmux cung duoc:
 
 ```bash
@@ -65,8 +76,12 @@ sudo -v
 sudo -n touch results/phase-T/RUNLOG.md results/phase-T/UNBLINDING_LOG.txt
 df -h .
 test -f results/phase-L/link_model_v2_fit.json
-pytest test/test_phase_t_gate_specs.py test/test_phase_t_validate.py test/test_phase_t_t5.py -q
-pytest -q
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m pytest \
+  test/test_load_spec_frozen_digests.py \
+  test/test_phase_t_gate_specs.py \
+  test/test_phase_t_validate.py \
+  test/test_phase_t_t5.py -q
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m pytest -q
 ```
 
 Neu `test -f ...` khong co output va exit code la 0 thi file model da co.
@@ -103,7 +118,7 @@ cung `results/phase-T/control_state.json`. Khi idx do pass, runner se xoa
 Sau Amendment 11, G2 phai duoc audit bang cung interpreter voi live runner:
 
 ```bash
-sudo -n env PYTHONPATH="$PWD" python3 -m measurements.t5_controls_audit \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m measurements.t5_controls_audit \
   --state results/phase-T/control_state.json \
   --sealed-dir results/phase-T/sealed
 ```
@@ -112,7 +127,7 @@ V-T5b 105s chi la aggregate z diagnostic. Neu aggregate `V-T5b_q_phase_l`
 fail, dung. Neu pass nhung `h2@0.70` con dang nghi, chay khoi C' cung-seed
 truoc G3.
 Khong dung `python3` conda/user-shell de ket luan V-T5a bit-exact digest; live
-runner chay bang `sudo python3`.
+runner chay bang `sudo -n env PYTHONPATH="$PWD" /usr/bin/python3`.
 
 Neu da tung chay smoke truoc Amendment 7, archive state cu truoc khi chay lai:
 
@@ -166,7 +181,7 @@ tail -f logs/t5_00_smoke.log
 ```bash
 printf "%s BAT DAU G0 smoke\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 sudo -n mn -c
-sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.t5_campaign \
   --stage smoke \
   --state results/phase-T/smoke_state.json \
   2>&1 | tee -a logs/t5_00_smoke.log
@@ -199,7 +214,7 @@ phong T.6.
 ```bash
 printf "%s BAT DAU G2 controls\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 sudo -n mn -c
-sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.t5_campaign \
   --stage controls \
   --state results/phase-T/control_state.json \
   2>&1 | tee -a logs/t5_02_controls.log
@@ -209,7 +224,7 @@ printf "%s XONG G2 controls\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RU
 Tom tat:
 
 ```bash
-sudo -n env PYTHONPATH="$PWD" python3 -m measurements.t5_controls_audit \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m measurements.t5_controls_audit \
   --state results/phase-T/control_state.json \
   --sealed-dir results/phase-T/sealed \
   --update-state \
@@ -225,12 +240,12 @@ mot diem duy nhat bang `--force-idx`. Runner se thay row cu, khong tao duplicate
 
 ```bash
 sudo -n mn -c
-sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.t5_campaign \
   --stage controls \
   --state results/phase-T/control_state.json \
   --force-idx 0 \
   2>&1 | tee -a logs/t5_02_controls_idx0_rerun_A10.log
-sudo -n env PYTHONPATH="$PWD" python3 -m measurements.t5_controls_audit \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m measurements.t5_controls_audit \
   --state results/phase-T/control_state.json \
   --sealed-dir results/phase-T/sealed \
   --update-state
@@ -243,24 +258,24 @@ duration/warm-up `70/10`, nen lich co the khop bit-exact va do nhay cao hon
 phep so cross-seed.
 
 ```bash
-printf "%s BAT DAU G2b controls-samesed A11\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
+printf "%s BAT DAU G2b controls-samesed A12\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 sudo -n mn -c
-sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.t5_campaign \
   --stage controls-samesed \
   --state results/phase-T/control_sameseed_state.json \
-  2>&1 | tee -a logs/t5_02b_controls_sameseed_A11.log
-printf "%s XONG G2b controls-samesed A11\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
+  2>&1 | tee -a logs/t5_02b_controls_sameseed_A12.log
+printf "%s XONG G2b controls-samesed A12\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 ```
 
 Audit C':
 
 ```bash
-sudo -n env PYTHONPATH="$PWD" python3 -m measurements.t5_controls_audit \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m measurements.t5_controls_audit \
   --stage controls-samesed \
   --state results/phase-T/control_sameseed_state.json \
   --sealed-dir results/phase-T/sealed \
   --update-state \
-  2>&1 | tee -a logs/t5_02b_controls_sameseed_A11_audit.log
+  2>&1 | tee -a logs/t5_02b_controls_sameseed_A12_audit.log
 ```
 
 Chi vao G3 neu:
@@ -280,7 +295,7 @@ printf "%s BAT DAU G3 main\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUN
 for S in 1 2 3; do
   printf "%s BAT DAU main session %s\n" "$(date -Is)" "$S" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
   sudo -n mn -c
-  sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_campaign \
+  sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.t5_campaign \
     --stage main \
     --session "$S" \
     --n-sessions 3 \
@@ -320,7 +335,7 @@ Chay sau G3, truoc khi mo niem phong T.6:
 ```bash
 printf "%s BAT DAU G1b step_v2\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
 sudo -n mn -c
-sudo -n env PYTHONPATH="$PWD" python3 -u -m measurements.t5_step \
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.t5_step \
   --state results/phase-T/step_v2_state.json \
   2>&1 | tee -a logs/t5_01_step_v2.log
 printf "%s XONG G1b step_v2\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null

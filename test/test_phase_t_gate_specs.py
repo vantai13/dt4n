@@ -230,8 +230,9 @@ def test_gate_specs_khai_bao_corr_group_cho_moi_cong():
         assert spec.name == name
         assert hasattr(spec, "corr_group")
         assert spec.corr_group in (None, "seed", "rho_bar")
-        assert spec.reference_sd_source in ("analytic", "replicates", "cross_seed")
+        assert spec.reference_sd_source in ("analytic", "replicates", "cross_seed", "exact")
         assert spec.reference_sd_source != "guessed"
+        assert spec.relax_policy in ("threshold", "never")
 
 
 def test_cong_dung_cross_seed_phai_ghi_ro_han_che():
@@ -255,6 +256,28 @@ def test_cac_cong_preregistered_phase_t_da_duoc_hien_thuc_hoa():
     }
 
     assert declared <= set(GATES)
+
+
+def test_khong_cong_bit_exact_nao_bi_noi_long():
+    """Never relax bit-exact gates in response to an apparent environment fail.
+
+    Amendment 12 found that V-T5a' was correct on the live interpreter and only
+    failed under a different Python summation algorithm. Weakening the gate
+    would have traded away proof that Phase T reproduced Phase L.
+    """
+    for name, spec in GATES.items():
+        if spec.relax_policy != "never":
+            continue
+        assert spec.noise_fn is None, f"{name}: bit-exact gate must not have a noise model"
+        assert spec.reference_sd_source == "exact", f"{name}: bit-exact gate must use exact source"
+        assert spec.max_false_fail == 0.0, f"{name}: bit-exact gate must not allow false fail"
+
+
+def test_ba_cong_bit_exact_duoc_khai_bao_day_du():
+    """Catch forgotten relax_policy='never' on any current digest gate."""
+    want = {"V-T0_digest_khop", "V-T5a_delegation", "V-T5a_phase_l_digest"}
+    got = {name for name, spec in GATES.items() if spec.relax_policy == "never"}
+    assert got == want, f"thieu/thua cong bit-exact: {got ^ want}"
 
 
 @pytest.mark.parametrize("gate_name", sorted(GATES))
