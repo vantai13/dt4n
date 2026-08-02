@@ -15,6 +15,7 @@ from measurements.t5_campaign import (
     build_smoke_plan,
     public_row,
     record_row,
+    require_clean_g3_worktree,
     select_todo,
     sealed_row,
     should_retry,
@@ -145,6 +146,21 @@ def test_retry_chi_danh_cho_cong_transient():
     assert should_retry(["A5-7_n_late"]) is True
     assert should_retry(["V-T6b_rho_bias"]) is False
     assert should_retry(["A5-7_n_late", "V-T6b_rho_bias"]) is False
+
+
+def test_g3_tu_choi_chay_neu_worktree_ban():
+    dirty = {
+        "python_executable": "/usr/bin/python3",
+        "git_commit": "abc123",
+        "git_dirty": True,
+    }
+    with pytest.raises(SystemExit, match="TU CHOI chay G3"):
+        require_clean_g3_worktree("main", False, dirty)
+
+    clean = dict(dirty, git_dirty=False)
+    assert require_clean_g3_worktree("main", False, clean)["git_dirty"] is False
+    assert require_clean_g3_worktree("main", True, dirty)["git_dirty"] is True
+    assert require_clean_g3_worktree("controls-samesed", False, dirty)["git_dirty"] is True
 
 
 def test_public_state_khong_lo_metric_niem_phong():

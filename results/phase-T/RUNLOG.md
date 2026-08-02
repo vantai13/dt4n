@@ -11,3 +11,5 @@
 2026-08-01T01:56:36+00:00 XONG G2 controls after Amendment 9
 2026-08-02T08:08:39+00:00 BAT DAU G2b controls-samesed A11
 2026-08-02T08:28:56+00:00 XONG G2b controls-samesed A11
+2026-08-02T10:38:04+00:00 BAT DAU G2b controls-samesed A12
+2026-08-02T11:16:57+00:00 XONG G2b controls-samesed A12

@@ -287,23 +287,52 @@ V-T5b_same_seed mean_gate=OK va sd_gate=OK
 
 ## G3 Main
 
-Chay 3 phien lien tiep trong cung tmux. Tong main khoang 8.4-9.1 gio; moi
-phien khoang 2.8-3.1 gio.
+Sau Amendment 13, G3 chi duoc start khi worktree sach. Khong append
+`results/phase-T/RUNLOG.md` truoc khi goi runner, vi file do duoc track va se
+lam `git_dirty=True`. Runner `stage=main` se tu choi chay neu cay lam viec ban.
+
+Khuyen nghi chay mot mach trong tmux de fingerprint dau phien gan cho toan bo
+G3. Tong main khoang 8.4-9.1 gio.
+
+Preflight:
 
 ```bash
-printf "%s BAT DAU G3 main\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
-for S in 1 2 3; do
-  printf "%s BAT DAU main session %s\n" "$(date -Is)" "$S" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
-  sudo -n mn -c
-  sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.t5_campaign \
-    --stage main \
-    --session "$S" \
-    --n-sessions 3 \
-    --state results/phase-T/campaign_state.json \
-    2>&1 | tee -a "logs/t5_03_main_s${S}.log"
-  printf "%s XONG main session %s\n" "$(date -Is)" "$S" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
-done
-printf "%s XONG G3 main\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
+git status --porcelain
+git tag --list phase-T-G3-start
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 - <<'PY'
+from measurements.provenance import env_fingerprint
+print(env_fingerprint())
+PY
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m measurements.t5_campaign \
+  --stage main \
+  --state results/phase-T/campaign_state.json \
+  --plan-only
+```
+
+Neu `git status --porcelain` co output, dung va commit truoc. Neu tag chua co,
+tao tag o commit sach:
+
+```bash
+git tag phase-T-G3-start
+```
+
+Chay G3:
+
+```bash
+sudo -n mn -c
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.t5_campaign \
+  --stage main \
+  --state results/phase-T/campaign_state.json \
+  2>&1 | tee -a logs/t5_03_main_all_A13.log
+```
+
+Sau khi runner ket thuc moi ghi RUNLOG va commit ket qua:
+
+```bash
+printf "%s XONG G3 main A13\n" "$(date -Is)" | sudo -n tee -a results/phase-T/RUNLOG.md >/dev/null
+git add results/phase-T/campaign_state.json results/phase-T/RUNLOG.md \
+        results/phase-T/raw/*.meta.json results/phase-T/sealed/*.json
+git commit -m "Phase T G3 main results"
 ```
 
 Tom tat:

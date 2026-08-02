@@ -477,6 +477,8 @@ Xac nhan sau Amendment 10, truoc khi resume G2/G3 T.5:
 [x] Da them `controls-samesed` C' cung-seed 45 diem, 70/10, chay truoc G3.
 [x] Amendment 12: khoa digest bit-exact doc lap interpreter, them env provenance,
     va danh dau cong bit-exact `relax_policy="never"`.
+[x] Amendment 13: C' pass 45/45 nhung phat hien instrument offset cong tinh
+    `Delta_hat = +0.01578 ms`; G3 phai start tu worktree sach/tagged.
 ```
 
 Ky: Codex theo yeu cau owner repo DT4N

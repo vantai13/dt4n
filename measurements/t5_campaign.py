@@ -269,6 +269,23 @@ def should_retry(gate_fail: Sequence[str]) -> bool:
     return bool(fail) and fail <= GATES_TRANSIENT
 
 
+def require_clean_g3_worktree(stage: str, plan_only: bool, env: Optional[Dict[str, Any]] = None) -> Dict[str, Any]:
+    """G3 is the main paper dataset; start it only from a committed tree."""
+    fingerprint = dict(env if env is not None else env_fingerprint())
+    if str(stage) == "main" and not bool(plan_only) and fingerprint.get("git_dirty"):
+        raise SystemExit(
+            "TU CHOI chay G3 voi cay lam viec ban. Commit/tag truoc.\n"
+            "8.2 gio du lieu khong the tai lap thi khong dung duoc cho paper.\n"
+            "python=%s commit=%s dirty=%s"
+            % (
+                fingerprint.get("python_executable", "unknown"),
+                fingerprint.get("git_commit", "unknown"),
+                fingerprint.get("git_dirty", "unknown"),
+            )
+        )
+    return fingerprint
+
+
 def public_row(row: Dict[str, Any]) -> Dict[str, Any]:
     """Visible checkpoint row: gate/provenance only, no sealed response metrics."""
     return {key: row[key] for key in sorted(GATE_FIELDS) if key in row}
@@ -429,7 +446,14 @@ def campaign_summary(state: State, plan: Sequence[Point]) -> Dict[str, Any]:
     }
 
 
-def measure(net: Any, point: Point, model, phase_l_ref=None, phase_l_seed_ref=None) -> Dict[str, Any]:
+def measure(
+    net: Any,
+    point: Point,
+    model,
+    phase_l_ref=None,
+    phase_l_seed_ref=None,
+    run_env: Optional[Dict[str, Any]] = None,
+) -> Dict[str, Any]:
     from measurements.owd_analyze import analyze
 
     h1, h2 = net.get("h1"), net.get("h2")
@@ -503,7 +527,7 @@ def measure(net: Any, point: Point, model, phase_l_ref=None, phase_l_seed_ref=No
         "max_late_ms": tx["counts"]["max_late_ms"],
         "socket_drops": rx["socket_drops_delta"],
         "n_foreign": rx["n_foreign_packets"],
-        "env": env_fingerprint(),
+        "env": dict(run_env if run_env is not None else env_fingerprint()),
         "wall_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
     }
     gates = gate_row(
@@ -523,6 +547,7 @@ def measure(net: Any, point: Point, model, phase_l_ref=None, phase_l_seed_ref=No
 def run_live(args: argparse.Namespace) -> None:
     plan = build_plan(args.stage)
     state = load_state(args.state)
+    run_env = require_clean_g3_worktree(args.stage, args.plan_only)
     if args.force_idx is not None:
         if args.session is not None:
             raise SystemExit("--force-idx khong di cung --session")
@@ -583,7 +608,14 @@ def run_live(args: argparse.Namespace) -> None:
         setup_measure_qdisc(intf_toward(s1, "s2"), BW, Q)
         t0 = time.time()
         for k, point in enumerate(todo, 1):
-            row = measure(net, point, model, phase_l_ref=phase_l_ref, phase_l_seed_ref=phase_l_seed_ref)
+            row = measure(
+                net,
+                point,
+                model,
+                phase_l_ref=phase_l_ref,
+                phase_l_seed_ref=phase_l_seed_ref,
+                run_env=run_env,
+            )
             row["attempt"] = 1
             if row["gate_fail"]:
                 if should_retry(row["gate_fail"]):
@@ -597,6 +629,7 @@ def run_live(args: argparse.Namespace) -> None:
                         model,
                         phase_l_ref=phase_l_ref,
                         phase_l_seed_ref=phase_l_seed_ref,
+                        run_env=run_env,
                     )
                     row2["attempt"] = 2
                     row2["attempt1_fail"] = row["gate_fail"]
