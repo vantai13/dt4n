@@ -35,7 +35,7 @@ DELTA_HAT_MS = 0.0158
 DELTA_SE_MS = 0.0023
 HOMOGENEOUS_N_LATE_MAX = 1e-3
 CONTROL_STATE = "results/phase-T/control_state.json"
-SCRIPT_VERSION = "t6_analyze_v3_t6d_cell_level"
+SCRIPT_VERSION = "t6_analyze_v4_t6e_paired"
 
 # From docs/phase-T/01-two-timescales.md, locked before T.6b.
 T_RELAX_P90_S = {
@@ -540,6 +540,185 @@ def cell_level_test(cells: Sequence[Row]) -> Dict[str, Any]:
     }
 
 
+def paired_cell_rows(main_rows: Sequence[Row], control_rows: Sequence[Row]) -> List[Row]:
+    """A18 -- compute paired-by-seed dynamic error rows.
+
+    The main campaign and C controls use the same seed set. Pairing first
+    removes the schedule component shared by both sides, then estimates the
+    cell error bar from the five seed-level differences.
+    """
+    main: Dict[Tuple[str, float, int], List[float]] = defaultdict(list)
+    for row in main_rows:
+        if str(row.get("block")) == "S" or int(row.get("seed", -1)) == 999:
+            continue
+        key = (str(row["mode"]), round(float(row["rho_bar"]), 3), int(row["seed"]))
+        main[key].append(float(row["err_qs_corrected_ms"]))
+
+    ctrl: Dict[Tuple[str, float, int], List[float]] = defaultdict(list)
+    for row in control_rows:
+        if abs(float(row.get("a", 0.0))) > 1e-12:
+            continue
+        key = (str(row["mode"]), round(float(row["rho_bar"]), 3), int(row["seed"]))
+        ctrl[key].append(float(row["err_qs_corrected_ms"]))
+
+    cells = sorted({(mode, rho) for mode, rho, _seed in ctrl})
+    out: List[Row] = []
+    for mode, rho in cells:
+        paired = []
+        seed_rows = []
+        for seed in sorted({s for m, r, s in ctrl if m == mode and r == rho}):
+            key = (mode, rho, seed)
+            if key not in main or key not in ctrl:
+                continue
+            main_mean = _mean(main[key])
+            ctrl_mean = _mean(ctrl[key])
+            diff = main_mean - ctrl_mean
+            paired.append(diff)
+            seed_rows.append(
+                {
+                    "seed": seed,
+                    "n_main": len(main[key]),
+                    "n_control": len(ctrl[key]),
+                    "mean_main_ms": main_mean,
+                    "control_ms": ctrl_mean,
+                    "diff_ms": diff,
+                }
+            )
+        if len(paired) != 5:
+            raise ValueError(
+                "T6e paired cell %s@%g needs 5 seeds, got %d"
+                % (mode, rho, len(paired))
+            )
+        if any(int(item["n_main"]) != 6 for item in seed_rows):
+            raise ValueError("T6e paired cell %s@%g needs 6 main rows/seed" % (mode, rho))
+        if any(int(item["n_control"]) != 1 for item in seed_rows):
+            raise ValueError("T6e paired cell %s@%g needs 1 control row/seed" % (mode, rho))
+
+        sd = _sd(paired)
+        se = float(sd) / math.sqrt(len(paired)) if sd is not None else 0.0
+        mu = _mean(paired)
+        t975 = 2.776  # df = 4
+        out.append(
+            {
+                "mode": mode,
+                "rho": rho,
+                "rho_bar": rho,
+                "n_seed": len(paired),
+                "mean_dyn": mu,
+                "sd_paired": sd,
+                "se_paired": se,
+                "t_paired": mu / max(se, 1e-12),
+                "df": len(paired) - 1,
+                "ci95": [mu - t975 * se, mu + t975 * se],
+                "seed_rows": seed_rows,
+            }
+        )
+    return out
+
+
+def assert_paired_mean_invariant(
+    paired: Sequence[Row],
+    t6d_cells: Sequence[Row],
+    tol: float = 1e-9,
+) -> Dict[str, Any]:
+    """A18 guard: pairing may change error bars, never the point estimate."""
+    ref = {
+        (str(row["mode"]), round(float(row["rho_bar"]), 3)): float(
+            row["mean_err_dyn_ms"]
+        )
+        for row in t6d_cells
+    }
+    diffs = []
+    for row in paired:
+        key = (str(row["mode"]), round(float(row["rho"]), 3))
+        if key not in ref:
+            raise ValueError("missing T6d reference cell for %s@%g" % key)
+        diff = abs(float(row["mean_dyn"]) - ref[key])
+        row["mean_dyn_t6d_reference_ms"] = ref[key]
+        row["mean_dyn_abs_diff_ms"] = diff
+        diffs.append(diff)
+        if diff > float(tol):
+            raise ValueError(
+                "%s@%g: paired changed mean_dyn by %.12g"
+                % (key[0], key[1], diff)
+            )
+    return {
+        "tol": float(tol),
+        "max_abs_diff_ms": max(diffs) if diffs else 0.0,
+        "pass": all(diff <= float(tol) for diff in diffs),
+    }
+
+
+def paired_cell_test(paired: Sequence[Row]) -> Dict[str, Any]:
+    """A18 -- summarize paired-by-seed cell error bars."""
+    reg = [row for row in paired if str(row["mode"]) != "cbr"]
+    cbr = [row for row in paired if str(row["mode"]) == "cbr"]
+
+    se_values = [float(row["se_paired"]) for row in reg]
+    means = [float(row["mean_dyn"]) for row in reg]
+    sd_means = _sd(means)
+    pred = math.sqrt(_mean([se * se for se in se_values]))
+    ratio = pred / max(float(sd_means), 1e-12)
+    n_t = sum(abs(float(row["t_paired"])) > 2.0 for row in reg)
+
+    w = [1.0 / max(float(row["se_paired"]) ** 2, 1e-24) for row in reg]
+    mu_w = sum(wi * float(row["mean_dyn"]) for wi, row in zip(w, reg)) / sum(w)
+    se_w = 1.0 / math.sqrt(sum(w))
+
+    mu = _mean(means)
+    se_emp = float(sd_means) / math.sqrt(len(means))
+    t975_df7 = 2.365
+
+    abs_mean_by_cell = {
+        "mode=%s,rho_bar=%g" % (row["mode"], float(row["rho"])): abs(float(row["mean_dyn"]))
+        for row in paired
+    }
+    strongest = max(abs_mean_by_cell, key=lambda key: abs_mean_by_cell[key])
+
+    return {
+        "status": "exploratory_A18",
+        "cell_table": list(paired),
+        "R1_SE_paired": {
+            "mean": _mean(se_values),
+            "range_target_ms": [0.015, 0.030],
+            "pass": 0.015 <= _mean(se_values) <= 0.030,
+            "summary": _number_summary(se_values),
+        },
+        "R2_mau_thuan": {
+            "tan_du_doan": pred,
+            "tan_quan_sat": sd_means,
+            "ti_so": ratio,
+            "target": [0.7, 1.5],
+            "pass": 0.7 <= ratio <= 1.5 and ratio < 2.0,
+        },
+        "R3_abs_t_gt_2": {
+            "observed": n_t,
+            "denominator": len(reg),
+            "target": [6, 8],
+            "pass": 6 <= n_t <= 8,
+        },
+        "R4_mean_gop": {
+            "weighted_mean": mu_w,
+            "weighted_se": se_w,
+            "weighted_t": mu_w / max(se_w, 1e-12),
+            "weighted_ci95": [mu_w - 1.96 * se_w, mu_w + 1.96 * se_w],
+            "unweighted_mean": mu,
+            "unweighted_se": se_emp,
+            "unweighted_t": mu / max(se_emp, 1e-12),
+            "unweighted_ci95": [
+                mu - t975_df7 * se_emp,
+                mu + t975_df7 * se_emp,
+            ],
+        },
+        "R5_cbr_manh_nhat": {
+            "observed_largest_cell": strongest,
+            "pass": strongest == "mode=cbr,rho_bar=0.98",
+            "abs_mean_by_cell_ms": abs_mean_by_cell,
+        },
+        "cbr_tach_rieng": list(cbr),
+    }
+
+
 def t6b_diagnostics(rows: Sequence[Row]) -> Dict[str, Any]:
     regular = [
         row
@@ -674,6 +853,7 @@ def build_report(
     baseline_rows: Sequence[Row] | None = None,
     baseline: Mapping[Cell, Row] | None = None,
     cell_level: bool = False,
+    paired: bool = False,
 ) -> Dict[str, Any]:
     regular = [row for row in rows if str(row.get("block")) != "S"]
     homogeneous = [
@@ -701,6 +881,11 @@ def build_report(
             "t6d_note": (
                 "Cell-level D-T2 restatement is exploratory under Amendment 17."
                 if cell_level
+                else None
+            ),
+            "t6e_note": (
+                "Paired-by-seed error bars are exploratory under Amendment 18."
+                if paired
                 else None
             ),
         },
@@ -741,6 +926,14 @@ def build_report(
         report["t6b_diagnostics"] = t6b_diagnostics(list(rows))
         if cell_level:
             report["t6d_cell_level"] = cell_level_test(cells)
+        if paired:
+            if baseline_rows is None:
+                raise ValueError("paired analysis needs baseline_rows")
+            paired_rows = paired_cell_rows(rows, baseline_rows)
+            report["t6e_invariance"] = assert_paired_mean_invariant(
+                paired_rows, cells
+            )
+            report["t6e_paired"] = paired_cell_test(paired_rows)
     return report
 
 
@@ -938,6 +1131,71 @@ def _print_report_summary(report: Mapping[str, Any]) -> None:
                     float(item["du_vuot_nhieu_do"]),
                 )
             )
+    if "t6e_paired" in report:
+        inv = report["t6e_invariance"]
+        t6e = report["t6e_paired"]
+        print("")
+        print("T6e paired-by-seed error bars (exploratory):")
+        print(
+            "invariance: pass=%s max_abs_diff=%.12g ms tol=%.1e"
+            % (
+                inv["pass"],
+                float(inv["max_abs_diff_ms"]),
+                float(inv["tol"]),
+            )
+        )
+        print(
+            "mode      rho    n_seed mean_dyn   se_paired t_paired ci95_lo  ci95_hi"
+        )
+        for item in t6e["cell_table"]:
+            print(
+                "%-8s %.3f %6d %+9.6f %.6f %+8.3f %+8.6f %+8.6f"
+                % (
+                    item["mode"],
+                    float(item["rho"]),
+                    int(item["n_seed"]),
+                    float(item["mean_dyn"]),
+                    float(item["se_paired"]),
+                    float(item["t_paired"]),
+                    float(item["ci95"][0]),
+                    float(item["ci95"][1]),
+                )
+            )
+        r1 = t6e["R1_SE_paired"]
+        r2 = t6e["R2_mau_thuan"]
+        r3 = t6e["R3_abs_t_gt_2"]
+        r4 = t6e["R4_mean_gop"]
+        r5 = t6e["R5_cbr_manh_nhat"]
+        print(
+            "T6e R1 mean_SE_paired=%.6f pass=%s"
+            % (float(r1["mean"]), r1["pass"])
+        )
+        print(
+            "T6e R2 tan_du_doan=%.6f tan_quan_sat=%.6f ti_so=%.3f pass=%s"
+            % (
+                float(r2["tan_du_doan"]),
+                float(r2["tan_quan_sat"]),
+                float(r2["ti_so"]),
+                r2["pass"],
+            )
+        )
+        print(
+            "T6e R3 |t|>2: %d/%d pass=%s"
+            % (int(r3["observed"]), int(r3["denominator"]), r3["pass"])
+        )
+        print(
+            "T6e R4 weighted mean=%+.6f +/- %.6f ms; unweighted=%+.6f +/- %.6f ms"
+            % (
+                float(r4["weighted_mean"]),
+                float(r4["weighted_se"]),
+                float(r4["unweighted_mean"]),
+                float(r4["unweighted_se"]),
+            )
+        )
+        print(
+            "T6e R5 strongest=%s pass=%s"
+            % (r5["observed_largest_cell"], r5["pass"])
+        )
 
 
 def main() -> None:
@@ -955,6 +1213,11 @@ def main() -> None:
         action="store_true",
         help="add exploratory A17 cell-level restatement of D-T2",
     )
+    parser.add_argument(
+        "--paired",
+        action="store_true",
+        help="add exploratory A18 paired-by-seed cell error bars",
+    )
     parser.add_argument("--out", default="-")
     parser.add_argument(
         "--make-fake-sealed",
@@ -964,6 +1227,8 @@ def main() -> None:
     args = parser.parse_args()
     if args.cell_level and not args.baseline_dir:
         raise SystemExit("--cell-level can dung --baseline-dir")
+    if args.paired and not args.baseline_dir:
+        raise SystemExit("--paired can dung --baseline-dir")
 
     public_rows = _load_state_rows(args.state)
     model = LinkModelV2.load(MODEL_PATH)
@@ -996,6 +1261,7 @@ def main() -> None:
         baseline_rows=baseline_rows,
         baseline=baseline,
         cell_level=args.cell_level,
+        paired=args.paired,
     )
     text = json.dumps(_jsonable(report), indent=1, sort_keys=True)
     _print_report_summary(report)
