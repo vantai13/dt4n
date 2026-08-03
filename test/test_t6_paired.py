@@ -5,6 +5,7 @@ import pytest
 from measurements.t6_analyze import (
     assert_paired_mean_invariant,
     jensen_mechanism_check,
+    kappa_map,
     paired_cell_rows,
     split_by_dynamics,
 )
@@ -171,3 +172,50 @@ def test_t6g_jensen_check_bat_duoc_corr_va_slope_primary():
     assert primary["slope"] == pytest.approx(1.0)
     assert out["best_scaling"] == "jensen_sigma2"
     assert out["mechanism_conclusion"] == "primary_jensen_pass"
+
+
+def test_t6h_kappa_map_dung_dau_va_tach_cbr():
+    rows = []
+    for mode in ("h2", "poisson"):
+        for rho in (0.7, 0.85):
+            for a in (0.2, 0.9):
+                for tau in (0.2, 1.0, 5.0):
+                    x = 0.010 + 0.020 * a + 0.002 * tau + 0.001 * rho
+                    for seed in (11, 12, 13):
+                        rows.append(
+                            {
+                                "block": "A",
+                                "mode": mode,
+                                "rho_bar": rho,
+                                "a": a,
+                                "tau_rho": tau,
+                                "seed": seed,
+                                "err_jensen_ms": -x,
+                                "err_dyn_ms": 0.25 * x + 0.003,
+                                "d_sampling_ms": 0.0,
+                            }
+                        )
+    for a in (0.2, 0.9):
+        for tau in (0.2, 1.0, 5.0):
+            x = 0.020 + 0.010 * a + 0.003 * tau
+            for seed in (11, 12, 13):
+                rows.append(
+                    {
+                        "block": "B",
+                        "mode": "cbr",
+                        "rho_bar": 0.98,
+                        "a": a,
+                        "tau_rho": tau,
+                        "seed": seed,
+                        "err_jensen_ms": -x,
+                        "err_dyn_ms": 0.80 * x - 0.010,
+                        "d_sampling_ms": 0.0,
+                    }
+                )
+
+    out = kappa_map(rows)
+
+    assert out["stable_global"]["kappa"] == pytest.approx(0.25)
+    assert out["stable_global"]["intercept"] == pytest.approx(0.003)
+    assert out["cbr_0p98"]["kappa"] == pytest.approx(0.80)
+    assert "Lambda<3" in out["by_lambda_bin"]

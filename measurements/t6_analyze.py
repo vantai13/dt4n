@@ -16,6 +16,7 @@ import argparse
 import json
 import math
 import os
+import random
 from collections import Counter, defaultdict
 from typing import Any, Dict, Iterable, List, Mapping, Sequence, Tuple
 
@@ -35,7 +36,8 @@ DELTA_HAT_MS = 0.0158
 DELTA_SE_MS = 0.0023
 HOMOGENEOUS_N_LATE_MAX = 1e-3
 CONTROL_STATE = "results/phase-T/control_state.json"
-SCRIPT_VERSION = "t6_analyze_v6_t6g_jensen_check"
+SCRIPT_VERSION = "t6_analyze_v7_t6h_kappa_map"
+KAPPA_BOOTSTRAP_N = 2000
 
 # From docs/phase-T/01-two-timescales.md, locked before T.6b.
 T_RELAX_P90_S = {
@@ -1033,6 +1035,142 @@ def jensen_mechanism_check(rows: Sequence[Row]) -> Dict[str, Any]:
     }
 
 
+def _stable_points_for_kappa(rows: Sequence[Row], include_cbr: bool = False) -> List[Row]:
+    selected = [
+        row
+        for row in rows
+        if str(row.get("block")) != "S"
+        and "err_dyn_ms" in row
+        and (include_cbr or str(row.get("mode")) != "cbr")
+    ]
+    return _group_mean_rows(selected, ("mode", "rho_bar", "a", "tau_rho"))
+
+
+def _lambda_bin(row: Mapping[str, Any]) -> str:
+    lam = _lambda_p90(row)
+    if lam is None:
+        return "unknown"
+    if lam < 3.0:
+        return "Lambda<3"
+    if lam < 10.0:
+        return "3<=Lambda<10"
+    return "Lambda>=10"
+
+
+def _seed_from_label(label: str) -> int:
+    return sum((idx + 1) * ord(ch) for idx, ch in enumerate(str(label))) % (2**32)
+
+
+def _percentile(sorted_values: Sequence[float], q: float) -> float:
+    if not sorted_values:
+        return float("nan")
+    pos = float(q) * (len(sorted_values) - 1)
+    lo = int(math.floor(pos))
+    hi = int(math.ceil(pos))
+    if lo == hi:
+        return float(sorted_values[lo])
+    frac = pos - lo
+    return float(sorted_values[lo]) * (1.0 - frac) + float(sorted_values[hi]) * frac
+
+
+def _kappa_fit(points: Sequence[Row], label: str, bootstrap_n: int = KAPPA_BOOTSTRAP_N) -> Row:
+    if len(points) < 3:
+        return {
+            "label": label,
+            "n": len(points),
+            "kappa": None,
+            "ci95": None,
+            "corr": None,
+        }
+    x = [-float(row["err_jensen_ms"]) for row in points]
+    y = [float(row["err_dyn_ms"]) for row in points]
+    fit = _regression(x, y)
+    reverse = _regression(y, x)
+    rng = random.Random(_seed_from_label(label))
+    boots = []
+    n = len(points)
+    for _ in range(int(bootstrap_n)):
+        idx = [rng.randrange(n) for _ in range(n)]
+        xb = [x[i] for i in idx]
+        yb = [y[i] for i in idx]
+        try:
+            boots.append(float(_regression(xb, yb)["slope"]))
+        except ValueError:
+            continue
+    boots.sort()
+    ci = [_percentile(boots, 0.025), _percentile(boots, 0.975)] if boots else None
+    return {
+        "label": label,
+        "n": n,
+        "kappa": fit["slope"],
+        "kappa_through_origin": fit["slope_through_origin"],
+        "ci95": ci,
+        "corr": fit["corr"],
+        "intercept": fit["intercept"],
+        "x_mean_neg_err_jensen_ms": fit["x_mean"],
+        "y_mean_err_dyn_ms": fit["y_mean"],
+        "reverse_slope_neg_err_jensen_on_err_dyn": reverse["slope"],
+        "reverse_corr": reverse["corr"],
+        "one_over_kappa": 1.0 / fit["slope"] if abs(float(fit["slope"])) > 1e-12 else None,
+        "bootstrap_n": int(bootstrap_n),
+    }
+
+
+def _kappa_by(points: Sequence[Row], key_fn, prefix: str) -> Dict[str, Row]:
+    grouped: Dict[str, List[Row]] = defaultdict(list)
+    for row in points:
+        grouped[str(key_fn(row))].append(row)
+    return {
+        key: _kappa_fit(grouped[key], "%s:%s" % (prefix, key))
+        for key in sorted(grouped, key=lambda v: (str(v)))
+    }
+
+
+def kappa_map(rows: Sequence[Row]) -> Dict[str, Any]:
+    """A21/T.6h -- kappa = slope(err_dyn ~ -err_jensen)."""
+    stable = _stable_points_for_kappa(rows, include_cbr=False)
+    all_points = _stable_points_for_kappa(rows, include_cbr=True)
+    cbr = [row for row in all_points if str(row.get("mode")) == "cbr"]
+
+    global_fit = _kappa_fit(stable, "stable_global")
+    reverse_ratio = None
+    if global_fit.get("one_over_kappa") is not None:
+        reverse_ratio = abs(
+            float(global_fit["reverse_slope_neg_err_jensen_on_err_dyn"])
+        ) / abs(float(global_fit["one_over_kappa"]))
+
+    return {
+        "status": "exploratory_A21",
+        "definition": "kappa = OLS slope of err_dyn_ms ~ (-err_jensen_ms), with intercept",
+        "base_points": "mean by (mode,rho_bar,a,tau_rho)",
+        "bootstrap_n": KAPPA_BOOTSTRAP_N,
+        "stable_global": global_fit,
+        "attenuation_check": {
+            "reverse_slope": global_fit.get(
+                "reverse_slope_neg_err_jensen_on_err_dyn"
+            ),
+            "one_over_kappa": global_fit.get("one_over_kappa"),
+            "reverse_over_one_over_kappa": reverse_ratio,
+            "attenuation_supported": reverse_ratio is not None and reverse_ratio < 0.5,
+        },
+        "by_lambda_bin": _kappa_by(stable, _lambda_bin, "lambda_bin"),
+        "by_mode": _kappa_by(stable, lambda row: row["mode"], "mode"),
+        "by_rho_bar": _kappa_by(
+            stable, lambda row: "%g" % float(row["rho_bar"]), "rho_bar"
+        ),
+        "by_mode_rho_bar": _kappa_by(
+            stable,
+            lambda row: "%s@%g" % (row["mode"], float(row["rho_bar"])),
+            "mode_rho_bar",
+        ),
+        "by_a": _kappa_by(stable, lambda row: "%g" % float(row["a"]), "a"),
+        "by_tau_rho": _kappa_by(
+            stable, lambda row: "%g" % float(row["tau_rho"]), "tau_rho"
+        ),
+        "cbr_0p98": _kappa_fit(cbr, "cbr_0p98") if cbr else None,
+    }
+
+
 def t6b_diagnostics(rows: Sequence[Row]) -> Dict[str, Any]:
     regular = [
         row
@@ -1170,6 +1308,7 @@ def build_report(
     paired: bool = False,
     split_dynamics: bool = False,
     jensen_check: bool = False,
+    kappa: bool = False,
 ) -> Dict[str, Any]:
     regular = [row for row in rows if str(row.get("block")) != "S"]
     homogeneous = [
@@ -1212,6 +1351,11 @@ def build_report(
             "t6g_note": (
                 "Jensen mechanism check is exploratory under Amendment 20."
                 if jensen_check
+                else None
+            ),
+            "t6h_note": (
+                "Kappa map is exploratory under Amendment 21."
+                if kappa
                 else None
             ),
         },
@@ -1264,6 +1408,8 @@ def build_report(
             report["t6f_split_dynamics"] = split_by_dynamics(rows)
         if jensen_check:
             report["t6g_jensen_check"] = jensen_mechanism_check(rows)
+        if kappa:
+            report["t6h_kappa_map"] = kappa_map(rows)
     return report
 
 
@@ -1294,6 +1440,11 @@ def write_fake_sealed(public_rows: Sequence[Row], sealed_dir: str, model: LinkMo
 
 
 def _print_report_summary(report: Mapping[str, Any]) -> None:
+    def _fmt_ci(ci):
+        if not ci:
+            return "[None,None]"
+        return "[%+.3f,%+.3f]" % (float(ci[0]), float(ci[1]))
+
     counts = report["counts"]
     all_reg = report["summary_all_regular"]["err_qs_corrected_ms"]
     homog = report["summary_homogeneous_regular"]["err_qs_corrected_ms"]
@@ -1632,6 +1783,60 @@ def _print_report_summary(report: Mapping[str, Any]) -> None:
                 t6g["mechanism_conclusion"],
             )
         )
+    if "t6h_kappa_map" in report:
+        t6h = report["t6h_kappa_map"]
+        print("")
+        print("T6h kappa map (exploratory):")
+        g = t6h["stable_global"]
+        print(
+            "stable_global: n=%d kappa=%+.3f ci95=%s corr=%+.3f intercept=%+.6f"
+            % (
+                int(g["n"]),
+                float(g["kappa"]),
+                _fmt_ci(g["ci95"]),
+                float(g["corr"]),
+                float(g["intercept"]),
+            )
+        )
+        att = t6h["attenuation_check"]
+        print(
+            "attenuation: reverse_slope=%+.3f one_over_kappa=%+.3f ratio=%.3f supported=%s"
+            % (
+                float(att["reverse_slope"]),
+                float(att["one_over_kappa"]),
+                float(att["reverse_over_one_over_kappa"]),
+                att["attenuation_supported"],
+            )
+        )
+        for title, key in (
+            ("by_lambda_bin", "by_lambda_bin"),
+            ("by_a", "by_a"),
+            ("by_tau_rho", "by_tau_rho"),
+            ("by_mode_rho_bar", "by_mode_rho_bar"),
+        ):
+            print("=== %s ===" % title)
+            for name, item in t6h[key].items():
+                print(
+                    "  %-18s n=%2d kappa=%+.3f ci95=%s corr=%+.3f"
+                    % (
+                        name,
+                        int(item["n"]),
+                        float(item["kappa"]),
+                        _fmt_ci(item["ci95"]),
+                        float(item["corr"]),
+                    )
+                )
+        if t6h.get("cbr_0p98"):
+            item = t6h["cbr_0p98"]
+            print(
+                "cbr_0p98: n=%d kappa=%+.3f ci95=%s corr=%+.3f"
+                % (
+                    int(item["n"]),
+                    float(item["kappa"]),
+                    _fmt_ci(item["ci95"]),
+                    float(item["corr"]),
+                )
+            )
 
 
 def main() -> None:
@@ -1664,6 +1869,11 @@ def main() -> None:
         action="store_true",
         help="add exploratory A20 Jensen mechanism check",
     )
+    parser.add_argument(
+        "--kappa-map",
+        action="store_true",
+        help="add exploratory A21 kappa map",
+    )
     parser.add_argument("--out", default="-")
     parser.add_argument(
         "--make-fake-sealed",
@@ -1679,6 +1889,8 @@ def main() -> None:
         raise SystemExit("--split-dynamics can dung --baseline-dir")
     if args.jensen_check and not args.baseline_dir:
         raise SystemExit("--jensen-check can dung --baseline-dir")
+    if args.kappa_map and not args.baseline_dir:
+        raise SystemExit("--kappa-map can dung --baseline-dir")
 
     public_rows = _load_state_rows(args.state)
     model = LinkModelV2.load(MODEL_PATH)
@@ -1714,6 +1926,7 @@ def main() -> None:
         paired=args.paired,
         split_dynamics=args.split_dynamics,
         jensen_check=args.jensen_check,
+        kappa=args.kappa_map,
     )
     text = json.dumps(_jsonable(report), indent=1, sort_keys=True)
     _print_report_summary(report)
