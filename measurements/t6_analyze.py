@@ -35,7 +35,7 @@ DELTA_HAT_MS = 0.0158
 DELTA_SE_MS = 0.0023
 HOMOGENEOUS_N_LATE_MAX = 1e-3
 CONTROL_STATE = "results/phase-T/control_state.json"
-SCRIPT_VERSION = "t6_analyze_v5_t6f_split_dynamics"
+SCRIPT_VERSION = "t6_analyze_v6_t6g_jensen_check"
 
 # From docs/phase-T/01-two-timescales.md, locked before T.6b.
 T_RELAX_P90_S = {
@@ -736,6 +736,10 @@ def _mean_se_t(values: Sequence[float]) -> Dict[str, Any]:
     }
 
 
+def _normal_two_sided_p(z: float) -> float:
+    return math.erfc(abs(float(z)) / math.sqrt(2.0))
+
+
 def _pairwise_group_z(summary: Mapping[str, Row]) -> List[Row]:
     keys = sorted(summary, key=lambda value: float(value))
     out = []
@@ -835,6 +839,197 @@ def split_by_dynamics(rows: Sequence[Row]) -> Dict[str, Any]:
             "and both a/tau pairwise |z| exceed 2; "
             "thiet_bi if all pairwise a/tau |z| are below 2"
         ),
+    }
+
+
+def _group_mean_rows(rows: Sequence[Row], keys: Sequence[str]) -> List[Row]:
+    grouped: Dict[str, List[Row]] = defaultdict(list)
+    for row in rows:
+        grouped[_group_key(row, keys)].append(row)
+    out = []
+    for key in sorted(grouped):
+        values = grouped[key]
+        first = values[0]
+        out.append(
+            {
+                "group": key,
+                "mode": first.get("mode"),
+                "rho_bar": first.get("rho_bar"),
+                "a": first.get("a"),
+                "tau_rho": first.get("tau_rho"),
+                "n": len(values),
+                "err_dyn_ms": _mean([float(row["err_dyn_ms"]) for row in values]),
+                "err_jensen_ms": _mean(
+                    [float(row["err_jensen_ms"]) for row in values]
+                ),
+                "d_sampling_ms": _mean(
+                    [float(row["d_sampling_ms"]) for row in values]
+                ),
+            }
+        )
+    return out
+
+
+def _regression(x: Sequence[float], y: Sequence[float]) -> Dict[str, Any]:
+    if len(x) != len(y) or len(x) < 3:
+        raise ValueError("regression needs equal length n>=3")
+    xs = [float(v) for v in x]
+    ys = [float(v) for v in y]
+    n = len(xs)
+    mx = _mean(xs)
+    my = _mean(ys)
+    sxx = sum((v - mx) ** 2 for v in xs)
+    syy = sum((v - my) ** 2 for v in ys)
+    sxy = sum((vx - mx) * (vy - my) for vx, vy in zip(xs, ys))
+    slope = sxy / max(sxx, 1e-24)
+    intercept = my - slope * mx
+    corr = sxy / math.sqrt(max(sxx * syy, 1e-24))
+    slope_origin = sum(vx * vy for vx, vy in zip(xs, ys)) / max(
+        sum(vx * vx for vx in xs), 1e-24
+    )
+    residuals = [vy - (intercept + slope * vx) for vx, vy in zip(xs, ys)]
+    rss = sum(r * r for r in residuals)
+    residual_sd = math.sqrt(rss / max(n - 2, 1))
+    se_slope = residual_sd / math.sqrt(max(sxx, 1e-24))
+    return {
+        "n": n,
+        "x_mean": mx,
+        "y_mean": my,
+        "corr": corr,
+        "slope": slope,
+        "intercept": intercept,
+        "slope_through_origin": slope_origin,
+        "residual_sd": residual_sd,
+        "se_slope": se_slope,
+        "t_slope_eq_0": slope / max(se_slope, 1e-12),
+        "t_slope_eq_1": (slope - 1.0) / max(se_slope, 1e-12),
+    }
+
+
+def _jensen_comparisons(points: Sequence[Row]) -> Dict[str, Any]:
+    y = [float(row["err_dyn_ms"]) for row in points]
+    xs = {
+        "primary_err_jensen": [
+            float(row["err_jensen_ms"]) for row in points
+        ],
+        "negative_err_jensen": [
+            -float(row["err_jensen_ms"]) for row in points
+        ],
+        "negative_err_jensen_plus_sampling": [
+            -(float(row["err_jensen_ms"]) + float(row["d_sampling_ms"]))
+            for row in points
+        ],
+    }
+    out = {name: _regression(x, y) for name, x in xs.items()}
+    best = max(out, key=lambda name: abs(float(out[name]["corr"])))
+    return {
+        "comparisons": out,
+        "best_by_abs_corr": best,
+        "best": out[best],
+    }
+
+
+def jensen_mechanism_check(rows: Sequence[Row]) -> Dict[str, Any]:
+    """A20/T.6g -- compare err_dyn with preregistered Jensen terms."""
+    stable = [
+        row
+        for row in rows
+        if str(row.get("block")) != "S"
+        and str(row.get("mode")) != "cbr"
+        and "err_dyn_ms" in row
+    ]
+    split = split_by_dynamics(rows)
+    a_summary = split["by_a"]
+    low_a = a_summary["0.2"]
+    high_a = a_summary["0.9"]
+    obs_low = float(low_a["mean"])
+    se_low = float(low_a["se"])
+    high = float(high_a["mean"])
+    ratio = 0.2 / 0.9
+    scaling = {}
+    for name, exponent in (
+        ("instrument_sigma0", 0),
+        ("linear_sigma1", 1),
+        ("jensen_sigma2", 2),
+    ):
+        pred = high * (ratio**exponent)
+        z = (obs_low - pred) / max(se_low, 1e-12)
+        scaling[name] = {
+            "exponent": exponent,
+            "pred_a0p2_ms": pred,
+            "obs_a0p2_ms": obs_low,
+            "se_obs_a0p2_ms": se_low,
+            "z": z,
+            "p_normal_two_sided": _normal_two_sided_p(z),
+        }
+
+    tau = split["by_tau_rho"]
+    diff_tau_5_minus_0p2 = float(tau["5"]["mean"]) - float(tau["0.2"]["mean"])
+    se_tau_5_minus_0p2 = math.sqrt(
+        float(tau["5"]["se"]) ** 2 + float(tau["0.2"]["se"]) ** 2
+    )
+    z_tau = diff_tau_5_minus_0p2 / max(se_tau_5_minus_0p2, 1e-12)
+
+    grouped = _group_mean_rows(stable, ("mode", "rho_bar", "a", "tau_rho"))
+    by_mode_rho_a = _group_mean_rows(stable, ("mode", "rho_bar", "a"))
+    row_level = [
+        {
+            "err_dyn_ms": float(row["err_dyn_ms"]),
+            "err_jensen_ms": float(row["err_jensen_ms"]),
+            "d_sampling_ms": float(row["d_sampling_ms"]),
+        }
+        for row in stable
+    ]
+    group_comp = _jensen_comparisons(grouped)
+    mode_rho_a_comp = _jensen_comparisons(by_mode_rho_a)
+    row_comp = _jensen_comparisons(row_level)
+    primary = group_comp["comparisons"]["primary_err_jensen"]
+    best = group_comp["best"]
+    primary_pass = abs(float(primary["corr"])) >= 0.7 and 0.5 <= abs(
+        float(primary["slope"])
+    ) <= 1.5
+    secondary_pass = abs(float(best["corr"])) >= 0.7 and 0.5 <= abs(
+        float(best["slope"])
+    ) <= 1.5
+    instrument_rejected = abs(float(scaling["instrument_sigma0"]["z"])) >= 2.0
+    jensen_best_scaling = min(scaling, key=lambda key: abs(float(scaling[key]["z"])))
+
+    if primary_pass:
+        conclusion = "primary_jensen_pass"
+    elif secondary_pass:
+        conclusion = "secondary_sign_convention_pass"
+    elif instrument_rejected and jensen_best_scaling == "jensen_sigma2":
+        conclusion = "scaling_supports_jensen_primary_regression_not_confirmed"
+    else:
+        conclusion = "jensen_not_confirmed"
+
+    return {
+        "status": "exploratory_A20",
+        "stable_n_rows": len(stable),
+        "stable_n_groups_mode_rho_a_tau": len(grouped),
+        "stable_n_groups_mode_rho_a": len(by_mode_rho_a),
+        "a_scaling_tests": scaling,
+        "instrument_rejected_by_a": instrument_rejected,
+        "best_scaling": jensen_best_scaling,
+        "tau_5_minus_0p2": {
+            "diff_ms": diff_tau_5_minus_0p2,
+            "se_ms": se_tau_5_minus_0p2,
+            "z": z_tau,
+            "p_normal_two_sided": _normal_two_sided_p(z_tau),
+        },
+        "group_level_mode_rho_a_tau": group_comp,
+        "group_level_mode_rho_a": mode_rho_a_comp,
+        "row_level": row_comp,
+        "G1_primary_abs_corr_ge_0p7": abs(float(primary["corr"])) >= 0.7,
+        "G2_any_abs_slope_unit_order": any(
+            0.5 <= abs(float(item["slope"])) <= 1.5
+            for item in group_comp["comparisons"].values()
+        ),
+        "mechanism_conclusion": conclusion,
+        "notes": {
+            "primary": "x=err_jensen_ms, y=err_dyn_ms, grouped by mode/rho/a/tau",
+            "secondary": "negative sign conventions are reported, not selected post hoc",
+        },
     }
 
 
@@ -974,6 +1169,7 @@ def build_report(
     cell_level: bool = False,
     paired: bool = False,
     split_dynamics: bool = False,
+    jensen_check: bool = False,
 ) -> Dict[str, Any]:
     regular = [row for row in rows if str(row.get("block")) != "S"]
     homogeneous = [
@@ -1011,6 +1207,11 @@ def build_report(
             "t6f_note": (
                 "Dynamics-vs-instrumentation split is exploratory under Amendment 19."
                 if split_dynamics
+                else None
+            ),
+            "t6g_note": (
+                "Jensen mechanism check is exploratory under Amendment 20."
+                if jensen_check
                 else None
             ),
         },
@@ -1061,6 +1262,8 @@ def build_report(
             report["t6e_paired"] = paired_cell_test(paired_rows)
         if split_dynamics:
             report["t6f_split_dynamics"] = split_by_dynamics(rows)
+        if jensen_check:
+            report["t6g_jensen_check"] = jensen_mechanism_check(rows)
     return report
 
 
@@ -1375,6 +1578,60 @@ def _print_report_summary(report: Mapping[str, Any]) -> None:
                 t6f["instrumentation_support"],
             )
         )
+    if "t6g_jensen_check" in report:
+        t6g = report["t6g_jensen_check"]
+        print("")
+        print("T6g Jensen mechanism check (exploratory):")
+        print("=== a scaling tests: predicted a=0.2 from a=0.9 ===")
+        for name in ("instrument_sigma0", "linear_sigma1", "jensen_sigma2"):
+            item = t6g["a_scaling_tests"][name]
+            print(
+                "  %-18s pred=%+.6f obs=%+.6f z=%+.3f p=%.6f"
+                % (
+                    name,
+                    float(item["pred_a0p2_ms"]),
+                    float(item["obs_a0p2_ms"]),
+                    float(item["z"]),
+                    float(item["p_normal_two_sided"]),
+                )
+            )
+        tau = t6g["tau_5_minus_0p2"]
+        print(
+            "tau 5 - 0.2: diff=%+.6f +/- %.6f ms z=%+.3f p=%.6f"
+            % (
+                float(tau["diff_ms"]),
+                float(tau["se_ms"]),
+                float(tau["z"]),
+                float(tau["p_normal_two_sided"]),
+            )
+        )
+        print("=== grouped by mode/rho/a/tau ===")
+        comps = t6g["group_level_mode_rho_a_tau"]["comparisons"]
+        for name in (
+            "primary_err_jensen",
+            "negative_err_jensen",
+            "negative_err_jensen_plus_sampling",
+        ):
+            item = comps[name]
+            print(
+                "  %-32s corr=%+.3f slope=%+.3f intercept=%+.6f slope0=%+.3f n=%d"
+                % (
+                    name,
+                    float(item["corr"]),
+                    float(item["slope"]),
+                    float(item["intercept"]),
+                    float(item["slope_through_origin"]),
+                    int(item["n"]),
+                )
+            )
+        print(
+            "best_scaling=%s best_regression=%s conclusion=%s"
+            % (
+                t6g["best_scaling"],
+                t6g["group_level_mode_rho_a_tau"]["best_by_abs_corr"],
+                t6g["mechanism_conclusion"],
+            )
+        )
 
 
 def main() -> None:
@@ -1402,6 +1659,11 @@ def main() -> None:
         action="store_true",
         help="add exploratory A19 split by a and tau_rho",
     )
+    parser.add_argument(
+        "--jensen-check",
+        action="store_true",
+        help="add exploratory A20 Jensen mechanism check",
+    )
     parser.add_argument("--out", default="-")
     parser.add_argument(
         "--make-fake-sealed",
@@ -1415,6 +1677,8 @@ def main() -> None:
         raise SystemExit("--paired can dung --baseline-dir")
     if args.split_dynamics and not args.baseline_dir:
         raise SystemExit("--split-dynamics can dung --baseline-dir")
+    if args.jensen_check and not args.baseline_dir:
+        raise SystemExit("--jensen-check can dung --baseline-dir")
 
     public_rows = _load_state_rows(args.state)
     model = LinkModelV2.load(MODEL_PATH)
@@ -1449,6 +1713,7 @@ def main() -> None:
         cell_level=args.cell_level,
         paired=args.paired,
         split_dynamics=args.split_dynamics,
+        jensen_check=args.jensen_check,
     )
     text = json.dumps(_jsonable(report), indent=1, sort_keys=True)
     _print_report_summary(report)

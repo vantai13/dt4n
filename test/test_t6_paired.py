@@ -4,6 +4,7 @@ import pytest
 
 from measurements.t6_analyze import (
     assert_paired_mean_invariant,
+    jensen_mechanism_check,
     paired_cell_rows,
     split_by_dynamics,
 )
@@ -137,3 +138,36 @@ def test_t6f_ratio_lon_gia_khong_duoc_goi_la_dong_luc():
     assert out["max_tau_pairwise_abs_z"] < 2.0
     assert out["dynamic_support"] is False
     assert out["ket_luan_nghieng_ve"] == "thiet_bi"
+
+
+def test_t6g_jensen_check_bat_duoc_corr_va_slope_primary():
+    rows = []
+    for mode in ("h2", "poisson"):
+        for rho in (0.7, 0.85):
+            for a in (0.2, 0.9):
+                for tau in (0.2, 1.0, 5.0):
+                    base = -0.010 * (a / 0.2) ** 2
+                    for seed in (11, 12, 13, 14, 15):
+                        rows.append(
+                            {
+                                "block": "A",
+                                "mode": mode,
+                                "rho_bar": rho,
+                                "a": a,
+                                "tau_rho": tau,
+                                "seed": seed,
+                                "err_dyn_ms": base,
+                                "err_jensen_ms": base,
+                                "d_sampling_ms": 0.001,
+                            }
+                        )
+
+    out = jensen_mechanism_check(rows)
+    primary = out["group_level_mode_rho_a_tau"]["comparisons"]["primary_err_jensen"]
+
+    assert out["G1_primary_abs_corr_ge_0p7"] is True
+    assert out["G2_any_abs_slope_unit_order"] is True
+    assert primary["corr"] == pytest.approx(1.0)
+    assert primary["slope"] == pytest.approx(1.0)
+    assert out["best_scaling"] == "jensen_sigma2"
+    assert out["mechanism_conclusion"] == "primary_jensen_pass"
