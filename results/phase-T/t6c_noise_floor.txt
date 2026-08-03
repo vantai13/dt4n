@@ -1,0 +1,23 @@
+T.6c noise-floor diagnostic
+status: exploratory; predictions locked in docs/phase-T/00q-amendment-16.md
+
+mode        rho   n   sd_err_dyn  se_batch_tb  se_naive_tb    ratioP1/P2
+cbr       0.980  30     1.154796     0.632120     0.014898    0.547  cbr rieng
+h2        0.700  30     0.148773     0.270293     0.037244    1.817  P1=OK P2=OK
+h2        0.850  30     0.242955     0.296043     0.043106    1.219  P1=FAIL P2=OK
+h2        0.925  30     0.219112     0.278592     0.043476    1.271  P1=OK P2=OK
+h2        0.980  30     0.127530     0.253651     0.043200    1.989  P1=OK P2=OK
+poisson   0.700  30     0.049009     0.095664     0.014465    1.952  P1=OK P2=OK
+poisson   0.850  30     0.212294     0.301073     0.028230    1.418  P1=FAIL P2=OK
+poisson   0.925  30     0.278092     0.370384     0.035051    1.332  P1=FAIL P2=OK
+poisson   0.980  30     0.199153     0.410853     0.038346    2.063  P1=FAIL P2=FAIL
+
+P1 h2/poisson: 4/8 o trong [0.05, 0.28] ms
+P2 h2/poisson: 7/8 o co ratio trong [0.5, 2.0]
+P3 cbr@0.98: se_batch/sd_err_dyn = 0.547, cung bac va bao cao rieng
+
+Ket luan chan doan:
+- P1 qua chat voi mot so o tai cao: 4/8 pass.
+- P2 xac nhan: 7/8 o h2/poisson co se_batch cung bac voi sd_err_dyn.
+- se_naive nho hon se_batch rat nhieu, nen tu tuong quan hang doi la thanh phan quan trong.
+- D-T2 tung diem dang bi gioi han boi san nhieu cua phep do; can bao cao them tieu chi trung binh o.
