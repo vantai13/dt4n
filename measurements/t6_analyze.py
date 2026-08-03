@@ -35,7 +35,7 @@ DELTA_HAT_MS = 0.0158
 DELTA_SE_MS = 0.0023
 HOMOGENEOUS_N_LATE_MAX = 1e-3
 CONTROL_STATE = "results/phase-T/control_state.json"
-SCRIPT_VERSION = "t6_analyze_v2_t6b_exploratory"
+SCRIPT_VERSION = "t6_analyze_v3_t6d_cell_level"
 
 # From docs/phase-T/01-two-timescales.md, locked before T.6b.
 T_RELAX_P90_S = {
@@ -353,6 +353,8 @@ def baseline_cell_table(
         main = grouped.get(cell, [])
         dyn = [row.get("err_dyn_ms") for row in main]
         corrected = [row.get("err_qs_corrected_ms") for row in main]
+        se_batch = [row.get("se_batch_ms") for row in main]
+        se_naive = [row.get("se_naive_ms") for row in main]
         item = dict(baseline[cell])
         item.update(
             {
@@ -366,6 +368,8 @@ def baseline_cell_table(
                     abs(float(x)) for x in dyn if _finite(x)
                 )["mean"],
                 "sd_err_dyn_ms": _number_summary(dyn)["sd"],
+                "mean_se_batch_ms": _number_summary(se_batch)["mean"],
+                "mean_se_naive_ms": _number_summary(se_naive)["mean"],
                 "class_dyn": dict(
                     sorted(
                         Counter(
@@ -379,6 +383,161 @@ def baseline_cell_table(
         )
         out.append(item)
     return out
+
+
+def _wilcoxon_exact_two_sided_p(values: Sequence[float]) -> Dict[str, Any]:
+    """Exact signed-rank p-value for n small, using ranks 1..n without ties."""
+    vals = [float(x) for x in values if float(x) != 0.0]
+    n = len(vals)
+    order = sorted(range(n), key=lambda i: abs(vals[i]))
+    ranks = [0] * n
+    for rank, i in enumerate(order, 1):
+        ranks[i] = rank
+    w_plus = sum(rank for rank, value in zip(ranks, vals) if value > 0.0)
+    total = n * (n + 1) // 2
+    extreme = min(w_plus, total - w_plus)
+    count = 0
+    for mask in range(1 << n):
+        wp = 0
+        for i, rank in enumerate(ranks):
+            if mask & (1 << i):
+                wp += rank
+        if min(wp, total - wp) <= extreme:
+            count += 1
+    return {
+        "n": n,
+        "w_plus": w_plus,
+        "w_minus": total - w_plus,
+        "p_two_sided_exact": count / float(1 << n),
+    }
+
+
+def _sign_test_two_sided_p(neg: int, n: int) -> float:
+    extreme = min(int(neg), int(n) - int(neg))
+    tail = sum(math.comb(int(n), k) for k in range(extreme + 1)) / float(1 << int(n))
+    return min(1.0, 2.0 * tail)
+
+
+def cell_level_test(cells: Sequence[Row]) -> Dict[str, Any]:
+    """A17 -- test D-T2 at the cell level, not the point level.
+
+    This supplements, and does not replace, the original per-point T.6 result.
+    The analysis is exploratory under docs/phase-T/00r-amendment-17.md.
+    """
+    reg: List[Row] = []
+    cbr: List[Row] = []
+    for item in cells:
+        cell = dict(item)
+        n = int(cell["n_main"])
+        sd_dyn = float(cell["sd_err_dyn_ms"])
+        se_c = float(cell["se_C_ms"])
+        se_stat = sd_dyn / math.sqrt(n)
+        se_tot = math.sqrt(se_stat * se_stat + se_c * se_c)
+        mean_dyn = float(cell["mean_err_dyn_ms"])
+        cell.update(
+            {
+                "n": n,
+                "rho": float(cell["rho_bar"]),
+                "mean_dyn": mean_dyn,
+                "sd_dyn": sd_dyn,
+                "se_C": se_c,
+                "se_stat": se_stat,
+                "se_tot": se_tot,
+                "t": mean_dyn / max(se_tot, 1e-12),
+                "ub95": abs(mean_dyn) + 1.96 * se_tot,
+            }
+        )
+        if str(cell["mode"]) == "cbr":
+            cbr.append(cell)
+        else:
+            reg.append(cell)
+
+    w = [1.0 / max(float(cell["se_tot"]) ** 2, 1e-24) for cell in reg]
+    mu_w = sum(wi * float(cell["mean_dyn"]) for wi, cell in zip(w, reg)) / sum(w)
+    se_w = 1.0 / math.sqrt(sum(w))
+
+    means = [float(cell["mean_dyn"]) for cell in reg]
+    n_reg = len(means)
+    mu = _mean(means)
+    sd = _sd(means)
+    se = (sd / math.sqrt(n_reg)) if sd is not None else None
+    t975_df7 = 2.365
+    neg = sum(1 for value in means if value < 0.0)
+    wilcoxon = _wilcoxon_exact_two_sided_p(means)
+    pred = math.sqrt(_mean([float(cell["se_tot"]) ** 2 for cell in reg]))
+    ratio = pred / max(float(sd), 1e-12)
+
+    cbr_out = []
+    for cell in cbr:
+        se_batch = float(cell.get("mean_se_batch_ms", 0.0))
+        excess = math.sqrt(max(float(cell["sd_dyn"]) ** 2 - se_batch**2, 0.0))
+        cbr_out.append(
+            {
+                "mode": cell["mode"],
+                "rho": cell["rho"],
+                "mean": cell["mean_dyn"],
+                "sd_dyn": cell["sd_dyn"],
+                "se_batch": se_batch,
+                "se_tot": cell["se_tot"],
+                "t": cell["t"],
+                "ub95": cell["ub95"],
+                "du_vuot_nhieu_do": excess,
+            }
+        )
+
+    t_cells = [
+        {
+            "mode": cell["mode"],
+            "rho": cell["rho"],
+            "mean_dyn": cell["mean_dyn"],
+            "se_stat": cell["se_stat"],
+            "se_C": cell["se_C"],
+            "se_tot": cell["se_tot"],
+            "t": cell["t"],
+            "ub95": cell["ub95"],
+        }
+        for cell in reg + cbr
+    ]
+
+    return {
+        "status": "exploratory_A17",
+        "cell_table": t_cells,
+        "bao_thu": {
+            "mean": mu_w,
+            "se": se_w,
+            "t": mu_w / max(se_w, 1e-12),
+            "ci95": [mu_w - 1.96 * se_w, mu_w + 1.96 * se_w],
+            "ub_o_xau_nhat": max(float(cell["ub95"]) for cell in reg),
+        },
+        "thuc_nghiem": {
+            "mean": mu,
+            "sd_giua_o": sd,
+            "se": se,
+            "t": mu / max(float(se), 1e-12) if se is not None else None,
+            "df": n_reg - 1,
+            "ci95": [
+                mu - t975_df7 * float(se),
+                mu + t975_df7 * float(se),
+            ]
+            if se is not None
+            else None,
+        },
+        "phi_tham_so": {
+            "am": neg,
+            "duong": n_reg - neg,
+            "sign_test_p": _sign_test_two_sided_p(neg, n_reg),
+            "wilcoxon_w_plus": wilcoxon["w_plus"],
+            "wilcoxon_w_minus": wilcoxon["w_minus"],
+            "wilcoxon_p_two_sided_exact": wilcoxon["p_two_sided_exact"],
+        },
+        "mau_thuan_SE": {
+            "tan_du_doan": pred,
+            "tan_quan_sat": sd,
+            "ti_so": ratio,
+            "canh_bao": ratio > 2.0,
+        },
+        "cbr_tach_rieng": cbr_out,
+    }
 
 
 def t6b_diagnostics(rows: Sequence[Row]) -> Dict[str, Any]:
@@ -514,6 +673,7 @@ def build_report(
     baseline_dir: str | None = None,
     baseline_rows: Sequence[Row] | None = None,
     baseline: Mapping[Cell, Row] | None = None,
+    cell_level: bool = False,
 ) -> Dict[str, Any]:
     regular = [row for row in rows if str(row.get("block")) != "S"]
     homogeneous = [
@@ -536,6 +696,11 @@ def build_report(
             "t6b_note": (
                 "Baseline subtraction is exploratory under Amendment 15."
                 if baseline is not None
+                else None
+            ),
+            "t6d_note": (
+                "Cell-level D-T2 restatement is exploratory under Amendment 17."
+                if cell_level
                 else None
             ),
         },
@@ -561,10 +726,11 @@ def build_report(
         "rows": list(rows),
     }
     if baseline is not None:
+        cells = baseline_cell_table(rows, baseline)
         report["counts"]["n_baseline_control"] = (
             len(baseline_rows) if baseline_rows is not None else None
         )
-        report["baseline_cells"] = baseline_cell_table(rows, baseline)
+        report["baseline_cells"] = cells
         report["baseline_control_summary"] = grouped_summary(
             list(baseline_rows or []), ("mode", "rho_bar")
         )
@@ -573,6 +739,8 @@ def build_report(
             regular, ("mode", "rho_bar")
         )
         report["t6b_diagnostics"] = t6b_diagnostics(list(rows))
+        if cell_level:
+            report["t6d_cell_level"] = cell_level_test(cells)
     return report
 
 
@@ -709,6 +877,67 @@ def _print_report_summary(report: Mapping[str, Any]) -> None:
         print("T6b P1 = %s" % diag["P1_mean_abs_err_dyn_h2_poisson"])
         print("T6b P3 = %s" % diag["P3_quasi_static_khong_dung"])
         print("T6b P4 = %s" % diag["P4_cbr_0p98_largest"])
+    if "t6d_cell_level" in report:
+        t6d = report["t6d_cell_level"]
+        bt = t6d["bao_thu"]
+        emp = t6d["thuc_nghiem"]
+        nonp = t6d["phi_tham_so"]
+        se = t6d["mau_thuan_SE"]
+        print("")
+        print("T6d cell-level D-T2 restatement (exploratory):")
+        print(
+            "bao_thu: mean=%+.6f ms se=%.6f t=%+.3f ci95=[%+.6f,%+.6f] ub_worst=%.6f"
+            % (
+                float(bt["mean"]),
+                float(bt["se"]),
+                float(bt["t"]),
+                float(bt["ci95"][0]),
+                float(bt["ci95"][1]),
+                float(bt["ub_o_xau_nhat"]),
+            )
+        )
+        print(
+            "thuc_nghiem: mean=%+.6f ms sd=%.6f se=%.6f t=%+.3f ci95=[%+.6f,%+.6f]"
+            % (
+                float(emp["mean"]),
+                float(emp["sd_giua_o"]),
+                float(emp["se"]),
+                float(emp["t"]),
+                float(emp["ci95"][0]),
+                float(emp["ci95"][1]),
+            )
+        )
+        print(
+            "phi_tham_so: am=%d duong=%d sign_p=%.7f wilcoxon_w+=%s wilcoxon_p=%.7f"
+            % (
+                int(nonp["am"]),
+                int(nonp["duong"]),
+                float(nonp["sign_test_p"]),
+                nonp["wilcoxon_w_plus"],
+                float(nonp["wilcoxon_p_two_sided_exact"]),
+            )
+        )
+        print(
+            "mau_thuan_SE: tan_du_doan=%.6f tan_quan_sat=%.6f ti_so=%.3f canh_bao=%s"
+            % (
+                float(se["tan_du_doan"]),
+                float(se["tan_quan_sat"]),
+                float(se["ti_so"]),
+                se["canh_bao"],
+            )
+        )
+        for item in t6d["cbr_tach_rieng"]:
+            print(
+                "cbr_tach_rieng: rho=%.3f mean=%+.6f se_tot=%.6f t=%+.3f ub95=%.6f du_vuot_nhieu_do=%.6f"
+                % (
+                    float(item["rho"]),
+                    float(item["mean"]),
+                    float(item["se_tot"]),
+                    float(item["t"]),
+                    float(item["ub95"]),
+                    float(item["du_vuot_nhieu_do"]),
+                )
+            )
 
 
 def main() -> None:
@@ -721,6 +950,11 @@ def main() -> None:
         default=None,
         help="sealed dir for exploratory T.6b C-block baseline subtraction",
     )
+    parser.add_argument(
+        "--cell-level",
+        action="store_true",
+        help="add exploratory A17 cell-level restatement of D-T2",
+    )
     parser.add_argument("--out", default="-")
     parser.add_argument(
         "--make-fake-sealed",
@@ -728,6 +962,8 @@ def main() -> None:
         help="write fake sealed files to this directory and exit",
     )
     args = parser.parse_args()
+    if args.cell_level and not args.baseline_dir:
+        raise SystemExit("--cell-level can dung --baseline-dir")
 
     public_rows = _load_state_rows(args.state)
     model = LinkModelV2.load(MODEL_PATH)
@@ -759,6 +995,7 @@ def main() -> None:
         baseline_dir=args.baseline_dir,
         baseline_rows=baseline_rows,
         baseline=baseline,
+        cell_level=args.cell_level,
     )
     text = json.dumps(_jsonable(report), indent=1, sort_keys=True)
     _print_report_summary(report)
