@@ -144,6 +144,7 @@ def test_select_todo_resume_va_session():
 
 def test_retry_chi_danh_cho_cong_transient():
     assert should_retry(["A5-7_n_late"]) is True
+    assert should_retry(["A5-7_max_late"]) is True
     assert should_retry(["V-T6b_rho_bias"]) is False
     assert should_retry(["A5-7_n_late", "V-T6b_rho_bias"]) is False
 
@@ -194,6 +195,8 @@ def test_public_state_khong_lo_metric_niem_phong():
         "gates": {"V-T6b_rho_bias": True},
         "gate_fail": [],
         "env": {"python_executable": "/usr/bin/python3", "git_dirty": False},
+        "warn_n_late": True,
+        "attempts": [{"attempt": 1, "gate_fail": []}],
     }
     pub = public_row(row)
     sealed = sealed_row(row)
@@ -204,6 +207,8 @@ def test_public_state_khong_lo_metric_niem_phong():
     assert "vt5b_same_seed_rel" in pub
     assert "loss" in pub
     assert "env" in pub
+    assert "warn_n_late" in pub
+    assert "attempts" in pub
     assert "q_mean_ms" not in pub
     assert "delta_pasta_ms" not in pub
     assert sealed["q_mean_ms"] == 9.5
@@ -245,6 +250,8 @@ def test_record_row_success_xoa_failed_row_cu(tmp_path):
     record_row(state, row, state_path, sealed_dir, complete=True)
 
     assert state["failed_rows"] == []
+    assert state["failed_row_history"][0]["pid"] == "old"
+    assert state["failed_row_history"][0]["resolution"] == "rerun_passed"
     assert state["done_idx"] == [7]
     assert len(state["rows"]) == 1
     assert state["rows"][0]["pid"] == "new"

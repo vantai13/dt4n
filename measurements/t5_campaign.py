@@ -71,6 +71,7 @@ GATE_FIELDS = {
     "meas_s",
     "attempt",
     "attempt1_fail",
+    "attempts",
     "env",
     "wall_utc",
     "gates",
@@ -93,6 +94,7 @@ GATE_FIELDS = {
     "socket_drops",
     "n_foreign",
     "n_late_ratio",
+    "warn_n_late",
     "max_late_ms",
     "n_recv_unique",
     "loss",
@@ -291,6 +293,15 @@ def public_row(row: Dict[str, Any]) -> Dict[str, Any]:
     return {key: row[key] for key in sorted(GATE_FIELDS) if key in row}
 
 
+def attempt_snapshot(row: Dict[str, Any]) -> Dict[str, Any]:
+    """Public, non-sealed snapshot of one attempt."""
+    return {
+        key: row[key]
+        for key in sorted(GATE_FIELDS - {"attempts"})
+        if key in row
+    }
+
+
 def sealed_row(row: Dict[str, Any]) -> Dict[str, Any]:
     """Fields withheld until unblinding."""
     return {key: value for key, value in row.items() if key not in GATE_FIELDS}
@@ -316,6 +327,17 @@ def record_row(
 ) -> None:
     save_sealed_row(row, sealed_dir)
     idx = int(row["idx"])
+    old_failed_same = [
+        old for old in state.get("failed_rows", []) if int(old.get("idx", -1)) == idx
+    ]
+    if complete and old_failed_same:
+        history = state.setdefault("failed_row_history", [])
+        for old in old_failed_same:
+            entry = dict(old)
+            entry["resolved_by_pid"] = row.get("pid")
+            entry["resolved_wall_utc"] = row.get("wall_utc")
+            entry["resolution"] = "rerun_passed"
+            history.append(entry)
     state["rows"] = [
         old for old in state.get("rows", []) if int(old.get("idx", -1)) != idx
     ]
@@ -541,6 +563,7 @@ def measure(
     )
     row["gate_fail"] = [name for name, ok in gates.items() if not ok]
     row["gates"] = gates
+    row["warn_n_late"] = float(row["n_late_ratio"]) > 0.001
     return row
 
 
@@ -608,6 +631,7 @@ def run_live(args: argparse.Namespace) -> None:
         setup_measure_qdisc(intf_toward(s1, "s2"), BW, Q)
         t0 = time.time()
         for k, point in enumerate(todo, 1):
+            attempts_history: List[Dict[str, Any]] = []
             row = measure(
                 net,
                 point,
@@ -617,6 +641,7 @@ def run_live(args: argparse.Namespace) -> None:
                 run_env=run_env,
             )
             row["attempt"] = 1
+            attempts_history.append(attempt_snapshot(row))
             if row["gate_fail"]:
                 if should_retry(row["gate_fail"]):
                     print(
@@ -633,8 +658,10 @@ def run_live(args: argparse.Namespace) -> None:
                     )
                     row2["attempt"] = 2
                     row2["attempt1_fail"] = row["gate_fail"]
+                    attempts_history.append(attempt_snapshot(row2))
                     row = row2
                 else:
+                    row["attempts"] = attempts_history
                     record_row(state, row, args.state, args.sealed_dir, complete=False)
                     raise SystemExit(
                         "gate deterministic fail: %s; dung chien dich"
@@ -642,12 +669,14 @@ def run_live(args: argparse.Namespace) -> None:
                     )
 
             if row["gate_fail"]:
+                row["attempts"] = attempts_history
                 record_row(state, row, args.state, args.sealed_dir, complete=False)
                 raise SystemExit(
                     "gate van fail sau retry: %s; dung chien dich"
                     % ",".join(row["gate_fail"])
                 )
 
+            row["attempts"] = attempts_history
             record_row(state, row, args.state, args.sealed_dir, complete=True)
 
             eta = (time.time() - t0) / k * (len(todo) - k) / 3600.0

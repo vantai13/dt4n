@@ -60,6 +60,7 @@ def _row_for(point, traj, sched, rho_bias=None):
         "socket_drops": 0,
         "n_foreign": 0,
         "n_late_ratio": 0.0,
+        "max_late_ms": 0.0,
     }
 
 
@@ -190,6 +191,14 @@ def _mutant_case(name):
         sched = build_varying_schedule(point["mode"], tr, BW, point["seed"])
         row = _row_for(point, tr, sched, rho_bias=0.02)
         return row, tr, sched
+    if name == "sender_stall":
+        point = _const_point()
+        tr = make_traj(point)
+        sched = build_varying_schedule(point["mode"], tr, BW, point["seed"])
+        row = _row_for(point, tr, sched)
+        row["n_late_ratio"] = 0.02
+        row["max_late_ms"] = 200.0
+        return row, tr, sched
     raise KeyError(name)
 
 
@@ -230,7 +239,14 @@ def test_gate_specs_khai_bao_corr_group_cho_moi_cong():
         assert spec.name == name
         assert hasattr(spec, "corr_group")
         assert spec.corr_group in (None, "seed", "rho_bar")
-        assert spec.reference_sd_source in ("analytic", "replicates", "cross_seed", "exact")
+        assert spec.reference_sd_source in (
+            "analytic",
+            "replicates",
+            "cross_seed",
+            "exact",
+            "invariant",
+            "empirical_g3_127",
+        )
         assert spec.reference_sd_source != "guessed"
         assert spec.relax_policy in ("threshold", "never")
 
@@ -278,6 +294,28 @@ def test_ba_cong_bit_exact_duoc_khai_bao_day_du():
     want = {"V-T0_digest_khop", "V-T5a_delegation", "V-T5a_phase_l_digest"}
     got = {name for name, spec in GATES.items() if spec.relax_policy == "never"}
     assert got == want, f"thieu/thua cong bit-exact: {got ^ want}"
+
+
+def test_reference_sd_source_khai_bao_trung_thuc():
+    """Catch threshold provenance claims that make meta-tests toothless.
+
+    A5-7_n_late used to claim ``analytic`` even though its 1e-3 threshold was a
+    hand-picked inherited constant. That false declaration made the false-fail
+    meta-test trust the wrong model. See docs/phase-T/00o-amendment-14.md.
+    """
+    hop_le = {"analytic", "replicates", "cross_seed", "exact", "invariant", "empirical_g3_127"}
+    for name, spec in GATES.items():
+        assert spec.reference_sd_source in hop_le, f"{name}: nguon do tan la lu"
+        if spec.reference_sd_source == "analytic":
+            if spec.noise_fn is not None:
+                continue
+            threshold = spec.threshold_fn({}, object(), object())
+            la_nhi_phan = spec.noise_fn is None and float(threshold) == 0.0
+            assert la_nhi_phan, (
+                f"{name}: khai 'analytic' thi phai co noise_fn dan duoc, "
+                f"hoac phai la cong nhi phan nguong 0. Khong duoc dung "
+                f"'analytic' cho mot so tron chon tay."
+            )
 
 
 @pytest.mark.parametrize("gate_name", sorted(GATES))

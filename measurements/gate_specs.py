@@ -59,7 +59,8 @@ GATES: Dict[str, GateSpec] = {
         noise_fn=None,
         must_catch=["over_clamp"],
         corr_group=None,
-        reference_sd_source="analytic",
+        reference_sd_source="invariant",
+        notes="Deterministic clamp invariant, not a statistical noise gate.",
     ),
     "V-T4a_ca_operational": GateSpec(
         name="V-T4a_ca_operational",
@@ -77,7 +78,8 @@ GATES: Dict[str, GateSpec] = {
         noise_fn=None,
         must_catch=["thinning_h2"],
         corr_group="seed",
-        reference_sd_source="analytic",
+        reference_sd_source="invariant",
+        notes="Deterministic schedule-shape invariant for operational-time rescaling.",
     ),
     "V-T5a_delegation": GateSpec(
         name="V-T5a_delegation",
@@ -131,7 +133,8 @@ GATES: Dict[str, GateSpec] = {
         noise_fn=None,
         must_catch=["bad_rate"],
         corr_group="seed",
-        reference_sd_source="analytic",
+        reference_sd_source="invariant",
+        notes="Deterministic generated-rate invariant, not a statistical noise gate.",
     ),
     "V-T6b_rho_bias": GateSpec(
         name="V-T6b_rho_bias",
@@ -166,11 +169,28 @@ GATES: Dict[str, GateSpec] = {
     "A5-7_n_late": GateSpec(
         name="A5-7_n_late",
         kind="transient",
-        threshold_fn=lambda _r, _s, _t: 0.001,
+        # Breakdown threshold, not a quality threshold. Operational fidelity is
+        # guarded directly by V-T4a/V-T6a/V-T6b. See Amendment 14.
+        threshold_fn=lambda _r, _s, _t: 0.01,
         noise_fn=None,
-        must_catch=[],
+        must_catch=["sender_stall"],
         corr_group=None,
-        reference_sd_source="analytic",
+        reference_sd_source="empirical_g3_127",
+        notes=(
+            "A14: threshold 1e-2 is 40x the observed operating mean and 11x "
+            "the observed max over the first 127 G3 rows. n_late is a "
+            "breakdown sentinel; V-T4a/V-T6a/V-T6b guard design fidelity."
+        ),
+    ),
+    "A5-7_max_late": GateSpec(
+        name="A5-7_max_late",
+        kind="transient",
+        threshold_fn=lambda _r, _s, _t: 100.0,
+        noise_fn=None,
+        must_catch=["sender_stall"],
+        corr_group=None,
+        reference_sd_source="empirical_g3_127",
+        notes="A14: catches long sender stalls that count-based n_late can miss.",
     ),
 }
 

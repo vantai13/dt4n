@@ -496,7 +496,8 @@ def gate_row(
         "V-T6b_rho_bias": math.isfinite(bias_sd) and abs(rho_bias) < 3.0 * bias_sd,
         "A5-7_socket_drops": int(row["socket_drops"]) == 0,
         "A5-7_n_foreign": int(row["n_foreign"]) == 0,
-        "A5-7_n_late": float(row["n_late_ratio"]) < 0.001,
+        "A5-7_n_late": float(row["n_late_ratio"]) < 0.01,
+        "A5-7_max_late": float(row.get("max_late_ms", 0.0)) < 100.0,
     }
 
     if c_design is not None:

@@ -105,6 +105,7 @@ def test_gate_row_bat_loi_van_hanh_va_giu_cac_cong_dung():
         "socket_drops": 0,
         "n_foreign": 0,
         "n_late_ratio": 0.0,
+        "max_late_ms": 0.0,
     }
     good = gate_row(row, tr, sched, MODEL, MODEL.sigma("h2", BW, Q, 0.85))
     assert all(good.values())
@@ -118,6 +119,7 @@ def test_gate_row_bat_loi_van_hanh_va_giu_cac_cong_dung():
         "socket_drops": 1,
         "n_foreign": 2,
         "n_late_ratio": 0.01,
+        "max_late_ms": 100.0,
     }
     out = gate_row(bad, tr, sched, MODEL, MODEL.sigma("h2", BW, Q, 0.85))
     assert out["V-T0_digest_khop"] is False
@@ -125,6 +127,7 @@ def test_gate_row_bat_loi_van_hanh_va_giu_cac_cong_dung():
     assert out["A5-7_socket_drops"] is False
     assert out["A5-7_n_foreign"] is False
     assert out["A5-7_n_late"] is False
+    assert out["A5-7_max_late"] is False
 
 
 def test_v_t5_phai_chay_tren_h2_hoac_poisson_khong_duoc_chi_cbr():

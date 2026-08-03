@@ -479,6 +479,8 @@ Xac nhan sau Amendment 10, truoc khi resume G2/G3 T.5:
     va danh dau cong bit-exact `relax_policy="never"`.
 [x] Amendment 13: C' pass 45/45 nhung phat hien instrument offset cong tinh
     `Delta_hat = +0.01578 ms`; G3 phai start tu worktree sach/tagged.
+[x] Amendment 14: A5-7_n_late thanh nguong sup do 1e-2, them A5-7_max_late,
+    warn_n_late, attempt history, va meta-test khai bao source trung thuc.
 ```
 
 Ky: Codex theo yeu cau owner repo DT4N

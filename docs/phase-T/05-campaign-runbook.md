@@ -294,6 +294,11 @@ lam `git_dirty=True`. Runner `stage=main` se tu choi chay neu cay lam viec ban.
 Khuyen nghi chay mot mach trong tmux de fingerprint dau phien gan cho toan bo
 G3. Tong main khoang 8.4-9.1 gio.
 
+Sau Amendment 14, neu G3 da dung tai idx 127 vi `A5-7_n_late`, resume tu cung
+`campaign_state.json`. Runner se chay lai idx 127 vi idx nay khong nam trong
+`done_idx`; row fail cu se duoc chuyen vao `failed_row_history` khi rerun pass.
+Canh bao `warn_n_late` duoc giu de T.6 lam sensitivity analysis.
+
 Preflight:
 
 ```bash
