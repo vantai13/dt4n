@@ -94,13 +94,19 @@ do `cbr / poisson / h2 / onoff` voi `c_a` la truc thiet ke thay cho `kappa`.
    `se_batch`.
 6. **Do chech uoc luong dac trung.** `sigma_hat` va `tau_hat` deu chech am
    duoi cua so huu han. Da hieu chinh giai tich trong T-G2.
-7. **Sentinel khong phai mau doc lap.** Block `S` lap lai seed `999`; dung de
-   canh drift/stability, khong can trong gate dac trung bo sinh.
-8. **`cbr` chi ton tai o `rho=0.98`.** Khong tach duoc anh huong cua mode
+7. **`cbr` chi ton tai o `rho=0.98`.** Khong tach duoc anh huong cua mode
    khoi anh huong cua `rho` cho che do tat dinh.
-9. **Baseline khoi C chi 5 seed/o.** Do chinh xac cua moi so sanh chua
+8. **Baseline khoi C chi 5 seed/o.** Do chinh xac cua moi so sanh chua
    baseline bi gioi han boi khoi C, khong boi 279 diem khoi chinh.
-10. **`c_s = 0` la gia dinh cau tao**, khong phai so do.
+9. **`c_s = 0` la gia dinh cau tao**, khong phai so do.
+10. **Mo hinh nhieu `c_a` bao thu.** `sd(ca_operational_z) = 0.744` tren
+    324 hang (ky vong 1.0 neu mo hinh chinh xac). SE giai tich cao hon do
+    tan thuc te khoang 25% (phuong sai ~1.8 lan). Huong bao thu: giam fail
+    gia, khong tao ket luan sai. Ket hop voi `mean(z) = +0.95` do o khoi C',
+    mo hinh vua co do lech duong nho vua uoc luong thua do tan.
+11. **Chinh sach mau cho T-G2.** 9 hang `block S` (sentinel, `seed=999`
+    lap lai) bi loai khoi kiem phan bo vi khong phai mau doc lap. Neu tinh
+    ca chung, T-G2 la 47/48 thay vi 48/48. Bao cao ca hai con so.
 
 ---
 
