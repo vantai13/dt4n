@@ -35,7 +35,7 @@ DELTA_HAT_MS = 0.0158
 DELTA_SE_MS = 0.0023
 HOMOGENEOUS_N_LATE_MAX = 1e-3
 CONTROL_STATE = "results/phase-T/control_state.json"
-SCRIPT_VERSION = "t6_analyze_v4_t6e_paired"
+SCRIPT_VERSION = "t6_analyze_v5_t6f_split_dynamics"
 
 # From docs/phase-T/01-two-timescales.md, locked before T.6b.
 T_RELAX_P90_S = {
@@ -719,6 +719,125 @@ def paired_cell_test(paired: Sequence[Row]) -> Dict[str, Any]:
     }
 
 
+def _mean_se_t(values: Sequence[float]) -> Dict[str, Any]:
+    vals = [float(value) for value in values]
+    sd = _sd(vals)
+    se = float(sd) / math.sqrt(len(vals)) if sd is not None else None
+    mean = _mean(vals)
+    return {
+        "n": len(vals),
+        "mean": mean,
+        "sd": sd,
+        "se": se,
+        "t": mean / max(float(se), 1e-12) if se is not None else None,
+        "ci95_approx": [mean - 1.96 * float(se), mean + 1.96 * float(se)]
+        if se is not None
+        else None,
+    }
+
+
+def _pairwise_group_z(summary: Mapping[str, Row]) -> List[Row]:
+    keys = sorted(summary, key=lambda value: float(value))
+    out = []
+    for i, left in enumerate(keys):
+        for right in keys[i + 1 :]:
+            a = summary[left]
+            b = summary[right]
+            se = math.sqrt(float(a["se"]) ** 2 + float(b["se"]) ** 2)
+            diff = float(a["mean"]) - float(b["mean"])
+            out.append(
+                {
+                    "left": left,
+                    "right": right,
+                    "diff_ms": diff,
+                    "se_diff_ms": se,
+                    "z": diff / max(se, 1e-12),
+                }
+            )
+    return out
+
+
+def split_by_dynamics(rows: Sequence[Row]) -> Dict[str, Any]:
+    """A19 -- split err_dyn by a and tau_rho.
+
+    This distinguishes a dynamics-like scaling pattern from a flat
+    instrumentation/lookup offset. It is a relative diagnostic; absolute
+    cell-level error bars remain the paired A18 result.
+    """
+    stable = [
+        row
+        for row in rows
+        if str(row.get("block")) != "S"
+        and str(row.get("mode")) != "cbr"
+        and "err_dyn_ms" in row
+    ]
+    cbr = [
+        row
+        for row in rows
+        if str(row.get("block")) != "S"
+        and str(row.get("mode")) == "cbr"
+        and "err_dyn_ms" in row
+    ]
+
+    by_a: Dict[str, List[float]] = defaultdict(list)
+    by_tau: Dict[str, List[float]] = defaultdict(list)
+    for row in stable:
+        by_a["%g" % float(row["a"])].append(float(row["err_dyn_ms"]))
+        by_tau["%g" % float(row["tau_rho"])].append(float(row["err_dyn_ms"]))
+
+    a_summary = {key: _mean_se_t(values) for key, values in sorted(by_a.items())}
+    tau_summary = {
+        key: _mean_se_t(values) for key, values in sorted(by_tau.items(), key=lambda x: float(x[0]))
+    }
+    a02 = float(a_summary["0.2"]["mean"])
+    a09 = float(a_summary["0.9"]["mean"])
+    a_ratio = abs(a09) / max(abs(a02), 1e-12)
+    a_pairwise = _pairwise_group_z(a_summary)
+    max_a_pairwise_abs_z = max(abs(float(row["z"])) for row in a_pairwise)
+
+    tau_order = ["0.2", "1", "5"]
+    tau_abs = [abs(float(tau_summary[key]["mean"])) for key in tau_order]
+    tau_dynamic_monotonic = tau_abs[0] > tau_abs[1] > tau_abs[2]
+    tau_pairwise = _pairwise_group_z(tau_summary)
+    max_tau_pairwise_abs_z = max(abs(float(row["z"])) for row in tau_pairwise)
+
+    dynamic_support = (
+        a_ratio > 2.0
+        and tau_dynamic_monotonic
+        and max_a_pairwise_abs_z > 2.0
+        and max_tau_pairwise_abs_z > 2.0
+    )
+    instrumentation_support = max_a_pairwise_abs_z < 2.0 and max_tau_pairwise_abs_z < 2.0
+    if dynamic_support:
+        conclusion = "dong_luc"
+    elif instrumentation_support:
+        conclusion = "thiet_bi"
+    else:
+        conclusion = "khong_phan_biet_duoc"
+
+    return {
+        "status": "exploratory_A19",
+        "stable_n": len(stable),
+        "cbr_excluded_n": len(cbr),
+        "by_a": a_summary,
+        "by_tau_rho": tau_summary,
+        "a_ratio_abs_0p9_over_0p2": a_ratio,
+        "a_pairwise": a_pairwise,
+        "max_a_pairwise_abs_z": max_a_pairwise_abs_z,
+        "tau_abs_dynamic_monotonic": tau_dynamic_monotonic,
+        "tau_pairwise": tau_pairwise,
+        "max_tau_pairwise_abs_z": max_tau_pairwise_abs_z,
+        "dynamic_support": dynamic_support,
+        "instrumentation_support": instrumentation_support,
+        "ket_luan_nghieng_ve": conclusion,
+        "decision_rule": (
+            "dong_luc if ratio>2, |tau0.2|>|tau1|>|tau5|, "
+            "and both a/tau pairwise |z| exceed 2; "
+            "thiet_bi if all pairwise a/tau |z| are below 2"
+        ),
+    }
+
+
 def t6b_diagnostics(rows: Sequence[Row]) -> Dict[str, Any]:
     regular = [
         row
@@ -854,6 +973,7 @@ def build_report(
     baseline: Mapping[Cell, Row] | None = None,
     cell_level: bool = False,
     paired: bool = False,
+    split_dynamics: bool = False,
 ) -> Dict[str, Any]:
     regular = [row for row in rows if str(row.get("block")) != "S"]
     homogeneous = [
@@ -886,6 +1006,11 @@ def build_report(
             "t6e_note": (
                 "Paired-by-seed error bars are exploratory under Amendment 18."
                 if paired
+                else None
+            ),
+            "t6f_note": (
+                "Dynamics-vs-instrumentation split is exploratory under Amendment 19."
+                if split_dynamics
                 else None
             ),
         },
@@ -934,6 +1059,8 @@ def build_report(
                 paired_rows, cells
             )
             report["t6e_paired"] = paired_cell_test(paired_rows)
+        if split_dynamics:
+            report["t6f_split_dynamics"] = split_by_dynamics(rows)
     return report
 
 
@@ -1196,6 +1323,58 @@ def _print_report_summary(report: Mapping[str, Any]) -> None:
             "T6e R5 strongest=%s pass=%s"
             % (r5["observed_largest_cell"], r5["pass"])
         )
+    if "t6f_split_dynamics" in report:
+        t6f = report["t6f_split_dynamics"]
+        print("")
+        print("T6f dynamics-vs-instrumentation split (exploratory):")
+        print("=== theo a ===")
+        for key in sorted(t6f["by_a"], key=lambda value: float(value)):
+            item = t6f["by_a"][key]
+            print(
+                "  a=%-4s n=%3d mean=%+.6f +/- %.6f ms t=%+.3f"
+                % (
+                    key,
+                    int(item["n"]),
+                    float(item["mean"]),
+                    float(item["se"]),
+                    float(item["t"]),
+                )
+            )
+        print(
+            "  ratio |a=0.9|/|a=0.2| = %.3f ; max_pairwise_a_abs_z=%.3f"
+            % (
+                float(t6f["a_ratio_abs_0p9_over_0p2"]),
+                float(t6f["max_a_pairwise_abs_z"]),
+            )
+        )
+        print("=== theo tau_rho ===")
+        for key in sorted(t6f["by_tau_rho"], key=lambda value: float(value)):
+            item = t6f["by_tau_rho"][key]
+            print(
+                "  tau=%-4s n=%3d mean=%+.6f +/- %.6f ms t=%+.3f"
+                % (
+                    key,
+                    int(item["n"]),
+                    float(item["mean"]),
+                    float(item["se"]),
+                    float(item["t"]),
+                )
+            )
+        print(
+            "  tau_monotonic_dynamic=%s max_pairwise_tau_abs_z=%.3f"
+            % (
+                t6f["tau_abs_dynamic_monotonic"],
+                float(t6f["max_tau_pairwise_abs_z"]),
+            )
+        )
+        print(
+            "ket_luan_nghieng_ve=%s dynamic_support=%s instrumentation_support=%s"
+            % (
+                t6f["ket_luan_nghieng_ve"],
+                t6f["dynamic_support"],
+                t6f["instrumentation_support"],
+            )
+        )
 
 
 def main() -> None:
@@ -1218,6 +1397,11 @@ def main() -> None:
         action="store_true",
         help="add exploratory A18 paired-by-seed cell error bars",
     )
+    parser.add_argument(
+        "--split-dynamics",
+        action="store_true",
+        help="add exploratory A19 split by a and tau_rho",
+    )
     parser.add_argument("--out", default="-")
     parser.add_argument(
         "--make-fake-sealed",
@@ -1229,6 +1413,8 @@ def main() -> None:
         raise SystemExit("--cell-level can dung --baseline-dir")
     if args.paired and not args.baseline_dir:
         raise SystemExit("--paired can dung --baseline-dir")
+    if args.split_dynamics and not args.baseline_dir:
+        raise SystemExit("--split-dynamics can dung --baseline-dir")
 
     public_rows = _load_state_rows(args.state)
     model = LinkModelV2.load(MODEL_PATH)
@@ -1262,6 +1448,7 @@ def main() -> None:
         baseline=baseline,
         cell_level=args.cell_level,
         paired=args.paired,
+        split_dynamics=args.split_dynamics,
     )
     text = json.dumps(_jsonable(report), indent=1, sort_keys=True)
     _print_report_summary(report)
