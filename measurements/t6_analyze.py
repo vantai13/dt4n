@@ -34,10 +34,25 @@ from twin.link_model_v2 import LinkModelV2
 DELTA_HAT_MS = 0.0158
 DELTA_SE_MS = 0.0023
 HOMOGENEOUS_N_LATE_MAX = 1e-3
-SCRIPT_VERSION = "t6_analyze_v1_pre_unblind"
+CONTROL_STATE = "results/phase-T/control_state.json"
+SCRIPT_VERSION = "t6_analyze_v2_t6b_exploratory"
+
+# From docs/phase-T/01-two-timescales.md, locked before T.6b.
+T_RELAX_P90_S = {
+    ("h2", 0.700): 0.110,
+    ("h2", 0.850): 0.104,
+    ("h2", 0.925): 0.097,
+    ("h2", 0.980): 0.123,
+    ("poisson", 0.700): 0.090,
+    ("poisson", 0.850): 0.194,
+    ("poisson", 0.925): 0.274,
+    ("poisson", 0.980): 0.300,
+    ("cbr", 0.980): 0.879,
+}
 
 
 Row = Dict[str, Any]
+Cell = Tuple[str, float]
 
 
 def _mean(xs: Sequence[float]) -> float:
@@ -200,6 +215,72 @@ def analyze_rows(rows: Sequence[Row], model: LinkModelV2) -> List[Row]:
     return out
 
 
+def _cell(row: Mapping[str, Any]) -> Cell:
+    return str(row["mode"]), round(float(row["rho_bar"]), 3)
+
+
+def baseline_from_controls(rows: Sequence[Row]) -> Dict[Cell, Row]:
+    grouped: Dict[Cell, List[Row]] = defaultdict(list)
+    for row in rows:
+        if abs(float(row.get("a", 0.0))) > 1e-12:
+            continue
+        grouped[_cell(row)].append(row)
+    out: Dict[Cell, Row] = {}
+    for cell, values in grouped.items():
+        errs = [float(row["err_qs_corrected_ms"]) for row in values]
+        sd = _sd(errs)
+        out[cell] = {
+            "mode": cell[0],
+            "rho_bar": cell[1],
+            "n_C": len(values),
+            "baseline_C_ms": _mean(errs),
+            "sd_C_ms": sd,
+            "se_C_ms": sd / math.sqrt(len(errs)) if sd is not None else 0.0,
+            "idx_C": [int(row["idx"]) for row in sorted(values, key=lambda r: int(r["idx"]))],
+        }
+    return out
+
+
+def apply_baseline(rows: Sequence[Row], baseline: Mapping[Cell, Row]) -> List[Row]:
+    out: List[Row] = []
+    for row in rows:
+        enriched = dict(row)
+        cell = _cell(row)
+        base = baseline.get(cell)
+        if base is None:
+            out.append(enriched)
+            continue
+        baseline_mean = float(base["baseline_C_ms"])
+        baseline_se = float(base["se_C_ms"])
+        err_dyn = float(row["err_qs_corrected_ms"]) - baseline_mean
+        se_dyn = math.sqrt(
+            float(row["se_err_qs_corrected_ms"]) ** 2 + baseline_se**2
+        )
+        enriched.update(
+            {
+                "baseline_cell": "mode=%s,rho_bar=%g" % cell,
+                "baseline_C_ms": baseline_mean,
+                "se_C_ms": baseline_se,
+                "err_dyn_ms": err_dyn,
+                "se_err_dyn_ms": se_dyn,
+                "err_dyn_z": err_dyn / max(se_dyn, 1e-12),
+                "err_dyn_class": classify_err_qs(
+                    err_dyn, float(row["sigma_ref_ms"]), se_dyn
+                ),
+            }
+        )
+        out.append(enriched)
+    return out
+
+
+def _lambda_p90(row: Mapping[str, Any]) -> float | None:
+    key = _cell(row)
+    t_relax = T_RELAX_P90_S.get(key)
+    if t_relax is None:
+        return None
+    return float(row["tau_rho"]) / t_relax
+
+
 def _group_key(row: Mapping[str, Any], keys: Sequence[str]) -> str:
     parts = []
     for key in keys:
@@ -213,10 +294,13 @@ def _group_key(row: Mapping[str, Any], keys: Sequence[str]) -> str:
 def summarize_rows(rows: Sequence[Row]) -> Dict[str, Any]:
     class_raw = Counter(str(row["err_qs_raw_class"]) for row in rows)
     class_corrected = Counter(str(row["err_qs_corrected_class"]) for row in rows)
+    class_dyn = Counter(
+        str(row["err_dyn_class"]) for row in rows if "err_dyn_class" in row
+    )
     commits = Counter(
         str(row.get("env", {}).get("git_commit", "unknown"))[:8] for row in rows
     )
-    return {
+    out = {
         "n": len(rows),
         "err_qs_raw_ms": _number_summary(row["err_qs_raw_ms"] for row in rows),
         "err_qs_corrected_ms": _number_summary(
@@ -234,6 +318,15 @@ def summarize_rows(rows: Sequence[Row]) -> Dict[str, Any]:
         "class_corrected": dict(sorted(class_corrected.items())),
         "commits": dict(sorted(commits.items())),
     }
+    if class_dyn:
+        out.update(
+            {
+                "err_dyn_ms": _number_summary(row.get("err_dyn_ms") for row in rows),
+                "err_dyn_z": _number_summary(row.get("err_dyn_z") for row in rows),
+                "class_dyn": dict(sorted(class_dyn.items())),
+            }
+        )
+    return out
 
 
 def grouped_summary(rows: Sequence[Row], keys: Sequence[str]) -> Dict[str, Any]:
@@ -244,6 +337,153 @@ def grouped_summary(rows: Sequence[Row], keys: Sequence[str]) -> Dict[str, Any]:
         key: summarize_rows(grouped[key])
         for key in sorted(grouped)
     }
+
+
+def baseline_cell_table(
+    rows: Sequence[Row],
+    baseline: Mapping[Cell, Row],
+) -> List[Row]:
+    regular = [row for row in rows if str(row.get("block")) != "S"]
+    grouped: Dict[Cell, List[Row]] = defaultdict(list)
+    for row in regular:
+        grouped[_cell(row)].append(row)
+
+    out: List[Row] = []
+    for cell in sorted(baseline):
+        main = grouped.get(cell, [])
+        dyn = [row.get("err_dyn_ms") for row in main]
+        corrected = [row.get("err_qs_corrected_ms") for row in main]
+        item = dict(baseline[cell])
+        item.update(
+            {
+                "n_main": len(main),
+                "mean_err_qs_corrected_ms": _number_summary(corrected)["mean"],
+                "mean_abs_err_qs_corrected_ms": _number_summary(
+                    abs(float(x)) for x in corrected if _finite(x)
+                )["mean"],
+                "mean_err_dyn_ms": _number_summary(dyn)["mean"],
+                "mean_abs_err_dyn_ms": _number_summary(
+                    abs(float(x)) for x in dyn if _finite(x)
+                )["mean"],
+                "sd_err_dyn_ms": _number_summary(dyn)["sd"],
+                "class_dyn": dict(
+                    sorted(
+                        Counter(
+                            str(row.get("err_dyn_class"))
+                            for row in main
+                            if "err_dyn_class" in row
+                        ).items()
+                    )
+                ),
+            }
+        )
+        out.append(item)
+    return out
+
+
+def t6b_diagnostics(rows: Sequence[Row]) -> Dict[str, Any]:
+    regular = [
+        row
+        for row in rows
+        if str(row.get("block")) != "S" and "err_dyn_ms" in row
+    ]
+    hp = [row for row in regular if str(row.get("mode")) != "cbr"]
+    for row in regular:
+        row["lambda_p90"] = _lambda_p90(row)
+
+    d2_rows = [
+        row
+        for row in hp
+        if row.get("lambda_p90") is not None and float(row["lambda_p90"]) >= 10.0
+    ]
+    ratios = [
+        abs(float(row["err_dyn_ms"])) / max(float(row["sigma_ref_ms"]), 1e-12)
+        for row in d2_rows
+    ]
+
+    bands = (
+        ("Lambda<3", lambda row: float(row["lambda_p90"]) < 3.0),
+        (
+            "3<=Lambda<10",
+            lambda row: 3.0 <= float(row["lambda_p90"]) < 10.0,
+        ),
+        ("Lambda>=10", lambda row: float(row["lambda_p90"]) >= 10.0),
+    )
+    band_rows: Dict[str, List[Row]] = {}
+    band_summary: Dict[str, Any] = {}
+    for name, pred in bands:
+        selected = [
+            row for row in hp if row.get("lambda_p90") is not None and pred(row)
+        ]
+        band_rows[name] = selected
+        vals = [abs(float(row["err_dyn_ms"])) for row in selected]
+        band_summary[name] = {
+            "n": len(selected),
+            "mean_abs_err_dyn_ms": _number_summary(vals)["mean"],
+            "median_abs_err_dyn_ms": _number_summary(vals)["p50"],
+        }
+
+    dynamic = band_rows["Lambda<3"]
+    dyn_vals = [float(row["err_dyn_ms"]) for row in dynamic]
+    mode_cell_abs = {
+        "mode=%s,rho_bar=%g" % key: _number_summary(
+            abs(float(row["err_dyn_ms"])) for row in values
+        )
+        for key, values in sorted(
+            _group_by_cell(regular).items(), key=lambda item: item[0]
+        )
+    }
+    cell_means = {
+        key: value["mean"]
+        for key, value in mode_cell_abs.items()
+        if value.get("mean") is not None
+    }
+    largest_cell = max(cell_means, key=lambda key: float(cell_means[key])) if cell_means else None
+    means = [band_summary[name]["mean_abs_err_dyn_ms"] for name, _ in bands]
+    p2_pass = all(x is not None for x in means) and means[0] > means[1] > means[2]
+    class_dyn = Counter(str(row.get("err_dyn_class")) for row in regular)
+    mean_abs_hp = _number_summary(abs(float(row["err_dyn_ms"])) for row in hp)
+
+    return {
+        "D-T2_err_dyn_Lambda_ge_10": {
+            "n": len(d2_rows),
+            "pass_abs_ratio_lt_0p1": sum(ratio < 0.10 for ratio in ratios),
+            "fail_abs_ratio_ge_0p1": sum(ratio >= 0.10 for ratio in ratios),
+            "abs_ratio": _number_summary(ratios),
+        },
+        "D-T3_err_dyn_by_Lambda": band_summary,
+        "D-T3_monotonic_P2_pass": bool(p2_pass),
+        "D-T4_err_dyn_dynamic_sign": {
+            "n": len(dyn_vals),
+            "mean": _number_summary(dyn_vals)["mean"],
+            "median": _number_summary(dyn_vals)["p50"],
+            "neg": sum(x < 0.0 for x in dyn_vals),
+            "pos": sum(x > 0.0 for x in dyn_vals),
+        },
+        "P1_mean_abs_err_dyn_h2_poisson": {
+            "threshold_ms": 0.140,
+            "observed_ms": mean_abs_hp["mean"],
+            "pass": mean_abs_hp["mean"] is not None and mean_abs_hp["mean"] <= 0.140,
+        },
+        "P3_quasi_static_khong_dung": {
+            "threshold": 80,
+            "observed": class_dyn.get("quasi_static_khong_dung", 0),
+            "pass": class_dyn.get("quasi_static_khong_dung", 0) <= 80,
+        },
+        "P4_cbr_0p98_largest": {
+            "observed_largest_cell": largest_cell,
+            "observed_mean_abs_ms": cell_means.get("mode=cbr,rho_bar=0.98"),
+            "pass": largest_cell == "mode=cbr,rho_bar=0.98",
+        },
+        "mode_cell_abs_err_dyn_ms": mode_cell_abs,
+    }
+
+
+def _group_by_cell(rows: Sequence[Row]) -> Dict[Cell, List[Row]]:
+    grouped: Dict[Cell, List[Row]] = defaultdict(list)
+    for row in rows:
+        grouped[_cell(row)].append(row)
+    return grouped
 
 
 def sentinel_summary(rows: Sequence[Row]) -> Dict[str, Any]:
@@ -266,22 +506,37 @@ def sentinel_summary(rows: Sequence[Row]) -> Dict[str, Any]:
     }
 
 
-def build_report(rows: Sequence[Row], state_path: str, sealed_dir: str) -> Dict[str, Any]:
+def build_report(
+    rows: Sequence[Row],
+    state_path: str,
+    sealed_dir: str,
+    baseline_state: str | None = None,
+    baseline_dir: str | None = None,
+    baseline_rows: Sequence[Row] | None = None,
+    baseline: Mapping[Cell, Row] | None = None,
+) -> Dict[str, Any]:
     regular = [row for row in rows if str(row.get("block")) != "S"]
     homogeneous = [
         row for row in regular if bool(row.get("homogeneous_a14", False))
     ]
-    return {
+    report = {
         "metadata": {
             "script_version": SCRIPT_VERSION,
             "state_path": state_path,
             "sealed_dir": sealed_dir,
+            "baseline_state": baseline_state,
+            "baseline_dir": baseline_dir,
             "delta_hat_ms": DELTA_HAT_MS,
             "delta_se_ms": DELTA_SE_MS,
             "homogeneous_n_late_max": HOMOGENEOUS_N_LATE_MAX,
             "model_path": MODEL_PATH,
             "confirmatory_note": (
                 "Script locked and fake-tested before reading real sealed data."
+            ),
+            "t6b_note": (
+                "Baseline subtraction is exploratory under Amendment 15."
+                if baseline is not None
+                else None
             ),
         },
         "counts": {
@@ -305,6 +560,20 @@ def build_report(rows: Sequence[Row], state_path: str, sealed_dir: str) -> Dict[
         "sentinel": sentinel_summary(rows),
         "rows": list(rows),
     }
+    if baseline is not None:
+        report["counts"]["n_baseline_control"] = (
+            len(baseline_rows) if baseline_rows is not None else None
+        )
+        report["baseline_cells"] = baseline_cell_table(rows, baseline)
+        report["baseline_control_summary"] = grouped_summary(
+            list(baseline_rows or []), ("mode", "rho_bar")
+        )
+        report["summary_dyn_by_mode"] = grouped_summary(regular, ("mode",))
+        report["summary_dyn_by_cell"] = grouped_summary(
+            regular, ("mode", "rho_bar")
+        )
+        report["t6b_diagnostics"] = t6b_diagnostics(list(rows))
+    return report
 
 
 def write_fake_sealed(public_rows: Sequence[Row], sealed_dir: str, model: LinkModelV2) -> None:
@@ -376,12 +645,82 @@ def _print_report_summary(report: Mapping[str, Any]) -> None:
                 float(q_mean["mean"]),
             )
         )
+    if "baseline_cells" in report:
+        print("")
+        print("T6b baseline cells (exploratory):")
+        print(
+            "mode      rho    nC baseline_C  SE_C    n_main mean_err_qs  mean_err_dyn  sd_err_dyn"
+        )
+        for item in report["baseline_cells"]:
+            print(
+                "%-8s %.3f %3d %+10.6f %.6f %6d %+11.6f %+12.6f %11s"
+                % (
+                    item["mode"],
+                    float(item["rho_bar"]),
+                    int(item["n_C"]),
+                    float(item["baseline_C_ms"]),
+                    float(item["se_C_ms"]),
+                    int(item["n_main"]),
+                    float(item["mean_err_qs_corrected_ms"]),
+                    float(item["mean_err_dyn_ms"]),
+                    (
+                        "None"
+                        if item["sd_err_dyn_ms"] is None
+                        else "%.6f" % float(item["sd_err_dyn_ms"])
+                    ),
+                )
+            )
+        diag = report["t6b_diagnostics"]
+        d2 = diag["D-T2_err_dyn_Lambda_ge_10"]
+        d3 = diag["D-T3_err_dyn_by_Lambda"]
+        d4 = diag["D-T4_err_dyn_dynamic_sign"]
+        print("")
+        print(
+            "T6b D-T2 err_dyn Lambda>=10: pass=%d/%d fail=%d mean_abs_ratio=%.6f"
+            % (
+                int(d2["pass_abs_ratio_lt_0p1"]),
+                int(d2["n"]),
+                int(d2["fail_abs_ratio_ge_0p1"]),
+                float(d2["abs_ratio"]["mean"]),
+            )
+        )
+        for name in ("Lambda<3", "3<=Lambda<10", "Lambda>=10"):
+            item = d3[name]
+            print(
+                "T6b D-T3 %-14s n=%3d mean|err_dyn|=%.6f ms median=%.6f ms"
+                % (
+                    name,
+                    int(item["n"]),
+                    float(item["mean_abs_err_dyn_ms"]),
+                    float(item["median_abs_err_dyn_ms"]),
+                )
+            )
+        print("T6b D-T3 P2 monotonic pass=%s" % diag["D-T3_monotonic_P2_pass"])
+        print(
+            "T6b D-T4 Lambda<3: n=%d mean=%+.6f ms median=%+.6f ms neg=%d pos=%d"
+            % (
+                int(d4["n"]),
+                float(d4["mean"]),
+                float(d4["median"]),
+                int(d4["neg"]),
+                int(d4["pos"]),
+            )
+        )
+        print("T6b P1 = %s" % diag["P1_mean_abs_err_dyn_h2_poisson"])
+        print("T6b P3 = %s" % diag["P3_quasi_static_khong_dung"])
+        print("T6b P4 = %s" % diag["P4_cbr_0p98_largest"])
 
 
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--state", default=STATE)
     parser.add_argument("--sealed-dir", default=SEALED)
+    parser.add_argument("--baseline-state", default=CONTROL_STATE)
+    parser.add_argument(
+        "--baseline-dir",
+        default=None,
+        help="sealed dir for exploratory T.6b C-block baseline subtraction",
+    )
     parser.add_argument("--out", default="-")
     parser.add_argument(
         "--make-fake-sealed",
@@ -402,7 +741,25 @@ def main() -> None:
         return
 
     rows = analyze_rows(combine_rows(public_rows, args.sealed_dir), model)
-    report = build_report(rows, args.state, args.sealed_dir)
+    baseline_rows = None
+    baseline = None
+    if args.baseline_dir:
+        baseline_public_rows = _load_state_rows(args.baseline_state)
+        baseline_rows = analyze_rows(
+            combine_rows(baseline_public_rows, args.baseline_dir), model
+        )
+        baseline = baseline_from_controls(baseline_rows)
+        rows = apply_baseline(rows, baseline)
+
+    report = build_report(
+        rows,
+        args.state,
+        args.sealed_dir,
+        baseline_state=args.baseline_state if args.baseline_dir else None,
+        baseline_dir=args.baseline_dir,
+        baseline_rows=baseline_rows,
+        baseline=baseline,
+    )
     text = json.dumps(_jsonable(report), indent=1, sort_keys=True)
     _print_report_summary(report)
     if args.out == "-":
