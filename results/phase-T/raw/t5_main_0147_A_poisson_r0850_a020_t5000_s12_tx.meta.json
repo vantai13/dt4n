@@ -1,0 +1,64 @@
+{
+  "config": {
+    "a": 0.2,
+    "bw_mbps": 6.0,
+    "dt": 0.005,
+    "duration_s": 105.0,
+    "frame_bg": 1512,
+    "frame_probe": 106,
+    "mode": "poisson",
+    "payload_bg": 1470,
+    "payload_probe": 64,
+    "probe_pps_nominal": 20.0,
+    "rho_bar": 0.85,
+    "run_id": 147,
+    "seed": 12,
+    "step": null,
+    "tau_rho": 5.0
+  },
+  "counts": {
+    "c_a_actual_bg": 0.9999077351697121,
+    "duration_s_actual": 105.00000910899689,
+    "max_late_ms": 23.063319735229015,
+    "n_bg_sent": 43985,
+    "n_late": 13,
+    "n_probe_sent": 2100
+  },
+  "role": "rho_gen",
+  "schedule": {
+    "c_a_design": 1.0,
+    "c_a_operational": 0.9974014862840823,
+    "c_a_pooled": 0.9981139071620803,
+    "c_a_pooled_predicted": 1.000577868155386,
+    "design": {
+      "bw_mbps": 6.0,
+      "c_design": 1.0,
+      "n_base": 43985,
+      "total_operational": 43985.812528011775
+    },
+    "mode": "poisson",
+    "n_bg": 43985,
+    "path": "rescale",
+    "rate_ratio": 0.9999815274979573,
+    "schedule_digest": "c2075bc443764325e0be74762a7086a0187af93fadfc542920f13bb68e3a5702"
+  },
+  "trajectory": {
+    "clamp_ratio": 0.0,
+    "design": {
+      "rho_bar": 0.85,
+      "sigma_rho": 0.015503875968992255,
+      "tau_rho": 5.0
+    },
+    "dt": 0.005,
+    "duration_s": 105.0,
+    "kind": "ou",
+    "measured": {
+      "rho_bar": 0.8473542672044799,
+      "sigma_rho": 0.02027344329945557,
+      "tau_rho_s": 8.436238833187138
+    },
+    "n_clamped": 0,
+    "n_steps": 21000,
+    "trajectory_digest": "640b842cffde284defd8c14a973ddd7a3c6b156a4fd0e2e157fbdc938c0cdb0c"
+  }
+}

@@ -318,6 +318,33 @@ def test_reference_sd_source_khai_bao_trung_thuc():
             )
 
 
+def test_a14_khong_dung_toi_duong_do():
+    """Amendment 14 changes gates/provenance only, not measurement mechanics.
+
+    G3 rows were produced by two commits: 2eec098e before A14 and 10dcd4d8
+    after A14. Validity depends on A14 not touching load generation, rho
+    trajectories, packet timestamps, or OWD analysis. See Amendment 14.
+    """
+    import subprocess
+
+    changed = set(
+        subprocess.check_output(
+            ["git", "diff", "--name-only", "2eec098e", "10dcd4d8"],
+            text=True,
+        ).split()
+    )
+    measurement_path = {
+        "mininet/load_spec.py",
+        "mininet/rho_spec.py",
+        "mininet/rho_schedule.py",
+        "measurements/packet_player.py",
+        "measurements/owd_analyze.py",
+    }
+    assert not (changed & measurement_path), (
+        f"A14 da dung vao duong do: {changed & measurement_path}"
+    )
+
+
 @pytest.mark.parametrize("gate_name", sorted(GATES))
 def test_moi_cong_bat_duoc_cac_mutant_da_khai_bao(gate_name):
     spec = GATES[gate_name]
