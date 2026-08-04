@@ -1,5 +1,10 @@
 #!/usr/bin/env python3
-"""Calibrated routing link model from Lesson 9.0 Mininet measurements.
+"""DEPRECATED tu Phase 20R. Giu de tai lap phu luc v7.
+
+Dung ``twin/link_model_v2.py`` cho moi cong viec moi. Xem
+``docs/phase-20/99c-erratum-2.md``.
+
+Calibrated routing link model from Lesson 9.0 Mininet measurements.
 
 This replaces the previous M/M/1 curve. The measured Mininet/HTB+netem links
 have three regimes under UDP constant-rate load:
