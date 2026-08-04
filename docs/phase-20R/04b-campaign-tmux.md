@@ -11,7 +11,7 @@ mkdir -p logs results/phase-20R/raw
 
 python3 -m measurements.l6_campaign_fine --stage smoke --plan-only
 python3 -m measurements.l6_campaign_fine --stage continuity --plan-only
-python3 -m measurements.l6_campaign_fine --stage full --plan-only | head -40
+python3 -m measurements.l6_campaign_fine --stage full --dry-run | head -40
 
 python3 -m pytest test/test_phase20r_campaign_grid.py test/test_phase20r_truth_table.py -q
 ```
@@ -103,17 +103,38 @@ cat results/phase-20R/continuity_check.json
 
 Chi di tiep neu `all_pass = true`. Neu fail, dung full campaign.
 
-## 4. Full Campaign -- 609 Diem
+## 4. Pre-Full Dirty Check
+
+Sau commit/tag freeze, chay dung 1 diem de dam bao provenance sach:
+
+```bash
+sudo -n mn -c
+sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.l6_campaign_fine \
+  --stage smoke \
+  --limit 1 \
+  --state /tmp/20r4_dirty_check.json \
+  2>&1 | tee -a logs/20r4_dirty_check.log
+
+python3 - <<'PY'
+import json
+r = json.load(open("/tmp/20r4_dirty_check.json"))["rows"][0]
+assert r["env"]["git_dirty"] is False, r["env"].get("git_status_relevant")
+print("OK git_dirty =", r["env"]["git_dirty"], "commit =", r["git_hash"][:8])
+PY
+```
+
+## 5. Full Campaign -- 609 Diem
 
 Preflight ngay truoc khi bam chay:
 
 ```bash
 git log -1 --oneline --decorate
 git tag --list phase-20R-campaign-grid
-python3 -m measurements.l6_campaign_fine --stage full --plan-only | head -40
+git tag --list phase-20R-campaign-start
+python3 -m measurements.l6_campaign_fine --stage full --dry-run | head -40
 ```
 
-Chay mot mach:
+Chay mot mach trong tmux:
 
 ```bash
 printf "%s BAT DAU 20R.4 full\n" "$(date -Is)" | tee -a results/phase-20R/RUNLOG.md
@@ -123,6 +144,19 @@ sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u -m measurements.l6_campaign_fi
   --state results/phase-20R/campaign_state.json \
   2>&1 | tee -a logs/20r4_02_full.log
 printf "%s XONG 20R.4 full\n" "$(date -Is)" | tee -a results/phase-20R/RUNLOG.md
+```
+
+Hoac chay bang `nohup` neu lo mat SSH:
+
+```bash
+sudo -n mn -c
+nohup sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -u \
+  -m measurements.l6_campaign_fine \
+  --stage full \
+  --state results/phase-20R/campaign_state.json \
+  > logs/20r4_02_full.log 2>&1 &
+echo $! > /tmp/20r4_campaign.pid
+tail -f logs/20r4_02_full.log
 ```
 
 Resume neu bi dut:
@@ -148,7 +182,7 @@ python3 -m measurements.l6_campaign_fine \
   --summary
 ```
 
-## 5. Build Artifacts Sau Full
+## 6. Build Artifacts Sau Full
 
 ```bash
 python3 -m measurements.build_truth_table \

@@ -42,6 +42,7 @@ def test_merge_states_excludes_controls_sentinels_failures_and_aggregates_seed_s
 
     table = B.merge_states(phase_l, phase20r).sort_values(["rho"]).reset_index(drop=True)
 
+    assert table.attrs["truth_field"] == "q_mean_ms"
     assert len(table) == 2
     first = table.iloc[0]
     assert first["rho"] == pytest.approx(0.9)
@@ -64,3 +65,28 @@ def test_continuity_report_uses_two_se_combined_tolerance():
     check = report["checks"][0]
     assert check["phase_l_mean_ms"] == pytest.approx(10.1)
     assert check["diff_ms"] == pytest.approx(0.15)
+
+
+def test_truth_table_parquet_records_truth_field_metadata(tmp_path):
+    phase_l_path = tmp_path / "phase_l.json"
+    phase20r_path = tmp_path / "phase20r.json"
+    out = tmp_path / "truth.parquet"
+    phase_l_path.write_text('{"rows": []}\n')
+    phase20r_path.write_text(
+        '{"rows": [%s]}\n'
+        % B.json.dumps(row(q_mean_ms=7.0, probe_mean_ms=3.0), sort_keys=True),
+        encoding="utf-8",
+    )
+
+    table = B.write_truth_table(str(phase_l_path), str(phase20r_path), str(out), None)
+
+    assert table["delay_mean_ms"].iloc[0] == pytest.approx(7.0)
+    try:
+        import pyarrow.parquet as pq
+    except Exception:
+        meta = B.json.loads((tmp_path / "truth.parquet.meta.json").read_text())
+        assert meta["truth_field"] == "q_mean_ms"
+    else:
+        md = pq.read_metadata(out).metadata
+        assert md[b"truth_field"] == b"q_mean_ms"
+        assert b"probe_mean_ms" in md[b"truth_field_note"]

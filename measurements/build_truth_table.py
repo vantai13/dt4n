@@ -26,6 +26,8 @@ TRUTH_TABLE_CSV = "results/phase-20R/truth_table.csv"
 CONTINUITY_JSON = "results/phase-20R/continuity_check.json"
 SENTINEL_JSON = "results/phase-20R/sentinel_control.json"
 VALID_MODES = {"cbr", "poisson", "h2"}
+TRUTH_FIELD = "q_mean_ms"
+TRUTH_FIELD_NOTE = "probe_mean_ms KHONG dung -- probe deu dan, khong thoa PASTA"
 
 
 def load_state(path: str) -> Dict[str, Any]:
@@ -50,6 +52,7 @@ def rows_from_state(state: Mapping[str, Any], source: str) -> List[Dict[str, Any
     for row in state.get("rows", []):
         if not usable_row(row):
             continue
+        assert TRUTH_FIELD in row, "thieu truong ground truth %s" % TRUTH_FIELD
         out.append(
             {
                 "source": source,
@@ -57,7 +60,7 @@ def rows_from_state(state: Mapping[str, Any], source: str) -> List[Dict[str, Any
                 "bw": float(row["bw"]),
                 "q": int(row["q"]),
                 "rho": round(float(row["rho"]), 4),
-                "delay_ms": float(row["q_mean_ms"]),
+                "delay_ms": float(row[TRUTH_FIELD]),
                 "loss": float(row["loss"]),
                 "se_batch_ms": float(row["se_batch_ms"]) if row.get("se_batch_ms") is not None else math.nan,
                 "se_naive_ms": float(row["se_naive_ms"]) if row.get("se_naive_ms") is not None else math.nan,
@@ -106,7 +109,31 @@ def merge_states(phase_l_state: Mapping[str, Any], phase_20r_state: Mapping[str,
     ).reset_index()
     table["delay_sd_ms"] = table["delay_sd_ms"].fillna(0.0)
     table["se_mean_ms"] = table["delay_sd_ms"] / table["n_seed"].pow(0.5)
+    table.attrs["truth_field"] = TRUTH_FIELD
+    table.attrs["truth_field_note"] = TRUTH_FIELD_NOTE
     return table
+
+
+def write_parquet_with_metadata(table: pd.DataFrame, out_path: str) -> None:
+    metadata = {
+        "phase": "20R",
+        "truth_field": TRUTH_FIELD,
+        "truth_field_note": TRUTH_FIELD_NOTE,
+    }
+    try:
+        import pyarrow as pa
+        import pyarrow.parquet as pq
+
+        arrow = pa.Table.from_pandas(table, preserve_index=False)
+        merged = dict(arrow.schema.metadata or {})
+        merged.update({k.encode("utf-8"): v.encode("utf-8") for k, v in metadata.items()})
+        pq.write_table(arrow.replace_schema_metadata(merged), out_path)
+    except Exception:
+        table.to_parquet(out_path, index=False)
+        Path(out_path + ".meta.json").write_text(
+            json.dumps(metadata, indent=2, sort_keys=True) + "\n",
+            encoding="utf-8",
+        )
 
 
 def write_truth_table(
@@ -118,7 +145,7 @@ def write_truth_table(
     table = merge_states(load_state(phase_l_path), load_state(phase_20r_path))
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
-    table.to_parquet(out, index=False)
+    write_parquet_with_metadata(table, str(out))
     if csv_path:
         table.to_csv(csv_path, index=False)
     return table
@@ -229,7 +256,7 @@ def write_sentinel_control(
 def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--phase-l-state", default=PHASE_L_STATE)
-    ap.add_argument("--phase-20r-state", default=PHASE_20R_STATE)
+    ap.add_argument("--phase-20r-state", "--state", dest="phase_20r_state", default=PHASE_20R_STATE)
     ap.add_argument("--continuity-state", default=CONTINUITY_STATE)
     ap.add_argument("--out", default=TRUTH_TABLE)
     ap.add_argument("--csv-out", default=TRUTH_TABLE_CSV)
@@ -242,7 +269,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     if not args.skip_truth:
         table = write_truth_table(args.phase_l_state, args.phase_20r_state, args.out, args.csv_out)
-        print("truth rows=%d -> %s" % (len(table), args.out))
+        print("truth rows=%d field=%s -> %s" % (len(table), TRUTH_FIELD, args.out))
     if not args.skip_continuity:
         report = write_continuity_check(args.phase_l_state, args.continuity_state, args.continuity_out)
         print("continuity %d/%d pass -> %s" % (report["n_pass"], report["n"], args.continuity_out))

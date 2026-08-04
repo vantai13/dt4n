@@ -85,6 +85,16 @@ results/phase-20R/raw/*.json
 !results/phase-20R/raw/MANIFEST.sha256.json
 !results/phase-20R/truth_table.parquet
 
+# Historical local experiment outputs kept on this workstation. They are not
+# part of Phase 20R provenance and would otherwise make live git fingerprints
+# dirty through the broad results JSON unignore rules above.
+results/ablation/
+results/ablation_dyn/
+results/asym_300/
+results/asym_500/
+results/eval/
+results/pilot/
+
 # Raw/generated experiment payloads stay local. Commit compact summaries,
 # diagnostics, and docs instead of large traces/log folders.
 results/phase-14/

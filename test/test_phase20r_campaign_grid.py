@@ -81,3 +81,10 @@ def test_gate_20r_is_stricter_than_phase_l_rate_gate():
 
     assert F.gate_20r(good) == []
     assert F.gate_20r(bad) == ["rate=1.0001100"]
+
+
+def test_campaign_output_paths_do_not_count_as_relevant_dirty_paths():
+    assert F.is_campaign_output_path("results/phase-20R/campaign_state.json")
+    assert F.is_campaign_output_path("results/phase-20R/raw/example_tx.meta.json")
+    assert F.is_campaign_output_path("logs/20r4_02_full.log")
+    assert not F.is_campaign_output_path("measurements/l6_campaign_fine.py")

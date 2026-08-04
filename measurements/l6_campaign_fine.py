@@ -88,6 +88,70 @@ def git_commit() -> str:
         return "unknown"
 
 
+def git_status_porcelain() -> List[str]:
+    try:
+        out = subprocess.check_output(["git", "status", "--porcelain"], text=True)
+    except Exception:
+        return []
+    return [line for line in out.splitlines() if line.strip()]
+
+
+def _status_path(line: str) -> str:
+    path = line[3:]
+    if " -> " in path:
+        path = path.split(" -> ", 1)[1]
+    return path.strip()
+
+
+def is_campaign_output_path(path: str) -> bool:
+    """Return whether a dirty path is an expected live-output file."""
+    allowed_exact = {
+        "logs/20r4_00_smoke.log",
+        "logs/20r4_01_continuity.log",
+        "logs/20r4_02_full.log",
+        "results/phase-20R/RUNLOG.md",
+        "results/phase-20R/smoke_state.json",
+        "results/phase-20R/continuity_state.json",
+        "results/phase-20R/continuity_check.json",
+        "results/phase-20R/campaign_state.json",
+        "results/phase-20R/sentinel_control.json",
+        "results/phase-20R/truth_table.csv",
+        "results/phase-20R/truth_table.parquet",
+    }
+    if path in allowed_exact:
+        return True
+    return path.startswith("results/phase-20R/raw/")
+
+
+def campaign_clean_status() -> Dict[str, Any]:
+    """Git cleanliness for provenance, ignoring this campaign's outputs.
+
+    Raw ``git status`` becomes dirty as soon as ``campaign_state.json`` is
+    written. For row provenance we need to know whether code/config changed, not
+    whether the checkpoint advanced. Both views are recorded.
+    """
+    raw = git_status_porcelain()
+    relevant = [line for line in raw if not is_campaign_output_path(_status_path(line))]
+    return {
+        "git_dirty_raw": bool(raw),
+        "git_status_raw": raw,
+        "git_dirty": bool(relevant),
+        "git_status_relevant": relevant,
+        "ignored_campaign_output": [line for line in raw if is_campaign_output_path(_status_path(line))],
+    }
+
+
+def run_environment_fingerprint() -> Dict[str, Any]:
+    env = env_fingerprint()
+    clean = campaign_clean_status()
+    env["git_dirty_raw"] = clean["git_dirty_raw"]
+    env["git_status_raw"] = clean["git_status_raw"]
+    env["git_dirty"] = clean["git_dirty"]
+    env["git_status_relevant"] = clean["git_status_relevant"]
+    env["ignored_campaign_output"] = clean["ignored_campaign_output"]
+    return env
+
+
 def load_calibration(path: str = CALIBRATION) -> List[Mapping[str, Any]]:
     with open(path, "r", encoding="utf-8") as f:
         return list(json.load(f)["cells"])
@@ -408,6 +472,7 @@ def print_plan(plan: Sequence[Point], todo: Sequence[Point], state: State) -> No
         )
     )
     print("plan_digest=%s" % stable_digest(plan))
+    print("order_seed=%d" % SHUFFLE_SEED)
     for point in todo:
         print(
             "%04d %-7s bw=%g q=%d rho=%.3f seed=%d probe=%g block=%s"
@@ -424,8 +489,13 @@ def print_plan(plan: Sequence[Point], todo: Sequence[Point], state: State) -> No
         )
 
 
-def _annotate_row(row: Dict[str, Any], args: argparse.Namespace, stage: str, plan_digest: str) -> Dict[str, Any]:
-    env = env_fingerprint()
+def _annotate_row(
+    row: Dict[str, Any],
+    args: argparse.Namespace,
+    stage: str,
+    plan_digest: str,
+    run_env: Mapping[str, Any],
+) -> Dict[str, Any]:
     return {
         **row,
         "phase": "20R.4",
@@ -433,8 +503,8 @@ def _annotate_row(row: Dict[str, Any], args: argparse.Namespace, stage: str, pla
         "runner": "measurements.l6_campaign_fine",
         "argv": list(sys.argv),
         "process_pid": os.getpid(),
-        "git_hash": env.get("git_commit") or git_commit(),
-        "env": env,
+        "git_hash": run_env.get("git_commit") or git_commit(),
+        "env": dict(run_env),
         "plan_digest": plan_digest,
         "state_path": args.state,
         "raw_dir": RAW,
@@ -471,6 +541,12 @@ def run_live(args: argparse.Namespace) -> None:
     os.makedirs(RAW, exist_ok=True)
     os.makedirs(os.path.dirname(RUNLOG), exist_ok=True)
     L6.RAW = RAW
+    run_env = run_environment_fingerprint()
+    if run_env.get("git_dirty"):
+        print("WORKTREE RELEVANT DIRTY -- dung truoc khi do:", file=sys.stderr)
+        for line in run_env.get("git_status_relevant", []):
+            print(line, file=sys.stderr)
+        raise SystemExit(2)
 
     print(
         "Ke hoach %d diem | da xong %d | phien nay %d diem (~%.1f gio)"
@@ -482,6 +558,14 @@ def run_live(args: argparse.Namespace) -> None:
         )
     )
     print("state=%s raw=%s plan_digest=%s" % (args.state, RAW, stable_digest(plan)))
+    print(
+        "git_commit=%s git_dirty=%s git_dirty_raw=%s"
+        % (
+            str(run_env.get("git_commit", ""))[:12],
+            run_env.get("git_dirty"),
+            run_env.get("git_dirty_raw"),
+        )
+    )
 
     net = Mininet(topo=SplitQdiscTopo(), link=Link, switch=OVSBridge, controller=None)
     net.start()
@@ -500,12 +584,12 @@ def run_live(args: argparse.Namespace) -> None:
                 current = (float(point["bw"]), int(point["q"]))
                 time.sleep(0.2)
 
-            row = _annotate_row(L6.measure(net, point), args, args.stage, plan_digest)
+            row = _annotate_row(L6.measure(net, point), args, args.stage, plan_digest, run_env)
             row["gate_fail"] = gate_20r(row)
             row["attempt"] = 1
             if row["gate_fail"]:
                 print("      * fail: %s -> chay lai 1 lan" % ",".join(row["gate_fail"]))
-                row2 = _annotate_row(L6.measure(net, point), args, args.stage, plan_digest)
+                row2 = _annotate_row(L6.measure(net, point), args, args.stage, plan_digest, run_env)
                 row2["gate_fail"] = gate_20r(row2)
                 row2["attempt"] = 2
                 row2["attempt1_fail"] = row["gate_fail"]
@@ -673,8 +757,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("--session", type=int, default=None)
     parser.add_argument("--n-sessions", type=int, default=4)
     parser.add_argument("--max-points", type=int, default=None)
+    parser.add_argument("--limit", dest="max_points", type=int, default=None, help="alias for --max-points")
     parser.add_argument("--resume", action="store_true", help="resume is the default behavior")
     parser.add_argument("--plan-only", action="store_true")
+    parser.add_argument("--dry-run", dest="plan_only", action="store_true", help="alias for --plan-only")
     parser.add_argument("--summary", action="store_true")
     parser.add_argument("--write-grid-doc", action="store_true")
     args = parser.parse_args(argv)
