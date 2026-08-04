@@ -1,0 +1,1997 @@
+{
+  "config": {
+    "a_sens": [
+      0.2,
+      0.9
+    ],
+    "calibration_path": "results/phase-20R/sla_calibration.json",
+    "dt": 0.005,
+    "fit_path": "results/phase-L/link_model_v2_fit.json",
+    "git_tag_to_create": "phase-20R-prediction",
+    "n": 200000,
+    "residual_field_seed": 12345,
+    "residual_field_step": 0.01,
+    "tau_main": 1.0,
+    "tau_sens": [
+      0.2,
+      1.0,
+      5.0
+    ],
+    "z_extrap": [
+      1.0,
+      2.0,
+      4.0
+    ],
+    "z_grid": [
+      0.0,
+      0.05,
+      0.1,
+      0.2,
+      0.3,
+      0.55
+    ]
+  },
+  "generated_date": "2026-08-04",
+  "inputs": {
+    "measurements/predict_err_quick.py": "3c9f86446464279ec29c51a9f852b1b6bacb94c46c3ef236ed583930f5ddf09c",
+    "measurements/sla_calib_v2.py": "7d8f5f50285a3de4ce20155648f24b91e4ee9287f3aa54ad0c07cd1aa0c46f3b",
+    "results/phase-20R/sla_calibration.json": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
+    "results/phase-L/link_model_v2_fit.json": "ab17908c40359572e35effdee561f8217477168ba77298831a734ab47cc9563b",
+    "twin/cost_v2.py": "ba591392e19ab6a10e10d6a45ec4782e83cb6516e2e616e54f744913ffd3bfab"
+  },
+  "main": {
+    "cbr@0.700": {
+      "feasible": true,
+      "mode": "cbr",
+      "prediction": {
+        "a": 0.9,
+        "mode": "cbr",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.7,
+        "sigma_rho": 0.046220930232558126,
+        "spearman": {
+          "note": "constant curve",
+          "rho": null
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.7,
+      "role": "pc1"
+    },
+    "cbr@0.850": {
+      "feasible": true,
+      "mode": "cbr",
+      "prediction": {
+        "a": 0.9,
+        "mode": "cbr",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.85,
+        "sigma_rho": 0.013081395348837201,
+        "spearman": {
+          "note": "constant curve",
+          "rho": null
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.85,
+      "role": "pc1"
+    },
+    "cbr@0.925": {
+      "feasible": false,
+      "mode": "cbr",
+      "prediction": {
+        "a": 0.9,
+        "mode": "cbr",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.925,
+        "sigma_rho": 0.0,
+        "spearman": {
+          "note": "constant curve",
+          "rho": null
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "reason": "sigma_max_regime = 0 (het headroom den tran do tin cay)",
+      "rho_bar": 0.925,
+      "role": "pc1_excluded_by_q8"
+    },
+    "cbr@0.960": {
+      "feasible": false,
+      "mode": "cbr",
+      "prediction": {
+        "a": 0.9,
+        "mode": "cbr",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": true,
+            "note": "PC1 prediction: cbr deterministic/no queueing error expected",
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.96,
+        "sigma_rho": 0.0,
+        "spearman": {
+          "note": "constant curve",
+          "rho": null
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "reason": "sigma_max_regime = 0 (het headroom den tran do tin cay)",
+      "rho_bar": 0.96,
+      "role": "pc1_excluded_by_q8"
+    },
+    "h2@0.700": {
+      "feasible": true,
+      "mode": "h2",
+      "prediction": {
+        "a": 0.9,
+        "mode": "h2",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.020041002050102508,
+            "err": 0.13538176908845442,
+            "extrapolated": false,
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.03739373937393739,
+            "err": 0.188003800380038,
+            "extrapolated": false,
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.06823864772954591,
+            "err": 0.2575915183036607,
+            "extrapolated": false,
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.0933179953986196,
+            "err": 0.3054566369910973,
+            "extrapolated": false,
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.1459252588923908,
+            "err": 0.38889889439191555,
+            "extrapolated": false,
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.21016516516516517,
+            "err": 0.47536036036036033,
+            "extrapolated": true,
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.26427855711422843,
+            "err": 0.5446593186372746,
+            "extrapolated": true,
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.3010240963855422,
+            "err": 0.592921686746988,
+            "extrapolated": true,
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.7,
+        "sigma_rho": 0.046220930232558126,
+        "spearman": {
+          "note": "rank correlation over non-extrapolated z grid",
+          "rho": 1.0
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.7,
+      "role": "gate"
+    },
+    "h2@0.850": {
+      "feasible": true,
+      "mode": "h2",
+      "prediction": {
+        "a": 0.9,
+        "mode": "h2",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.014275713785689287,
+            "err": 0.11105555277763889,
+            "extrapolated": false,
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.02723272327232723,
+            "err": 0.15597559755975599,
+            "extrapolated": false,
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.05109521904380879,
+            "err": 0.21209241848369673,
+            "extrapolated": false,
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.07020106031809542,
+            "err": 0.2517555266579974,
+            "extrapolated": false,
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.10951023062684478,
+            "err": 0.3234579018460153,
+            "extrapolated": false,
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.15801301301301304,
+            "err": 0.39813813813813814,
+            "extrapolated": true,
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.20433366733466932,
+            "err": 0.45773046092184366,
+            "extrapolated": true,
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.23506024096385542,
+            "err": 0.49964357429718875,
+            "extrapolated": true,
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.85,
+        "sigma_rho": 0.04796511627906979,
+        "spearman": {
+          "note": "rank correlation over non-extrapolated z grid",
+          "rho": 1.0
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.85,
+      "role": "gate"
+    },
+    "h2@0.925": {
+      "feasible": true,
+      "mode": "h2",
+      "prediction": {
+        "a": 0.9,
+        "mode": "h2",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.0032801640082004146,
+            "err": 0.031951597579879,
+            "extrapolated": false,
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.005755575557555764,
+            "err": 0.04477447744774477,
+            "extrapolated": false,
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.009541908381676345,
+            "err": 0.06009701940388078,
+            "extrapolated": false,
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.013604081224367293,
+            "err": 0.07057117135140542,
+            "extrapolated": false,
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.02282255240382211,
+            "err": 0.0901745960278153,
+            "extrapolated": false,
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.034359359359359354,
+            "err": 0.11188688688688689,
+            "extrapolated": true,
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.047489979959919826,
+            "err": 0.12583667334669338,
+            "extrapolated": true,
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.053519076305220875,
+            "err": 0.13335341365461847,
+            "extrapolated": true,
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.925,
+        "sigma_rho": 0.021802325581395346,
+        "spearman": {
+          "note": "rank correlation over non-extrapolated z grid",
+          "rho": 1.0
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.925,
+      "role": "gate"
+    },
+    "h2@0.960": {
+      "feasible": true,
+      "mode": "h2",
+      "prediction": {
+        "a": 0.9,
+        "mode": "h2",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 1.0000500025003634e-05,
+            "err": 0.00027001350067503376,
+            "extrapolated": false,
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 5.000500050006407e-05,
+            "err": 0.00026002600260026,
+            "extrapolated": false,
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 9.5019003800767e-05,
+            "err": 0.00033006601320264054,
+            "extrapolated": false,
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 9.502850855255818e-05,
+            "err": 0.00033009902970891267,
+            "extrapolated": false,
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.00012506878783330455,
+            "err": 0.00033018159987993395,
+            "extrapolated": false,
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.00013013013013013497,
+            "err": 0.00033033033033033035,
+            "extrapolated": true,
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.00016533066132262686,
+            "err": 0.0003306613226452906,
+            "extrapolated": true,
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.00016566265060238838,
+            "err": 0.00033132530120481927,
+            "extrapolated": true,
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.96,
+        "sigma_rho": 0.009593023255813982,
+        "spearman": {
+          "note": "rank correlation over non-extrapolated z grid",
+          "rho": 0.942857142857143
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.96,
+      "role": "gate"
+    },
+    "poisson@0.700": {
+      "feasible": true,
+      "mode": "poisson",
+      "prediction": {
+        "a": 0.9,
+        "mode": "poisson",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.01006050302515124,
+            "err": 0.057797889894494726,
+            "extrapolated": false,
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.018116811681168132,
+            "err": 0.0799029902990299,
+            "extrapolated": false,
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.03140128025605121,
+            "err": 0.10720644128825765,
+            "extrapolated": false,
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.04361308392517754,
+            "err": 0.12610283084925478,
+            "extrapolated": false,
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.06435539546750713,
+            "err": 0.15944269348141477,
+            "extrapolated": false,
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.08462962962962964,
+            "err": 0.19073073073073074,
+            "extrapolated": true,
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.11067134268537074,
+            "err": 0.21677855711422847,
+            "extrapolated": true,
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.12171686746987953,
+            "err": 0.23066265060240965,
+            "extrapolated": true,
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.7,
+        "sigma_rho": 0.046220930232558126,
+        "spearman": {
+          "note": "rank correlation over non-extrapolated z grid",
+          "rho": 1.0
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.7,
+      "role": "gate"
+    },
+    "poisson@0.850": {
+      "feasible": true,
+      "mode": "poisson",
+      "prediction": {
+        "a": 0.9,
+        "mode": "poisson",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.024916245812290627,
+            "err": 0.1536326816340817,
+            "extrapolated": false,
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.047514751475147526,
+            "err": 0.21234123412341235,
+            "extrapolated": false,
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.0849869973994799,
+            "err": 0.28907281456291256,
+            "extrapolated": false,
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.11762028608582575,
+            "err": 0.34569870961288385,
+            "extrapolated": false,
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.18253039171544347,
+            "err": 0.4364050227625194,
+            "extrapolated": false,
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.2598798798798799,
+            "err": 0.5285285285285285,
+            "extrapolated": true,
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.32235971943887776,
+            "err": 0.6063476953907816,
+            "extrapolated": true,
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.37144076305220886,
+            "err": 0.6604066265060241,
+            "extrapolated": true,
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.85,
+        "sigma_rho": 0.04796511627906979,
+        "spearman": {
+          "note": "rank correlation over non-extrapolated z grid",
+          "rho": 1.0
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.85,
+      "role": "gate"
+    },
+    "poisson@0.925": {
+      "feasible": true,
+      "mode": "poisson",
+      "prediction": {
+        "a": 0.9,
+        "mode": "poisson",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.02031101555077755,
+            "err": 0.13549677483874192,
+            "extrapolated": false,
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.0373787378737874,
+            "err": 0.187993799379938,
+            "extrapolated": false,
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.0672634526905381,
+            "err": 0.25803160632126426,
+            "extrapolated": false,
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.09292787836350905,
+            "err": 0.3076622986896069,
+            "extrapolated": false,
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.14698584221321728,
+            "err": 0.3928160488268548,
+            "extrapolated": false,
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.20621121121121122,
+            "err": 0.475045045045045,
+            "extrapolated": true,
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.2576002004008016,
+            "err": 0.5463827655310621,
+            "extrapolated": true,
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.2944277108433735,
+            "err": 0.5938303212851406,
+            "extrapolated": true,
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.925,
+        "sigma_rho": 0.021802325581395346,
+        "spearman": {
+          "note": "rank correlation over non-extrapolated z grid",
+          "rho": 1.0
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.925,
+      "role": "gate"
+    },
+    "poisson@0.960": {
+      "feasible": true,
+      "mode": "poisson",
+      "prediction": {
+        "a": 0.9,
+        "mode": "poisson",
+        "per_z": {
+          "0.000": {
+            "d_sla": 0.0,
+            "err": 0.0,
+            "extrapolated": false,
+            "z_s": 0.0,
+            "z_steps": 0
+          },
+          "0.050": {
+            "d_sla": 0.010860543027151365,
+            "err": 0.0864093204660233,
+            "extrapolated": false,
+            "z_s": 0.05,
+            "z_steps": 10
+          },
+          "0.100": {
+            "d_sla": 0.020827082708270828,
+            "err": 0.12083708370837083,
+            "extrapolated": false,
+            "z_s": 0.1,
+            "z_steps": 20
+          },
+          "0.200": {
+            "d_sla": 0.03825765153030605,
+            "err": 0.1680236047209442,
+            "extrapolated": false,
+            "z_s": 0.2,
+            "z_steps": 40
+          },
+          "0.300": {
+            "d_sla": 0.05379113734120236,
+            "err": 0.20160048014404322,
+            "extrapolated": false,
+            "z_s": 0.3,
+            "z_steps": 60
+          },
+          "0.550": {
+            "d_sla": 0.08383610986042322,
+            "err": 0.2622292260743409,
+            "extrapolated": false,
+            "z_s": 0.55,
+            "z_steps": 110
+          },
+          "1.000": {
+            "d_sla": 0.12032532532532533,
+            "err": 0.3313813813813814,
+            "extrapolated": true,
+            "z_s": 1.0,
+            "z_steps": 200
+          },
+          "2.000": {
+            "d_sla": 0.1565681362725451,
+            "err": 0.37970941883767534,
+            "extrapolated": true,
+            "z_s": 2.0,
+            "z_steps": 400
+          },
+          "4.000": {
+            "d_sla": 0.1806475903614458,
+            "err": 0.420035140562249,
+            "extrapolated": true,
+            "z_s": 4.0,
+            "z_steps": 800
+          }
+        },
+        "rho_bar": 0.96,
+        "sigma_rho": 0.009593023255813982,
+        "spearman": {
+          "note": "rank correlation over non-extrapolated z grid",
+          "rho": 1.0
+        },
+        "tau_rho": 1.0,
+        "with_model_err": false
+      },
+      "rho_bar": 0.96,
+      "role": "gate"
+    }
+  },
+  "model_error_summary": {
+    "by_mode": {
+      "cbr": {
+        "e_model_pure_max_ms": 6.215887211041813,
+        "e_model_pure_min_ms": 4.980235328543948,
+        "efficiency_max": 0.42550144517541055,
+        "efficiency_min": 0.18350437929740948,
+        "topology_mean_resid_sd_ms_per_link": 6.171935648469647
+      },
+      "h2": {
+        "e_model_pure_max_ms": 0.07995281410788171,
+        "e_model_pure_min_ms": 0.047442777947348205,
+        "efficiency_max": 0.9779416781817794,
+        "efficiency_min": 0.9582240231926856,
+        "topology_mean_resid_sd_ms_per_link": 0.2177095364194295
+      },
+      "poisson": {
+        "e_model_pure_max_ms": 0.07838953513811986,
+        "e_model_pure_min_ms": 0.057950406910128954,
+        "efficiency_max": 0.9694540403768476,
+        "efficiency_min": 0.9413722055354534,
+        "topology_mean_resid_sd_ms_per_link": 0.25559420644126163
+      }
+    },
+    "links": {
+      "cbr|4|10": {
+        "bias_rms_ms": 6.180624530387173,
+        "e_model_pure_ms": 6.215887211041813,
+        "model_efficiency": 0.18350437929740948,
+        "resid_sd_ms": 6.323263224355594,
+        "sigma_schedule_ms": 1.1603464931195095
+      },
+      "cbr|6|13": {
+        "bias_rms_ms": 4.7340144301556295,
+        "e_model_pure_ms": 5.883962033039427,
+        "model_efficiency": 0.42550144517541055,
+        "resid_sd_ms": 6.5019190849993285,
+        "sigma_schedule_ms": 2.7665759670807972
+      },
+      "cbr|8|18": {
+        "bias_rms_ms": 4.9474172193498935,
+        "e_model_pure_ms": 4.980235328543948,
+        "model_efficiency": 0.3277031059019488,
+        "resid_sd_ms": 5.27131326920247,
+        "sigma_schedule_ms": 1.7274257304998049
+      },
+      "h2|4|10": {
+        "bias_rms_ms": 0.08014966824369787,
+        "e_model_pure_ms": 0.07995281410788171,
+        "model_efficiency": 0.9582240231926856,
+        "resid_sd_ms": 0.2795369745878859,
+        "sigma_schedule_ms": 0.26785904442071556
+      },
+      "h2|6|13": {
+        "bias_rms_ms": 0.06189636749018005,
+        "e_model_pure_ms": 0.05379673957876811,
+        "model_efficiency": 0.9637293279665072,
+        "resid_sd_ms": 0.20157531221773434,
+        "sigma_schedule_ms": 0.19426404017823598
+      },
+      "h2|8|18": {
+        "bias_rms_ms": 0.04952282299034142,
+        "e_model_pure_ms": 0.047442777947348205,
+        "model_efficiency": 0.9779416781817794,
+        "resid_sd_ms": 0.22713137783943915,
+        "sigma_schedule_ms": 0.22212124081204093
+      },
+      "poisson|4|10": {
+        "bias_rms_ms": 0.08032506931606434,
+        "e_model_pure_ms": 0.07838953513811986,
+        "model_efficiency": 0.9413722055354534,
+        "resid_sd_ms": 0.23235493820647365,
+        "sigma_schedule_ms": 0.2187324806464821
+      },
+      "poisson|6|13": {
+        "bias_rms_ms": 0.07176791948160821,
+        "e_model_pure_ms": 0.06698441686436969,
+        "model_efficiency": 0.9682541438672926,
+        "resid_sd_ms": 0.2679721568707349,
+        "sigma_schedule_ms": 0.2594651513311452
+      },
+      "poisson|8|18": {
+        "bias_rms_ms": 0.06743140946604988,
+        "e_model_pure_ms": 0.057950406910128954,
+        "model_efficiency": 0.9694540403768476,
+        "resid_sd_ms": 0.23626896448497225,
+        "sigma_schedule_ms": 0.22905190223561026
+      }
+    }
+  },
+  "phase": "20R.3",
+  "scaling_law": {
+    "h6_pre_campaign_pass": true,
+    "max_spread": 0.015643034994793747,
+    "mode": "poisson",
+    "pass_threshold": 0.05,
+    "ratios": [
+      0.1,
+      0.3,
+      0.55,
+      1.0
+    ],
+    "rho_bar": 0.925,
+    "rows": [
+      {
+        "spread": 0.012153640171352703,
+        "values": [
+          {
+            "err": 0.18242364847296946,
+            "tau_rho": 0.2,
+            "z_over_tau": 0.1,
+            "z_s": 0.020000000000000004
+          },
+          {
+            "err": 0.187993799379938,
+            "tau_rho": 1.0,
+            "z_over_tau": 0.1,
+            "z_s": 0.1
+          },
+          {
+            "err": 0.19457728864432217,
+            "tau_rho": 5.0,
+            "z_over_tau": 0.1,
+            "z_s": 0.5
+          }
+        ],
+        "z_over_tau": 0.1
+      },
+      {
+        "spread": 0.013060752999211,
+        "values": [
+          {
+            "err": 0.2994179650779047,
+            "tau_rho": 0.2,
+            "z_over_tau": 0.3,
+            "z_s": 0.06
+          },
+          {
+            "err": 0.3076622986896069,
+            "tau_rho": 1.0,
+            "z_over_tau": 0.3,
+            "z_s": 0.3
+          },
+          {
+            "err": 0.3124787180771157,
+            "tau_rho": 5.0,
+            "z_over_tau": 0.3,
+            "z_s": 1.5
+          }
+        ],
+        "z_over_tau": 0.3
+      },
+      {
+        "spread": 0.011724128715642546,
+        "values": [
+          {
+            "err": 0.38109192011121223,
+            "tau_rho": 0.2,
+            "z_over_tau": 0.55,
+            "z_s": 0.11000000000000001
+          },
+          {
+            "err": 0.3928160488268548,
+            "tau_rho": 1.0,
+            "z_over_tau": 0.55,
+            "z_s": 0.55
+          },
+          {
+            "err": 0.3824066182000501,
+            "tau_rho": 5.0,
+            "z_over_tau": 0.55,
+            "z_s": 2.75
+          }
+        ],
+        "z_over_tau": 0.55
+      },
+      {
+        "spread": 0.015643034994793747,
+        "values": [
+          {
+            "err": 0.4664382876575315,
+            "tau_rho": 0.2,
+            "z_over_tau": 1.0,
+            "z_s": 0.2
+          },
+          {
+            "err": 0.475045045045045,
+            "tau_rho": 1.0,
+            "z_over_tau": 1.0,
+            "z_s": 1.0
+          },
+          {
+            "err": 0.4594020100502513,
+            "tau_rho": 5.0,
+            "z_over_tau": 1.0,
+            "z_s": 5.0
+          }
+        ],
+        "z_over_tau": 1.0
+      }
+    ],
+    "taus": [
+      0.2,
+      1.0,
+      5.0
+    ]
+  },
+  "script": "measurements.predict_err_quick",
+  "sensitivity": {
+    "a": {
+      "h2@0.700": {
+        "0.2": 0.1463104707589174,
+        "0.9": 0.38889889439191555
+      },
+      "h2@0.850": {
+        "0.2": 0.009805392966131372,
+        "0.9": 0.3234579018460153
+      },
+      "h2@0.925": {
+        "0.2": 0.0,
+        "0.9": 0.0901745960278153
+      },
+      "h2@0.960": {
+        "0.2": 0.0,
+        "0.9": 0.00033018159987993395
+      },
+      "poisson@0.700": {
+        "0.2": 0.0,
+        "0.9": 0.15944269348141477
+      },
+      "poisson@0.850": {
+        "0.2": 0.28716293961678924,
+        "0.9": 0.4364050227625194
+      },
+      "poisson@0.925": {
+        "0.2": 0.2338386112361799,
+        "0.9": 0.3928160488268548
+      },
+      "poisson@0.960": {
+        "0.2": 0.019380659362649457,
+        "0.9": 0.2622292260743409
+      }
+    },
+    "tau": {
+      "h2@0.700": {
+        "0.2": 0.5712041622892591,
+        "1.0": 0.38889889439191555,
+        "5.0": 0.2145930261643904
+      },
+      "h2@0.850": {
+        "0.2": 0.4744709590274651,
+        "1.0": 0.3234579018460153,
+        "5.0": 0.17839811896543098
+      },
+      "h2@0.925": {
+        "0.2": 0.11926059332632948,
+        "1.0": 0.0901745960278153,
+        "5.0": 0.04824653559457702
+      },
+      "h2@0.960": {
+        "0.2": 0.0008404622542398319,
+        "1.0": 0.00033018159987993395,
+        "5.0": 6.003301815998799e-05
+      },
+      "poisson@0.700": {
+        "0.2": 0.22913102206213418,
+        "1.0": 0.15944269348141477,
+        "5.0": 0.07462104157286507
+      },
+      "poisson@0.850": {
+        "0.2": 0.6332783030666866,
+        "1.0": 0.4364050227625194,
+        "5.0": 0.2417479613787583
+      },
+      "poisson@0.925": {
+        "0.2": 0.5718445144829656,
+        "1.0": 0.3928160488268548,
+        "5.0": 0.2038221021561859
+      },
+      "poisson@0.960": {
+        "0.2": 0.40642853569463205,
+        "1.0": 0.2622292260743409,
+        "5.0": 0.13013157236480064
+      }
+    }
+  },
+  "sla_calibration_summary": {
+    "max_clip_fraction_feasible": 0.000740625,
+    "max_fixpoint_rounds": 4,
+    "n_design_cells": 12,
+    "n_feasible": 10,
+    "n_gate_cells": 8,
+    "n_in_band": 8,
+    "n_pc1_cells": 4
+  },
+  "stopping_rules": {
+    "err_z0_gt_0p20": "STOP: likely quantization or measured-lookup bug",
+    "ratio_1p2_to_2": "record and explain in text, then continue",
+    "ratio_gt_2": "STOP: investigate measurement pipeline before trusting the number",
+    "ratio_lt_1p2": "understanding confirmed"
+  },
+  "with_model_error": {
+    "h2@0.700": {
+      "a": 0.9,
+      "mode": "h2",
+      "per_z": {
+        "0.000": {
+          "d_sla": 3.500000000000725e-05,
+          "err": 0.00483,
+          "extrapolated": false,
+          "z_s": 0.0,
+          "z_steps": 0
+        },
+        "0.050": {
+          "d_sla": 0.01984099204960249,
+          "err": 0.13575178758937947,
+          "extrapolated": false,
+          "z_s": 0.05,
+          "z_steps": 10
+        },
+        "0.100": {
+          "d_sla": 0.037003700370037,
+          "err": 0.18834883488348836,
+          "extrapolated": false,
+          "z_s": 0.1,
+          "z_steps": 20
+        },
+        "0.200": {
+          "d_sla": 0.06783856771354271,
+          "err": 0.2577715543108622,
+          "extrapolated": false,
+          "z_s": 0.2,
+          "z_steps": 40
+        },
+        "0.300": {
+          "d_sla": 0.09324797439231769,
+          "err": 0.3056516955086526,
+          "extrapolated": false,
+          "z_s": 0.3,
+          "z_steps": 60
+        },
+        "0.550": {
+          "d_sla": 0.1458502176196908,
+          "err": 0.38917404572514885,
+          "extrapolated": false,
+          "z_s": 0.55,
+          "z_steps": 110
+        },
+        "1.000": {
+          "d_sla": 0.2102352352352352,
+          "err": 0.47575075075075074,
+          "extrapolated": true,
+          "z_s": 1.0,
+          "z_steps": 200
+        },
+        "2.000": {
+          "d_sla": 0.26510020040080157,
+          "err": 0.5448797595190381,
+          "extrapolated": true,
+          "z_s": 2.0,
+          "z_steps": 400
+        },
+        "4.000": {
+          "d_sla": 0.3021536144578313,
+          "err": 0.5935993975903614,
+          "extrapolated": true,
+          "z_s": 4.0,
+          "z_steps": 800
+        }
+      },
+      "rho_bar": 0.7,
+      "sigma_rho": 0.046220930232558126,
+      "spearman": {
+        "note": "rank correlation over non-extrapolated z grid",
+        "rho": 1.0
+      },
+      "tau_rho": 1.0,
+      "with_model_err": true
+    },
+    "h2@0.850": {
+      "a": 0.9,
+      "mode": "h2",
+      "per_z": {
+        "0.000": {
+          "d_sla": 3.0000000000002247e-05,
+          "err": 0.00129,
+          "extrapolated": false,
+          "z_s": 0.0,
+          "z_steps": 0
+        },
+        "0.050": {
+          "d_sla": 0.014390719535976787,
+          "err": 0.11105055252762638,
+          "extrapolated": false,
+          "z_s": 0.05,
+          "z_steps": 10
+        },
+        "0.100": {
+          "d_sla": 0.027202720272027192,
+          "err": 0.156010601060106,
+          "extrapolated": false,
+          "z_s": 0.1,
+          "z_steps": 20
+        },
+        "0.200": {
+          "d_sla": 0.05133526705341068,
+          "err": 0.2121874374874975,
+          "extrapolated": false,
+          "z_s": 0.2,
+          "z_steps": 40
+        },
+        "0.300": {
+          "d_sla": 0.07037111133340002,
+          "err": 0.25188056416925075,
+          "extrapolated": false,
+          "z_s": 0.3,
+          "z_steps": 60
+        },
+        "0.550": {
+          "d_sla": 0.10982540397218468,
+          "err": 0.32358797338536194,
+          "extrapolated": false,
+          "z_s": 0.55,
+          "z_steps": 110
+        },
+        "1.000": {
+          "d_sla": 0.15882382382382385,
+          "err": 0.3983033033033033,
+          "extrapolated": true,
+          "z_s": 1.0,
+          "z_steps": 200
+        },
+        "2.000": {
+          "d_sla": 0.2044689378757515,
+          "err": 0.45794088176352704,
+          "extrapolated": true,
+          "z_s": 2.0,
+          "z_steps": 400
+        },
+        "4.000": {
+          "d_sla": 0.23515562248995983,
+          "err": 0.49987449799196787,
+          "extrapolated": true,
+          "z_s": 4.0,
+          "z_steps": 800
+        }
+      },
+      "rho_bar": 0.85,
+      "sigma_rho": 0.04796511627906979,
+      "spearman": {
+        "note": "rank correlation over non-extrapolated z grid",
+        "rho": 1.0
+      },
+      "tau_rho": 1.0,
+      "with_model_err": true
+    },
+    "h2@0.925": {
+      "a": 0.9,
+      "mode": "h2",
+      "per_z": {
+        "0.000": {
+          "d_sla": 0.0002449999999999952,
+          "err": 0.000695,
+          "extrapolated": false,
+          "z_s": 0.0,
+          "z_steps": 0
+        },
+        "0.050": {
+          "d_sla": 0.003210160508025417,
+          "err": 0.031856592829641484,
+          "extrapolated": false,
+          "z_s": 0.05,
+          "z_steps": 10
+        },
+        "0.100": {
+          "d_sla": 0.00543554355435541,
+          "err": 0.044649464946494646,
+          "extrapolated": false,
+          "z_s": 0.1,
+          "z_steps": 20
+        },
+        "0.200": {
+          "d_sla": 0.008776755351070226,
+          "err": 0.0599619923984797,
+          "extrapolated": false,
+          "z_s": 0.2,
+          "z_steps": 40
+        },
+        "0.300": {
+          "d_sla": 0.012148644593378,
+          "err": 0.07028608582574772,
+          "extrapolated": false,
+          "z_s": 0.3,
+          "z_steps": 60
+        },
+        "0.550": {
+          "d_sla": 0.021086597628695802,
+          "err": 0.08977937865826205,
+          "extrapolated": false,
+          "z_s": 0.55,
+          "z_steps": 110
+        },
+        "1.000": {
+          "d_sla": 0.031096096096096093,
+          "err": 0.1114114114114114,
+          "extrapolated": true,
+          "z_s": 1.0,
+          "z_steps": 200
+        },
+        "2.000": {
+          "d_sla": 0.04301102204408819,
+          "err": 0.12536573146292584,
+          "extrapolated": true,
+          "z_s": 2.0,
+          "z_steps": 400
+        },
+        "4.000": {
+          "d_sla": 0.04889056224899599,
+          "err": 0.13275602409638554,
+          "extrapolated": true,
+          "z_s": 4.0,
+          "z_steps": 800
+        }
+      },
+      "rho_bar": 0.925,
+      "sigma_rho": 0.021802325581395346,
+      "spearman": {
+        "note": "rank correlation over non-extrapolated z grid",
+        "rho": 1.0
+      },
+      "tau_rho": 1.0,
+      "with_model_err": true
+    },
+    "h2@0.960": {
+      "a": 0.9,
+      "mode": "h2",
+      "per_z": {
+        "0.000": {
+          "d_sla": 0.0,
+          "err": 1e-05,
+          "extrapolated": false,
+          "z_s": 0.0,
+          "z_steps": 0
+        },
+        "0.050": {
+          "d_sla": 5.000250012487939e-06,
+          "err": 0.00027001350067503376,
+          "extrapolated": false,
+          "z_s": 0.05,
+          "z_steps": 10
+        },
+        "0.100": {
+          "d_sla": 2.0002000200025627e-05,
+          "err": 0.00026002600260026,
+          "extrapolated": false,
+          "z_s": 0.1,
+          "z_steps": 20
+        },
+        "0.200": {
+          "d_sla": 2.5005001000222293e-05,
+          "err": 0.00033006601320264054,
+          "extrapolated": false,
+          "z_s": 0.2,
+          "z_steps": 40
+        },
+        "0.300": {
+          "d_sla": 5.5016504951488354e-05,
+          "err": 0.00033009902970891267,
+          "extrapolated": false,
+          "z_s": 0.3,
+          "z_steps": 60
+        },
+        "0.550": {
+          "d_sla": 0.00012506878783330455,
+          "err": 0.00033018159987993395,
+          "extrapolated": false,
+          "z_s": 0.55,
+          "z_steps": 110
+        },
+        "1.000": {
+          "d_sla": 0.00013013013013013497,
+          "err": 0.00033033033033033035,
+          "extrapolated": true,
+          "z_s": 1.0,
+          "z_steps": 200
+        },
+        "2.000": {
+          "d_sla": 0.00016533066132265462,
+          "err": 0.0003306613226452906,
+          "extrapolated": true,
+          "z_s": 2.0,
+          "z_steps": 400
+        },
+        "4.000": {
+          "d_sla": 0.00016566265060238838,
+          "err": 0.00033132530120481927,
+          "extrapolated": true,
+          "z_s": 4.0,
+          "z_steps": 800
+        }
+      },
+      "rho_bar": 0.96,
+      "sigma_rho": 0.009593023255813982,
+      "spearman": {
+        "note": "rank correlation over non-extrapolated z grid",
+        "rho": 0.942857142857143
+      },
+      "tau_rho": 1.0,
+      "with_model_err": true
+    },
+    "poisson@0.700": {
+      "a": 0.9,
+      "mode": "poisson",
+      "per_z": {
+        "0.000": {
+          "d_sla": 0.004525000000000001,
+          "err": 0.078975,
+          "extrapolated": false,
+          "z_s": 0.0,
+          "z_steps": 0
+        },
+        "0.050": {
+          "d_sla": 0.013530676533826697,
+          "err": 0.10143507175358768,
+          "extrapolated": false,
+          "z_s": 0.05,
+          "z_steps": 10
+        },
+        "0.100": {
+          "d_sla": 0.021122112211221122,
+          "err": 0.11665666566656666,
+          "extrapolated": false,
+          "z_s": 0.1,
+          "z_steps": 20
+        },
+        "0.200": {
+          "d_sla": 0.034501900380076,
+          "err": 0.13834266853370675,
+          "extrapolated": false,
+          "z_s": 0.2,
+          "z_steps": 40
+        },
+        "0.300": {
+          "d_sla": 0.04565369610883266,
+          "err": 0.1561818545563669,
+          "extrapolated": false,
+          "z_s": 0.3,
+          "z_steps": 60
+        },
+        "0.550": {
+          "d_sla": 0.06726199409675321,
+          "err": 0.18567712241732953,
+          "extrapolated": false,
+          "z_s": 0.55,
+          "z_steps": 110
+        },
+        "1.000": {
+          "d_sla": 0.08962462462462462,
+          "err": 0.21494494494494495,
+          "extrapolated": true,
+          "z_s": 1.0,
+          "z_steps": 200
+        },
+        "2.000": {
+          "d_sla": 0.11274048096192382,
+          "err": 0.24027054108216434,
+          "extrapolated": true,
+          "z_s": 2.0,
+          "z_steps": 400
+        },
+        "4.000": {
+          "d_sla": 0.12550200803212852,
+          "err": 0.2548343373493976,
+          "extrapolated": true,
+          "z_s": 4.0,
+          "z_steps": 800
+        }
+      },
+      "rho_bar": 0.7,
+      "sigma_rho": 0.046220930232558126,
+      "spearman": {
+        "note": "rank correlation over non-extrapolated z grid",
+        "rho": 1.0
+      },
+      "tau_rho": 1.0,
+      "with_model_err": true
+    },
+    "poisson@0.850": {
+      "a": 0.9,
+      "mode": "poisson",
+      "per_z": {
+        "0.000": {
+          "d_sla": 0.0007650000000000157,
+          "err": 0.017715,
+          "extrapolated": false,
+          "z_s": 0.0,
+          "z_steps": 0
+        },
+        "0.050": {
+          "d_sla": 0.025871293564678238,
+          "err": 0.1551127556377819,
+          "extrapolated": false,
+          "z_s": 0.05,
+          "z_steps": 10
+        },
+        "0.100": {
+          "d_sla": 0.04854485448544854,
+          "err": 0.21386138613861386,
+          "extrapolated": false,
+          "z_s": 0.1,
+          "z_steps": 20
+        },
+        "0.200": {
+          "d_sla": 0.08599719943988798,
+          "err": 0.29107821564312863,
+          "extrapolated": false,
+          "z_s": 0.2,
+          "z_steps": 40
+        },
+        "0.300": {
+          "d_sla": 0.1180604181254376,
+          "err": 0.34716414924477346,
+          "extrapolated": false,
+          "z_s": 0.3,
+          "z_steps": 60
+        },
+        "0.550": {
+          "d_sla": 0.18268547701235677,
+          "err": 0.4377657711741458,
+          "extrapolated": false,
+          "z_s": 0.55,
+          "z_steps": 110
+        },
+        "1.000": {
+          "d_sla": 0.25972972972972974,
+          "err": 0.5304104104104104,
+          "extrapolated": true,
+          "z_s": 1.0,
+          "z_steps": 200
+        },
+        "2.000": {
+          "d_sla": 0.32212424849699395,
+          "err": 0.6071843687374749,
+          "extrapolated": true,
+          "z_s": 2.0,
+          "z_steps": 400
+        },
+        "4.000": {
+          "d_sla": 0.3715512048192771,
+          "err": 0.6610843373493976,
+          "extrapolated": true,
+          "z_s": 4.0,
+          "z_steps": 800
+        }
+      },
+      "rho_bar": 0.85,
+      "sigma_rho": 0.04796511627906979,
+      "spearman": {
+        "note": "rank correlation over non-extrapolated z grid",
+        "rho": 1.0
+      },
+      "tau_rho": 1.0,
+      "with_model_err": true
+    },
+    "poisson@0.925": {
+      "a": 0.9,
+      "mode": "poisson",
+      "per_z": {
+        "0.000": {
+          "d_sla": 0.0011350000000000249,
+          "err": 0.00706,
+          "extrapolated": false,
+          "z_s": 0.0,
+          "z_steps": 0
+        },
+        "0.050": {
+          "d_sla": 0.021096054802740155,
+          "err": 0.13553177658882945,
+          "extrapolated": false,
+          "z_s": 0.05,
+          "z_steps": 10
+        },
+        "0.100": {
+          "d_sla": 0.038538853885388524,
+          "err": 0.1879037903790379,
+          "extrapolated": false,
+          "z_s": 0.1,
+          "z_steps": 20
+        },
+        "0.200": {
+          "d_sla": 0.06937387477495499,
+          "err": 0.2578465693138628,
+          "extrapolated": false,
+          "z_s": 0.2,
+          "z_steps": 40
+        },
+        "0.300": {
+          "d_sla": 0.09472841852555769,
+          "err": 0.30735720716214865,
+          "extrapolated": false,
+          "z_s": 0.3,
+          "z_steps": 60
+        },
+        "0.550": {
+          "d_sla": 0.14692080644354397,
+          "err": 0.39210065536044825,
+          "extrapolated": false,
+          "z_s": 0.55,
+          "z_steps": 110
+        },
+        "1.000": {
+          "d_sla": 0.2045895895895896,
+          "err": 0.4741841841841842,
+          "extrapolated": true,
+          "z_s": 1.0,
+          "z_steps": 200
+        },
+        "2.000": {
+          "d_sla": 0.2557064128256513,
+          "err": 0.5449649298597194,
+          "extrapolated": true,
+          "z_s": 2.0,
+          "z_steps": 400
+        },
+        "4.000": {
+          "d_sla": 0.29233433734939757,
+          "err": 0.5925602409638554,
+          "extrapolated": true,
+          "z_s": 4.0,
+          "z_steps": 800
+        }
+      },
+      "rho_bar": 0.925,
+      "sigma_rho": 0.021802325581395346,
+      "spearman": {
+        "note": "rank correlation over non-extrapolated z grid",
+        "rho": 1.0
+      },
+      "tau_rho": 1.0,
+      "with_model_err": true
+    },
+    "poisson@0.960": {
+      "a": 0.9,
+      "mode": "poisson",
+      "per_z": {
+        "0.000": {
+          "d_sla": 0.00047999999999998044,
+          "err": 0.00414,
+          "extrapolated": false,
+          "z_s": 0.0,
+          "z_steps": 0
+        },
+        "0.050": {
+          "d_sla": 0.011410570528526426,
+          "err": 0.08664933246662333,
+          "extrapolated": false,
+          "z_s": 0.05,
+          "z_steps": 10
+        },
+        "0.100": {
+          "d_sla": 0.02067706770677069,
+          "err": 0.12111211121112112,
+          "extrapolated": false,
+          "z_s": 0.1,
+          "z_steps": 20
+        },
+        "0.200": {
+          "d_sla": 0.03593218643728746,
+          "err": 0.1684736947389478,
+          "extrapolated": false,
+          "z_s": 0.2,
+          "z_steps": 40
+        },
+        "0.300": {
+          "d_sla": 0.05181554466339902,
+          "err": 0.20194558367510254,
+          "extrapolated": false,
+          "z_s": 0.3,
+          "z_steps": 60
+        },
+        "0.550": {
+          "d_sla": 0.0812146680674371,
+          "err": 0.26287458101956074,
+          "extrapolated": false,
+          "z_s": 0.55,
+          "z_steps": 110
+        },
+        "1.000": {
+          "d_sla": 0.11925925925925926,
+          "err": 0.33233733733733734,
+          "extrapolated": true,
+          "z_s": 1.0,
+          "z_steps": 200
+        },
+        "2.000": {
+          "d_sla": 0.15289579158316635,
+          "err": 0.380686372745491,
+          "extrapolated": true,
+          "z_s": 2.0,
+          "z_steps": 400
+        },
+        "4.000": {
+          "d_sla": 0.17696285140562248,
+          "err": 0.4211345381526104,
+          "extrapolated": true,
+          "z_s": 4.0,
+          "z_steps": 800
+        }
+      },
+      "rho_bar": 0.96,
+      "sigma_rho": 0.009593023255813982,
+      "spearman": {
+        "note": "rank correlation over non-extrapolated z grid",
+        "rho": 1.0
+      },
+      "tau_rho": 1.0,
+      "with_model_err": true
+    }
+  }
+}
