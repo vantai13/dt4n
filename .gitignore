@@ -78,6 +78,13 @@ results/**/*
 results/phase-L/raw/*.bin
 !results/phase-L/raw/MANIFEST.sha256.json
 
+# Phase 20R live campaign raw payloads stay local; compact state/table artifacts
+# are committed after validation.
+results/phase-20R/raw/*.bin
+results/phase-20R/raw/*.json
+!results/phase-20R/raw/MANIFEST.sha256.json
+!results/phase-20R/truth_table.parquet
+
 # Raw/generated experiment payloads stay local. Commit compact summaries,
 # diagnostics, and docs instead of large traces/log folders.
 results/phase-14/
