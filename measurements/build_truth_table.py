@@ -16,10 +16,12 @@ from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 import pandas as pd
 
 from measurements import l6_campaign as L6
+from measurements import l6_campaign_fine as FINE
 
 
 PHASE_L_STATE = "results/phase-L/campaign_state.json"
 PHASE_20R_STATE = "results/phase-20R/campaign_state.json"
+CALIBRATION = FINE.CALIBRATION
 CONTINUITY_STATE = "results/phase-20R/continuity_state.json"
 TRUTH_TABLE = "results/phase-20R/truth_table.parquet"
 TRUTH_TABLE_CSV = "results/phase-20R/truth_table.csv"
@@ -28,6 +30,7 @@ SENTINEL_JSON = "results/phase-20R/sentinel_control.json"
 VALID_MODES = {"cbr", "poisson", "h2"}
 TRUTH_FIELD = "q_mean_ms"
 TRUTH_FIELD_NOTE = "probe_mean_ms KHONG dung -- probe deu dan, khong thoa PASTA"
+TruthGrid = Mapping[Tuple[str, float, int], set[float]]
 
 
 def load_state(path: str) -> Dict[str, Any]:
@@ -47,10 +50,30 @@ def usable_row(row: Mapping[str, Any]) -> bool:
     return True
 
 
-def rows_from_state(state: Mapping[str, Any], source: str) -> List[Dict[str, Any]]:
+def truth_grid(calibration_path: str = CALIBRATION) -> Dict[Tuple[str, float, int], set[float]]:
+    calib = FINE.load_calibration(calibration_path)
+    need = FINE.required_rho_ranges(calib)
+    return {
+        key: {round(float(rho), 4) for rho in FINE.rho_grid(key[0], lo, hi)}
+        for key, (lo, hi) in need.items()
+    }
+
+
+def in_truth_grid(row: Mapping[str, Any], grid: TruthGrid) -> bool:
+    key = (str(row["mode"]), float(row["bw"]), int(row["q"]))
+    return key in grid and round(float(row["rho"]), 4) in grid[key]
+
+
+def rows_from_state(
+    state: Mapping[str, Any],
+    source: str,
+    grid: Optional[TruthGrid] = None,
+) -> List[Dict[str, Any]]:
     out = []
     for row in state.get("rows", []):
         if not usable_row(row):
+            continue
+        if grid is not None and not in_truth_grid(row, grid):
             continue
         assert TRUTH_FIELD in row, "thieu truong ground truth %s" % TRUTH_FIELD
         out.append(
@@ -73,8 +96,12 @@ def rows_from_state(state: Mapping[str, Any], source: str) -> List[Dict[str, Any
     return out
 
 
-def merge_states(phase_l_state: Mapping[str, Any], phase_20r_state: Mapping[str, Any]) -> pd.DataFrame:
-    rows = rows_from_state(phase_l_state, "phase-L") + rows_from_state(phase_20r_state, "phase-20R")
+def merge_states(
+    phase_l_state: Mapping[str, Any],
+    phase_20r_state: Mapping[str, Any],
+    grid: Optional[TruthGrid] = None,
+) -> pd.DataFrame:
+    rows = rows_from_state(phase_l_state, "phase-L", grid) + rows_from_state(phase_20r_state, "phase-20R", grid)
     df = pd.DataFrame(rows)
     if df.empty:
         return pd.DataFrame(
@@ -141,8 +168,9 @@ def write_truth_table(
     phase_20r_path: str = PHASE_20R_STATE,
     out_path: str = TRUTH_TABLE,
     csv_path: Optional[str] = TRUTH_TABLE_CSV,
+    calibration_path: str = CALIBRATION,
 ) -> pd.DataFrame:
-    table = merge_states(load_state(phase_l_path), load_state(phase_20r_path))
+    table = merge_states(load_state(phase_l_path), load_state(phase_20r_path), truth_grid(calibration_path))
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     write_parquet_with_metadata(table, str(out))
@@ -255,8 +283,9 @@ def write_sentinel_control(
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--phase-l-state", default=PHASE_L_STATE)
+    ap.add_argument("--phase-l-state", "--phase-l", dest="phase_l_state", default=PHASE_L_STATE)
     ap.add_argument("--phase-20r-state", "--state", dest="phase_20r_state", default=PHASE_20R_STATE)
+    ap.add_argument("--calibration", default=CALIBRATION)
     ap.add_argument("--continuity-state", default=CONTINUITY_STATE)
     ap.add_argument("--out", default=TRUTH_TABLE)
     ap.add_argument("--csv-out", default=TRUTH_TABLE_CSV)
@@ -268,7 +297,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     args = ap.parse_args(argv)
 
     if not args.skip_truth:
-        table = write_truth_table(args.phase_l_state, args.phase_20r_state, args.out, args.csv_out)
+        table = write_truth_table(args.phase_l_state, args.phase_20r_state, args.out, args.csv_out, args.calibration)
         print("truth rows=%d field=%s -> %s" % (len(table), TRUTH_FIELD, args.out))
     if not args.skip_continuity:
         report = write_continuity_check(args.phase_l_state, args.continuity_state, args.continuity_out)

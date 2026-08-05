@@ -32,7 +32,13 @@ RAW = "results/phase-L/raw"
 ORDER_SEED = 9000
 SENTINEL_EVERY = 30
 SENTINEL = {"mode": "h2", "rho": 0.90, "bw": 6.0, "q": 13, "seed": 999, "probe_pps": 20.0}
-SENTINEL_REF = {"mean_ms": 10.751, "sd_ms": 0.212}
+SENTINEL_REF = {
+    "mean_ms": 10.874913271091032,
+    "sd_ms": 0.012231184552303593,
+    "source": "results/phase-L/campaign_state.json, seed=999, h2|6|13",
+    "note": "Gia tri cu (10.751, 0.212) la hang so pilot truoc Phase L. "
+    "Voi sd = 0.212, mot drift 0.5 ms KHONG bi phat hien.",
+}
 STATE = "results/phase-L/campaign_state.json"
 LG = "python3 -m measurements.load_gen"
 PB = "python3 -m measurements.owd_probe"

@@ -81,13 +81,13 @@ def test_gate_bat_loi_van_hanh():
 
 def test_sentinel_summary_flags_out_of_control():
     ok = sentinel_summary([
-        {"q_mean_ms": 10.70},
-        {"q_mean_ms": 10.80},
-        {"q_mean_ms": 10.75},
-        {"q_mean_ms": 10.74},
+        {"q_mean_ms": 10.865},
+        {"q_mean_ms": 10.885},
+        {"q_mean_ms": 10.875},
+        {"q_mean_ms": 10.872},
     ])
     assert ok["pass"] is True
-    bad = sentinel_summary([{"q_mean_ms": 10.75}, {"q_mean_ms": 11.50}])
+    bad = sentinel_summary([{"q_mean_ms": 10.875}, {"q_mean_ms": 10.930}])
     assert bad["n_outside_3sigma"] == 1
     assert bad["pass"] is False
 
@@ -105,7 +105,7 @@ def test_campaign_summary_coverage_and_fails():
     state = {
         "done_idx": [p["idx"] for p in plan[:720]],
         "rows": [{"gate_fail": []} for _ in range(719)] + [{"gate_fail": ["rate"]}],
-        "sentinels": [{"q_mean_ms": 10.75}, {"q_mean_ms": 10.76}],
+        "sentinels": [{"q_mean_ms": 10.874}, {"q_mean_ms": 10.876}],
     }
     summary = campaign_summary(state, plan)
     assert summary["coverage_pass"] is True

@@ -90,3 +90,23 @@ def test_truth_table_parquet_records_truth_field_metadata(tmp_path):
         md = pq.read_metadata(out).metadata
         assert md[b"truth_field"] == b"q_mean_ms"
         assert b"probe_mean_ms" in md[b"truth_field_note"]
+
+
+def test_write_truth_table_keeps_only_phase20r_preregistered_grid(tmp_path):
+    phase_l_path = tmp_path / "phase_l.json"
+    phase20r_path = tmp_path / "phase20r.json"
+    out = tmp_path / "truth.parquet"
+    phase_l_path.write_text(
+        '{"rows": [%s]}\n' % B.json.dumps(row(mode="cbr", bw=4.0, q=10, rho=1.02), sort_keys=True),
+        encoding="utf-8",
+    )
+    phase20r_path.write_text(
+        '{"rows": [%s]}\n' % B.json.dumps(row(mode="h2", bw=6.0, q=13, rho=0.52), sort_keys=True),
+        encoding="utf-8",
+    )
+
+    table = B.write_truth_table(str(phase_l_path), str(phase20r_path), str(out), None)
+
+    assert len(table) == 1
+    assert table["mode"].iloc[0] == "h2"
+    assert table["rho"].iloc[0] == pytest.approx(0.52)
