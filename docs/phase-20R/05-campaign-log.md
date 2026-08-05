@@ -122,6 +122,41 @@ poisson  bw=6 q=13  0.3016 ms  VUOT
 poisson  bw=8 q=18  0.2463 ms  VUOT
 ```
 
-Vi vay, ket luan hien tai: campaign measurement PASS, nhung bang tra chua PASS
-ngan sach noi suy tuyen tinh. Truoc Lesson 20R.5 can quyet dinh do bu them
-hoac amend interpolator/budget.
+Check tren la diagnostic ad-hoc sai thu tuc: no lay `max`, do tren nhip `2h`,
+va khong tru nhieu do. Amendment 5 thay the ket luan nay.
+
+Check dung dung RMS, tru nhieu theo phuong sai tu `se_mean_ms`, va chia 4 de
+quy ve nhip `h`:
+
+```text
+cbr|4|10        e_true=0.0012 ms  OK
+cbr|6|13        e_true=0.0010 ms  OK
+cbr|8|18        e_true=0.0016 ms  OK
+h2|4|10         e_true=0.0000 ms  OK
+h2|6|13         e_true=0.0000 ms  OK
+h2|8|18         e_true=0.0000 ms  OK
+poisson|4|10    e_true=0.0000 ms  OK
+poisson|6|13    e_true=0.0000 ms  OK
+poisson|8|18    e_true=0.0100 ms  OK
+```
+
+Ket luan cap nhat: campaign measurement PASS va ngan sach noi suy DAT. Khong
+do bu, khong doi interpolator.
+
+## Frozen Residual Field For 20R.5
+
+Nhieu dong bang trong bang tra, tinh bang `se_mean_ms` sau khi trung binh 5
+seed:
+
+```text
+           mean     max
+mode
+cbr      0.0025  0.0070
+h2       0.0843  0.1903
+poisson  0.0553  0.1767
+```
+
+Du doan 20R.3 gia dinh bien do truong du `0.27 ms` cho mot seed. Bang tra
+thuc te thap hon gia dinh khoang 2-4 lan, nen D1 `err(z=0) in [0.000, 0.10]`
+van kha bac nhung ky vong nam o dau thap cua khoang. Khong sua
+`02-prediction.md`.

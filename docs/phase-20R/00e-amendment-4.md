@@ -132,6 +132,10 @@ Sign test `p = 0.125`, chua co y nghia. Bien do khoang `0.6%` san nhieu
 
 ## E. Truth Table Va Kiem Noi Suy Sau Khi Build
 
+Ghi chu sau do: Section nay ghi lai ket qua cua mot check ad-hoc sai thu tuc.
+Amendment 5 thay the ket luan cua Section E: ngan sach noi suy DAT sau khi
+dung RMS, tru nhieu theo phuong sai, va chia 4 de quy tu nhip `2h` ve nhip `h`.
+
 Bang tra duoc build lai sau amendment bang dung mien rho da ky trong
 `04-campaign-grid.md`, khong giu cac diem Phase L ngoai mien 20R:
 
@@ -158,7 +162,6 @@ poisson  bw=6 q=13  0.3016 ms  VUOT
 poisson  bw=8 q=18  0.2463 ms  VUOT
 ```
 
-Ket luan rieng cho check nay: campaign/gate measurement PASS, nhung dieu kien
-noi suy tuyen tinh preregistered KHONG PASS. Khong nen vao Lesson 20R.5 voi
-noi suy tuyen tinh tren bang nay neu chua co buoc do bu hoac amendment ve
-interpolator/budget.
+Ket luan cu cua check ad-hoc nay bi supersede boi Amendment 5. No khong phai
+bang chung bang tra qua tho; no so mot uoc luong co nhieu voi mot ngan sach
+danh cho dai luong that, lai dung max tren nhip `2h`.
