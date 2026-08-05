@@ -19,7 +19,7 @@ import numpy as np
 import pandas as pd
 
 from measurements import sla_calib_v2 as SLA
-from measurements.decision_error import check_z_grid
+from measurements.decision_error import check_z_grid, sawtooth_age_steps
 from mininet.rho_spec import ou_trajectory
 from twin import cost_v2 as C
 from twin import topology_v7 as T7
@@ -39,6 +39,8 @@ TRUTH_TABLE = "results/phase-20R/truth_table.parquet"
 CALIBRATION = "results/phase-20R/sla_calibration.json"
 CONTROLS_OUT = "results/phase-20R/controls.json"
 FIXED_OUT = "results/phase-20R/decision_error_by_age_by_regime.parquet"
+SUMMARY_OUT = "results/phase-20R/decision_error_by_age_summary.parquet"
+SAWTOOTH_OUT = "results/phase-20R/decision_error_sawtooth.json"
 RHO_SOURCE = "calibration_ar1"
 
 
@@ -171,6 +173,54 @@ def _viol(delay: np.ndarray, loss: np.ndarray, t_delay_ms: float, t_loss: float)
     return (delay > float(t_delay_ms)) | (loss > float(t_loss))
 
 
+def _cell_arrays(
+    tt: TruthTable,
+    cv2: C.CostV2,
+    cal_cell: Mapping[str, Any],
+    seed: int,
+    tau: float = TAU,
+    n: int = N,
+    dt: float = DT,
+    rho_source: str = RHO_SOURCE,
+) -> Dict[str, Any]:
+    mode = str(cal_cell["mode"])
+    tt.reset_clip_log()
+    rho_mat = rho_matrix_from_cell(
+        mode,
+        float(cal_cell["rho_bar"]),
+        float(cal_cell["sigma_rho"]),
+        int(seed),
+        tau=tau,
+        n=n,
+        dt=dt,
+        source=rho_source,
+    )
+    d_true, l_true, c_true = tt.path_tables(mode, rho_mat, float(cal_cell["w_loss"]))
+    d_fresh, l_fresh, c_fresh = cv2.tables_batch(rho_mat, mode, float(cal_cell["w_loss"]))
+    a_true = c_true.argmin(axis=1)
+    a_fresh = c_fresh.argmin(axis=1)
+    return {
+        "mode": mode,
+        "rho_bar": float(cal_cell["rho_bar"]),
+        "seed": int(seed),
+        "tau_rho": float(tau),
+        "sigma_rho": float(cal_cell["sigma_rho"]),
+        "n": int(n),
+        "dt": float(dt),
+        "rho_source": str(rho_source),
+        "clip_fraction": dict(tt.clip_log),
+        "d_true": d_true,
+        "l_true": l_true,
+        "c_true": c_true,
+        "d_fresh": d_fresh,
+        "l_fresh": l_fresh,
+        "c_fresh": c_fresh,
+        "a_true": a_true,
+        "a_fresh": a_fresh,
+        "viol": _viol(d_true, l_true, float(cal_cell["t_delay_ms"]), float(cal_cell["t_loss"])),
+    }
+
+
 def _decomposition(
     d_true: np.ndarray,
     d_fresh: np.ndarray,
@@ -205,13 +255,12 @@ def run_cell(
     t_delay = float(cal_cell["t_delay_ms"])
     t_loss = float(cal_cell["t_loss"])
 
-    tt.reset_clip_log()
-    rho_mat = rho_matrix_from_cell(mode, rho_bar, sigma, seed, tau=tau, n=n, dt=dt, source=rho_source)
-    d_true, l_true, c_true = tt.path_tables(mode, rho_mat, w_loss)
-    d_fresh, l_fresh, c_fresh = cv2.tables_batch(rho_mat, mode, w_loss)
-    a_true = c_true.argmin(axis=1)
-    a_fresh = c_fresh.argmin(axis=1)
-    viol = _viol(d_true, l_true, t_delay, t_loss)
+    arrays = _cell_arrays(tt, cv2, cal_cell, seed, tau=tau, n=n, dt=dt, rho_source=rho_source)
+    d_true = arrays["d_true"]
+    d_fresh = arrays["d_fresh"]
+    a_true = arrays["a_true"]
+    a_fresh = arrays["a_fresh"]
+    viol = arrays["viol"]
     err_model_const = float((a_fresh != a_true).mean())
 
     out: Dict[str, Any] = {
@@ -223,7 +272,7 @@ def run_cell(
         "n": int(n),
         "dt": float(dt),
         "rho_source": str(rho_source),
-        "clip_fraction": dict(tt.clip_log),
+        "clip_fraction": dict(arrays["clip_fraction"]),
         "per_z": {},
     }
     rows = np.arange(int(n))
@@ -274,6 +323,264 @@ def block_bootstrap_paired(
         key: (float(np.percentile(values, 2.5)), float(np.percentile(values, 97.5)))
         for key, values in acc.items()
     }
+
+
+def _block_means(values: np.ndarray, block_len: int) -> np.ndarray:
+    arr = np.asarray(values, dtype=float)
+    n_blocks = len(arr) // int(block_len)
+    if n_blocks <= 0:
+        raise ValueError("block_len too large for values")
+    return arr[: n_blocks * int(block_len)].reshape(n_blocks, int(block_len)).mean(axis=1)
+
+
+def _bootstrap_from_block_means(
+    by_name: Mapping[str, np.ndarray],
+    n_boot: int = N_BOOT,
+    seed: int = 7,
+) -> Dict[str, Tuple[float, float]]:
+    first = next(iter(by_name.values()))
+    n_blocks = len(first)
+    if any(len(v) != n_blocks for v in by_name.values()):
+        raise ValueError("paired bootstrap needs equal block counts")
+    rng = np.random.default_rng(int(seed))
+    boot = {key: np.empty(int(n_boot), dtype=float) for key in by_name}
+    for b in range(int(n_boot)):
+        pick = rng.integers(0, n_blocks, size=n_blocks)
+        for key, values in by_name.items():
+            boot[key][b] = np.asarray(values, dtype=float)[pick].mean()
+    return {
+        key: (float(np.percentile(values, 2.5)), float(np.percentile(values, 97.5)))
+        for key, values in boot.items()
+    }
+
+
+def _fixed_metric_series(arrays: Mapping[str, Any], z_s: float, max_k: int) -> Dict[str, np.ndarray]:
+    d_true = arrays["d_true"]
+    d_fresh = arrays["d_fresh"]
+    a_true = arrays["a_true"]
+    a_fresh = arrays["a_fresh"]
+    viol = arrays["viol"]
+    n = int(arrays["n"])
+    k = int(round(float(z_s) / float(arrays["dt"])))
+    current = np.arange(max_k, n)
+    twin_rows = current - k
+    a_twin = a_fresh[twin_rows]
+    a_now = a_fresh[current]
+    a_truth = a_true[current]
+    e_model, e_stale, _total = _decomposition(d_true[current], d_fresh[current], 0)
+    stale = d_fresh[current] - d_fresh[twin_rows]
+    if not np.allclose(e_model + stale, d_true[current] - d_fresh[twin_rows], atol=1e-9):
+        raise AssertionError("phan ra khong khop")
+    return {
+        "err_total": (a_twin != a_truth).astype(float),
+        "err_model": (a_now != a_truth).astype(float),
+        "err_stale": (a_twin != a_now).astype(float),
+        "d_sla": viol[current, a_twin].astype(float) - viol[current, a_truth].astype(float),
+        "rms_e_model": np.mean(e_model * e_model, axis=1),
+        "rms_e_stale": np.mean(stale * stale, axis=1),
+        "cov_e": np.mean(e_model * stale, axis=1),
+    }
+
+
+def fixed_summary_with_bootstrap(
+    truth_path: str = TRUTH_TABLE,
+    calibration_path: str = CALIBRATION,
+    out_path: str = SUMMARY_OUT,
+    n: int = N,
+    seeds: Sequence[int] = (101, 102, 103, 104, 105),
+    block_s: float = BLOCK_S,
+    n_boot: int = N_BOOT,
+    rho_source: str = RHO_SOURCE,
+) -> pd.DataFrame:
+    check_z_grid(Z_ALL, DT)
+    block_len = int(round(float(block_s) / DT))
+    max_k = max(int(round(z / DT)) for z in Z_ALL)
+    tt = TruthTable(truth_path)
+    cv2 = C.CostV2(strict_reliable=False)
+    out_rows: List[Dict[str, Any]] = []
+    for cell in feasible_cells(calibration_path, include_pc1=True):
+        arrays_by_seed = [
+            _cell_arrays(tt, cv2, cell, seed=seed, n=n, rho_source=rho_source)
+            for seed in seeds
+        ]
+        for z_s in Z_ALL:
+            by_metric_blocks: Dict[str, List[np.ndarray]] = {
+                "err_total": [],
+                "err_model": [],
+                "err_stale": [],
+                "d_sla": [],
+                "rms_e_model": [],
+                "rms_e_stale": [],
+                "cov_e": [],
+            }
+            per_seed_means = {key: [] for key in by_metric_blocks}
+            clip_max = 0.0
+            for arrays in arrays_by_seed:
+                clip_max = max(clip_max, max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0)
+                series = _fixed_metric_series(arrays, z_s, max_k)
+                for key, values in series.items():
+                    if key.startswith("rms_"):
+                        metric_values = np.sqrt(values)
+                    else:
+                        metric_values = values
+                    per_seed_means[key].append(float(np.mean(metric_values)))
+                    by_metric_blocks[key].append(_block_means(metric_values, block_len))
+            blocks = {key: np.concatenate(parts) for key, parts in by_metric_blocks.items()}
+            ci = _bootstrap_from_block_means(blocks, n_boot=n_boot, seed=7)
+            row: Dict[str, Any] = {
+                "mode": str(cell["mode"]),
+                "rho_bar": float(cell["rho_bar"]),
+                "z_key": z_key(z_s),
+                "z_s": float(z_s),
+                "z_steps": int(round(float(z_s) / DT)),
+                "n_seed": int(len(seeds)),
+                "n": int(n),
+                "block_len": int(block_len),
+                "n_boot": int(n_boot),
+                "rho_source": str(rho_source),
+                "clip_fraction_max": float(clip_max),
+                "extrapolated": bool(float(z_s) in Z_EXTRAP),
+            }
+            for key, means in per_seed_means.items():
+                row[key] = float(np.mean(means))
+                row[key + "_seed_sd"] = float(np.std(means, ddof=1)) if len(means) > 1 else 0.0
+                row[key + "_ci95_lo"] = ci[key][0]
+                row[key + "_ci95_hi"] = ci[key][1]
+            out_rows.append(row)
+    table = pd.DataFrame(out_rows)
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    table.to_parquet(out, index=False)
+    return table
+
+
+def _sawtooth_metric_series(arrays: Mapping[str, Any]) -> Dict[str, np.ndarray]:
+    d_true = arrays["d_true"]
+    d_fresh = arrays["d_fresh"]
+    a_true = arrays["a_true"]
+    a_fresh = arrays["a_fresh"]
+    viol = arrays["viol"]
+    n = int(arrays["n"])
+    dt = float(arrays["dt"])
+    age = sawtooth_age_steps(n, dt)
+    rows = np.arange(n)
+    valid = rows >= age
+    current = rows[valid]
+    twin_rows = current - age[valid]
+    a_twin = a_fresh[twin_rows]
+    a_now = a_fresh[current]
+    a_truth = a_true[current]
+    e_model = d_true[current] - d_fresh[current]
+    e_stale = d_fresh[current] - d_fresh[twin_rows]
+    if not np.allclose(e_model + e_stale, d_true[current] - d_fresh[twin_rows], atol=1e-9):
+        raise AssertionError("phan ra khong khop")
+    return {
+        "err_total": (a_twin != a_truth).astype(float),
+        "err_model": (a_now != a_truth).astype(float),
+        "err_stale": (a_twin != a_now).astype(float),
+        "d_sla": viol[current, a_twin].astype(float) - viol[current, a_truth].astype(float),
+        "rms_e_model": np.sqrt(np.mean(e_model * e_model, axis=1)),
+        "rms_e_stale": np.sqrt(np.mean(e_stale * e_stale, axis=1)),
+        "cov_e": np.mean(e_model * e_stale, axis=1),
+        "age_s": age[valid].astype(float) * dt,
+    }
+
+
+def sawtooth_summary(
+    truth_path: str = TRUTH_TABLE,
+    calibration_path: str = CALIBRATION,
+    out_path: str = SAWTOOTH_OUT,
+    n: int = N,
+    seeds: Sequence[int] = (101, 102, 103, 104, 105),
+    block_s: float = BLOCK_S,
+    n_boot: int = N_BOOT,
+    rho_source: str = RHO_SOURCE,
+) -> Dict[str, Any]:
+    check_z_grid(Z_ALL, DT)
+    block_len = int(round(float(block_s) / DT))
+    tt = TruthTable(truth_path)
+    cv2 = C.CostV2(strict_reliable=False)
+    rows = []
+    summary_rows = []
+    for cell in feasible_cells(calibration_path, include_pc1=True):
+        by_metric_blocks: Dict[str, List[np.ndarray]] = {
+            "err_total": [],
+            "err_model": [],
+            "err_stale": [],
+            "d_sla": [],
+            "rms_e_model": [],
+            "rms_e_stale": [],
+            "cov_e": [],
+        }
+        per_seed_means = {key: [] for key in by_metric_blocks}
+        age_means = []
+        age_min = math.inf
+        age_max = 0.0
+        clip_max = 0.0
+        for seed in seeds:
+            arrays = _cell_arrays(tt, cv2, cell, seed=seed, n=n, rho_source=rho_source)
+            clip_max = max(clip_max, max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0)
+            series = _sawtooth_metric_series(arrays)
+            age_means.append(float(np.mean(series["age_s"])))
+            age_min = min(age_min, float(np.min(series["age_s"])))
+            age_max = max(age_max, float(np.max(series["age_s"])))
+            row = {
+                "mode": str(cell["mode"]),
+                "rho_bar": float(cell["rho_bar"]),
+                "seed": int(seed),
+                "n": int(n),
+                "rho_source": str(rho_source),
+                "clip_fraction_max": float(max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0),
+                "age_mean_s": float(np.mean(series["age_s"])),
+                "age_min_s": float(np.min(series["age_s"])),
+                "age_max_s": float(np.max(series["age_s"])),
+            }
+            for key in by_metric_blocks:
+                values = series[key]
+                row[key] = float(np.mean(values))
+                per_seed_means[key].append(row[key])
+                by_metric_blocks[key].append(_block_means(values, block_len))
+            rows.append(row)
+        blocks = {key: np.concatenate(parts) for key, parts in by_metric_blocks.items()}
+        ci = _bootstrap_from_block_means(blocks, n_boot=n_boot, seed=11)
+        summary = {
+            "mode": str(cell["mode"]),
+            "rho_bar": float(cell["rho_bar"]),
+            "n_seed": int(len(seeds)),
+            "n": int(n),
+            "block_len": int(block_len),
+            "n_boot": int(n_boot),
+            "rho_source": str(rho_source),
+            "clip_fraction_max": float(clip_max),
+            "age_mean_s": float(np.mean(age_means)),
+            "age_min_s": float(age_min),
+            "age_max_s": float(age_max),
+        }
+        for key, means in per_seed_means.items():
+            summary[key] = float(np.mean(means))
+            summary[key + "_seed_sd"] = float(np.std(means, ddof=1)) if len(means) > 1 else 0.0
+            summary[key + "_ci95_lo"] = ci[key][0]
+            summary[key + "_ci95_hi"] = ci[key][1]
+        summary_rows.append(summary)
+    report = {
+        "phase": "20R.5",
+        "script": "measurements.decision_error_v2",
+        "kind": "sawtooth_operational",
+        "config": {
+            "n": int(n),
+            "dt": DT,
+            "tau": TAU,
+            "block_s": float(block_s),
+            "block_len": int(block_len),
+            "n_boot": int(n_boot),
+            "seeds": [int(s) for s in seeds],
+            "rho_source": str(rho_source),
+        },
+        "rows": rows,
+        "summary": summary_rows,
+    }
+    write_json(out_path, report)
+    return report
 
 
 def _control_one(
@@ -402,11 +709,17 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--control", action="store_true", help="run mandatory controls first")
     ap.add_argument("--control-out", default=CONTROLS_OUT)
     ap.add_argument("--run-fixed", action="store_true", help="run fixed-z grid artifact")
+    ap.add_argument("--summarize-fixed", action="store_true", help="run paired block bootstrap summary for fixed-z grid")
+    ap.add_argument("--run-sawtooth", action="store_true", help="run operational sawtooth AoI summary")
     ap.add_argument("--out", default=FIXED_OUT)
+    ap.add_argument("--summary-out", default=SUMMARY_OUT)
+    ap.add_argument("--sawtooth-out", default=SAWTOOTH_OUT)
     ap.add_argument("--n", type=int, default=N)
     ap.add_argument("--control-n", type=int, default=CONTROL_N)
     ap.add_argument("--seeds", default="101,102,103,104,105")
     ap.add_argument("--rho-source", choices=("calibration_ar1", "scalar_ou"), default=RHO_SOURCE)
+    ap.add_argument("--n-boot", type=int, default=N_BOOT)
+    ap.add_argument("--block-s", type=float, default=BLOCK_S)
     args = ap.parse_args(argv)
 
     tt = TruthTable(args.truth_table)
@@ -426,7 +739,31 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             rho_source=args.rho_source,
         )
         print("fixed rows=%d -> %s" % (len(table), args.out))
-    if not args.control and not args.run_fixed:
+    if args.summarize_fixed:
+        table = fixed_summary_with_bootstrap(
+            args.truth_table,
+            args.calibration,
+            args.summary_out,
+            n=args.n,
+            seeds=parse_int_list(args.seeds),
+            block_s=args.block_s,
+            n_boot=args.n_boot,
+            rho_source=args.rho_source,
+        )
+        print("fixed summary rows=%d -> %s" % (len(table), args.summary_out))
+    if args.run_sawtooth:
+        report = sawtooth_summary(
+            args.truth_table,
+            args.calibration,
+            args.sawtooth_out,
+            n=args.n,
+            seeds=parse_int_list(args.seeds),
+            block_s=args.block_s,
+            n_boot=args.n_boot,
+            rho_source=args.rho_source,
+        )
+        print("sawtooth rows=%d -> %s" % (len(report["summary"]), args.sawtooth_out))
+    if not args.control and not args.run_fixed and not args.summarize_fixed and not args.run_sawtooth:
         ap.print_help()
         return 2
     return 0
