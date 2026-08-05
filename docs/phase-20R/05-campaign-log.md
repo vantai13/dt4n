@@ -143,6 +143,10 @@ poisson|8|18    e_true=0.0100 ms  OK
 Ket luan cap nhat: campaign measurement PASS va ngan sach noi suy DAT. Khong
 do bu, khong doi interpolator.
 
+Ghi chu: `e_true=0.0000` o mot so o la ket qua clamp sau khi tru nhieu theo
+phuong sai, nghia la "khong phat hien duoc do cong", khong phai "do cong that
+bang 0".
+
 ## Frozen Residual Field For 20R.5
 
 Nhieu dong bang trong bang tra, tinh bang `se_mean_ms` sau khi trung binh 5

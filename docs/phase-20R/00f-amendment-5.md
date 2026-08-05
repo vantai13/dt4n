@@ -62,6 +62,11 @@ KET LUAN: NGAN SACH NOI SUY DAT
 
 Tat ca 9/9 o dat ngan sach. Khong can do bu.
 
+Ghi chu dien giai: `curv = 0.0000` trong bang tren co nghia la "khong phat
+hien duoc do cong sau khi tru nhieu", khong phai "do cong that bang 0". Bang
+chung rang buoc do cong that den tu tinh toan tren duong cong tron
+`link_model_v2`; du lieu do that chi xac nhan khong mau thuan voi rang buoc do.
+
 ## Khong Hanh Dong
 
 Khong do bu. Khong doi interpolator. Luoi `h = 0.02` cho `poisson/h2` va
