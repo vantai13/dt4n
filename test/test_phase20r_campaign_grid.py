@@ -1,6 +1,7 @@
 """Tests for the Phase 20R.4 fine-grid campaign plan."""
 
 import json
+import time
 
 import pytest
 
@@ -88,3 +89,18 @@ def test_campaign_output_paths_do_not_count_as_relevant_dirty_paths():
     assert F.is_campaign_output_path("results/phase-20R/raw/example_tx.meta.json")
     assert F.is_campaign_output_path("logs/20r4_02_full.log")
     assert not F.is_campaign_output_path("measurements/l6_campaign_fine.py")
+
+
+def test_deadline_raises_point_timeout():
+    with pytest.raises(F.PointTimeout):
+        with F.deadline(0.01, "unit-test"):
+            time.sleep(0.05)
+
+
+def test_campaign_summary_counts_timeout_history():
+    plan = F.build_smoke_plan()
+    state = {"stage": "smoke", "done_idx": [], "rows": [], "sentinels": [], "timeout_history": [{"idx": 0}]}
+
+    summary = F.campaign_summary(state, plan)
+
+    assert summary["n_timeout_history"] == 1

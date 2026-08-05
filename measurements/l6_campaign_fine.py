@@ -14,6 +14,7 @@ import json
 import math
 import os
 import random
+import signal
 import subprocess
 import sys
 import time
@@ -55,6 +56,10 @@ SENTINEL_EVERY = L6.SENTINEL_EVERY
 
 Point = Dict[str, Any]
 State = Dict[str, Any]
+
+
+class PointTimeout(RuntimeError):
+    """Raised when one live measurement point exceeds its wall-clock budget."""
 
 CONTINUITY_POINTS: Tuple[Tuple[str, float, int, float], ...] = (
     ("cbr", 4.0, 10, 0.70),
@@ -150,6 +155,61 @@ def run_environment_fingerprint() -> Dict[str, Any]:
     env["git_status_relevant"] = clean["git_status_relevant"]
     env["ignored_campaign_output"] = clean["ignored_campaign_output"]
     return env
+
+
+def _timeout_handler(_signum: int, _frame: object) -> None:
+    raise PointTimeout("live measurement exceeded deadline")
+
+
+class deadline:
+    """Signal-based wall-clock deadline for blocking Mininet host.cmd calls."""
+
+    def __init__(self, seconds: float, label: str):
+        self.seconds = float(seconds)
+        self.label = label
+        self._old_handler = None
+        self._old_timer = None
+
+    def __enter__(self) -> None:
+        self._old_handler = signal.getsignal(signal.SIGALRM)
+        self._old_timer = signal.setitimer(signal.ITIMER_REAL, self.seconds)
+        signal.signal(signal.SIGALRM, _timeout_handler)
+
+    def __exit__(self, exc_type: object, exc: object, tb: object) -> bool:
+        signal.setitimer(signal.ITIMER_REAL, 0.0)
+        if self._old_handler is not None:
+            signal.signal(signal.SIGALRM, self._old_handler)
+        if self._old_timer and self._old_timer[0] > 0:
+            signal.setitimer(signal.ITIMER_REAL, self._old_timer[0], self._old_timer[1])
+        if exc_type is PointTimeout and exc is not None:
+            exc.args = ("%s timed out after %.1f s" % (self.label, self.seconds),)
+        return False
+
+
+def cleanup_live_processes() -> None:
+    """Kill leftover point-level helpers without using Mininet's PTY shell."""
+    for pattern in ("measurements.load_gen", "measurements.owd_probe"):
+        try:
+            subprocess.run(
+                ["pkill", "-f", pattern],
+                stdout=subprocess.DEVNULL,
+                stderr=subprocess.DEVNULL,
+                timeout=5.0,
+                check=False,
+            )
+        except Exception:
+            pass
+
+
+def stop_net_best_effort(net: Any, timeout_s: float) -> None:
+    cleanup_live_processes()
+    try:
+        with deadline(timeout_s, "net.stop"):
+            net.stop()
+    except PointTimeout as exc:
+        print("WARNING: %s; run `sudo mn -c` before resume" % exc, file=sys.stderr)
+    except Exception as exc:
+        print("WARNING: net.stop failed: %s; run `sudo mn -c` before resume" % exc, file=sys.stderr)
 
 
 def load_calibration(path: str = CALIBRATION) -> List[Mapping[str, Any]]:
@@ -362,6 +422,7 @@ def new_state(stage: str, plan: Sequence[Point], calibration_path: str) -> State
         "rows": [],
         "sentinels": [],
         "failed_rows": [],
+        "timeout_history": [],
     }
 
 
@@ -370,6 +431,7 @@ def load_state(path: str, stage: str, plan: Sequence[Point], calibration_path: s
         with open(path, "r", encoding="utf-8") as f:
             state = json.load(f)
         state.setdefault("failed_rows", [])
+        state.setdefault("timeout_history", [])
         return state
     return new_state(stage, plan, calibration_path)
 
@@ -450,6 +512,7 @@ def campaign_summary(state: State, plan: Sequence[Point]) -> Dict[str, Any]:
         "n_regular_plan": sum(1 for point in plan if point.get("block") != "E"),
         "n_sentinel_plan": sum(1 for point in plan if point.get("block") == "E"),
         "n_fail": len(fails),
+        "n_timeout_history": len(state.get("timeout_history", [])),
         "coverage": done_unique / len(plan) if plan else 0.0,
         "coverage_pass": bool(done_unique == len(plan)) if plan else False,
         "fail_pass": bool(len(fails) == 0),
@@ -584,12 +647,67 @@ def run_live(args: argparse.Namespace) -> None:
                 current = (float(point["bw"]), int(point["q"]))
                 time.sleep(0.2)
 
-            row = _annotate_row(L6.measure(net, point), args, args.stage, plan_digest, run_env)
+            try:
+                with deadline(args.point_timeout, "point idx=%d" % int(point["idx"])):
+                    row = _annotate_row(L6.measure(net, point), args, args.stage, plan_digest, run_env)
+            except PointTimeout as exc:
+                cleanup_live_processes()
+                timeout_row = {
+                    **point,
+                    "phase": "20R.4",
+                    "stage": args.stage,
+                    "runner": "measurements.l6_campaign_fine",
+                    "state_path": args.state,
+                    "raw_dir": RAW,
+                    "plan_digest": plan_digest,
+                    "git_hash": run_env.get("git_commit") or git_commit(),
+                    "env": dict(run_env),
+                    "attempt": 1,
+                    "timeout_s": float(args.point_timeout),
+                    "reason": str(exc),
+                    "wall_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                }
+                state.setdefault("timeout_history", []).append(timeout_row)
+                save_state(state, args.state)
+                print(
+                    "TIMEOUT idx=%d after %.1f s; khong danh dau done, hay resume bang process moi"
+                    % (int(point["idx"]), float(args.point_timeout)),
+                    file=sys.stderr,
+                )
+                raise SystemExit(3)
             row["gate_fail"] = gate_20r(row)
             row["attempt"] = 1
             if row["gate_fail"]:
                 print("      * fail: %s -> chay lai 1 lan" % ",".join(row["gate_fail"]))
-                row2 = _annotate_row(L6.measure(net, point), args, args.stage, plan_digest, run_env)
+                try:
+                    with deadline(args.point_timeout, "retry idx=%d" % int(point["idx"])):
+                        row2 = _annotate_row(L6.measure(net, point), args, args.stage, plan_digest, run_env)
+                except PointTimeout as exc:
+                    cleanup_live_processes()
+                    timeout_row = {
+                        **point,
+                        "phase": "20R.4",
+                        "stage": args.stage,
+                        "runner": "measurements.l6_campaign_fine",
+                        "state_path": args.state,
+                        "raw_dir": RAW,
+                        "plan_digest": plan_digest,
+                        "git_hash": run_env.get("git_commit") or git_commit(),
+                        "env": dict(run_env),
+                        "attempt": 2,
+                        "attempt1_fail": row["gate_fail"],
+                        "timeout_s": float(args.point_timeout),
+                        "reason": str(exc),
+                        "wall_utc": time.strftime("%Y-%m-%dT%H:%M:%SZ", time.gmtime()),
+                    }
+                    state.setdefault("timeout_history", []).append(timeout_row)
+                    save_state(state, args.state)
+                    print(
+                        "TIMEOUT retry idx=%d after %.1f s; khong danh dau done, hay resume bang process moi"
+                        % (int(point["idx"]), float(args.point_timeout)),
+                        file=sys.stderr,
+                    )
+                    raise SystemExit(3)
                 row2["gate_fail"] = gate_20r(row2)
                 row2["attempt"] = 2
                 row2["attempt1_fail"] = row["gate_fail"]
@@ -639,12 +757,7 @@ def run_live(args: argparse.Namespace) -> None:
                 )
             )
     finally:
-        try:
-            net.get("h1").cmd("pkill -f 'measurements.load_gen' 2>/dev/null")
-            net.get("h2").cmd("pkill -f 'measurements.owd_probe' 2>/dev/null")
-        except Exception:
-            pass
-        net.stop()
+        stop_net_best_effort(net, args.stop_timeout)
         save_state(state, args.state)
 
     print("\n=== TONG KET ===")
@@ -758,6 +871,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     parser.add_argument("--n-sessions", type=int, default=4)
     parser.add_argument("--max-points", type=int, default=None)
     parser.add_argument("--limit", dest="max_points", type=int, default=None, help="alias for --max-points")
+    parser.add_argument("--point-timeout", type=float, default=240.0)
+    parser.add_argument("--stop-timeout", type=float, default=30.0)
     parser.add_argument("--resume", action="store_true", help="resume is the default behavior")
     parser.add_argument("--plan-only", action="store_true")
     parser.add_argument("--dry-run", dest="plan_only", action="store_true", help="alias for --plan-only")
