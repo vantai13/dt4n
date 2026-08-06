@@ -4,8 +4,8 @@ Ngay ghi: 2026-08-06
 
 Ket luan ngan: decision-error gates chinh dat tru G4; G4/H3 FAIL nhu thong ke
 da tien dang ky. Muc dich khoa hoc cua G4 van dat bang ket qua phu thuoc che do
-va co che don dinh H7. H6 PASS. `20R-G6` end-to-end additivity khong co artifact
-trong lesson nay, nen khong duoc danh dau PASS neu chua co DC1 rieng.
+va co che don dinh H7/H8. H6 PASS. `20R-G6` end-to-end additivity khong co
+artifact trong lesson nay, nen khong duoc danh dau PASS neu chua co DC1 rieng.
 
 ## Gate Table
 
@@ -20,6 +20,7 @@ G6      NOT EVALUATED   no end-to-end additivity DC1 artifact in decision-error 
 G7      PASS            CI95 from paired block bootstrap, not naive iid SE
 H6      PASS            max spread across tau at fixed z/tau = 0.029201 < 0.05
 H7      PASS/PARTIAL    poisson unimodal PASS; h2 peak below left edge PARTIAL; delay-only PASS
+H8      PASS            R stable across tau; Spearman(R,err)=1.0 per tau sweep
 ```
 
 ## 20R-G4
@@ -57,6 +58,31 @@ h2 err qua rho_bar     : 0.0017 .. 0.3898  ti so 229x
 Bien thien nay lon hon CI block bootstrap nhieu lan. Ket qua H7 con cho thay
 phu thuoc che do co dang don dinh/loss-driven, khong phai don dieu.
 
+## H8 Mechanism
+
+Bien dung cua he thong la:
+
+```text
+R = sd(cost_margin) / mean(cost_margin)
+```
+
+`R` duoc tinh tu twin va phan phoi rho, khong can measured truth. Phep kiem tau
+sau Amendment 9:
+
+```text
+constant-sigma max |R_tau - R_tau=1| = 0.018882 < 0.02
+operational max |R_tau - R_tau=1|   = 0.018696 < 0.02
+
+tau=0.2  Spearman(R, err) = 1.000000
+tau=1.0  Spearman(R, err) = 1.000000
+tau=5.0  Spearman(R, err) = 1.000000
+all tau  Spearman(R, err) = 0.988696
+```
+
+Ket luan co che: `rho_bar` la bien thiet ke; `R` la bien he thong phan ung
+theo. `R` du doan thu hang risk tot, nhung khong phai cong thuc diem chinh xac
+(`MAE ~= 0.054-0.056` voi linear rule hoi cuu).
+
 ## Prediction Decision
 
 Prediction at `z=0.55` matched the measured run tightly:
@@ -88,5 +114,6 @@ diagnostic, and tau scaling. The paper claim should emphasize:
 2. model and stale error can cancel, so do not add them;
 3. operational err is not monotonic in rho_bar;
 4. the true mechanism is loss-driven and band/unimodal, not delay-driven;
-5. z/tau scaling is empirically stable within 0.029 absolute spread.
+5. cost-margin CV `R` collapses family/rho effects and is stable across tau;
+6. z/tau scaling is empirically stable within 0.029 absolute spread.
 ```

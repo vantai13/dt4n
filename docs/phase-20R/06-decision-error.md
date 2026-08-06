@@ -36,7 +36,9 @@ summary+sawtooth bootstrap: 89.97 s
 constant-sigma run        : 41.25 s
 tau sweep                 : 24.19 s, 23.00 s, 21.41 s
 H7 calibrated/w2500/w0    : 76.80 s, 78.06 s, 51.36 s
-plot 6 hinh               : 1.33 s
+H8 margin-CV tau checks   : 49.55 s, 52.87 s
+H8 margin-CV plot inputs  : 54.87 s, 29.85 s
+plot 7 hinh               : 1.52 s
 ```
 
 ## Artifacts
@@ -52,6 +54,10 @@ results/phase-20R/decision_error_tau5.0.parquet
 results/phase-20R/decision_error_unimodal.parquet
 results/phase-20R/decision_error_w2500.parquet
 results/phase-20R/decision_error_delay_only.parquet
+results/phase-20R/margin_cv_by_tau.parquet
+results/phase-20R/margin_cv_by_tau_operational.parquet
+results/phase-20R/margin_cv_unimodal.parquet
+results/phase-20R/margin_cv_operational.parquet
 ```
 
 ## Fixed-Z Result
@@ -242,6 +248,46 @@ cua dai chuyen tiep. Nhung khi `w_loss = 0`, err sup xuong duoi `0.008` o moi
 o, nen co che chinh van ro: decision flips den tu so hang loss, khong phai
 delay.
 
+## H8 Cost-Margin CV
+
+Amendment 9 duoc commit truoc khi chay tai `1447adc`. Dinh nghia:
+
+```text
+R = sd(cost_margin) / mean(cost_margin)
+cost_margin = cost duong nhi - cost duong tot nhat, tinh tu twin
+```
+
+H8b, constant-sigma `0.0096`: R khong phu thuoc tau trong nguong da ky.
+
+```text
+mode     rho_bar  R@0.2   R@1.0   R@5.0   max_delta_vs_tau1
+h2       0.700    0.6507  0.6529  0.6665       0.0136
+h2       0.850    0.3523  0.3561  0.3612       0.0051
+h2       0.925    0.2889  0.2926  0.2982       0.0057
+h2       0.960    0.2952  0.2992  0.3052       0.0060
+poisson  0.700    0.1655  0.1666  0.1695       0.0028
+poisson  0.850    0.7424  0.7413  0.7602       0.0189
+poisson  0.925    0.7489  0.7495  0.7675       0.0180
+poisson  0.960    0.7413  0.7429  0.7616       0.0187
+```
+
+`max_delta = 0.018882 < 0.02`, H8b PASS. Kiem lai voi sigma van hanh cung
+PASS: `max_delta = 0.018696 < 0.02`.
+
+Tren tau sweep thuc te, dung R tinh voi cung sigma van hanh:
+
+```text
+tau=0.2  Spearman(R, err) = 1.000000, exact p = 0.000050
+tau=1.0  Spearman(R, err) = 1.000000, exact p = 0.000050
+tau=5.0  Spearman(R, err) = 1.000000, exact p = 0.000050
+all tau  Spearman(R, err) = 0.988696, n = 24
+```
+
+Tren operational holdout `z=0.55`: `Spearman(R, err) = 0.976190`,
+`p = 0.000397`. Cong thuc diem hoi cuu `err = max(0, 0.633R - 0.220)` co
+MAE `0.053676` tren operational va `0.056151` tren tau sweep. H8c PASS:
+`R` la du doan thu hang/regime-risk, khong phai cong thuc diem chinh xac.
+
 ## H6 Tau Scaling
 
 Run:
@@ -293,6 +339,7 @@ docs/phase-20R/figures/decision_error_d_sla_ci_z055.png
 docs/phase-20R/figures/decision_error_constant_sigma_z055.png
 docs/phase-20R/figures/decision_error_tau_scaling.png
 docs/phase-20R/figures/decision_error_loss_mechanism_z055.png
+docs/phase-20R/figures/decision_error_margin_cv_vs_err.png
 ```
 
 ## Threats
@@ -386,4 +433,38 @@ python3 -m measurements.decision_error_v2 --run-fixed \
 
 python3 -m measurements.plot_decision_error_v2 \
   2>&1 | tee logs/20r5_10_plots_with_h7.log
+
+python3 -m measurements.decision_error_v2 --compute-margin-cv \
+  --tau 0.2,1.0,5.0 \
+  --sigma-override 0.0096 \
+  --n 200000 \
+  --seeds 101,102,103 \
+  --out results/phase-20R/margin_cv_by_tau.parquet \
+  2>&1 | tee logs/20r5_11_margin_cv_by_tau.log
+
+python3 -m measurements.decision_error_v2 --compute-margin-cv \
+  --tau 1.0 \
+  --sigma-override 0.0096 \
+  --rho-bar-extra 0.65,0.78,0.88 \
+  --n 200000 \
+  --seeds 101,102,103,104,105 \
+  --out results/phase-20R/margin_cv_unimodal.parquet \
+  2>&1 | tee logs/20r5_12_margin_cv_unimodal.log
+
+python3 -m measurements.decision_error_v2 --compute-margin-cv \
+  --tau 1.0 \
+  --n 200000 \
+  --seeds 101,102,103,104,105 \
+  --out results/phase-20R/margin_cv_operational.parquet \
+  2>&1 | tee logs/20r5_13_margin_cv_operational.log
+
+python3 -m measurements.decision_error_v2 --compute-margin-cv \
+  --tau 0.2,1.0,5.0 \
+  --n 200000 \
+  --seeds 101,102,103 \
+  --out results/phase-20R/margin_cv_by_tau_operational.parquet \
+  2>&1 | tee logs/20r5_14_margin_cv_by_tau_operational.log
+
+python3 -m measurements.plot_decision_error_v2 \
+  2>&1 | tee logs/20r5_15_plots_with_h8.log
 ```
