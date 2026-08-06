@@ -24,6 +24,8 @@ H9_K_SD_THRESHOLD = 0.15
 H9_C_SPEARMAN_THRESHOLD = 0.9
 H9_R_THRESHOLD = 0.30
 H8B_DELTA_THRESHOLD = 0.02
+H8B_CI = "results/phase-20R/margin_cv_ci.json"
+H8B_CI_N800K = "results/phase-20R/margin_cv_ci_n800k.json"
 
 DESIGNS = (
     {
@@ -235,7 +237,12 @@ def h9_by_group(df: pd.DataFrame, keys: Sequence[str]) -> Dict[str, Any]:
     }
 
 
-def h8b_ci_review(path: str = "results/phase-20R/margin_cv_ci.json") -> Dict[str, Any]:
+def default_h8b_ci_path() -> str:
+    return H8B_CI_N800K if os.path.exists(H8B_CI_N800K) else H8B_CI
+
+
+def h8b_ci_review(path: Optional[str] = None) -> Dict[str, Any]:
+    path = path or default_h8b_ci_path()
     with open(path, "r", encoding="utf-8") as f:
         data = json.load(f)
     rows = pd.DataFrame(data["rows"])
@@ -270,6 +277,7 @@ def h8b_ci_review(path: str = "results/phase-20R/margin_cv_ci.json") -> Dict[str
         "worst_point_delta": worst_point,
         "worst_conservative_ci": worst_ci,
         "any_ci_reaches_threshold_conservative": bool(any(row["ci95_abs_reaches_threshold_conservative"] for row in checks)),
+        "pass_conservative": bool(not any(row["ci95_abs_reaches_threshold_conservative"] for row in checks)),
         "checks": checks,
     }
 
@@ -304,7 +312,7 @@ def write_figure(df: pd.DataFrame, out_path: str = FIGURE) -> str:
     return out_path
 
 
-def analyze(write_fig: bool = True) -> Dict[str, Any]:
+def analyze(write_fig: bool = True, h8b_ci_path: Optional[str] = None) -> Dict[str, Any]:
     z055 = pooled_three_designs(z_keys=("0.550",))
     rho_s = spearman_no_scipy(z055["margin_cv"], z055["err_total"])
     all_z = pooled_three_designs(z_keys=Z_KEYS_MAIN)
@@ -338,7 +346,7 @@ def analyze(write_fig: bool = True) -> Dict[str, Any]:
             "by_tau_and_z_over_tau": by_tau_z,
             "threshold_R0p30_all_tau": threshold_report(tau_rows),
         },
-        "h8b_ci_review": h8b_ci_review(),
+        "h8b_ci_review": h8b_ci_review(h8b_ci_path),
     }
     report["summary"] = {
         "pooled_spearman_R_err": rho_s,
@@ -364,9 +372,10 @@ def analyze(write_fig: bool = True) -> Dict[str, Any]:
 def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--out", default=OUT)
+    ap.add_argument("--h8b-ci", default="", help="margin_cv_ci JSON; defaults to n800k artifact when present")
     ap.add_argument("--no-figure", action="store_true")
     args = ap.parse_args(argv)
-    report = analyze(write_fig=not args.no_figure)
+    report = analyze(write_fig=not args.no_figure, h8b_ci_path=args.h8b_ci or None)
     write_json(args.out, report)
     print(json.dumps(report["summary"], indent=2, sort_keys=True))
     print("h9 -> %s" % args.out)

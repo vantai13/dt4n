@@ -20,7 +20,7 @@ G6      NOT EVALUATED   no end-to-end additivity DC1 artifact in decision-error 
 G7      PASS            CI95 from paired block bootstrap, not naive iid SE
 H6      PASS            max spread across tau at fixed z/tau = 0.029201 < 0.05
 H7      PASS/PARTIAL    poisson unimodal PASS; h2 peak below left edge PARTIAL; delay-only PASS
-H8      PASS            R stable across tau; Spearman(R,err)=1.0 per tau sweep
+H8      PASS            H8b inconclusive at n=200k, PASS after n=800k CI recheck
 ```
 
 ## 20R-G4
@@ -79,9 +79,28 @@ tau=5.0  Spearman(R, err) = 1.000000
 all tau  Spearman(R, err) = 0.988696
 ```
 
+H8b, tuc `R` gan doc lap voi `tau`, khong duoc danh PASS tron voi artifact
+cu `n=200000`. Worst point cu:
+
+```text
+tau=5, poisson rho_bar=0.85
+point |Delta R| = 0.018882
+conservative CI signed range = [-0.025670, +0.062551]
+```
+
+Khoang CI bao thu cu cham/vuot nguong `+-0.02`, nen ket luan dung tai thoi
+diem do la `KHONG KET LUAN DUOC`. Phep va `n=800000`, 5 seed, `n_boot=2000`
+da duoc chay rieng tai `results/phase-20R/margin_cv_ci_n800k.json` va cuu
+duoc H8b:
+
+```text
+max |Delta R| = 0.006670
+conservative signed CI envelope = [-0.016592, +0.015376]
+threshold = +-0.020000
+```
+
 Ket luan co che: `rho_bar` la bien thiet ke; `R` la bien he thong phan ung
-theo. `R` du doan thu hang risk tot, nhung khong phai cong thuc diem chinh xac
-(`MAE ~= 0.054-0.056` voi linear rule hoi cuu).
+theo. `R` du doan thu hang risk tot; H8a/H8b/H8c PASS sau artifact n800k.
 
 ## Prediction Decision
 
@@ -114,6 +133,7 @@ diagnostic, and tau scaling. The paper claim should emphasize:
 2. model and stale error can cancel, so do not add them;
 3. operational err is not monotonic in rho_bar;
 4. the true mechanism is loss-driven and band/unimodal, not delay-driven;
-5. cost-margin CV `R` collapses family/rho effects and is stable across tau;
+5. cost-margin CV `R` collapses family/rho effects and is stable across tau
+   after the n=800k conservative CI recheck;
 6. z/tau scaling is empirically stable within 0.029 absolute spread.
 ```

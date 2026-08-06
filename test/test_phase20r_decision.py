@@ -7,6 +7,7 @@ import pandas as pd
 import pytest
 
 from measurements import additivity_check as A
+from measurements import additivity_live as AL
 from measurements import decision_error_v2 as D
 from measurements import h9_separability as H9
 from measurements import plot_decision_error_v2 as P
@@ -133,8 +134,59 @@ def test_seed_mean_margin_cv_bootstrap_matches_seed_average_estimator():
 def test_additivity_plan_matches_preregistered_day2_budget():
     plan = A.build_plan()
 
-    assert plan["counts"] == {"A_table_cells": 9, "B_live_runs": 30, "C_live_runs": 45}
-    assert plan["branch_b_paths"] == ["P1"]
+    assert plan["counts"] == {
+        "A_table_cells": 12,
+        "Aprime_live_runs": 30,
+        "B_live_runs": 30,
+        "C_live_runs": 20,
+    }
+    assert [row["link"] for row in plan["tandem_links"]] == ["L1", "L2", "L3"]
+
+
+def test_additivity_live_branch_plans_match_reduced_budget():
+    seeds = (101, 102, 103, 104, 105)
+
+    assert len(AL.build_plan("Aprime", modes=("poisson", "h2"), rho_bars=(0.925,), seeds=seeds)) == 30
+    assert len(AL.build_plan("B", modes=("poisson", "h2"), rho_bars=(0.925,), seeds=seeds)) == 30
+    assert len(AL.build_plan("C", modes=("poisson", "h2"), rho_bars=(0.85, 0.925), seeds=seeds)) == 20
+
+
+def test_additivity_analyze_checks_c_minus_sum_b():
+    rows = []
+    for seed in A.SEEDS:
+        for link, cost in zip(("L1", "L2", "L3"), (1.0, 2.0, 3.0)):
+            rows.append(
+                {
+                    "branch": "B",
+                    "mode": "poisson",
+                    "rho_bar": 0.925,
+                    "seed": seed,
+                    "link": link,
+                    "cost_ms": cost,
+                    "trajectory_digest": "traj-%d" % seed,
+                    "probe_intrusion_ratio": 0.01,
+                }
+            )
+        rows.append(
+            {
+                "branch": "C",
+                "mode": "poisson",
+                "rho_bar": 0.925,
+                "seed": seed,
+                "path": "T123",
+                "cost_ms": 5.9,
+                "trajectory_digest": "traj-%d" % seed,
+                "probe_intrusion_ratio": 0.01,
+            }
+        )
+
+    report = A.analyze(rows, modes=("poisson",))
+    g6 = [row for row in report["checks"] if row["contrast"] == "C_minus_sumB"]
+
+    assert report["summary"]["g6_evaluated"]
+    assert report["summary"]["g6_pass"]
+    assert report["paired_schedule"]["pass"]
+    assert g6[0]["mean_ms"] == pytest.approx(-0.1)
 
 
 def test_tost_equivalence_uses_90ci_inside_delta():

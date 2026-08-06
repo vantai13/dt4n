@@ -68,8 +68,8 @@ Moi o co R < 0.30 phai co err_total = 0.0.
 ```
 
 Quy tac: dung gia tri raw trong parquet, khong lam tron `R`. Mot o duy nhat
-co `R < 0.30` va `err_total > 0` la bac bo H9c. Neu fail sat bien, bao cao
-la fail sat bien, khong doi nguong hau nghiem.
+co `R < 0.30` va `err_total > 0` la bac bo H9c. Neu fail, bao cao la bac bo
+nguong sac, khong doi nguong hau nghiem.
 
 ## H8b CI Review
 
@@ -81,7 +81,8 @@ signed_delta_CI ~= [lo_tau - hi_tau1, hi_tau - lo_tau1]
 ```
 
 Day khong phai paired bootstrap cho delta, nen chi dung de canh bao. Neu
-khoang bao thu cham 0.02, viet `H8b PASS (bien hep, CI cham nguong)`.
+khoang bao thu cham 0.02, khong viet PASS tron; viet `H8b khong ket luan duoc
+o co mau hien tai`.
 
 ## Khong Sua
 
@@ -141,8 +142,8 @@ tau operational, theo tau va z/tau:
   Spearman(z/tau, c) = 0.971625  PASS
 ```
 
-H9c strict `R < 0.30 -> err_total = 0.0`: FAIL sat bien, vi dung gia tri raw
-khong lam tron:
+H9c strict `R < 0.30 -> err_total = 0.0`: FAIL, vi nguong sac duoc dat tu
+bang tham do da lam tron. Dung gia tri raw khong lam tron:
 
 ```text
 set           mode  rho_bar  R         z/tau  err_total
@@ -150,12 +151,21 @@ sigma_fixed   h2    0.925    0.293424  0.55   0.001137
 operational   h2    0.960    0.299915  0.55   0.001675
 ```
 
-Tren tau sweep operational cung co cac diem fail sat bien tai `h2, rho_bar =
-0.960`, `R` khoang `0.295-0.299`, `err_total` khoang `0.0012-0.0021`.
+Hai diem nay nam duoi 0.30 nhung khong bang 0. Dang dong
+`err = 4.760398 * Phi(-1.159900/R)` du doan dung huong: R gan 0.30 co err
+duoi 0.002, khong co vach cat tuyet doi.
 
-Ket luan: H9a/H9b ung ho manh tich `c(z/tau) * Phi(-k/R)`, nhung H9c o
-nguong raw `0.30` bi bac bo. Neu can phat bieu nguong zero, phai dang ky lai
-nguong thap hon; khong doi nguong trong Phase 20R.6.
+Ket luan: H9a/H9b ung ho manh tich `c(z/tau) * Phi(-k/R)`. H9c bi bac bo:
+nguong sac la gia tao do lam tron trong phan tich tham do. Thay bang can mem
+da do:
+
+```text
+R < 0.30  =>  err_total < 0.002
+n = 5/5 trong tap sach dung de phat bieu can mem
+```
+
+Phat bieu van hanh: khong co nguong zero tuyet doi; co quan he tron va vung
+R thap co err nho hon dinh 0.43 hon 200 lan.
 
 H8b CI review:
 
@@ -167,12 +177,25 @@ conservative CI signed range = [-0.025670, +0.062551]
 Do CI bao thu cham/vuot `0.02`, H8b phai viet:
 
 ```text
-PASS theo point estimate; bien hep, CI cham nguong.
+KHONG KET LUAN DUOC o co mau hien tai.
 ```
+
+Phep va no-testbed dang ky lai voi `n=800000`, 5 seed, `n_boot=2000` da
+duoc chay. Ket qua moi:
+
+```text
+max |Delta R| = 0.006670
+conservative signed CI envelope = [-0.016592, +0.015376]
+threshold = +-0.020000
+```
+
+Vi envelope moi nam tron trong `+-0.02`, H8b PASS sau phep va n800k. Luu y:
+voi artifact cu `n=200000`, H8b la `khong ket luan duoc`, khong phai PASS.
 
 Artifacts:
 
 ```text
 results/phase-20R/h9_separability.json
 docs/phase-20R/figures/decision_error_h9_separability.png
+results/phase-20R/margin_cv_ci_n800k.json
 ```
