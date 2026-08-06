@@ -39,6 +39,17 @@ cleanup_mininet() {
   run_logged "cleanup-mininet" "logs/20r6_00_cleanup.log" sudo -n mn -c
 }
 
+run_smoke_topo() {
+  if run_logged "B1 smoke topology" "logs/20r6_00_smoke_topo.log" \
+    sudo -n env PYTHONPATH="$PWD" python3 -m measurements.additivity_live --smoke-topo; then
+    return 0
+  fi
+  log_msg "Smoke failed once; cleanup and retry once before stopping"
+  cleanup_mininet
+  run_logged "B1 smoke topology retry" "logs/20r6_00_smoke_topo.log" \
+    sudo -n env PYTHONPATH="$PWD" python3 -m measurements.additivity_live --smoke-topo
+}
+
 check_sudo() {
   run_logged "sudo-check" "logs/20r6_00_sudo_check.log" sudo -n true
   run_logged "mininet-import-check" "logs/20r6_00_sudo_check.log" sudo -n env PYTHONPATH="$PWD" python3 -c "import mininet; print('mininet OK')"
@@ -168,8 +179,7 @@ log_msg "Estimated wall time: smoke ~1m, A' ~42m, B ~42m, C ~28m, quasistatic ~3
 check_sudo
 cleanup_mininet
 
-run_logged "B1 smoke topology" "logs/20r6_00_smoke_topo.log" \
-  sudo -n env PYTHONPATH="$PWD" python3 -m measurements.additivity_live --smoke-topo
+run_smoke_topo
 
 cleanup_mininet
 run_logged "B2 branch Aprime" "logs/20r6_01_branch_a.log" \
