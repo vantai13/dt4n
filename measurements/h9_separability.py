@@ -276,6 +276,9 @@ def h8b_ci_review(path: str = "results/phase-20R/margin_cv_ci.json") -> Dict[str
 
 def write_figure(df: pd.DataFrame, out_path: str = FIGURE) -> str:
     ensure_parent(out_path)
+    cache_dir = "/tmp/matplotlib-%s" % os.getuid()
+    os.makedirs(cache_dir, exist_ok=True)
+    os.environ.setdefault("MPLCONFIGDIR", cache_dir)
     import matplotlib
 
     matplotlib.use("Agg")

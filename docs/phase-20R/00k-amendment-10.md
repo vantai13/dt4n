@@ -95,3 +95,84 @@ Lenh formal:
 python3 -m measurements.h9_separability \
   --out results/phase-20R/h9_separability.json
 ```
+
+## Ket Qua Formal Tren Artifact Da Co
+
+Chay sau commit prereg `cfad852`.
+
+```text
+pooled n = 30
+Spearman(R, err_total) = 0.994651
+```
+
+So sanh dang ham tai `z = 0.55, tau = 1.0`:
+
+```text
+threshold linear      MAE = 0.014825   RMSE = 0.021605
+Phi(-k/R)             MAE = 0.051513   RMSE = 0.066018
+c * Phi(-k/R)         MAE = 0.013371   RMSE = 0.019946
+```
+
+Fit hai tham so:
+
+```text
+k = 1.159900
+c = 4.760398
+```
+
+Theo tap:
+
+```text
+set           n   MAE       RMSE      k         c
+a02           8   0.008110  0.013339  1.233800  5.526398
+operational   8   0.022962  0.027396  1.055700  3.844557
+sigma_fixed  14   0.006386  0.008748  1.281900  6.663054
+```
+
+H9a/H9b:
+
+```text
+tau=1, ba tap, theo z:
+  sd(k) = 0.020053 < 0.15        PASS
+  Spearman(z/tau, c) = 1.000000  PASS
+
+tau operational, theo tau va z/tau:
+  sd(k) = 0.015017 < 0.15        PASS
+  Spearman(z/tau, c) = 0.971625  PASS
+```
+
+H9c strict `R < 0.30 -> err_total = 0.0`: FAIL sat bien, vi dung gia tri raw
+khong lam tron:
+
+```text
+set           mode  rho_bar  R         z/tau  err_total
+sigma_fixed   h2    0.925    0.293424  0.55   0.001137
+operational   h2    0.960    0.299915  0.55   0.001675
+```
+
+Tren tau sweep operational cung co cac diem fail sat bien tai `h2, rho_bar =
+0.960`, `R` khoang `0.295-0.299`, `err_total` khoang `0.0012-0.0021`.
+
+Ket luan: H9a/H9b ung ho manh tich `c(z/tau) * Phi(-k/R)`, nhung H9c o
+nguong raw `0.30` bi bac bo. Neu can phat bieu nguong zero, phai dang ky lai
+nguong thap hon; khong doi nguong trong Phase 20R.6.
+
+H8b CI review:
+
+```text
+worst point delta: tau=5, poisson rho_bar=0.85, |Delta R| = 0.018882
+conservative CI signed range = [-0.025670, +0.062551]
+```
+
+Do CI bao thu cham/vuot `0.02`, H8b phai viet:
+
+```text
+PASS theo point estimate; bien hep, CI cham nguong.
+```
+
+Artifacts:
+
+```text
+results/phase-20R/h9_separability.json
+docs/phase-20R/figures/decision_error_h9_separability.png
+```

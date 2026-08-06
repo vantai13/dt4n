@@ -202,6 +202,35 @@ H8b van o sat nguong 0.02; CI95 cua R ton tai trong
 theo tau trong point estimate, nhung tau=5 co uncertainty rong hon do effective
 sample nho hon.
 
+Sau formal H9 review, khoang CI bao thu cho worst H8b:
+
+```text
+tau=5, poisson rho_bar=0.85
+point |Delta R| = 0.018882
+CI bao thu signed delta = [-0.025670, +0.062551]
+```
+
+Vi CI bao thu cham/vuot `0.02`, ghi H8b la `PASS theo point estimate; bien
+hep, CI cham nguong`, khong viet PASS tron.
+
+H9 formal:
+
+```text
+pooled n = 30
+Spearman(R, err_total) = 0.994651
+c * Phi(-k/R): k = 1.159900, c = 4.760398
+H9a PASS: sd(k) = 0.020053 tren ba tap tau=1; 0.015017 tren tau sweep
+H9b PASS: Spearman(z/tau, c) = 1.000000 tren tau=1; 0.971625 tren tau sweep
+H9c FAIL sat bien: R=0.293424 va R=0.299915 co err_total > 0
+```
+
+Artifacts H9:
+
+```text
+results/phase-20R/h9_separability.json
+docs/phase-20R/figures/decision_error_h9_separability.png
+```
+
 `results/phase-20R/additivity_check.json` va
 `results/phase-20R/quasistatic_check.json` hien chi la placeholder
 `not evaluated`, vi chua chay live Branch B/C va dynamic trace.
