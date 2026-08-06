@@ -1,0 +1,1140 @@
+{
+  "branch_b_paths": [
+    "P1"
+  ],
+  "counts": {
+    "A_table_cells": 12,
+    "B_live_runs": 60,
+    "C_live_runs": 60
+  },
+  "delta_ms": 0.44,
+  "kind": "additivity_design",
+  "modes": [
+    "poisson",
+    "h2"
+  ],
+  "paths": [
+    "P1",
+    "P4",
+    "P2"
+  ],
+  "phase": "20R.6",
+  "plan_digest": "92da7c974e57ad51785ff3d4c3f32cceb6b5c958654e0357b16bf2eb95382298",
+  "rho_bars": [
+    0.85,
+    0.925
+  ],
+  "rows": [
+    {
+      "branch": "A",
+      "mode": "poisson",
+      "path": "P1",
+      "rho_bar": 0.85,
+      "source": "truth_table"
+    },
+    {
+      "branch": "A",
+      "mode": "poisson",
+      "path": "P4",
+      "rho_bar": 0.85,
+      "source": "truth_table"
+    },
+    {
+      "branch": "A",
+      "mode": "poisson",
+      "path": "P2",
+      "rho_bar": 0.85,
+      "source": "truth_table"
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "A",
+      "mode": "poisson",
+      "path": "P1",
+      "rho_bar": 0.925,
+      "source": "truth_table"
+    },
+    {
+      "branch": "A",
+      "mode": "poisson",
+      "path": "P4",
+      "rho_bar": 0.925,
+      "source": "truth_table"
+    },
+    {
+      "branch": "A",
+      "mode": "poisson",
+      "path": "P2",
+      "rho_bar": 0.925,
+      "source": "truth_table"
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "poisson",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "A",
+      "mode": "h2",
+      "path": "P1",
+      "rho_bar": 0.85,
+      "source": "truth_table"
+    },
+    {
+      "branch": "A",
+      "mode": "h2",
+      "path": "P4",
+      "rho_bar": 0.85,
+      "source": "truth_table"
+    },
+    {
+      "branch": "A",
+      "mode": "h2",
+      "path": "P2",
+      "rho_bar": 0.85,
+      "source": "truth_table"
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.85,
+      "seed": 105
+    },
+    {
+      "branch": "A",
+      "mode": "h2",
+      "path": "P1",
+      "rho_bar": 0.925,
+      "source": "truth_table"
+    },
+    {
+      "branch": "A",
+      "mode": "h2",
+      "path": "P4",
+      "rho_bar": 0.925,
+      "source": "truth_table"
+    },
+    {
+      "branch": "A",
+      "mode": "h2",
+      "path": "P2",
+      "rho_bar": 0.925,
+      "source": "truth_table"
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "uA",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "ac",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "B",
+      "link": "vC",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "single_link",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P1",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P4",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 105
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 101
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 102
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 103
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 104
+    },
+    {
+      "branch": "C",
+      "mode": "h2",
+      "path": "P2",
+      "probe": "end_to_end_path",
+      "rho_bar": 0.925,
+      "seed": 105
+    }
+  ],
+  "seeds": [
+    101,
+    102,
+    103,
+    104,
+    105
+  ]
+}

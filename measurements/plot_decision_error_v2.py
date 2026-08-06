@@ -291,6 +291,12 @@ def _margin_cv_mean(path: str) -> pd.DataFrame:
     return df.groupby(["mode", "rho_bar"])["margin_cv"].mean().reset_index()
 
 
+def _spearman_no_scipy(x: pd.Series, y: pd.Series) -> float:
+    xr = pd.Series(x, dtype=float).rank(method="average")
+    yr = pd.Series(y, dtype=float).rank(method="average")
+    return float(xr.corr(yr))
+
+
 def plot_margin_cv_vs_error(
     margin_cv_unimodal: str,
     margin_cv_operational: str,
@@ -350,7 +356,7 @@ def plot_sensitivity_a02(margin_cv_path: str, sensitivity_path: str, out_dir: Pa
     cv = _margin_cv_mean(margin_cv_path)
     err = _err_at_z055(sensitivity_path)
     df = cv.merge(err, on=["mode", "rho_bar"], how="inner").sort_values(["mode", "rho_bar"])
-    rho_s = float(df["margin_cv"].corr(df["err_total"], method="spearman")) if len(df) >= 2 else float("nan")
+    rho_s = _spearman_no_scipy(df["margin_cv"], df["err_total"]) if len(df) >= 2 else float("nan")
     fig, ax = plt.subplots(figsize=(7.0, 5.0))
     colors = {"poisson": "#b4452c", "h2": "#2f6f73"}
     for mode, group in df.groupby("mode"):

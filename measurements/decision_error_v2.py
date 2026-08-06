@@ -996,6 +996,49 @@ def bootstrap_margin_cv_from_blocks(
     }
 
 
+def bootstrap_seed_mean_margin_cv(
+    seed_blocks: Sequence[Tuple[np.ndarray, np.ndarray]],
+    n_boot: int = N_BOOT,
+    seed: int = 7,
+) -> Dict[str, Any]:
+    if not seed_blocks:
+        raise ValueError("need at least one seed")
+    rng = np.random.default_rng(int(seed))
+    seed_cvs: List[float] = []
+    seed_means: List[float] = []
+    seed_sds: List[float] = []
+    for block_mean, block_second in seed_blocks:
+        mean_blocks = np.asarray(block_mean, dtype=float)
+        second_blocks = np.asarray(block_second, dtype=float)
+        if len(mean_blocks) != len(second_blocks):
+            raise ValueError("block moment arrays must have equal length")
+        if len(mean_blocks) <= 0:
+            raise ValueError("need at least one block per seed")
+        mean = float(np.mean(mean_blocks))
+        second = float(np.mean(second_blocks))
+        seed_means.append(mean)
+        seed_sds.append(math.sqrt(max(second - mean * mean, 0.0)))
+        seed_cvs.append(_margin_cv_from_moments(mean, second))
+    boot = np.empty(int(n_boot), dtype=float)
+    for b in range(int(n_boot)):
+        cv_values = []
+        for block_mean, block_second in seed_blocks:
+            mean_blocks = np.asarray(block_mean, dtype=float)
+            second_blocks = np.asarray(block_second, dtype=float)
+            pick = rng.integers(0, len(mean_blocks), size=len(mean_blocks))
+            cv_values.append(_margin_cv_from_moments(float(np.mean(mean_blocks[pick])), float(np.mean(second_blocks[pick]))))
+        boot[b] = float(np.mean(cv_values))
+    return {
+        "margin_mean_ms": float(np.mean(seed_means)),
+        "margin_sd_ms": float(np.mean(seed_sds)),
+        "margin_cv": float(np.mean(seed_cvs)),
+        "margin_cv_seed_sd": float(np.std(seed_cvs, ddof=1)) if len(seed_cvs) > 1 else 0.0,
+        "margin_cv_ci95_lo": float(np.percentile(boot, 2.5)),
+        "margin_cv_ci95_hi": float(np.percentile(boot, 97.5)),
+        "margin_cv_boot_sd": float(np.std(boot, ddof=1)) if int(n_boot) > 1 else 0.0,
+    }
+
+
 def compute_margin_cv_ci(
     calibration_path: str = CALIBRATION,
     out_path: str = MARGIN_CV_CI_OUT,
@@ -1022,8 +1065,7 @@ def compute_margin_cv_ci(
             rho_bar = float(cell["rho_bar"])
             sigma, sigma_source = resolve_sigma(cell, sigma_override=sigma_override, a_override=a_override)
             w_loss = float(w_loss_override) if w_loss_override is not None else float(cell["w_loss"])
-            means: List[np.ndarray] = []
-            seconds: List[np.ndarray] = []
+            seed_blocks: List[Tuple[np.ndarray, np.ndarray]] = []
             for seed in seeds:
                 rho_mat = rho_matrix_from_cell(
                     mode,
@@ -1038,11 +1080,9 @@ def compute_margin_cv_ci(
                 _delay, _loss, cost = cv2.tables_batch(rho_mat, mode, w_loss)
                 margin = _cost_margin_series(cost)
                 block_mean, block_second = _margin_block_moments(margin, block_len)
-                means.append(block_mean)
-                seconds.append(block_second)
-            stats = bootstrap_margin_cv_from_blocks(
-                np.concatenate(means),
-                np.concatenate(seconds),
+                seed_blocks.append((block_mean, block_second))
+            stats = bootstrap_seed_mean_margin_cv(
+                seed_blocks,
                 n_boot=n_boot,
                 seed=1301 + int(round(float(tau) * 1000)) + int(round(rho_bar * 1000)),
             )
@@ -1060,7 +1100,7 @@ def compute_margin_cv_ci(
                     "dt": DT,
                     "block_s": float(block_s),
                     "block_len": int(block_len),
-                    "n_blocks": int(sum(len(part) for part in means)),
+                    "n_blocks": int(sum(len(block_mean) for block_mean, _block_second in seed_blocks)),
                     "n_boot": int(n_boot),
                     "rho_source": str(rho_source),
                     **stats,

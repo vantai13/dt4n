@@ -140,6 +140,54 @@ python3 -m measurements.plot_decision_error_v2
 Criterion sensitivity: tai `z=0.55`, `Spearman(R, err_total) > 0.9` tren
 `poisson,h2`. Neu fail, bao cao huong fail va tac dong len gate H8.
 
+## Ket Qua Khong-Mininet Sau Prereg
+
+Prereg/code duoc commit truoc khi sinh so tai commit `986a8a3`.
+
+Artifacts da sinh:
+
+```text
+results/phase-20R/additivity_plan.json
+results/phase-20R/quasistatic_plan.json
+results/phase-20R/sensitivity_a02.parquet
+results/phase-20R/margin_cv_a02.parquet
+results/phase-20R/margin_cv_ci.json
+docs/phase-20R/figures/decision_error_a02_margin_cv_vs_err.png
+```
+
+Sensitivity `a=0.2` tai `z=0.55`:
+
+```text
+mode     rho_bar  R         err_total
+h2       0.700    0.667557  0.180545
+h2       0.850    0.392885  0.012725
+h2       0.925    0.145859  0.000000
+h2       0.960    0.064526  0.000000
+poisson  0.700    0.177920  0.000000
+poisson  0.850    0.747392  0.297133
+poisson  0.925    0.733750  0.228484
+poisson  0.960    0.438822  0.016551
+```
+
+`Spearman(R, err_total) = 0.975900`, `n = 8`, PASS > 0.9.
+
+CI `R` da duoc tinh bang block bootstrap, dung estimator mean theo seed nhu
+H8b. Max point delta vs tau=1:
+
+```text
+tau=0.2: max |Delta R| = 0.003991
+tau=5.0: max |Delta R| = 0.018882
+```
+
+H8b van o sat nguong 0.02; CI95 cua R ton tai trong
+`results/phase-20R/margin_cv_ci.json`, va ket luan nen viet la `R` on dinh
+theo tau trong point estimate, nhung tau=5 co uncertainty rong hon do effective
+sample nho hon.
+
+`results/phase-20R/additivity_check.json` va
+`results/phase-20R/quasistatic_check.json` hien chi la placeholder
+`not evaluated`, vi chua chay live Branch B/C va dynamic trace.
+
 ## Loi Khong Duoc Lam
 
 - Khong dung ordinary t-test thay cho TOST equivalence.

@@ -8,6 +8,7 @@ import pytest
 
 from measurements import additivity_check as A
 from measurements import decision_error_v2 as D
+from measurements import plot_decision_error_v2 as P
 from measurements import quasistatic_check as Q
 from twin import cost_v2 as C
 from twin import topology_v7 as T7
@@ -117,6 +118,17 @@ def test_margin_cv_bootstrap_from_block_moments_reports_observed_value():
     assert stats["margin_cv"] == pytest.approx(float(values.std(ddof=0) / values.mean()))
 
 
+def test_seed_mean_margin_cv_bootstrap_matches_seed_average_estimator():
+    a = np.array([1.0, 2.0, 3.0, 4.0])
+    b = np.array([2.0, 2.0, 2.0, 2.0])
+    blocks = [D._margin_block_moments(a, 2), D._margin_block_moments(b, 2)]
+
+    stats = D.bootstrap_seed_mean_margin_cv(blocks, n_boot=10, seed=2)
+
+    expected = 0.5 * (float(a.std(ddof=0) / a.mean()) + 0.0)
+    assert stats["margin_cv"] == pytest.approx(expected)
+
+
 def test_additivity_plan_matches_preregistered_day2_budget():
     plan = A.build_plan()
 
@@ -143,3 +155,7 @@ def test_quasistatic_analyze_checks_max_window_difference():
     assert report["summary"]["evaluated"]
     assert report["summary"]["max_abs_diff_ms"] == pytest.approx(0.2)
     assert report["summary"]["pass"]
+
+
+def test_spearman_helper_does_not_require_scipy():
+    assert P._spearman_no_scipy(pd.Series([1.0, 2.0, 3.0]), pd.Series([10.0, 20.0, 30.0])) == pytest.approx(1.0)
