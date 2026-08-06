@@ -75,3 +75,7 @@ def test_error_decomposition_is_exact_identity():
 def test_check_z_grid_rejects_duplicate_lags_at_dt_0p2():
     with pytest.raises(ValueError, match="AoI aliasing"):
         D.check_z_grid([0.05, 0.10, 0.20], 0.2, require_sawtooth_age=False)
+
+
+def test_scaled_z_values_follow_tau_ratios():
+    assert D.z_values_for(tau=2.0, scaled=True) == pytest.approx((0.20, 0.60, 1.10, 2.00))

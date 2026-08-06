@@ -34,6 +34,7 @@ N_BOOT = 2000
 Z_GRID = (0.0, 0.05, 0.10, 0.20, 0.30, 0.55)
 Z_EXTRAP = (1.0, 2.0, 4.0)
 Z_ALL = Z_GRID + Z_EXTRAP
+Z_SCALED_RATIOS = (0.10, 0.30, 0.55, 1.00)
 
 TRUTH_TABLE = "results/phase-20R/truth_table.parquet"
 CALIBRATION = "results/phase-20R/sla_calibration.json"
@@ -65,6 +66,18 @@ def load_calibration(path: str = CALIBRATION) -> List[Dict[str, Any]]:
     with open(path, "r", encoding="utf-8") as f:
         report = json.load(f)
     return [dict(row) for row in report["cells"]]
+
+
+def z_values_for(tau: float = TAU, scaled: bool = False) -> Tuple[float, ...]:
+    if not scaled:
+        return tuple(float(z) for z in Z_ALL)
+    return tuple(round(float(ratio) * float(tau), 12) for ratio in Z_SCALED_RATIOS)
+
+
+def z_over_tau(z_s: float, tau: float) -> float:
+    if not float(tau):
+        return math.nan
+    return round(float(z_s) / float(tau), 12)
 
 
 def feasible_cells(path: str = CALIBRATION, include_pc1: bool = True) -> List[Dict[str, Any]]:
@@ -182,13 +195,15 @@ def _cell_arrays(
     n: int = N,
     dt: float = DT,
     rho_source: str = RHO_SOURCE,
+    sigma_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     mode = str(cal_cell["mode"])
+    sigma = float(sigma_override) if sigma_override is not None else float(cal_cell["sigma_rho"])
     tt.reset_clip_log()
     rho_mat = rho_matrix_from_cell(
         mode,
         float(cal_cell["rho_bar"]),
-        float(cal_cell["sigma_rho"]),
+        sigma,
         int(seed),
         tau=tau,
         n=n,
@@ -204,7 +219,8 @@ def _cell_arrays(
         "rho_bar": float(cal_cell["rho_bar"]),
         "seed": int(seed),
         "tau_rho": float(tau),
-        "sigma_rho": float(cal_cell["sigma_rho"]),
+        "sigma_rho": float(sigma),
+        "sigma_rho_source": "override" if sigma_override is not None else "calibration",
         "n": int(n),
         "dt": float(dt),
         "rho_source": str(rho_source),
@@ -246,22 +262,32 @@ def run_cell(
     dt: float = DT,
     z_values: Sequence[float] = Z_ALL,
     rho_source: str = RHO_SOURCE,
+    sigma_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     check_z_grid(z_values, dt)
     mode = str(cal_cell["mode"])
     rho_bar = float(cal_cell["rho_bar"])
-    sigma = float(cal_cell["sigma_rho"])
+    sigma = float(sigma_override) if sigma_override is not None else float(cal_cell["sigma_rho"])
     w_loss = float(cal_cell["w_loss"])
     t_delay = float(cal_cell["t_delay_ms"])
     t_loss = float(cal_cell["t_loss"])
 
-    arrays = _cell_arrays(tt, cv2, cal_cell, seed, tau=tau, n=n, dt=dt, rho_source=rho_source)
+    arrays = _cell_arrays(
+        tt,
+        cv2,
+        cal_cell,
+        seed,
+        tau=tau,
+        n=n,
+        dt=dt,
+        rho_source=rho_source,
+        sigma_override=sigma_override,
+    )
     d_true = arrays["d_true"]
     d_fresh = arrays["d_fresh"]
     a_true = arrays["a_true"]
     a_fresh = arrays["a_fresh"]
     viol = arrays["viol"]
-    err_model_const = float((a_fresh != a_true).mean())
 
     out: Dict[str, Any] = {
         "mode": mode,
@@ -269,6 +295,7 @@ def run_cell(
         "seed": int(seed),
         "tau_rho": float(tau),
         "sigma_rho": sigma,
+        "sigma_rho_source": "override" if sigma_override is not None else "calibration",
         "n": int(n),
         "dt": float(dt),
         "rho_source": str(rho_source),
@@ -276,23 +303,30 @@ def run_cell(
         "per_z": {},
     }
     rows = np.arange(int(n))
+    common_start = max(int(round(float(z_s) / float(dt))) for z_s in z_values)
+    err_model_const = float((a_fresh[common_start:int(n)] != a_true[common_start:int(n)]).mean())
     for z_s in z_values:
         k = int(round(float(z_s) / float(dt)))
         if k >= int(n):
             raise ValueError("z %.3f exceeds trace length" % float(z_s))
-        current = slice(k, int(n))
-        lag_rows = rows[: int(n) - k]
-        a_twin = a_fresh[: int(n) - k] if k else a_fresh
+        current = rows[common_start:int(n)]
+        lag_rows = current - k
+        a_twin = a_fresh[lag_rows]
         a_now = a_fresh[current]
         a_truth = a_true[current]
-        e_model, e_stale, _total = _decomposition(d_true, d_fresh, k)
+        e_model = d_true[current] - d_fresh[current]
+        e_stale = d_fresh[current] - d_fresh[lag_rows]
+        if not np.allclose(e_model + e_stale, d_true[current] - d_fresh[lag_rows], atol=1e-9):
+            raise AssertionError("phan ra khong khop")
         out["per_z"][z_key(z_s)] = {
             "z_s": float(z_s),
+            "z": float(z_s),
+            "z_over_tau": z_over_tau(z_s, tau),
             "z_steps": int(k),
             "err_total": float((a_twin != a_truth).mean()),
             "err_model": err_model_const,
             "err_stale": float((a_twin != a_now).mean()),
-            "d_sla": float(viol[current][lag_rows, a_twin].mean() - viol[current][lag_rows, a_truth].mean()),
+            "d_sla": float(viol[current, a_twin].mean() - viol[current, a_truth].mean()),
             "rms_e_model": float(np.sqrt((e_model**2).mean())),
             "rms_e_stale": float(np.sqrt((e_stale**2).mean())),
             "cov_e": float(np.mean(e_model * e_stale)),
@@ -388,22 +422,34 @@ def fixed_summary_with_bootstrap(
     out_path: str = SUMMARY_OUT,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103, 104, 105),
+    tau: float = TAU,
+    z_values: Sequence[float] = Z_ALL,
     block_s: float = BLOCK_S,
     n_boot: int = N_BOOT,
     rho_source: str = RHO_SOURCE,
+    sigma_override: Optional[float] = None,
 ) -> pd.DataFrame:
-    check_z_grid(Z_ALL, DT)
+    check_z_grid(z_values, DT)
     block_len = int(round(float(block_s) / DT))
-    max_k = max(int(round(z / DT)) for z in Z_ALL)
+    max_k = max(int(round(z / DT)) for z in z_values)
     tt = TruthTable(truth_path)
     cv2 = C.CostV2(strict_reliable=False)
     out_rows: List[Dict[str, Any]] = []
     for cell in feasible_cells(calibration_path, include_pc1=True):
         arrays_by_seed = [
-            _cell_arrays(tt, cv2, cell, seed=seed, n=n, rho_source=rho_source)
+            _cell_arrays(
+                tt,
+                cv2,
+                cell,
+                seed=seed,
+                tau=tau,
+                n=n,
+                rho_source=rho_source,
+                sigma_override=sigma_override,
+            )
             for seed in seeds
         ]
-        for z_s in Z_ALL:
+        for z_s in z_values:
             by_metric_blocks: Dict[str, List[np.ndarray]] = {
                 "err_total": [],
                 "err_model": [],
@@ -432,7 +478,12 @@ def fixed_summary_with_bootstrap(
                 "rho_bar": float(cell["rho_bar"]),
                 "z_key": z_key(z_s),
                 "z_s": float(z_s),
+                "z": float(z_s),
+                "z_over_tau": z_over_tau(z_s, tau),
                 "z_steps": int(round(float(z_s) / DT)),
+                "tau_rho": float(tau),
+                "sigma_rho": float(arrays_by_seed[0]["sigma_rho"]),
+                "sigma_rho_source": str(arrays_by_seed[0]["sigma_rho_source"]),
                 "n_seed": int(len(seeds)),
                 "n": int(n),
                 "block_len": int(block_len),
@@ -492,9 +543,11 @@ def sawtooth_summary(
     out_path: str = SAWTOOTH_OUT,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103, 104, 105),
+    tau: float = TAU,
     block_s: float = BLOCK_S,
     n_boot: int = N_BOOT,
     rho_source: str = RHO_SOURCE,
+    sigma_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     check_z_grid(Z_ALL, DT)
     block_len = int(round(float(block_s) / DT))
@@ -518,7 +571,16 @@ def sawtooth_summary(
         age_max = 0.0
         clip_max = 0.0
         for seed in seeds:
-            arrays = _cell_arrays(tt, cv2, cell, seed=seed, n=n, rho_source=rho_source)
+            arrays = _cell_arrays(
+                tt,
+                cv2,
+                cell,
+                seed=seed,
+                tau=tau,
+                n=n,
+                rho_source=rho_source,
+                sigma_override=sigma_override,
+            )
             clip_max = max(clip_max, max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0)
             series = _sawtooth_metric_series(arrays)
             age_means.append(float(np.mean(series["age_s"])))
@@ -528,6 +590,9 @@ def sawtooth_summary(
                 "mode": str(cell["mode"]),
                 "rho_bar": float(cell["rho_bar"]),
                 "seed": int(seed),
+                "tau_rho": float(tau),
+                "sigma_rho": float(arrays["sigma_rho"]),
+                "sigma_rho_source": str(arrays["sigma_rho_source"]),
                 "n": int(n),
                 "rho_source": str(rho_source),
                 "clip_fraction_max": float(max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0),
@@ -546,6 +611,9 @@ def sawtooth_summary(
         summary = {
             "mode": str(cell["mode"]),
             "rho_bar": float(cell["rho_bar"]),
+            "tau_rho": float(tau),
+            "sigma_rho": float(sigma_override) if sigma_override is not None else float(cell["sigma_rho"]),
+            "sigma_rho_source": "override" if sigma_override is not None else "calibration",
             "n_seed": int(len(seeds)),
             "n": int(n),
             "block_len": int(block_len),
@@ -569,7 +637,8 @@ def sawtooth_summary(
         "config": {
             "n": int(n),
             "dt": DT,
-            "tau": TAU,
+            "tau": float(tau),
+            "sigma_override": None if sigma_override is None else float(sigma_override),
             "block_s": float(block_s),
             "block_len": int(block_len),
             "n_boot": int(n_boot),
@@ -664,6 +733,7 @@ def flatten_cell_result(result: Mapping[str, Any]) -> List[Dict[str, Any]]:
                 "seed": result["seed"],
                 "tau_rho": result["tau_rho"],
                 "sigma_rho": result["sigma_rho"],
+                "sigma_rho_source": result["sigma_rho_source"],
                 "n": result["n"],
                 "dt": result["dt"],
                 "z_key": z,
@@ -680,14 +750,31 @@ def run_fixed_grid(
     out_path: str = FIXED_OUT,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103, 104, 105),
+    tau: float = TAU,
+    z_values: Sequence[float] = Z_ALL,
     rho_source: str = RHO_SOURCE,
+    sigma_override: Optional[float] = None,
 ) -> pd.DataFrame:
     tt = TruthTable(truth_path)
     cv2 = C.CostV2(strict_reliable=False)
     rows = []
     for cell in feasible_cells(calibration_path, include_pc1=True):
         for seed in seeds:
-            rows.extend(flatten_cell_result(run_cell(tt, cv2, cell, seed=seed, n=n, rho_source=rho_source)))
+            rows.extend(
+                flatten_cell_result(
+                    run_cell(
+                        tt,
+                        cv2,
+                        cell,
+                        seed=seed,
+                        tau=tau,
+                        n=n,
+                        z_values=z_values,
+                        rho_source=rho_source,
+                        sigma_override=sigma_override,
+                    )
+                )
+            )
     table = pd.DataFrame(rows)
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -718,9 +805,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--control-n", type=int, default=CONTROL_N)
     ap.add_argument("--seeds", default="101,102,103,104,105")
     ap.add_argument("--rho-source", choices=("calibration_ar1", "scalar_ou"), default=RHO_SOURCE)
+    ap.add_argument("--sigma-override", type=float, default=None)
+    ap.add_argument("--tau", type=float, default=TAU)
+    ap.add_argument("--z-grid-scaled", action="store_true", help="use z/tau ratios 0.10,0.30,0.55,1.00")
     ap.add_argument("--n-boot", type=int, default=N_BOOT)
+    ap.add_argument("--boot-metrics", default=None, help="accepted for audit compatibility; all metrics are bootstrapped")
     ap.add_argument("--block-s", type=float, default=BLOCK_S)
     args = ap.parse_args(argv)
+    z_values = z_values_for(args.tau, args.z_grid_scaled)
 
     tt = TruthTable(args.truth_table)
     cv2 = C.CostV2(strict_reliable=False)
@@ -736,7 +828,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.out,
             n=args.n,
             seeds=parse_int_list(args.seeds),
+            tau=args.tau,
+            z_values=z_values,
             rho_source=args.rho_source,
+            sigma_override=args.sigma_override,
         )
         print("fixed rows=%d -> %s" % (len(table), args.out))
     if args.summarize_fixed:
@@ -746,9 +841,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.summary_out,
             n=args.n,
             seeds=parse_int_list(args.seeds),
+            tau=args.tau,
+            z_values=z_values,
             block_s=args.block_s,
             n_boot=args.n_boot,
             rho_source=args.rho_source,
+            sigma_override=args.sigma_override,
         )
         print("fixed summary rows=%d -> %s" % (len(table), args.summary_out))
     if args.run_sawtooth:
@@ -758,9 +856,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.sawtooth_out,
             n=args.n,
             seeds=parse_int_list(args.seeds),
+            tau=args.tau,
             block_s=args.block_s,
             n_boot=args.n_boot,
             rho_source=args.rho_source,
+            sigma_override=args.sigma_override,
         )
         print("sawtooth rows=%d -> %s" % (len(report["summary"]), args.sawtooth_out))
     if not args.control and not args.run_fixed and not args.summarize_fixed and not args.run_sawtooth:
