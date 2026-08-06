@@ -84,3 +84,13 @@ def test_scaled_z_values_follow_tau_ratios():
 def test_parse_float_list_accepts_empty_and_values():
     assert D.parse_float_list("") == ()
     assert D.parse_float_list("0.65, 0.78,0.88") == pytest.approx((0.65, 0.78, 0.88))
+
+
+def test_cost_margin_stats_uses_best_second_best_gap():
+    cost = np.array([[1.0, 3.0, 2.0], [4.0, 1.0, 2.0], [0.0, 10.0, 4.0]])
+    stats = D.cost_margin_stats(cost)
+    margins = np.array([1.0, 1.0, 4.0])
+
+    assert stats["margin_mean_ms"] == pytest.approx(float(margins.mean()))
+    assert stats["margin_sd_ms"] == pytest.approx(float(margins.std(ddof=0)))
+    assert stats["margin_cv"] == pytest.approx(float(margins.std(ddof=0) / margins.mean()))

@@ -23,6 +23,9 @@ TAU_PATHS = (
 UNIMODAL = "results/phase-20R/decision_error_unimodal.parquet"
 W2500 = "results/phase-20R/decision_error_w2500.parquet"
 DELAY_ONLY = "results/phase-20R/decision_error_delay_only.parquet"
+MARGIN_CV_UNIMODAL = "results/phase-20R/margin_cv_unimodal.parquet"
+MARGIN_CV_OPERATIONAL = "results/phase-20R/margin_cv_operational.parquet"
+OPERATIONAL_RAW = "results/phase-20R/decision_error_by_age_by_regime.parquet"
 OUT_DIR = "docs/phase-20R/figures"
 
 
@@ -274,6 +277,72 @@ def plot_loss_mechanism(unimodal_path: str, w2500_path: str, delay_only_path: st
     return path
 
 
+def _err_at_z055(path: str) -> pd.DataFrame:
+    df = pd.read_parquet(path)
+    df = df[(df["z_key"] == "0.550") & (df["mode"].isin(["poisson", "h2"]))].copy()
+    return df.groupby(["mode", "rho_bar"])["err_total"].mean().reset_index()
+
+
+def _margin_cv_mean(path: str) -> pd.DataFrame:
+    df = pd.read_parquet(path)
+    df = df[df["mode"].isin(["poisson", "h2"])].copy()
+    return df.groupby(["mode", "rho_bar"])["margin_cv"].mean().reset_index()
+
+
+def plot_margin_cv_vs_error(
+    margin_cv_unimodal: str,
+    margin_cv_operational: str,
+    unimodal_path: str,
+    operational_raw_path: str,
+    out_dir: Path,
+) -> Path:
+    plt = _plt()
+    parts = []
+    for label, cv_path, err_path in [
+        ("sigma=0.0096", margin_cv_unimodal, unimodal_path),
+        ("operational sigma", margin_cv_operational, operational_raw_path),
+    ]:
+        cv = _margin_cv_mean(cv_path)
+        err = _err_at_z055(err_path)
+        merged = cv.merge(err, on=["mode", "rho_bar"], how="inner")
+        merged["set"] = label
+        parts.append(merged)
+    df = pd.concat(parts, ignore_index=True)
+    fig, ax = plt.subplots(figsize=(7.4, 5.2))
+    colors = {"poisson": "#b4452c", "h2": "#2f6f73"}
+    markers = {"sigma=0.0096": "o", "operational sigma": "s"}
+    for (mode, label), group in df.groupby(["mode", "set"]):
+        ax.scatter(
+            group["margin_cv"],
+            group["err_total"],
+            s=62,
+            marker=markers[label],
+            color=colors[mode],
+            label="%s, %s" % (mode, label),
+            alpha=0.92,
+            zorder=3,
+        )
+        for _, row in group.iterrows():
+            ax.annotate(
+                "%.3f" % row["rho_bar"],
+                (row["margin_cv"], row["err_total"]),
+                xytext=(4, 4),
+                textcoords="offset points",
+                fontsize=8,
+            )
+    ax.axvline(0.35, color="#777777", linestyle="--", linewidth=1.0, label="R=0.35")
+    ax.set_xlabel("R = sd(cost margin) / mean(cost margin)")
+    ax.set_ylabel("err_total at z=0.55")
+    ax.set_title("Decision error collapses by cost-margin CV")
+    ax.grid(True, color="#dddddd", linewidth=0.7)
+    ax.legend(frameon=False, fontsize=8)
+    fig.tight_layout()
+    path = out_dir / "decision_error_margin_cv_vs_err.png"
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+    return path
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--summary", default=SUMMARY)
@@ -283,6 +352,9 @@ def main() -> int:
     ap.add_argument("--unimodal", default=UNIMODAL)
     ap.add_argument("--w2500", default=W2500)
     ap.add_argument("--delay-only", default=DELAY_ONLY)
+    ap.add_argument("--margin-cv-unimodal", default=MARGIN_CV_UNIMODAL)
+    ap.add_argument("--margin-cv-operational", default=MARGIN_CV_OPERATIONAL)
+    ap.add_argument("--operational-raw", default=OPERATIONAL_RAW)
     ap.add_argument("--out-dir", default=OUT_DIR)
     args = ap.parse_args()
 
@@ -299,6 +371,16 @@ def main() -> int:
     ]
     if Path(args.unimodal).exists() and Path(args.w2500).exists() and Path(args.delay_only).exists():
         paths.append(plot_loss_mechanism(args.unimodal, args.w2500, args.delay_only, out_dir))
+    if Path(args.margin_cv_unimodal).exists() and Path(args.margin_cv_operational).exists():
+        paths.append(
+            plot_margin_cv_vs_error(
+                args.margin_cv_unimodal,
+                args.margin_cv_operational,
+                args.unimodal,
+                args.operational_raw,
+                out_dir,
+            )
+        )
     for path in paths:
         print("plot -> %s" % path)
     return 0

@@ -42,6 +42,7 @@ CONTROLS_OUT = "results/phase-20R/controls.json"
 FIXED_OUT = "results/phase-20R/decision_error_by_age_by_regime.parquet"
 SUMMARY_OUT = "results/phase-20R/decision_error_by_age_summary.parquet"
 SAWTOOTH_OUT = "results/phase-20R/decision_error_sawtooth.json"
+MARGIN_CV_OUT = "results/phase-20R/margin_cv_by_tau.parquet"
 RHO_SOURCE = "calibration_ar1"
 EXTRA_RHO_MODES = ("poisson", "h2")
 
@@ -299,6 +300,21 @@ def _decomposition(
     if not np.allclose(e_model + e_stale, total, atol=1e-9):
         raise AssertionError("phan ra khong khop")
     return e_model, e_stale, total
+
+
+def cost_margin_stats(cost: np.ndarray) -> Dict[str, float]:
+    ordered = np.sort(np.asarray(cost, dtype=float), axis=1)
+    margin = ordered[:, 1] - ordered[:, 0]
+    mean = float(np.mean(margin))
+    sd = float(np.std(margin, ddof=0))
+    return {
+        "margin_mean_ms": mean,
+        "margin_sd_ms": sd,
+        "margin_cv": sd / mean if mean > 0.0 else math.nan,
+        "margin_p10_ms": float(np.percentile(margin, 10)),
+        "margin_p50_ms": float(np.percentile(margin, 50)),
+        "margin_p90_ms": float(np.percentile(margin, 90)),
+    }
 
 
 def run_cell(
@@ -852,6 +868,62 @@ def run_fixed_grid(
     return table
 
 
+def compute_margin_cv(
+    calibration_path: str = CALIBRATION,
+    out_path: str = MARGIN_CV_OUT,
+    n: int = N,
+    seeds: Sequence[int] = (101, 102, 103),
+    tau_values: Sequence[float] = (TAU,),
+    rho_source: str = RHO_SOURCE,
+    sigma_override: Optional[float] = None,
+    w_loss_override: Optional[float] = None,
+    rho_bar_extra: Sequence[float] = (),
+) -> pd.DataFrame:
+    cv2 = C.CostV2(strict_reliable=False)
+    rows: List[Dict[str, Any]] = []
+    for tau in tau_values:
+        cells = measurement_cells(calibration_path, include_pc1=True, rho_bar_extra=rho_bar_extra, n=n, tau=float(tau))
+        for cell in cells:
+            mode = str(cell["mode"])
+            rho_bar = float(cell["rho_bar"])
+            sigma = float(sigma_override) if sigma_override is not None else float(cell["sigma_rho"])
+            w_loss = float(w_loss_override) if w_loss_override is not None else float(cell["w_loss"])
+            for seed in seeds:
+                rho_mat = rho_matrix_from_cell(
+                    mode,
+                    rho_bar,
+                    sigma,
+                    int(seed),
+                    tau=float(tau),
+                    n=int(n),
+                    dt=DT,
+                    source=rho_source,
+                )
+                _delay, _loss, cost = cv2.tables_batch(rho_mat, mode, w_loss)
+                stats = cost_margin_stats(cost)
+                rows.append(
+                    {
+                        "mode": mode,
+                        "rho_bar": rho_bar,
+                        "seed": int(seed),
+                        "tau_rho": float(tau),
+                        "sigma_rho": float(sigma),
+                        "sigma_rho_source": "override" if sigma_override is not None else "calibration",
+                        "w_loss": float(w_loss),
+                        "w_loss_source": "override" if w_loss_override is not None else "calibration",
+                        "n": int(n),
+                        "dt": DT,
+                        "rho_source": str(rho_source),
+                        **stats,
+                    }
+                )
+    table = pd.DataFrame(rows)
+    out = Path(out_path)
+    out.parent.mkdir(parents=True, exist_ok=True)
+    table.to_parquet(out, index=False)
+    return table
+
+
 def parse_int_list(text: str) -> Tuple[int, ...]:
     vals = [int(part.strip()) for part in str(text).split(",") if part.strip()]
     if not vals:
@@ -873,6 +945,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--run-fixed", action="store_true", help="run fixed-z grid artifact")
     ap.add_argument("--summarize-fixed", action="store_true", help="run paired block bootstrap summary for fixed-z grid")
     ap.add_argument("--run-sawtooth", action="store_true", help="run operational sawtooth AoI summary")
+    ap.add_argument("--compute-margin-cv", action="store_true", help="compute R = sd(cost margin) / mean(cost margin)")
     ap.add_argument("--out", default=FIXED_OUT)
     ap.add_argument("--summary-out", default=SUMMARY_OUT)
     ap.add_argument("--sawtooth-out", default=SAWTOOTH_OUT)
@@ -883,13 +956,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--sigma-override", type=float, default=None)
     ap.add_argument("--w-loss-override", type=float, default=None)
     ap.add_argument("--rho-bar-extra", default="", help="comma-separated extra rho_bar values for h2/poisson H7 diagnostics")
-    ap.add_argument("--tau", type=float, default=TAU)
+    ap.add_argument("--tau", default=str(TAU), help="single tau or comma-separated tau list for --compute-margin-cv")
     ap.add_argument("--z-grid-scaled", action="store_true", help="use z/tau ratios 0.10,0.30,0.55,1.00")
     ap.add_argument("--n-boot", type=int, default=N_BOOT)
     ap.add_argument("--boot-metrics", default=None, help="accepted for audit compatibility; all metrics are bootstrapped")
     ap.add_argument("--block-s", type=float, default=BLOCK_S)
     args = ap.parse_args(argv)
-    z_values = z_values_for(args.tau, args.z_grid_scaled)
+    tau_values = parse_float_list(args.tau)
+    if not tau_values:
+        ap.error("--tau needs at least one value")
+    if not args.compute_margin_cv and len(tau_values) != 1:
+        ap.error("--tau may be a list only with --compute-margin-cv")
+    tau = tau_values[0]
+    z_values = z_values_for(tau, args.z_grid_scaled)
     rho_bar_extra = parse_float_list(args.rho_bar_extra)
 
     tt = TruthTable(args.truth_table)
@@ -906,7 +985,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.out,
             n=args.n,
             seeds=parse_int_list(args.seeds),
-            tau=args.tau,
+            tau=tau,
             z_values=z_values,
             rho_source=args.rho_source,
             sigma_override=args.sigma_override,
@@ -921,7 +1000,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.summary_out,
             n=args.n,
             seeds=parse_int_list(args.seeds),
-            tau=args.tau,
+            tau=tau,
             z_values=z_values,
             block_s=args.block_s,
             n_boot=args.n_boot,
@@ -937,7 +1016,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.sawtooth_out,
             n=args.n,
             seeds=parse_int_list(args.seeds),
-            tau=args.tau,
+            tau=tau,
             block_s=args.block_s,
             n_boot=args.n_boot,
             rho_source=args.rho_source,
@@ -945,7 +1024,20 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             w_loss_override=args.w_loss_override,
         )
         print("sawtooth rows=%d -> %s" % (len(report["summary"]), args.sawtooth_out))
-    if not args.control and not args.run_fixed and not args.summarize_fixed and not args.run_sawtooth:
+    if args.compute_margin_cv:
+        table = compute_margin_cv(
+            args.calibration,
+            args.out,
+            n=args.n,
+            seeds=parse_int_list(args.seeds),
+            tau_values=tau_values,
+            rho_source=args.rho_source,
+            sigma_override=args.sigma_override,
+            w_loss_override=args.w_loss_override,
+            rho_bar_extra=rho_bar_extra,
+        )
+        print("margin-cv rows=%d -> %s" % (len(table), args.out))
+    if not args.control and not args.run_fixed and not args.summarize_fixed and not args.run_sawtooth and not args.compute_margin_cv:
         ap.print_help()
         return 2
     return 0
