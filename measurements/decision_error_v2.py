@@ -43,6 +43,7 @@ FIXED_OUT = "results/phase-20R/decision_error_by_age_by_regime.parquet"
 SUMMARY_OUT = "results/phase-20R/decision_error_by_age_summary.parquet"
 SAWTOOTH_OUT = "results/phase-20R/decision_error_sawtooth.json"
 MARGIN_CV_OUT = "results/phase-20R/margin_cv_by_tau.parquet"
+MARGIN_CV_CI_OUT = "results/phase-20R/margin_cv_ci.json"
 RHO_SOURCE = "calibration_ar1"
 EXTRA_RHO_MODES = ("poisson", "h2")
 
@@ -80,6 +81,16 @@ def z_over_tau(z_s: float, tau: float) -> float:
     if not float(tau):
         return math.nan
     return round(float(z_s) / float(tau), 12)
+
+
+def resolve_sigma(cal_cell: Mapping[str, Any], sigma_override: Optional[float] = None, a_override: Optional[float] = None) -> Tuple[float, str]:
+    if sigma_override is not None and a_override is not None:
+        raise ValueError("sigma_override and a_override are mutually exclusive")
+    if sigma_override is not None:
+        return float(sigma_override), "override"
+    if a_override is not None:
+        return float(a_override) * float(cal_cell["sigma_max"]), "a_override"
+    return float(cal_cell["sigma_rho"]), "calibration"
 
 
 def feasible_cells(path: str = CALIBRATION, include_pc1: bool = True) -> List[Dict[str, Any]]:
@@ -242,10 +253,11 @@ def _cell_arrays(
     dt: float = DT,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     mode = str(cal_cell["mode"])
-    sigma = float(sigma_override) if sigma_override is not None else float(cal_cell["sigma_rho"])
+    sigma, sigma_source = resolve_sigma(cal_cell, sigma_override=sigma_override, a_override=a_override)
     w_loss = float(w_loss_override) if w_loss_override is not None else float(cal_cell["w_loss"])
     tt.reset_clip_log()
     rho_mat = rho_matrix_from_cell(
@@ -268,7 +280,7 @@ def _cell_arrays(
         "seed": int(seed),
         "tau_rho": float(tau),
         "sigma_rho": float(sigma),
-        "sigma_rho_source": "override" if sigma_override is not None else "calibration",
+        "sigma_rho_source": sigma_source,
         "w_loss": float(w_loss),
         "w_loss_source": "override" if w_loss_override is not None else "calibration",
         "n": int(n),
@@ -328,12 +340,13 @@ def run_cell(
     z_values: Sequence[float] = Z_ALL,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     check_z_grid(z_values, dt)
     mode = str(cal_cell["mode"])
     rho_bar = float(cal_cell["rho_bar"])
-    sigma = float(sigma_override) if sigma_override is not None else float(cal_cell["sigma_rho"])
+    sigma, sigma_source = resolve_sigma(cal_cell, sigma_override=sigma_override, a_override=a_override)
     w_loss = float(w_loss_override) if w_loss_override is not None else float(cal_cell["w_loss"])
     t_delay = float(cal_cell["t_delay_ms"])
     t_loss = float(cal_cell["t_loss"])
@@ -348,6 +361,7 @@ def run_cell(
         dt=dt,
         rho_source=rho_source,
         sigma_override=sigma_override,
+        a_override=a_override,
         w_loss_override=w_loss_override,
     )
     d_true = arrays["d_true"]
@@ -362,7 +376,7 @@ def run_cell(
         "seed": int(seed),
         "tau_rho": float(tau),
         "sigma_rho": sigma,
-        "sigma_rho_source": "override" if sigma_override is not None else "calibration",
+        "sigma_rho_source": sigma_source,
         "w_loss": float(w_loss),
         "w_loss_source": "override" if w_loss_override is not None else "calibration",
         "n": int(n),
@@ -497,6 +511,7 @@ def fixed_summary_with_bootstrap(
     n_boot: int = N_BOOT,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
 ) -> pd.DataFrame:
     check_z_grid(z_values, DT)
@@ -516,6 +531,7 @@ def fixed_summary_with_bootstrap(
                 n=n,
                 rho_source=rho_source,
                 sigma_override=sigma_override,
+                a_override=a_override,
                 w_loss_override=w_loss_override,
             )
             for seed in seeds
@@ -621,6 +637,7 @@ def sawtooth_summary(
     n_boot: int = N_BOOT,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     check_z_grid(Z_ALL, DT)
@@ -654,6 +671,7 @@ def sawtooth_summary(
                 n=n,
                 rho_source=rho_source,
                 sigma_override=sigma_override,
+                a_override=a_override,
                 w_loss_override=w_loss_override,
             )
             clip_max = max(clip_max, max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0)
@@ -685,12 +703,13 @@ def sawtooth_summary(
             rows.append(row)
         blocks = {key: np.concatenate(parts) for key, parts in by_metric_blocks.items()}
         ci = _bootstrap_from_block_means(blocks, n_boot=n_boot, seed=11)
+        sigma, sigma_source = resolve_sigma(cell, sigma_override=sigma_override, a_override=a_override)
         summary = {
             "mode": str(cell["mode"]),
             "rho_bar": float(cell["rho_bar"]),
             "tau_rho": float(tau),
-            "sigma_rho": float(sigma_override) if sigma_override is not None else float(cell["sigma_rho"]),
-            "sigma_rho_source": "override" if sigma_override is not None else "calibration",
+            "sigma_rho": float(sigma),
+            "sigma_rho_source": sigma_source,
             "w_loss": float(w_loss_override) if w_loss_override is not None else float(cell["w_loss"]),
             "w_loss_source": "override" if w_loss_override is not None else "calibration",
             "n_seed": int(len(seeds)),
@@ -718,6 +737,7 @@ def sawtooth_summary(
             "dt": DT,
             "tau": float(tau),
             "sigma_override": None if sigma_override is None else float(sigma_override),
+            "a_override": None if a_override is None else float(a_override),
             "w_loss_override": None if w_loss_override is None else float(w_loss_override),
             "block_s": float(block_s),
             "block_len": int(block_len),
@@ -836,6 +856,7 @@ def run_fixed_grid(
     z_values: Sequence[float] = Z_ALL,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
     rho_bar_extra: Sequence[float] = (),
 ) -> pd.DataFrame:
@@ -857,6 +878,7 @@ def run_fixed_grid(
                         z_values=z_values,
                         rho_source=rho_source,
                         sigma_override=sigma_override,
+                        a_override=a_override,
                         w_loss_override=w_loss_override,
                     )
                 )
@@ -876,6 +898,7 @@ def compute_margin_cv(
     tau_values: Sequence[float] = (TAU,),
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
     rho_bar_extra: Sequence[float] = (),
 ) -> pd.DataFrame:
@@ -886,7 +909,7 @@ def compute_margin_cv(
         for cell in cells:
             mode = str(cell["mode"])
             rho_bar = float(cell["rho_bar"])
-            sigma = float(sigma_override) if sigma_override is not None else float(cell["sigma_rho"])
+            sigma, sigma_source = resolve_sigma(cell, sigma_override=sigma_override, a_override=a_override)
             w_loss = float(w_loss_override) if w_loss_override is not None else float(cell["w_loss"])
             for seed in seeds:
                 rho_mat = rho_matrix_from_cell(
@@ -908,7 +931,7 @@ def compute_margin_cv(
                         "seed": int(seed),
                         "tau_rho": float(tau),
                         "sigma_rho": float(sigma),
-                        "sigma_rho_source": "override" if sigma_override is not None else "calibration",
+                        "sigma_rho_source": sigma_source,
                         "w_loss": float(w_loss),
                         "w_loss_source": "override" if w_loss_override is not None else "calibration",
                         "n": int(n),
@@ -922,6 +945,149 @@ def compute_margin_cv(
     out.parent.mkdir(parents=True, exist_ok=True)
     table.to_parquet(out, index=False)
     return table
+
+
+def _cost_margin_series(cost: np.ndarray) -> np.ndarray:
+    ordered = np.sort(np.asarray(cost, dtype=float), axis=1)
+    return ordered[:, 1] - ordered[:, 0]
+
+
+def _margin_cv_from_moments(mean: float, second_moment: float) -> float:
+    var = max(float(second_moment) - float(mean) * float(mean), 0.0)
+    return math.sqrt(var) / float(mean) if float(mean) > 0.0 else math.nan
+
+
+def _margin_block_moments(values: np.ndarray, block_len: int) -> Tuple[np.ndarray, np.ndarray]:
+    arr = np.asarray(values, dtype=float)
+    n_blocks = len(arr) // int(block_len)
+    if n_blocks <= 0:
+        raise ValueError("block_len too large for margin series")
+    blocks = arr[: n_blocks * int(block_len)].reshape(n_blocks, int(block_len))
+    return blocks.mean(axis=1), (blocks * blocks).mean(axis=1)
+
+
+def bootstrap_margin_cv_from_blocks(
+    block_mean: np.ndarray,
+    block_second_moment: np.ndarray,
+    n_boot: int = N_BOOT,
+    seed: int = 7,
+) -> Dict[str, Any]:
+    mean_blocks = np.asarray(block_mean, dtype=float)
+    second_blocks = np.asarray(block_second_moment, dtype=float)
+    if len(mean_blocks) != len(second_blocks):
+        raise ValueError("block moment arrays must have equal length")
+    if len(mean_blocks) <= 0:
+        raise ValueError("need at least one block")
+    observed_mean = float(np.mean(mean_blocks))
+    observed_second = float(np.mean(second_blocks))
+    observed = _margin_cv_from_moments(observed_mean, observed_second)
+    rng = np.random.default_rng(int(seed))
+    boot = np.empty(int(n_boot), dtype=float)
+    for b in range(int(n_boot)):
+        pick = rng.integers(0, len(mean_blocks), size=len(mean_blocks))
+        boot[b] = _margin_cv_from_moments(float(np.mean(mean_blocks[pick])), float(np.mean(second_blocks[pick])))
+    return {
+        "margin_mean_ms": observed_mean,
+        "margin_sd_ms": math.sqrt(max(observed_second - observed_mean * observed_mean, 0.0)),
+        "margin_cv": observed,
+        "margin_cv_ci95_lo": float(np.percentile(boot, 2.5)),
+        "margin_cv_ci95_hi": float(np.percentile(boot, 97.5)),
+        "margin_cv_boot_sd": float(np.std(boot, ddof=1)) if int(n_boot) > 1 else 0.0,
+    }
+
+
+def compute_margin_cv_ci(
+    calibration_path: str = CALIBRATION,
+    out_path: str = MARGIN_CV_CI_OUT,
+    n: int = N,
+    seeds: Sequence[int] = (101, 102, 103),
+    tau_values: Sequence[float] = (TAU,),
+    rho_source: str = RHO_SOURCE,
+    sigma_override: Optional[float] = None,
+    a_override: Optional[float] = None,
+    w_loss_override: Optional[float] = None,
+    rho_bar_extra: Sequence[float] = (),
+    block_s: float = BLOCK_S,
+    n_boot: int = N_BOOT,
+) -> Dict[str, Any]:
+    block_len = int(round(float(block_s) / DT))
+    if block_len <= 0:
+        raise ValueError("block_s too small")
+    cv2 = C.CostV2(strict_reliable=False)
+    rows: List[Dict[str, Any]] = []
+    for tau in tau_values:
+        cells = measurement_cells(calibration_path, include_pc1=True, rho_bar_extra=rho_bar_extra, n=n, tau=float(tau))
+        for cell in cells:
+            mode = str(cell["mode"])
+            rho_bar = float(cell["rho_bar"])
+            sigma, sigma_source = resolve_sigma(cell, sigma_override=sigma_override, a_override=a_override)
+            w_loss = float(w_loss_override) if w_loss_override is not None else float(cell["w_loss"])
+            means: List[np.ndarray] = []
+            seconds: List[np.ndarray] = []
+            for seed in seeds:
+                rho_mat = rho_matrix_from_cell(
+                    mode,
+                    rho_bar,
+                    sigma,
+                    int(seed),
+                    tau=float(tau),
+                    n=int(n),
+                    dt=DT,
+                    source=rho_source,
+                )
+                _delay, _loss, cost = cv2.tables_batch(rho_mat, mode, w_loss)
+                margin = _cost_margin_series(cost)
+                block_mean, block_second = _margin_block_moments(margin, block_len)
+                means.append(block_mean)
+                seconds.append(block_second)
+            stats = bootstrap_margin_cv_from_blocks(
+                np.concatenate(means),
+                np.concatenate(seconds),
+                n_boot=n_boot,
+                seed=1301 + int(round(float(tau) * 1000)) + int(round(rho_bar * 1000)),
+            )
+            rows.append(
+                {
+                    "mode": mode,
+                    "rho_bar": rho_bar,
+                    "tau_rho": float(tau),
+                    "sigma_rho": float(sigma),
+                    "sigma_rho_source": sigma_source,
+                    "w_loss": float(w_loss),
+                    "w_loss_source": "override" if w_loss_override is not None else "calibration",
+                    "n_seed": int(len(seeds)),
+                    "n": int(n),
+                    "dt": DT,
+                    "block_s": float(block_s),
+                    "block_len": int(block_len),
+                    "n_blocks": int(sum(len(part) for part in means)),
+                    "n_boot": int(n_boot),
+                    "rho_source": str(rho_source),
+                    **stats,
+                }
+            )
+    report = {
+        "phase": "20R.6",
+        "script": "measurements.decision_error_v2",
+        "kind": "margin_cv_block_bootstrap_ci",
+        "config": {
+            "n": int(n),
+            "dt": DT,
+            "seeds": [int(s) for s in seeds],
+            "tau_values": [float(tau) for tau in tau_values],
+            "sigma_override": None if sigma_override is None else float(sigma_override),
+            "a_override": None if a_override is None else float(a_override),
+            "w_loss_override": None if w_loss_override is None else float(w_loss_override),
+            "rho_bar_extra": [float(rho) for rho in rho_bar_extra],
+            "rho_source": str(rho_source),
+            "block_s": float(block_s),
+            "block_len": int(block_len),
+            "n_boot": int(n_boot),
+        },
+        "rows": rows,
+    }
+    write_json(out_path, report)
+    return report
 
 
 def parse_int_list(text: str) -> Tuple[int, ...]:
@@ -946,6 +1112,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--summarize-fixed", action="store_true", help="run paired block bootstrap summary for fixed-z grid")
     ap.add_argument("--run-sawtooth", action="store_true", help="run operational sawtooth AoI summary")
     ap.add_argument("--compute-margin-cv", action="store_true", help="compute R = sd(cost margin) / mean(cost margin)")
+    ap.add_argument("--compute-margin-cv-ci", action="store_true", help="compute block-bootstrap CI for R")
     ap.add_argument("--out", default=FIXED_OUT)
     ap.add_argument("--summary-out", default=SUMMARY_OUT)
     ap.add_argument("--sawtooth-out", default=SAWTOOTH_OUT)
@@ -954,6 +1121,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--seeds", default="101,102,103,104,105")
     ap.add_argument("--rho-source", choices=("calibration_ar1", "scalar_ou"), default=RHO_SOURCE)
     ap.add_argument("--sigma-override", type=float, default=None)
+    ap.add_argument("--a-override", type=float, default=None, help="set sigma_rho to a * sigma_max for every calibration cell")
     ap.add_argument("--w-loss-override", type=float, default=None)
     ap.add_argument("--rho-bar-extra", default="", help="comma-separated extra rho_bar values for h2/poisson H7 diagnostics")
     ap.add_argument("--tau", default=str(TAU), help="single tau or comma-separated tau list for --compute-margin-cv")
@@ -962,11 +1130,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--boot-metrics", default=None, help="accepted for audit compatibility; all metrics are bootstrapped")
     ap.add_argument("--block-s", type=float, default=BLOCK_S)
     args = ap.parse_args(argv)
+    if args.sigma_override is not None and args.a_override is not None:
+        ap.error("--sigma-override and --a-override are mutually exclusive")
+    if args.a_override is not None and args.a_override < 0.0:
+        ap.error("--a-override must be non-negative")
     tau_values = parse_float_list(args.tau)
     if not tau_values:
         ap.error("--tau needs at least one value")
-    if not args.compute_margin_cv and len(tau_values) != 1:
-        ap.error("--tau may be a list only with --compute-margin-cv")
+    if not (args.compute_margin_cv or args.compute_margin_cv_ci) and len(tau_values) != 1:
+        ap.error("--tau may be a list only with --compute-margin-cv or --compute-margin-cv-ci")
     tau = tau_values[0]
     z_values = z_values_for(tau, args.z_grid_scaled)
     rho_bar_extra = parse_float_list(args.rho_bar_extra)
@@ -989,6 +1161,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             z_values=z_values,
             rho_source=args.rho_source,
             sigma_override=args.sigma_override,
+            a_override=args.a_override,
             w_loss_override=args.w_loss_override,
             rho_bar_extra=rho_bar_extra,
         )
@@ -1006,6 +1179,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             n_boot=args.n_boot,
             rho_source=args.rho_source,
             sigma_override=args.sigma_override,
+            a_override=args.a_override,
             w_loss_override=args.w_loss_override,
         )
         print("fixed summary rows=%d -> %s" % (len(table), args.summary_out))
@@ -1021,6 +1195,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             n_boot=args.n_boot,
             rho_source=args.rho_source,
             sigma_override=args.sigma_override,
+            a_override=args.a_override,
             w_loss_override=args.w_loss_override,
         )
         print("sawtooth rows=%d -> %s" % (len(report["summary"]), args.sawtooth_out))
@@ -1033,11 +1208,35 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             tau_values=tau_values,
             rho_source=args.rho_source,
             sigma_override=args.sigma_override,
+            a_override=args.a_override,
             w_loss_override=args.w_loss_override,
             rho_bar_extra=rho_bar_extra,
         )
         print("margin-cv rows=%d -> %s" % (len(table), args.out))
-    if not args.control and not args.run_fixed and not args.summarize_fixed and not args.run_sawtooth and not args.compute_margin_cv:
+    if args.compute_margin_cv_ci:
+        report = compute_margin_cv_ci(
+            args.calibration,
+            args.out,
+            n=args.n,
+            seeds=parse_int_list(args.seeds),
+            tau_values=tau_values,
+            rho_source=args.rho_source,
+            sigma_override=args.sigma_override,
+            a_override=args.a_override,
+            w_loss_override=args.w_loss_override,
+            rho_bar_extra=rho_bar_extra,
+            block_s=args.block_s,
+            n_boot=args.n_boot,
+        )
+        print("margin-cv-ci rows=%d -> %s" % (len(report["rows"]), args.out))
+    if (
+        not args.control
+        and not args.run_fixed
+        and not args.summarize_fixed
+        and not args.run_sawtooth
+        and not args.compute_margin_cv
+        and not args.compute_margin_cv_ci
+    ):
         ap.print_help()
         return 2
     return 0

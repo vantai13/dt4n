@@ -25,6 +25,8 @@ W2500 = "results/phase-20R/decision_error_w2500.parquet"
 DELAY_ONLY = "results/phase-20R/decision_error_delay_only.parquet"
 MARGIN_CV_UNIMODAL = "results/phase-20R/margin_cv_unimodal.parquet"
 MARGIN_CV_OPERATIONAL = "results/phase-20R/margin_cv_operational.parquet"
+SENSITIVITY_A02 = "results/phase-20R/sensitivity_a02.parquet"
+MARGIN_CV_A02 = "results/phase-20R/margin_cv_a02.parquet"
 OPERATIONAL_RAW = "results/phase-20R/decision_error_by_age_by_regime.parquet"
 OUT_DIR = "docs/phase-20R/figures"
 
@@ -343,6 +345,43 @@ def plot_margin_cv_vs_error(
     return path
 
 
+def plot_sensitivity_a02(margin_cv_path: str, sensitivity_path: str, out_dir: Path) -> Path:
+    plt = _plt()
+    cv = _margin_cv_mean(margin_cv_path)
+    err = _err_at_z055(sensitivity_path)
+    df = cv.merge(err, on=["mode", "rho_bar"], how="inner").sort_values(["mode", "rho_bar"])
+    rho_s = float(df["margin_cv"].corr(df["err_total"], method="spearman")) if len(df) >= 2 else float("nan")
+    fig, ax = plt.subplots(figsize=(7.0, 5.0))
+    colors = {"poisson": "#b4452c", "h2": "#2f6f73"}
+    for mode, group in df.groupby("mode"):
+        ax.scatter(
+            group["margin_cv"],
+            group["err_total"],
+            s=64,
+            color=colors.get(mode, "#333333"),
+            label=mode,
+            zorder=3,
+        )
+        for _, row in group.iterrows():
+            ax.annotate(
+                "%.3f" % row["rho_bar"],
+                (row["margin_cv"], row["err_total"]),
+                xytext=(4, 4),
+                textcoords="offset points",
+                fontsize=8,
+            )
+    ax.set_xlabel("R = sd(cost margin) / mean(cost margin)")
+    ax.set_ylabel("err_total at z=0.55")
+    ax.set_title("Sensitivity a=0.2, Spearman=%.3f" % rho_s)
+    ax.grid(True, color="#dddddd", linewidth=0.7)
+    ax.legend(frameon=False)
+    fig.tight_layout()
+    path = out_dir / "decision_error_a02_margin_cv_vs_err.png"
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+    return path
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--summary", default=SUMMARY)
@@ -354,6 +393,8 @@ def main() -> int:
     ap.add_argument("--delay-only", default=DELAY_ONLY)
     ap.add_argument("--margin-cv-unimodal", default=MARGIN_CV_UNIMODAL)
     ap.add_argument("--margin-cv-operational", default=MARGIN_CV_OPERATIONAL)
+    ap.add_argument("--sensitivity-a02", default=SENSITIVITY_A02)
+    ap.add_argument("--margin-cv-a02", default=MARGIN_CV_A02)
     ap.add_argument("--operational-raw", default=OPERATIONAL_RAW)
     ap.add_argument("--out-dir", default=OUT_DIR)
     args = ap.parse_args()
@@ -381,6 +422,8 @@ def main() -> int:
                 out_dir,
             )
         )
+    if Path(args.margin_cv_a02).exists() and Path(args.sensitivity_a02).exists():
+        paths.append(plot_sensitivity_a02(args.margin_cv_a02, args.sensitivity_a02, out_dir))
     for path in paths:
         print("plot -> %s" % path)
     return 0

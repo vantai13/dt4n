@@ -6,7 +6,9 @@ import numpy as np
 import pandas as pd
 import pytest
 
+from measurements import additivity_check as A
 from measurements import decision_error_v2 as D
+from measurements import quasistatic_check as Q
 from twin import cost_v2 as C
 from twin import topology_v7 as T7
 
@@ -94,3 +96,50 @@ def test_cost_margin_stats_uses_best_second_best_gap():
     assert stats["margin_mean_ms"] == pytest.approx(float(margins.mean()))
     assert stats["margin_sd_ms"] == pytest.approx(float(margins.std(ddof=0)))
     assert stats["margin_cv"] == pytest.approx(float(margins.std(ddof=0) / margins.mean()))
+
+
+def test_a_override_sets_sigma_from_sigma_max():
+    cell = {"sigma_max": 0.25, "sigma_rho": 0.9}
+
+    sigma, source = D.resolve_sigma(cell, a_override=0.2)
+
+    assert sigma == pytest.approx(0.05)
+    assert source == "a_override"
+
+
+def test_margin_cv_bootstrap_from_block_moments_reports_observed_value():
+    values = np.array([1.0, 2.0, 3.0, 4.0])
+    means, seconds = D._margin_block_moments(values, block_len=2)
+
+    stats = D.bootstrap_margin_cv_from_blocks(means, seconds, n_boot=10, seed=1)
+
+    assert stats["margin_mean_ms"] == pytest.approx(float(values.mean()))
+    assert stats["margin_cv"] == pytest.approx(float(values.std(ddof=0) / values.mean()))
+
+
+def test_additivity_plan_matches_preregistered_day2_budget():
+    plan = A.build_plan()
+
+    assert plan["counts"] == {"A_table_cells": 12, "B_live_runs": 60, "C_live_runs": 60}
+    assert plan["branch_b_paths"] == ["P1"]
+
+
+def test_tost_equivalence_uses_90ci_inside_delta():
+    out = A.tost_equivalence([0.01, 0.02, 0.0, -0.01, 0.01], delta_ms=0.44)
+
+    assert out["equiv_pass"]
+    assert out["power_ok"]
+
+
+def test_quasistatic_analyze_checks_max_window_difference():
+    rows = [
+        {"seed": 101, "window_idx": 0, "measured_cost_ms": 10.10, "table_cost_ms": 10.00},
+        {"seed": 101, "window_idx": 1, "measured_cost_ms": 10.20, "table_cost_ms": 10.00},
+        {"seed": 102, "window_idx": 0, "measured_cost_ms": 9.90, "table_cost_ms": 10.00},
+    ]
+
+    report = Q.analyze(rows, seeds=(101, 102))
+
+    assert report["summary"]["evaluated"]
+    assert report["summary"]["max_abs_diff_ms"] == pytest.approx(0.2)
+    assert report["summary"]["pass"]
