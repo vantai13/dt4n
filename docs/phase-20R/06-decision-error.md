@@ -35,7 +35,8 @@ fixed-z rerun             : 45.30 s
 summary+sawtooth bootstrap: 89.97 s
 constant-sigma run        : 41.25 s
 tau sweep                 : 24.19 s, 23.00 s, 21.41 s
-plot 5 hinh               : 1.23 s
+H7 calibrated/w2500/w0    : 76.80 s, 78.06 s, 51.36 s
+plot 6 hinh               : 1.33 s
 ```
 
 ## Artifacts
@@ -48,6 +49,9 @@ results/phase-20R/decision_error_constant_sigma.parquet
 results/phase-20R/decision_error_tau0.2.parquet
 results/phase-20R/decision_error_tau1.0.parquet
 results/phase-20R/decision_error_tau5.0.parquet
+results/phase-20R/decision_error_unimodal.parquet
+results/phase-20R/decision_error_w2500.parquet
+results/phase-20R/decision_error_delay_only.parquet
 ```
 
 ## Fixed-Z Result
@@ -188,11 +192,55 @@ poisson  0.925      0.2905     0.0403     0.2954  0.0923
 poisson  0.960      0.2650     0.0155     0.2675  0.0900
 ```
 
-Ket luan: confound `sigma_rho` la that, nhung khong giai thich het H3. Voi
-sigma co dinh, `poisson` co Spearman duong theo `rho_bar` (`rho_s = 0.4`), nen
-dat metric G4 da ky/amended. Tuy vay strict monotonic H3' khong sach vi
-`rho_bar = 0.960` giam nhe so voi `0.925`. `h2` van giam manh, gan nhu ranking
-bi khoa o tai cao.
+Ket luan: confound `sigma_rho` la that, nhung khong giai thich het H3. Du doan
+truoc khi chay constant-sigma noi `poisson@0.960` se lon nhat; du doan do BI
+BAC BO. Thuc te `poisson` co dang dai/dinh: nho tai 0.70, lon tai 0.85-0.925,
+roi giam tai 0.960. `h2` van giam manh, gan nhu ranking bi khoa o tai cao.
+
+Do do `20R-G4` khong duoc ghi PASS. G4/H3 nhu da tien dang ky FAIL; phan
+constant-sigma chi la diagnostic dan den Amendment 8/H7.
+
+## H7 Loss-Driven Unimodal Mechanism
+
+Amendment 8 duoc commit truoc khi chay tai `1d78812`. Run H7 khong dung
+Mininet; no dung `truth_table.parquet` da do, `sigma_rho = 0.0096`, va them
+`rho_bar = 0.65, 0.78, 0.88`.
+
+Tai `z = 0.55`:
+
+```text
+mode     rho_bar  w=hieu chuan  w=2500   w=0 delay-only
+h2       0.650       0.2103      0.2101      0.0000
+h2       0.700       0.1672      0.1606      0.0000
+h2       0.780       0.0431      0.0391      0.0000
+h2       0.850       0.0058      0.0053      0.0000
+h2       0.880       0.0041      0.0037      0.0000
+h2       0.925       0.0011      0.0011      0.0000
+h2       0.960       0.0017      0.0016      0.0000
+poisson  0.650       0.0000      0.0000      0.0000
+poisson  0.700       0.0000      0.0000      0.0000
+poisson  0.780       0.0936      0.1300      0.0000
+poisson  0.850       0.2870      0.2887      0.0016
+poisson  0.880       0.3005      0.2979      0.0050
+poisson  0.925       0.2905      0.2857      0.0080
+poisson  0.960       0.2650      0.2588      0.0078
+```
+
+H7 read:
+
+```text
+H7a/H7b poisson: PASS. Dung mot cuc dai noi bo tai rho_bar=0.88.
+H7c h2        : PARTIAL. Err tang khi giam 0.70 -> 0.65, nen dinh nam ben
+                trai 0.70; nhung luoi chua co diem thap hon de thay su giam
+                sau dinh.
+H7d delay-only: PASS. max err_total(w=0) = 0.007979 < 0.02.
+```
+
+`w_loss = 2500` khong lam thay doi dang co che o cac o da ky; tren extended
+grid no lam `poisson@0.78` tang them `0.0364`, tuc anh huong vi tri/suon trai
+cua dai chuyen tiep. Nhung khi `w_loss = 0`, err sup xuong duoi `0.008` o moi
+o, nen co che chinh van ro: decision flips den tu so hang loss, khong phai
+delay.
 
 ## H6 Tau Scaling
 
@@ -236,7 +284,7 @@ H6 PASS.
 
 ## Figures
 
-Matplotlib da duoc cai va 5 hinh da sinh:
+Matplotlib da duoc cai va hinh da sinh:
 
 ```text
 docs/phase-20R/figures/decision_error_pred_vs_measured_z055.png
@@ -244,6 +292,7 @@ docs/phase-20R/figures/decision_error_decomposition_vs_z.png
 docs/phase-20R/figures/decision_error_d_sla_ci_z055.png
 docs/phase-20R/figures/decision_error_constant_sigma_z055.png
 docs/phase-20R/figures/decision_error_tau_scaling.png
+docs/phase-20R/figures/decision_error_loss_mechanism_z055.png
 ```
 
 ## Threats
@@ -308,5 +357,33 @@ done 2>&1 | tee logs/20r5_05_tau_sweep.log
 
 python3 -m measurements.plot_decision_error_v2 \
   2>&1 | tee logs/20r5_06_plots.log
-```
 
+python3 -m measurements.decision_error_v2 --run-fixed \
+  --sigma-override 0.0096 \
+  --rho-bar-extra 0.65,0.78,0.88 \
+  --n 200000 \
+  --seeds 101,102,103,104,105 \
+  --out results/phase-20R/decision_error_unimodal.parquet \
+  2>&1 | tee logs/20r5_07_unimodal.log
+
+python3 -m measurements.decision_error_v2 --run-fixed \
+  --sigma-override 0.0096 \
+  --w-loss-override 2500 \
+  --rho-bar-extra 0.65,0.78,0.88 \
+  --n 200000 \
+  --seeds 101,102,103,104,105 \
+  --out results/phase-20R/decision_error_w2500.parquet \
+  2>&1 | tee logs/20r5_08_w2500.log
+
+python3 -m measurements.decision_error_v2 --run-fixed \
+  --sigma-override 0.0096 \
+  --w-loss-override 0 \
+  --rho-bar-extra 0.65,0.78,0.88 \
+  --n 200000 \
+  --seeds 101,102,103 \
+  --out results/phase-20R/decision_error_delay_only.parquet \
+  2>&1 | tee logs/20r5_09_delay_only.log
+
+python3 -m measurements.plot_decision_error_v2 \
+  2>&1 | tee logs/20r5_10_plots_with_h7.log
+```

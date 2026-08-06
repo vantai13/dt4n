@@ -2,9 +2,10 @@
 
 Ngay ghi: 2026-08-06
 
-Ket luan ngan: decision-error gates dat voi ghi chu quan trong ve H3/G4. H6
-PASS. `20R-G6` end-to-end additivity khong co artifact trong lesson nay, nen
-khong duoc danh dau PASS neu chua co DC1 rieng.
+Ket luan ngan: decision-error gates chinh dat tru G4; G4/H3 FAIL nhu thong ke
+da tien dang ky. Muc dich khoa hoc cua G4 van dat bang ket qua phu thuoc che do
+va co che don dinh H7. H6 PASS. `20R-G6` end-to-end additivity khong co artifact
+trong lesson nay, nen khong duoc danh dau PASS neu chua co DC1 rieng.
 
 ## Gate Table
 
@@ -13,14 +14,15 @@ Gate    Status          Evidence
 G1      PASS            poisson@0.700, z=0.55: err=0.187870 in [0.05,0.40]
 G2      PASS            same cell: d_sla_ci95_lo=0.065583 >= 0.03
 G3      PASS            same cell: Spearman(err,z)=1.0, exact p=0.002778
-G4      PASS/WEAK       Amendment 7, constant-sigma poisson: Spearman(err,rho)=0.4 > 0
+G4      FAIL            H3 monotonic theo rho_bar bi bac bo; khong co p<0.05
 G5      PASS            NC1b=0, NC2 in [0.74692,0.75124], PC1 cbr=0
 G6      NOT EVALUATED   no end-to-end additivity DC1 artifact in decision-error v2
 G7      PASS            CI95 from paired block bootstrap, not naive iid SE
 H6      PASS            max spread across tau at fixed z/tau = 0.029201 < 0.05
+H7      PASS/PARTIAL    poisson unimodal PASS; h2 peak below left edge PARTIAL; delay-only PASS
 ```
 
-## Qualification On G4
+## 20R-G4
 
 Operational calibration does not support the original monotonic story:
 
@@ -30,16 +32,30 @@ h2     : 0.3898, 0.3340, 0.1047, 0.0017
 rho_bar: 0.700,  0.850,  0.925,  0.960
 ```
 
-Amendment 7 correctly identifies a `sigma_rho` confound. Constant-sigma partly
-rescues G4 by the prereg Spearman metric:
+Nhu da tien dang ky, G4 FAIL. Operational calibration:
+
+```text
+poisson Spearman(err,rho_bar) = +0.2, exact p = 0.9167
+h2      Spearman(err,rho_bar) = -1.0, exact p = 0.0833
+```
+
+Constant-sigma diagnostic cung khong cuu monotonic law:
 
 ```text
 poisson constant-sigma: 0.0000, 0.2870, 0.2905, 0.2650
-Spearman(err,rho_bar) = 0.4 > 0
+h2 constant-sigma     : 0.1672, 0.0058, 0.0011, 0.0017
 ```
 
-But strict monotonic H3' is not clean because `rho_bar=0.960` drops below
-`0.925`. Report this as a qualified/weak G4 pass, not as a clean monotonic law.
+Khong goi fail la pass. Tuy vay muc dich cua G4 la chung minh che do van hanh
+la bien dieu kien. Muc dich do DAT bang thong ke khac:
+
+```text
+poisson err qua rho_bar: 0.1879 .. 0.4301  ti so 2.3x
+h2 err qua rho_bar     : 0.0017 .. 0.3898  ti so 229x
+```
+
+Bien thien nay lon hon CI block bootstrap nhieu lan. Ket qua H7 con cho thay
+phu thuoc che do co dang don dinh/loss-driven, khong phai don dieu.
 
 ## Prediction Decision
 
@@ -70,7 +86,7 @@ diagnostic, and tau scaling. The paper claim should emphasize:
 ```text
 1. staleness dominates model error in substantive cells;
 2. model and stale error can cancel, so do not add them;
-3. operational err is not monotonic in rho_bar because feasible sigma shrinks;
-4. z/tau scaling is empirically stable within 0.029 absolute spread.
+3. operational err is not monotonic in rho_bar;
+4. the true mechanism is loss-driven and band/unimodal, not delay-driven;
+5. z/tau scaling is empirically stable within 0.029 absolute spread.
 ```
-

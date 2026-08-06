@@ -20,6 +20,9 @@ TAU_PATHS = (
     "results/phase-20R/decision_error_tau1.0.parquet",
     "results/phase-20R/decision_error_tau5.0.parquet",
 )
+UNIMODAL = "results/phase-20R/decision_error_unimodal.parquet"
+W2500 = "results/phase-20R/decision_error_w2500.parquet"
+DELAY_ONLY = "results/phase-20R/decision_error_delay_only.parquet"
 OUT_DIR = "docs/phase-20R/figures"
 
 
@@ -231,12 +234,55 @@ def plot_tau_scaling(tau_paths: Tuple[str, ...], out_dir: Path) -> Path:
     return path
 
 
+def plot_loss_mechanism(unimodal_path: str, w2500_path: str, delay_only_path: str, out_dir: Path) -> Path:
+    plt = _plt()
+    paths = {
+        "calibrated w": unimodal_path,
+        "w=2500": w2500_path,
+        "w=0": delay_only_path,
+    }
+    frames = []
+    for label, path in paths.items():
+        frame = pd.read_parquet(path)
+        frame = frame[(frame["z_key"] == "0.550") & (frame["mode"].isin(["poisson", "h2"]))].copy()
+        frame["slice"] = label
+        frames.append(frame)
+    df = pd.concat(frames, ignore_index=True)
+    mean = df.groupby(["slice", "mode", "rho_bar"])["err_total"].mean().reset_index()
+    styles = {
+        "calibrated w": ("#111111", "o"),
+        "w=2500": ("#b4452c", "s"),
+        "w=0": ("#2f6f73", "^"),
+    }
+    fig, axes = plt.subplots(1, 2, figsize=(10.8, 4.6), sharey=True)
+    for ax, mode in zip(axes, ["poisson", "h2"]):
+        sub = mean[mean["mode"] == mode]
+        for label in ["calibrated w", "w=2500", "w=0"]:
+            group = sub[sub["slice"] == label].sort_values("rho_bar")
+            color, marker = styles[label]
+            ax.plot(group["rho_bar"], group["err_total"], marker=marker, linewidth=2, color=color, label=label)
+        ax.set_title(mode)
+        ax.set_xlabel("rho_bar")
+        ax.grid(True, color="#dddddd", linewidth=0.7)
+    axes[0].set_ylabel("err_total at z=0.55")
+    axes[1].legend(frameon=False)
+    fig.suptitle("Loss term drives decision flips")
+    fig.tight_layout()
+    path = out_dir / "decision_error_loss_mechanism_z055.png"
+    fig.savefig(path, dpi=180)
+    plt.close(fig)
+    return path
+
+
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--summary", default=SUMMARY)
     ap.add_argument("--prediction", default=PREDICTION)
     ap.add_argument("--constant-sigma", default=CONSTANT_SIGMA)
     ap.add_argument("--tau-paths", default=",".join(TAU_PATHS))
+    ap.add_argument("--unimodal", default=UNIMODAL)
+    ap.add_argument("--w2500", default=W2500)
+    ap.add_argument("--delay-only", default=DELAY_ONLY)
     ap.add_argument("--out-dir", default=OUT_DIR)
     args = ap.parse_args()
 
@@ -251,6 +297,8 @@ def main() -> int:
         plot_constant_sigma(args.summary, args.constant_sigma, out_dir),
         plot_tau_scaling(tau_paths, out_dir),
     ]
+    if Path(args.unimodal).exists() and Path(args.w2500).exists() and Path(args.delay_only).exists():
+        paths.append(plot_loss_mechanism(args.unimodal, args.w2500, args.delay_only, out_dir))
     for path in paths:
         print("plot -> %s" % path)
     return 0
