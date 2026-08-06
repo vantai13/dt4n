@@ -43,6 +43,7 @@ FIXED_OUT = "results/phase-20R/decision_error_by_age_by_regime.parquet"
 SUMMARY_OUT = "results/phase-20R/decision_error_by_age_summary.parquet"
 SAWTOOTH_OUT = "results/phase-20R/decision_error_sawtooth.json"
 RHO_SOURCE = "calibration_ar1"
+EXTRA_RHO_MODES = ("poisson", "h2")
 
 
 def ensure_parent(path: str) -> None:
@@ -89,6 +90,50 @@ def feasible_cells(path: str = CALIBRATION, include_pc1: bool = True) -> List[Di
         if role == "gate" or (include_pc1 and role.startswith("pc1")):
             rows.append(cell)
     return rows
+
+
+def extra_calibrated_cells(
+    rho_bars: Sequence[float],
+    n: int = N,
+    dt: float = DT,
+    tau: float = TAU,
+    seed: int = SLA.DEFAULT_SEED,
+    modes: Sequence[str] = EXTRA_RHO_MODES,
+) -> List[Dict[str, Any]]:
+    if not rho_bars:
+        return []
+    cv2 = C.CostV2(strict_reliable=True)
+    rows: List[Dict[str, Any]] = []
+    for mode in modes:
+        for rho_bar in rho_bars:
+            cell = SLA.calibrate_cell(cv2, str(mode), float(rho_bar), seed=int(seed), n=int(n), dt=float(dt), tau=float(tau))
+            if not cell.get("feasible"):
+                raise ValueError("extra rho_bar %.3f infeasible for %s: %s" % (float(rho_bar), mode, cell.get("reason", "")))
+            cell = dict(cell)
+            cell["role"] = "h7_extra"
+            cell["extra_rho_bar"] = True
+            cell["extra_calibration_source"] = "measurements.sla_calib_v2.calibrate_cell"
+            rows.append(cell)
+    return rows
+
+
+def measurement_cells(
+    calibration_path: str = CALIBRATION,
+    include_pc1: bool = True,
+    rho_bar_extra: Sequence[float] = (),
+    n: int = N,
+    dt: float = DT,
+    tau: float = TAU,
+) -> List[Dict[str, Any]]:
+    rows = feasible_cells(calibration_path, include_pc1=include_pc1)
+    existing = {(str(row["mode"]), round(float(row["rho_bar"]), 12)) for row in rows}
+    extra = []
+    for cell in extra_calibrated_cells(rho_bar_extra, n=n, dt=dt, tau=tau):
+        key = (str(cell["mode"]), round(float(cell["rho_bar"]), 12))
+        if key not in existing:
+            extra.append(cell)
+            existing.add(key)
+    return rows + extra
 
 
 class TruthTable:
@@ -196,9 +241,11 @@ def _cell_arrays(
     dt: float = DT,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    w_loss_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     mode = str(cal_cell["mode"])
     sigma = float(sigma_override) if sigma_override is not None else float(cal_cell["sigma_rho"])
+    w_loss = float(w_loss_override) if w_loss_override is not None else float(cal_cell["w_loss"])
     tt.reset_clip_log()
     rho_mat = rho_matrix_from_cell(
         mode,
@@ -210,8 +257,8 @@ def _cell_arrays(
         dt=dt,
         source=rho_source,
     )
-    d_true, l_true, c_true = tt.path_tables(mode, rho_mat, float(cal_cell["w_loss"]))
-    d_fresh, l_fresh, c_fresh = cv2.tables_batch(rho_mat, mode, float(cal_cell["w_loss"]))
+    d_true, l_true, c_true = tt.path_tables(mode, rho_mat, w_loss)
+    d_fresh, l_fresh, c_fresh = cv2.tables_batch(rho_mat, mode, w_loss)
     a_true = c_true.argmin(axis=1)
     a_fresh = c_fresh.argmin(axis=1)
     return {
@@ -221,6 +268,8 @@ def _cell_arrays(
         "tau_rho": float(tau),
         "sigma_rho": float(sigma),
         "sigma_rho_source": "override" if sigma_override is not None else "calibration",
+        "w_loss": float(w_loss),
+        "w_loss_source": "override" if w_loss_override is not None else "calibration",
         "n": int(n),
         "dt": float(dt),
         "rho_source": str(rho_source),
@@ -263,12 +312,13 @@ def run_cell(
     z_values: Sequence[float] = Z_ALL,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    w_loss_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     check_z_grid(z_values, dt)
     mode = str(cal_cell["mode"])
     rho_bar = float(cal_cell["rho_bar"])
     sigma = float(sigma_override) if sigma_override is not None else float(cal_cell["sigma_rho"])
-    w_loss = float(cal_cell["w_loss"])
+    w_loss = float(w_loss_override) if w_loss_override is not None else float(cal_cell["w_loss"])
     t_delay = float(cal_cell["t_delay_ms"])
     t_loss = float(cal_cell["t_loss"])
 
@@ -282,6 +332,7 @@ def run_cell(
         dt=dt,
         rho_source=rho_source,
         sigma_override=sigma_override,
+        w_loss_override=w_loss_override,
     )
     d_true = arrays["d_true"]
     d_fresh = arrays["d_fresh"]
@@ -296,6 +347,8 @@ def run_cell(
         "tau_rho": float(tau),
         "sigma_rho": sigma,
         "sigma_rho_source": "override" if sigma_override is not None else "calibration",
+        "w_loss": float(w_loss),
+        "w_loss_source": "override" if w_loss_override is not None else "calibration",
         "n": int(n),
         "dt": float(dt),
         "rho_source": str(rho_source),
@@ -428,6 +481,7 @@ def fixed_summary_with_bootstrap(
     n_boot: int = N_BOOT,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    w_loss_override: Optional[float] = None,
 ) -> pd.DataFrame:
     check_z_grid(z_values, DT)
     block_len = int(round(float(block_s) / DT))
@@ -446,6 +500,7 @@ def fixed_summary_with_bootstrap(
                 n=n,
                 rho_source=rho_source,
                 sigma_override=sigma_override,
+                w_loss_override=w_loss_override,
             )
             for seed in seeds
         ]
@@ -484,6 +539,8 @@ def fixed_summary_with_bootstrap(
                 "tau_rho": float(tau),
                 "sigma_rho": float(arrays_by_seed[0]["sigma_rho"]),
                 "sigma_rho_source": str(arrays_by_seed[0]["sigma_rho_source"]),
+                "w_loss": float(arrays_by_seed[0]["w_loss"]),
+                "w_loss_source": str(arrays_by_seed[0]["w_loss_source"]),
                 "n_seed": int(len(seeds)),
                 "n": int(n),
                 "block_len": int(block_len),
@@ -548,6 +605,7 @@ def sawtooth_summary(
     n_boot: int = N_BOOT,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    w_loss_override: Optional[float] = None,
 ) -> Dict[str, Any]:
     check_z_grid(Z_ALL, DT)
     block_len = int(round(float(block_s) / DT))
@@ -580,6 +638,7 @@ def sawtooth_summary(
                 n=n,
                 rho_source=rho_source,
                 sigma_override=sigma_override,
+                w_loss_override=w_loss_override,
             )
             clip_max = max(clip_max, max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0)
             series = _sawtooth_metric_series(arrays)
@@ -593,6 +652,8 @@ def sawtooth_summary(
                 "tau_rho": float(tau),
                 "sigma_rho": float(arrays["sigma_rho"]),
                 "sigma_rho_source": str(arrays["sigma_rho_source"]),
+                "w_loss": float(arrays["w_loss"]),
+                "w_loss_source": str(arrays["w_loss_source"]),
                 "n": int(n),
                 "rho_source": str(rho_source),
                 "clip_fraction_max": float(max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0),
@@ -614,6 +675,8 @@ def sawtooth_summary(
             "tau_rho": float(tau),
             "sigma_rho": float(sigma_override) if sigma_override is not None else float(cell["sigma_rho"]),
             "sigma_rho_source": "override" if sigma_override is not None else "calibration",
+            "w_loss": float(w_loss_override) if w_loss_override is not None else float(cell["w_loss"]),
+            "w_loss_source": "override" if w_loss_override is not None else "calibration",
             "n_seed": int(len(seeds)),
             "n": int(n),
             "block_len": int(block_len),
@@ -639,6 +702,7 @@ def sawtooth_summary(
             "dt": DT,
             "tau": float(tau),
             "sigma_override": None if sigma_override is None else float(sigma_override),
+            "w_loss_override": None if w_loss_override is None else float(w_loss_override),
             "block_s": float(block_s),
             "block_len": int(block_len),
             "n_boot": int(n_boot),
@@ -734,6 +798,8 @@ def flatten_cell_result(result: Mapping[str, Any]) -> List[Dict[str, Any]]:
                 "tau_rho": result["tau_rho"],
                 "sigma_rho": result["sigma_rho"],
                 "sigma_rho_source": result["sigma_rho_source"],
+                "w_loss": result["w_loss"],
+                "w_loss_source": result["w_loss_source"],
                 "n": result["n"],
                 "dt": result["dt"],
                 "z_key": z,
@@ -754,11 +820,14 @@ def run_fixed_grid(
     z_values: Sequence[float] = Z_ALL,
     rho_source: str = RHO_SOURCE,
     sigma_override: Optional[float] = None,
+    w_loss_override: Optional[float] = None,
+    rho_bar_extra: Sequence[float] = (),
 ) -> pd.DataFrame:
     tt = TruthTable(truth_path)
     cv2 = C.CostV2(strict_reliable=False)
     rows = []
-    for cell in feasible_cells(calibration_path, include_pc1=True):
+    cells = measurement_cells(calibration_path, include_pc1=True, rho_bar_extra=rho_bar_extra, n=n, tau=tau)
+    for cell in cells:
         for seed in seeds:
             rows.extend(
                 flatten_cell_result(
@@ -772,6 +841,7 @@ def run_fixed_grid(
                         z_values=z_values,
                         rho_source=rho_source,
                         sigma_override=sigma_override,
+                        w_loss_override=w_loss_override,
                     )
                 )
             )
@@ -786,6 +856,11 @@ def parse_int_list(text: str) -> Tuple[int, ...]:
     vals = [int(part.strip()) for part in str(text).split(",") if part.strip()]
     if not vals:
         raise ValueError("expected at least one seed")
+    return tuple(vals)
+
+
+def parse_float_list(text: str) -> Tuple[float, ...]:
+    vals = [float(part.strip()) for part in str(text).split(",") if part.strip()]
     return tuple(vals)
 
 
@@ -806,6 +881,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--seeds", default="101,102,103,104,105")
     ap.add_argument("--rho-source", choices=("calibration_ar1", "scalar_ou"), default=RHO_SOURCE)
     ap.add_argument("--sigma-override", type=float, default=None)
+    ap.add_argument("--w-loss-override", type=float, default=None)
+    ap.add_argument("--rho-bar-extra", default="", help="comma-separated extra rho_bar values for h2/poisson H7 diagnostics")
     ap.add_argument("--tau", type=float, default=TAU)
     ap.add_argument("--z-grid-scaled", action="store_true", help="use z/tau ratios 0.10,0.30,0.55,1.00")
     ap.add_argument("--n-boot", type=int, default=N_BOOT)
@@ -813,6 +890,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--block-s", type=float, default=BLOCK_S)
     args = ap.parse_args(argv)
     z_values = z_values_for(args.tau, args.z_grid_scaled)
+    rho_bar_extra = parse_float_list(args.rho_bar_extra)
 
     tt = TruthTable(args.truth_table)
     cv2 = C.CostV2(strict_reliable=False)
@@ -832,6 +910,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             z_values=z_values,
             rho_source=args.rho_source,
             sigma_override=args.sigma_override,
+            w_loss_override=args.w_loss_override,
+            rho_bar_extra=rho_bar_extra,
         )
         print("fixed rows=%d -> %s" % (len(table), args.out))
     if args.summarize_fixed:
@@ -847,6 +927,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             n_boot=args.n_boot,
             rho_source=args.rho_source,
             sigma_override=args.sigma_override,
+            w_loss_override=args.w_loss_override,
         )
         print("fixed summary rows=%d -> %s" % (len(table), args.summary_out))
     if args.run_sawtooth:
@@ -861,6 +942,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             n_boot=args.n_boot,
             rho_source=args.rho_source,
             sigma_override=args.sigma_override,
+            w_loss_override=args.w_loss_override,
         )
         print("sawtooth rows=%d -> %s" % (len(report["summary"]), args.sawtooth_out))
     if not args.control and not args.run_fixed and not args.summarize_fixed and not args.run_sawtooth:

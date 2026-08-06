@@ -79,3 +79,8 @@ def test_check_z_grid_rejects_duplicate_lags_at_dt_0p2():
 
 def test_scaled_z_values_follow_tau_ratios():
     assert D.z_values_for(tau=2.0, scaled=True) == pytest.approx((0.20, 0.60, 1.10, 2.00))
+
+
+def test_parse_float_list_accepts_empty_and_values():
+    assert D.parse_float_list("") == ()
+    assert D.parse_float_list("0.65, 0.78,0.88") == pytest.approx((0.65, 0.78, 0.88))
