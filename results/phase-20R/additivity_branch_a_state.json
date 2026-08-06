@@ -1,0 +1,4634 @@
+{
+ "argv": [
+  "/home/ubuntu/dt4n/measurements/additivity_live.py",
+  "--branch",
+  "Aprime",
+  "--modes",
+  "poisson,h2",
+  "--rho-bar",
+  "0.925",
+  "--seeds",
+  "101,102,103,104,105",
+  "--state",
+  "results/phase-20R/additivity_branch_a_state.json"
+ ],
+ "branch": "Aprime",
+ "delta_ms": 0.44,
+ "done_idx": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10,
+  11,
+  12,
+  13,
+  14,
+  15,
+  16,
+  17,
+  18,
+  19,
+  20,
+  21,
+  22,
+  23,
+  24,
+  25,
+  26,
+  27,
+  28,
+  29,
+  30
+ ],
+ "duration_s": 70.0,
+ "env": {
+  "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+  "git_dirty": true,
+  "git_status_porcelain": [
+   " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+   " M results/phase-20R/decision_error_delay_only.parquet"
+  ],
+  "machine": "x86_64",
+  "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+  "python_executable": "/usr/bin/python3",
+  "python_version": "3.10.12",
+  "python_version_info": [
+   3,
+   10,
+   12
+  ]
+ },
+ "failed_rows": [],
+ "kind": "additivity_live_state",
+ "phase": "20R.6",
+ "plan_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+ "probe_rate_pps": 5.0,
+ "probe_size_bytes": 1470,
+ "qdisc_proof": {
+  "access": [
+   {
+    "ifname": "hsrc-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hdst-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   }
+  ],
+  "measured": [
+   {
+    "base_ms": 1.107,
+    "bw": 8.0,
+    "idx": 1,
+    "if_fwd": "s0-eth4",
+    "if_rev": "s1-eth3",
+    "link": "L1",
+    "measure_assert": {
+     "bfifo_limit_bytes": 27216,
+     "ceiling_ms": 27.216,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 8Mbit ceil 8Mbit burst 1600b cburst 1600b \n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 0 borrowed: 0 giants: 0\n tokens: 25000 ctokens: 25000\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s0-eth4",
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 27216b\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 18,
+    "topology_v7_link": "uA"
+   },
+   {
+    "base_ms": 1.712,
+    "bw": 6.0,
+    "idx": 2,
+    "if_fwd": "s1-eth6",
+    "if_rev": "s2-eth3",
+    "link": "L2",
+    "measure_assert": {
+     "bfifo_limit_bytes": 19656,
+     "ceiling_ms": 26.208,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 0 borrowed: 0 giants: 0\n tokens: 33334 ctokens: 33334\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s1-eth6",
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 0 bytes 0 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 13,
+    "topology_v7_link": "ac"
+   },
+   {
+    "base_ms": 2.436,
+    "bw": 4.0,
+    "idx": 3,
+    "if_fwd": "s2-eth6",
+    "if_rev": "s3-eth4",
+    "link": "L3",
+    "measure_assert": {
+     "bfifo_limit_bytes": 15120,
+     "ceiling_ms": 30.24,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 4Mbit ceil 4Mbit burst 1600b cburst 1600b \n Sent 90 bytes 1 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 1 borrowed: 0 giants: 0\n tokens: 47187 ctokens: 47187\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s2-eth6",
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 90 bytes 1 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 15120b\n Sent 90 bytes 1 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 10,
+    "topology_v7_link": "ad"
+   }
+  ]
+ },
+ "raw_dir": "results/phase-20R/raw_additivity",
+ "rows": [
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 18.102952523863223,
+   "delay_ms": 7.674976207852181,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 1,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 11.959865081735188,
+     "n_bg_recv": 39678,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00022670596236681024,
+     "rate_ratio": 0.999998129382255,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983959452837,
+     "schedule_digest": "fcbbb75d1ad5bd5bf62437600a11c8092e41f1da73ad881f764297166d99433b",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "fcbbb75d1ad5bd5bf62437600a11c8092e41f1da73ad881f764297166d99433b"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.003236245954692557,
+   "max_abs_rate_error": 1.8706177450367178e-06,
+   "max_abs_rho_error": 1.6040547164974939e-06,
+   "max_late_ms": 11.959865081735188,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00022670596236681024,
+   "n_recv_unique": 308,
+   "n_sent": 309,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 308,
+    "n_recv_unique": 308,
+    "n_reorder": 0,
+    "n_sent": 309
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     3.1191575683558104,
+     4.002744142484034,
+     5.146602918102872,
+     3.7808345800294774,
+     4.945443490842908,
+     3.6181435005649596
+    ],
+    "inflation_factor": 1.1759471279833804,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.3222673499597111,
+    "se_naive_ms": 0.2740491832420766,
+    "spread_ms": 2.0274453497470613
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0001_poisson_r0925_s101_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.0077441896074452385,
+   "probe_loss": 0.003236245954692557,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.121818523442618,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 357,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0001_poisson_r0925_s101_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     191
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    191
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.89704894100214,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 358,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0001_poisson_r0925_s101_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 5.121818523442618,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 191,
+    "seed": 101701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 7.674976207852181,
+   "q_p50_ms": 5.87315700317896,
+   "q_p90_ms": 14.503911000019173,
+   "q_p95_ms": 17.51361900164676,
+   "q_p99_ms": 23.69408300069091,
+   "q_sd_ms": 4.8095436466862385,
+   "queue_mean_ms": 4.162976207852181,
+   "queue_sd_ms": 4.8095436466862385,
+   "rate_ratio": 0.999998129382255,
+   "rate_ratio_by_link": {
+    "L1": 0.999998129382255
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983959452837
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "fcbbb75d1ad5bd5bf62437600a11c8092e41f1da73ad881f764297166d99433b",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "63a4d315af203892cb085512b63e15bb099f181d3e73b06e7ea2804c741bf376",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:22:39Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 120.7281589194605,
+   "delay_ms": 16.448395759350106,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 2,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 32991,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.9999713477418372,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774719924176458,
+     "schedule_digest": "cc6d87bf2b2aae386f22ebb4d37e70163351e0d043cc6cd1569a9b7f49a28a05",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "cc6d87bf2b2aae386f22ebb4d37e70163351e0d043cc6cd1569a9b7f49a28a05"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.032362459546925564,
+   "max_abs_rate_error": 2.8652258162842337e-05,
+   "max_abs_rho_error": 2.8007582354327987e-05,
+   "max_late_ms": 0.0,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 299,
+   "n_sent": 309,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 299,
+    "n_recv_unique": 299,
+    "n_reorder": 0,
+    "n_sent": 309
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     8.955192750515076,
+     14.574764410682315,
+     10.23521072198087,
+     11.769635000116697,
+     11.668189210531796,
+     12.27476991690916
+    ],
+    "inflation_factor": 1.6448304065921837,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.7787410426988908,
+    "se_naive_ms": 0.47344762084761877,
+    "spread_ms": 5.619571660167239
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0002_poisson_r0925_s101_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.01072231439430184,
+   "probe_loss": 0.032362459546925564,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.318608330506865,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 358,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0002_poisson_r0925_s101_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     292
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    292
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.19103215200084,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 368,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0002_poisson_r0925_s101_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 5.318608330506865,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 292,
+    "seed": 101702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 16.448395759350106,
+   "q_p50_ms": 16.43050900104246,
+   "q_p90_ms": 28.690511998251544,
+   "q_p95_ms": 29.896375000066122,
+   "q_p99_ms": 30.94559599860478,
+   "q_sd_ms": 8.186674676338065,
+   "queue_mean_ms": 11.432395759350106,
+   "queue_sd_ms": 8.186674676338065,
+   "rate_ratio": 0.9999713477418372,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713477418372
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.9774719924176458
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "cc6d87bf2b2aae386f22ebb4d37e70163351e0d043cc6cd1569a9b7f49a28a05",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "864f701a585565da47d79ff921520b4586218774d589a9064d3190b5f626203d",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:23:57Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 193.09966717111502,
+   "delay_ms": 19.510728092466625,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 3,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 21915,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.999965149114644,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.987465584750711,
+     "schedule_digest": "9fd5df5c1e2b2de0362e564cc9af9728136f693a97feec3690adbef133cd846b",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "9fd5df5c1e2b2de0362e564cc9af9728136f693a97feec3690adbef133cd846b"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.05387205387205387,
+   "max_abs_rate_error": 3.485088535604142e-05,
+   "max_abs_rho_error": 3.441524928915474e-05,
+   "max_late_ms": 0.0,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 281,
+   "n_sent": 297,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 281,
+    "n_recv_unique": 281,
+    "n_reorder": 0,
+    "n_sent": 297
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     12.922105700199609,
+     14.396999048874088,
+     12.69888746945962,
+     14.75773752342017,
+     14.155150735164439,
+     12.965983531046277
+    ],
+    "inflation_factor": 0.6457014521782931,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.3625184736997381,
+    "se_naive_ms": 0.5614335734831806,
+    "spread_ms": 2.0588500539605494
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0003_poisson_r0925_s101_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.015153431445312468,
+   "probe_loss": 0.05387205387205387,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.011055372127139,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 330,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0003_poisson_r0925_s101_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     393
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    393
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.64600749399688,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 349,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0003_poisson_r0925_s101_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 5.011055372127139,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 393,
+    "seed": 101703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 19.510728092466625,
+   "q_p50_ms": 19.170040997526144,
+   "q_p90_ms": 32.614073000988924,
+   "q_p95_ms": 34.70613499823469,
+   "q_p99_ms": 36.02476900207205,
+   "q_sd_ms": 9.411341654566604,
+   "queue_mean_ms": 13.486728092466624,
+   "queue_sd_ms": 9.411341654566604,
+   "rate_ratio": 0.999965149114644,
+   "rate_ratio_by_link": {
+    "L3": 0.999965149114644
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.987465584750711
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "9fd5df5c1e2b2de0362e564cc9af9728136f693a97feec3690adbef133cd846b",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "03bc3f69d150937e2644e87cd9df8e5aa9b68b0bfb621c852c803c73ba0d889e",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:25:15Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 7.072471245103092,
+   "delay_ms": 7.072471245103092,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 4,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 39687,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.9999981302108292,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983966557861,
+     "schedule_digest": "8dfb6510163c1c1066296614c2c20e54ef45b3fb16de0285e790539b5acad16f",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "8dfb6510163c1c1066296614c2c20e54ef45b3fb16de0285e790539b5acad16f"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0,
+   "max_abs_rate_error": 1.8697891708274739e-06,
+   "max_abs_rho_error": 1.6033442140628296e-06,
+   "max_late_ms": 0.0,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 306,
+   "n_sent": 306,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 306,
+    "n_recv_unique": 306,
+    "n_reorder": 0,
+    "n_sent": 306
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     3.4623089508028495,
+     3.440874431629816,
+     2.661051477182561,
+     4.132289042667872,
+     2.9206944037259044,
+     4.788570859891479
+    ],
+    "inflation_factor": 1.2250578713227265,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.3202658374477025,
+    "se_naive_ms": 0.2614291495485868,
+    "spread_ms": 2.127519382708918
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0004_poisson_r0925_s102_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.007585466910327246,
+   "probe_loss": 0.0,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.0168431946608765,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 351,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0004_poisson_r0925_s102_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     491
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    491
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.96431548300097,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 351,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0004_poisson_r0925_s102_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 5.0168431946608765,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 491,
+    "seed": 102701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 7.072471245103092,
+   "q_p50_ms": 5.003047998570139,
+   "q_p90_ms": 12.984567999182502,
+   "q_p95_ms": 16.248020002193982,
+   "q_p99_ms": 24.407629000733607,
+   "q_sd_ms": 4.573142384784383,
+   "queue_mean_ms": 3.5604712451030913,
+   "queue_sd_ms": 4.573142384784383,
+   "rate_ratio": 0.9999981302108292,
+   "rate_ratio_by_link": {
+    "L1": 0.9999981302108292
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983966557861
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "8dfb6510163c1c1066296614c2c20e54ef45b3fb16de0285e790539b5acad16f",
+   "seed": 102,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "fe2f6cbe4c8f615897f051a358d752a09cfb56a7b56dcbdc26facc2d41378dda",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:26:33Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 168.01441753123288,
+   "delay_ms": 15.542271711954761,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 5,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 6.06077087650192,
+     "n_bg_recv": 32996,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 8.839127872716559e-05,
+     "rate_ratio": 0.9999713398563284,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.977471984709561,
+     "schedule_digest": "5bfe643287c5912258ebfa16925b50eb9d45e9cbe3dddef44f4eb2410c3941e7",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "5bfe643287c5912258ebfa16925b50eb9d45e9cbe3dddef44f4eb2410c3941e7"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0473186119873817,
+   "max_abs_rate_error": 2.8660143671643823e-05,
+   "max_abs_rho_error": 2.8015290439165064e-05,
+   "max_late_ms": 6.06077087650192,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 8.839127872716559e-05,
+   "n_recv_unique": 302,
+   "n_sent": 317,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 302,
+    "n_recv_unique": 302,
+    "n_reorder": 0,
+    "n_sent": 317
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     9.698643066803925,
+     11.42417052832107,
+     12.450392075821446,
+     7.2418241137380726,
+     9.937630269143064,
+     11.882404129344785
+    ],
+    "inflation_factor": 1.6902730579336178,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.777198129772528,
+    "se_naive_ms": 0.4598062580034633,
+    "spread_ms": 5.208567962083373
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0005_poisson_r0925_s102_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.010801950493232244,
+   "probe_loss": 0.0473186119873817,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.35811036370647,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 358,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0005_poisson_r0925_s102_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     592
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    592
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.98736019699936,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 375,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0005_poisson_r0925_s102_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 5.35811036370647,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 592,
+    "seed": 102702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 15.542271711954761,
+   "q_p50_ms": 13.871952000885736,
+   "q_p90_ms": 27.483845999926793,
+   "q_p95_ms": 29.181497998183126,
+   "q_p99_ms": 30.402096000147516,
+   "q_sd_ms": 7.990580833678016,
+   "queue_mean_ms": 10.526271711954761,
+   "queue_sd_ms": 7.990580833678016,
+   "rate_ratio": 0.9999713398563284,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713398563284
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.977471984709561
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "5bfe643287c5912258ebfa16925b50eb9d45e9cbe3dddef44f4eb2410c3941e7",
+   "seed": 102,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "4c6ced84936e032774a6c8fc8c6b37360ec34f56e4dd63e4a97195c5c5dce8b4",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:27:51Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 179.3316579932769,
+   "delay_ms": 19.286392348537966,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 6,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 13.013718540605623,
+     "n_bg_recv": 21845,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0001312450783095634,
+     "rate_ratio": 0.9999651481575251,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655838055562,
+     "schedule_digest": "11628784ceeb88ca7b4923e9accfa2a464568291ee4a1785965bae3071f35247",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "11628784ceeb88ca7b4923e9accfa2a464568291ee4a1785965bae3071f35247"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.04966887417218543,
+   "max_abs_rate_error": 3.4851842474870054e-05,
+   "max_abs_rho_error": 3.4416194443998016e-05,
+   "max_late_ms": 13.013718540605623,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0001312450783095634,
+   "n_recv_unique": 287,
+   "n_sent": 302,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 287,
+    "n_recv_unique": 287,
+    "n_reorder": 0,
+    "n_sent": 302
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     15.782867191037873,
+     14.068793416981862,
+     13.132195490607904,
+     10.83596725382247,
+     14.166712351505192,
+     13.143630092895894
+    ],
+    "inflation_factor": 1.1686455553847694,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.6667343350869483,
+    "se_naive_ms": 0.5705188643509881,
+    "spread_ms": 4.946899937215402
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0006_poisson_r0925_s102_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.015558659448534467,
+   "probe_loss": 0.04966887417218543,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.145059341446583,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 343,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0006_poisson_r0925_s102_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     693
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    693
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.97003846000007,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 360,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0006_poisson_r0925_s102_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 5.145059341446583,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 693,
+    "seed": 102703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 19.286392348537966,
+   "q_p50_ms": 19.125453001581832,
+   "q_p90_ms": 33.30702600007737,
+   "q_p95_ms": 34.8072249996427,
+   "q_p99_ms": 36.26003300243849,
+   "q_sd_ms": 9.665202496821152,
+   "queue_mean_ms": 13.262392348537967,
+   "queue_sd_ms": 9.665202496821152,
+   "rate_ratio": 0.9999651481575251,
+   "rate_ratio_by_link": {
+    "L3": 0.9999651481575251
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655838055562
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "11628784ceeb88ca7b4923e9accfa2a464568291ee4a1785965bae3071f35247",
+   "seed": 102,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "983a6c12768c0ada42b64524fca15eb4ed5cf5258d81cd9f85db44785befab48",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:29:10Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 6.9937854391902174,
+   "delay_ms": 6.9937854391902174,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 7,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 39690,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.999998129396547,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983959575391,
+     "schedule_digest": "f63ee1defb968b69e6d3939ffa4e0cd436410113fd6baa9da5e27b3cf453a4f8",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "f63ee1defb968b69e6d3939ffa4e0cd436410113fd6baa9da5e27b3cf453a4f8"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0,
+   "max_abs_rate_error": 1.8706034530246995e-06,
+   "max_abs_rho_error": 1.604042461078592e-06,
+   "max_late_ms": 0.0,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 296,
+   "n_sent": 296,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 296,
+    "n_recv_unique": 296,
+    "n_reorder": 0,
+    "n_sent": 296
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     3.288861220533042,
+     4.017787511889595,
+     2.6496321314832465,
+     4.230552309044552,
+     3.5280655611131806,
+     3.1204231598530896
+    ],
+    "inflation_factor": 0.8557111916788455,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.23873710226329958,
+    "se_naive_ms": 0.2789926140791896,
+    "spread_ms": 1.5809201775613055
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0007_poisson_r0925_s103_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.007144535298307711,
+   "probe_loss": 0.0,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.72522175814002,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 330,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0007_poisson_r0925_s103_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     791
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    791
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.83799213899692,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 330,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0007_poisson_r0925_s103_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 4.72522175814002,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 791,
+    "seed": 103701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 6.9937854391902174,
+   "q_p50_ms": 4.7180509980074135,
+   "q_p90_ms": 13.749579001113773,
+   "q_p95_ms": 17.924495998840314,
+   "q_p99_ms": 24.867707998736762,
+   "q_sd_ms": 4.7999704268233705,
+   "queue_mean_ms": 3.4817854391902174,
+   "queue_sd_ms": 4.7999704268233705,
+   "rate_ratio": 0.999998129396547,
+   "rate_ratio_by_link": {
+    "L1": 0.999998129396547
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983959575391
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "f63ee1defb968b69e6d3939ffa4e0cd436410113fd6baa9da5e27b3cf453a4f8",
+   "seed": 103,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "cbfd506fd57a75f1aa508cb953e650e365ace59a88b530f078f14336334e7263",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:30:28Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 90.5836727992912,
+   "delay_ms": 17.11229569332416,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 8,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 32979,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.9999713482132019,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774719928784048,
+     "schedule_digest": "83abf605859e542572a7b0cd4e1a78fb0efddba16e3b50472fc58f4920df7168",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "83abf605859e542572a7b0cd4e1a78fb0efddba16e3b50472fc58f4920df7168"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.02280130293159609,
+   "max_abs_rate_error": 2.8651786798117307e-05,
+   "max_abs_rho_error": 2.8007121595341467e-05,
+   "max_late_ms": 0.0,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 300,
+   "n_sent": 307,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 300,
+    "n_recv_unique": 300,
+    "n_reorder": 0,
+    "n_sent": 307
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     12.464356444402329,
+     10.882333928315173,
+     14.435693633069084,
+     11.790409759231368,
+     11.791820282467043,
+     11.111628844405963
+    ],
+    "inflation_factor": 1.0947710260528853,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.5239617285002652,
+    "se_naive_ms": 0.4786039418574767,
+    "spread_ms": 3.5533597047539107
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0008_poisson_r0925_s103_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.01067569742613121,
+   "probe_loss": 0.02280130293159609,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.295484834390481,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 362,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0008_poisson_r0925_s103_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     892
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    892
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.87084498799959,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 370,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0008_poisson_r0925_s103_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 5.295484834390481,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 892,
+    "seed": 103702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 17.11229569332416,
+   "q_p50_ms": 17.327791000684023,
+   "q_p90_ms": 27.79604000254441,
+   "q_p95_ms": 29.406975002461344,
+   "q_p99_ms": 30.803982998735968,
+   "q_sd_ms": 8.2896634399989,
+   "queue_mean_ms": 12.09629569332416,
+   "queue_sd_ms": 8.2896634399989,
+   "rate_ratio": 0.9999713482132019,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713482132019
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.9774719928784048
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "83abf605859e542572a7b0cd4e1a78fb0efddba16e3b50472fc58f4920df7168",
+   "seed": 103,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "17a1eaedb7688e02818a27e90c01eba111a4650d872d02bed21f6a88a9f2eb28",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:31:46Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 146.44660939563937,
+   "delay_ms": 19.404704384451122,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 9,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 10.65247484802967,
+     "n_bg_recv": 21969,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 8.749671887304226e-05,
+     "rate_ratio": 0.9999651496145887,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655852444064,
+     "schedule_digest": "5fc4956d5fd773bcf44a37fa3829ac4775199739a794bea2365e9bb223f8d401",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "5fc4956d5fd773bcf44a37fa3829ac4775199739a794bea2365e9bb223f8d401"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.03942652329749104,
+   "max_abs_rate_error": 3.485038541128915e-05,
+   "max_abs_rho_error": 3.4414755593736857e-05,
+   "max_late_ms": 10.65247484802967,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 8.749671887304226e-05,
+   "n_recv_unique": 268,
+   "n_sent": 279,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 268,
+    "n_recv_unique": 268,
+    "n_reorder": 0,
+    "n_sent": 279
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     15.548193590968202,
+     11.033731170290922,
+     10.728005731901403,
+     14.411146360216662,
+     11.207172897299573,
+     17.078045565500837
+    ],
+    "inflation_factor": 1.8616302154390452,
+    "n_blocks": 6,
+    "se_batch_means_ms": 1.105842215947567,
+    "se_naive_ms": 0.5940181926445398,
+    "spread_ms": 6.350039833599434
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0009_poisson_r0925_s103_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.014393938489479516,
+   "probe_loss": 0.03942652329749104,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.759900294140052,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 317,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0009_poisson_r0925_s103_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     993
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    993
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.53927173800184,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 331,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0009_poisson_r0925_s103_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 4.759900294140052,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 993,
+    "seed": 103703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 19.404704384451122,
+   "q_p50_ms": 18.862077997002984,
+   "q_p90_ms": 32.75560800259211,
+   "q_p95_ms": 34.96455699653109,
+   "q_p99_ms": 36.16633700014302,
+   "q_sd_ms": 9.724496919411303,
+   "queue_mean_ms": 13.380704384451121,
+   "queue_sd_ms": 9.724496919411303,
+   "rate_ratio": 0.9999651496145887,
+   "rate_ratio_by_link": {
+    "L3": 0.9999651496145887
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655852444064
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "5fc4956d5fd773bcf44a37fa3829ac4775199739a794bea2365e9bb223f8d401",
+   "seed": 103,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "f61eed12822220bac50030bee1503ec0df7ef24b99edbd2653915abc0cd1afa3",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:33:04Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 7.1312772661737815,
+   "delay_ms": 7.1312772661737815,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 10,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 39644,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.9999981284965128,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983951857598,
+     "schedule_digest": "8a6bdab0746ec72a52c3b8f5be4533832010910b89ece5371b46643b769d9261",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "8a6bdab0746ec72a52c3b8f5be4533832010910b89ece5371b46643b769d9261"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0,
+   "max_abs_rate_error": 1.8715034871830127e-06,
+   "max_abs_rho_error": 1.6048142403857213e-06,
+   "max_late_ms": 0.0,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 323,
+   "n_sent": 323,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 323,
+    "n_recv_unique": 323,
+    "n_reorder": 0,
+    "n_sent": 323
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     4.568608318956475,
+     3.2047693478924213,
+     2.7175649834060125,
+     4.046015181732153,
+     2.9704320655045953,
+     4.560370134640834
+    ],
+    "inflation_factor": 1.2757343471479254,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.3343765566846572,
+    "se_naive_ms": 0.26210516118202876,
+    "spread_ms": 1.8510433355504623
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0010_poisson_r0925_s104_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.00815668341414047,
+   "probe_loss": 0.0,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.394631887659041,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 377,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0010_poisson_r0925_s104_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1091
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1091
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.88428642600047,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 377,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0010_poisson_r0925_s104_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 5.394631887659041,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1091,
+    "seed": 104701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 7.1312772661737815,
+   "q_p50_ms": 5.014881998021622,
+   "q_p90_ms": 13.728288999799872,
+   "q_p95_ms": 17.929320999200456,
+   "q_p99_ms": 22.503560998983914,
+   "q_sd_ms": 4.710606575845314,
+   "queue_mean_ms": 3.6192772661737815,
+   "queue_sd_ms": 4.710606575845314,
+   "rate_ratio": 0.9999981284965128,
+   "rate_ratio_by_link": {
+    "L1": 0.9999981284965128
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983951857598
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "8a6bdab0746ec72a52c3b8f5be4533832010910b89ece5371b46643b769d9261",
+   "seed": 104,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "55569fba233675adec83145d48902f6489cb5cf38eb9c2813a278e1094cde78a",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:34:22Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 139.5079726474716,
+   "delay_ms": 17.28489851601808,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 11,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 1.1311670787108596,
+     "n_bg_recv": 32989,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 5.8927519151443724e-05,
+     "rate_ratio": 0.999971336784975,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.977471981707313,
+     "schedule_digest": "1c383f45a41bd4f2ed266dfdd9b7a4849986e4afa81294b68104d76fd9df3cbc",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "1c383f45a41bd4f2ed266dfdd9b7a4849986e4afa81294b68104d76fd9df3cbc"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.03793103448275862,
+   "max_abs_rate_error": 2.8663215025037658e-05,
+   "max_abs_rho_error": 2.801829268717082e-05,
+   "max_late_ms": 1.1311670787108596,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 5.8927519151443724e-05,
+   "n_recv_unique": 279,
+   "n_sent": 290,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 279,
+    "n_recv_unique": 279,
+    "n_reorder": 0,
+    "n_sent": 290
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     14.364454789565093,
+     13.395447163187486,
+     12.098742756057707,
+     9.996043115977447,
+     12.34279495632939,
+     10.811217547424825
+    ],
+    "inflation_factor": 1.3602958883828928,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.6563699483152938,
+    "se_naive_ms": 0.4825199825426072,
+    "spread_ms": 4.368411673587646
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0011_poisson_r0925_s104_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.009830758101950623,
+   "probe_loss": 0.03793103448275862,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.876368106126302,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 329,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0011_poisson_r0925_s104_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1192
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1192
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.9290932469994,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 341,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0011_poisson_r0925_s104_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 4.876368106126302,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1192,
+    "seed": 104702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 17.28489851601808,
+   "q_p50_ms": 17.19126400068891,
+   "q_p90_ms": 28.639154997039817,
+   "q_p95_ms": 30.21542200160585,
+   "q_p99_ms": 30.79265699936915,
+   "q_sd_ms": 8.059672689462278,
+   "queue_mean_ms": 12.268898516018082,
+   "queue_sd_ms": 8.059672689462278,
+   "rate_ratio": 0.999971336784975,
+   "rate_ratio_by_link": {
+    "L2": 0.999971336784975
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.977471981707313
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "1c383f45a41bd4f2ed266dfdd9b7a4849986e4afa81294b68104d76fd9df3cbc",
+   "seed": 104,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "2fc32fec8d39e5b44519868dcaae28190e3cb8720650686ed51a40e585f18aea",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:35:41Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 152.39049411783623,
+   "delay_ms": 19.969479803559075,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 12,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 1.76331067996216,
+     "n_bg_recv": 21914,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 8.749671887304226e-05,
+     "rate_ratio": 0.9999651576714955,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655932006019,
+     "schedule_digest": "bae9f38289be62adf5a1b800ac2e1524ef9a5e22a9321ee726ec691c0cd47285",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "bae9f38289be62adf5a1b800ac2e1524ef9a5e22a9321ee726ec691c0cd47285"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0410958904109589,
+   "max_abs_rate_error": 3.484232850448077e-05,
+   "max_abs_rho_error": 3.440679939825664e-05,
+   "max_late_ms": 1.76331067996216,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 8.749671887304226e-05,
+   "n_recv_unique": 280,
+   "n_sent": 292,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 280,
+    "n_recv_unique": 280,
+    "n_reorder": 0,
+    "n_sent": 292
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     13.2069761052742,
+     12.532229304428176,
+     13.492051063757513,
+     16.594218862783414,
+     12.616361578885085,
+     15.384422524857655
+    ],
+    "inflation_factor": 1.1752373322371747,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.6732327825810882,
+    "se_naive_ms": 0.5728483635722551,
+    "spread_ms": 4.061989558355238
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0012_poisson_r0925_s104_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.014471461965670764,
+   "probe_loss": 0.0410958904109589,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.785536364309115,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 320,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0012_poisson_r0925_s104_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1293
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1293
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.5846765440001,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 333,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0012_poisson_r0925_s104_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 4.785536364309115,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1293,
+    "seed": 104703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 19.969479803559075,
+   "q_p50_ms": 19.955240999227158,
+   "q_p90_ms": 32.970146001137095,
+   "q_p95_ms": 34.019773001748604,
+   "q_p99_ms": 35.76828300149157,
+   "q_sd_ms": 9.585586541327292,
+   "queue_mean_ms": 13.945479803559076,
+   "queue_sd_ms": 9.585586541327292,
+   "rate_ratio": 0.9999651576714955,
+   "rate_ratio_by_link": {
+    "L3": 0.9999651576714955
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655932006019
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "bae9f38289be62adf5a1b800ac2e1524ef9a5e22a9321ee726ec691c0cd47285",
+   "seed": 104,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "3f249ce932df182e18d09b3e7488d398f1ce2e8387aef04535c7de4cffc9da47",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:36:59Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 7.0884033186442945,
+   "delay_ms": 7.0884033186442945,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 13,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 1.1592039481911343,
+     "n_bg_recv": 39686,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 2.5189551374090027e-05,
+     "rate_ratio": 0.9999981260251344,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983930665528,
+     "schedule_digest": "40e841ea9c9a529ca2168682c53c5a59190769f02cc073a58a45b8eda4aee43e",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "40e841ea9c9a529ca2168682c53c5a59190769f02cc073a58a45b8eda4aee43e"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0,
+   "max_abs_rate_error": 1.8739748656182442e-06,
+   "max_abs_rho_error": 1.6069334473067798e-06,
+   "max_late_ms": 1.1592039481911343,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 2.5189551374090027e-05,
+   "n_recv_unique": 339,
+   "n_sent": 339,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 339,
+    "n_recv_unique": 339,
+    "n_reorder": 0,
+    "n_sent": 339
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     2.9072635997727048,
+     2.6419372770760674,
+     4.721121906641201,
+     2.8969537692179212,
+     3.885160228061355,
+     4.416304219994345
+    ],
+    "inflation_factor": 1.4127234969666613,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.3602662756532762,
+    "se_naive_ms": 0.2550154198092014,
+    "spread_ms": 2.079184629565134
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0013_poisson_r0925_s105_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.008565334727972246,
+   "probe_loss": 0.0,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.664903920616564,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 396,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0013_poisson_r0925_s105_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1391
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1391
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.90409820700006,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 396,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0013_poisson_r0925_s105_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 5.664903920616564,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1391,
+    "seed": 105701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 7.0884033186442945,
+   "q_p50_ms": 5.423502000439214,
+   "q_p90_ms": 14.033259002416628,
+   "q_p95_ms": 16.967160999001237,
+   "q_p99_ms": 26.93733199771424,
+   "q_sd_ms": 4.695331831874828,
+   "queue_mean_ms": 3.5764033186442945,
+   "queue_sd_ms": 4.695331831874828,
+   "rate_ratio": 0.9999981260251344,
+   "rate_ratio_by_link": {
+    "L1": 0.9999981260251344
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983930665528
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "40e841ea9c9a529ca2168682c53c5a59190769f02cc073a58a45b8eda4aee43e",
+   "seed": 105,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "d162e5ffeb0d349ed2921f4605fa4be9886c92451768bea99b800b5817795c7d",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:38:17Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 97.96073202276921,
+   "delay_ms": 15.865326120924339,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 14,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 32951,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.9999713476417957,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774719923198553,
+     "schedule_digest": "aeba79778c9aa5b86cb31bf7a2dccda93cfd1629c1f29fc09f62eaff83f70af2",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "aeba79778c9aa5b86cb31bf7a2dccda93cfd1629c1f29fc09f62eaff83f70af2"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.025477707006369428,
+   "max_abs_rate_error": 2.865235820426193e-05,
+   "max_abs_rho_error": 2.800768014488142e-05,
+   "max_late_ms": 0.0,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 306,
+   "n_sent": 314,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 306,
+    "n_recv_unique": 306,
+    "n_reorder": 0,
+    "n_sent": 314
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     11.259381259733345,
+     10.73443022435139,
+     11.85893080857684,
+     9.162139148328505,
+     9.959333939987118,
+     12.260064054730305
+    ],
+    "inflation_factor": 1.0311733471966689,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.47701595108633743,
+    "se_naive_ms": 0.4625953069705935,
+    "spread_ms": 3.0979249064018006
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0014_poisson_r0925_s105_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.010738310201121357,
+   "probe_loss": 0.025477707006369428,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.326542758492737,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 359,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0014_poisson_r0925_s105_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1492
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1492
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.08796506200088,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 368,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0014_poisson_r0925_s105_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 5.326542758492737,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1492,
+    "seed": 105702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 15.865326120924339,
+   "q_p50_ms": 15.079881996757118,
+   "q_p90_ms": 27.934005000974516,
+   "q_p95_ms": 29.951775996709706,
+   "q_p99_ms": 30.97865600004699,
+   "q_sd_ms": 8.092112945180174,
+   "queue_mean_ms": 10.849326120924339,
+   "queue_sd_ms": 8.092112945180174,
+   "rate_ratio": 0.9999713476417957,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713476417957
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.9774719923198553
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "aeba79778c9aa5b86cb31bf7a2dccda93cfd1629c1f29fc09f62eaff83f70af2",
+   "seed": 105,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "0598597bf0b663e1d639a4ce58272695d85bfaa98f66ff28f7eded73eb16fa37",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:39:34Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 120.84072809317071,
+   "delay_ms": 18.72734029448515,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 15,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 9.220565316354623,
+     "n_bg_recv": 21865,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00021874179718260565,
+     "rate_ratio": 0.9999651471432919,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655828040009,
+     "schedule_digest": "f9615dc6d4495c5c464a3ef50a1dd5e99c983632c3eb063181073e1a2141b435",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "f9615dc6d4495c5c464a3ef50a1dd5e99c983632c3eb063181073e1a2141b435"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.03169014084507042,
+   "max_abs_rate_error": 3.485285670812299e-05,
+   "max_abs_rho_error": 3.441719599928117e-05,
+   "max_late_ms": 9.220565316354623,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00021874179718260565,
+   "n_recv_unique": 275,
+   "n_sent": 284,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 275,
+    "n_recv_unique": 275,
+    "n_reorder": 0,
+    "n_sent": 284
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     11.046588288849712,
+     13.267707368485341,
+     13.460288553492969,
+     14.92024355083027,
+     13.22023727967462,
+     9.610941889251182
+    ],
+    "inflation_factor": 1.3253865937901317,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.7810419916479134,
+    "se_naive_ms": 0.5892937164955114,
+    "spread_ms": 5.309301661579088
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0015_poisson_r0925_s105_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.01405592832838017,
+   "probe_loss": 0.03169014084507042,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.648124447215665,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 315,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0015_poisson_r0925_s105_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1593
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1593
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.92067525099992,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 325,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0015_poisson_r0925_s105_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 4.648124447215665,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1593,
+    "seed": 105703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 18.72734029448515,
+   "q_p50_ms": 18.276864002221032,
+   "q_p90_ms": 32.900421998167644,
+   "q_p95_ms": 34.64838399824896,
+   "q_p99_ms": 35.981244001707296,
+   "q_sd_ms": 9.772330744648404,
+   "queue_mean_ms": 12.70334029448515,
+   "queue_sd_ms": 9.772330744648404,
+   "rate_ratio": 0.9999651471432919,
+   "rate_ratio_by_link": {
+    "L3": 0.9999651471432919
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655828040009
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "f9615dc6d4495c5c464a3ef50a1dd5e99c983632c3eb063181073e1a2141b435",
+   "seed": 105,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "26444d5ff9b222ec41fc617e32056db802fdc1522676494659e3680889010f85",
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-06T14:40:53Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 26.999394995026933,
+   "delay_ms": 12.384818902504646,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 16,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 16.015393415727885,
+     "n_bg_recv": 38536,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0002770850651149903,
+     "rate_ratio": 0.999998128982234,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983956022657,
+     "schedule_digest": "3d40e7e6eb87c621a7f291d20af6d51556778eac4ff0b71d00c44f25ac58556a",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "3d40e7e6eb87c621a7f291d20af6d51556778eac4ff0b71d00c44f25ac58556a"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.003236245954692557,
+   "max_abs_rate_error": 1.8710177660530292e-06,
+   "max_abs_rho_error": 1.6043977344448734e-06,
+   "max_late_ms": 16.015393415727885,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0002770850651149903,
+   "n_recv_unique": 308,
+   "n_sent": 309,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 308,
+    "n_recv_unique": 308,
+    "n_reorder": 0,
+    "n_sent": 309
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     10.16122790910727,
+     10.496581320185214,
+     9.353418786855906,
+     9.017664079656242,
+     6.659812907283022,
+     7.908774687242233
+    ],
+    "inflation_factor": 1.209715827857799,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.5874710576966335,
+    "se_naive_ms": 0.48562732186198215,
+    "spread_ms": 3.8367684129021926
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0016_h2_r0925_s101_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.007744186173158257,
+   "probe_loss": 0.003236245954692557,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.121816252088794,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 354,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0016_h2_r0925_s101_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1691
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1691
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.89707993800039,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 358,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0016_h2_r0925_s101_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 5.121816252088794,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1691,
+    "seed": 101701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 12.384818902504646,
+   "q_p50_ms": 9.80597800003062,
+   "q_p90_ms": 26.373529996589525,
+   "q_p95_ms": 28.786889998399886,
+   "q_p99_ms": 30.55877899964736,
+   "q_sd_ms": 8.522724909767009,
+   "queue_mean_ms": 8.872818902504646,
+   "queue_sd_ms": 8.522724909767009,
+   "rate_ratio": 0.999998128982234,
+   "rate_ratio_by_link": {
+    "L1": 0.999998128982234
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983956022657
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "3d40e7e6eb87c621a7f291d20af6d51556778eac4ff0b71d00c44f25ac58556a",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "e6ae80c20e84ca7ed57d02d15274a838bc4d7d59575b07f8fd6f138850d3877a",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:42:11Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 250.55573978756726,
+   "delay_ms": 16.72252230721068,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 17,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 30489,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.9999713378563809,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774719827546123,
+     "schedule_digest": "aaa2edea125b451dad93ffe13afbe5315813760a6a25a46fddf321f29df2394d",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "aaa2edea125b451dad93ffe13afbe5315813760a6a25a46fddf321f29df2394d"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.05177993527508091,
+   "max_abs_rate_error": 2.866214361907371e-05,
+   "max_abs_rho_error": 2.8017245387812473e-05,
+   "max_late_ms": 0.0,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 293,
+   "n_sent": 309,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 293,
+    "n_recv_unique": 293,
+    "n_reorder": 0,
+    "n_sent": 309
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     9.600676448863684,
+     12.704908358733892,
+     9.84015932008333,
+     13.386060451368536,
+     12.643655166727884,
+     11.994816734748346
+    ],
+    "inflation_factor": 1.2179041050421837,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.6505398300641226,
+    "se_naive_ms": 0.5341470049824574,
+    "spread_ms": 3.785384002504852
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0017_h2_r0925_s101_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.010722313600716665,
+   "probe_loss": 0.05177993527508091,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.318607936863425,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 348,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0017_h2_r0925_s101_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1792
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1792
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.19103727300171,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 368,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0017_h2_r0925_s101_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 5.318607936863425,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1792,
+    "seed": 101702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 16.72252230721068,
+   "q_p50_ms": 15.657445001965622,
+   "q_p90_ms": 29.49625299963774,
+   "q_p95_ms": 30.43402799896686,
+   "q_p99_ms": 31.1084120011623,
+   "q_sd_ms": 9.143123958417974,
+   "queue_mean_ms": 11.70652230721068,
+   "queue_sd_ms": 9.143123958417974,
+   "rate_ratio": 0.9999713378563809,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713378563809
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.9774719827546123
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "aaa2edea125b451dad93ffe13afbe5315813760a6a25a46fddf321f29df2394d",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "6526b56cdd5ac81745542e95f2cabb9cdd7adfb1659f09a6e413168ed7bdbaae",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:43:29Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 277.6989850843818,
+   "delay_ms": 19.212896821689665,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 18,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 4.521142956946278,
+     "n_bg_recv": 19924,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00017499343774608452,
+     "rate_ratio": 0.9999651512574427,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655868667247,
+     "schedule_digest": "8d98aa7fd529483f301e2fa2535ce1d3a8bcdb9ace1c974bda47d168f1c38c7e",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "8d98aa7fd529483f301e2fa2535ce1d3a8bcdb9ace1c974bda47d168f1c38c7e"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.05723905723905724,
+   "max_abs_rate_error": 3.4848742557325174e-05,
+   "max_abs_rho_error": 3.441313327545714e-05,
+   "max_late_ms": 4.521142956946278,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00017499343774608452,
+   "n_recv_unique": 280,
+   "n_sent": 297,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 280,
+    "n_recv_unique": 280,
+    "n_reorder": 0,
+    "n_sent": 297
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     13.668282260478009,
+     10.539488500398875,
+     17.571843122544923,
+     11.53384804785587,
+     13.318336096774381,
+     12.378701239080627
+    ],
+    "inflation_factor": 1.7002252745558863,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.9978181920118383,
+    "se_naive_ms": 0.5868741083574806,
+    "spread_ms": 7.032354622146048
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0018_h2_r0925_s101_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.015153430338058396,
+   "probe_loss": 0.05723905723905724,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.011055005971692,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 328,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0018_h2_r0925_s101_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1893
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1893
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.64601258299808,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 349,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0018_h2_r0925_s101_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 5.011055005971692,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1893,
+    "seed": 101703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 19.212896821689665,
+   "q_p50_ms": 19.131380000292324,
+   "q_p90_ms": 33.55960400014976,
+   "q_p95_ms": 34.75931499790261,
+   "q_p99_ms": 36.049643998669694,
+   "q_sd_ms": 9.820282141410633,
+   "queue_mean_ms": 13.188896821689664,
+   "queue_sd_ms": 9.820282141410633,
+   "rate_ratio": 0.9999651512574427,
+   "rate_ratio_by_link": {
+    "L3": 0.9999651512574427
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655868667247
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "8d98aa7fd529483f301e2fa2535ce1d3a8bcdb9ace1c974bda47d168f1c38c7e",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "52893514730e40823dfba25be8e7393e222aae50268755e54077d56e752cf677",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:44:47Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 55.69705334169963,
+   "delay_ms": 11.423484590823291,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 19,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 4.625978879630566,
+     "n_bg_recv": 38550,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00012594775687045014,
+     "rate_ratio": 0.9999981285393889,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983952225259,
+     "schedule_digest": "807cfe31a0c11ce36a493ec0a22b299d4e2c3789b01e5956f293bdebf6286c0f",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "807cfe31a0c11ce36a493ec0a22b299d4e2c3789b01e5956f293bdebf6286c0f"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.00980392156862745,
+   "max_abs_rate_error": 1.8714606111469578e-06,
+   "max_abs_rho_error": 1.6047774742400378e-06,
+   "max_late_ms": 4.625978879630566,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00012594775687045014,
+   "n_recv_unique": 303,
+   "n_sent": 306,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 303,
+    "n_recv_unique": 303,
+    "n_reorder": 0,
+    "n_sent": 306
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     9.953467458888285,
+     5.984098725628642,
+     9.259332317192385,
+     8.547116872579592,
+     8.458051461695085,
+     5.268549919856014
+    ],
+    "inflation_factor": 1.6339337682402655,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.7613380924474861,
+    "se_naive_ms": 0.46595407185166476,
+    "spread_ms": 4.684917539032272
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0019_h2_r0925_s102_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.007585467314079802,
+   "probe_loss": 0.00980392156862745,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.016843461692991,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 346,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0019_h2_r0925_s102_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1991
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1991
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.96431175900216,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 351,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0019_h2_r0925_s102_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 5.016843461692991,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1991,
+    "seed": 102701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 11.423484590823291,
+   "q_p50_ms": 8.585750999144977,
+   "q_p90_ms": 25.62623799963086,
+   "q_p95_ms": 28.33902500128653,
+   "q_p99_ms": 30.450007002172526,
+   "q_sd_ms": 8.110813689992472,
+   "queue_mean_ms": 7.911484590823291,
+   "queue_sd_ms": 8.110813689992472,
+   "rate_ratio": 0.9999981285393889,
+   "rate_ratio_by_link": {
+    "L1": 0.9999981285393889
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983952225259
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "807cfe31a0c11ce36a493ec0a22b299d4e2c3789b01e5956f293bdebf6286c0f",
+   "seed": 102,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "a176cd86ebb7ee489c94b3d3dc17ba94a1cec4df9d186461a09f65d0590a2301",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:46:05Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 286.86213155844024,
+   "delay_ms": 16.192805882735687,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 20,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 6.837458418885944,
+     "n_bg_recv": 30340,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00020624631703005302,
+     "rate_ratio": 0.9999713495989202,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774719942329445,
+     "schedule_digest": "90b1a9b27512cb9a0417cd1fb145507f3c6e52153f16c063948c0e0ad44f272c",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "90b1a9b27512cb9a0417cd1fb145507f3c6e52153f16c063948c0e0ad44f272c"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.05993690851735016,
+   "max_abs_rate_error": 2.8650401079799437e-05,
+   "max_abs_rho_error": 2.800576705563884e-05,
+   "max_late_ms": 6.837458418885944,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00020624631703005302,
+   "n_recv_unique": 298,
+   "n_sent": 317,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 298,
+    "n_recv_unique": 298,
+    "n_reorder": 0,
+    "n_sent": 317
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     13.711646227503396,
+     10.267827055469281,
+     10.550454463117164,
+     11.68054009794127,
+     11.922584327154395,
+     9.694364096363783
+    ],
+    "inflation_factor": 1.1881673601112932,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.5931160767851704,
+    "se_naive_ms": 0.4991856338568453,
+    "spread_ms": 4.017282131139613
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0020_h2_r0925_s102_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.01080195072443568,
+   "probe_loss": 0.05993690851735016,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.358110478390714,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 352,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0020_h2_r0925_s102_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2092
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2092
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.98735869899974,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 375,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0020_h2_r0925_s102_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 5.358110478390714,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2092,
+    "seed": 102702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 16.192805882735687,
+   "q_p50_ms": 15.557697000007844,
+   "q_p90_ms": 28.74338600024604,
+   "q_p95_ms": 30.2749240008092,
+   "q_p99_ms": 31.0126470002837,
+   "q_sd_ms": 8.617280111532873,
+   "queue_mean_ms": 11.176805882735687,
+   "queue_sd_ms": 8.617280111532873,
+   "rate_ratio": 0.9999713495989202,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713495989202
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.9774719942329445
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "90b1a9b27512cb9a0417cd1fb145507f3c6e52153f16c063948c0e0ad44f272c",
+   "seed": 102,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "161b696e157ff4744cbd575e34833886452b404e1872bc6bf1cb45f549c082ca",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:47:23Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 392.44008859240904,
+   "delay_ms": 18.60697496745987,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 21,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 19869,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.999965155843007,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655913949695,
+     "schedule_digest": "d533e2e0994774f5c69d7435e52a873c988abfbaabbaa15aa445a76cfc0b557a",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "d533e2e0994774f5c69d7435e52a873c988abfbaabbaa15aa445a76cfc0b557a"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.08278145695364239,
+   "max_abs_rate_error": 3.484415699295251e-05,
+   "max_abs_rho_error": 3.4408605030678e-05,
+   "max_late_ms": 0.0,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 277,
+   "n_sent": 302,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 277,
+    "n_recv_unique": 277,
+    "n_reorder": 0,
+    "n_sent": 302
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     13.524445249822747,
+     10.864547979205478,
+     14.289125519571826,
+     11.711360218839673,
+     12.854021852891652,
+     13.046863725139701
+    ],
+    "inflation_factor": 0.8116408750448081,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.50642534299783,
+    "se_naive_ms": 0.6239524875701608,
+    "spread_ms": 3.4245775403663483
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0021_h2_r0925_s102_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.015558658877287454,
+   "probe_loss": 0.08278145695364239,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.145059152542148,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 330,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0021_h2_r0925_s102_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2193
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2193
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.97004102899882,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 360,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0021_h2_r0925_s102_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 5.145059152542148,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2193,
+    "seed": 102703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 18.60697496745987,
+   "q_p50_ms": 17.705267998937984,
+   "q_p90_ms": 33.588413998334204,
+   "q_p95_ms": 34.82935599979339,
+   "q_p99_ms": 36.07827999960375,
+   "q_sd_ms": 10.384639029276014,
+   "queue_mean_ms": 12.58297496745987,
+   "queue_sd_ms": 10.384639029276014,
+   "rate_ratio": 0.999965155843007,
+   "rate_ratio_by_link": {
+    "L3": 0.999965155843007
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655913949695
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "d533e2e0994774f5c69d7435e52a873c988abfbaabbaa15aa445a76cfc0b557a",
+   "seed": 102,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "bd22af136c7da0e569139526aee3fd64a5bc5d3489371ec5c17f3e98f8b72e25",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:48:42Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 87.68843529914076,
+   "delay_ms": 11.406272924320055,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 22,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 1.1056975163228344,
+     "n_bg_recv": 38593,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 5.0379102748180054e-05,
+     "rate_ratio": 0.999998130153661,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983966067644,
+     "schedule_digest": "ee58cefbe689dddd5fe1afb79a213de3f3c4432eebc26eb56118c3196fb184cb",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "ee58cefbe689dddd5fe1afb79a213de3f3c4432eebc26eb56118c3196fb184cb"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.016891891891891893,
+   "max_abs_rate_error": 1.8698463389865694e-06,
+   "max_abs_rho_error": 1.6033932357384373e-06,
+   "max_late_ms": 1.1056975163228344,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 5.0379102748180054e-05,
+   "n_recv_unique": 291,
+   "n_sent": 296,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 291,
+    "n_recv_unique": 291,
+    "n_reorder": 0,
+    "n_sent": 296
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     9.04095312133987,
+     7.150603341337622,
+     7.187730891903787,
+     8.575966308721531,
+     9.631893951048303,
+     5.493433419978828
+    ],
+    "inflation_factor": 1.344635446448335,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.6218692715193049,
+    "se_naive_ms": 0.4624816883727742,
+    "spread_ms": 4.138460531069475
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0022_h2_r0925_s103_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.007144535729917673,
+   "probe_loss": 0.016891891891891893,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.725222043596345,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 325,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0022_h2_r0925_s103_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2291
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2291
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.83798792000016,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 330,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0022_h2_r0925_s103_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 4.725222043596345,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2291,
+    "seed": 103701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 11.406272924320055,
+   "q_p50_ms": 9.033842998859939,
+   "q_p90_ms": 22.99345599817508,
+   "q_p95_ms": 27.90960400011437,
+   "q_p99_ms": 30.781864000118105,
+   "q_sd_ms": 7.88934660255958,
+   "queue_mean_ms": 7.894272924320055,
+   "queue_sd_ms": 7.88934660255958,
+   "rate_ratio": 0.999998130153661,
+   "rate_ratio_by_link": {
+    "L1": 0.999998130153661
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983966067644
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "ee58cefbe689dddd5fe1afb79a213de3f3c4432eebc26eb56118c3196fb184cb",
+   "seed": 103,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "45f723cfd19fb5d76ce4a29b9ce1541c4dc909b1861e9004187b844dd1f35b81",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:50:00Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 355.3156001628067,
+   "delay_ms": 16.990543845035056,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 23,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 1.8007539183599874,
+     "n_bg_recv": 30497,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 2.9463759575721862e-05,
+     "rate_ratio": 0.9999713393420888,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774719842068917,
+     "schedule_digest": "f3da36e1178f68a063d8cb0d6d45b5d7ad41472959be9c5e77e2885a58e7add6",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "f3da36e1178f68a063d8cb0d6d45b5d7ad41472959be9c5e77e2885a58e7add6"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0749185667752443,
+   "max_abs_rate_error": 2.8660657911183662e-05,
+   "max_abs_rho_error": 2.801579310840463e-05,
+   "max_late_ms": 1.8007539183599874,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 2.9463759575721862e-05,
+   "n_recv_unique": 284,
+   "n_sent": 307,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 284,
+    "n_recv_unique": 284,
+    "n_reorder": 0,
+    "n_sent": 307
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     12.222116806139727,
+     11.513995157943818,
+     11.09255602135276,
+     13.251569000494783,
+     10.454141822184384,
+     13.439295877593928
+    ],
+    "inflation_factor": 0.915629151153677,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.48773458441168893,
+    "se_naive_ms": 0.5326769946076441,
+    "spread_ms": 2.9851540554095433
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0023_h2_r0925_s103_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.010675697833933222,
+   "probe_loss": 0.0749185667752443,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.295485036673226,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 337,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0023_h2_r0925_s103_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2392
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2392
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.87084231899644,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 370,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0023_h2_r0925_s103_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 5.295485036673226,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2392,
+    "seed": 103702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 16.990543845035056,
+   "q_p50_ms": 17.645664000996852,
+   "q_p90_ms": 29.238295996878527,
+   "q_p95_ms": 30.35162700045877,
+   "q_p99_ms": 31.31648300125054,
+   "q_sd_ms": 8.97683227457893,
+   "queue_mean_ms": 11.974543845035058,
+   "queue_sd_ms": 8.97683227457893,
+   "rate_ratio": 0.9999713393420888,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713393420888
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.9774719842068917
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "f3da36e1178f68a063d8cb0d6d45b5d7ad41472959be9c5e77e2885a58e7add6",
+   "seed": 103,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "1935a85b28189e9534437198d0f35c9ce04b5066126fc0f6ecb060a7de960b59",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:51:18Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 343.3857405747163,
+   "delay_ms": 19.66502282637324,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 24,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 19867,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "rate_ratio": 0.9999651501432206,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655857664304,
+     "schedule_digest": "78f834a43c2631d151366587241deb5d3383f7547bac88412397c1d02b26cb77",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "78f834a43c2631d151366587241deb5d3383f7547bac88412397c1d02b26cb77"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.07168458781362007,
+   "max_abs_rate_error": 3.4849856779373134e-05,
+   "max_abs_rho_error": 3.441423356975726e-05,
+   "max_late_ms": 0.0,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0,
+   "n_recv_unique": 259,
+   "n_sent": 279,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 259,
+    "n_recv_unique": 259,
+    "n_reorder": 0,
+    "n_sent": 279
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     12.424320720869176,
+     13.102127688762266,
+     12.812580432017223,
+     14.559310022219586,
+     15.041426135360018,
+     14.392976604603762
+    ],
+    "inflation_factor": 0.6790547485987267,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.43922052382973525,
+    "se_naive_ms": 0.6468116521327554,
+    "spread_ms": 2.617105414490842
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0024_h2_r0925_s103_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.014393940887253095,
+   "probe_loss": 0.07168458781362007,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.759901087054595,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 307,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0024_h2_r0925_s103_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2493
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2493
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.53926015400066,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 331,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0024_h2_r0925_s103_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 4.759901087054595,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2493,
+    "seed": 103703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 19.66502282637324,
+   "q_p50_ms": 19.188086001779652,
+   "q_p90_ms": 34.61750399739924,
+   "q_p95_ms": 35.444581999147545,
+   "q_p99_ms": 36.3351169996555,
+   "q_sd_ms": 10.409448407753816,
+   "queue_mean_ms": 13.64102282637324,
+   "queue_sd_ms": 10.409448407753816,
+   "rate_ratio": 0.9999651501432206,
+   "rate_ratio_by_link": {
+    "L3": 0.9999651501432206
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655857664304
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "78f834a43c2631d151366587241deb5d3383f7547bac88412397c1d02b26cb77",
+   "seed": 103,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "6eeb79c9af4bd1b5692c770c78917a608c5a514e268d4909358eba96027b46ca",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:52:36Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 95.65364511506351,
+   "delay_ms": 11.766883271297834,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 25,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 11.818559698440367,
+     "n_bg_recv": 38530,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00047860147610771054,
+     "rate_ratio": 0.9999981280107915,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983947692538,
+     "schedule_digest": "675525e2771be67adcda2c5a37bd2fd54042bf2c5a3df257f3c4affb46c39c21",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "675525e2771be67adcda2c5a37bd2fd54042bf2c5a3df257f3c4affb46c39c21"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.018575851393188854,
+   "max_abs_rate_error": 1.871989208535041e-06,
+   "max_abs_rho_error": 1.6052307463265691e-06,
+   "max_late_ms": 11.818559698440367,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00047860147610771054,
+   "n_recv_unique": 317,
+   "n_sent": 323,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 317,
+    "n_recv_unique": 317,
+    "n_reorder": 0,
+    "n_sent": 323
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     6.871664543565282,
+     9.083397304493701,
+     9.201458258193552,
+     6.5690847781365,
+     7.9727280981238495,
+     9.958823372774836
+    ],
+    "inflation_factor": 1.266009982585424,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.5573134716762979,
+    "se_naive_ms": 0.4402125412456557,
+    "spread_ms": 3.3897385946383354
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0025_h2_r0925_s104_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.008156682285721044,
+   "probe_loss": 0.018575851393188854,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.394631141349897,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 369,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0025_h2_r0925_s104_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2591
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2591
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.88429609399827,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 377,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0025_h2_r0925_s104_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 5.394631141349897,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2591,
+    "seed": 104701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 11.766883271297834,
+   "q_p50_ms": 9.33054700067197,
+   "q_p90_ms": 23.781754000764806,
+   "q_p95_ms": 28.329240999254864,
+   "q_p99_ms": 30.58555999882566,
+   "q_sd_ms": 7.837761467790195,
+   "queue_mean_ms": 8.254883271297834,
+   "queue_sd_ms": 7.837761467790195,
+   "rate_ratio": 0.9999981280107915,
+   "rate_ratio_by_link": {
+    "L1": 0.9999981280107915
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983947692538
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "675525e2771be67adcda2c5a37bd2fd54042bf2c5a3df257f3c4affb46c39c21",
+   "seed": 104,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "2275ffb927cee038e435213a7c1a59db3b07af37060e3342c95b0d20c1fdf3d6",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:53:54Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 343.45181278683367,
+   "delay_ms": 16.438073944153906,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 26,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 2.1544627015828155,
+     "n_bg_recv": 30595,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 8.839127872716559e-05,
+     "rate_ratio": 0.9999713403134014,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774719851563498,
+     "schedule_digest": "58b1ca9c58a18dd263a7ed2fc9ac3afb87aa3be7c41660bad636376b89377c52",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "58b1ca9c58a18dd263a7ed2fc9ac3afb87aa3be7c41660bad636376b89377c52"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.07241379310344828,
+   "max_abs_rate_error": 2.8659686598597744e-05,
+   "max_abs_rho_error": 2.8014843650336907e-05,
+   "max_late_ms": 2.1544627015828155,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 8.839127872716559e-05,
+   "n_recv_unique": 269,
+   "n_sent": 290,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 269,
+    "n_recv_unique": 269,
+    "n_reorder": 0,
+    "n_sent": 290
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     11.488526818191696,
+     12.48018697995576,
+     10.955889578901022,
+     10.51717134870096,
+     10.376085348472644,
+     12.866927000103692
+    ],
+    "inflation_factor": 0.8013249460296921,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.4218222437835127,
+    "se_naive_ms": 0.5264059803373232,
+    "spread_ms": 2.4908416516310474
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0026_h2_r0925_s104_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.009830759874827932,
+   "probe_loss": 0.07241379310344828,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.876368985529728,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 315,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0026_h2_r0925_s104_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2692
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2692
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.92908063600044,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 341,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0026_h2_r0925_s104_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 4.876368985529728,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2692,
+    "seed": 104702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 16.438073944153906,
+   "q_p50_ms": 16.098722001447108,
+   "q_p90_ms": 28.610379003043285,
+   "q_p95_ms": 30.04075299843354,
+   "q_p99_ms": 31.078139997520715,
+   "q_sd_ms": 8.63370001217831,
+   "queue_mean_ms": 11.422073944153906,
+   "queue_sd_ms": 8.63370001217831,
+   "rate_ratio": 0.9999713403134014,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713403134014
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.9774719851563498
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "58b1ca9c58a18dd263a7ed2fc9ac3afb87aa3be7c41660bad636376b89377c52",
+   "seed": 104,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "9f951bd802202bce681b33389ce5daacdd12c5aa09add04015d03809b411b269",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:55:13Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 405.60263690568996,
+   "delay_ms": 18.9670193894754,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 27,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 4.363262905826559,
+     "n_bg_recv": 19887,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00021874179718260565,
+     "rate_ratio": 0.9999651456433536,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655813228117,
+     "schedule_digest": "75868c3b928f8b0d965c30c38986e21e7ee59d14c45c034bd0110b09688bd3d4",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "75868c3b928f8b0d965c30c38986e21e7ee59d14c45c034bd0110b09688bd3d4"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.08561643835616438,
+   "max_abs_rate_error": 3.485435664640768e-05,
+   "max_abs_rho_error": 3.4418677188452484e-05,
+   "max_late_ms": 4.363262905826559,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00021874179718260565,
+   "n_recv_unique": 267,
+   "n_sent": 292,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 267,
+    "n_recv_unique": 267,
+    "n_reorder": 0,
+    "n_sent": 292
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     13.394008426109428,
+     12.364841733506182,
+     11.54429273874089,
+     15.445439574405293,
+     12.34057381831614,
+     12.478460072931584
+    ],
+    "inflation_factor": 0.8732564541705241,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.5577817530897227,
+    "se_naive_ms": 0.6387376244697099,
+    "spread_ms": 3.901146835664404
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0027_h2_r0925_s104_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.014471490300266728,
+   "probe_loss": 0.08561643835616438,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.785545734215188,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 307,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0027_h2_r0925_s104_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2793
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2793
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.58454030000212,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 333,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0027_h2_r0925_s104_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 4.785545734215188,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2793,
+    "seed": 104703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 18.9670193894754,
+   "q_p50_ms": 19.230532999902266,
+   "q_p90_ms": 33.41755800076737,
+   "q_p95_ms": 35.14202100061323,
+   "q_p99_ms": 36.09829099670844,
+   "q_sd_ms": 10.437058782426519,
+   "queue_mean_ms": 12.9430193894754,
+   "queue_sd_ms": 10.437058782426519,
+   "rate_ratio": 0.9999651456433536,
+   "rate_ratio_by_link": {
+    "L3": 0.9999651456433536
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655813228117
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "75868c3b928f8b0d965c30c38986e21e7ee59d14c45c034bd0110b09688bd3d4",
+   "seed": 104,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "2d165a59f1b45ca4579c8a497405b8139c273d672dfc58e987f2d870dcf8b678",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:56:31Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 91.49055259345712,
+   "delay_ms": 11.563047945857365,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 28,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 3.934475182177266,
+     "n_bg_recv": 38367,
+     "n_bg_sent": 39699,
+     "n_foreign": 0,
+     "n_late_ratio": 5.0379102748180054e-05,
+     "rate_ratio": 0.9999981303107693,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574983967414848,
+     "schedule_digest": "f8bae17849b38bff04196b6c5060fcd4001145b73dd49b7dabe1fd0bb0761de8",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "f8bae17849b38bff04196b6c5060fcd4001145b73dd49b7dabe1fd0bb0761de8"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.017699115044247787,
+   "max_abs_rate_error": 1.8696892306602209e-06,
+   "max_abs_rho_error": 1.6032585153924472e-06,
+   "max_late_ms": 3.934475182177266,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 5.0379102748180054e-05,
+   "n_recv_unique": 333,
+   "n_sent": 339,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 333,
+    "n_recv_unique": 333,
+    "n_reorder": 0,
+    "n_sent": 339
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     7.878109591562248,
+     7.781098593966362,
+     10.352024327914933,
+     8.681504819978727,
+     6.166022326810476,
+     7.220874800186721
+    ],
+    "inflation_factor": 1.2384065005975875,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.5781780463236191,
+    "se_naive_ms": 0.46687258670284915,
+    "spread_ms": 4.186002001104456
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0028_h2_r0925_s105_L1",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.00856533516785392,
+   "probe_loss": 0.017699115044247787,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.664904211543599,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 389,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0028_h2_r0925_s105_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2891
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2891
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.90409461700256,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 396,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0028_h2_r0925_s105_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 5.664904211543599,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2891,
+    "seed": 105701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 11.563047945857365,
+   "q_p50_ms": 8.076350998407463,
+   "q_p90_ms": 25.96807700024266,
+   "q_p95_ms": 28.573413001822075,
+   "q_p99_ms": 30.708205999644008,
+   "q_sd_ms": 8.51962523045849,
+   "queue_mean_ms": 8.051047945857364,
+   "queue_sd_ms": 8.51962523045849,
+   "rate_ratio": 0.9999981303107693,
+   "rate_ratio_by_link": {
+    "L1": 0.9999981303107693
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L1": 0.8574983967414848
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "f8bae17849b38bff04196b6c5060fcd4001145b73dd49b7dabe1fd0bb0761de8",
+   "seed": 105,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "0e3b09ee93211c68d424736e3d3560b57d2cb5addd831258d2580cd4c9e2988c",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:57:49Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 433.69320073862934,
+   "delay_ms": 16.619263270182906,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 29,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 4.885156547970837,
+     "n_bg_recv": 30494,
+     "n_bg_sent": 33940,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00020624631703005302,
+     "rate_ratio": 0.9999713404848493,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774719853239401,
+     "schedule_digest": "59428bc0847f1f7b7e896792c4f224ec2cc9f61bd9cd7a67cb9d2928025938c1",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L2": "59428bc0847f1f7b7e896792c4f224ec2cc9f61bd9cd7a67cb9d2928025938c1"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.09235668789808917,
+   "max_abs_rate_error": 2.8659515150741832e-05,
+   "max_abs_rho_error": 2.8014676060061916e-05,
+   "max_late_ms": 4.885156547970837,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00020624631703005302,
+   "n_recv_unique": 285,
+   "n_sent": 314,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 285,
+    "n_recv_unique": 285,
+    "n_reorder": 0,
+    "n_sent": 314
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     13.251080500080919,
+     11.863001234234344,
+     11.830170238839775,
+     10.705377372348677,
+     12.535533166945763,
+     9.881025230802502
+    ],
+    "inflation_factor": 0.9393872101659252,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.49807761041750415,
+    "se_naive_ms": 0.5302154479296435,
+    "spread_ms": 3.370055269278417
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0029_h2_r0925_s105_L2",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.010738300564033111,
+   "probe_loss": 0.09235668789808917,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 5.326537978191028,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 336,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0029_h2_r0925_s105_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     2992
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    2992
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.08802706499773,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 368,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0029_h2_r0925_s105_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 5.326537978191028,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 2992,
+    "seed": 105702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 16.619263270182906,
+   "q_p50_ms": 16.244845000005093,
+   "q_p90_ms": 29.352346999916712,
+   "q_p95_ms": 30.65680899901455,
+   "q_p99_ms": 31.079812001666518,
+   "q_sd_ms": 8.951066978222277,
+   "queue_mean_ms": 11.603263270182907,
+   "queue_sd_ms": 8.951066978222277,
+   "rate_ratio": 0.9999713404848493,
+   "rate_ratio_by_link": {
+    "L2": 0.9999713404848493
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L2": 0.9774719853239401
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "59428bc0847f1f7b7e896792c4f224ec2cc9f61bd9cd7a67cb9d2928025938c1",
+   "seed": 105,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "ede26b4373d1e6729021fb5852bff50ffcda430eb25e60145279ad52d8f64cf9",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T14:59:06Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "Aprime",
+   "cost_ms": 289.181906037723,
+   "delay_ms": 18.863708101034447,
+   "env": {
+    "git_commit": "b544c5c1bd0a3ebbe2ace1e5fad6484b94206e75",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/figures/decision_error_loss_mechanism_z055.png",
+     " M results/phase-20R/decision_error_delay_only.parquet",
+     "?? results/phase-20R/additivity_branch_a_state.json",
+     "?? results/phase-20R/raw_additivity/"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "gate_fail": [],
+   "idx": 30,
+   "link": "L3",
+   "link_idx": 3,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 4.396659642225131,
+     "n_bg_recv": 19958,
+     "n_bg_sent": 22858,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0001312450783095634,
+     "rate_ratio": 0.9999651500431797,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874655856676399,
+     "schedule_digest": "22be79296465ecf6e0bc983b098facd7f168a5753bc04cdcc082ae345a2be3b9",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L3": "22be79296465ecf6e0bc983b098facd7f168a5753bc04cdcc082ae345a2be3b9"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.05985915492957746,
+   "max_abs_rate_error": 3.484995682034864e-05,
+   "max_abs_rho_error": 3.441433236028857e-05,
+   "max_late_ms": 4.396659642225131,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0001312450783095634,
+   "n_recv_unique": 267,
+   "n_sent": 284,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 267,
+    "n_recv_unique": 267,
+    "n_reorder": 0,
+    "n_sent": 284
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     12.465892155645028,
+     13.344566325031337,
+     11.529352538183538,
+     15.164438043148435,
+     14.515135510474137,
+     9.831706777933707
+    ],
+    "inflation_factor": 1.230036913159105,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.8034366223341673,
+    "se_naive_ms": 0.6531809035476019,
+    "spread_ms": 5.332731265214727
+   },
+   "phase": "20R.6",
+   "pid": "20r6_aprime_0030_h2_r0925_s105_L3",
+   "plan_branch_digest": "425686bc77961a2125591cbd50cb615847e4d27a6b99f4316d69fa7903168951",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.014055929970769536,
+   "probe_loss": 0.05985915492957746,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 4.648124990333841,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 304,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0030_h2_r0925_s105_L3_probe_L3.bin",
+    "port": 5853,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     3093
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    3093
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 69.9206670809981,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 325,
+    "out": "results/phase-20R/raw_additivity/20r6_aprime_0030_h2_r0925_s105_L3_probe_L3_tx.bin",
+    "rate_pps_actual": 4.648124990333841,
+    "rate_pps_nominal": 5.0,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 3093,
+    "seed": 105703,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 18.863708101034447,
+   "q_p50_ms": 17.570771002031165,
+   "q_p90_ms": 34.54676399789844,
+   "q_p95_ms": 35.53983300091443,
+   "q_p99_ms": 36.40031800179952,
+   "q_sd_ms": 10.673063907178802,
+   "queue_mean_ms": 12.839708101034446,
+   "queue_sd_ms": 10.673063907178802,
+   "rate_ratio": 0.9999651500431797,
+   "rate_ratio_by_link": {
+    "L3": 0.9999651500431797
+   },
+   "raw_dir": "results/phase-20R/raw_additivity",
+   "rho_actual_by_link": {
+    "L3": 0.9874655856676399
+   },
+   "rho_bar": 0.925,
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "22be79296465ecf6e0bc983b098facd7f168a5753bc04cdcc082ae345a2be3b9",
+   "seed": 105,
+   "socket_drops": 0,
+   "static_ms": 6.024,
+   "trajectory_digest": "61b8df366ca764d3cc941c949a8d6211c97c39bc9f6388e0a2906fad33c7654c",
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-06T15:00:25Z"
+  }
+ ],
+ "runner": "measurements.additivity_live",
+ "timeout_history": [],
+ "warmup_s": 10.0
+}
