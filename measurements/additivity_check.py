@@ -30,6 +30,9 @@ RHO_BARS = (0.85, 0.925)
 PATHS_MAIN = ("P1", "P4")
 PATHS_EXTRA = ("P2",)
 DEFAULT_BRANCH_B_PATHS = ("P1",)
+DEFAULT_BRANCH_B_RHO_BARS = (0.925,)
+DEFAULT_EXTRA_PATH_MODES = ("poisson",)
+DEFAULT_EXTRA_PATH_RHO_BARS = (0.925,)
 SEEDS = (101, 102, 103, 104, 105)
 DELTA_MS = 0.44
 PROBE_INTRUSION_MAX = 0.02
@@ -129,18 +132,47 @@ def selected_paths(main_paths: Sequence[str] = PATHS_MAIN, extra_paths: Sequence
     return out
 
 
+def path_mode_rho_specs(
+    modes: Sequence[str] = MODES,
+    rho_bars: Sequence[float] = RHO_BARS,
+    paths: Sequence[str] = selected_paths(),
+    extra_paths: Sequence[str] = PATHS_EXTRA,
+    extra_modes: Sequence[str] = DEFAULT_EXTRA_PATH_MODES,
+    extra_rho_bars: Sequence[float] = DEFAULT_EXTRA_PATH_RHO_BARS,
+) -> List[Tuple[str, float, str]]:
+    specs: List[Tuple[str, float, str]] = []
+    extra = set(str(path) for path in extra_paths)
+    for path in paths:
+        use_modes = extra_modes if path in extra else modes
+        use_rhos = extra_rho_bars if path in extra else rho_bars
+        for mode in use_modes:
+            for rho_bar in use_rhos:
+                specs.append((str(mode), float(rho_bar), str(path)))
+    return specs
+
+
 def build_plan(
     modes: Sequence[str] = MODES,
     rho_bars: Sequence[float] = RHO_BARS,
     seeds: Sequence[int] = SEEDS,
     paths: Sequence[str] = selected_paths(),
     branch_b_paths: Sequence[str] = DEFAULT_BRANCH_B_PATHS,
+    branch_b_rho_bars: Sequence[float] = DEFAULT_BRANCH_B_RHO_BARS,
+    extra_path_modes: Sequence[str] = DEFAULT_EXTRA_PATH_MODES,
+    extra_path_rho_bars: Sequence[float] = DEFAULT_EXTRA_PATH_RHO_BARS,
 ) -> Dict[str, Any]:
     rows: List[Dict[str, Any]] = []
+    specs = path_mode_rho_specs(
+        modes=modes,
+        rho_bars=rho_bars,
+        paths=paths,
+        extra_modes=extra_path_modes,
+        extra_rho_bars=extra_path_rho_bars,
+    )
+    for mode, rho_bar, path in specs:
+        rows.append({"branch": "A", "mode": mode, "rho_bar": float(rho_bar), "path": path, "source": "truth_table"})
     for mode in modes:
-        for rho_bar in rho_bars:
-            for path in paths:
-                rows.append({"branch": "A", "mode": mode, "rho_bar": float(rho_bar), "path": path, "source": "truth_table"})
+        for rho_bar in branch_b_rho_bars:
             for path in branch_b_paths:
                 for link in T7.PATHS[path]:
                     for seed in seeds:
@@ -155,18 +187,18 @@ def build_plan(
                                 "probe": "single_link",
                             }
                         )
-            for path in paths:
-                for seed in seeds:
-                    rows.append(
-                        {
-                            "branch": "C",
-                            "mode": mode,
-                            "rho_bar": float(rho_bar),
-                            "path": path,
-                            "seed": int(seed),
-                            "probe": "end_to_end_path",
-                        }
-                    )
+    for mode, rho_bar, path in specs:
+        for seed in seeds:
+            rows.append(
+                {
+                    "branch": "C",
+                    "mode": mode,
+                    "rho_bar": float(rho_bar),
+                    "path": path,
+                    "seed": int(seed),
+                    "probe": "end_to_end_path",
+                }
+            )
     counts = {
         "A_table_cells": sum(1 for row in rows if row["branch"] == "A"),
         "B_live_runs": sum(1 for row in rows if row["branch"] == "B"),
@@ -181,6 +213,9 @@ def build_plan(
         "seeds": [int(seed) for seed in seeds],
         "paths": list(paths),
         "branch_b_paths": list(branch_b_paths),
+        "branch_b_rho_bars": [float(rho) for rho in branch_b_rho_bars],
+        "extra_path_modes": list(extra_path_modes),
+        "extra_path_rho_bars": [float(rho) for rho in extra_path_rho_bars],
         "counts": counts,
         "rows": rows,
     }
@@ -201,40 +236,40 @@ def branch_a_rows(
     modes: Sequence[str] = MODES,
     rho_bars: Sequence[float] = RHO_BARS,
     paths: Sequence[str] = selected_paths(),
+    extra_path_modes: Sequence[str] = DEFAULT_EXTRA_PATH_MODES,
+    extra_path_rho_bars: Sequence[float] = DEFAULT_EXTRA_PATH_RHO_BARS,
 ) -> List[Dict[str, Any]]:
     tt = D.TruthTable(truth_table)
     calib = calibration_by_cell(calibration_path)
     rows = []
-    for mode in modes:
-        for rho_bar in rho_bars:
-            cell = calib[(str(mode), round(float(rho_bar), 12))]
-            w_loss = float(cell["w_loss"])
-            for path in paths:
-                delay_sum = 0.0
-                loss_sum = 0.0
-                keep = 1.0
-                clip_max = 0.0
-                for link in T7.PATHS[path]:
-                    rho = float(rho_bar) + float(C.LINK_OFFSET[link])
-                    d, loss = tt.delay_loss(str(mode), link, np.asarray([rho], dtype=float))
-                    delay_sum += float(d[0])
-                    loss_sum += float(loss[0])
-                    keep *= 1.0 - float(loss[0])
-                    clip_max = max(clip_max, max(tt.clip_log.values()) if tt.clip_log else 0.0)
-                rows.append(
-                    {
-                        "branch": "A",
-                        "mode": str(mode),
-                        "rho_bar": float(rho_bar),
-                        "path": str(path),
-                        "delay_ms": float(delay_sum),
-                        "loss_sum": float(loss_sum),
-                        "loss_e2e_composed": float(1.0 - keep),
-                        "w_loss": float(w_loss),
-                        "cost_ms": float(delay_sum + w_loss * loss_sum),
-                        "clip_fraction_max": float(clip_max),
-                    }
-                )
+    for mode, rho_bar, path in path_mode_rho_specs(modes, rho_bars, paths, extra_modes=extra_path_modes, extra_rho_bars=extra_path_rho_bars):
+        cell = calib[(str(mode), round(float(rho_bar), 12))]
+        w_loss = float(cell["w_loss"])
+        delay_sum = 0.0
+        loss_sum = 0.0
+        keep = 1.0
+        clip_max = 0.0
+        for link in T7.PATHS[path]:
+            rho = float(rho_bar) + float(C.LINK_OFFSET[link])
+            d, loss = tt.delay_loss(str(mode), link, np.asarray([rho], dtype=float))
+            delay_sum += float(d[0])
+            loss_sum += float(loss[0])
+            keep *= 1.0 - float(loss[0])
+            clip_max = max(clip_max, max(tt.clip_log.values()) if tt.clip_log else 0.0)
+        rows.append(
+            {
+                "branch": "A",
+                "mode": str(mode),
+                "rho_bar": float(rho_bar),
+                "path": str(path),
+                "delay_ms": float(delay_sum),
+                "loss_sum": float(loss_sum),
+                "loss_e2e_composed": float(1.0 - keep),
+                "w_loss": float(w_loss),
+                "cost_ms": float(delay_sum + w_loss * loss_sum),
+                "clip_fraction_max": float(clip_max),
+            }
+        )
     return rows
 
 
@@ -387,6 +422,9 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--rho-bars", default=",".join("%.3f" % r for r in RHO_BARS))
     ap.add_argument("--paths", default=",".join(selected_paths()))
     ap.add_argument("--branch-b-paths", default=",".join(DEFAULT_BRANCH_B_PATHS))
+    ap.add_argument("--branch-b-rho-bars", default=",".join("%.3f" % r for r in DEFAULT_BRANCH_B_RHO_BARS))
+    ap.add_argument("--extra-path-modes", default=",".join(DEFAULT_EXTRA_PATH_MODES))
+    ap.add_argument("--extra-path-rho-bars", default=",".join("%.3f" % r for r in DEFAULT_EXTRA_PATH_RHO_BARS))
     ap.add_argument("--seeds", default=",".join(str(seed) for seed in SEEDS))
     ap.add_argument("--delta-ms", type=float, default=DELTA_MS)
     ap.add_argument("--from-state", default="", help="comma-separated JSON state/result files containing branch B/C rows")
@@ -399,8 +437,20 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     rho_bars = parse_float_list(args.rho_bars)
     paths = parse_list(args.paths)
     branch_b_paths = parse_list(args.branch_b_paths)
+    branch_b_rho_bars = parse_float_list(args.branch_b_rho_bars)
+    extra_path_modes = parse_list(args.extra_path_modes)
+    extra_path_rho_bars = parse_float_list(args.extra_path_rho_bars)
     seeds = parse_int_list(args.seeds)
-    plan = build_plan(modes=modes, rho_bars=rho_bars, seeds=seeds, paths=paths, branch_b_paths=branch_b_paths)
+    plan = build_plan(
+        modes=modes,
+        rho_bars=rho_bars,
+        seeds=seeds,
+        paths=paths,
+        branch_b_paths=branch_b_paths,
+        branch_b_rho_bars=branch_b_rho_bars,
+        extra_path_modes=extra_path_modes,
+        extra_path_rho_bars=extra_path_rho_bars,
+    )
     if args.plan_only:
         print(json.dumps({"counts": plan["counts"], "plan_digest": plan["plan_digest"]}, indent=2, sort_keys=True))
         return 0

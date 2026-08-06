@@ -8,6 +8,7 @@ import pytest
 
 from measurements import additivity_check as A
 from measurements import decision_error_v2 as D
+from measurements import h9_separability as H9
 from measurements import plot_decision_error_v2 as P
 from measurements import quasistatic_check as Q
 from twin import cost_v2 as C
@@ -132,7 +133,7 @@ def test_seed_mean_margin_cv_bootstrap_matches_seed_average_estimator():
 def test_additivity_plan_matches_preregistered_day2_budget():
     plan = A.build_plan()
 
-    assert plan["counts"] == {"A_table_cells": 12, "B_live_runs": 60, "C_live_runs": 60}
+    assert plan["counts"] == {"A_table_cells": 9, "B_live_runs": 30, "C_live_runs": 45}
     assert plan["branch_b_paths"] == ["P1"]
 
 
@@ -159,3 +160,28 @@ def test_quasistatic_analyze_checks_max_window_difference():
 
 def test_spearman_helper_does_not_require_scipy():
     assert P._spearman_no_scipy(pd.Series([1.0, 2.0, 3.0]), pd.Series([10.0, 20.0, 30.0])) == pytest.approx(1.0)
+
+
+def test_h9_gaussian_gap_fit_recovers_synthetic_parameters():
+    r = np.array([0.25, 0.35, 0.50, 0.70, 0.90])
+    y = 2.0 * H9.phi_neg_over_r(0.8, r)
+
+    fit = H9.fit_gaussian_gap(r, y, c_free=True)
+
+    assert fit["k"] == pytest.approx(0.8, abs=0.002)
+    assert fit["c"] == pytest.approx(2.0, rel=0.002)
+    assert fit["mae"] < 1e-4
+
+
+def test_h9_threshold_report_is_strict_about_nonzero_boundary():
+    df = pd.DataFrame(
+        [
+            {"set": "x", "mode": "h2", "rho_bar": 0.9, "z_key": "0.550", "z_over_tau": 0.55, "tau_rho": 1.0, "margin_cv": 0.29, "err_total": 0.0},
+            {"set": "x", "mode": "h2", "rho_bar": 0.96, "z_key": "0.550", "z_over_tau": 0.55, "tau_rho": 1.0, "margin_cv": 0.299, "err_total": 0.001},
+        ]
+    )
+
+    report = H9.threshold_report(df, threshold=0.30)
+
+    assert not report["pass_strict_zero"]
+    assert report["n_low_nonzero"] == 1

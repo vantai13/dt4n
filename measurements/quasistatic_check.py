@@ -18,7 +18,7 @@ from measurements.additivity_check import DELTA_MS, parse_int_list, stable_diges
 
 MODE = "poisson"
 RHO_BAR = 0.925
-SEEDS = (101, 102, 103, 104, 105)
+SEEDS = (101, 102, 103)
 DURATION_S = 600.0
 WINDOW_S = 60.0
 OUT = "results/phase-20R/quasistatic_check.json"

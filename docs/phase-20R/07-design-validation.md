@@ -44,7 +44,7 @@ modes       = poisson,h2
 rho_bar     = 0.85,0.925
 seeds       = 101,102,103,104,105
 paths C     = P1,P4 va P2-extra
-paths B     = P1 mac dinh theo ngan sach 60 run; analyzer chap nhan mo rong B
+paths B     = P1 tai rho_bar=0.925; analyzer chap nhan mo rong B
 Delta       = 0.44 ms (= 20% cost gap)
 TOST        = CI90 phai nam trong [-0.44,+0.44]
 power check = 1.645 * se < 0.44
@@ -60,6 +60,20 @@ Branch C: 2 mode x 2 rho x 2 path x 5 seed = 40 run ~= 0.8 h
 C-extra P2: 2 mode x 2 rho x 1 path x 5 seed = 20 run ~= 0.4 h
 Tong additivity live ~= 2.4 h, cong cleanup/overhead nen nen du tru 3 h
 ```
+
+Cat giam truoc live run, sau khi co ket qua `a=0.2` va truoc khi chay
+Mininet G6:
+
+```text
+Branch B: 2 mode x 1 rho_bar(0.925) x 3 link(P1) x 5 seed = 30 run ~= 0.6 h
+Branch C: P1/P4 khong cat = 40 run ~= 0.8 h
+C-extra P2: poisson x rho_bar 0.925 x 5 seed = 5 run ~= 0.1 h
+Tong additivity live moi ~= 1.5 h; du tru 1.8 h ca cleanup/overhead
+```
+
+Ly do cat Branch B: B do CPU contention/probe artifact cua ha tang. Chay tai
+`rho_bar=0.925`, muc R cao nhat, la worst-case contention. Ket luan G6 chinh
+van den tu Branch C end-to-end P1/P4; khong cat o day.
 
 Lenh khoa plan:
 
@@ -91,6 +105,10 @@ threshold  = max |measured_cost - table_cost(rho(t))| <= 0.44 ms
 ```
 
 So run du kien: `600 s x 5 seed = 50 min`, du tru 60 phut ca startup/cleanup.
+
+Cat giam truoc live run: dung `seeds = 101,102,103`, `600 s x 3 seed = 30 min`,
+du tru 40 phut. Ly do: day la xac nhan o muc decision, khong phai uoc luong
+link-level moi; nguong bat cap can phat hien la `0.44 ms`.
 
 Lenh khoa plan:
 
