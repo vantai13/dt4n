@@ -11,6 +11,7 @@ from __future__ import annotations
 import os
 import shlex
 import subprocess
+import time
 from typing import Any, Dict, List, Optional
 
 from mininet.tc_spec import (
@@ -32,6 +33,9 @@ from mininet.tc_spec import (
 )
 from mininet.topo import Topo
 
+MAX_QDISC_INSTALL_ATTEMPTS = 3
+QDISC_SETTLE_S = 0.5
+
 
 class SplitQdiscTopo(Topo):
     """h1 --- s1 == measured link == s2 --- h2."""
@@ -48,15 +52,42 @@ class SplitQdiscTopo(Topo):
 
 
 def sh(cmd: str, timeout: float = 10.0) -> str:
-    """Run a command in the root namespace, where switch interfaces live."""
+    """Run a command in the root namespace, where switch interfaces live.
+
+    Use ``sh -c`` rather than a login shell: ``sh -lc`` reads profile scripts
+    on every call and widens the race window between qdisc setup commands.
+    """
     p = subprocess.run(
-        ["sh", "-lc", cmd],
+        ["sh", "-c", cmd],
         stdout=subprocess.PIPE,
         stderr=subprocess.STDOUT,
         text=True,
         timeout=timeout,
         check=False,
     )
+    return p.stdout or ""
+
+
+def sh_tc_batch(cmds: List[str], timeout: float = 10.0) -> str:
+    """Run several tc commands in one process with ``tc -batch``."""
+    lines = []
+    for cmd in cmds:
+        c = cmd.strip()
+        lines.append(c[3:].strip() if c.startswith("tc ") else c)
+    p = subprocess.run(
+        ["tc", "-batch", "-"],
+        input="\n".join(lines) + "\n",
+        stdout=subprocess.PIPE,
+        stderr=subprocess.STDOUT,
+        text=True,
+        timeout=timeout,
+        check=False,
+    )
+    if p.returncode != 0:
+        raise RuntimeError(
+            "tc -batch that bai (rc=%d):\n%s\n---\n%s"
+            % (p.returncode, "\n".join(lines), p.stdout or "")
+        )
     return p.stdout or ""
 
 
@@ -80,18 +111,19 @@ def setup_measure_qdisc(
 ) -> List[str]:
     """Measured direction: HTB for rate plus bfifo for byte buffer; no netem."""
     dev = shlex.quote(ifname)
-    cmds = ["tc qdisc del dev %s root" % dev] + measure_cmds(
+    del_cmd = "tc qdisc del dev %s root" % dev
+    add_cmds = measure_cmds(
         dev,
         bw_mbps,
         queue_pkts,
         burst_bytes=burst_bytes,
         frame_bytes=frame_bytes,
     )
-    for i, cmd in enumerate(cmds):
-        out = sh(cmd + (" 2>/dev/null" if i == 0 else ""))
-        if i > 0 and out.strip():
-            raise RuntimeError("lenh tc bao loi/canh bao:\n  %s\n  -> %s" % (cmd, out.strip()))
-    return cmds
+    sh(del_cmd + " 2>/dev/null")
+    out = sh_tc_batch(add_cmds)
+    if out.strip():
+        raise RuntimeError("lenh tc bao loi/canh bao:\n  %s\n  -> %s" % ("\n  ".join(add_cmds), out.strip()))
+    return [del_cmd] + add_cmds
 
 
 def change_measure_qdisc(
@@ -154,6 +186,15 @@ def find_layer(layers: List[Dict[str, Any]], kind: str) -> Optional[Dict[str, An
     return None
 
 
+def read_direct_packets(ifname: str) -> int:
+    """Read HTB ``direct_packets_stat`` for a measured interface."""
+    layers = parse_qdisc_tree(show_qdisc(ifname))
+    htb = find_layer(layers, "htb")
+    if htb is None:
+        raise RuntimeError("khong tim thay htb tren %s" % ifname)
+    return int(htb.get("direct_packets_stat") or 0)
+
+
 def assert_measure_qdisc(
     ifname: str,
     bw_mbps: float,
@@ -187,6 +228,45 @@ def assert_measure_qdisc(
         "bfifo_limit_bytes": bfifo["limit_bytes"],
         "ceiling_ms": queue_ceiling_ms(queue_pkts, bw_mbps, frame_bytes),
     }
+
+
+def setup_and_verify_measure_qdisc(
+    ifname: str,
+    bw_mbps: float,
+    queue_pkts: int,
+    burst_bytes: int = DEFAULT_BURST_BYTES,
+    frame_bytes: int = FRAME_BYTES_1470,
+    log_sink: Optional[List[Dict[str, Any]]] = None,
+) -> Dict[str, Any]:
+    """Install measured qdisc and retry only pre-run setup validation."""
+    attempts: List[str] = []
+    for attempt in range(1, MAX_QDISC_INSTALL_ATTEMPTS + 1):
+        setup_measure_qdisc(ifname, bw_mbps, queue_pkts, burst_bytes=burst_bytes, frame_bytes=frame_bytes)
+        time.sleep(QDISC_SETTLE_S)
+        try:
+            proof = assert_measure_qdisc(ifname, bw_mbps, queue_pkts, burst_bytes=burst_bytes, frame_bytes=frame_bytes)
+            proof["install_attempts"] = int(attempt)
+            proof["install_history"] = list(attempts)
+            return proof
+        except AssertionError as exc:
+            lines = str(exc).splitlines()
+            reason = lines[1] if len(lines) > 1 else str(exc)
+            attempts.append(reason)
+            if attempt < MAX_QDISC_INSTALL_ATTEMPTS:
+                if log_sink is not None:
+                    log_sink.append(
+                        {
+                            "event": "qdisc_reinstall",
+                            "ifname": ifname,
+                            "attempt": int(attempt + 1),
+                            "reason": reason,
+                        }
+                    )
+                continue
+            raise RuntimeError(
+                "V-L1 khong sach sau %d lan cai tren %s. Dieu tra truoc khi chay tiep.\nLich su:\n%s"
+                % (MAX_QDISC_INSTALL_ATTEMPTS, ifname, "\n".join(attempts))
+            ) from exc
 
 
 def assert_no_hidden_queue(ifname: str) -> Dict[str, Any]:

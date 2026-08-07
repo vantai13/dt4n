@@ -63,22 +63,21 @@ def _assert_host_no_hidden_queue(node: Any, ifname: str) -> Dict[str, Any]:
 def configure_qdiscs(net: Any, check_access: bool = True) -> Dict[str, Any]:
     """Install Phase L qdiscs and assert the measured stack on all links."""
     from mininet.topology_split_qdisc import (
-        assert_measure_qdisc,
         intf_toward,
-        setup_measure_qdisc,
+        setup_and_verify_measure_qdisc,
         setup_return_qdisc,
     )
 
     measured: List[Dict[str, Any]] = []
     access: List[Dict[str, Any]] = []
+    reinstall_log: List[Dict[str, Any]] = []
     for i, (name, t7_link, bw, q, base_ms) in enumerate(TANDEM_LINKS, start=1):
         a = net.get("s%d" % (i - 1))
         b = net.get("s%d" % i)
         fwd = intf_toward(a, b.name)
         rev = intf_toward(b, a.name)
-        setup_measure_qdisc(fwd, bw, q)
         setup_return_qdisc(rev, base_ms)
-        proof = assert_measure_qdisc(fwd, bw, q)
+        proof = setup_and_verify_measure_qdisc(fwd, bw, q, log_sink=reinstall_log)
         measured.append(
             {
                 "idx": int(i),
@@ -101,4 +100,4 @@ def configure_qdiscs(net: Any, check_access: bool = True) -> Dict[str, Any]:
                     continue
                 access.append(_assert_host_no_hidden_queue(node, intf.name))
 
-    return {"measured": measured, "access": access}
+    return {"measured": measured, "access": access, "qdisc_reinstall_log": reinstall_log}

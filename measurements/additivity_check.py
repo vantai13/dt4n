@@ -37,11 +37,12 @@ DELTA_MS = 0.44
 GAP_FRACTION = 0.20
 N_LINKS_IN_PATH = 3
 DELTA_LOSS = 0.005
-PROBE_INTRUSION_MAX = 0.02
+PROBE_INTRUSION_MAX = 0.005
 OUT = "results/phase-20R/additivity_check.json"
 DEFAULT_APRIME_STATE = "results/phase-20R/additivity_branch_a_state.json"
 DEFAULT_B_STATE = "results/phase-20R/additivity_branch_b_state.json"
 DEFAULT_C_STATE = "results/phase-20R/additivity_branch_c_state.json"
+CAMPAIGN_STATE = "results/phase-20R/campaign_state.json"
 
 
 def stable_digest(obj: object) -> str:
@@ -98,35 +99,106 @@ def tcrit_95(df: int) -> float:
         24: 1.710882,
         30: 1.697261,
     }
-    if int(df) in table:
-        return table[int(df)]
     if int(df) <= 0:
         raise ValueError("df must be positive")
-    return 1.644854 if int(df) >= 120 else 1.697261
+    if int(df) in table:
+        return table[int(df)]
+    if int(df) >= 120:
+        return 1.644854
+    # Conservative fallback: nearest tabulated df BELOW the requested one, so the
+    # critical value is never smaller than the exact one.
+    lower = [key for key in table if key <= int(df)]
+    return table[max(lower)] if lower else table[1]
 
 
-def tost_equivalence(samples: Sequence[float], delta_ms: float = DELTA_MS) -> Dict[str, Any]:
+def welch_df(se_a: float, df_a: float, se_b: float, df_b: float) -> float:
+    """Welch-Satterthwaite df for the sum of two independent mean estimates."""
+    va, vb = float(se_a) ** 2, float(se_b) ** 2
+    if vb <= 0.0:
+        return float(df_a)
+    if va <= 0.0:
+        return float(df_b)
+    denom = 0.0
+    if df_a > 0:
+        denom += va * va / float(df_a)
+    if df_b > 0:
+        denom += vb * vb / float(df_b)
+    if denom <= 0.0:
+        return float(df_a)
+    return float((va + vb) ** 2 / denom)
+
+
+def verdict_from_ci(ci_lo: float, ci_hi: float, delta: float, power_ok: bool) -> str:
+    """Three-way outcome. ``INCONCLUSIVE`` is a valid scientific result.
+
+    ``PASS``          CI lies inside +-delta -> equivalence established.
+    ``FAIL``          CI lies entirely outside +-delta -> non-equivalence established.
+    ``INCONCLUSIVE``  neither; typically the CI is wider than delta (a power problem,
+                      not evidence of bias). Never report this as FAIL.
+    """
+    d = float(delta)
+    if ci_lo >= -d and ci_hi <= d:
+        return "PASS"
+    if ci_lo > d or ci_hi < -d:
+        return "FAIL"
+    return "INCONCLUSIVE"
+
+
+def tost_equivalence(
+    samples: Sequence[float],
+    delta_ms: float = DELTA_MS,
+    ref_se: float = 0.0,
+    ref_df: Optional[float] = None,
+) -> Dict[str, Any]:
+    """Paired TOST on ``samples``.
+
+    ``ref_se``/``ref_df`` propagate the uncertainty of the *reference* side of the
+    contrast (RC5). Branch A is a measured truth table, not an exact constant, so
+    its standard error must enter the interval; ignoring it understates the CI.
+    """
     arr = np.asarray(samples, dtype=float)
     if arr.size == 0:
-        return {"n": 0, "equiv_pass": False, "power_ok": False, "reason": "no_samples"}
+        return {"n": 0, "equiv_pass": False, "power_ok": False, "verdict": "INCONCLUSIVE", "reason": "no_samples"}
     mean = float(np.mean(arr))
     sd = float(np.std(arr, ddof=1)) if arr.size > 1 else 0.0
-    se = sd / math.sqrt(float(arr.size)) if arr.size > 1 else 0.0
-    tcrit = tcrit_95(int(arr.size) - 1) if arr.size > 1 else 0.0
+    se_sample = sd / math.sqrt(float(arr.size)) if arr.size > 1 else 0.0
+    df_sample = float(arr.size - 1)
+    ref = float(ref_se or 0.0)
+    ref_dof = float(ref_df) if ref_df else 0.0
+    se = math.sqrt(se_sample ** 2 + ref ** 2)
+    df = welch_df(se_sample, df_sample, ref, ref_dof) if ref > 0.0 else df_sample
+    tcrit = tcrit_95(int(math.floor(df))) if df >= 1.0 else 0.0
     ci_lo = mean - tcrit * se
     ci_hi = mean + tcrit * se
+    power_ok = bool(1.644854 * se < float(delta_ms))
     return {
         "n": int(arr.size),
         "mean_ms": mean,
         "sd_ms": sd,
+        "se_sample_ms": se_sample,
+        "ref_se_ms": ref,
         "se_ms": se,
+        "df": float(df),
+        "tcrit": float(tcrit),
         "ci90_lo_ms": float(ci_lo),
         "ci90_hi_ms": float(ci_hi),
         "delta_ms": float(delta_ms),
         "equiv_pass": bool(ci_lo >= -float(delta_ms) and ci_hi <= float(delta_ms)),
         "power_check_1p645se_ms": float(1.644854 * se),
-        "power_ok": bool(1.644854 * se < float(delta_ms)),
+        "power_ok": power_ok,
+        "bias_detected": bool(ci_lo > 0.0 or ci_hi < 0.0),
+        "verdict": verdict_from_ci(float(ci_lo), float(ci_hi), float(delta_ms), power_ok),
     }
+
+
+VERDICT_ORDER = {"PASS": 0, "INCONCLUSIVE": 1, "FAIL": 2}
+
+
+def worst_verdict(rows: Sequence[Mapping[str, Any]]) -> Optional[str]:
+    verdicts = [str(row.get("verdict", "INCONCLUSIVE")) for row in rows]
+    if not verdicts:
+        return None
+    return max(verdicts, key=lambda v: VERDICT_ORDER.get(v, 1))
 
 
 def measured_cost_gap_ms(
@@ -251,13 +323,101 @@ def calibration_by_cell(calibration_path: str) -> Dict[Tuple[str, float], Mappin
     return out
 
 
+class TruthLossSE:
+    """Standard error of the truth-table ``loss`` column, from Phase L replicates.
+
+    The truth table itself carries no SE for loss, so the per-cell spread is
+    recomputed from the campaign rows that built it (gate-clean only). Each grid
+    cell averages several *different* seeds, so this SE is the uncertainty of the
+    traffic-ensemble mean -- the right quantity for the A side of ``A' - A``.
+    """
+
+    def __init__(self, campaign_state: str = CAMPAIGN_STATE):
+        self.curves: Dict[Tuple[str, float, int], Tuple[np.ndarray, np.ndarray, int]] = {}
+        self.source = str(campaign_state)
+        if not os.path.exists(campaign_state):
+            return
+        with open(campaign_state, "r", encoding="utf-8") as f:
+            rows = json.load(f).get("rows", [])
+        if not rows:
+            return
+        df = pd.DataFrame(rows)
+        if "gate_fail" in df.columns:
+            df = df[df["gate_fail"].apply(lambda x: len(x) == 0)]
+        if df.empty or "loss" not in df.columns:
+            return
+        for key, group in df.groupby(["mode", "bw", "q"], sort=True):
+            agg = group.groupby("rho")["loss"].agg(["mean", "std", "count"]).reset_index().sort_values("rho")
+            agg = agg[agg["count"] >= 2]
+            if agg.empty:
+                continue
+            se = (agg["std"] / np.sqrt(agg["count"])).to_numpy(float)
+            self.curves[(str(key[0]), float(key[1]), int(key[2]))] = (
+                agg["rho"].to_numpy(float),
+                np.nan_to_num(se, nan=0.0),
+                int(agg["count"].min()),
+            )
+
+    @property
+    def available(self) -> bool:
+        return bool(self.curves)
+
+    def se(self, mode: str, t7_link: str, rho: float) -> float:
+        bw, _base, q = T7.LINKS[t7_link]
+        curve = self.curves.get((str(mode), float(bw), int(q)))
+        if curve is None:
+            return 0.0
+        grid, se, _n = curve
+        rq = float(np.clip(float(rho), float(grid.min()), float(grid.max())))
+        return float(np.interp(rq, grid, se))
+
+    def df(self, mode: str, t7_link: str) -> float:
+        bw, _base, q = T7.LINKS[t7_link]
+        curve = self.curves.get((str(mode), float(bw), int(q)))
+        return float(max(int(curve[2]) - 1, 0)) if curve else 0.0
+
+
+class TruthDelaySE:
+    """Per-cell standard error of the truth-table delay mean (RC5).
+
+    ``decision_error_v2.TruthTable`` drops ``se_mean_ms``/``n_seed`` when it builds
+    its interpolation curves, so the branch-A uncertainty is reloaded here instead
+    of widening that shared class.
+    """
+
+    def __init__(self, truth_table: str = D.TRUTH_TABLE):
+        table = pd.read_parquet(truth_table)
+        self.curves: Dict[Tuple[str, float, int], Tuple[np.ndarray, np.ndarray, int]] = {}
+        for key, group in table.groupby(["mode", "bw", "q"], sort=True):
+            group = group.sort_values("rho")
+            se = group["se_mean_ms"].to_numpy(float) if "se_mean_ms" in group else np.zeros(len(group))
+            n_seed = int(group["n_seed"].min()) if "n_seed" in group else 0
+            self.curves[(str(key[0]), float(key[1]), int(key[2]))] = (group["rho"].to_numpy(float), se, n_seed)
+
+    def _curve(self, mode: str, t7_link: str) -> Tuple[np.ndarray, np.ndarray, int]:
+        bw, _base, q = T7.LINKS[t7_link]
+        return self.curves[(str(mode), float(bw), int(q))]
+
+    def se_ms(self, mode: str, t7_link: str, rho: float) -> float:
+        grid, se, _n = self._curve(mode, t7_link)
+        rq = float(np.clip(float(rho), float(grid.min()), float(grid.max())))
+        return float(np.interp(rq, grid, np.nan_to_num(se, nan=0.0)))
+
+    def df(self, mode: str, t7_link: str) -> float:
+        _grid, _se, n_seed = self._curve(mode, t7_link)
+        return float(max(int(n_seed) - 1, 0))
+
+
 def branch_a_link_rows(
     truth_table: str = D.TRUTH_TABLE,
     calibration_path: str = D.CALIBRATION,
     modes: Sequence[str] = MODES,
     rho_bars: Sequence[float] = C_RHO_BARS,
+    campaign_state: str = CAMPAIGN_STATE,
 ) -> List[Dict[str, Any]]:
     tt = D.TruthTable(truth_table)
+    se_table = TruthDelaySE(truth_table)
+    loss_se_table = TruthLossSE(campaign_state)
     calib = calibration_by_cell(calibration_path)
     rows: List[Dict[str, Any]] = []
     for mode in modes:
@@ -267,6 +427,13 @@ def branch_a_link_rows(
             for link, t7_link, _bw, _q, _base_ms in TANDEM_LINKS:
                 rho = float(C.rho_vector(float(rho_bar))[t7_link])
                 delay, loss = tt.delay_loss(str(mode), t7_link, np.asarray([rho], dtype=float))
+                se_delay = se_table.se_ms(str(mode), t7_link, rho)
+                se_loss = loss_se_table.se(str(mode), t7_link, rho)
+                # cost = delay + w_loss * loss, and w_loss is O(1e3): the loss term
+                # dominates the branch-A uncertainty and cannot be dropped (RC5).
+                se_cost = math.sqrt(se_delay ** 2 + (w_loss * se_loss) ** 2)
+                se_df = se_table.df(str(mode), t7_link)
+                loss_df = loss_se_table.df(str(mode), t7_link)
                 rows.append(
                     {
                         "branch": "A",
@@ -279,6 +446,12 @@ def branch_a_link_rows(
                         "loss": float(loss[0]),
                         "w_loss": w_loss,
                         "cost_ms": float(delay[0] + w_loss * loss[0]),
+                        "se_delay_ms": float(se_delay),
+                        "se_loss": float(se_loss),
+                        "se_cost_ms": float(se_cost),
+                        "se_df": float(min(se_df, loss_df) if loss_se_table.available else se_df),
+                        "se_cost_includes_loss": bool(loss_se_table.available),
+                        "se_loss_source": loss_se_table.source if loss_se_table.available else None,
                         "clip_fraction_max": float(max(tt.clip_log.values()) if tt.clip_log else 0.0),
                     }
                 )
@@ -323,6 +496,14 @@ def _measurement_frame(rows: Sequence[Mapping[str, Any]]) -> pd.DataFrame:
     if "seed" in df.columns:
         df["seed"] = df["seed"].astype(int)
     return df
+
+
+def _probe_delay_or_delay(df: pd.DataFrame) -> pd.Series:
+    base = pd.to_numeric(df["delay_ms"], errors="coerce")
+    if "probe_delay_ms" not in df.columns:
+        return base
+    probe = pd.to_numeric(df["probe_delay_ms"], errors="coerce")
+    return probe.where(probe.notna(), base)
 
 
 def _probe_intrusion(df: pd.DataFrame) -> Dict[str, Any]:
@@ -385,6 +566,9 @@ def _append_tost(
     truth_table: str = D.TRUTH_TABLE,
     calibration_path: str = D.CALIBRATION,
     units: str = "ms",
+    ref_se_col: str = "",
+    ref_df_col: str = "",
+    role: str = "primary",
 ) -> None:
     for key, group in df.groupby(list(group_cols), sort=True):
         if not isinstance(key, tuple):
@@ -402,8 +586,87 @@ def _append_tost(
             row["delta_source"] = "fixed"
         row["delta_column"] = str(delta_col)
         row["units"] = str(units)
-        row.update(tost_equivalence(group[delta_col], delta_ms=d))
+        row["role"] = str(role)
+        ref_se = float(pd.to_numeric(group[ref_se_col], errors="coerce").max()) if ref_se_col and ref_se_col in group.columns else 0.0
+        ref_df = float(pd.to_numeric(group[ref_df_col], errors="coerce").max()) if ref_df_col and ref_df_col in group.columns else 0.0
+        if not math.isfinite(ref_se):
+            ref_se = 0.0
+        if not math.isfinite(ref_df):
+            ref_df = 0.0
+        row.update(tost_equivalence(group[delta_col], delta_ms=d, ref_se=ref_se, ref_df=ref_df or None))
         checks.append(row)
+
+
+def _branch_a_path_row(key: Any, group: pd.DataFrame) -> Dict[str, Any]:
+    """Branch-A path totals with uncertainty propagated through the composition.
+
+    Path loss is nonlinear in the link losses, ``1 - prod(1 - l_i)``, so the link
+    SEs enter through the partial derivatives ``d/dl_i = prod_{j!=i}(1 - l_j)``
+    rather than as a plain root-sum-square.
+    """
+    mode, rho_bar = (key if isinstance(key, tuple) else (key, None))
+    loss = pd.to_numeric(group["loss"], errors="coerce").to_numpy(float)
+    se_loss = pd.to_numeric(group.get("se_loss", pd.Series(np.zeros(len(group)))), errors="coerce").to_numpy(float)
+    se_delay = pd.to_numeric(group["se_delay_ms"], errors="coerce").to_numpy(float)
+    se_loss = np.nan_to_num(se_loss, nan=0.0)
+    se_delay = np.nan_to_num(se_delay, nan=0.0)
+    w_loss = float(group["w_loss"].iloc[0])
+    keep = float(np.prod(1.0 - loss))
+    partial = np.array([float(np.prod(np.delete(1.0 - loss, i))) for i in range(len(loss))], dtype=float)
+    se_path_loss = float(math.sqrt(float(np.sum(np.square(partial * se_loss)))))
+    se_path_delay = float(math.sqrt(float(np.sum(np.square(se_delay)))))
+    return {
+        "mode": str(mode),
+        "rho_bar": float(rho_bar),
+        "path_a_ms": float(group["cost_ms"].sum()),
+        "path_a_delay_ms": float(group["delay_ms"].sum()),
+        "path_a_loss": float(1.0 - keep),
+        "path_a_se_ms": float(math.sqrt(se_path_delay ** 2 + (w_loss * se_path_loss) ** 2)),
+        "path_a_se_delay_ms": se_path_delay,
+        "path_a_se_loss": se_path_loss,
+        "path_a_df": float(pd.to_numeric(group["se_df"], errors="coerce").min()),
+        "path_a_se_includes_loss": bool(group.get("se_cost_includes_loss", pd.Series([False])).all()),
+    }
+
+
+def _aprime_path_frame(ap: pd.DataFrame, a: pd.DataFrame) -> pd.DataFrame:
+    """Per-seed path totals for A' minus the matching branch-A path total.
+
+    The pre-registered G6 margin is defined on the *path* cost, so this is the
+    primary topology-transfer estimand; the per-link contrast stays as a
+    diagnostic. Seeds that are missing any link are dropped rather than summed
+    over an incomplete path.
+    """
+    have = ap.groupby(["mode", "rho_bar", "seed"], sort=True)["link"].nunique().reset_index(name="n_links")
+    complete = have[have["n_links"] == N_LINKS_IN_PATH][["mode", "rho_bar", "seed"]]
+    if complete.empty:
+        return pd.DataFrame()
+    ap_ok = ap.merge(complete, on=["mode", "rho_bar", "seed"], how="inner")
+    agg: Dict[str, Any] = {"metric_ms": "sum"}
+    if "delay_ms" in ap_ok.columns:
+        ap_ok["delay_ms"] = pd.to_numeric(ap_ok["delay_ms"], errors="coerce")
+        agg["delay_ms"] = "sum"
+    ap_sum = ap_ok.groupby(["mode", "rho_bar", "seed"], sort=True).agg(agg).reset_index()
+    ap_sum = ap_sum.rename(columns={"metric_ms": "path_aprime_ms", "delay_ms": "path_aprime_delay_ms"})
+    if "loss" in ap_ok.columns:
+        ap_loss = (
+            ap_ok.groupby(["mode", "rho_bar", "seed"], sort=True)["loss"]
+            .agg(lambda xs: 1.0 - float(np.prod(1.0 - pd.to_numeric(xs, errors="coerce").to_numpy(float))))
+            .reset_index(name="path_aprime_loss")
+        )
+        ap_sum = ap_sum.merge(ap_loss, on=["mode", "rho_bar", "seed"], how="inner")
+
+    a_path = pd.DataFrame([_branch_a_path_row(key, group) for key, group in a.groupby(["mode", "rho_bar"], sort=True)])
+
+    merged = ap_sum.merge(a_path, on=["mode", "rho_bar"], how="inner")
+    if merged.empty:
+        return merged
+    merged["delta_ms"] = merged["path_aprime_ms"] - merged["path_a_ms"]
+    if "path_aprime_delay_ms" in merged.columns:
+        merged["delta_delay_ms"] = merged["path_aprime_delay_ms"] - merged["path_a_delay_ms"]
+    if "path_aprime_loss" in merged.columns:
+        merged["delta_loss"] = merged["path_aprime_loss"] - merged["path_a_loss"]
+    return merged
 
 
 def analyze(
@@ -428,6 +691,19 @@ def analyze(
         "per_link_divisor": N_LINKS_IN_PATH,
         "delta_loss": DELTA_LOSS,
         "plan_digest": plan["plan_digest"],
+        "estimand": {
+            "topology_transfer_primary": "Aprime_minus_A_path",
+            "topology_transfer_primary_delta": "delta_path_ms = %.2f x measured cost gap" % GAP_FRACTION,
+            "topology_transfer_link_role": "diagnostic",
+            "reference_se_propagated": True,
+            "reference_se_covers_loss_term": bool(a_rows) and all(row.get("se_cost_includes_loss") for row in a_rows),
+            "reference_se_loss_source": CAMPAIGN_STATE,
+            "reference_se_path_composition": "d(path_loss)/d(l_i) = prod_{j!=i}(1 - l_j)",
+            "loss_estimator_note": (
+                "RC6: the 64 B probe underestimates loss in a byte-limited bfifo, so every "
+                "loss/cost contrast is scored from the bg load stream, not the probe."
+            ),
+        },
         "branch_a": a_rows,
         "checks": [],
         "summary": {
@@ -450,7 +726,7 @@ def analyze(
 
     if not ap.empty:
         ma = ap.merge(
-            a[["mode", "rho_bar", "link", "cost_ms", "delay_ms", "loss"]].rename(
+            a[["mode", "rho_bar", "link", "cost_ms", "delay_ms", "loss", "se_cost_ms", "se_delay_ms", "se_df"]].rename(
                 columns={"cost_ms": "a_cost_ms", "delay_ms": "a_delay_ms", "loss": "a_loss"}
             ),
             on=["mode", "rho_bar", "link"],
@@ -459,9 +735,35 @@ def analyze(
         ma["delta_ms"] = ma["metric_ms"] - ma["a_cost_ms"]
         ma["delta_delay_ms"] = pd.to_numeric(ma["delay_ms"], errors="coerce") - ma["a_delay_ms"]
         ma["delta_loss"] = pd.to_numeric(ma["loss"], errors="coerce") - ma["a_loss"]
-        _append_tost(checks, "Aprime_minus_A", ma, ("mode", "rho_bar", "link"), "delta_ms", delta_ms, True, truth_table, calibration_path)
-        _append_tost(checks, "Aprime_minus_A_delay", ma, ("mode", "rho_bar", "link"), "delta_delay_ms", delta_ms, True, truth_table, calibration_path)
-        _append_tost(checks, "Aprime_minus_A_loss", ma, ("mode", "rho_bar", "link"), "delta_loss", DELTA_LOSS, True, truth_table, calibration_path, units="loss_fraction")
+        link_kw = {"ref_se_col": "se_cost_ms", "ref_df_col": "se_df", "role": "diagnostic"}
+        _append_tost(checks, "Aprime_minus_A", ma, ("mode", "rho_bar", "link"), "delta_ms", delta_ms, True, truth_table, calibration_path, **link_kw)
+        _append_tost(
+            checks, "Aprime_minus_A_delay", ma, ("mode", "rho_bar", "link"), "delta_delay_ms", delta_ms, True,
+            truth_table, calibration_path, ref_se_col="se_delay_ms", ref_df_col="se_df", role="diagnostic",
+        )
+        _append_tost(
+            checks, "Aprime_minus_A_loss", ma, ("mode", "rho_bar", "link"), "delta_loss", DELTA_LOSS, True,
+            truth_table, calibration_path, units="loss_fraction", ref_se_col="se_loss", ref_df_col="se_df",
+            role="diagnostic",
+        )
+
+        mp = _aprime_path_frame(ap, a)
+        if not mp.empty:
+            _append_tost(
+                checks, "Aprime_minus_A_path", mp, ("mode", "rho_bar"), "delta_ms", delta_ms, False,
+                truth_table, calibration_path, ref_se_col="path_a_se_ms", ref_df_col="path_a_df", role="primary",
+            )
+            if "delta_delay_ms" in mp.columns:
+                _append_tost(
+                    checks, "Aprime_minus_A_path_delay", mp, ("mode", "rho_bar"), "delta_delay_ms", delta_ms, False,
+                    truth_table, calibration_path, ref_se_col="path_a_se_delay_ms", ref_df_col="path_a_df", role="primary",
+                )
+            if "delta_loss" in mp.columns:
+                _append_tost(
+                    checks, "Aprime_minus_A_path_loss", mp, ("mode", "rho_bar"), "delta_loss", DELTA_LOSS, False,
+                    truth_table, calibration_path, units="loss_fraction", ref_se_col="path_a_se_loss",
+                    ref_df_col="path_a_df", role="primary",
+                )
 
     if not ap.empty and not b.empty:
         mb = b.merge(
@@ -498,6 +800,15 @@ def analyze(
         if "delta_delay_ms" in mc.columns:
             _append_tost(checks, "C_minus_sumB_delay", mc, ("mode", "rho_bar"), "delta_delay_ms", delta_ms, False, truth_table, calibration_path)
             _append_tost(checks, "C_minus_sumB_loss", mc, ("mode", "rho_bar"), "delta_loss", DELTA_LOSS, False, truth_table, calibration_path, units="loss_fraction")
+        if "delay_ms" in c.columns and ("delay_ms" in b.columns or "probe_delay_ms" in b.columns):
+            b_g6a = b.copy()
+            c_g6a = c.copy()
+            b_g6a["g6a_delay_ms"] = _probe_delay_or_delay(b_g6a)
+            c_g6a["g6a_delay_ms"] = _probe_delay_or_delay(c_g6a)
+            b_probe_delay = b_g6a.groupby(["mode", "rho_bar", "seed"], sort=True)["g6a_delay_ms"].sum().reset_index(name="sum_b_probe_delay_ms")
+            mc_g6a = c_g6a.merge(b_probe_delay, on=["mode", "rho_bar", "seed"], how="inner")
+            mc_g6a["delta_ms"] = pd.to_numeric(mc_g6a["g6a_delay_ms"], errors="coerce") - mc_g6a["sum_b_probe_delay_ms"]
+            _append_tost(checks, "G6a_delay_C_minus_sumB", mc_g6a, ("mode", "rho_bar"), "delta_ms", delta_ms, False, truth_table, calibration_path)
 
     if not c.empty:
         a_sum = a.groupby(["mode", "rho_bar"], sort=True)["cost_ms"].sum().reset_index(name="sum_a_ms")
@@ -511,15 +822,41 @@ def analyze(
         mc_ap["delta_ms"] = mc_ap["metric_ms"] - mc_ap["sum_aprime_ms"]
         _append_tost(checks, "C_minus_sumAprime", mc_ap, ("mode", "rho_bar"), "delta_ms", delta_ms, False, truth_table, calibration_path)
 
-    transfer = [row for row in checks if row.get("contrast") == "Aprime_minus_A"]
-    g6 = [row for row in checks if row.get("contrast") == "C_minus_sumB"]
+    transfer_link = [row for row in checks if row.get("contrast") == "Aprime_minus_A"]
+    transfer_path = [row for row in checks if row.get("contrast") == "Aprime_minus_A_path"]
+    transfer = transfer_path if transfer_path else transfer_link
+    g6_cost_probe = [row for row in checks if row.get("contrast") == "C_minus_sumB"]
+    g6a_delay = [row for row in checks if row.get("contrast") == "G6a_delay_C_minus_sumB"]
+    g6_primary = g6a_delay if g6a_delay else g6_cost_probe
     result["summary"].update(
         {
             "topology_transfer_evaluated": bool(transfer),
             "topology_transfer_pass": bool(transfer and all(row.get("equiv_pass") for row in transfer)),
-            "g6_evaluated": bool(g6),
-            "g6_pass": bool(g6 and all(row.get("equiv_pass") for row in g6)),
-            "power_pass": bool(g6 and all(row.get("power_ok") for row in g6)),
+            "topology_transfer_verdict": worst_verdict(transfer),
+            "topology_transfer_primary_contrast": "Aprime_minus_A_path" if transfer_path else "Aprime_minus_A",
+            "topology_transfer_path_evaluated": bool(transfer_path),
+            "topology_transfer_path_pass": bool(transfer_path and all(row.get("equiv_pass") for row in transfer_path)),
+            "topology_transfer_path_verdict": worst_verdict(transfer_path),
+            "topology_transfer_path_power_pass": bool(transfer_path and all(row.get("power_ok") for row in transfer_path)),
+            "topology_transfer_link_evaluated": bool(transfer_link),
+            "topology_transfer_link_pass": bool(transfer_link and all(row.get("equiv_pass") for row in transfer_link)),
+            "topology_transfer_link_verdict": worst_verdict(transfer_link),
+            "topology_transfer_link_power_pass": bool(transfer_link and all(row.get("power_ok") for row in transfer_link)),
+            "topology_transfer_link_role": "diagnostic",
+            "g6_evaluated": bool(g6_primary),
+            "g6_pass": bool(g6_primary and all(row.get("equiv_pass") for row in g6_primary)),
+            "g6_verdict": worst_verdict(g6_primary),
+            "power_pass": bool(g6_primary and all(row.get("power_ok") for row in g6_primary)),
+            "g6_primary_contrast": "G6a_delay_C_minus_sumB" if g6a_delay else "C_minus_sumB",
+            "g6a_delay_evaluated": bool(g6a_delay),
+            "g6a_delay_pass": bool(g6a_delay and all(row.get("equiv_pass") for row in g6a_delay)),
+            "g6a_delay_power_pass": bool(g6a_delay and all(row.get("power_ok") for row in g6a_delay)),
+            "g6_cost_probe_evaluated": bool(g6_cost_probe),
+            "g6_cost_probe_pass": bool(g6_cost_probe and all(row.get("equiv_pass") for row in g6_cost_probe)),
+            "g6_cost_probe_power_pass": bool(g6_cost_probe and all(row.get("power_ok") for row in g6_cost_probe)),
+            "g6_cost_probe_interpretable": False if g6_cost_probe else None,
+            "g6b_loss_evaluated": False,
+            "g6b_loss_reason": "requires bg path-flow runner",
             "paired_schedule_pass": bool(result.get("paired_schedule", {}).get("pass")),
             "probe_intrusion_pass": bool(result.get("probe_intrusion", {}).get("pass")),
         }

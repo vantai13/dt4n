@@ -300,10 +300,14 @@ def run_live(args: argparse.Namespace) -> None:
 
     os.makedirs(args.raw_dir, exist_ok=True)
     tt = D.TruthTable(args.truth_table)
-    net = Mininet(topo=TandemTopo(), link=Link, switch=OVSBridge, controller=None)
-    net.start()
+    saved_sysctl = AL.disable_ipv6_on_new_links()
+    net = None
     try:
+        net = Mininet(topo=TandemTopo(), link=Link, switch=OVSBridge, controller=None)
+        net.start()
         state["qdisc_proof"] = configure_qdiscs(net)
+        state["qdisc_proof"]["sysctl_saved"] = saved_sysctl
+        qdisc_ifaces = AL.measured_qdisc_ifaces_from_proof(state["qdisc_proof"])
         _save_state(args.state, state)
         t0 = time.time()
         for seed_i, seed in enumerate(todo, start=1):
@@ -331,7 +335,7 @@ def run_live(args: argparse.Namespace) -> None:
                 largs = _live_arg_namespace(args, int(seed))
                 try:
                     with AL.deadline(args.point_timeout, "quasistatic seed=%d window=%d" % (int(seed), int(window_idx))):
-                        live = AL.measure_point(net, point, largs)
+                        live = AL.measure_point(net, point, largs, qdisc_ifaces=qdisc_ifaces)
                 except AL.PointTimeout as exc:
                     AL.cleanup_live_processes()
                     timeout_row = {
@@ -345,14 +349,16 @@ def run_live(args: argparse.Namespace) -> None:
                     raise SystemExit(3)
                 live["gate_fail"] = AL.gate_live(live)
                 live["attempt"] = 1
-                if live["gate_fail"]:
+                if live["gate_fail"] and AL.retryable_gate_fail(live["gate_fail"]):
                     print("      * fail: %s -> chay lai 1 lan" % ",".join(live["gate_fail"]))
                     with AL.deadline(args.point_timeout, "quasistatic retry seed=%d window=%d" % (int(seed), int(window_idx))):
-                        live2 = AL.measure_point(net, point, largs)
+                        live2 = AL.measure_point(net, point, largs, qdisc_ifaces=qdisc_ifaces)
                     live2["gate_fail"] = AL.gate_live(live2)
                     live2["attempt"] = 2
                     live2["attempt1_fail"] = live["gate_fail"]
                     live = live2
+                elif live["gate_fail"]:
+                    print("      * fail: %s -> khong retry vi la validity gate" % ",".join(live["gate_fail"]))
                 table = _tandem_table_cost(tt, args.mode, rho_by_idx, float(cell["w_loss"]))
                 trace_window_digests.append(str(live["trajectory_digest"]))
                 win = {
@@ -371,6 +377,10 @@ def run_live(args: argparse.Namespace) -> None:
                     "window_trajectory_digest": str(live["trajectory_digest"]),
                     "probe_intrusion_ratio": float(live["probe_intrusion_ratio"]),
                     "max_abs_rate_error": float(live["max_abs_rate_error"]),
+                    "direct_packets_before": dict(live.get("direct_packets_before", {})),
+                    "direct_packets_after": dict(live.get("direct_packets_after", {})),
+                    "direct_packets_delta": dict(live.get("direct_packets_delta", {})),
+                    "vl1g_run_pass": bool(live.get("vl1g_run_pass", True)),
                     "socket_drops": int(live["socket_drops"]),
                     "n_foreign": int(live["n_foreign"]),
                 }
@@ -412,7 +422,9 @@ def run_live(args: argparse.Namespace) -> None:
             state.setdefault("done_seeds", []).append(int(seed))
             _save_state(args.state, state)
     finally:
-        AL.stop_net_best_effort(net, args.stop_timeout)
+        if net is not None:
+            AL.stop_net_best_effort(net, args.stop_timeout)
+        AL.restore_sysctl(saved_sysctl)
         _save_state(args.state, state)
     print("state -> %s" % args.state)
 

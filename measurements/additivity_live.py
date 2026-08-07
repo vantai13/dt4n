@@ -26,6 +26,7 @@ from measurements.additivity_check import (
     C_RHO_BARS,
     DELTA_MS,
     MODES,
+    PROBE_INTRUSION_MAX,
     SEEDS,
     calibration_by_cell,
     parse_float_list,
@@ -34,7 +35,7 @@ from measurements.additivity_check import (
     stable_digest,
 )
 from measurements.provenance import env_fingerprint
-from mininet.load_spec import FRAME_BG, PROBE_PPS, capacity_bytes_per_s
+from mininet.load_spec import FRAME_OVERHEAD_BYTES, PAYLOAD_PROBE, PROBE_PPS, capacity_bytes_per_s
 from mininet.topology_tandem import TANDEM_BY_IDX, TANDEM_LINKS
 from twin import cost_v2 as C
 
@@ -52,8 +53,8 @@ LOAD_PORT_BASE = 5750
 PROBE_PORT_BASE = 5850
 PATH_PROBE_PORT = 5899
 PATH_NAME = "T123"
-DEFAULT_PROBE_RATE_PPS = 5.0
-DEFAULT_PROBE_SIZE_BYTES = 1470
+DEFAULT_PROBE_RATE_PPS = PROBE_PPS
+DEFAULT_PROBE_SIZE_BYTES = PAYLOAD_PROBE
 LG = "python3 -m measurements.load_gen"
 PB = "python3 -m measurements.owd_probe"
 
@@ -123,6 +124,40 @@ def cleanup_live_processes() -> None:
             )
         except Exception:
             pass
+
+
+def _sysctl_get(key: str) -> Optional[str]:
+    p = subprocess.run(
+        ["sysctl", "-n", key],
+        stdout=subprocess.PIPE,
+        stderr=subprocess.DEVNULL,
+        text=True,
+        check=False,
+    )
+    return p.stdout.strip() or None
+
+
+def _sysctl_set(key: str, value: str) -> None:
+    subprocess.run(
+        ["sysctl", "-qw", "%s=%s" % (key, value)],
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+        check=False,
+    )
+
+
+def disable_ipv6_on_new_links() -> Dict[str, Optional[str]]:
+    """Disable IPv6 only for interfaces created after this call."""
+    key = "net.ipv6.conf.default.disable_ipv6"
+    saved = {key: _sysctl_get(key)}
+    _sysctl_set(key, "1")
+    return saved
+
+
+def restore_sysctl(saved: Mapping[str, Optional[str]]) -> None:
+    for key, value in saved.items():
+        if value is not None:
+            _sysctl_set(str(key), str(value))
 
 
 def stop_net_best_effort(net: Any, timeout_s: float) -> None:
@@ -286,6 +321,28 @@ def _load_links(point: Mapping[str, Any]) -> Tuple[int, ...]:
     return (int(point["link_idx"]),) if point["branch"] == "Aprime" else tuple(range(1, len(TANDEM_LINKS) + 1))
 
 
+def probe_links_for_point(point: Mapping[str, Any]) -> Tuple[int, ...]:
+    if point["branch"] == "C":
+        return tuple(range(1, len(TANDEM_LINKS) + 1))
+    return (int(point["link_idx"]),)
+
+
+def probe_frame_bytes_on_wire(probe_size_bytes: int) -> int:
+    return int(probe_size_bytes) + int(FRAME_OVERHEAD_BYTES)
+
+
+def probe_load_share(
+    link_idx: int,
+    args: argparse.Namespace,
+    rate_pps: Optional[float] = None,
+    frame_bytes: Optional[int] = None,
+) -> float:
+    _name, _t7_link, bw, _q, _base = TANDEM_BY_IDX[int(link_idx)]
+    rate = float(args.probe_rate if rate_pps is None else rate_pps)
+    frame = int(probe_frame_bytes_on_wire(args.probe_size) if frame_bytes is None else frame_bytes)
+    return rate * frame / capacity_bytes_per_s(float(bw))
+
+
 def _load_prefix(raw_dir: str, point: Mapping[str, Any], link_idx: int) -> str:
     return os.path.join(raw_dir, "%s_load_L%d" % (point["pid"], int(link_idx)))
 
@@ -299,18 +356,55 @@ def _host_cmd(host: Any, cmd: str) -> str:
     return host.cmd(cmd)
 
 
+def measured_qdisc_ifaces_from_proof(proof: Mapping[str, Any]) -> Dict[str, str]:
+    return {str(row["link"]): str(row["if_fwd"]) for row in proof.get("measured", [])}
+
+
+def direct_packet_snapshot(ifaces: Mapping[str, str]) -> Dict[str, int]:
+    from mininet.topology_split_qdisc import read_direct_packets
+
+    return {str(name): int(read_direct_packets(str(ifname))) for name, ifname in ifaces.items()}
+
+
+def attach_direct_packet_delta(
+    row: Dict[str, Any],
+    direct_before: Mapping[str, int],
+    direct_after: Mapping[str, int],
+) -> Dict[str, Any]:
+    direct_delta = {
+        str(name): int(direct_after.get(name, 0)) - int(before)
+        for name, before in direct_before.items()
+    }
+    row["direct_packets_before"] = {str(k): int(v) for k, v in direct_before.items()}
+    row["direct_packets_after"] = {str(k): int(v) for k, v in direct_after.items()}
+    row["direct_packets_delta"] = direct_delta
+    row["vl1g_run_pass"] = bool(all(int(v) == 0 for v in direct_delta.values()))
+    return row
+
+
+def retryable_gate_fail(fails: Sequence[str]) -> bool:
+    return bool(fails) and not any(str(fail).startswith("V-L1g-run") for fail in fails)
+
+
 def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Namespace) -> Dict[int, Dict[str, Any]]:
     cwd = os.getcwd()
     rhos = rho_by_link_from_point(point)
+    probe_links = set(probe_links_for_point(point))
     specs: Dict[int, Dict[str, Any]] = {}
     for link_idx in _load_links(point):
         name, _t7_link, bw, _q, _base = TANDEM_BY_IDX[int(link_idx)]
         prefix = _load_prefix(args.raw_dir, point, int(link_idx))
         ensure_parent(prefix)
         recv = net.get("hsink%d" % int(link_idx))
-        send = net.get("hload%d" % int(link_idx))
         port = LOAD_PORT_BASE + int(link_idx)
-        rho = float(rhos[int(link_idx)])
+        rho_target_total = float(rhos[int(link_idx)])
+        rho_probe_share = probe_load_share(int(link_idx), args) if int(link_idx) in probe_links else 0.0
+        rho_bg = rho_target_total - rho_probe_share
+        if rho_bg <= 0.0:
+            raise ValueError(
+                "probe load %.6f leaves non-positive background rho %.6f on L%d"
+                % (rho_probe_share, rho_bg, int(link_idx))
+            )
         seed = _load_seed(int(point["seed"]), int(link_idx))
         run_id = _run_id(point, int(link_idx))
         _host_cmd(
@@ -321,7 +415,11 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
         specs[int(link_idx)] = {
             "link": name,
             "bw": float(bw),
-            "rho": rho,
+            "rho": float(rho_bg),
+            "rho_bg": float(rho_bg),
+            "rho_target_total": float(rho_target_total),
+            "rho_probe_share": float(rho_probe_share),
+            "probe_traverses_link": bool(int(link_idx) in probe_links),
             "seed": int(seed),
             "run_id": int(run_id),
             "port": int(port),
@@ -343,7 +441,7 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
                 net.get("hsink%d" % int(link_idx)).IP(),
                 int(spec["port"]),
                 float(spec["bw"]),
-                float(spec["rho"]),
+                float(spec["rho_bg"]),
                 str(point["mode"]),
                 float(args.duration),
                 int(spec["seed"]),
@@ -451,9 +549,25 @@ def _row_from_measurement(
     owd = dict(probe["analysis"])
     owd_ms = dict(owd["owd_ms"])
     counts = dict(owd["counts"])
+    probe_rx = dict(probe["rx_meta"])
+    probe_tx = dict(probe["tx_meta"])
+    probe_links = set(probe_links_for_point(point))
+    probe_frame = int(probe["probe_frame_bytes_on_wire"])
+    probe_rate = float(probe["probe_rate_pps_actual"])
+    probe_share_actual_by_idx = {
+        int(link_idx): (
+            probe_load_share(int(link_idx), args, rate_pps=probe_rate, frame_bytes=probe_frame)
+            if int(link_idx) in probe_links
+            else 0.0
+        )
+        for link_idx in load_specs
+    }
     load_rows: List[Dict[str, Any]] = []
     schedule_map: Dict[str, str] = {}
-    rho_actual_by_link: Dict[str, float] = {}
+    rho_bg_actual_by_link: Dict[str, float] = {}
+    rho_target_total_by_link: Dict[str, float] = {}
+    rho_probe_share_by_link: Dict[str, float] = {}
+    rho_total_actual_by_link: Dict[str, float] = {}
     rate_ratio_by_link: Dict[str, float] = {}
     load_socket_drops = 0
     load_foreign = 0
@@ -467,8 +581,15 @@ def _row_from_measurement(
         late_ratio = int(tx["counts"].get("n_late", 0)) / float(sent_total)
         link_name = str(spec["link"])
         schedule = str(tx["schedule"]["digest_bg"])
+        rho_bg_actual = float(tx["rates"]["rho_actual"])
+        rho_probe_actual = float(probe_share_actual_by_idx[int(link_idx)])
+        rho_total_actual = rho_bg_actual + rho_probe_actual
+        rho_target_total = float(spec["rho_target_total"])
         schedule_map[link_name] = schedule
-        rho_actual_by_link[link_name] = float(tx["rates"]["rho_actual"])
+        rho_bg_actual_by_link[link_name] = rho_bg_actual
+        rho_target_total_by_link[link_name] = rho_target_total
+        rho_probe_share_by_link[link_name] = rho_probe_actual
+        rho_total_actual_by_link[link_name] = rho_total_actual
         rate_ratio_by_link[link_name] = float(tx["rates"]["rate_ratio"])
         load_socket_drops += int(rx.get("socket_drops_delta", 0))
         load_foreign += int(rx.get("n_foreign_packets", 0))
@@ -478,8 +599,14 @@ def _row_from_measurement(
             {
                 "link_idx": int(link_idx),
                 "link": link_name,
-                "rho": float(spec["rho"]),
-                "rho_actual": float(tx["rates"]["rho_actual"]),
+                "rho": rho_target_total,
+                "rho_bg": float(spec["rho_bg"]),
+                "rho_bg_actual": rho_bg_actual,
+                "rho_target_total": rho_target_total,
+                "rho_probe_share": rho_probe_actual,
+                "rho_total_actual": rho_total_actual,
+                "probe_traverses_link": bool(spec["probe_traverses_link"]),
+                "rho_actual": rho_total_actual,
                 "rate_ratio": float(tx["rates"]["rate_ratio"]),
                 "schedule_digest": schedule,
                 "n_bg_sent": int(tx["counts"]["n_bg_sent"]),
@@ -499,15 +626,14 @@ def _row_from_measurement(
     loss = float(owd["loss_rate"])
     cost_ms = delay_ms + w_loss * loss
     max_abs_rate_error = max((abs(float(v) - 1.0) for v in rate_ratio_by_link.values()), default=0.0)
-    max_abs_rho_error = max(
-        (
-            abs(float(row["rho_actual"]) - float(row["rho"]))
-            for row in load_rows
-        ),
+    max_abs_bg_rho_error = max(
+        (abs(float(row["rho_bg_actual"]) - float(row["rho_bg"])) for row in load_rows),
         default=0.0,
     )
-    probe_rx = dict(probe["rx_meta"])
-    probe_tx = dict(probe["tx_meta"])
+    max_abs_total_rho_error = max(
+        (abs(float(row["rho_total_actual"]) - float(row["rho_target_total"])) for row in load_rows),
+        default=0.0,
+    )
     row = {
         **dict(point),
         "phase": "20R.6",
@@ -540,11 +666,17 @@ def _row_from_measurement(
         "load_schedule_digests": schedule_map,
         "schedule_digest": schedule_map.get(target_link_name) if target_link_name is not None else trajectory_digest,
         "trajectory_digest": trajectory_digest,
-        "rho_actual_by_link": rho_actual_by_link,
+        "rho_actual_by_link": rho_total_actual_by_link,
+        "rho_bg_actual_by_link": rho_bg_actual_by_link,
+        "rho_target_total_by_link": rho_target_total_by_link,
+        "rho_probe_share_by_link": rho_probe_share_by_link,
+        "rho_total_actual_by_link": rho_total_actual_by_link,
         "rate_ratio_by_link": rate_ratio_by_link,
         "rate_ratio": rate_ratio_by_link.get(target_link_name, max(rate_ratio_by_link.values()) if rate_ratio_by_link else 1.0),
         "max_abs_rate_error": float(max_abs_rate_error),
-        "max_abs_rho_error": float(max_abs_rho_error),
+        "max_abs_bg_rho_error": float(max_abs_bg_rho_error),
+        "max_abs_total_rho_error": float(max_abs_total_rho_error),
+        "max_abs_rho_error": float(max_abs_total_rho_error),
         "n_late_ratio": float(max(load_late_ratios) if load_late_ratios else 0.0),
         "max_late_ms": float(load_max_late),
         "socket_drops": int(load_socket_drops + int(probe_rx.get("socket_drops_delta", 0))),
@@ -575,8 +707,13 @@ def gate_live(row: Mapping[str, Any]) -> List[str]:
         bad.append("late=%.4f" % float(row.get("n_late_ratio", 0.0)))
     if float(row.get("max_late_ms", 0.0)) > 50.0:
         bad.append("maxlate=%.1f" % float(row.get("max_late_ms", 0.0)))
-    if float(row.get("probe_intrusion_ratio", 1.0)) > 0.02:
-        bad.append("probe_intrusion=%.4f" % float(row.get("probe_intrusion_ratio", 1.0)))
+    if float(row.get("probe_intrusion_ratio", 1.0)) > PROBE_INTRUSION_MAX:
+        bad.append(
+            "probe_intrusion=%.4f>%.4f"
+            % (float(row.get("probe_intrusion_ratio", 1.0)), float(PROBE_INTRUSION_MAX))
+        )
+    if row.get("vl1g_run_pass") is False:
+        bad.append("V-L1g-run")
     if not math.isfinite(float(row.get("q_mean_ms", float("nan")))):
         bad.append("q_mean_nan")
     if int(row.get("n_recv_unique", 0)) <= 0:
@@ -584,13 +721,24 @@ def gate_live(row: Mapping[str, Any]) -> List[str]:
     return bad
 
 
-def measure_point(net: Any, point: Mapping[str, Any], args: argparse.Namespace) -> Dict[str, Any]:
+def measure_point(
+    net: Any,
+    point: Mapping[str, Any],
+    args: argparse.Namespace,
+    qdisc_ifaces: Optional[Mapping[str, str]] = None,
+) -> Dict[str, Any]:
     cleanup_live_processes()
     time.sleep(0.2)
+    direct_before = direct_packet_snapshot(qdisc_ifaces or {})
     load_specs = start_background_loads(net, point, args)
     probe = run_measure_probe(net, point, args)
     load_meta = _wait_for_load_meta(load_specs)
-    return _row_from_measurement(point, args, load_specs, load_meta, probe)
+    direct_after = direct_packet_snapshot(qdisc_ifaces or {})
+    return attach_direct_packet_delta(
+        _row_from_measurement(point, args, load_specs, load_meta, probe),
+        direct_before,
+        direct_after,
+    )
 
 
 def summarize_state(state: Mapping[str, Any], plan: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
@@ -598,6 +746,11 @@ def summarize_state(state: Mapping[str, Any], plan: Sequence[Mapping[str, Any]])
     fails = [row for row in rows if row.get("gate_fail")]
     rate_errors = [float(row.get("max_abs_rate_error", 0.0)) for row in rows]
     intrusions = [float(row.get("probe_intrusion_ratio", 0.0)) for row in rows]
+    direct_deltas = [
+        int(v)
+        for row in rows
+        for v in dict(row.get("direct_packets_delta", {})).values()
+    ]
     return {
         "phase": "20R.6",
         "branch": state.get("branch"),
@@ -610,6 +763,8 @@ def summarize_state(state: Mapping[str, Any], plan: Sequence[Mapping[str, Any]])
         "fail_pass": bool(not fails),
         "max_abs_rate_error": max(rate_errors) if rate_errors else None,
         "max_probe_intrusion_ratio": max(intrusions) if intrusions else None,
+        "max_direct_packets_delta": max(direct_deltas) if direct_deltas else None,
+        "n_vl1g_run_fail_rows": sum(1 for row in rows if row.get("vl1g_run_pass") is False),
         "n_socket_drop_rows": sum(1 for row in rows if int(row.get("socket_drops", 0)) != 0),
         "n_foreign_rows": sum(1 for row in rows if int(row.get("n_foreign", 0)) != 0),
     }
@@ -640,16 +795,25 @@ def run_smoke_topo(args: argparse.Namespace) -> None:
     from mininet.node import OVSBridge
     from mininet.topology_tandem import TandemTopo, configure_qdiscs
 
-    net = Mininet(topo=TandemTopo(), link=Link, switch=OVSBridge, controller=None)
-    net.start()
+    saved_sysctl = disable_ipv6_on_new_links()
+    net = None
     try:
+        net = Mininet(topo=TandemTopo(), link=Link, switch=OVSBridge, controller=None)
+        net.start()
         proof = configure_qdiscs(net)
+        qdisc_ifaces = measured_qdisc_ifaces_from_proof(proof)
+        direct_before = direct_packet_snapshot(qdisc_ifaces)
         checks = {
             "hsrc_to_hdst": net.ping([net.get("hsrc"), net.get("hdst")], timeout="1"),
             "link_probes": {},
         }
         for idx in range(1, len(TANDEM_LINKS) + 1):
             checks["link_probes"]["L%d" % idx] = net.ping([net.get("hpa%d" % idx), net.get("hpb%d" % idx)], timeout="1")
+        direct_after = direct_packet_snapshot(qdisc_ifaces)
+        direct_delta = {
+            name: int(direct_after[name]) - int(before)
+            for name, before in direct_before.items()
+        }
         out = {
             "phase": "20R.6",
             "smoke": "tandem_topology",
@@ -670,11 +834,23 @@ def run_smoke_topo(args: argparse.Namespace) -> None:
             ],
             "n_access_checked": len(proof["access"]),
             "ping_loss_percent": checks,
-            "pass": bool(checks["hsrc_to_hdst"] == 0.0 and all(v == 0.0 for v in checks["link_probes"].values())),
+            "direct_packets_before": direct_before,
+            "direct_packets_after": direct_after,
+            "direct_packets_delta": direct_delta,
+            "vl1g_run_pass": bool(all(v == 0 for v in direct_delta.values())),
+            "qdisc_reinstall_log": list(proof.get("qdisc_reinstall_log", [])),
+            "sysctl_saved": saved_sysctl,
+            "pass": bool(
+                checks["hsrc_to_hdst"] == 0.0
+                and all(v == 0.0 for v in checks["link_probes"].values())
+                and all(v == 0 for v in direct_delta.values())
+            ),
         }
         print(json.dumps(out, indent=2, sort_keys=True))
     finally:
-        stop_net_best_effort(net, args.stop_timeout)
+        if net is not None:
+            stop_net_best_effort(net, args.stop_timeout)
+        restore_sysctl(saved_sysctl)
 
 
 def run_live(args: argparse.Namespace) -> None:
@@ -704,17 +880,21 @@ def run_live(args: argparse.Namespace) -> None:
     write_json_atomic(args.state, state)
     print_plan(plan, todo, state, args)
 
-    net = Mininet(topo=TandemTopo(), link=Link, switch=OVSBridge, controller=None)
-    net.start()
+    saved_sysctl = disable_ipv6_on_new_links()
+    net = None
     try:
+        net = Mininet(topo=TandemTopo(), link=Link, switch=OVSBridge, controller=None)
+        net.start()
         proof = configure_qdiscs(net)
+        proof["sysctl_saved"] = saved_sysctl
         state["qdisc_proof"] = proof
+        qdisc_ifaces = measured_qdisc_ifaces_from_proof(proof)
         write_json_atomic(args.state, state)
         t0 = time.time()
         for k, point in enumerate(todo, start=1):
             try:
                 with deadline(args.point_timeout, "point idx=%d" % int(point["idx"])):
-                    row = measure_point(net, point, args)
+                    row = measure_point(net, point, args, qdisc_ifaces=qdisc_ifaces)
             except PointTimeout as exc:
                 cleanup_live_processes()
                 timeout_row = {
@@ -733,11 +913,11 @@ def run_live(args: argparse.Namespace) -> None:
                 raise SystemExit(3)
             row["gate_fail"] = gate_live(row)
             row["attempt"] = 1
-            if row["gate_fail"]:
+            if row["gate_fail"] and retryable_gate_fail(row["gate_fail"]):
                 print("      * fail: %s -> chay lai 1 lan" % ",".join(row["gate_fail"]))
                 try:
                     with deadline(args.point_timeout, "retry idx=%d" % int(point["idx"])):
-                        row2 = measure_point(net, point, args)
+                        row2 = measure_point(net, point, args, qdisc_ifaces=qdisc_ifaces)
                 except PointTimeout as exc:
                     cleanup_live_processes()
                     timeout_row = {
@@ -760,6 +940,8 @@ def run_live(args: argparse.Namespace) -> None:
                 row2["attempt"] = 2
                 row2["attempt1_fail"] = row["gate_fail"]
                 row = row2
+            elif row["gate_fail"]:
+                print("      * fail: %s -> khong retry vi la validity gate" % ",".join(row["gate_fail"]))
 
             state.setdefault("rows", []).append(row)
             state.setdefault("done_idx", []).append(point["idx"])
@@ -789,7 +971,9 @@ def run_live(args: argparse.Namespace) -> None:
                 )
             )
     finally:
-        stop_net_best_effort(net, args.stop_timeout)
+        if net is not None:
+            stop_net_best_effort(net, args.stop_timeout)
+        restore_sysctl(saved_sysctl)
         write_json_atomic(args.state, state)
     print("\n=== TONG KET ===")
     print(json.dumps(summarize_state(state, plan), indent=2, sort_keys=True))

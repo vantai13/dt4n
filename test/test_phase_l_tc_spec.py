@@ -3,6 +3,7 @@
 
 import pytest
 
+from mininet import topology_split_qdisc as SQ
 from mininet.tc_spec import (
     CONFIGS,
     DEFAULT_BURST_BYTES,
@@ -73,6 +74,69 @@ def test_lenh_bfifo_dung_don_vi_byte_khong_phai_goi():
 
 def test_khong_lenh_nao_tao_netem_o_chieu_do():
     assert "netem" not in " ".join(measure_cmds("s1-eth2", 6.0, 13))
+
+
+def test_live_shell_helper_khong_dung_login_shell(monkeypatch):
+    calls = []
+
+    def fake_run(args, **_kwargs):
+        calls.append(args)
+        return SQ.subprocess.CompletedProcess(args, 0, stdout="")
+
+    monkeypatch.setattr(SQ.subprocess, "run", fake_run)
+
+    assert SQ.sh("true") == ""
+    assert calls == [["sh", "-c", "true"]]
+
+
+def test_tc_batch_goi_nhieu_lenh_trong_mot_process(monkeypatch):
+    seen = {}
+
+    def fake_run(args, **kwargs):
+        seen["args"] = args
+        seen["input"] = kwargs.get("input")
+        return SQ.subprocess.CompletedProcess(args, 0, stdout="")
+
+    monkeypatch.setattr(SQ.subprocess, "run", fake_run)
+
+    SQ.sh_tc_batch(["tc qdisc add dev s0-eth1 root handle 1: htb default 10", "tc class add dev s0-eth1 parent 1: classid 1:10 htb rate 6mbit"])
+
+    assert seen["args"] == ["tc", "-batch", "-"]
+    assert seen["input"].splitlines() == [
+        "qdisc add dev s0-eth1 root handle 1: htb default 10",
+        "class add dev s0-eth1 parent 1: classid 1:10 htb rate 6mbit",
+    ]
+
+
+def test_qdisc_setup_retry_ghi_provenance(monkeypatch):
+    calls = []
+
+    def fake_setup(*_args, **_kwargs):
+        calls.append("setup")
+
+    def fake_assert(*_args, **_kwargs):
+        if len(calls) == 1:
+            raise AssertionError("V-L1 FAIL tren s0-eth1:\nV-L1g: direct_packets_stat=1")
+        return {"ifname": "s0-eth1"}
+
+    monkeypatch.setattr(SQ, "setup_measure_qdisc", fake_setup)
+    monkeypatch.setattr(SQ, "assert_measure_qdisc", fake_assert)
+    monkeypatch.setattr(SQ.time, "sleep", lambda _seconds: None)
+
+    log = []
+    proof = SQ.setup_and_verify_measure_qdisc("s0-eth1", 6.0, 13, log_sink=log)
+
+    assert len(calls) == 2
+    assert proof["install_attempts"] == 2
+    assert proof["install_history"] == ["V-L1g: direct_packets_stat=1"]
+    assert log == [
+        {
+            "event": "qdisc_reinstall",
+            "ifname": "s0-eth1",
+            "attempt": 2,
+            "reason": "V-L1g: direct_packets_stat=1",
+        }
+    ]
 
 
 def test_burst_it_nhat_bang_mot_khung_mtu():
