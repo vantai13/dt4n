@@ -24,6 +24,7 @@ import pandas as pd
 from measurements import decision_error_v2 as D
 from mininet.topology_tandem import TANDEM_LINKS
 from twin import cost_v2 as C
+from twin import topology_v7 as T7
 
 
 MODES = ("poisson", "h2")
@@ -33,6 +34,9 @@ C_RHO_BARS = (0.85, 0.925)
 SEEDS = (101, 102, 103, 104, 105)
 TANDEM_PATH = "T123"
 DELTA_MS = 0.44
+GAP_FRACTION = 0.20
+N_LINKS_IN_PATH = 3
+DELTA_LOSS = 0.005
 PROBE_INTRUSION_MAX = 0.02
 OUT = "results/phase-20R/additivity_check.json"
 DEFAULT_APRIME_STATE = "results/phase-20R/additivity_branch_a_state.json"
@@ -125,6 +129,49 @@ def tost_equivalence(samples: Sequence[float], delta_ms: float = DELTA_MS) -> Di
     }
 
 
+def measured_cost_gap_ms(
+    mode: str,
+    rho_bar: float,
+    truth_table: str = D.TRUTH_TABLE,
+    calibration_path: str = D.CALIBRATION,
+) -> float:
+    tt = D.TruthTable(truth_table)
+    calib = calibration_by_cell(calibration_path)
+    w_loss = float(calib[(str(mode), round(float(rho_bar), 12))]["w_loss"])
+    rho = C.rho_vector(float(rho_bar))
+    costs: List[float] = []
+    for path in T7.PATH_NAMES:
+        delay = 0.0
+        keep = 1.0
+        for link in T7.PATHS[path]:
+            d, loss = tt.delay_loss(str(mode), link, np.asarray([rho[link]], dtype=float))
+            delay += float(d[0])
+            keep *= 1.0 - float(loss[0])
+        costs.append(delay + w_loss * (1.0 - keep))
+    ordered = sorted(costs)
+    return float(ordered[1] - ordered[0])
+
+
+def delta_for_cell(
+    mode: str,
+    rho_bar: float,
+    truth_table: str = D.TRUTH_TABLE,
+    calibration_path: str = D.CALIBRATION,
+    per_link: bool = True,
+) -> Dict[str, Any]:
+    gap = measured_cost_gap_ms(mode, rho_bar, truth_table, calibration_path)
+    delta_path = GAP_FRACTION * gap
+    delta = delta_path / float(N_LINKS_IN_PATH) if per_link else delta_path
+    return {
+        "delta_ms": float(delta),
+        "delta_path_ms": float(delta_path),
+        "cost_gap_ms": float(gap),
+        "gap_fraction": float(GAP_FRACTION),
+        "per_link": bool(per_link),
+        "delta_source": "runtime_cost_gap",
+    }
+
+
 def _link_names() -> Tuple[str, ...]:
     return tuple(row[0] for row in TANDEM_LINKS)
 
@@ -177,7 +224,10 @@ def build_plan(
     plan = {
         "phase": "20R.6",
         "kind": "tandem_additivity_design",
-        "delta_ms": DELTA_MS,
+        "legacy_delta_ms": DELTA_MS,
+        "delta_policy": "runtime_cost_gap",
+        "gap_fraction": GAP_FRACTION,
+        "per_link_divisor": N_LINKS_IN_PATH,
         "modes": list(modes),
         "seeds": [int(seed) for seed in seeds],
         "tandem_links": [
@@ -330,7 +380,11 @@ def _append_tost(
     df: pd.DataFrame,
     group_cols: Sequence[str],
     delta_col: str,
-    delta_ms: float,
+    delta_ms: Optional[float] = None,
+    per_link: bool = True,
+    truth_table: str = D.TRUTH_TABLE,
+    calibration_path: str = D.CALIBRATION,
+    units: str = "ms",
 ) -> None:
     for key, group in df.groupby(list(group_cols), sort=True):
         if not isinstance(key, tuple):
@@ -339,7 +393,16 @@ def _append_tost(
         row.update({name: value for name, value in zip(group_cols, key)})
         if "rho_bar" in row:
             row["rho_bar"] = float(row["rho_bar"])
-        row.update(tost_equivalence(group[delta_col], delta_ms=delta_ms))
+        if delta_ms is None:
+            delta_info = delta_for_cell(str(row["mode"]), float(row["rho_bar"]), truth_table, calibration_path, per_link=per_link)
+            d = float(delta_info["delta_ms"])
+            row.update(delta_info)
+        else:
+            d = float(delta_ms)
+            row["delta_source"] = "fixed"
+        row["delta_column"] = str(delta_col)
+        row["units"] = str(units)
+        row.update(tost_equivalence(group[delta_col], delta_ms=d))
         checks.append(row)
 
 
@@ -348,7 +411,7 @@ def analyze(
     truth_table: str = D.TRUTH_TABLE,
     calibration_path: str = D.CALIBRATION,
     modes: Sequence[str] = MODES,
-    delta_ms: float = DELTA_MS,
+    delta_ms: Optional[float] = None,
 ) -> Dict[str, Any]:
     plan = build_plan(modes=modes)
     live_rhos = sorted({float(row["rho_bar"]) for row in measurement_rows if "rho_bar" in row} | set(C_RHO_BARS) | set(APRIME_RHO_BARS))
@@ -359,7 +422,11 @@ def analyze(
         "phase": "20R.6",
         "script": "measurements.additivity_check",
         "kind": "tandem_additivity_analysis",
-        "delta_ms": float(delta_ms),
+        "delta_ms": None if delta_ms is None else float(delta_ms),
+        "delta_policy": "runtime_cost_gap" if delta_ms is None else "fixed",
+        "gap_fraction": GAP_FRACTION,
+        "per_link_divisor": N_LINKS_IN_PATH,
+        "delta_loss": DELTA_LOSS,
         "plan_digest": plan["plan_digest"],
         "branch_a": a_rows,
         "checks": [],
@@ -382,36 +449,67 @@ def analyze(
     c = df[df["branch"] == "C"].copy()
 
     if not ap.empty:
-        ma = ap.merge(a[["mode", "rho_bar", "link", "cost_ms"]].rename(columns={"cost_ms": "a_cost_ms"}), on=["mode", "rho_bar", "link"], how="inner")
+        ma = ap.merge(
+            a[["mode", "rho_bar", "link", "cost_ms", "delay_ms", "loss"]].rename(
+                columns={"cost_ms": "a_cost_ms", "delay_ms": "a_delay_ms", "loss": "a_loss"}
+            ),
+            on=["mode", "rho_bar", "link"],
+            how="inner",
+        )
         ma["delta_ms"] = ma["metric_ms"] - ma["a_cost_ms"]
-        _append_tost(checks, "Aprime_minus_A", ma, ("mode", "rho_bar", "link"), "delta_ms", delta_ms)
+        ma["delta_delay_ms"] = pd.to_numeric(ma["delay_ms"], errors="coerce") - ma["a_delay_ms"]
+        ma["delta_loss"] = pd.to_numeric(ma["loss"], errors="coerce") - ma["a_loss"]
+        _append_tost(checks, "Aprime_minus_A", ma, ("mode", "rho_bar", "link"), "delta_ms", delta_ms, True, truth_table, calibration_path)
+        _append_tost(checks, "Aprime_minus_A_delay", ma, ("mode", "rho_bar", "link"), "delta_delay_ms", delta_ms, True, truth_table, calibration_path)
+        _append_tost(checks, "Aprime_minus_A_loss", ma, ("mode", "rho_bar", "link"), "delta_loss", DELTA_LOSS, True, truth_table, calibration_path, units="loss_fraction")
 
     if not ap.empty and not b.empty:
         mb = b.merge(
-            ap[["mode", "rho_bar", "link", "seed", "metric_ms"]].rename(columns={"metric_ms": "aprime_ms"}),
+            ap[["mode", "rho_bar", "link", "seed", "metric_ms", "delay_ms", "loss"]].rename(
+                columns={"metric_ms": "aprime_ms", "delay_ms": "aprime_delay_ms", "loss": "aprime_loss"}
+            ),
             on=["mode", "rho_bar", "link", "seed"],
             how="inner",
         )
         mb["delta_ms"] = mb["metric_ms"] - mb["aprime_ms"]
-        _append_tost(checks, "B_minus_Aprime", mb, ("mode", "rho_bar", "link"), "delta_ms", delta_ms)
+        if {"delay_ms", "loss", "aprime_delay_ms", "aprime_loss"}.issubset(mb.columns):
+            mb["delta_delay_ms"] = pd.to_numeric(mb["delay_ms"], errors="coerce") - pd.to_numeric(mb["aprime_delay_ms"], errors="coerce")
+            mb["delta_loss"] = pd.to_numeric(mb["loss"], errors="coerce") - pd.to_numeric(mb["aprime_loss"], errors="coerce")
+        _append_tost(checks, "B_minus_Aprime", mb, ("mode", "rho_bar", "link"), "delta_ms", delta_ms, True, truth_table, calibration_path)
+        if "delta_delay_ms" in mb.columns:
+            _append_tost(checks, "B_minus_Aprime_delay", mb, ("mode", "rho_bar", "link"), "delta_delay_ms", delta_ms, True, truth_table, calibration_path)
+            _append_tost(checks, "B_minus_Aprime_loss", mb, ("mode", "rho_bar", "link"), "delta_loss", DELTA_LOSS, True, truth_table, calibration_path, units="loss_fraction")
 
     if not b.empty and not c.empty:
         b_sum = b.groupby(["mode", "rho_bar", "seed"], sort=True)["metric_ms"].sum().reset_index(name="sum_b_ms")
         mc = c.merge(b_sum, on=["mode", "rho_bar", "seed"], how="inner")
         mc["delta_ms"] = mc["metric_ms"] - mc["sum_b_ms"]
-        _append_tost(checks, "C_minus_sumB", mc, ("mode", "rho_bar"), "delta_ms", delta_ms)
+        if {"delay_ms", "loss"}.issubset(b.columns) and {"delay_ms", "loss"}.issubset(c.columns):
+            b_dl = b.groupby(["mode", "rho_bar", "seed"], sort=True)["delay_ms"].sum().reset_index(name="sum_b_delay_ms")
+            b_loss = (
+                b.groupby(["mode", "rho_bar", "seed"], sort=True)["loss"]
+                .agg(lambda xs: 1.0 - float(np.prod(1.0 - pd.to_numeric(xs, errors="coerce").to_numpy(float))))
+                .reset_index(name="path_b_loss")
+            )
+            mc = mc.merge(b_dl, on=["mode", "rho_bar", "seed"], how="inner").merge(b_loss, on=["mode", "rho_bar", "seed"], how="inner")
+            mc["delta_delay_ms"] = pd.to_numeric(mc["delay_ms"], errors="coerce") - mc["sum_b_delay_ms"]
+            mc["delta_loss"] = pd.to_numeric(mc["loss"], errors="coerce") - mc["path_b_loss"]
+        _append_tost(checks, "C_minus_sumB", mc, ("mode", "rho_bar"), "delta_ms", delta_ms, False, truth_table, calibration_path)
+        if "delta_delay_ms" in mc.columns:
+            _append_tost(checks, "C_minus_sumB_delay", mc, ("mode", "rho_bar"), "delta_delay_ms", delta_ms, False, truth_table, calibration_path)
+            _append_tost(checks, "C_minus_sumB_loss", mc, ("mode", "rho_bar"), "delta_loss", DELTA_LOSS, False, truth_table, calibration_path, units="loss_fraction")
 
     if not c.empty:
         a_sum = a.groupby(["mode", "rho_bar"], sort=True)["cost_ms"].sum().reset_index(name="sum_a_ms")
         mc_a = c.merge(a_sum, on=["mode", "rho_bar"], how="inner")
         mc_a["delta_ms"] = mc_a["metric_ms"] - mc_a["sum_a_ms"]
-        _append_tost(checks, "C_minus_sumA", mc_a, ("mode", "rho_bar"), "delta_ms", delta_ms)
+        _append_tost(checks, "C_minus_sumA", mc_a, ("mode", "rho_bar"), "delta_ms", delta_ms, False, truth_table, calibration_path)
 
     if not ap.empty and not c.empty:
         ap_sum = ap.groupby(["mode", "rho_bar", "seed"], sort=True)["metric_ms"].sum().reset_index(name="sum_aprime_ms")
         mc_ap = c.merge(ap_sum, on=["mode", "rho_bar", "seed"], how="inner")
         mc_ap["delta_ms"] = mc_ap["metric_ms"] - mc_ap["sum_aprime_ms"]
-        _append_tost(checks, "C_minus_sumAprime", mc_ap, ("mode", "rho_bar"), "delta_ms", delta_ms)
+        _append_tost(checks, "C_minus_sumAprime", mc_ap, ("mode", "rho_bar"), "delta_ms", delta_ms, False, truth_table, calibration_path)
 
     transfer = [row for row in checks if row.get("contrast") == "Aprime_minus_A"]
     g6 = [row for row in checks if row.get("contrast") == "C_minus_sumB"]
@@ -439,7 +537,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--calibration", default=D.CALIBRATION)
     ap.add_argument("--modes", default=",".join(MODES))
     ap.add_argument("--seeds", default=",".join(str(seed) for seed in SEEDS))
-    ap.add_argument("--delta-ms", type=float, default=DELTA_MS)
+    ap.add_argument("--delta-ms", type=float, default=None, help="override runtime equivalence margin; omitted means 20%% of measured cost gap")
     ap.add_argument("--from-state", default="", help="comma-separated JSON state/result files containing A'/B/C rows")
     ap.add_argument("--out", default=OUT)
     ap.add_argument("--plan-only", action="store_true")

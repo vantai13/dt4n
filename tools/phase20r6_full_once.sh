@@ -189,8 +189,15 @@ run_logged "B2 branch Aprime" "logs/20r6_01_branch_a.log" \
   --state results/phase-20R/additivity_branch_a_state.json
 require_additivity_branch_ok "Aprime" "results/phase-20R/additivity_branch_a_state.json"
 
-run_logged "B2 check Aprime vs truth table" "logs/20r6_01_compare_a.log" \
-  python3 -m measurements.additivity_check --compare-a-vs-truthtable
+run_logged "B2 rescore Aprime from bg stream" "logs/20r6_01_rescore_a.log" \
+  python3 -m measurements.additivity_rescore \
+  --state results/phase-20R/additivity_branch_a_state.json \
+  --out results/phase-20R/additivity_branch_a_state_bg.json
+
+run_logged "B2 check Aprime-bg vs truth table" "logs/20r6_01_compare_a.log" \
+  python3 -m measurements.additivity_check \
+  --from-state results/phase-20R/additivity_branch_a_state_bg.json \
+  --out results/phase-20R/additivity_check.json
 require_aprime_transfer_ok
 
 cleanup_mininet
@@ -200,6 +207,10 @@ run_logged "B3 branch B" "logs/20r6_02_branch_b.log" \
   --seeds 101,102,103,104,105 \
   --state results/phase-20R/additivity_branch_b_state.json
 require_additivity_branch_ok "B" "results/phase-20R/additivity_branch_b_state.json"
+run_logged "B3 rescore B from bg stream" "logs/20r6_02_rescore_b.log" \
+  python3 -m measurements.additivity_rescore \
+  --state results/phase-20R/additivity_branch_b_state.json \
+  --out results/phase-20R/additivity_branch_b_state_bg.json
 
 cleanup_mininet
 run_logged "B4 branch C" "logs/20r6_03_branch_c.log" \
@@ -218,7 +229,9 @@ run_logged "B5 quasistatic live" "logs/20r6_04_quasistatic.log" \
 require_quasistatic_state_ok
 
 run_logged "B6 additivity analyze" "logs/20r6_05_additivity_analyze.log" \
-  python3 -m measurements.additivity_check --analyze
+  python3 -m measurements.additivity_check \
+  --from-state results/phase-20R/additivity_branch_a_state_bg.json,results/phase-20R/additivity_branch_b_state_bg.json,results/phase-20R/additivity_branch_c_state.json \
+  --out results/phase-20R/additivity_check.json
 require_additivity_final_ok
 
 run_logged "B6 quasistatic analyze" "logs/20r6_06_quasistatic_analyze.log" \
