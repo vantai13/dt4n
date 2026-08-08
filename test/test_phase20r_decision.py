@@ -621,3 +621,45 @@ def test_fragility_index_tracks_the_width_of_the_dsla_band():
 
     # Rank correlation, no scipy: fragility should predict which cells move most.
     assert P._spearman_no_scipy(pd.Series(frag), pd.Series(width)) > 0.5
+
+
+def test_quasistatic_band_delay_residual_does_not_move_argmin():
+    """A delay residual is common-mode, so argmin must be untouched.
+
+    Not a tautology: it fails if BiasedTruthTable ever applies a different
+    residual per link or per path.
+    """
+    from measurements import quasistatic_band as QB
+
+    cv2, tt0 = C.CostV2(), D.TruthTable()
+    cells = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True)
+             if str(c["mode"]) == "poisson"][:1]
+    rows = QB.sweep(tt0, cv2, cells, [101], 20_000, resid_loss=0.0, resid_delay_ms=-0.029)
+
+    assert max(abs(r["d_err"]) for r in rows) == 0.0
+
+
+def test_quasistatic_band_loss_residual_does_move_the_gate():
+    """Positive control: a large enough loss residual MUST flip a gate.
+
+    Without this, the test above proves nothing -- a function that always
+    returns zero would pass it too.
+    """
+    from measurements import quasistatic_band as QB
+
+    cv2, tt0 = C.CostV2(), D.TruthTable()
+    cells = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True) if str(c["mode"]) != "cbr"]
+    rows = QB.sweep(tt0, cv2, cells, [101], 20_000, resid_loss=-0.010, resid_delay_ms=0.0)
+
+    assert QB.verdict(rows)["n_flipped"] > 0
+
+
+def test_phase_t_err_dyn_is_read_from_the_artifact_not_hardcoded():
+    from measurements import quasistatic_band as QB
+
+    err = QB.phase_t_err_dyn()
+
+    assert set(err) >= {"h2", "poisson"}
+    for mode in ("h2", "poisson"):
+        assert err[mode]["ci95_lo_ms"] < err[mode]["mean_ms"] < err[mode]["ci95_hi_ms"]
+        assert err[mode]["n"] == 120

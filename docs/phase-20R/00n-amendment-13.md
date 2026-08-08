@@ -703,12 +703,25 @@ poisson co `I2 = 67%`; phan lon "di dieu" khi ay la nhieu do, da duoc boc ra
 bang 8 seed. **CI90 cua poisson CHUA 0** -> voi poisson khong co bang chung ve
 bias, va moi con so duoi day cho poisson la CAN TREN cua tac hai.
 
-### 15.3 G6 sau khi do lai
+### 15.3 G6-PRE sau khi do lai
+
+**Ten goi da duoc sua (2026-08-07).** Cac con so duoi day den tu contrast
+`Aprime_minus_A_*`, tuc CHUYEN TOPOLOGY, khong phai cascade. Cascade la
+`C - sum(B)` va CHUA duoc do (`has_branch_b = false`, `has_branch_c = false`,
+`g6_evaluated = false`). Cach goi cu ("G6") noi qua pham vi phep do.
 
 ```text
-G6-ABS   h2 FAIL (-0.010130 vs delta_loss 0.005) | poisson PASS
-G6-DIFF  h2 INCONCLUSIVE                          | poisson PASS (truoc: FAIL)
+G6-PRE-ABS   h2       loss FAIL (-0.010130 vs delta_loss 0.005)
+             poisson  loss PASS | delay PASS | cost INCONCLUSIVE
+                      mean -4.655 ms, CI90 [-14.990, +5.681], delta 1.509,
+                      1.645*se = 9.27 ms > delta -> power_ok = false
+G6-PRE-DIFF  h2 INCONCLUSIVE | poisson PASS (truoc: FAIL)
+G6-CASCADE   NOT MEASURED (dung som, Amendment 11)
 ```
+
+`cost` cua poisson INCONCLUSIVE do THIEU POWER CAU TRUC, khong phai do bias: de
+dat `power_ok` can `se <= 0.917 ms`, tuc giam 6.1 lan so voi `5.638 ms` hien
+tai, tuc khoang 300 seed. Khong kha thi.
 
 poisson chuyen FAIL -> PASS dung bang co che da du bao: 8 seed siet phan du
 per-link (L1/L2 ve gan 0), `differential` tu `9.286 ms` xuong `2.763 ms`.
@@ -809,3 +822,164 @@ h2      : |d err| = 0.004 <= tol 0.009   -> DAT
 ```
 
 **Khong con buoi testbed nao can chay.** Lesson 20R.6 dong voi G6 co dieu kien.
+
+---
+
+## 16. Dai sai so cua gia dinh TUA TINH (khong Mininet)
+
+Gia dinh tua tinh -- `f(rho_now)` tra bang tra tai `rho` tuc thoi -- chua duoc do
+o MUC DUONG. `results/phase-20R/quasistatic_check.json` van la placeholder rong
+(`evaluated: false`, `n_input_rows: 0`).
+
+Thay vi de trong, sai so nay duoc CHAN TREN bang cung ky thuat da dung cho
+additivity: bom phan du vao bang tra roi tinh lai headline
+(`measurements/quasistatic_band.py`).
+
+### 16.1 Sai so tua tinh do duoc o Phase T (muc link)
+
+Nguon: `results/phase-T/t6e_paired.json`, khoa `summary_dyn_by_mode`.
+
+```text
+mode      mean_ms      sd    se_mean    n    CI95 cua TRUNG BINH    p05/p95 mot cua so
+cbr       -0.6166   1.1548   0.2108    30   [-1.0298, -0.2034]     [-3.058, +0.526]
+h2        -0.0342   0.1887   0.0172   120   [-0.0679, -0.0004]     [-0.281, +0.401]
+poisson   -0.0313   0.2019   0.0184   120   [-0.0674, +0.0048]     [-0.448, +0.245]
+```
+
+`cbr` khong dung trong 20R. Dau te nhat dung cho bien: `-0.0679 ms` (CI95 cua
+trung binh) hoac `-0.448 ms` neu muon chan mot CUA SO don le.
+
+### 16.2 Quet kenh delay -- mien nhiem
+
+```text
+resid_ms   max|d err|   min d_sla (tap G2)   gate
+  +0.000     0.00000          0.0494          SONG
+  -0.050     0.00000          0.0542          SONG
+  -0.100     0.00000          0.0567          SONG
+  -0.500     0.00000          0.0552          SONG
+  -1.000     0.00000          0.0548          SONG
+  -2.000     0.00000          0.0548          SONG
+```
+
+`d err = 0.00000` o MOI muc, dung nhu co che §15.5 du bao: phan du delay dong
+deu len ca bon duong -> common-mode -> `argmin` mien nhiem. Day la xac nhan bang
+so cho mot lap luan truoc do chi bang loi.
+
+`-2.0 ms/link` la **29 lan** dau te nhat cua CI95 Phase T (`-0.0679 ms`) va
+**4.5 lan** dau te nhat cua mot cua so don le (`-0.448 ms`). Gate van song.
+
+### 16.3 Quet kenh loss -- cho mong manh, va BAT DOI XUNG
+
+```text
+resid       max|d err|   min d_sla (tap G2)   gate
+ -0.0005      0.01965          0.0537          SONG
+ -0.0010      0.02445          0.0492          SONG
+ -0.0020      0.02403          0.0330          SONG   <- sat mep
+ -0.0050      0.07016         -0.0728          LAT: h2@0.700, poisson@0.925, poisson@0.960
+ +0.0005      0.00003          0.0000          LAT: poisson@0.700
+ +0.0020      0.00011          0.0000          LAT: poisson@0.700, poisson@0.850
+```
+
+```text
+nguong sup do chieu am    : -0.002  / link
+nguong sup do chieu duong : +0.0005 / link      <- chat hon 4 lan
+phan du cong tinh do duoc : h2 -0.001884 (94% nguong am) | poisson -0.000262 (13%)
+```
+
+Bat doi xung sinh ra tu `poisson @ 0.700`: `t_loss = 4.24e-04`, bon duong nam
+trong dai `2.0e-04` quanh nguong (§15.6). Day loss LEN thi ca bon cung vi pham
+-> `n_up = 4` -> `d_sla` triet tieu ve 0 -> thuoc chet. Day loss XUONG thi thu tu
+con giu duoc.
+
+Nhat quan voi H7 (co che la loss-driven, khong phai delay-driven): hai ket qua
+doc lap cung chi ve mot huong.
+
+Tham so lan chay: `--seeds 101,102 --n 60000`. Can chay lai voi 5 seed / n=120k
+truoc khi trich vao ban cuoi.
+
+### 16.4 Ket luan ve lo hong tua tinh -- CO PHAM VI THEO KENH
+
+**!! SUA (2026-08-08).** Ban truoc cua muc nay suy tu "kenh delay an toan" ra
+"lo hong tua tinh khong lat duoc ket luan nao". Suy luan do KHONG hop le: no
+ngam gia dinh rang gia dinh tua tinh, khi sai, chi bieu hien o delay. Chua ai
+chung minh dieu do, va co che censoring (§2) noi nguoc lai.
+
+```text
+KENH DELAY -- DA CHAN TREN:
+  Phase T do err_dyn o don vi ms. Dau te nhat:
+    CI95 cua trung binh  -0.0679 ms/link  |  mot cua so p05  -0.4480 ms/link
+  Quet cho thay gate song toi -2.0 ms/link = 29x CI95, 4.5x mot cua so.
+  => Kenh delay: lo hong DA DUOC CHAN. Phep do live chi con vai tro xac nhan.
+
+KENH LOSS -- CHUA CHAN DUOC:
+  Nguong sup do: +5e-4 (chieu duong) va -2e-3 (chieu am) tren moi link.
+  Chieu duong CHAT HON kenh delay khoang 4 lan.
+  Phase T KHONG do sai so tua tinh o kenh loss. Khong artifact nao chan duoc.
+
+  Va censoring (§2) noi day KHONG phai ngau nhien:
+      delay quan sat = min(X, q_max)   -> bi cat cut o tran -> MU voi dong hoc
+      loss  quan sat = P(X > q_max)    -> chinh la phan bi cat -> giu dong hoc
+  Khi rho tang, occupancy bo len cham hon trang thai dung, nen bang tra tinh
+  NOI QUA ve loss; khi rho giam thi noi thieu. Tuc sai so tua tinh CO mat o
+  kenh loss, va co dau xac dinh.
+
+  => `err_dyn` nho o kenh delay KHONG duoc dung lam bang chung cho kenh loss.
+
+TRANG THAI: gia dinh tua tinh CHUA duoc chan o kenh quyet dinh chinh (loss).
+            Day la muc phai DO, khong phai muc co the suy luan.
+```
+
+### 16.5 Loi thiet ke phai sua TRUOC khi chay live
+
+`measurements/quasistatic_check.py:280,306` dung `TandemTopo`. Nhung chinh Lesson
+20R.6 vua chung minh `TandemTopo` KHONG chuyen doi duoc tu bang tra
+(`Aprime_minus_A_path`, h2, `-54.168 ms`, FAIL). Chay tua tinh tren do se tron
+hai nguyen nhan:
+
+```text
+lech quan sat = (gia dinh tua tinh sai) + (chuyen topology sai, da biet -54 ms)
+                                          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+                                          khong tach duoc -> phep do vo gia tri
+```
+
+De xuat sua: dung `SplitQdiscTopo` -- chinh topology da sinh ra bang tra -- va do
+o MUC LINK, roi lan truyen len muc quyet dinh bang `quasistatic_band.py` (thay CI
+Phase T bang CI vua do). Hai ve cua phep so sanh khi do cung mot topology nen
+chenh lech chi con la tua tinh.
+
+**Chua thuc hien.** Day la thay doi thiet ke do, can duyet truoc khi sua code.
+
+
+### 16.6 Nguong sup do kenh loss -- hai con so, khong mot
+
+O `poisson @ 0.700` da duoc khai bao MONG MANH tu §15.6 (`F = 3.9`,
+`t_loss = 4.24e-04`, bon duong nam trong dai `2.01e-04` quanh nguong), kem
+quyet dinh ky truoc: giu trong headline, KHONG dung lam o van hanh 21R. Ap
+dung nhat quan quyet dinh do:
+
+```text
+Ke ca o mong manh (8/8 o) :  [-2e-3, +5e-4]
+Loai o mong manh  (7/8 o) :  [-2e-3, +2e-3]      <- doi xung
+Chi so `err` rieng        :  |d err| <= 3e-5 den +5e-3  => BAT BIEN
+```
+
+Chi so `err` khong nhuc nhich o chieu duong (`max|d err| = 3e-5`); chi `d_sla`
+chet. Dung co che §15.5: `err` so HIEU giua cac duong nen mien nhiem dich
+chuyen chung, `d_sla` dem vuot NGUONG TUYET DOI nen khong.
+
+**Phat bieu chinh dung con so CHAT HON (`+5e-4`).** Con so noi long chi de giai
+thich NGUON GOC cua nguong, khong duoc trich rieng.
+
+### 16.7 Trang thai cua QS-LOSS
+
+```text
+| QS-DELAY | tua tinh, kenh delay | CHAN DUOC, bien 29x   | DAT           |
+| QS-LOSS  | tua tinh, kenh loss  | CHUA DO, nguong +5e-4 | CHUA DANH GIA |
+```
+
+Bo sung vao pham vi hieu luc §15.8:
+
+```text
+6. Phat bieu ve `d_sla`: chua chan duoc sai so tua tinh o KENH LOSS.
+   Nguong sup do +5e-4/link. Day la gioi han DA BIET, chua duoc do.
+```

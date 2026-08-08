@@ -1,5 +1,12 @@
 # Phase 20R -- Bay cong, doc duoi bien sai so he thong
 
+> **Luu y ve ten goi.** Con so bao cao o hang G6-PRE den tu contrast
+> `Aprime_minus_A_*`, tuc CHUYEN TOPOLOGY -- khong phai cascade. Cascade la
+> `C - sum(B)` va CHUA duoc do (`has_branch_b = false`, `has_branch_c = false`,
+> `g6_evaluated = false` trong `additivity_check_inband_bg.json`). Chuyen
+> topology la DIEU KIEN TIEN QUYET cua cascade; no FAIL cho h2, nen theo luat
+> dung som cua Amendment 11, B/C khong duoc mo.
+
 Ngay: 2026-08-07
 
 Cot "Duoi bien" tra loi mot cau: *neu phan du cong tinh do duoc o Lesson 20R.6
@@ -18,8 +25,11 @@ Nguon: `results/phase-20R/additivity_band_sawtooth.json`,
 | G3 | `Spearman(err, z) > 0`, `p < 0.05` | DAT moi o | bien gan nhu khong doi theo `z` -> thu tu theo `z` giu nguyen | **DAT** |
 | G4 | `Spearman(err, rho_bar) > 0` | FAIL co chu dich | khong lien quan (bien khong doi hinh dang `err(rho_bar)`) | **FAIL nhu da ky** |
 | G5 | `NC1b = 0`, `NC2 = 0.747-0.751`, `PC1 = 0` | DAT | control noi bo, khong di qua bang tra path | **DAT** |
-| G6 | tinh cong tinh | G6-ABS: h2 FAIL / poisson PASS<br>G6-DIFF: h2 INCONCLUSIVE / poisson PASS | -- | **co dieu kien** |
+| G6-PRE | **dieu kien tien quyet** cua cong tinh: chuyen topology `A' - A` | ABS: h2 FAIL / poisson (loss PASS, delay PASS, **cost INCONCLUSIVE**)<br>DIFF: h2 INCONCLUSIVE / poisson PASS | -- | **co dieu kien** |
+| G6-CASCADE | cong tinh thuc su: `C - sum(B)` | **NOT MEASURED** | -- | **dung som (Amendment 11)** |
 | G7 | moi CI dung `se_batch` | DAT | khong doi | **DAT** |
+| QS-DELAY | tua tinh, kenh delay | Phase T `err_dyn` CI95 [-0.068, -0.000] ms | gate song toi -2.0 ms/link = 29x | **DAT** |
+| QS-LOSS | tua tinh, kenh loss | **CHUA DO** | nguong sup do +5e-4/link | **CHUA DANH GIA** |
 
 ## Bang bien day du (sawtooth, 5 seed, n = 120k)
 

@@ -1,3 +1,30 @@
+> **SUPERSEDED cho con so `err_dyn` (2026-08-08).**
+>
+> Bang duoi day dong bang o commit `f91b4ad`. Artifact hien hanh
+> `results/phase-T/t6e_paired.json` (script `t6_analyze_v4_t6e_paired`) cho:
+>
+> ```text
+> h2       mean -0.0342  se 0.0172  n=120   CI95 [-0.0679, -0.0004]
+> poisson  mean -0.0313  se 0.0184  n=120   CI95 [-0.0674, +0.0048]
+> cbr      mean -0.6166  se 0.2108  n= 30   CI95 [-1.0298, -0.2034]
+> ```
+>
+> Con so `-0.0200 +/- 0.0046` KHONG tai lap duoc tu artifact hien hanh. Da thu
+> cac tap con sau, khong tap nao khop:
+>
+> ```text
+> bo cbr                                n=249  mean -0.0335  se 0.0121
+> class=khong_phan_biet_duoc_o_phan_giai n=152  mean -0.0276  se 0.0078
+> class=quasi_static_khong_dung          n= 78  mean -0.0429  se 0.0335
+> class=cong_vao_band_21R                n= 19  mean -0.0425  se 0.0530
+> block=A                                n=240  mean -0.0327  se 0.0126
+> ```
+>
+> Ket luan: day la chenh lech GIUA HAI LAN CHAY (commit khac nhau), khong phai
+> hai estimand khac nhau. Moi trich dan MOI phai dung artifact, khong dung bang
+> duoi day. `measurements/quasistatic_band.py` doc truc tiep tu artifact va co
+> test canh (`test_phase_t_err_dyn_is_read_from_the_artifact_not_hardcoded`).
+
 # PHU LUC -- Xap xi quasi-static (khong thuoc Gate T)
 
 **Trang thai: EXPLORATORY. Dong bang theo so lieu o commit `f91b4ad`.

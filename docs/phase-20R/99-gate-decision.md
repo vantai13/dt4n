@@ -1,3 +1,8 @@
+> **SUPERSEDED cho hang G6 (2026-08-07).** Xem `08-gates.md` va
+> `00n-amendment-13.md` §15. Hang `G6 NOT EVALUATED` duoi day VAN DUNG cho
+> cascade (`C - sum(B)`); dieu kien tien quyet `A' - A` da duoc do va bao cao
+> rieng thanh `G6-PRE`.
+
 # Phase 20R -- Gate Decision
 
 Ngay ghi: 2026-08-06

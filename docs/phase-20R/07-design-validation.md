@@ -358,9 +358,22 @@ RC8  silent join failure     join tra ve rong ma khong bao loi -> ket luan NGUOC
 ### Trang thai cuoi
 
 ```text
-G6-ABS   h2 FAIL (-0.010130 vs 0.005) | poisson PASS
-G6-DIFF  h2 INCONCLUSIVE (tac o d_sla, ngay tai k=0) | poisson PASS
+G6-PRE-ABS   (chuyen topology, KHONG phai cascade)
+   h2       loss FAIL (-0.010130 vs delta 0.005)
+   poisson  loss PASS | delay PASS | cost INCONCLUSIVE
+            (mean -4.655 ms, CI90 [-14.990, +5.681], delta 1.509,
+             1.645*se = 9.27 ms > delta -> power_ok = false)
+G6-PRE-DIFF
+   h2 INCONCLUSIVE (tac o d_sla, ngay tai k=0) | poisson PASS
+G6-CASCADE   NOT MEASURED -- dung som theo Amendment 11
 ```
+
+Chu y: "poisson PASS" trong cac ban tom tat truoc day chi dung cho contrast
+`loss` va `delay`. Contrast `cost` -- dai luong thuc su di vao quyet dinh -- la
+INCONCLUSIVE vi thieu power cau truc: `cost = delay + w_loss * loss` voi
+`w_loss ~ 3222`, nen nhieu loss co 1e-3 thanh nhieu cost co 3.2 ms. De dat
+`power_ok` can `se <= 0.917 ms`, tuc giam 6.1 lan, tuc ~300 seed. Khong kha thi;
+bao cao INCONCLUSIVE kem CI la ket luan hop le (xem Amendment 12 §10.4).
 
 Branch B va C **khong mo** theo quy tac dung som cua Amendment 11. Pham vi hieu
 luc: `00n-amendment-13.md` §15.8.
