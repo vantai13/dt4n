@@ -827,6 +827,11 @@ h2      : |d err| = 0.004 <= tol 0.009   -> DAT
 
 ## 16. Dai sai so cua gia dinh TUA TINH (khong Mininet)
 
+Provenance: code va docs duoc commit tai `cf520ab` truoc khi sinh so cuoi.
+So o §16.2/§16.3 hien tai la SMOKE (`--seeds 101,102 --n 60000`), sinh
+TRUOC commit nay; phai chay lai `--seeds 101,102,103,104,105 --n 120000`
+sau `cf520ab` truoc khi trich vao ban cuoi.
+
 Gia dinh tua tinh -- `f(rho_now)` tra bang tra tai `rho` tuc thoi -- chua duoc do
 o MUC DUONG. `results/phase-20R/quasistatic_check.json` van la placeholder rong
 (`evaluated: false`, `n_input_rows: 0`).
