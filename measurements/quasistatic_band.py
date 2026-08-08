@@ -32,7 +32,20 @@ from twin import cost_v2 as C
 
 PHASE_T_PAIRED = "results/phase-T/t6e_paired.json"
 DELAY_SWEEP_MS = (0.0, -0.05, -0.10, -0.20, -0.50, -1.00, -2.00)
-LOSS_SWEEP = (0.0, -0.0005, -0.0010, -0.0020, -0.0050, -0.0100, 0.0005, 0.0010, 0.0020, 0.0050)
+LOSS_SWEEP = (
+    0.0,
+    -0.0005, -0.0010, -0.0020, -0.0030, -0.0050, -0.0100,
+    # Finer on the positive side: the smoke run flipped a cell at +5e-4, which
+    # was the smallest step tried, so the true threshold was below the grid.
+    +0.00005, +0.0001, +0.0002, +0.0005, +0.0010, +0.0020, +0.0050,
+)
+
+# Cells declared fragile BEFORE this sweep existed: Amendment 13 §15.6
+# (F = 3.9, t_loss = 4.24e-04, all four paths inside a 2.01e-04 band around the
+# threshold), together with the signed decision not to use them as an operating
+# point for Phase 21R. Excluding them here applies a pre-registered rule; it is
+# not a choice made after seeing this table. Both numbers are always reported.
+FRAGILE_CELLS = (("poisson", 0.700),)
 G2_FLOOR = 0.03
 OUT = "results/phase-20R/quasistatic_band.json"
 
@@ -87,9 +100,17 @@ def sweep(tt0, cv2, cells, seeds, n, resid_loss: float, resid_delay_ms: float) -
     return rows
 
 
-def verdict(rows: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
-    """Only cells already in the G2 set can be flipped by the band."""
+def verdict(rows: Sequence[Dict[str, Any]], exclude_fragile: bool = False) -> Dict[str, Any]:
+    """Only cells already in the G2 set can be flipped by the band.
+
+    ``exclude_fragile`` drops the cells listed in ``FRAGILE_CELLS``, which were
+    declared fragile in a signed amendment before this sweep was written. Report
+    both numbers; the headline statement uses the stricter one.
+    """
     g2 = [r for r in rows if r["in_g2_set"]]
+    if exclude_fragile:
+        drop = {(m, round(v, 3)) for m, v in FRAGILE_CELLS}
+        g2 = [r for r in g2 if (r["mode"], round(r["rho_bar"], 3)) not in drop]
     flipped = [r for r in g2 if r["d_sla_perturbed"] < G2_FLOOR]
     return {
         "max_abs_d_err": max(abs(r["d_err"]) for r in rows),
@@ -98,6 +119,7 @@ def verdict(rows: Sequence[Dict[str, Any]]) -> Dict[str, Any]:
         "n_flipped": len(flipped),
         "flipped_cells": ["%s@%.3f" % (r["mode"], r["rho_bar"]) for r in flipped],
         "gate_survives": bool(not flipped),
+        "excluded_fragile": bool(exclude_fragile),
     }
 
 
@@ -143,15 +165,23 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
               "SONG" if v["gate_survives"] else "LAT: " + ",".join(v["flipped_cells"])))
 
     print()
-    print("=== KENH LOSS: tim NGUONG SUP DO ===")
-    print("%10s | %11s | %14s | %s" % ("resid", "max|d err|", "min d_sla(G2)", "gate"))
-    for r in LOSS_SWEEP:
+    print("=== KENH LOSS: nguong sup do, KE CA va LOAI o mong manh ===")
+    print("%10s | %11s | %-30s | %s"
+          % ("resid", "max|d err|", "ke ca o mong manh (8/8)", "loai o mong manh (7/8)"))
+    fmt = lambda v: "SONG" if v["gate_survives"] else "LAT: " + ",".join(v["flipped_cells"])
+    for r in sorted(LOSS_SWEEP):
         rows = sweep(tt0, cv2, cells, seeds, args.n, r, 0.0)
-        v = verdict(rows)
-        report["loss_sweep"].append({"resid_loss": r, "verdict": v, "rows": rows})
-        print("%+10.4f | %11.5f | %14.4f | %s" % (r, v["max_abs_d_err"], v["min_d_sla_in_g2"],
-              "SONG" if v["gate_survives"] else "LAT: " + ",".join(v["flipped_cells"])))
+        v_all, v_rob = verdict(rows, False), verdict(rows, True)
+        report["loss_sweep"].append(
+            {"resid_loss": r, "verdict": v_all, "verdict_robust": v_rob, "rows": rows})
+        print("%+10.5f | %11.5f | %-30s | %s" % (r, v_all["max_abs_d_err"], fmt(v_all), fmt(v_rob)))
 
+    def _edges(key: str):
+        n = [e["resid_loss"] for e in report["loss_sweep"] if e[key]["gate_survives"] and e["resid_loss"] < 0]
+        p = [e["resid_loss"] for e in report["loss_sweep"] if e[key]["gate_survives"] and e["resid_loss"] > 0]
+        return (min(n) if n else None, max(p) if p else None)
+
+    report["breakdown_robust"] = dict(zip(("loss_neg", "loss_pos"), _edges("verdict_robust")))
     neg = [e["resid_loss"] for e in report["loss_sweep"] if e["verdict"]["gate_survives"] and e["resid_loss"] < 0]
     pos = [e["resid_loss"] for e in report["loss_sweep"] if e["verdict"]["gate_survives"] and e["resid_loss"] > 0]
     dly = [e["resid_delay_ms"] for e in report["delay_sweep"] if e["verdict"]["gate_survives"]]

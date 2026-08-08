@@ -828,9 +828,8 @@ h2      : |d err| = 0.004 <= tol 0.009   -> DAT
 ## 16. Dai sai so cua gia dinh TUA TINH (khong Mininet)
 
 Provenance: code va docs duoc commit tai `cf520ab` truoc khi sinh so cuoi.
-So o §16.2/§16.3 hien tai la SMOKE (`--seeds 101,102 --n 60000`), sinh
-TRUOC commit nay; phai chay lai `--seeds 101,102,103,104,105 --n 120000`
-sau `cf520ab` truoc khi trich vao ban cuoi.
+So o §16.2/§16.3 la SO CUOI: `--seeds 101,102,103,104,105 --n 120000`,
+sinh sau commit `cf520ab`. Log: `logs/d2_band_final.log`.
 
 Gia dinh tua tinh -- `f(rho_now)` tra bang tra tai `rho` tuc thoi -- chua duoc do
 o MUC DUONG. `results/phase-20R/quasistatic_check.json` van la placeholder rong
@@ -875,32 +874,54 @@ so cho mot lap luan truoc do chi bang loi.
 
 ### 16.3 Quet kenh loss -- cho mong manh, va BAT DOI XUNG
 
+So cuoi: `--seeds 101,102,103,104,105 --n 120000`, sinh sau commit `cf520ab`.
+Luoi chieu duong duoc lam min vi lan smoke lat ngay o buoc nho nhat.
+
 ```text
-resid       max|d err|   min d_sla (tap G2)   gate
- -0.0005      0.01965          0.0537          SONG
- -0.0010      0.02445          0.0492          SONG
- -0.0020      0.02403          0.0330          SONG   <- sat mep
- -0.0050      0.07016         -0.0728          LAT: h2@0.700, poisson@0.925, poisson@0.960
- +0.0005      0.00003          0.0000          LAT: poisson@0.700
- +0.0020      0.00011          0.0000          LAT: poisson@0.700, poisson@0.850
+resid       max|d err|   ke ca o mong manh (8/8)      loai o mong manh (7/8)
+-0.01000     0.20983     LAT: h2@0.700, p@0.925, p@0.960   LAT: (nhu ben trai)
+-0.00500     0.06518     LAT: h2@0.700, p@0.925, p@0.960   LAT: (nhu ben trai)
+-0.00300     0.02760     LAT: poisson@0.960                LAT: poisson@0.960
+-0.00200     0.02774     LAT: poisson@0.960                LAT: poisson@0.960
+-0.00100     0.02771     SONG                              SONG
+-0.00050     0.02201     SONG                              SONG
++0.00005     0.00001     SONG                              SONG
++0.00010     0.00001     LAT: poisson@0.700                SONG
++0.00050     0.00005     LAT: poisson@0.700                SONG
++0.00100     0.00009     LAT: poisson@0.700                SONG
++0.00200     0.00019     LAT: poisson@0.700, p@0.850       LAT: poisson@0.850
++0.00500     0.00044     LAT: 5 o                          LAT: 4 o
 ```
 
 ```text
-nguong sup do chieu am    : -0.002  / link
-nguong sup do chieu duong : +0.0005 / link      <- chat hon 4 lan
-phan du cong tinh do duoc : h2 -0.001884 (94% nguong am) | poisson -0.000262 (13%)
+nguong sup do, ke ca o mong manh (8/8 o) :  [-1e-3, +5e-5]
+nguong sup do, loai o mong manh  (7/8 o) :  [-1e-3, +1e-3]   <- DOI XUNG
+chi so `err` rieng                        :  |d err| <= 4.4e-4 tren toan quet
 ```
 
-Bat doi xung sinh ra tu `poisson @ 0.700`: `t_loss = 4.24e-04`, bon duong nam
-trong dai `2.0e-04` quanh nguong (§15.6). Day loss LEN thi ca bon cung vi pham
--> `n_up = 4` -> `d_sla` triet tieu ve 0 -> thuoc chet. Day loss XUONG thi thu tu
-con giu duoc.
+**Doi so voi lan smoke (2 seed, n=60k), phai ghi ro:**
 
-Nhat quan voi H7 (co che la loss-driven, khong phai delay-driven): hai ket qua
-doc lap cung chi ve mot huong.
+```text
+chieu am  : -2e-3 -> -1e-3   (poisson@0.960 lat som hon voi 5 seed)
+chieu duong ke ca o mong manh : +5e-4 -> +5e-5  (luoi min hon lo ra nguong that)
+chieu duong loai o mong manh  : (khong do duoc o smoke) -> +1e-3
+```
 
-Tham so lan chay: `--seeds 101,102 --n 60000`. Can chay lai voi 5 seed / n=120k
-truoc khi trich vao ban cuoi.
+Lan smoke bao `+5e-4` chi vi do la buoc nho nhat duoc thu; nguong that thap hon
+mot bac do lon. Day la ly do phai lam min luoi truoc khi trich con so.
+
+**Canh bao khi doc bang nay.** Quet o day bom CUNG MOT phan du cho CA HAI mode.
+`additivity_band.py` thi bom phan du RIENG theo mode (`h2 -0.001884`,
+`poisson -0.000262`). Vi vay KHONG duoc so truc tiep nguong o day voi phan du
+cong tinh do duoc: `poisson@0.960` lat tai `-2e-3` la vi quet ep poisson chiu
+`-2e-3`, trong khi phan du that cua poisson chi la `-2.6e-4`.
+
+Bat doi xung (khi ke ca o mong manh) sinh ra tu `poisson @ 0.700`:
+`t_loss = 4.24e-04`, bon duong nam trong dai `2.0e-04` quanh nguong (§15.6). Day
+loss LEN thi ca bon cung vi pham -> `n_up = 4` -> `d_sla` triet tieu ve 0. Day
+loss XUONG thi thu tu con giu.
+
+Nhat quan voi H7 (co che loss-driven): hai ket qua doc lap cung chi mot huong.
 
 ### 16.4 Ket luan ve lo hong tua tinh -- CO PHAM VI THEO KENH
 
@@ -963,16 +984,16 @@ quyet dinh ky truoc: giu trong headline, KHONG dung lam o van hanh 21R. Ap
 dung nhat quan quyet dinh do:
 
 ```text
-Ke ca o mong manh (8/8 o) :  [-2e-3, +5e-4]
-Loai o mong manh  (7/8 o) :  [-2e-3, +2e-3]      <- doi xung
-Chi so `err` rieng        :  |d err| <= 3e-5 den +5e-3  => BAT BIEN
+Ke ca o mong manh (8/8 o) :  [-1e-3, +5e-5]
+Loai o mong manh  (7/8 o) :  [-1e-3, +1e-3]      <- doi xung
+Chi so `err` rieng        :  |d err| <= 4.4e-4 tren toan quet
 ```
 
 Chi so `err` khong nhuc nhich o chieu duong (`max|d err| = 3e-5`); chi `d_sla`
 chet. Dung co che §15.5: `err` so HIEU giua cac duong nen mien nhiem dich
 chuyen chung, `d_sla` dem vuot NGUONG TUYET DOI nen khong.
 
-**Phat bieu chinh dung con so CHAT HON (`+5e-4`).** Con so noi long chi de giai
+**Phat bieu chinh dung con so CHAT HON (`+5e-5`).** Con so noi long chi de giai
 thich NGUON GOC cua nguong, khong duoc trich rieng.
 
 ### 16.7 Trang thai cua QS-LOSS

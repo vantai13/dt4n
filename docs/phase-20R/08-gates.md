@@ -29,7 +29,7 @@ Nguon: `results/phase-20R/additivity_band_sawtooth.json`,
 | G6-CASCADE | cong tinh thuc su: `C - sum(B)` | **NOT MEASURED** | -- | **dung som (Amendment 11)** |
 | G7 | moi CI dung `se_batch` | DAT | khong doi | **DAT** |
 | QS-DELAY | tua tinh, kenh delay | Phase T `err_dyn` CI95 [-0.068, -0.000] ms | gate song toi -2.0 ms/link = 29x | **DAT** |
-| QS-LOSS | tua tinh, kenh loss | **CHUA DO** | nguong sup do +5e-4/link | **CHUA DANH GIA** |
+| QS-LOSS | tua tinh, kenh loss | **CHUA DO** | nguong sup do `[-1e-3, +5e-5]` (8/8 o), `[-1e-3, +1e-3]` (7/8 o) | **CHUA DANH GIA** |
 
 ## Bang bien day du (sawtooth, 5 seed, n = 120k)
 
