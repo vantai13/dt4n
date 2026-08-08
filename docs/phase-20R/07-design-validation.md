@@ -271,3 +271,96 @@ docs/phase-20R/figures/decision_error_h9_separability.png
 - Khong cong p95/p99.
 - Khong chon `Delta` sau khi nhin ket qua.
 - Khong sua nguoc `truth_table.parquet` de lam dep G6.
+
+---
+
+## Lesson 20R.6 -- Ket Qua Cuoi Va Tam Nhin Nguyen Nhan
+
+Muc nay tong hop phan chan doan. Chi tiet so va pham vi hieu luc o
+`00n-amendment-13.md` §15; bang bay cong o `08-gates.md`.
+
+### Thieu hut theo TUNG LINK, kem nguon goc diem lua
+
+Bao cao o muc path che mat tang nay, va reviewer se hoi ngay.
+
+```text
+link  rho      hai diem luoi neo cua bang tra   deficit poisson   deficit h2
+L1    0.8575   ca hai tu 20R.4 (04/08)          +0.000018         -0.002567
+L2    0.9775   mot 20R.4, mot Phase L           +0.000358         -0.002712
+L3    0.9875   ca hai tu Phase L  (29/07)       -0.001785         -0.008231
+```
+
+Thieu hut lon nhat, o ca hai mode, roi vao link ma ca hai diem neo deu tu Phase
+L. Day KHONG phai bang chung (`n = 3` link, `rho`/`bw`/`q` doi cung luc), nhung
+no la mot bien gay nhieu phai ghi ra. Sentinel loss recheck (`z_welch = +1.78`,
+MDE = 3.4e-4, tuc 5-24 lan nho hon deficit) da loai drift theo thoi gian nhu
+mot loi giai thich.
+
+### Do doc BAC HAI thay secant
+
+`loss(c_a)` loi, nen do doc trung binh tren `c_a in [1, 2]` uoc luong THAP phan
+ung tai `c_a = 2`. Ba duong cong cbr do duoc `loss = 0` tuyet doi, cho phep neo
+parabol qua goc:
+
+```text
+loss'(2) = 1.5 * l_h2 - 2 * l_poisson      (cuc bo)
+secant   =       l_h2 -     l_poisson      (trung binh)
+```
+
+Ket qua tai o FAIL (`h2 L3`): burstiness giai thich **83.3%**, khong phai 64%.
+
+### Cochran Q -- phan du la common-mode hay differential
+
+```text
+mode      phan du gop     Cochran Q (df=2)    I2      doc
+h2         -0.001884          0.06            0%      ba link DONG NHAT
+poisson    -0.000262          0.62            0%      ba link DONG NHAT
+```
+
+Voi 5 seed truoc do poisson co `I2 = 67%`; phan lon "di dieu" khi ay la nhieu
+do, boc ra duoc bang 8 seed. `I2` la con so bien minh dinh luong cho viec tang
+seed -- khong phai cam tinh.
+
+### CENSORING -- vi sao "phan bo delay khop" KHONG phai bang chung
+
+```text
+delay quan sat duoc = min(X, q_max)     <- bi cat cut
+loss  quan sat duoc = P(X > q_max)      <- chinh la phan bi cat
+```
+
+Hai phan bo `X` khac nhau CHI o phan duoi vuot `q_max` cho phan bo delay quan
+sat duoc gan nhu y het nhung loss khac ro ret. Voi h2, `p99` cham tran buffer o
+CA HAI phia, nen so sanh phan vi delay mat kha nang phan biet. Phan bo delay chi
+lay lai kha nang do khi `p99 << q_max`, tuc che do chua bao hoa.
+
+(Amendment 12 §10.1 tung ket luan nguoc lai; da danh dau `!! SUA` va giu nguyen
+van de theo vet.)
+
+### Ket qua do lai in-band (RC7)
+
+48 diem, 8 seed, validity sach. `probe_injection_differs = False` nhung deficit
+h2 chi giam **11.9%** (`-0.011497 -> -0.010130`), duoi nguong `20%` da ky.
+**RC7 bi bac; RC7 va RC8 la hai nguyen nhan doc lap.**
+
+### RC1-RC8: moi nguyen nhan, kem "phep do co the noi doi nhu the nao"
+
+```text
+RC1  estimator mismatch      probe vs bg la hai dai luong khac nhau voi h2
+RC2  thieu power             probe 5 pps -> sai so nhi phan x w_loss >> margin
+RC3  hang so oi              delta = 0.44 ms tu he cu; DELTA_LOSS = 0.005 la ca thu hai
+RC4  ngan sach probe         background nguyen rho + probe -> tai thuc > muc tieu
+RC5  SE bang tra bi bo qua   coi bang tra la hang so exact -> mot FAIL gia (poisson L3)
+RC6  packet-size bias        bfifo gioi han theo BYTE -> probe 106 B loss thap hon bg 1512 B
+RC7  diem bom probe          in-band vs out-of-band -> arrival process tai bfifo khac
+RC8  silent join failure     join tra ve rong ma khong bao loi -> ket luan NGUOC
+```
+
+### Trang thai cuoi
+
+```text
+G6-ABS   h2 FAIL (-0.010130 vs 0.005) | poisson PASS
+G6-DIFF  h2 INCONCLUSIVE (tac o d_sla, ngay tai k=0) | poisson PASS
+```
+
+Branch B va C **khong mo** theo quy tac dung som cua Amendment 11. Pham vi hieu
+luc: `00n-amendment-13.md` §15.8.

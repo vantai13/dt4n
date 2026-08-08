@@ -10,6 +10,9 @@ import pytest
 from measurements import additivity_check as A
 from measurements import additivity_live as AL
 from measurements import decision_error_v2 as D
+from measurements import diag_ca_late as CA
+from measurements import diag_interp_bias as IB
+from measurements import g6_differential as G6
 from measurements import h9_separability as H9
 from measurements import plot_decision_error_v2 as P
 from measurements import quasistatic_check as Q
@@ -416,3 +419,205 @@ def test_h9_threshold_report_is_strict_about_nonzero_boundary():
 
     assert not report["pass_strict_zero"]
     assert report["n_low_nonzero"] == 1
+
+
+def test_pchip_passes_through_every_measured_grid_point():
+    x = np.array([0.90, 0.92, 0.94, 0.96, 0.98, 1.00])
+    y = np.array([0.063, 0.075, 0.085, 0.094, 0.110, 0.125])
+
+    for xi, yi in zip(x, y):
+        assert IB.pchip_eval(x, y, float(xi)) == pytest.approx(float(yi))
+
+
+def test_pchip_does_not_overshoot_on_a_convex_increasing_curve():
+    x = np.linspace(0.6, 1.0, 21)
+    y = 0.2 * (x - 0.6) ** 3
+    xq = np.linspace(0.61, 0.99, 40)
+    vals = [IB.pchip_eval(x, y, float(q)) for q in xq]
+
+    assert all(v >= -1e-12 for v in vals)
+    assert all(b >= a - 1e-12 for a, b in zip(vals, vals[1:]))
+    # On a convex curve the chord sits ABOVE the curve, so the curvature-aware
+    # reading must not exceed the linear one.
+    assert all(v <= float(np.interp(q, x, y)) + 1e-12 for v, q in zip(vals, xq))
+
+
+def test_leave_out_probe_uses_a_coarser_bracket_than_the_real_grid():
+    x = np.arange(0.60, 1.041, 0.02)
+    y = 0.1 * (x - 0.6) ** 2
+
+    loo = IB.leave_out_linear(x, y, 0.9875, spacing=0.10)
+
+    assert loo["bracket_width"] >= 0.08
+    assert loo["n_points"] < len(x)
+
+
+def test_truth_table_grid_is_uniform_for_the_load_modes():
+    grid = {(row["mode"], row["bw"], row["q"]): row for row in IB.grid_report()}
+
+    for key, row in grid.items():
+        if key[0] == "cbr":
+            continue
+        assert row["uniform"], key
+        assert row["gap_max"] == pytest.approx(0.02), key
+
+
+def test_interp_bias_at_path_level_is_far_below_the_observed_deficit():
+    links = IB.link_report(rho_bar=0.925, modes=("h2",))
+    paths = IB.path_report(links)
+
+    assert len(paths) == 1
+    # h2 interpolation bias is ~1e-5 against a ~1.1e-2 deficit: not the mechanism.
+    assert abs(paths[0]["bias_path"]) < 1e-3
+    assert paths[0]["bias_path"] == pytest.approx(paths[0]["bias_path_via_partials"], abs=1e-6)
+
+
+def test_link_report_labels_the_provenance_of_the_bracketing_points():
+    rows = {row["link"]: row for row in IB.link_report(rho_bar=0.925, modes=("h2",))}
+
+    assert rows["L1"]["provenance"] == "pure_phase-20R"
+    assert rows["L2"]["provenance"] == "mixed"
+    assert rows["L3"]["provenance"] == "pure_phase-L"
+
+
+def test_ca_verdict_flags_a_relative_burstiness_drop():
+    matched = [{"mode": "h2", "link": "L1", "ca_a": 2.0, "d_ca": 0.001, "d_ca_t": 0.4,
+                "probe_pps_a": 20.0, "probe_pps_aprime": 20.0}]
+    dropped = [{"mode": "h2", "link": "L3", "ca_a": 2.0253, "d_ca": -0.056, "d_ca_t": -4.53,
+                "probe_pps_a": 20.0, "probe_pps_aprime": 0.0}]
+
+    assert CA.verdict(matched)["verdict"] == "SOURCE_MATCHES"
+    assert not CA.verdict(matched)["probe_injection_differs"]
+    assert CA.verdict(dropped)["verdict"] == "SOURCE_DIFFERS"
+    assert CA.verdict(dropped)["probe_injection_differs"]
+
+
+def test_ca_metadata_parser_tolerates_null_fields(tmp_path):
+    path = tmp_path / "x_tx.meta.json"
+    path.write_text(json.dumps({
+        "config": {"mode": "h2", "bw_mbps": 6.0, "rho_nominal": 0.9, "probe_pps_nominal": None},
+        "c_a": {"actual_bg": 2.0, "schedule_bg": 1.99, "design_target": None},
+        "counts": {"n_bg_sent": 100, "n_late": 2, "max_late_ms": None},
+        "rates": {"rho_actual": 0.9},
+    }))
+
+    row = CA._meta_row(str(path))
+
+    assert row["late_ratio"] == pytest.approx(0.02)
+    assert row["probe_pps_nominal"] == 0.0
+    assert math.isnan(row["ca_target"])
+    assert row["max_late_ms"] == 0.0
+
+
+def test_join_assertion_rejects_a_silently_empty_cell():
+    cells = [{"mode": "h2", "link": "L1"}, {"mode": "h2", "link": "L2"}]
+    rows_a = [{}] * (CA.EXPECTED_MIN_A_ROWS + 1)
+
+    # An empty cell must raise, not be reported as a result (RC8).
+    with pytest.raises(SystemExit, match="RONG"):
+        CA.assert_join_is_populated(rows_a, cells)
+
+
+def test_join_assertion_rejects_an_undersized_branch_a_join():
+    full = [{"mode": m, "link": l} for m in CA.MODES for l in ("L1", "L2", "L3")]
+
+    with pytest.raises(SystemExit, match="join hong"):
+        CA.assert_join_is_populated([{}] * 10, full)
+
+    CA.assert_join_is_populated([{}] * (CA.EXPECTED_MIN_A_ROWS + 1), full)
+
+
+def test_inband_probe_is_rejected_for_the_path_branch():
+    args = type("Args", (), {"probe_inband": True, "raw_dir": "x", "warmup": 10.0,
+                             "probe_rate": 20.0, "probe_size": 64})()
+
+    with pytest.raises(ValueError, match="branch C"):
+        AL.run_measure_probe(None, {"branch": "C", "pid": "p"}, args, {})
+
+    with pytest.raises(ValueError, match="load_specs"):
+        AL.run_measure_probe(None, {"branch": "Aprime", "pid": "p", "link_idx": 1}, args, None)
+
+
+def test_wait_for_load_meta_times_out_instead_of_crashing_on_missing_files(tmp_path):
+    specs = {1: {"prefix": str(tmp_path / "nope")}}
+
+    with pytest.raises(AL.PointTimeout, match="chua xuat hien"):
+        AL._wait_for_load_meta(specs, timeout_s=0.05)
+
+
+def test_scaled_bias_at_k0_is_pure_common_mode():
+    residual = {"L1": {"loss": -0.001705, "delay_ms": -0.21},
+                "L2": {"loss": -0.002143, "delay_ms": -0.01},
+                "L3": {"loss": -0.001373, "delay_ms": -0.29}}
+
+    common = G6.scaled_bias(residual, 0.0)
+    observed = G6.scaled_bias(residual, 1.0)
+
+    # k = 0 removes every link-to-link difference, which is what argmin is blind to.
+    assert len({round(v["loss"], 12) for v in common.values()}) == 1
+    assert common["L1"]["loss"] == pytest.approx(
+        np.mean([r["loss"] for r in residual.values()])
+    )
+    # k = 1 reproduces the measured vector exactly.
+    for link in residual:
+        assert observed[link]["loss"] == pytest.approx(residual[link]["loss"])
+
+
+def test_link_classes_measured_cover_the_whole_topology():
+    cov = G6.class_coverage()
+
+    assert cov["full_coverage"]
+    assert cov["uncovered"] == []
+
+
+def test_paths_do_not_share_one_link_class_multiset():
+    """Why a per-class bias is not automatically common-mode."""
+    cls = G6.tandem_class_map()
+    multisets = {
+        path: tuple(sorted(cls[G6.link_class(link)] for link in T7.PATHS[path]))
+        for path in T7.PATH_NAMES
+    }
+
+    assert len(set(multisets.values())) > 1
+
+
+def test_g6_differential_keeps_the_sign_of_the_shift():
+    """max|.| hides direction, and direction decides how a number may be stated."""
+    report = json.load(open("results/phase-20R/g6_differential_inband.json"))
+
+    for block in report["modes"].values():
+        for row in block["sensitivity"]:
+            assert "d_sla_lo" in row and "d_sla_hi" in row
+            assert row["d_sla_lo"] <= row["d_sla_hi"]
+            assert row["d_err_lo"] <= row["d_err_hi"]
+            assert row["max_abs_d_dsla"] == pytest.approx(
+                max(abs(row["d_sla_lo"]), abs(row["d_sla_hi"]))
+            )
+            assert row["direction"] in (
+                "BAO THU (con so cong bo la can tren)",
+                "KHONG bao thu -- phai ghi ro",
+                "HAI CHIEU",
+            )
+
+
+def test_additivity_band_flags_only_cells_the_band_actually_flips():
+    report = json.load(open("results/phase-20R/additivity_band_sawtooth.json"))
+    rows = report["rows"]
+
+    # A cell already under the floor at baseline was never in the G2 set; only a
+    # DAT -> TRUOT transition is caused by the systematic-error band.
+    for row in rows:
+        if row["g2_baseline"] != "DAT":
+            assert not row["g2_flipped_by_band"]
+    flipped = [r for r in rows if r["g2_flipped_by_band"]]
+    assert [(r["mode"], r["rho_bar"]) for r in flipped] == [("poisson", 0.7)]
+
+
+def test_fragility_index_tracks_the_width_of_the_dsla_band():
+    report = json.load(open("results/phase-20R/additivity_band_sawtooth.json"))
+    rows = [r for r in report["rows"] if r["g2_baseline"] == "DAT"]
+    frag = np.array([r["fragility_index"] for r in rows])
+    width = np.array([r["d_sla_hi"] - r["d_sla_lo"] for r in rows])
+
+    # Rank correlation, no scipy: fragility should predict which cells move most.
+    assert P._spearman_no_scipy(pd.Series(frag), pd.Series(width)) > 0.5

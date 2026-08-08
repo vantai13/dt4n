@@ -386,6 +386,24 @@ def retryable_gate_fail(fails: Sequence[str]) -> bool:
     return bool(fails) and not any(str(fail).startswith("V-L1g-run") for fail in fails)
 
 
+def clear_load_outputs(specs: Mapping[int, Mapping[str, Any]]) -> None:
+    """Delete a previous attempt's artifacts before relaunching.
+
+    ``owd_probe recv`` opens the ``.bin`` files with mode ``wb``, which truncates
+    them immediately, while its ``_rx.meta.json`` is only written at the end. On a
+    retry that leaves a window where the metadata of attempt N-1 sits next to the
+    freshly truncated payload of attempt N, so anything that keys off "the file
+    exists" reads zero packets. Removing them makes the window impossible.
+    """
+    for spec in specs.values():
+        prefix = str(spec["prefix"])
+        for suffix in ("_bg.bin", "_bgtx.bin", "_probe.bin", "_prtx.bin", "_tx.meta.json", "_rx.meta.json"):
+            try:
+                os.remove(prefix + suffix)
+            except FileNotFoundError:
+                pass
+
+
 def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Namespace) -> Dict[int, Dict[str, Any]]:
     cwd = os.getcwd()
     rhos = rho_by_link_from_point(point)
@@ -399,6 +417,12 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
         port = LOAD_PORT_BASE + int(link_idx)
         rho_target_total = float(rhos[int(link_idx)])
         rho_probe_share = probe_load_share(int(link_idx), args) if int(link_idx) in probe_links else 0.0
+        # RC7. Out-of-band: load_gen is told the background-only rho and a separate
+        # host adds the probe. In-band: load_gen is told the TOTAL rho and carves
+        # the probe out of it internally (``background_pps(rho, bw, probe_pps)``),
+        # which is precisely what branch A did.
+        inband = bool(getattr(args, "probe_inband", False)) and int(link_idx) in probe_links
+        rho_command = float(rho_target_total) if inband else float(rho_target_total) - rho_probe_share
         rho_bg = rho_target_total - rho_probe_share
         if rho_bg <= 0.0:
             raise ValueError(
@@ -407,6 +431,9 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
             )
         seed = _load_seed(int(point["seed"]), int(link_idx))
         run_id = _run_id(point, int(link_idx))
+        # Remove the previous attempt's artifacts first: a retry must not be able
+        # to read attempt N-1's metadata beside attempt N's truncated payload.
+        clear_load_outputs({int(link_idx): {"prefix": prefix}})
         _host_cmd(
             recv,
             "cd %s && %s recv --port %d --duration %g --out-prefix %s >/dev/null 2>&1 &"
@@ -415,8 +442,12 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
         specs[int(link_idx)] = {
             "link": name,
             "bw": float(bw),
-            "rho": float(rho_bg),
-            "rho_bg": float(rho_bg),
+            "rho": float(rho_command),
+            "rho_command": float(rho_command),
+            # What ``tx.rates.rho_actual`` should equal: in-band that is the total.
+            "rho_bg": float(rho_target_total) if inband else float(rho_bg),
+            "rho_bg_command": float(rho_bg),
+            "probe_inband": bool(inband),
             "rho_target_total": float(rho_target_total),
             "rho_probe_share": float(rho_probe_share),
             "probe_traverses_link": bool(int(link_idx) in probe_links),
@@ -432,7 +463,7 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
             send,
             (
                 "cd %s && %s --dst %s --port %d --bw %g --rho %g --mode %s "
-                "--duration %g --seed %d --run-id %d --probe-pps 0 --out-prefix %s "
+                "--duration %g --seed %d --run-id %d --probe-pps %g --out-prefix %s "
                 ">/dev/null 2>&1 &"
             )
             % (
@@ -441,18 +472,69 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
                 net.get("hsink%d" % int(link_idx)).IP(),
                 int(spec["port"]),
                 float(spec["bw"]),
-                float(spec["rho_bg"]),
+                float(spec["rho_command"]),
                 str(point["mode"]),
                 float(args.duration),
                 int(spec["seed"]),
                 int(spec["run_id"]),
+                float(args.probe_rate) if spec["probe_inband"] else 0.0,
                 spec["prefix"],
             ),
         )
     return specs
 
 
-def run_measure_probe(net: Any, point: Mapping[str, Any], args: argparse.Namespace) -> Dict[str, Any]:
+def _inband_probe_result(
+    point: Mapping[str, Any],
+    args: argparse.Namespace,
+    load_specs: Mapping[int, Mapping[str, Any]],
+) -> Dict[str, Any]:
+    """Read the probe that ``load_gen`` already emitted on the measured link.
+
+    In-band the probe shares one socket and one schedule with the background, so
+    there is nothing extra to launch: the ``*_probe.bin``/``*_prtx.bin`` files
+    next to the load stream are the probe, exactly as in branch A.
+    """
+    from measurements.owd_analyze import analyze
+
+    link_idx = int(point["link_idx"])
+    spec = load_specs[link_idx]
+    prefix = str(spec["prefix"])
+    rx_path = prefix + "_probe.bin"
+    tx_path = prefix + "_prtx.bin"
+    tx_meta = read_json(prefix + "_tx.meta.json")
+    rx_meta = read_json(prefix + "_rx.meta.json")
+    owd = analyze(rx_path, tx_path, warmup_s=float(args.warmup))
+    frame_bytes = int(tx_meta.get("config", {}).get("frame_probe", int(args.probe_size) + 42))
+    rate_pps = float(tx_meta.get("rates", {}).get("probe_pps_actual", float(args.probe_rate)))
+    min_bw = float(TANDEM_BY_IDX[link_idx][2])
+    return {
+        "prefix": prefix,
+        "rx_path": rx_path,
+        "tx_path": tx_path,
+        "run_id": int(spec["run_id"]),
+        "rx_meta": rx_meta,
+        "tx_meta": tx_meta,
+        "analysis": owd,
+        "probe_intrusion_ratio": float(rate_pps * frame_bytes / capacity_bytes_per_s(min_bw)),
+        "probe_frame_bytes_on_wire": int(frame_bytes),
+        "probe_rate_pps_actual": rate_pps,
+        "probe_injection": "in_band",
+    }
+
+
+def run_measure_probe(
+    net: Any,
+    point: Mapping[str, Any],
+    args: argparse.Namespace,
+    load_specs: Optional[Mapping[int, Mapping[str, Any]]] = None,
+) -> Dict[str, Any]:
+    if bool(getattr(args, "probe_inband", False)):
+        if point["branch"] == "C":
+            raise ValueError("--probe-inband khong ap dung cho branch C (probe di suot path)")
+        if load_specs is None:
+            raise ValueError("--probe-inband can load_specs de doc luong probe cua load_gen")
+        return _inband_probe_result(point, args, load_specs)
     cwd = os.getcwd()
     prefix = _probe_prefix(args.raw_dir, point)
     ensure_parent(prefix)
@@ -518,17 +600,39 @@ def run_measure_probe(net: Any, point: Mapping[str, Any], args: argparse.Namespa
         "probe_intrusion_ratio": float(intrusion),
         "probe_frame_bytes_on_wire": int(frame_bytes),
         "probe_rate_pps_actual": rate_pps,
+        "probe_injection": "out_of_band",
     }
 
 
-def _wait_for_load_meta(specs: Mapping[int, Mapping[str, Any]]) -> Dict[int, Dict[str, Any]]:
+def _wait_for_load_meta(
+    specs: Mapping[int, Mapping[str, Any]], timeout_s: float = 0.0, since: float = 0.0
+) -> Dict[int, Dict[str, Any]]:
+    """Collect the load-side metadata, optionally waiting for it to appear.
+
+    Out-of-band, the probe sender runs in the foreground for the whole point, so
+    by the time this is called ``load_gen`` has already written its metadata. In
+    band there is no such barrier, so the caller passes a timeout and this polls.
+    """
+    deadline = time.monotonic() + max(float(timeout_s), 0.0)
     out: Dict[int, Dict[str, Any]] = {}
     for link_idx, spec in specs.items():
         prefix = str(spec["prefix"])
-        out[int(link_idx)] = {
-            "tx": read_json(prefix + "_tx.meta.json"),
-            "rx": read_json(prefix + "_rx.meta.json"),
-        }
+        paths = (prefix + "_tx.meta.json", prefix + "_rx.meta.json")
+        while True:
+            if all(
+                os.path.exists(path)
+                and os.path.getsize(path) > 0
+                and os.path.getmtime(path) >= float(since)
+                for path in paths
+            ):
+                break
+            if time.monotonic() >= deadline:
+                missing = [path for path in paths if not os.path.exists(path)]
+                raise PointTimeout(
+                    "load metadata chua xuat hien sau %.0fs: %s" % (float(timeout_s), missing or list(paths))
+                )
+            time.sleep(0.25)
+        out[int(link_idx)] = {"tx": read_json(paths[0]), "rx": read_json(paths[1])}
     return out
 
 
@@ -582,7 +686,11 @@ def _row_from_measurement(
         link_name = str(spec["link"])
         schedule = str(tx["schedule"]["digest_bg"])
         rho_bg_actual = float(tx["rates"]["rho_actual"])
-        rho_probe_actual = float(probe_share_actual_by_idx[int(link_idx)])
+        # In-band, load_gen carves the probe out of the rho it was given, so the
+        # rho_actual it reports is ALREADY the total. Adding the probe share again
+        # would double-count it -- which is exactly one probe share of error.
+        inband_link = bool(spec.get("probe_inband"))
+        rho_probe_actual = 0.0 if inband_link else float(probe_share_actual_by_idx[int(link_idx)])
         rho_total_actual = rho_bg_actual + rho_probe_actual
         rho_target_total = float(spec["rho_target_total"])
         schedule_map[link_name] = schedule
@@ -730,9 +838,19 @@ def measure_point(
     cleanup_live_processes()
     time.sleep(0.2)
     direct_before = direct_packet_snapshot(qdisc_ifaces or {})
+    launched_at = time.time()
     load_specs = start_background_loads(net, point, args)
-    probe = run_measure_probe(net, point, args)
-    load_meta = _wait_for_load_meta(load_specs)
+    if bool(getattr(args, "probe_inband", False)):
+        # The probe is inside the load stream, so wait for load_gen to finish
+        # first and then read it; there is no separate sender to start. The
+        # freshness stamp is what makes a retry safe.
+        load_meta = _wait_for_load_meta(
+            load_specs, timeout_s=float(args.duration) + 30.0, since=launched_at
+        )
+        probe = run_measure_probe(net, point, args, load_specs)
+    else:
+        probe = run_measure_probe(net, point, args)
+        load_meta = _wait_for_load_meta(load_specs)
     direct_after = direct_packet_snapshot(qdisc_ifaces or {})
     return attach_direct_packet_delta(
         _row_from_measurement(point, args, load_specs, load_meta, probe),
@@ -993,6 +1111,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--warmup", type=float, default=WARM)
     ap.add_argument("--probe-rate", type=float, default=DEFAULT_PROBE_RATE_PPS)
     ap.add_argument("--probe-size", type=int, default=DEFAULT_PROBE_SIZE_BYTES)
+    ap.add_argument(
+        "--probe-inband",
+        action="store_true",
+        help="RC7: emit the probe from the SAME load_gen socket as the background, "
+             "exactly like the Phase L truth table, instead of a separate host",
+    )
     ap.add_argument("--point-timeout", type=float, default=180.0)
     ap.add_argument("--stop-timeout", type=float, default=20.0)
     ap.add_argument("--max-points", type=int, default=None)

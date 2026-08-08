@@ -1,0 +1,282 @@
+{
+  "class_coverage": {
+    "classes_in_topology": [
+      "bw4_q10",
+      "bw6_q13",
+      "bw8_q18"
+    ],
+    "classes_measured": [
+      "bw4_q10",
+      "bw6_q13",
+      "bw8_q18"
+    ],
+    "full_coverage": true,
+    "uncovered": []
+  },
+  "g6_diff_pass_all": false,
+  "gate": {
+    "dsla_tol_frac": 0.1,
+    "err_tol_frac": 0.1,
+    "k_scales": [
+      0.0,
+      1.0,
+      2.0,
+      3.0
+    ],
+    "n_trace": 100000,
+    "seeds": [
+      11,
+      12,
+      13
+    ],
+    "worst_case_permutations": true
+  },
+  "modes": {
+    "h2": {
+      "cost_shift": {
+        "common_mode_ms": -21.30442824223681,
+        "decision_gap_ms": 103.79261741414163,
+        "differential_ms": 2.015904503452912,
+        "differential_over_gap": 0.019422426697356294,
+        "per_path_ms": {
+          "P1": -21.49956384067692,
+          "P2": -22.364129868944534,
+          "P3": -21.005793893834163,
+          "P4": -20.348225365491622
+        }
+      },
+      "differential_distinguishable": false,
+      "differential_spread_loss": 0.0002466434574162124,
+      "g6_diff_pass": false,
+      "g6_diff_verdict": "INCONCLUSIVE",
+      "mean_per_link_se_loss": 0.0013604200561309144,
+      "residual_per_link": {
+        "L1": {
+          "delay_ms": -0.1337893573260147,
+          "loss": -0.001749380359216155
+        },
+        "L2": {
+          "delay_ms": -0.06444702325844487,
+          "loss": -0.0017346530421520658
+        },
+        "L3": {
+          "delay_ms": -0.2432402874051891,
+          "loss": -0.002169025266005392
+        }
+      },
+      "sensitivity": [
+        {
+          "d_err_hi": 0.0,
+          "d_err_lo": -2.0161290322590064e-05,
+          "d_err_rel": 0.00023547264592774144,
+          "d_sla_hi": 0.003155241935483874,
+          "d_sla_lo": -0.005493951612903211,
+          "direction": "HAI CHIEU",
+          "dsla_base_mean": 0.02547640382317801,
+          "dsla_pass": false,
+          "dsla_tol": 0.002547640382317801,
+          "err_base_mean": 0.08562051971326164,
+          "err_pass": true,
+          "err_tol": 0.008562051971326165,
+          "k": 0.0,
+          "max_abs_d_dsla": 0.005493951612903211,
+          "max_abs_d_err": 2.0161290322590064e-05,
+          "order": [
+            "L3",
+            "L2",
+            "L1"
+          ]
+        },
+        {
+          "d_err_hi": 0.004062499999999998,
+          "d_err_lo": 0.0015524193548387064,
+          "d_err_rel": 0.04744773815441772,
+          "d_sla_hi": 0.003850806451612898,
+          "d_sla_lo": -0.005181451612903204,
+          "direction": "HAI CHIEU",
+          "dsla_base_mean": 0.02547640382317801,
+          "dsla_pass": false,
+          "dsla_tol": 0.002547640382317801,
+          "err_base_mean": 0.08562051971326164,
+          "err_pass": true,
+          "err_tol": 0.008562051971326165,
+          "k": 1.0,
+          "max_abs_d_dsla": 0.005181451612903204,
+          "max_abs_d_err": 0.004062499999999998,
+          "order": [
+            "L2",
+            "L3",
+            "L1"
+          ]
+        },
+        {
+          "d_err_hi": 0.008528225806451614,
+          "d_err_lo": 0.00341733870967742,
+          "d_err_rel": 0.09960492922738812,
+          "d_sla_hi": 0.004395161290322566,
+          "d_sla_lo": -0.0049697580645161055,
+          "direction": "HAI CHIEU",
+          "dsla_base_mean": 0.02547640382317801,
+          "dsla_pass": false,
+          "dsla_tol": 0.002547640382317801,
+          "err_base_mean": 0.08562051971326164,
+          "err_pass": true,
+          "err_tol": 0.008562051971326165,
+          "k": 2.0,
+          "max_abs_d_dsla": 0.0049697580645161055,
+          "max_abs_d_err": 0.008528225806451614,
+          "order": [
+            "L2",
+            "L3",
+            "L1"
+          ]
+        },
+        {
+          "d_err_hi": 0.012943548387096774,
+          "d_err_lo": 0.005534274193548384,
+          "d_err_rel": 0.15117343868553937,
+          "d_sla_hi": 0.005231854838709693,
+          "d_sla_lo": -0.0048588709677419295,
+          "direction": "HAI CHIEU",
+          "dsla_base_mean": 0.02547640382317801,
+          "dsla_pass": false,
+          "dsla_tol": 0.002547640382317801,
+          "err_base_mean": 0.08562051971326164,
+          "err_pass": false,
+          "err_tol": 0.008562051971326165,
+          "k": 3.0,
+          "max_abs_d_dsla": 0.005231854838709693,
+          "max_abs_d_err": 0.012943548387096774,
+          "order": [
+            "L2",
+            "L3",
+            "L1"
+          ]
+        }
+      ]
+    },
+    "poisson": {
+      "cost_shift": {
+        "common_mode_ms": -0.8151192406836347,
+        "decision_gap_ms": 24.08199638124603,
+        "differential_ms": 2.762805262256923,
+        "differential_over_gap": 0.11472492639391271,
+        "per_path_ms": {
+          "P1": -0.014109184038977478,
+          "P2": -2.7769144462959003,
+          "P3": -0.16152148506959732,
+          "P4": -0.30793184733006407
+        }
+      },
+      "differential_distinguishable": true,
+      "differential_spread_loss": 0.00045995887935787965,
+      "g6_diff_pass": true,
+      "g6_diff_verdict": "PASS",
+      "mean_per_link_se_loss": 0.00042658254683153145,
+      "residual_per_link": {
+        "L1": {
+          "delay_ms": -0.023123074851914005,
+          "loss": 2.1671690993338655e-05
+        },
+        "L2": {
+          "delay_ms": -0.053324695700468716,
+          "loss": -1.5688614313100853e-05
+        },
+        "L3": {
+          "delay_ms": -0.17816556274512996,
+          "loss": -0.000793023328223959
+        }
+      },
+      "sensitivity": [
+        {
+          "d_err_hi": 0.00032258064516133,
+          "d_err_lo": -0.0005544354838709666,
+          "d_err_rel": 0.001742935243793797,
+          "d_sla_hi": 0.003669354838709671,
+          "d_sla_lo": -0.0034778225806451624,
+          "direction": "HAI CHIEU",
+          "dsla_base_mean": 0.12849313022700118,
+          "dsla_pass": true,
+          "dsla_tol": 0.012849313022700119,
+          "err_base_mean": 0.31810446535244924,
+          "err_pass": true,
+          "err_tol": 0.031810446535244924,
+          "k": 0.0,
+          "max_abs_d_dsla": 0.003669354838709671,
+          "max_abs_d_err": 0.0005544354838709666,
+          "order": [
+            "L3",
+            "L2",
+            "L1"
+          ]
+        },
+        {
+          "d_err_hi": 0.027066532258064515,
+          "d_err_lo": -0.009586693548387037,
+          "d_err_rel": 0.08508692962884282,
+          "d_sla_hi": 0.005655241935483862,
+          "d_sla_lo": -0.0004939516129032206,
+          "direction": "HAI CHIEU",
+          "dsla_base_mean": 0.12849313022700118,
+          "dsla_pass": true,
+          "dsla_tol": 0.012849313022700119,
+          "err_base_mean": 0.31810446535244924,
+          "err_pass": true,
+          "err_tol": 0.031810446535244924,
+          "k": 1.0,
+          "max_abs_d_dsla": 0.005655241935483862,
+          "max_abs_d_err": 0.027066532258064515,
+          "order": [
+            "L3",
+            "L1",
+            "L2"
+          ]
+        },
+        {
+          "d_err_hi": 0.051854838709677414,
+          "d_err_lo": 0.010635080645161332,
+          "d_err_rel": 0.16301197989227836,
+          "d_sla_hi": -0.007479838709677444,
+          "d_sla_lo": -0.019475806451612926,
+          "direction": "BAO THU (con so cong bo la can tren)",
+          "dsla_base_mean": 0.12849313022700118,
+          "dsla_pass": false,
+          "dsla_tol": 0.012849313022700119,
+          "err_base_mean": 0.31810446535244924,
+          "err_pass": false,
+          "err_tol": 0.031810446535244924,
+          "k": 2.0,
+          "max_abs_d_dsla": 0.019475806451612926,
+          "max_abs_d_err": 0.051854838709677414,
+          "order": [
+            "L1",
+            "L3",
+            "L2"
+          ]
+        },
+        {
+          "d_err_hi": 0.09876008064516129,
+          "d_err_lo": 0.021179435483870912,
+          "d_err_rel": 0.3104643015172339,
+          "d_sla_hi": -0.010977822580645169,
+          "d_sla_lo": -0.02655241935483872,
+          "direction": "BAO THU (con so cong bo la can tren)",
+          "dsla_base_mean": 0.12849313022700118,
+          "dsla_pass": false,
+          "dsla_tol": 0.012849313022700119,
+          "err_base_mean": 0.31810446535244924,
+          "err_pass": false,
+          "err_tol": 0.031810446535244924,
+          "k": 3.0,
+          "max_abs_d_dsla": 0.02655241935483872,
+          "max_abs_d_err": 0.09876008064516129,
+          "order": [
+            "L1",
+            "L3",
+            "L2"
+          ]
+        }
+      ]
+    }
+  }
+}

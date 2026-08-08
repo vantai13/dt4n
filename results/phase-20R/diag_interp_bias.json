@@ -1,0 +1,298 @@
+{
+  "grid": [
+    {
+      "bw": 4.0,
+      "gap_max": 0.050000000000000044,
+      "gap_min": 0.04999999999999993,
+      "mode": "cbr",
+      "n_points": 8,
+      "q": 10,
+      "rho_max": 0.95,
+      "rho_min": 0.6,
+      "uniform": true
+    },
+    {
+      "bw": 6.0,
+      "gap_max": 0.050000000000000044,
+      "gap_min": 0.04999999999999993,
+      "mode": "cbr",
+      "n_points": 10,
+      "q": 13,
+      "rho_max": 0.95,
+      "rho_min": 0.5,
+      "uniform": true
+    },
+    {
+      "bw": 8.0,
+      "gap_max": 0.050000000000000044,
+      "gap_min": 0.04999999999999993,
+      "mode": "cbr",
+      "n_points": 8,
+      "q": 18,
+      "rho_max": 0.85,
+      "rho_min": 0.5,
+      "uniform": true
+    },
+    {
+      "bw": 4.0,
+      "gap_max": 0.020000000000000018,
+      "gap_min": 0.019999999999999907,
+      "mode": "h2",
+      "n_points": 23,
+      "q": 10,
+      "rho_max": 1.04,
+      "rho_min": 0.6,
+      "uniform": true
+    },
+    {
+      "bw": 6.0,
+      "gap_max": 0.020000000000000018,
+      "gap_min": 0.019999999999999907,
+      "mode": "h2",
+      "n_points": 28,
+      "q": 13,
+      "rho_max": 1.04,
+      "rho_min": 0.5,
+      "uniform": true
+    },
+    {
+      "bw": 8.0,
+      "gap_max": 0.020000000000000018,
+      "gap_min": 0.019999999999999907,
+      "mode": "h2",
+      "n_points": 24,
+      "q": 18,
+      "rho_max": 0.96,
+      "rho_min": 0.5,
+      "uniform": true
+    },
+    {
+      "bw": 4.0,
+      "gap_max": 0.020000000000000018,
+      "gap_min": 0.019999999999999907,
+      "mode": "poisson",
+      "n_points": 23,
+      "q": 10,
+      "rho_max": 1.04,
+      "rho_min": 0.6,
+      "uniform": true
+    },
+    {
+      "bw": 6.0,
+      "gap_max": 0.020000000000000018,
+      "gap_min": 0.019999999999999907,
+      "mode": "poisson",
+      "n_points": 28,
+      "q": 13,
+      "rho_max": 1.04,
+      "rho_min": 0.5,
+      "uniform": true
+    },
+    {
+      "bw": 8.0,
+      "gap_max": 0.020000000000000018,
+      "gap_min": 0.019999999999999907,
+      "mode": "poisson",
+      "n_points": 24,
+      "q": 18,
+      "rho_max": 0.96,
+      "rho_min": 0.5,
+      "uniform": true
+    }
+  ],
+  "kind": "interpolation_bias_and_provenance",
+  "links": [
+    {
+      "bias_curv": -8.536607126121364e-06,
+      "bracket_rho": [
+        0.84,
+        0.86
+      ],
+      "bracket_source": [
+        "phase-20R",
+        "phase-20R"
+      ],
+      "grid_gap": 0.020000000000000018,
+      "link": "L1",
+      "loo_bracket": [
+        0.8,
+        0.9
+      ],
+      "loo_bracket_width": 0.09999999999999998,
+      "loo_shift": 0.0005155562837068364,
+      "loo_spacing": 0.1,
+      "loo_value": 0.0010517766933741159,
+      "loss_curvature": 0.0005276838025411581,
+      "loss_linear": 0.0005362204096672795,
+      "mode": "poisson",
+      "provenance": "pure_phase-20R",
+      "rho": 0.8575,
+      "topology_v7_link": "uA"
+    },
+    {
+      "bias_curv": -0.00010656970486631542,
+      "bracket_rho": [
+        0.96,
+        0.98
+      ],
+      "bracket_source": [
+        "phase-20R",
+        "phase-L"
+      ],
+      "grid_gap": 0.020000000000000018,
+      "link": "L2",
+      "loo_bracket": [
+        0.9,
+        1.0
+      ],
+      "loo_bracket_width": 0.09999999999999998,
+      "loo_shift": 0.003211257083776651,
+      "loo_spacing": 0.1,
+      "loo_value": 0.028173019035878728,
+      "loss_curvature": 0.02485519224723576,
+      "loss_linear": 0.024961761952102077,
+      "mode": "poisson",
+      "provenance": "mixed",
+      "rho": 0.9775,
+      "topology_v7_link": "ac"
+    },
+    {
+      "bias_curv": -0.0001688104953231906,
+      "bracket_rho": [
+        0.98,
+        1.0
+      ],
+      "bracket_source": [
+        "phase-L",
+        "phase-L"
+      ],
+      "grid_gap": 0.020000000000000018,
+      "link": "L3",
+      "loo_bracket": [
+        0.9,
+        1.0
+      ],
+      "loo_bracket_width": 0.09999999999999998,
+      "loo_shift": 0.0015698608006891601,
+      "loo_spacing": 0.1,
+      "loo_value": 0.0399150268376676,
+      "loss_curvature": 0.03817635554165525,
+      "loss_linear": 0.03834516603697844,
+      "mode": "poisson",
+      "provenance": "pure_phase-L",
+      "rho": 0.9875,
+      "topology_v7_link": "ad"
+    },
+    {
+      "bias_curv": -4.602291730351066e-06,
+      "bracket_rho": [
+        0.84,
+        0.86
+      ],
+      "bracket_source": [
+        "phase-20R",
+        "phase-20R"
+      ],
+      "grid_gap": 0.020000000000000018,
+      "link": "L1",
+      "loo_bracket": [
+        0.8,
+        0.9
+      ],
+      "loo_bracket_width": 0.09999999999999998,
+      "loo_shift": 0.00028730606809275125,
+      "loo_spacing": 0.1,
+      "loo_value": 0.031097168864663474,
+      "loss_curvature": 0.030805260504840372,
+      "loss_linear": 0.030809862796570723,
+      "mode": "h2",
+      "provenance": "pure_phase-20R",
+      "rho": 0.8575,
+      "topology_v7_link": "uA"
+    },
+    {
+      "bias_curv": -8.835853127692195e-05,
+      "bracket_rho": [
+        0.96,
+        0.98
+      ],
+      "bracket_source": [
+        "phase-20R",
+        "phase-L"
+      ],
+      "grid_gap": 0.020000000000000018,
+      "link": "L2",
+      "loo_bracket": [
+        0.9,
+        1.0
+      ],
+      "loo_bracket_width": 0.09999999999999998,
+      "loo_shift": 0.000829366937009357,
+      "loo_spacing": 0.1,
+      "loo_value": 0.10165291587610499,
+      "loss_curvature": 0.10073519040781871,
+      "loss_linear": 0.10082354893909563,
+      "mode": "h2",
+      "provenance": "mixed",
+      "rho": 0.9775,
+      "topology_v7_link": "ac"
+    },
+    {
+      "bias_curv": 0.00013609469850356382,
+      "bracket_rho": [
+        0.98,
+        1.0
+      ],
+      "bracket_source": [
+        "phase-L",
+        "phase-L"
+      ],
+      "grid_gap": 0.020000000000000018,
+      "link": "L3",
+      "loo_bracket": [
+        0.9,
+        1.0
+      ],
+      "loo_bracket_width": 0.09999999999999998,
+      "loo_shift": -0.000219382464501372,
+      "loo_spacing": 0.1,
+      "loo_value": 0.13251615924211385,
+      "loss_curvature": 0.1328716364051188,
+      "loss_linear": 0.13273554170661522,
+      "mode": "h2",
+      "provenance": "pure_phase-L",
+      "rho": 0.9875,
+      "topology_v7_link": "ad"
+    }
+  ],
+  "loo_spacing": 0.1,
+  "note": "bias_curv = estimator bias on the real grid; loo_* = sensitivity to a coarser grid, NOT a bias",
+  "paths": [
+    {
+      "bias_path": 4.075648940660148e-05,
+      "bias_path_via_partials": 4.0744624193731914e-05,
+      "bias_share_of_deficit": -0.003544837327311447,
+      "deficit_observed": -0.01149742164262102,
+      "loo_share_of_deficit": -0.06349319783989518,
+      "loo_shift_path": 0.0007300080670036291,
+      "mode": "h2",
+      "path_loss_curvature": 0.24424324234756067,
+      "path_loss_linear": 0.24420248585815407,
+      "path_loss_loo": 0.2449324939251577
+    },
+    {
+      "bias_path": -0.0002749613582627708,
+      "bias_path_via_partials": -0.0002749410977143901,
+      "bias_share_of_deficit": 0.19950520573817537,
+      "deficit_observed": -0.0013782164592919034,
+      "loo_share_of_deficit": -3.694857057810292,
+      "loo_shift_path": 0.005092312811805,
+      "mode": "poisson",
+      "path_loss_curvature": 0.06257759091728099,
+      "path_loss_linear": 0.06285255227554376,
+      "path_loss_loo": 0.06794486508734876
+    }
+  ],
+  "phase": "20R.6",
+  "rho_bar": 0.925
+}

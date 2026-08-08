@@ -97,9 +97,14 @@ def z_score(today: Sequence[float], ref: Mapping[str, Any]) -> Dict[str, Any]:
     ref_sd = float(ref["sd"])
     ref_se = float(ref["se"])
     se_pooled = math.sqrt(se_today ** 2 + ref_se ** 2)
+    # Minimum detectable effect: the smallest true shift this comparison could
+    # have flagged. Without it, "no drift" may only mean "no power to see drift".
+    mde = Z_ALERT * se_pooled
     return {
         "n": len(vals),
         "mean": mean,
+        "mde": mde,
+        "mde_relative": mde / float(ref["mean"]) if float(ref["mean"]) else float("nan"),
         "sd": sd,
         "se": se_today,
         "ref_mean": float(ref["mean"]),
@@ -191,6 +196,14 @@ def summarize(rows: Sequence[Mapping[str, Any]], ref: Mapping[str, Any]) -> Dict
     # A' - A through w_loss and the one Phase L's sentinel never guarded.
     summary["loss_drift"] = bool(summary["loss"]["drift"])
     summary["verdict"] = "DRIFT:" + ",".join(drift_fields) if drift_fields else "STABLE"
+    # A "no drift" reading on loss is only meaningful if the sentinel cell can
+    # actually resolve an effect the size of the one under investigation.
+    summary["loss_mde"] = float(summary["loss"]["mde"])
+    summary["loss_reference_level"] = float(summary["loss"]["ref_mean"])
+    summary["loss_has_power_for"] = {
+        "deficit_%.5f" % abs(target): bool(abs(target) > summary["loss"]["mde"])
+        for target in (0.00179, 0.00257, 0.00823)
+    }
     return summary
 
 
@@ -250,7 +263,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             continue
         s = summary[field]
         print(
-            "%-10s hom nay=%.6f (sd=%.6f, n=%d)  Phase L=%.6f (sd=%.6f)  z_mean=%+.2f  z_welch=%+.2f  %s"
+            "%-10s hom nay=%.6f (sd=%.6f, n=%d)  Phase L=%.6f (sd=%.6f)  z_mean=%+.2f  z_welch=%+.2f  MDE=%.6f  %s"
             % (
                 field,
                 s["mean"],
@@ -260,9 +273,15 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 s["ref_sd"],
                 s["z_mean"],
                 s["z_welch"],
+                s["mde"],
                 "*** DRIFT ***" if s["drift"] else "on dinh",
             )
         )
+    power = summary.get("loss_has_power_for", {})
+    if power:
+        print("power tren loss: muc nen=%.6f, MDE=%.6f -> phat hien duoc %s"
+              % (summary["loss_reference_level"], summary["loss_mde"],
+                 ", ".join("%s=%s" % (k, "co" if v else "KHONG") for k, v in sorted(power.items()))))
     print("verdict=%s -> %s" % (summary.get("verdict"), args.out))
     return 0
 

@@ -497,19 +497,32 @@ So phan vi hang doi (da tru `static_ms`) giua A' va Phase L noi suy:
 Tren hang doi 9-30 ms, `p99` khop trong 0.07 ms o 5/6 o. Voi h2, `p99` gan sat
 tran buffer o CA HAI phia (vd L2: 26.217 vs 26.178, tran 26.208).
 
-Ket luan co che: neu burst bi lam muot tren duong den shaper (CPU/softirq
+**!! SUA (2026-08-07, xem Amendment 13 muc 2). Ket luan duoi day SAI. Giu lai
+nguyen van de theo vet.**
+
+~~Ket luan co che: neu burst bi lam muot tren duong den shaper (CPU/softirq
 batching, OVS datapath cua tandem) thi `sd` va `p99` cua A' phai THAP hon ro
 ret. Chung khong. Vay gia thuyet "lam muot burst" bi loai; chenh lech loss
-sinh ra o TANG DROP chu khong o tang arrival.
+sinh ra o TANG DROP chu khong o tang arrival.~~
+
+Loi lap luan: bien delay bi KIEM DUYET (censored) o tran buffer, nen "phan bo
+delay khop" KHONG phai bang chung loai tru. Xem Amendment 13 muc 2. Chinh doan
+tren da tu ghi "p99 gan sat tran o CA HAI phia" -- do la dau hieu censoring,
+khong phai dau hieu hai phan bo giong nhau.
 
 ### 10.2 Noi Suy Bang Tra: Lon Hon Uoc Luong Cu ~20 Lan
 
-Luoi truth table quanh diem can dung KHONG min o vung bao hoa:
+**!! SUA (2026-08-07, xem Amendment 13 muc 1). Toan bo muc nay SAI vi lay luoi
+tu `campaign_state.json` (chi chien dich 20R.4) thay vi tu
+`truth_table.parquet` (da tron Phase L + 20R.4). Luoi that DEU 0.02. Giu lai
+nguyen van de theo vet.**
+
+~~Luoi truth table quanh diem can dung KHONG min o vung bao hoa:~~
 
 ```text
 L1 rho = 0.8575  nam giua luoi 0.840 va 0.860   (khoang 0.02)
-L2 rho = 0.9775  nam giua luoi 0.960 va 1.040   (khoang 0.08)
-L3 rho = 0.9875  nam giua luoi 0.960 va 1.040   (khoang 0.08)
+L2 rho = 0.9775  nam giua luoi 0.960 va 1.040   (khoang 0.08)   <- SAI
+L3 rho = 0.9875  nam giua luoi 0.960 va 1.040   (khoang 0.08)   <- SAI
 ```
 
 `TruthTable.delay_loss` noi suy TUYEN TINH (`np.interp`). Ham loss loi manh o
@@ -526,8 +539,12 @@ h2   L1  |   -0.000113      -0.002567  | 4%
 h2   L3  |   -0.000191      -0.008231  | 2.3%
 ```
 
-Uoc luong cu trong muc 9.4 ("sai so noi suy ~8e-5") THAP HON thuc te khoang 20
-lan o cac o poisson. Sua lai o day.
+~~Uoc luong cu trong muc 9.4 ("sai so noi suy ~8e-5") THAP HON thuc te khoang 20
+lan o cac o poisson. Sua lai o day.~~
+
+Bang tren la LEAVE-OUT SENSITIVITY voi khoang cach ~0.08-0.10, khong phai bias
+cua estimator dang dung. Bias that (luoi 0.02) nho hon ~20 lan. So dung o
+Amendment 13 muc 1.
 
 Hai he qua:
 

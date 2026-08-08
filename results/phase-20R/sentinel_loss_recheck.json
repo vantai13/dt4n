@@ -14,7 +14,7 @@
     "rho": 0.9,
     "seed": 999
   },
-  "git_hash": "6a25b443858dd36f81c2391b0c573f4029256838",
+  "git_hash": "ae655eed0c73b4e76322e59c72e2f0ed0d98872f",
   "kind": "sentinel_loss_drift_recheck",
   "phase": "20R.6",
   "raw_dir": "results/phase-20R/raw_sentinel_recheck",
@@ -271,6 +271,8 @@
     "loss": {
       "delta": 0.0002002063209968069,
       "drift": false,
+      "mde": 0.00033778760662590243,
+      "mde_relative": 0.005285837009827154,
       "mean": 0.06410448600232357,
       "n": 4,
       "ref_mean": 0.06390427968132677,
@@ -281,12 +283,21 @@
       "z_welch": 1.7780965056411981
     },
     "loss_drift": false,
+    "loss_has_power_for": {
+      "deficit_0.00179": true,
+      "deficit_0.00257": true,
+      "deficit_0.00823": true
+    },
+    "loss_mde": 0.00033778760662590243,
+    "loss_reference_level": 0.06390427968132677,
     "max_direct_packets_delta": 0,
     "n_clean": 4,
     "n_run": 5,
     "q_mean_ms": {
       "delta": 0.036053608490552946,
       "drift": true,
+      "mde": 0.02347365108565115,
+      "mde_relative": 0.002159884848882212,
       "mean": 10.90406404793564,
       "n": 4,
       "ref_mean": 10.868010439445086,
@@ -299,5 +310,5 @@
     "verdict": "DRIFT:q_mean_ms",
     "z_alert": 3.0
   },
-  "wall_utc": "2026-08-07T03:51:26Z"
+  "wall_utc": "2026-08-07T09:03:20Z"
 }
