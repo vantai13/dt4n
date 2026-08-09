@@ -1,0 +1,1050 @@
+{
+  "band_joint_identity": "In band reports, joint is identical to full by construction for per-cell metrics; joint only has independent meaning in scan conclusions that include inter-mode K5",
+  "baseline": {
+    "K1_err_in_g1_band": true,
+    "K2_d_sla_floor": true,
+    "K3_spearman_err_z_positive": true,
+    "K4_path_ranking_preserved": true,
+    "K5_family_order_preserved": true,
+    "per_cell": {
+      "h2@0.925": {
+        "d_sla": 0.020361990950226245,
+        "err_total": 0.10935143288084465
+      },
+      "poisson@0.925": {
+        "d_sla": 0.06309703368526898,
+        "err_total": 0.2888386123680241
+      }
+    },
+    "rankings": {
+      "h2@0.925": [
+        "P1",
+        "P3",
+        "P4",
+        "P2"
+      ],
+      "poisson@0.925": [
+        "P1",
+        "P3",
+        "P4",
+        "P2"
+      ]
+    },
+    "spearman_err_z": {
+      "h2@0.925": {
+        "n": 6,
+        "rho": 1.0
+      },
+      "poisson@0.925": {
+        "n": 6,
+        "rho": 1.0
+      }
+    }
+  },
+  "calibration": "results/phase-20R/sla_calibration.json",
+  "calibration_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
+  "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+  "git_dirty": true,
+  "independent_variants": [
+    "common_mode",
+    "differential",
+    "full",
+    "joint"
+  ],
+  "is_smoke": true,
+  "joint_scaling_rule": "QT-1 shared multiplier: scan endpoint defines s = r_endpoint / point(anchor); all mode residuals in the same channel are multiplied by s",
+  "kind": "scan",
+  "n": 2000,
+  "n_independent_variants": 4,
+  "phase": "20R.6-v2",
+  "residual_file": "results/phase-20R/residual_transfer.json",
+  "residual_sha256": "3e6e5c609bd61a594b447f3e0ee2f05a75925de1e47339fb5ee1c146bebd98a5",
+  "rho_bar_filter": 0.925,
+  "safety_published": {
+    "binding": {
+      "bound": "bracket_lo",
+      "channel": "loss",
+      "first_broken": [
+        "K2_d_sla_floor"
+      ],
+      "hi": 3.0276929296918613,
+      "mode": "poisson",
+      "value": 2.901539057621367,
+      "variant": "common_mode"
+    },
+    "candidates": [
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K5_family_order_preserved"
+        ],
+        "hi": 12.88888714874099,
+        "mode": "h2",
+        "value": 12.856339453920937,
+        "variant": "common_mode"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K4_path_ranking_preserved"
+        ],
+        "hi": 6.7373728277509715,
+        "mode": "h2",
+        "value": 6.704825132930919,
+        "variant": "differential"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K4_path_ranking_preserved"
+        ],
+        "hi": 6.672277438110867,
+        "mode": "h2",
+        "value": 6.639729743290814,
+        "variant": "full"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K4_path_ranking_preserved"
+        ],
+        "hi": 6.672277438110867,
+        "mode": "h2",
+        "value": 6.639729743290814,
+        "variant": "joint"
+      },
+      {
+        "bound": "lower",
+        "channel": "delay_ms",
+        "first_broken": null,
+        "mode": "h2",
+        "value": 10.0,
+        "variant": "common_mode"
+      },
+      {
+        "bound": "lower",
+        "channel": "delay_ms",
+        "first_broken": null,
+        "mode": "h2",
+        "value": 10.0,
+        "variant": "differential"
+      },
+      {
+        "bound": "lower",
+        "channel": "delay_ms",
+        "first_broken": null,
+        "mode": "h2",
+        "value": 10.0,
+        "variant": "full"
+      },
+      {
+        "bound": "lower",
+        "channel": "delay_ms",
+        "first_broken": null,
+        "mode": "h2",
+        "value": 10.0,
+        "variant": "joint"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K2_d_sla_floor"
+        ],
+        "hi": 3.0276929296918613,
+        "mode": "poisson",
+        "value": 2.901539057621367,
+        "variant": "common_mode"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K2_d_sla_floor"
+        ],
+        "hi": 3.1538468017623558,
+        "mode": "poisson",
+        "value": 3.0276929296918613,
+        "variant": "differential"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K4_path_ranking_preserved"
+        ],
+        "hi": 4.036923906255815,
+        "mode": "poisson",
+        "value": 3.91077003418532,
+        "variant": "full"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K4_path_ranking_preserved"
+        ],
+        "hi": 3.658462290044332,
+        "mode": "poisson",
+        "value": 3.532308417973838,
+        "variant": "joint"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "delay_ms",
+        "first_broken": [
+          "K2_d_sla_floor"
+        ],
+        "hi": 6.685791015625,
+        "mode": "poisson",
+        "value": 6.685714721679687,
+        "variant": "common_mode"
+      },
+      {
+        "bound": "lower",
+        "channel": "delay_ms",
+        "first_broken": null,
+        "mode": "poisson",
+        "value": 10.0,
+        "variant": "differential"
+      },
+      {
+        "bound": "lower",
+        "channel": "delay_ms",
+        "first_broken": null,
+        "mode": "poisson",
+        "value": 10.0,
+        "variant": "full"
+      },
+      {
+        "bound": "lower",
+        "channel": "delay_ms",
+        "first_broken": null,
+        "mode": "poisson",
+        "value": 10.0,
+        "variant": "joint"
+      }
+    ],
+    "rule": "min over supported variants; bracket rows use conservative lo",
+    "value": 2.901539057621367
+  },
+  "scans": [
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K5_family_order_preserved"
+      ],
+      "mode": "h2",
+      "r_ci90": [
+        -0.0030004044999166236,
+        -0.0007683012783324518
+      ],
+      "r_max": 0.05,
+      "r_point": -0.0018843528891245376,
+      "r_star": 0.03867187500000001,
+      "r_star_bracket": {
+        "bracket_width": 9.765625000000139e-05,
+        "r_star": 0.03867187500000001,
+        "r_star_hi": 0.03867187500000001,
+        "r_star_lo": 0.03857421875000001
+      },
+      "residual_decomposition": {
+        "common_mode": -0.0018843528891245376,
+        "diff_over_cm": 0.10687145749121998,
+        "diff_rms": 0.0002013835396885306,
+        "differential": {
+          "L1": 0.0001349725299083827,
+          "L2": 0.00014969984697247186,
+          "L3": -0.00028467237688085435
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 12.88888714874099,
+        "lo": 12.856339453920937
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 0.025
+        },
+        {
+          "K1_err_in_g1_band": false,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": false,
+          "holds": false,
+          "r": 0.05
+        }
+      ],
+      "variant": "common_mode"
+    },
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K4_path_ranking_preserved"
+      ],
+      "mode": "h2",
+      "r_ci90": [
+        -0.0030004044999166236,
+        -0.0007683012783324518
+      ],
+      "r_max": 0.05,
+      "r_point": -0.0018843528891245376,
+      "r_star": 0.020214843750000003,
+      "r_star_bracket": {
+        "bracket_width": 9.765624999999792e-05,
+        "r_star": 0.020214843750000003,
+        "r_star_hi": 0.020214843750000003,
+        "r_star_lo": 0.020117187500000005
+      },
+      "residual_decomposition": {
+        "common_mode": -0.0018843528891245376,
+        "diff_over_cm": 0.10687145749121998,
+        "diff_rms": 0.0002013835396885306,
+        "differential": {
+          "L1": 0.0001349725299083827,
+          "L2": 0.00014969984697247186,
+          "L3": -0.00028467237688085435
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 6.7373728277509715,
+        "lo": 6.704825132930919
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": false,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 0.025
+        }
+      ],
+      "variant": "differential"
+    },
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K4_path_ranking_preserved"
+      ],
+      "mode": "h2",
+      "r_ci90": [
+        -0.0030004044999166236,
+        -0.0007683012783324518
+      ],
+      "r_max": 0.05,
+      "r_point": -0.0018843528891245376,
+      "r_star": 0.020019531250000007,
+      "r_star_bracket": {
+        "bracket_width": 9.765625000000139e-05,
+        "r_star": 0.020019531250000007,
+        "r_star_hi": 0.020019531250000007,
+        "r_star_lo": 0.019921875000000006
+      },
+      "residual_decomposition": {
+        "common_mode": -0.0018843528891245376,
+        "diff_over_cm": 0.10687145749121998,
+        "diff_rms": 0.0002013835396885306,
+        "differential": {
+          "L1": 0.0001349725299083827,
+          "L2": 0.00014969984697247186,
+          "L3": -0.00028467237688085435
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 6.672277438110867,
+        "lo": 6.639729743290814
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": false,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 0.025
+        }
+      ],
+      "variant": "full"
+    },
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K4_path_ranking_preserved"
+      ],
+      "mode": "h2",
+      "r_ci90": [
+        -0.0030004044999166236,
+        -0.0007683012783324518
+      ],
+      "r_max": 0.05,
+      "r_point": -0.0018843528891245376,
+      "r_star": 0.020019531250000007,
+      "r_star_bracket": {
+        "bracket_width": 9.765625000000139e-05,
+        "r_star": 0.020019531250000007,
+        "r_star_hi": 0.020019531250000007,
+        "r_star_lo": 0.019921875000000006
+      },
+      "residual_decomposition": {
+        "common_mode": -0.0018843528891245376,
+        "diff_over_cm": 0.10687145749121998,
+        "diff_rms": 0.0002013835396885306,
+        "differential": {
+          "L1": 0.0001349725299083827,
+          "L2": 0.00014969984697247186,
+          "L3": -0.00028467237688085435
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 6.672277438110867,
+        "lo": 6.639729743290814
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": false,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 0.025
+        }
+      ],
+      "variant": "joint"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": null,
+      "mode": "h2",
+      "r_ci90": [
+        -0.7435243972479476,
+        -0.13942893873134
+      ],
+      "r_max": 7.435243972479476,
+      "r_point": -0.4414766679896438,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": {
+        "common_mode": -0.14715888932988289,
+        "diff_over_cm": 0.5001512564914371,
+        "diff_rms": 0.07360170340222526,
+        "differential": {
+          "L1": 0.013369532003868173,
+          "L2": 0.08271186607143802,
+          "L3": -0.09608139807530622
+        }
+      },
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.717621986239738
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 7.435243972479476
+        }
+      ],
+      "variant": "common_mode"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": null,
+      "mode": "h2",
+      "r_ci90": [
+        -0.7435243972479476,
+        -0.13942893873134
+      ],
+      "r_max": 7.435243972479476,
+      "r_point": -0.4414766679896438,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": {
+        "common_mode": -0.14715888932988289,
+        "diff_over_cm": 0.5001512564914371,
+        "diff_rms": 0.07360170340222526,
+        "differential": {
+          "L1": 0.013369532003868173,
+          "L2": 0.08271186607143802,
+          "L3": -0.09608139807530622
+        }
+      },
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.717621986239738
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 7.435243972479476
+        }
+      ],
+      "variant": "differential"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": null,
+      "mode": "h2",
+      "r_ci90": [
+        -0.7435243972479476,
+        -0.13942893873134
+      ],
+      "r_max": 7.435243972479476,
+      "r_point": -0.4414766679896438,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": {
+        "common_mode": -0.14715888932988289,
+        "diff_over_cm": 0.5001512564914371,
+        "diff_rms": 0.07360170340222526,
+        "differential": {
+          "L1": 0.013369532003868173,
+          "L2": 0.08271186607143802,
+          "L3": -0.09608139807530622
+        }
+      },
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.717621986239738
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 7.435243972479476
+        }
+      ],
+      "variant": "full"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": null,
+      "mode": "h2",
+      "r_ci90": [
+        -0.7435243972479476,
+        -0.13942893873134
+      ],
+      "r_max": 7.435243972479476,
+      "r_point": -0.4414766679896438,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": {
+        "common_mode": -0.14715888932988289,
+        "diff_over_cm": 0.5001512564914371,
+        "diff_rms": 0.07360170340222526,
+        "differential": {
+          "L1": 0.013369532003868173,
+          "L2": 0.08271186607143802,
+          "L3": -0.09608139807530622
+        }
+      },
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.717621986239738
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 7.435243972479476
+        }
+      ],
+      "variant": "joint"
+    },
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K2_d_sla_floor"
+      ],
+      "mode": "poisson",
+      "r_ci90": [
+        -0.0007741042617021706,
+        0.00024941076067302325
+      ],
+      "r_max": 0.05,
+      "r_point": -0.0002623467505145737,
+      "r_star": 0.0023437500000000003,
+      "r_star_bracket": {
+        "bracket_width": 9.765625000000009e-05,
+        "r_star": 0.0023437500000000003,
+        "r_star_hi": 0.0023437500000000003,
+        "r_star_lo": 0.0022460937500000003
+      },
+      "residual_decomposition": {
+        "common_mode": -0.0002623467505145737,
+        "diff_over_cm": 1.431520884579032,
+        "diff_rms": 0.00037555485236305715,
+        "differential": {
+          "L1": 0.0002840184415079124,
+          "L2": 0.00024665813620147287,
+          "L3": -0.0005306765777093852
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 3.0276929296918613,
+        "lo": 2.901539057621367
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": false,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 0.025
+        }
+      ],
+      "variant": "common_mode"
+    },
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K2_d_sla_floor"
+      ],
+      "mode": "poisson",
+      "r_ci90": [
+        -0.0007741042617021706,
+        0.00024941076067302325
+      ],
+      "r_max": 0.05,
+      "r_point": -0.0002623467505145737,
+      "r_star": 0.0024414062500000004,
+      "r_star_bracket": {
+        "bracket_width": 9.765625000000009e-05,
+        "r_star": 0.0024414062500000004,
+        "r_star_hi": 0.0024414062500000004,
+        "r_star_lo": 0.0023437500000000003
+      },
+      "residual_decomposition": {
+        "common_mode": -0.0002623467505145737,
+        "diff_over_cm": 1.431520884579032,
+        "diff_rms": 0.00037555485236305715,
+        "differential": {
+          "L1": 0.0002840184415079124,
+          "L2": 0.00024665813620147287,
+          "L3": -0.0005306765777093852
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 3.1538468017623558,
+        "lo": 3.0276929296918613
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": false,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": false,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 0.025
+        }
+      ],
+      "variant": "differential"
+    },
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K4_path_ranking_preserved"
+      ],
+      "mode": "poisson",
+      "r_ci90": [
+        -0.0007741042617021706,
+        0.00024941076067302325
+      ],
+      "r_max": 0.05,
+      "r_point": -0.0002623467505145737,
+      "r_star": 0.003125,
+      "r_star_bracket": {
+        "bracket_width": 9.765625000000009e-05,
+        "r_star": 0.003125,
+        "r_star_hi": 0.003125,
+        "r_star_lo": 0.00302734375
+      },
+      "residual_decomposition": {
+        "common_mode": -0.0002623467505145737,
+        "diff_over_cm": 1.431520884579032,
+        "diff_rms": 0.00037555485236305715,
+        "differential": {
+          "L1": 0.0002840184415079124,
+          "L2": 0.00024665813620147287,
+          "L3": -0.0005306765777093852
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 4.036923906255815,
+        "lo": 3.91077003418532
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": false,
+          "K2_d_sla_floor": false,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": false,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 0.025
+        }
+      ],
+      "variant": "full"
+    },
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K4_path_ranking_preserved"
+      ],
+      "mode": "poisson",
+      "r_ci90": [
+        -0.0007741042617021706,
+        0.00024941076067302325
+      ],
+      "r_max": 0.05,
+      "r_point": -0.0002623467505145737,
+      "r_star": 0.0028320312500000003,
+      "r_star_bracket": {
+        "bracket_width": 9.765625000000009e-05,
+        "r_star": 0.0028320312500000003,
+        "r_star_hi": 0.0028320312500000003,
+        "r_star_lo": 0.0027343750000000003
+      },
+      "residual_decomposition": {
+        "common_mode": -0.0002623467505145737,
+        "diff_over_cm": 1.431520884579032,
+        "diff_rms": 0.00037555485236305715,
+        "differential": {
+          "L1": 0.0002840184415079124,
+          "L2": 0.00024665813620147287,
+          "L3": -0.0005306765777093852
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 3.658462290044332,
+        "lo": 3.532308417973838
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": false,
+          "K2_d_sla_floor": false,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": false,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 0.025
+        }
+      ],
+      "variant": "joint"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": [
+        "K2_d_sla_floor"
+      ],
+      "mode": "poisson",
+      "r_ci90": [
+        -0.7156968610055205,
+        0.2064701944104943
+      ],
+      "r_max": 7.1569686100552055,
+      "r_point": -0.2546133332975131,
+      "r_star": 4.784999643221724,
+      "r_star_bracket": {
+        "bracket_width": 5.4603337174441435e-05,
+        "r_star": 4.784999643221724,
+        "r_star_hi": 4.784999643221724,
+        "r_star_lo": 4.7849450398845494
+      },
+      "residual_decomposition": {
+        "common_mode": -0.08487111109917089,
+        "diff_over_cm": 0.7907458271118151,
+        "diff_rms": 0.06711147694401264,
+        "differential": {
+          "L1": 0.06174803624725689,
+          "L2": 0.03154641539870218,
+          "L3": -0.09329445164595906
+        }
+      },
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 6.685791015625,
+        "lo": 6.685714721679687
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.5784843050276027
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": false,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 7.1569686100552055
+        }
+      ],
+      "variant": "common_mode"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": null,
+      "mode": "poisson",
+      "r_ci90": [
+        -0.7156968610055205,
+        0.2064701944104943
+      ],
+      "r_max": 7.1569686100552055,
+      "r_point": -0.2546133332975131,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": {
+        "common_mode": -0.08487111109917089,
+        "diff_over_cm": 0.7907458271118151,
+        "diff_rms": 0.06711147694401264,
+        "differential": {
+          "L1": 0.06174803624725689,
+          "L2": 0.03154641539870218,
+          "L3": -0.09329445164595906
+        }
+      },
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.5784843050276027
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 7.1569686100552055
+        }
+      ],
+      "variant": "differential"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": null,
+      "mode": "poisson",
+      "r_ci90": [
+        -0.7156968610055205,
+        0.2064701944104943
+      ],
+      "r_max": 7.1569686100552055,
+      "r_point": -0.2546133332975131,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": {
+        "common_mode": -0.08487111109917089,
+        "diff_over_cm": 0.7907458271118151,
+        "diff_rms": 0.06711147694401264,
+        "differential": {
+          "L1": 0.06174803624725689,
+          "L2": 0.03154641539870218,
+          "L3": -0.09329445164595906
+        }
+      },
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.5784843050276027
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 7.1569686100552055
+        }
+      ],
+      "variant": "full"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": null,
+      "mode": "poisson",
+      "r_ci90": [
+        -0.7156968610055205,
+        0.2064701944104943
+      ],
+      "r_max": 7.1569686100552055,
+      "r_point": -0.2546133332975131,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": {
+        "common_mode": -0.08487111109917089,
+        "diff_over_cm": 0.7907458271118151,
+        "diff_rms": 0.06711147694401264,
+        "differential": {
+          "L1": 0.06174803624725689,
+          "L2": 0.03154641539870218,
+          "L3": -0.09329445164595906
+        }
+      },
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0
+      },
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.5784843050276027
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 7.1569686100552055
+        }
+      ],
+      "variant": "joint"
+    }
+  ],
+  "schema": "band_v2/v1",
+  "seeds": [
+    101,
+    102
+  ],
+  "truth_table": "results/phase-20R/truth_table.parquet",
+  "truth_table_sha256": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e",
+  "variant_universe": [
+    "common_mode",
+    "differential",
+    "full",
+    "joint"
+  ],
+  "variants": [
+    "common_mode",
+    "differential",
+    "full",
+    "joint"
+  ],
+  "wall_utc": "2026-08-09T03:52:25Z"
+}

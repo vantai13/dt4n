@@ -1,5 +1,8 @@
 # Phase 20R.6 -- Design Validation
 
+> SUPERSEDED cho hang G6-CASCADE. Xem `00o-amendment-14.md` va tai lieu
+> `07b-design-validation-v2.md` sau khi cascade v2 chay xong.
+
 Trang thai: preregistration truoc khi chay testbed additivity/quasistatic.
 Ngay ky: 2026-08-06.
 

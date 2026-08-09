@@ -1,0 +1,163 @@
+{
+  "deltas": [
+    0.005,
+    0.01
+  ],
+  "invariant_by_mode": {
+    "h2": {
+      "details": {
+        "branch_b": {
+          "carve_out_fraction": [
+            0.25
+          ],
+          "modes": [
+            "h2"
+          ],
+          "probe_rate": [
+            81.63855820105822
+          ],
+          "probe_size": [
+            1470
+          ],
+          "rho_bars": [
+            0.925
+          ],
+          "seeds": [
+            101,
+            102,
+            103
+          ]
+        },
+        "branch_c": {
+          "carve_out_fraction": [
+            0.25
+          ],
+          "modes": [
+            "h2"
+          ],
+          "probe_rate": [
+            81.63855820105822
+          ],
+          "probe_size": [
+            1470
+          ],
+          "rho_bars": [
+            0.925
+          ],
+          "seeds": [
+            101,
+            102,
+            103
+          ]
+        }
+      },
+      "status": "ok"
+    },
+    "poisson": {
+      "details": {
+        "branch_b": {
+          "carve_out_fraction": [
+            0.25
+          ],
+          "modes": [
+            "poisson"
+          ],
+          "probe_rate": [
+            81.63855820105822
+          ],
+          "probe_size": [
+            1470
+          ],
+          "rho_bars": [
+            0.925
+          ],
+          "seeds": [
+            101,
+            102,
+            103
+          ]
+        },
+        "branch_c": {
+          "carve_out_fraction": [
+            0.25
+          ],
+          "modes": [
+            "poisson"
+          ],
+          "probe_rate": [
+            81.63855820105822
+          ],
+          "probe_size": [
+            1470
+          ],
+          "rho_bars": [
+            0.925
+          ],
+          "seeds": [
+            101,
+            102,
+            103
+          ]
+        }
+      },
+      "status": "ok"
+    }
+  },
+  "note": "Pilot summary intentionally omits point estimates; use sd(d_s) only for power planning.",
+  "rho_bar": 0.925,
+  "rows": [
+    {
+      "channel": "loss",
+      "mode": "poisson",
+      "n_observed_seed": 0,
+      "n_seed_required": {
+        "delta_0.005": null,
+        "delta_0.01": null
+      },
+      "reason": "trajectory_digest lech o seed 101 -> khong phai paired that",
+      "sd_d_s": null,
+      "seed_ids": [],
+      "status": "insufficient_data"
+    },
+    {
+      "channel": "delay_ms",
+      "mode": "poisson",
+      "n_observed_seed": 0,
+      "n_seed_required": {
+        "delta_0.005": null,
+        "delta_0.01": null
+      },
+      "reason": "trajectory_digest lech o seed 101 -> khong phai paired that",
+      "sd_d_s": null,
+      "seed_ids": [],
+      "status": "insufficient_data"
+    },
+    {
+      "channel": "loss",
+      "mode": "h2",
+      "n_observed_seed": 0,
+      "n_seed_required": {
+        "delta_0.005": null,
+        "delta_0.01": null
+      },
+      "reason": "trajectory_digest lech o seed 101 -> khong phai paired that",
+      "sd_d_s": null,
+      "seed_ids": [],
+      "status": "insufficient_data"
+    },
+    {
+      "channel": "delay_ms",
+      "mode": "h2",
+      "n_observed_seed": 0,
+      "n_seed_required": {
+        "delta_0.005": null,
+        "delta_0.01": null
+      },
+      "reason": "trajectory_digest lech o seed 101 -> khong phai paired that",
+      "sd_d_s": null,
+      "seed_ids": [],
+      "status": "insufficient_data"
+    }
+  ],
+  "schema": "phase20r6/pilot_power_only/v1"
+}

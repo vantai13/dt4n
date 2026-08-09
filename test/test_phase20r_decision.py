@@ -160,10 +160,49 @@ def test_additivity_probe_budget_uses_phase_l_defaults():
     args = type("Args", (), {"probe_rate": AL.DEFAULT_PROBE_RATE_PPS, "probe_size": AL.DEFAULT_PROBE_SIZE_BYTES})()
 
     assert AL.DEFAULT_PROBE_RATE_PPS == pytest.approx(20.0)
-    assert AL.DEFAULT_PROBE_SIZE_BYTES == 64
-    assert A.PROBE_INTRUSION_MAX == pytest.approx(0.005)
-    assert AL.probe_load_share(3, args) == pytest.approx(0.00424)
-    assert AL.probe_load_share(3, args) < A.PROBE_INTRUSION_MAX
+    assert AL.DEFAULT_PROBE_SIZE_BYTES == 1470
+    assert A.PROBE_INTRUSION_MAX == pytest.approx(0.02)
+    assert AL.probe_load_share(3, args) == pytest.approx(0.06048)
+    assert AL.probe_load_share(3, args) > A.PROBE_INTRUSION_MAX
+
+
+def test_additivity_live_carve_out_rate_matches_slowest_link_budget():
+    args = type("Args", (), {"probe_rate": None, "probe_size": AL.DEFAULT_PROBE_SIZE_BYTES,
+                             "carve_out_fraction": 0.25})()
+    point = {"branch": "C", "rho_bar": 0.925}
+
+    rate = AL.resolved_probe_rate(point, args)
+
+    assert rate == pytest.approx(81.6386, rel=1e-4)
+    assert AL.probe_load_share(3, args, rate_pps=rate) == pytest.approx(0.246875, rel=1e-4)
+
+
+def test_rho_gate_not_dominated_by_counting_noise():
+    for duration_s in (120.0, 330.0, 660.0):
+        n_probe = int(round(81.6386 * duration_s))
+        gate = AL.rho_gate_threshold(0.16458, n_probe)
+
+        assert gate["threshold"] >= 3.0 * gate["sigma_counting"]
+
+
+def test_additivity_live_rho_gate_uses_duration_aware_threshold():
+    row = {
+        "socket_drops": 0,
+        "n_foreign": 0,
+        "max_abs_rate_error": 0.0,
+        "max_abs_rho_error": 0.006,
+        "rho_gate_threshold": 0.007,
+        "n_late_ratio": 0.0,
+        "max_late_ms": 0.0,
+        "probe_intrusion_ratio": 0.0,
+        "vl1g_run_pass": True,
+        "q_mean_ms": 1.0,
+        "n_recv_unique": 1,
+    }
+
+    assert not [fail for fail in AL.gate_live(row) if fail.startswith("rho=")]
+    row["max_abs_rho_error"] = 0.008
+    assert [fail for fail in AL.gate_live(row) if fail.startswith("rho=")]
 
 
 def test_additivity_analyze_checks_c_minus_sum_b():

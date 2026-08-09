@@ -1,0 +1,839 @@
+{
+ "argv": [
+  "/home/ubuntu/dt4n/measurements/additivity_live.py",
+  "--branch",
+  "C",
+  "--modes",
+  "poisson,h2",
+  "--rho-bar",
+  "0.925",
+  "--seeds",
+  "101",
+  "--duration",
+  "120",
+  "--state",
+  "results/phase-20R/branch_c_fixed_preflight120.json",
+  "--raw-dir",
+  "results/phase-20R/raw_additivity_fixed_preflight120"
+ ],
+ "branch": "C",
+ "carve_out_fraction": 0.25,
+ "delta_ms": 0.44,
+ "done_idx": [
+  1,
+  2
+ ],
+ "duration_s": 120.0,
+ "env": {
+  "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+  "git_dirty": true,
+  "git_status_porcelain": [
+   " M docs/phase-20R/07-design-validation.md",
+   " M measurements/additivity_check.py",
+   " M measurements/additivity_live.py",
+   " M measurements/owd_probe.py",
+   " M test/test_phase20r_decision.py",
+   " M test/test_phase_l_probe.py",
+   "?? docs/phase-20R/00o-amendment-14.md",
+   "?? docs/phase-20R/FUTURE_WORK.md",
+   "?? measurements/band_v2.py",
+   "?? measurements/cascade_residual.py",
+   "?? measurements/residual_spec.py",
+   "?? measurements/transfer_residual.py",
+   "?? results/phase-20R/band_v2_transfer.json",
+   "?? results/phase-20R/band_v2_transfer_smoke.json",
+   "?? results/phase-20R/branch_b_fixed_preflight120.json",
+   "?? results/phase-20R/branch_b_tmux_preflight.json",
+   "?? results/phase-20R/branch_b_tmux_preflight120.json",
+   "?? results/phase-20R/branch_b_v2_smoke.json",
+   "?? results/phase-20R/branch_c_tmux_preflight.json",
+   "?? results/phase-20R/branch_c_tmux_preflight120.json",
+   "?? results/phase-20R/branch_c_v2_smoke.json",
+   "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+   "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+   "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+   "?? results/phase-20R/raw_additivity_tmux_preflight/",
+   "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+   "?? results/phase-20R/raw_additivity_v2_smoke/",
+   "?? results/phase-20R/residual_transfer.json",
+   "?? test/test_phase20r6_band.py",
+   "?? tools/pilot_power_only.py"
+  ],
+  "machine": "x86_64",
+  "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+  "python_executable": "/usr/bin/python3",
+  "python_version": "3.10.12",
+  "python_version_info": [
+   3,
+   10,
+   12
+  ]
+ },
+ "estimator_version": "v2-bg",
+ "failed_rows": [],
+ "kind": "additivity_live_state",
+ "phase": "20R.6",
+ "plan_digest": "561f5226e15616e72d749f86081447459be417e31d7ad8a15a86f75081935ebe",
+ "probe_rate_policy": "carve_out_fraction",
+ "probe_rate_pps": null,
+ "probe_size_bytes": 1470,
+ "qdisc_proof": {
+  "access": [
+   {
+    "ifname": "hsrc-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hdst-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   }
+  ],
+  "measured": [
+   {
+    "base_ms": 1.107,
+    "bw": 8.0,
+    "idx": 1,
+    "if_fwd": "s0-eth4",
+    "if_rev": "s1-eth3",
+    "link": "L1",
+    "measure_assert": {
+     "bfifo_limit_bytes": 27216,
+     "ceiling_ms": 27.216,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 8Mbit ceil 8Mbit burst 1600b cburst 1600b \n Sent 352 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 4 borrowed: 0 giants: 0\n tokens: 23656 ctokens: 23656\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s0-eth4",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 352 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 27216b\n Sent 352 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 18,
+    "topology_v7_link": "uA"
+   },
+   {
+    "base_ms": 1.712,
+    "bw": 6.0,
+    "idx": 2,
+    "if_fwd": "s1-eth6",
+    "if_rev": "s2-eth3",
+    "link": "L2",
+    "measure_assert": {
+     "bfifo_limit_bytes": 19656,
+     "ceiling_ms": 26.208,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 352 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 4 borrowed: 0 giants: 0\n tokens: 31542 ctokens: 31542\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s1-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 352 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 352 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 13,
+    "topology_v7_link": "ac"
+   },
+   {
+    "base_ms": 2.436,
+    "bw": 4.0,
+    "idx": 3,
+    "if_fwd": "s2-eth6",
+    "if_rev": "s3-eth4",
+    "link": "L3",
+    "measure_assert": {
+     "bfifo_limit_bytes": 15120,
+     "ceiling_ms": 30.24,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 4Mbit ceil 4Mbit burst 1600b cburst 1600b \n Sent 1210 bytes 15 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 15 borrowed: 0 giants: 0\n tokens: 47812 ctokens: 47812\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s2-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 1210 bytes 15 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 15120b\n Sent 1210 bytes 15 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 10,
+    "topology_v7_link": "ad"
+   }
+  ],
+  "qdisc_reinstall_log": [],
+  "sysctl_saved": {
+   "net.ipv6.conf.default.disable_ipv6": "0"
+  }
+ },
+ "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+ "rows": [
+  {
+   "attempt": 1,
+   "branch": "C",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 208.10104316011504,
+   "delay_ms": 40.058864531745485,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M measurements/owd_probe.py",
+     " M test/test_phase20r_decision.py",
+     " M test/test_phase_l_probe.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? docs/phase-20R/FUTURE_WORK.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer.json",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_fixed_preflight120.json",
+     "?? results/phase-20R/branch_b_tmux_preflight.json",
+     "?? results/phase-20R/branch_b_tmux_preflight120.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_fixed_preflight120.json",
+     "?? results/phase-20R/branch_c_tmux_preflight.json",
+     "?? results/phase-20R/branch_c_tmux_preflight120.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+     "?? results/phase-20R/raw_additivity_tmux_preflight/",
+     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py",
+     "?? tools/pilot_power_only.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 1,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 1.8676063627935946,
+     "n_bg_recv": 58251,
+     "n_bg_sent": 58258,
+     "n_foreign": 0,
+     "n_late_ratio": 3.43300490919702e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.999983372714889,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574929945252097,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340507945252096,
+     "rho_probe_share": 0.1234422,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574929945252097,
+     "schedule_digest": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 9.59152951327269,
+     "n_bg_recv": 47243,
+     "n_bg_sent": 48387,
+     "n_foreign": 0,
+     "n_late_ratio": 6.2000124000248e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999810459684024,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774911919454959,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129015919454959,
+     "rho_probe_share": 0.1645896,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774911919454959,
+     "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 28392,
+     "n_bg_sent": 29389,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999700214082466,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874871971054827,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406027971054827,
+     "rho_probe_share": 0.2468844,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874871971054827,
+     "schedule_digest": "9a5360a07bb8c62b9e0557ceac6ccd82dcf6eb88644c93165d38d34b3e37a10f",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
+    "L2": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+    "L3": "9a5360a07bb8c62b9e0557ceac6ccd82dcf6eb88644c93165d38d34b3e37a10f"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.052150657454869624,
+   "max_abs_bg_rho_error": 2.2202894517375782e-05,
+   "max_abs_rate_error": 2.99785917533546e-05,
+   "max_abs_rho_error": 1.2802894517438546e-05,
+   "max_abs_total_rho_error": 1.2802894517438546e-05,
+   "max_late_ms": 9.59152951327269,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 6.2000124000248e-05,
+   "n_probe_expected": 9797,
+   "n_recv_unique": 8506,
+   "n_sent": 8974,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 8506,
+    "n_recv_unique": 8506,
+    "n_reorder": 0,
+    "n_sent": 8974
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     24.795271103847096,
+     25.098633934966248,
+     24.80228129144312,
+     24.04075929448701,
+     27.865704364588357,
+     26.465125240583223
+    ],
+    "inflation_factor": 3.8663935066238646,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.5715823259010839,
+    "se_naive_ms": 0.1478334589901041,
+    "spread_ms": 3.8249450701013465
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0001_poisson_r0925_s101_path",
+   "plan_branch_digest": "561f5226e15616e72d749f86081447459be417e31d7ad8a15a86f75081935ebe",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 1.2802894517438546e-05,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.1234422,
+    "L2": 0.1645896,
+    "L3": 0.2468844
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.2468844,
+   "probe_loss": 0.052150657454869624,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.64166666666667,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 9286,
+    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_c_0001_poisson_r0925_s101_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     190
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    190
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 120.0,
+    "duration_s_actual": 119.98213373100043,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 9797,
+    "n_sent": 9797,
+    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_c_0001_poisson_r0925_s101_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.64166666666667,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 190,
+    "schedule": "poisson_fixed_count",
+    "seed": 101700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 40.058864531745485,
+   "q_p50_ms": 39.53020899952785,
+   "q_p90_ms": 58.4637059995624,
+   "q_p95_ms": 63.59767300036433,
+   "q_p99_ms": 72.26235100042354,
+   "q_sd_ms": 13.634381062736283,
+   "queue_mean_ms": 25.50686453174548,
+   "queue_sd_ms": 13.634381062736283,
+   "rate_ratio": 0.999983372714889,
+   "rate_ratio_by_link": {
+    "L1": 0.999983372714889,
+    "L2": 0.9999810459684024,
+    "L3": 0.9999700214082466
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+   "rho_actual_by_link": {
+    "L1": 0.8574929945252097,
+    "L2": 0.9774911919454959,
+    "L3": 0.9874871971054827
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340507945252096,
+    "L2": 0.8129015919454959,
+    "L3": 0.7406027971054827
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0024941958882612027,
+    "threshold": 0.00997678355304481
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0024941958882612027,
+   "rho_gate_threshold": 0.00997678355304481,
+   "rho_probe_share_by_link": {
+    "L1": 0.1234422,
+    "L2": 0.1645896,
+    "L3": 0.2468844
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574929945252097,
+    "L2": 0.9774911919454959,
+    "L3": 0.9874871971054827
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "ebc257fb00aa94f8cd8e785d65a3ef523fa8cabc02f5d1ad872ce47ede79ae1f",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "ebc257fb00aa94f8cd8e785d65a3ef523fa8cabc02f5d1ad872ce47ede79ae1f",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T05:23:09Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 624.147631014271,
+   "delay_ms": 45.4436400985373,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M measurements/owd_probe.py",
+     " M test/test_phase20r_decision.py",
+     " M test/test_phase_l_probe.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? docs/phase-20R/FUTURE_WORK.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer.json",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_fixed_preflight120.json",
+     "?? results/phase-20R/branch_b_tmux_preflight.json",
+     "?? results/phase-20R/branch_b_tmux_preflight120.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_fixed_preflight120.json",
+     "?? results/phase-20R/branch_c_tmux_preflight.json",
+     "?? results/phase-20R/branch_c_tmux_preflight120.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+     "?? results/phase-20R/raw_additivity_tmux_preflight/",
+     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py",
+     "?? tools/pilot_power_only.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 2,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 14.06617469365301,
+     "n_bg_recv": 56857,
+     "n_bg_sent": 58258,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00022314531909780632,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999833751731819,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574929963297515,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340507963297515,
+     "rho_probe_share": 0.1234422,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574929963297515,
+     "schedule_digest": "77fd5d40493e4f271f9636efe6893bb6c0dfb96144e76c5693160e9db7a72c3d",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 1.85502861495479,
+     "n_bg_recv": 44109,
+     "n_bg_sent": 48387,
+     "n_foreign": 0,
+     "n_late_ratio": 8.266683200033066e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999810505849859,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774911956983949,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129015956983949,
+     "rho_probe_share": 0.1645896,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774911956983949,
+     "schedule_digest": "e71bb9600b4ab15ef9787daba7d89ab8f610b1fdf3119d50e2acac97b9af140a",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 1.1418665089877322,
+     "n_bg_recv": 26366,
+     "n_bg_sent": 29389,
+     "n_foreign": 0,
+     "n_late_ratio": 3.4026336384361496e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999700167500455,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874871936555025,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406027936555025,
+     "rho_probe_share": 0.2468844,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874871936555025,
+     "schedule_digest": "4a8e8e657d281a04a5a0fa4d48dace1a1c6b1737c1f96be3938e1674529cd9f6",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "77fd5d40493e4f271f9636efe6893bb6c0dfb96144e76c5693160e9db7a72c3d",
+    "L2": "e71bb9600b4ab15ef9787daba7d89ab8f610b1fdf3119d50e2acac97b9af140a",
+    "L3": "4a8e8e657d281a04a5a0fa4d48dace1a1c6b1737c1f96be3938e1674529cd9f6"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.12814798306217964,
+   "max_abs_bg_rho_error": 2.22063444975662e-05,
+   "max_abs_rate_error": 2.9983249954512736e-05,
+   "max_abs_rho_error": 1.2806344497628963e-05,
+   "max_abs_total_rho_error": 1.2806344497628963e-05,
+   "max_late_ms": 14.06617469365301,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00022314531909780632,
+   "n_probe_expected": 9797,
+   "n_recv_unique": 7824,
+   "n_sent": 8974,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 7824,
+    "n_recv_unique": 7824,
+    "n_reorder": 0,
+    "n_sent": 8974
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     30.962253170141246,
+     30.390915656425932,
+     32.05673790039381,
+     30.158360147832244,
+     31.961490283687517,
+     29.862802869056353
+    ],
+    "inflation_factor": 2.132872737444611,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.3809481527218109,
+    "se_naive_ms": 0.17860800882954872,
+    "spread_ms": 2.1939350313374604
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0002_h2_r0925_s101_path",
+   "plan_branch_digest": "561f5226e15616e72d749f86081447459be417e31d7ad8a15a86f75081935ebe",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 1.2806344497628963e-05,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.1234422,
+    "L2": 0.1645896,
+    "L3": 0.2468844
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.2468844,
+   "probe_loss": 0.12814798306217964,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.64166666666667,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 8533,
+    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_c_0002_h2_r0925_s101_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     290
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    290
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 120.0,
+    "duration_s_actual": 119.98214139699849,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 9797,
+    "n_sent": 9797,
+    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_c_0002_h2_r0925_s101_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.64166666666667,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 290,
+    "schedule": "poisson_fixed_count",
+    "seed": 101700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 45.4436400985373,
+   "q_p50_ms": 44.86715699876763,
+   "q_p90_ms": 66.55769200133031,
+   "q_p95_ms": 72.17699000047682,
+   "q_p99_ms": 82.05074300112423,
+   "q_sd_ms": 15.798481638450955,
+   "queue_mean_ms": 30.891640098537305,
+   "queue_sd_ms": 15.798481638450955,
+   "rate_ratio": 0.9999833751731819,
+   "rate_ratio_by_link": {
+    "L1": 0.9999833751731819,
+    "L2": 0.9999810505849859,
+    "L3": 0.9999700167500455
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+   "rho_actual_by_link": {
+    "L1": 0.8574929963297515,
+    "L2": 0.9774911956983949,
+    "L3": 0.9874871936555025
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340507963297515,
+    "L2": 0.8129015956983949,
+    "L3": 0.7406027936555025
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0024941958882612027,
+    "threshold": 0.00997678355304481
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0024941958882612027,
+   "rho_gate_threshold": 0.00997678355304481,
+   "rho_probe_share_by_link": {
+    "L1": 0.1234422,
+    "L2": 0.1645896,
+    "L3": 0.2468844
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574929963297515,
+    "L2": 0.9774911956983949,
+    "L3": 0.9874871936555025
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "e4229e83e91df7e77e6c38a01b5de489de686055159d0daa8a7af6eab06fcdfb",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "e4229e83e91df7e77e6c38a01b5de489de686055159d0daa8a7af6eab06fcdfb",
+   "vl1g_run_pass": true,
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-09T05:25:18Z"
+  }
+ ],
+ "runner": "measurements.additivity_live",
+ "timeout_history": [],
+ "warmup_s": 10.0
+}

@@ -1,0 +1,1067 @@
+{
+ "argv": [
+  "/home/ubuntu/dt4n/measurements/additivity_live.py",
+  "--branch",
+  "B",
+  "--modes",
+  "poisson,h2",
+  "--rho-bar",
+  "0.925",
+  "--seeds",
+  "101",
+  "--duration",
+  "120",
+  "--max-points",
+  "2",
+  "--state",
+  "results/phase-20R/branch_b_tmux_preflight120.json",
+  "--raw-dir",
+  "results/phase-20R/raw_additivity_tmux_preflight120"
+ ],
+ "branch": "B",
+ "carve_out_fraction": 0.25,
+ "delta_ms": 0.44,
+ "done_idx": [
+  1,
+  2
+ ],
+ "duration_s": 120.0,
+ "env": {
+  "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+  "git_dirty": true,
+  "git_status_porcelain": [
+   " M docs/phase-20R/07-design-validation.md",
+   " M measurements/additivity_check.py",
+   " M measurements/additivity_live.py",
+   " M test/test_phase20r_decision.py",
+   "?? docs/phase-20R/00o-amendment-14.md",
+   "?? docs/phase-20R/FUTURE_WORK.md",
+   "?? measurements/band_v2.py",
+   "?? measurements/cascade_residual.py",
+   "?? measurements/residual_spec.py",
+   "?? measurements/transfer_residual.py",
+   "?? results/phase-20R/band_v2_transfer.json",
+   "?? results/phase-20R/band_v2_transfer_smoke.json",
+   "?? results/phase-20R/branch_b_tmux_preflight.json",
+   "?? results/phase-20R/branch_b_v2_smoke.json",
+   "?? results/phase-20R/branch_c_tmux_preflight.json",
+   "?? results/phase-20R/branch_c_v2_smoke.json",
+   "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+   "?? results/phase-20R/raw_additivity_tmux_preflight/",
+   "?? results/phase-20R/raw_additivity_v2_smoke/",
+   "?? results/phase-20R/residual_transfer.json",
+   "?? test/test_phase20r6_band.py"
+  ],
+  "machine": "x86_64",
+  "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+  "python_executable": "/usr/bin/python3",
+  "python_version": "3.10.12",
+  "python_version_info": [
+   3,
+   10,
+   12
+  ]
+ },
+ "estimator_version": "v2-bg",
+ "failed_rows": [
+  {
+   "attempt": 2,
+   "attempt1_fail": [
+    "rho=0.00360"
+   ],
+   "branch": "B",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 93.62331164805413,
+   "delay_ms": 15.529608664896339,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M test/test_phase20r_decision.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? docs/phase-20R/FUTURE_WORK.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer.json",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_tmux_preflight.json",
+     "?? results/phase-20R/branch_b_tmux_preflight120.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_tmux_preflight.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_tmux_preflight/",
+     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [
+    "rho=0.00360"
+   ],
+   "idx": 2,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 1.675732537478325,
+     "n_bg_recv": 68030,
+     "n_bg_sent": 68055,
+     "n_foreign": 0,
+     "n_late_ratio": 2.938799500404085e-05,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.9999918329847262,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574929967844027,
+     "rho_bg": 0.8575000000000002,
+     "rho_bg_actual": 0.8574929967844027,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574929967844027,
+     "schedule_digest": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 18.28254640531668,
+     "n_bg_recv": 47145,
+     "n_bg_sent": 48387,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0004133341600016533,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.999981045585073,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9811048707404784,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129015916338809,
+     "rho_probe_share": 0.16820327910659746,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9811048707404784,
+     "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 37749,
+     "n_bg_sent": 39186,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.999987028183145,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874871903308557,
+     "rho_bg": 0.9875000000000002,
+     "rho_bg_actual": 0.9874871903308557,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874871903308557,
+     "schedule_digest": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
+    "L2": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+    "L3": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.02423580786026201,
+   "max_abs_bg_rho_error": 1.5075032785860643e-05,
+   "max_abs_rate_error": 1.8954414927052632e-05,
+   "max_abs_rho_error": 0.0036048707404782165,
+   "max_abs_total_rho_error": 0.0036048707404782165,
+   "max_late_ms": 18.28254640531668,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0004133341600016533,
+   "n_recv_unique": 8938,
+   "n_sent": 9160,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 8938,
+    "n_recv_unique": 8938,
+    "n_reorder": 0,
+    "n_sent": 9160
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     10.614525821941132,
+     9.523595995187893,
+     10.719069801643728,
+     10.537701869054288,
+     11.120710754803127,
+     10.548337905506134
+    ],
+    "inflation_factor": 2.524287798577598,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.21624298945186868,
+    "se_naive_ms": 0.08566495055505108,
+    "spread_ms": 1.5971147596152342
+   },
+   "phase": "20R.6",
+   "pid": "20r6_b_0002_poisson_r0925_s101_L2",
+   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+   "probe_budgeted_by_carve_out": true,
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.0036048707404782165,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.0,
+    "L2": 0.16820327910659746,
+    "L3": 0.0
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.0,
+    "L2": 0.16458333333333336,
+    "L3": 0.0
+   },
+   "probe_load_share_physical": 0.16820327910659746,
+   "probe_loss": 0.02423580786026201,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 83.43416622351064,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 9773,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight120/20r6_b_0002_poisson_r0925_s101_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     292
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    292
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 119.98681659000067,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 10011,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight120/20r6_b_0002_poisson_r0925_s101_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 83.43416622351064,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 292,
+    "seed": 101702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 15.529608664896339,
+   "q_p50_ms": 14.59631699883577,
+   "q_p90_ms": 27.54745599934214,
+   "q_p95_ms": 29.41722999905725,
+   "q_p99_ms": 30.925339999998336,
+   "q_sd_ms": 8.098849781893145,
+   "queue_mean_ms": 10.513608664896338,
+   "queue_sd_ms": 8.098849781893145,
+   "rate_ratio": 0.999981045585073,
+   "rate_ratio_by_link": {
+    "L1": 0.9999918329847262,
+    "L2": 0.999981045585073,
+    "L3": 0.999987028183145
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_tmux_preflight120",
+   "rho_actual_by_link": {
+    "L1": 0.8574929967844027,
+    "L2": 0.9811048707404784,
+    "L3": 0.9874871903308557
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.8574929967844027,
+    "L2": 0.8129015916338809,
+    "L3": 0.9874871903308557
+   },
+   "rho_probe_share_by_link": {
+    "L1": 0.0,
+    "L2": 0.16820327910659746,
+    "L3": 0.0
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574929967844027,
+    "L2": 0.9811048707404784,
+    "L3": 0.9874871903308557
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "f482de41f85c481e3160354031d6d9fc32de0e552c4418555f2fae58d62b9eed",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T04:27:51Z"
+  }
+ ],
+ "kind": "additivity_live_state",
+ "phase": "20R.6",
+ "plan_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+ "probe_rate_policy": "carve_out_fraction",
+ "probe_rate_pps": null,
+ "probe_size_bytes": 1470,
+ "qdisc_proof": {
+  "access": [
+   {
+    "ifname": "hsrc-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hdst-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   }
+  ],
+  "measured": [
+   {
+    "base_ms": 1.107,
+    "bw": 8.0,
+    "idx": 1,
+    "if_fwd": "s0-eth4",
+    "if_rev": "s1-eth3",
+    "link": "L1",
+    "measure_assert": {
+     "bfifo_limit_bytes": 27216,
+     "ceiling_ms": 27.216,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 8Mbit ceil 8Mbit burst 1600b cburst 1600b \n Sent 176 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 2 borrowed: 0 giants: 0\n tokens: 23656 ctokens: 23656\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s0-eth4",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 176 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 27216b\n Sent 176 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 18,
+    "topology_v7_link": "uA"
+   },
+   {
+    "base_ms": 1.712,
+    "bw": 6.0,
+    "idx": 2,
+    "if_fwd": "s1-eth6",
+    "if_rev": "s2-eth3",
+    "link": "L2",
+    "measure_assert": {
+     "bfifo_limit_bytes": 19656,
+     "ceiling_ms": 26.208,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 598 bytes 7 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 7 borrowed: 0 giants: 0\n tokens: 31875 ctokens: 31875\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s1-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 598 bytes 7 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 598 bytes 7 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 13,
+    "topology_v7_link": "ac"
+   },
+   {
+    "base_ms": 2.436,
+    "bw": 4.0,
+    "idx": 3,
+    "if_fwd": "s2-eth6",
+    "if_rev": "s3-eth4",
+    "link": "L3",
+    "measure_assert": {
+     "bfifo_limit_bytes": 15120,
+     "ceiling_ms": 30.24,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 4Mbit ceil 4Mbit burst 1600b cburst 1600b \n Sent 890 bytes 11 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 11 borrowed: 0 giants: 0\n tokens: 47553 ctokens: 47553\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s2-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 890 bytes 11 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 15120b\n Sent 890 bytes 11 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 10,
+    "topology_v7_link": "ad"
+   }
+  ],
+  "qdisc_reinstall_log": [],
+  "sysctl_saved": {
+   "net.ipv6.conf.default.disable_ipv6": "0"
+  }
+ },
+ "raw_dir": "results/phase-20R/raw_additivity_tmux_preflight120",
+ "rows": [
+  {
+   "attempt": 1,
+   "branch": "B",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 9.34263576751665,
+   "delay_ms": 6.83170258578094,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M test/test_phase20r_decision.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? docs/phase-20R/FUTURE_WORK.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer.json",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_tmux_preflight.json",
+     "?? results/phase-20R/branch_b_tmux_preflight120.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_tmux_preflight.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_tmux_preflight/",
+     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 1,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 2.721523491345579,
+     "n_bg_recv": 58239,
+     "n_bg_sent": 58258,
+     "n_foreign": 0,
+     "n_late_ratio": 5.14950736379553e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999833745481875,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8573236856532598,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340507958709661,
+     "rho_probe_share": 0.12327288978229373,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8573236856532598,
+     "schedule_digest": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 17.538807362143416,
+     "n_bg_recv": 56810,
+     "n_bg_sent": 58184,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00018905541042210918,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.9999909932674877,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774911959189694,
+     "rho_bg": 0.9775000000000001,
+     "rho_bg_actual": 0.9774911959189694,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774911959189694,
+     "schedule_digest": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 28.99820008678944,
+     "n_bg_recv": 37742,
+     "n_bg_sent": 39186,
+     "n_foreign": 0,
+     "n_late_ratio": 0.000382789771857296,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.99998703169143,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.987487193795287,
+     "rho_bg": 0.9875000000000002,
+     "rho_bg_actual": 0.987487193795287,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.987487193795287,
+     "schedule_digest": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
+    "L2": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
+    "L3": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0007792496938661917,
+   "max_abs_bg_rho_error": 1.2806204713111669e-05,
+   "max_abs_rate_error": 1.662545181246866e-05,
+   "max_abs_rho_error": 0.0001763143467403694,
+   "max_abs_total_rho_error": 0.0001763143467403694,
+   "max_late_ms": 28.99820008678944,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.000382789771857296,
+   "n_recv_unique": 8976,
+   "n_sent": 8983,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 8976,
+    "n_recv_unique": 8976,
+    "n_reorder": 0,
+    "n_sent": 8983
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     3.7118336946768977,
+     3.2657757446273314,
+     3.0109507129915842,
+     3.5269552199052727,
+     3.185278730799903,
+     3.229878007260747
+    ],
+    "inflation_factor": 2.195950658987933,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.10345186491449235,
+    "se_naive_ms": 0.04711028660460482,
+    "spread_ms": 0.7008829816853135
+   },
+   "phase": "20R.6",
+   "pid": "20r6_b_0001_poisson_r0925_s101_L1",
+   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+   "probe_budgeted_by_carve_out": true,
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.0001763143467403694,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12327288978229373,
+    "L2": 0.0,
+    "L3": 0.0
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.0,
+    "L3": 0.0
+   },
+   "probe_load_share_physical": 0.12327288978229373,
+   "probe_loss": 0.0007792496938661917,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.52968900945352,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 9774,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight120/20r6_b_0001_poisson_r0925_s101_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     191
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    191
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 119.96856751000087,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 9781,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight120/20r6_b_0001_poisson_r0925_s101_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 81.52968900945352,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 191,
+    "seed": 101701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 6.83170258578094,
+   "q_p50_ms": 5.009068999015028,
+   "q_p90_ms": 12.669297999990988,
+   "q_p95_ms": 16.493093999769656,
+   "q_p99_ms": 23.974532000237843,
+   "q_sd_ms": 4.463311196546441,
+   "queue_mean_ms": 3.31970258578094,
+   "queue_sd_ms": 4.463311196546441,
+   "rate_ratio": 0.9999833745481875,
+   "rate_ratio_by_link": {
+    "L1": 0.9999833745481875,
+    "L2": 0.9999909932674877,
+    "L3": 0.99998703169143
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_tmux_preflight120",
+   "rho_actual_by_link": {
+    "L1": 0.8573236856532598,
+    "L2": 0.9774911959189694,
+    "L3": 0.987487193795287
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340507958709661,
+    "L2": 0.9774911959189694,
+    "L3": 0.987487193795287
+   },
+   "rho_probe_share_by_link": {
+    "L1": 0.12327288978229373,
+    "L2": 0.0,
+    "L3": 0.0
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8573236856532598,
+    "L2": 0.9774911959189694,
+    "L3": 0.987487193795287
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "da433c1877ac7d01dabd6128afa539563a6d7c6f55528d61339d217322031117",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T04:23:34Z"
+  },
+  {
+   "attempt": 2,
+   "attempt1_fail": [
+    "rho=0.00360"
+   ],
+   "branch": "B",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 93.62331164805413,
+   "delay_ms": 15.529608664896339,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M test/test_phase20r_decision.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? docs/phase-20R/FUTURE_WORK.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer.json",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_tmux_preflight.json",
+     "?? results/phase-20R/branch_b_tmux_preflight120.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_tmux_preflight.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_tmux_preflight/",
+     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [
+    "rho=0.00360"
+   ],
+   "idx": 2,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 1.675732537478325,
+     "n_bg_recv": 68030,
+     "n_bg_sent": 68055,
+     "n_foreign": 0,
+     "n_late_ratio": 2.938799500404085e-05,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.9999918329847262,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574929967844027,
+     "rho_bg": 0.8575000000000002,
+     "rho_bg_actual": 0.8574929967844027,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574929967844027,
+     "schedule_digest": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 18.28254640531668,
+     "n_bg_recv": 47145,
+     "n_bg_sent": 48387,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0004133341600016533,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.999981045585073,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9811048707404784,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129015916338809,
+     "rho_probe_share": 0.16820327910659746,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9811048707404784,
+     "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 37749,
+     "n_bg_sent": 39186,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.999987028183145,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874871903308557,
+     "rho_bg": 0.9875000000000002,
+     "rho_bg_actual": 0.9874871903308557,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874871903308557,
+     "schedule_digest": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
+    "L2": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+    "L3": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.02423580786026201,
+   "max_abs_bg_rho_error": 1.5075032785860643e-05,
+   "max_abs_rate_error": 1.8954414927052632e-05,
+   "max_abs_rho_error": 0.0036048707404782165,
+   "max_abs_total_rho_error": 0.0036048707404782165,
+   "max_late_ms": 18.28254640531668,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0004133341600016533,
+   "n_recv_unique": 8938,
+   "n_sent": 9160,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 8938,
+    "n_recv_unique": 8938,
+    "n_reorder": 0,
+    "n_sent": 9160
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     10.614525821941132,
+     9.523595995187893,
+     10.719069801643728,
+     10.537701869054288,
+     11.120710754803127,
+     10.548337905506134
+    ],
+    "inflation_factor": 2.524287798577598,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.21624298945186868,
+    "se_naive_ms": 0.08566495055505108,
+    "spread_ms": 1.5971147596152342
+   },
+   "phase": "20R.6",
+   "pid": "20r6_b_0002_poisson_r0925_s101_L2",
+   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+   "probe_budgeted_by_carve_out": true,
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.0036048707404782165,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.0,
+    "L2": 0.16820327910659746,
+    "L3": 0.0
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.0,
+    "L2": 0.16458333333333336,
+    "L3": 0.0
+   },
+   "probe_load_share_physical": 0.16820327910659746,
+   "probe_loss": 0.02423580786026201,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 83.43416622351064,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 9773,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight120/20r6_b_0002_poisson_r0925_s101_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     292
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    292
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 119.98681659000067,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 10011,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight120/20r6_b_0002_poisson_r0925_s101_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 83.43416622351064,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 292,
+    "seed": 101702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 15.529608664896339,
+   "q_p50_ms": 14.59631699883577,
+   "q_p90_ms": 27.54745599934214,
+   "q_p95_ms": 29.41722999905725,
+   "q_p99_ms": 30.925339999998336,
+   "q_sd_ms": 8.098849781893145,
+   "queue_mean_ms": 10.513608664896338,
+   "queue_sd_ms": 8.098849781893145,
+   "rate_ratio": 0.999981045585073,
+   "rate_ratio_by_link": {
+    "L1": 0.9999918329847262,
+    "L2": 0.999981045585073,
+    "L3": 0.999987028183145
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_tmux_preflight120",
+   "rho_actual_by_link": {
+    "L1": 0.8574929967844027,
+    "L2": 0.9811048707404784,
+    "L3": 0.9874871903308557
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.8574929967844027,
+    "L2": 0.8129015916338809,
+    "L3": 0.9874871903308557
+   },
+   "rho_probe_share_by_link": {
+    "L1": 0.0,
+    "L2": 0.16820327910659746,
+    "L3": 0.0
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574929967844027,
+    "L2": 0.9811048707404784,
+    "L3": 0.9874871903308557
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "f482de41f85c481e3160354031d6d9fc32de0e552c4418555f2fae58d62b9eed",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T04:27:51Z"
+  }
+ ],
+ "runner": "measurements.additivity_live",
+ "timeout_history": [],
+ "warmup_s": 10.0
+}

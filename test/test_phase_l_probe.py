@@ -14,6 +14,8 @@ from measurements.owd_probe import (
     REC_RX,
     REC_TX,
     pack_packet,
+    poisson_fixed_count_offsets,
+    run_send,
     unpack_packet,
 )
 
@@ -52,3 +54,35 @@ def test_goi_nho_hon_header_bi_tu_choi_khong_crash():
 def test_size_nho_hon_header_thi_nem_loi_ro_rang():
     with pytest.raises(ValueError):
         pack_packet(KIND_PROBE, 0, 0.0, 0, 16)
+
+
+def test_poisson_fixed_count_offsets_are_sorted_and_bounded():
+    offsets = poisson_fixed_count_offsets(100, 2.5, seed=123)
+
+    assert len(offsets) == 100
+    assert offsets == sorted(offsets)
+    assert all(0.0 <= value < 2.5 for value in offsets)
+    assert offsets == poisson_fixed_count_offsets(100, 2.5, seed=123)
+
+
+def test_fixed_count_sender_uses_duration_accounting(tmp_path):
+    out = tmp_path / "tx.bin"
+
+    meta = run_send(
+        "127.0.0.1",
+        9,
+        "poisson",
+        rate_pps=1000.0,
+        size=64,
+        duration_s=0.001,
+        run_id=1,
+        seed=2,
+        out_path=str(out),
+        fixed_count=3,
+    )
+
+    assert meta["schedule"] == "poisson_fixed_count"
+    assert meta["n_sent"] == 3
+    assert meta["n_fixed_count"] == 3
+    assert meta["duration_s_accounting"] == 0.001
+    assert meta["rate_pps_actual"] == 3000.0

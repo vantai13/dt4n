@@ -1,0 +1,1055 @@
+{
+ "argv": [
+  "/home/ubuntu/dt4n/measurements/additivity_live.py",
+  "--branch",
+  "B",
+  "--modes",
+  "poisson,h2",
+  "--rho-bar",
+  "0.925",
+  "--seeds",
+  "101",
+  "--duration",
+  "45",
+  "--max-points",
+  "2",
+  "--state",
+  "results/phase-20R/branch_b_tmux_preflight.json",
+  "--raw-dir",
+  "results/phase-20R/raw_additivity_tmux_preflight"
+ ],
+ "branch": "B",
+ "carve_out_fraction": 0.25,
+ "delta_ms": 0.44,
+ "done_idx": [
+  1,
+  2
+ ],
+ "duration_s": 45.0,
+ "env": {
+  "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+  "git_dirty": true,
+  "git_status_porcelain": [
+   " M docs/phase-20R/07-design-validation.md",
+   " M measurements/additivity_check.py",
+   " M measurements/additivity_live.py",
+   " M test/test_phase20r_decision.py",
+   "?? docs/phase-20R/00o-amendment-14.md",
+   "?? docs/phase-20R/FUTURE_WORK.md",
+   "?? measurements/band_v2.py",
+   "?? measurements/cascade_residual.py",
+   "?? measurements/residual_spec.py",
+   "?? measurements/transfer_residual.py",
+   "?? results/phase-20R/band_v2_transfer.json",
+   "?? results/phase-20R/band_v2_transfer_smoke.json",
+   "?? results/phase-20R/branch_b_v2_smoke.json",
+   "?? results/phase-20R/branch_c_v2_smoke.json",
+   "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+   "?? results/phase-20R/raw_additivity_v2_smoke/",
+   "?? results/phase-20R/residual_transfer.json",
+   "?? test/test_phase20r6_band.py"
+  ],
+  "machine": "x86_64",
+  "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+  "python_executable": "/usr/bin/python3",
+  "python_version": "3.10.12",
+  "python_version_info": [
+   3,
+   10,
+   12
+  ]
+ },
+ "estimator_version": "v2-bg",
+ "failed_rows": [
+  {
+   "attempt": 2,
+   "attempt1_fail": [
+    "rho=0.00321"
+   ],
+   "branch": "B",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 101.97880105810943,
+   "delay_ms": 15.131846957038922,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M test/test_phase20r_decision.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? docs/phase-20R/FUTURE_WORK.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer.json",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_tmux_preflight.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_tmux_preflight/",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [
+    "rho=0.00321"
+   ],
+   "idx": 2,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 25506,
+     "n_bg_sent": 25520,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.9999673392056956,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574719933688839,
+     "rho_bg": 0.8575000000000002,
+     "rho_bg_actual": 0.8574719933688839,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574719933688839,
+     "schedule_digest": "a153c4e4de4f35c306ca8142502e15ae37f2df18d254c994085dbdd6d8fdbaf1",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 1.3659917749464512,
+     "n_bg_recv": 17694,
+     "n_bg_sent": 18145,
+     "n_foreign": 0,
+     "n_late_ratio": 5.511160099200882e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999741570157681,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9807149969665286,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8128959917987872,
+     "rho_probe_share": 0.1678190051677414,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9807149969665286,
+     "schedule_digest": "667623f8443177c46cf8a23c0cd4301bcebef0d56efa5977495f53117577e746",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 2.7923934248974547,
+     "n_bg_recv": 14177,
+     "n_bg_sent": 14694,
+     "n_foreign": 0,
+     "n_late_ratio": 6.805498843065197e-05,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.9999359723128736,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874367726589628,
+     "rho_bg": 0.9875000000000002,
+     "rho_bg_actual": 0.9874367726589628,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874367726589628,
+     "schedule_digest": "db35e63b215be6b5b323f324068d9a06974a4d09553d849dd8d4805d5bbcd4d7",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "a153c4e4de4f35c306ca8142502e15ae37f2df18d254c994085dbdd6d8fdbaf1",
+    "L2": "667623f8443177c46cf8a23c0cd4301bcebef0d56efa5977495f53117577e746",
+    "L3": "db35e63b215be6b5b323f324068d9a06974a4d09553d849dd8d4805d5bbcd4d7"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.026952315134761574,
+   "max_abs_bg_rho_error": 6.322734103736405e-05,
+   "max_abs_rate_error": 6.402768712643336e-05,
+   "max_abs_rho_error": 0.003214996966528494,
+   "max_abs_total_rho_error": 0.003214996966528494,
+   "max_late_ms": 2.7923934248974547,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 6.805498843065197e-05,
+   "n_recv_unique": 2816,
+   "n_sent": 2894,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 2816,
+    "n_recv_unique": 2816,
+    "n_reorder": 0,
+    "n_sent": 2894
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     8.968861177158383,
+     10.247533959519703,
+     11.059051839854561,
+     12.22247309979257,
+     9.682842101071685,
+     8.473249091690446
+    ],
+    "inflation_factor": 3.731894269048006,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.564085301589576,
+    "se_naive_ms": 0.1511525410213383,
+    "spread_ms": 3.7492240081021233
+   },
+   "phase": "20R.6",
+   "pid": "20r6_b_0002_poisson_r0925_s101_L2",
+   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+   "probe_budgeted_by_carve_out": true,
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.003214996966528494,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.0,
+    "L2": 0.1678190051677414,
+    "L3": 0.0
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.0,
+    "L2": 0.16458333333333336,
+    "L3": 0.0
+   },
+   "probe_load_share_physical": 0.1678190051677414,
+   "probe_loss": 0.026952315134761574,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 83.24355415066537,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 3651,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight/20r6_b_0002_poisson_r0925_s101_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     292
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    292
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 44.9884683349992,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 3745,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight/20r6_b_0002_poisson_r0925_s101_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 83.24355415066537,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 292,
+    "seed": 101702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 15.131846957038922,
+   "q_p50_ms": 13.921745000447496,
+   "q_p90_ms": 27.37186699862324,
+   "q_p95_ms": 29.25008700087748,
+   "q_p99_ms": 30.783446999452657,
+   "q_sd_ms": 8.021060234825315,
+   "queue_mean_ms": 10.115846957038922,
+   "queue_sd_ms": 8.021060234825315,
+   "rate_ratio": 0.9999741570157681,
+   "rate_ratio_by_link": {
+    "L1": 0.9999673392056956,
+    "L2": 0.9999741570157681,
+    "L3": 0.9999359723128736
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_tmux_preflight",
+   "rho_actual_by_link": {
+    "L1": 0.8574719933688839,
+    "L2": 0.9807149969665286,
+    "L3": 0.9874367726589628
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.8574719933688839,
+    "L2": 0.8128959917987872,
+    "L3": 0.9874367726589628
+   },
+   "rho_probe_share_by_link": {
+    "L1": 0.0,
+    "L2": 0.1678190051677414,
+    "L3": 0.0
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574719933688839,
+    "L2": 0.9807149969665286,
+    "L3": 0.9874367726589628
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "667623f8443177c46cf8a23c0cd4301bcebef0d56efa5977495f53117577e746",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "96fd775bf0fac9b90c634a31f281fe5e3a183fa7035824b2c36eb1733d9ccd38",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T04:16:44Z"
+  }
+ ],
+ "kind": "additivity_live_state",
+ "phase": "20R.6",
+ "plan_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+ "probe_rate_policy": "carve_out_fraction",
+ "probe_rate_pps": null,
+ "probe_size_bytes": 1470,
+ "qdisc_proof": {
+  "access": [
+   {
+    "ifname": "hsrc-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hdst-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   }
+  ],
+  "measured": [
+   {
+    "base_ms": 1.107,
+    "bw": 8.0,
+    "idx": 1,
+    "if_fwd": "s0-eth4",
+    "if_rev": "s1-eth3",
+    "link": "L1",
+    "measure_assert": {
+     "bfifo_limit_bytes": 27216,
+     "ceiling_ms": 27.216,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 8Mbit ceil 8Mbit burst 1600b cburst 1600b \n Sent 176 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 2 borrowed: 0 giants: 0\n tokens: 23593 ctokens: 23593\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s0-eth4",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 176 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 27216b\n Sent 176 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 18,
+    "topology_v7_link": "uA"
+   },
+   {
+    "base_ms": 1.712,
+    "bw": 6.0,
+    "idx": 2,
+    "if_fwd": "s1-eth6",
+    "if_rev": "s2-eth3",
+    "link": "L2",
+    "measure_assert": {
+     "bfifo_limit_bytes": 19656,
+     "ceiling_ms": 26.208,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 582 bytes 7 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 7 borrowed: 0 giants: 0\n tokens: 31875 ctokens: 31875\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s1-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 582 bytes 7 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 582 bytes 7 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 13,
+    "topology_v7_link": "ac"
+   },
+   {
+    "base_ms": 2.436,
+    "bw": 4.0,
+    "idx": 3,
+    "if_fwd": "s2-eth6",
+    "if_rev": "s3-eth4",
+    "link": "L3",
+    "measure_assert": {
+     "bfifo_limit_bytes": 15120,
+     "ceiling_ms": 30.24,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 4Mbit ceil 4Mbit burst 1600b cburst 1600b \n Sent 980 bytes 12 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 12 borrowed: 0 giants: 0\n tokens: 47812 ctokens: 47812\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s2-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 980 bytes 12 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 15120b\n Sent 980 bytes 12 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 10,
+    "topology_v7_link": "ad"
+   }
+  ],
+  "qdisc_reinstall_log": [],
+  "sysctl_saved": {
+   "net.ipv6.conf.default.disable_ipv6": "0"
+  }
+ },
+ "raw_dir": "results/phase-20R/raw_additivity_tmux_preflight",
+ "rows": [
+  {
+   "attempt": 1,
+   "branch": "B",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 9.112122811674055,
+   "delay_ms": 6.880651425491637,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M test/test_phase20r_decision.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? docs/phase-20R/FUTURE_WORK.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer.json",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_tmux_preflight.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_tmux_preflight/",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 1,
+   "link": "L1",
+   "link_idx": 1,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 21839,
+     "n_bg_sent": 21847,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999948070215664,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8579692163866931,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340591880266721,
+     "rho_probe_share": 0.12391002836002099,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8579692163866931,
+     "schedule_digest": "14011d1359a1740d7ac7dc5ac949fc45428b0b6d80b12628dd9f85343c85bac4",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 21295,
+     "n_bg_sent": 21819,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.9999909805092718,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774911834478133,
+     "rho_bg": 0.9775000000000001,
+     "rho_bg_actual": 0.9774911834478133,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774911834478133,
+     "schedule_digest": "0e9b74c10eefd2d2f966cd7df311b6ebb442d5d08191c115d97682d68660ecff",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 18.974506581798778,
+     "n_bg_recv": 14172,
+     "n_bg_sent": 14694,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0003402749421532598,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.999935966224419,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874367666466138,
+     "rho_bg": 0.9875000000000002,
+     "rho_bg_actual": 0.9874367666466138,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874367666466138,
+     "schedule_digest": "db35e63b215be6b5b323f324068d9a06974a4d09553d849dd8d4805d5bbcd4d7",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "14011d1359a1740d7ac7dc5ac949fc45428b0b6d80b12628dd9f85343c85bac4",
+    "L2": "0e9b74c10eefd2d2f966cd7df311b6ebb442d5d08191c115d97682d68660ecff",
+    "L3": "db35e63b215be6b5b323f324068d9a06974a4d09553d849dd8d4805d5bbcd4d7"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.0006925207756232687,
+   "max_abs_bg_rho_error": 6.323335338631608e-05,
+   "max_abs_rate_error": 6.403377558095169e-05,
+   "max_abs_rho_error": 0.00046921638669294996,
+   "max_abs_total_rho_error": 0.00046921638669294996,
+   "max_late_ms": 18.974506581798778,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0003402749421532598,
+   "n_recv_unique": 2886,
+   "n_sent": 2888,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 2886,
+    "n_recv_unique": 2886,
+    "n_reorder": 0,
+    "n_sent": 2888
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     2.508857306139009,
+     2.439376832930108,
+     4.147692116409166,
+     4.2163147290200005,
+     3.1102930355369938,
+     3.850543886929223
+    ],
+    "inflation_factor": 3.8236175521829456,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.3279522555382891,
+    "se_naive_ms": 0.0857701511886453,
+    "spread_ms": 1.7769378960898923
+   },
+   "phase": "20R.6",
+   "pid": "20r6_b_0001_poisson_r0925_s101_L1",
+   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+   "probe_budgeted_by_carve_out": true,
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.00046921638669294996,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12391002836002099,
+    "L2": 0.0,
+    "L3": 0.0
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.0,
+    "L3": 0.0
+   },
+   "probe_load_share_physical": 0.12391002836002099,
+   "probe_loss": 0.0006925207756232687,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.95107695768584,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 3684,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight/20r6_b_0001_poisson_r0925_s101_L1_probe_L1.bin",
+    "port": 5851,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     191
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    191
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 44.978054430001066,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 3686,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight/20r6_b_0001_poisson_r0925_s101_L1_probe_L1_tx.bin",
+    "rate_pps_actual": 81.95107695768584,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 191,
+    "seed": 101701,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 6.880651425491637,
+   "q_p50_ms": 4.943011000022409,
+   "q_p90_ms": 12.851136999187759,
+   "q_p95_ms": 16.49789600082778,
+   "q_p99_ms": 25.099699000519934,
+   "q_sd_ms": 4.607701526530116,
+   "queue_mean_ms": 3.368651425491637,
+   "queue_sd_ms": 4.607701526530116,
+   "rate_ratio": 0.9999948070215664,
+   "rate_ratio_by_link": {
+    "L1": 0.9999948070215664,
+    "L2": 0.9999909805092718,
+    "L3": 0.999935966224419
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_tmux_preflight",
+   "rho_actual_by_link": {
+    "L1": 0.8579692163866931,
+    "L2": 0.9774911834478133,
+    "L3": 0.9874367666466138
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340591880266721,
+    "L2": 0.9774911834478133,
+    "L3": 0.9874367666466138
+   },
+   "rho_probe_share_by_link": {
+    "L1": 0.12391002836002099,
+    "L2": 0.0,
+    "L3": 0.0
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8579692163866931,
+    "L2": 0.9774911834478133,
+    "L3": 0.9874367666466138
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "14011d1359a1740d7ac7dc5ac949fc45428b0b6d80b12628dd9f85343c85bac4",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 3.512,
+   "trajectory_digest": "f37d9ecac89db1d9976fbbbaba1adeb9daf905150f52ea93ee23b31b26bb3fff",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T04:14:57Z"
+  },
+  {
+   "attempt": 2,
+   "attempt1_fail": [
+    "rho=0.00321"
+   ],
+   "branch": "B",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 101.97880105810943,
+   "delay_ms": 15.131846957038922,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M test/test_phase20r_decision.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? docs/phase-20R/FUTURE_WORK.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer.json",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_tmux_preflight.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_tmux_preflight/",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [
+    "rho=0.00321"
+   ],
+   "idx": 2,
+   "link": "L2",
+   "link_idx": 2,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 25506,
+     "n_bg_sent": 25520,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.9999673392056956,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574719933688839,
+     "rho_bg": 0.8575000000000002,
+     "rho_bg_actual": 0.8574719933688839,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574719933688839,
+     "schedule_digest": "a153c4e4de4f35c306ca8142502e15ae37f2df18d254c994085dbdd6d8fdbaf1",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 1.3659917749464512,
+     "n_bg_recv": 17694,
+     "n_bg_sent": 18145,
+     "n_foreign": 0,
+     "n_late_ratio": 5.511160099200882e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999741570157681,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9807149969665286,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8128959917987872,
+     "rho_probe_share": 0.1678190051677414,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9807149969665286,
+     "schedule_digest": "667623f8443177c46cf8a23c0cd4301bcebef0d56efa5977495f53117577e746",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 2.7923934248974547,
+     "n_bg_recv": 14177,
+     "n_bg_sent": 14694,
+     "n_foreign": 0,
+     "n_late_ratio": 6.805498843065197e-05,
+     "probe_traverses_link": false,
+     "rate_ratio": 0.9999359723128736,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874367726589628,
+     "rho_bg": 0.9875000000000002,
+     "rho_bg_actual": 0.9874367726589628,
+     "rho_probe_share": 0.0,
+     "rho_probe_share_configured": 0.0,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874367726589628,
+     "schedule_digest": "db35e63b215be6b5b323f324068d9a06974a4d09553d849dd8d4805d5bbcd4d7",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "a153c4e4de4f35c306ca8142502e15ae37f2df18d254c994085dbdd6d8fdbaf1",
+    "L2": "667623f8443177c46cf8a23c0cd4301bcebef0d56efa5977495f53117577e746",
+    "L3": "db35e63b215be6b5b323f324068d9a06974a4d09553d849dd8d4805d5bbcd4d7"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.026952315134761574,
+   "max_abs_bg_rho_error": 6.322734103736405e-05,
+   "max_abs_rate_error": 6.402768712643336e-05,
+   "max_abs_rho_error": 0.003214996966528494,
+   "max_abs_total_rho_error": 0.003214996966528494,
+   "max_late_ms": 2.7923934248974547,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 6.805498843065197e-05,
+   "n_recv_unique": 2816,
+   "n_sent": 2894,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 2816,
+    "n_recv_unique": 2816,
+    "n_reorder": 0,
+    "n_sent": 2894
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     8.968861177158383,
+     10.247533959519703,
+     11.059051839854561,
+     12.22247309979257,
+     9.682842101071685,
+     8.473249091690446
+    ],
+    "inflation_factor": 3.731894269048006,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.564085301589576,
+    "se_naive_ms": 0.1511525410213383,
+    "spread_ms": 3.7492240081021233
+   },
+   "phase": "20R.6",
+   "pid": "20r6_b_0002_poisson_r0925_s101_L2",
+   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+   "probe_budgeted_by_carve_out": true,
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.003214996966528494,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.0,
+    "L2": 0.1678190051677414,
+    "L3": 0.0
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.0,
+    "L2": 0.16458333333333336,
+    "L3": 0.0
+   },
+   "probe_load_share_physical": 0.1678190051677414,
+   "probe_loss": 0.026952315134761574,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 83.24355415066537,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 3651,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight/20r6_b_0002_poisson_r0925_s101_L2_probe_L2.bin",
+    "port": 5852,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     292
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    292
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 44.9884683349992,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 3745,
+    "out": "results/phase-20R/raw_additivity_tmux_preflight/20r6_b_0002_poisson_r0925_s101_L2_probe_L2_tx.bin",
+    "rate_pps_actual": 83.24355415066537,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 292,
+    "seed": 101702,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 15.131846957038922,
+   "q_p50_ms": 13.921745000447496,
+   "q_p90_ms": 27.37186699862324,
+   "q_p95_ms": 29.25008700087748,
+   "q_p99_ms": 30.783446999452657,
+   "q_sd_ms": 8.021060234825315,
+   "queue_mean_ms": 10.115846957038922,
+   "queue_sd_ms": 8.021060234825315,
+   "rate_ratio": 0.9999741570157681,
+   "rate_ratio_by_link": {
+    "L1": 0.9999673392056956,
+    "L2": 0.9999741570157681,
+    "L3": 0.9999359723128736
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_tmux_preflight",
+   "rho_actual_by_link": {
+    "L1": 0.8574719933688839,
+    "L2": 0.9807149969665286,
+    "L3": 0.9874367726589628
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.8574719933688839,
+    "L2": 0.8128959917987872,
+    "L3": 0.9874367726589628
+   },
+   "rho_probe_share_by_link": {
+    "L1": 0.0,
+    "L2": 0.1678190051677414,
+    "L3": 0.0
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574719933688839,
+    "L2": 0.9807149969665286,
+    "L3": 0.9874367726589628
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "667623f8443177c46cf8a23c0cd4301bcebef0d56efa5977495f53117577e746",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 5.016,
+   "trajectory_digest": "96fd775bf0fac9b90c634a31f281fe5e3a183fa7035824b2c36eb1733d9ccd38",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T04:16:44Z"
+  }
+ ],
+ "runner": "measurements.additivity_live",
+ "timeout_history": [],
+ "warmup_s": 10.0
+}

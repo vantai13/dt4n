@@ -1,0 +1,496 @@
+{
+ "argv": [
+  "/home/ubuntu/dt4n/measurements/additivity_live.py",
+  "--branch",
+  "C",
+  "--modes",
+  "poisson",
+  "--rho-bar",
+  "0.925",
+  "--seeds",
+  "101",
+  "--duration",
+  "60",
+  "--state",
+  "results/phase-20R/branch_c_v2_smoke.json",
+  "--raw-dir",
+  "results/phase-20R/raw_additivity_v2_smoke",
+  "--max-points",
+  "1",
+  "--point-timeout",
+  "150"
+ ],
+ "branch": "C",
+ "carve_out_fraction": 0.25,
+ "delta_ms": 0.44,
+ "done_idx": [
+  1
+ ],
+ "duration_s": 60.0,
+ "env": {
+  "git_commit": "53ed69ee38d1dc49bf18164a8c48ea1c4fb5572b",
+  "git_dirty": true,
+  "git_status_porcelain": [
+   " M docs/phase-20R/07-design-validation.md",
+   " M measurements/additivity_check.py",
+   " M measurements/additivity_live.py",
+   " M test/test_phase20r_decision.py",
+   "?? docs/phase-20R/00o-amendment-14.md",
+   "?? measurements/band_v2.py",
+   "?? measurements/cascade_residual.py",
+   "?? measurements/residual_spec.py",
+   "?? measurements/transfer_residual.py",
+   "?? results/phase-20R/band_v2_transfer_smoke.json",
+   "?? results/phase-20R/branch_b_v2_smoke.json",
+   "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+   "?? results/phase-20R/raw_additivity_v2_smoke/",
+   "?? results/phase-20R/residual_transfer.json",
+   "?? test/test_phase20r6_band.py"
+  ],
+  "machine": "x86_64",
+  "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+  "python_executable": "/home/ubuntu/miniforge3/bin/python3",
+  "python_version": "3.13.13",
+  "python_version_info": [
+   3,
+   13,
+   13
+  ]
+ },
+ "estimator_version": "v2-bg",
+ "failed_rows": [],
+ "kind": "additivity_live_state",
+ "phase": "20R.6",
+ "plan_digest": "eac70f64873556a91fcbe0e7e8ee35e3da322c6d68ad8cd49a5685f88f7340ab",
+ "probe_rate_policy": "carve_out_fraction",
+ "probe_rate_pps": null,
+ "probe_size_bytes": 1470,
+ "qdisc_proof": {
+  "access": [
+   {
+    "ifname": "hsrc-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hdst-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   }
+  ],
+  "measured": [
+   {
+    "base_ms": 1.107,
+    "bw": 8.0,
+    "idx": 1,
+    "if_fwd": "s0-eth4",
+    "if_rev": "s1-eth3",
+    "link": "L1",
+    "measure_assert": {
+     "bfifo_limit_bytes": 27216,
+     "ceiling_ms": 27.216,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 8Mbit ceil 8Mbit burst 1600b cburst 1600b \n Sent 348 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 4 borrowed: 0 giants: 0\n tokens: 23656 ctokens: 23656\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s0-eth4",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 348 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 27216b\n Sent 348 bytes 4 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 18,
+    "topology_v7_link": "uA"
+   },
+   {
+    "base_ms": 1.712,
+    "bw": 6.0,
+    "idx": 2,
+    "if_fwd": "s1-eth6",
+    "if_rev": "s2-eth3",
+    "link": "L2",
+    "measure_assert": {
+     "bfifo_limit_bytes": 19656,
+     "ceiling_ms": 26.208,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 3 borrowed: 0 giants: 0\n tokens: 31459 ctokens: 31459\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s1-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 13,
+    "topology_v7_link": "ac"
+   },
+   {
+    "base_ms": 2.436,
+    "bw": 4.0,
+    "idx": 3,
+    "if_fwd": "s2-eth6",
+    "if_rev": "s3-eth4",
+    "link": "L3",
+    "measure_assert": {
+     "bfifo_limit_bytes": 15120,
+     "ceiling_ms": 30.24,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 4Mbit ceil 4Mbit burst 1600b cburst 1600b \n Sent 1300 bytes 16 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 16 borrowed: 0 giants: 0\n tokens: 47812 ctokens: 47812\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s2-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 1300 bytes 16 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 15120b\n Sent 1300 bytes 16 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 10,
+    "topology_v7_link": "ad"
+   }
+  ],
+  "qdisc_reinstall_log": [],
+  "sysctl_saved": {
+   "net.ipv6.conf.default.disable_ipv6": "0"
+  }
+ },
+ "raw_dir": "results/phase-20R/raw_additivity_v2_smoke",
+ "rows": [
+  {
+   "attempt": 1,
+   "branch": "C",
+   "carve_out_fraction": 0.25,
+   "cost_ms": 196.7032019029307,
+   "delay_ms": 39.94111571234879,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "53ed69ee38d1dc49bf18164a8c48ea1c4fb5572b",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/07-design-validation.md",
+     " M measurements/additivity_check.py",
+     " M measurements/additivity_live.py",
+     " M test/test_phase20r_decision.py",
+     "?? docs/phase-20R/00o-amendment-14.md",
+     "?? measurements/band_v2.py",
+     "?? measurements/cascade_residual.py",
+     "?? measurements/residual_spec.py",
+     "?? measurements/transfer_residual.py",
+     "?? results/phase-20R/band_v2_transfer_smoke.json",
+     "?? results/phase-20R/branch_b_v2_smoke.json",
+     "?? results/phase-20R/branch_c_v2_smoke.json",
+     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+     "?? results/phase-20R/raw_additivity_v2_smoke/",
+     "?? results/phase-20R/residual_transfer.json",
+     "?? test/test_phase20r6_band.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/home/ubuntu/miniforge3/bin/python3",
+    "python_version": "3.13.13",
+    "python_version_info": [
+     3,
+     13,
+     13
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 1,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 19.45494547726412,
+     "n_bg_recv": 29114,
+     "n_bg_sent": 29129,
+     "n_foreign": 0,
+     "n_late_ratio": 0.000343300490919702,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999833701565911,
+     "rho": 0.8575,
+     "rho_actual": 0.8572235939547911,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340507926472578,
+     "rho_probe_share": 0.12317280130753329,
+     "rho_probe_share_configured": 0.1234375,
+     "rho_target_total": 0.8575,
+     "rho_total_actual": 0.8572235939547911,
+     "schedule_digest": "1e02bd54582c976a87f692422322ddf124aae718ed33792cd33c674544549e76",
+     "socket_drops": 0
+    },
+    {
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 23636,
+     "n_bg_sent": 24193,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999603710608012,
+     "rho": 0.9775,
+     "rho_actual": 0.9771151867050112,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8128847849616334,
+     "rho_probe_share": 0.16423040174337772,
+     "rho_probe_share_configured": 0.16458333333333333,
+     "rho_target_total": 0.9775,
+     "rho_total_actual": 0.9771151867050112,
+     "schedule_digest": "bfd6878d979ea6f1db6dd950fcc976cca12b7ff0bcf147839ff6026dd1e9db78",
+     "socket_drops": 0
+    },
+    {
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 0.0,
+     "n_bg_recv": 14221,
+     "n_bg_sent": 14694,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999359787013653,
+     "rho": 0.9875,
+     "rho_actual": 0.9869231868407653,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7405775842256987,
+     "rho_probe_share": 0.24634560261506658,
+     "rho_probe_share_configured": 0.246875,
+     "rho_target_total": 0.9875,
+     "rho_total_actual": 0.9869231868407653,
+     "schedule_digest": "af61871b16a397ac60e0807df6db710c2fd6a1e217462a1f4719443f64febb9c",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "1e02bd54582c976a87f692422322ddf124aae718ed33792cd33c674544549e76",
+    "L2": "bfd6878d979ea6f1db6dd950fcc976cca12b7ff0bcf147839ff6026dd1e9db78",
+    "L3": "af61871b16a397ac60e0807df6db710c2fd6a1e217462a1f4719443f64febb9c"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.048649963512527365,
+   "max_abs_bg_rho_error": 4.741577430134036e-05,
+   "max_abs_rate_error": 6.402129863469774e-05,
+   "max_abs_rho_error": 0.0005768131592347459,
+   "max_abs_total_rho_error": 0.0005768131592347459,
+   "max_late_ms": 19.45494547726412,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.000343300490919702,
+   "n_recv_unique": 3911,
+   "n_sent": 4111,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 3911,
+    "n_recv_unique": 3911,
+    "n_reorder": 0,
+    "n_sent": 4111
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     25.310517663715498,
+     24.97870164486315,
+     29.039787232919153,
+     23.04038606451088,
+     25.132278841538557,
+     24.81847772928692
+    ],
+    "inflation_factor": 3.5989874151925574,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.8043653501512894,
+    "se_naive_ms": 0.22349768347502078,
+    "spread_ms": 5.999401168408273
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0001_poisson_r0925_s101_path",
+   "plan_branch_digest": "eac70f64873556a91fcbe0e7e8ee35e3da322c6d68ad8cd49a5685f88f7340ab",
+   "probe_budgeted_by_carve_out": true,
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 0.0005768131592347459,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12317280130753329,
+    "L2": 0.16423040174337772,
+    "L3": 0.24634560261506658
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.1234375,
+    "L2": 0.16458333333333333,
+    "L3": 0.246875
+   },
+   "probe_load_share_physical": 0.24634560261506658,
+   "probe_loss": 0.048649963512527365,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.46349292826275,
+   "probe_rate_pps_configured": 81.6385582010582,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 4655,
+    "out": "results/phase-20R/raw_additivity_v2_smoke/20r6_c_0001_poisson_r0925_s101_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     190
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    190
+   ],
+   "probe_sender_meta": {
+    "duration_s_actual": 59.97778666699992,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_sent": 4886,
+    "out": "results/phase-20R/raw_additivity_v2_smoke/20r6_c_0001_poisson_r0925_s101_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.46349292826275,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 190,
+    "seed": 101700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 39.94111571234879,
+   "q_p50_ms": 39.3536349999034,
+   "q_p90_ms": 59.242137000088725,
+   "q_p95_ms": 64.16165599980226,
+   "q_p99_ms": 71.67299599986686,
+   "q_sd_ms": 13.97709554888418,
+   "queue_mean_ms": 25.389115712348787,
+   "queue_sd_ms": 13.97709554888418,
+   "rate_ratio": 0.9999833701565911,
+   "rate_ratio_by_link": {
+    "L1": 0.9999833701565911,
+    "L2": 0.9999603710608012,
+    "L3": 0.9999359787013653
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_v2_smoke",
+   "rho_actual_by_link": {
+    "L1": 0.8572235939547911,
+    "L2": 0.9771151867050112,
+    "L3": 0.9869231868407653
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340507926472578,
+    "L2": 0.8128847849616334,
+    "L3": 0.7405775842256987
+   },
+   "rho_probe_share_by_link": {
+    "L1": 0.12317280130753329,
+    "L2": 0.16423040174337772,
+    "L3": 0.24634560261506658
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575,
+    "L2": 0.9775,
+    "L3": 0.9875
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8572235939547911,
+    "L2": 0.9771151867050112,
+    "L3": 0.9869231868407653
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "b6561623f4809ee4600f199249ccc61c75ae5b4d8d21c9c8650d4c0fa289bd21",
+   "seed": 101,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "b6561623f4809ee4600f199249ccc61c75ae5b4d8d21c9c8650d4c0fa289bd21",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T02:14:40Z"
+  }
+ ],
+ "runner": "measurements.additivity_live",
+ "timeout_history": [],
+ "warmup_s": 10.0
+}

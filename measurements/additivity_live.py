@@ -35,7 +35,7 @@ from measurements.additivity_check import (
     stable_digest,
 )
 from measurements.provenance import env_fingerprint
-from mininet.load_spec import FRAME_OVERHEAD_BYTES, PAYLOAD_PROBE, PROBE_PPS, capacity_bytes_per_s
+from mininet.load_spec import FRAME_OVERHEAD_BYTES, PAYLOAD_BG, PAYLOAD_PROBE, PROBE_PPS, capacity_bytes_per_s
 from mininet.topology_tandem import TANDEM_BY_IDX, TANDEM_LINKS
 from twin import cost_v2 as C
 
@@ -54,7 +54,10 @@ PROBE_PORT_BASE = 5850
 PATH_PROBE_PORT = 5899
 PATH_NAME = "T123"
 DEFAULT_PROBE_RATE_PPS = PROBE_PPS
-DEFAULT_PROBE_SIZE_BYTES = PAYLOAD_PROBE
+DEFAULT_PROBE_SIZE_BYTES = PAYLOAD_BG
+DEFAULT_CARVE_OUT_FRACTION = 0.25
+RHO_ERROR_MAX = 0.003
+RHO_GATE_K_SIGMA = 4.0
 LG = "python3 -m measurements.load_gen"
 PB = "python3 -m measurements.owd_probe"
 
@@ -256,8 +259,11 @@ def new_state(branch: str, plan: Sequence[Mapping[str, Any]], args: argparse.Nam
         "raw_dir": args.raw_dir,
         "duration_s": float(args.duration),
         "warmup_s": float(args.warmup),
-        "probe_rate_pps": float(args.probe_rate),
+        "probe_rate_pps": None if _fixed_probe_rate(args) is None else float(_fixed_probe_rate(args)),
+        "probe_rate_policy": "carve_out_fraction" if _fixed_probe_rate(args) is None else "fixed",
+        "carve_out_fraction": float(getattr(args, "carve_out_fraction", 0.0) or 0.0),
         "probe_size_bytes": int(args.probe_size),
+        "estimator_version": "v2-bg",
         "delta_ms": float(DELTA_MS),
         "done_idx": [],
         "rows": [],
@@ -331,6 +337,26 @@ def probe_frame_bytes_on_wire(probe_size_bytes: int) -> int:
     return int(probe_size_bytes) + int(FRAME_OVERHEAD_BYTES)
 
 
+def _fixed_probe_rate(args: argparse.Namespace) -> Optional[float]:
+    rate = getattr(args, "probe_rate", None)
+    return None if rate is None else float(rate)
+
+
+def resolved_probe_rate(point: Mapping[str, Any], args: argparse.Namespace) -> float:
+    fixed = _fixed_probe_rate(args)
+    if fixed is not None:
+        return float(fixed)
+    fraction = float(getattr(args, "carve_out_fraction", 0.0) or 0.0)
+    if fraction <= 0.0:
+        return float(DEFAULT_PROBE_RATE_PPS)
+    rhos = rho_by_link_from_point(point)
+    loaded = _load_links(point)
+    slow_idx = min(loaded, key=lambda idx: float(TANDEM_BY_IDX[int(idx)][2]))
+    _name, _t7_link, bw, _q, _base = TANDEM_BY_IDX[int(slow_idx)]
+    frame = probe_frame_bytes_on_wire(int(args.probe_size))
+    return float(fraction) * float(rhos[int(slow_idx)]) * capacity_bytes_per_s(float(bw)) / float(frame)
+
+
 def probe_load_share(
     link_idx: int,
     args: argparse.Namespace,
@@ -338,9 +364,30 @@ def probe_load_share(
     frame_bytes: Optional[int] = None,
 ) -> float:
     _name, _t7_link, bw, _q, _base = TANDEM_BY_IDX[int(link_idx)]
-    rate = float(args.probe_rate if rate_pps is None else rate_pps)
+    rate = float((DEFAULT_PROBE_RATE_PPS if _fixed_probe_rate(args) is None else _fixed_probe_rate(args)) if rate_pps is None else rate_pps)
     frame = int(probe_frame_bytes_on_wire(args.probe_size) if frame_bytes is None else frame_bytes)
     return rate * frame / capacity_bytes_per_s(float(bw))
+
+
+def expected_probe_count(point: Mapping[str, Any], args: argparse.Namespace) -> int:
+    return int(round(resolved_probe_rate(point, args) * float(args.duration)))
+
+
+def rho_gate_threshold(
+    probe_share: float,
+    n_probe_expected: int,
+    floor: float = RHO_ERROR_MAX,
+    k_sigma: float = RHO_GATE_K_SIGMA,
+) -> Dict[str, Any]:
+    sigma = float(probe_share) / math.sqrt(max(int(n_probe_expected), 1))
+    threshold = max(float(floor), float(k_sigma) * sigma)
+    return {
+        "threshold": float(threshold),
+        "floor": float(floor),
+        "k_sigma": float(k_sigma),
+        "sigma_counting": float(sigma),
+        "binding": "floor" if threshold == float(floor) else "counting",
+    }
 
 
 def _load_prefix(raw_dir: str, point: Mapping[str, Any], link_idx: int) -> str:
@@ -408,6 +455,7 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
     cwd = os.getcwd()
     rhos = rho_by_link_from_point(point)
     probe_links = set(probe_links_for_point(point))
+    probe_rate = resolved_probe_rate(point, args)
     specs: Dict[int, Dict[str, Any]] = {}
     for link_idx in _load_links(point):
         name, _t7_link, bw, _q, _base = TANDEM_BY_IDX[int(link_idx)]
@@ -416,7 +464,7 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
         recv = net.get("hsink%d" % int(link_idx))
         port = LOAD_PORT_BASE + int(link_idx)
         rho_target_total = float(rhos[int(link_idx)])
-        rho_probe_share = probe_load_share(int(link_idx), args) if int(link_idx) in probe_links else 0.0
+        rho_probe_share = probe_load_share(int(link_idx), args, rate_pps=probe_rate) if int(link_idx) in probe_links else 0.0
         # RC7. Out-of-band: load_gen is told the background-only rho and a separate
         # host adds the probe. In-band: load_gen is told the TOTAL rho and carves
         # the probe out of it internally (``background_pps(rho, bw, probe_pps)``),
@@ -477,7 +525,7 @@ def start_background_loads(net: Any, point: Mapping[str, Any], args: argparse.Na
                 float(args.duration),
                 int(spec["seed"]),
                 int(spec["run_id"]),
-                float(args.probe_rate) if spec["probe_inband"] else 0.0,
+                float(probe_rate) if spec["probe_inband"] else 0.0,
                 spec["prefix"],
             ),
         )
@@ -506,7 +554,7 @@ def _inband_probe_result(
     rx_meta = read_json(prefix + "_rx.meta.json")
     owd = analyze(rx_path, tx_path, warmup_s=float(args.warmup))
     frame_bytes = int(tx_meta.get("config", {}).get("frame_probe", int(args.probe_size) + 42))
-    rate_pps = float(tx_meta.get("rates", {}).get("probe_pps_actual", float(args.probe_rate)))
+    rate_pps = float(tx_meta.get("rates", {}).get("probe_pps_actual", resolved_probe_rate(point, args)))
     min_bw = float(TANDEM_BY_IDX[link_idx][2])
     return {
         "prefix": prefix,
@@ -536,6 +584,8 @@ def run_measure_probe(
             raise ValueError("--probe-inband can load_specs de doc luong probe cua load_gen")
         return _inband_probe_result(point, args, load_specs)
     cwd = os.getcwd()
+    probe_rate = resolved_probe_rate(point, args)
+    n_probe_expected = expected_probe_count(point, args)
     prefix = _probe_prefix(args.raw_dir, point)
     ensure_parent(prefix)
     rx_path = prefix + ".bin"
@@ -565,16 +615,17 @@ def run_measure_probe(
         send,
         (
             "cd %s && %s send --dst %s --port %d --mode poisson --rate %g --size %d "
-            "--duration %g --run-id %d --seed %d --out %s >/dev/null 2>&1"
+            "--duration %g --fixed-count %d --run-id %d --seed %d --out %s >/dev/null 2>&1"
         )
         % (
             cwd,
             PB,
             dst_ip,
             int(port),
-            float(args.probe_rate),
+            float(probe_rate),
             int(args.probe_size),
             float(args.duration),
+            int(n_probe_expected),
             int(run_id),
             _probe_seed(int(point["seed"]), link_idx),
             tx_path,
@@ -587,7 +638,7 @@ def run_measure_probe(
     tx_meta = read_json(tx_path + ".meta.json")
     owd = analyze(rx_path, tx_path, warmup_s=float(args.warmup))
     frame_bytes = int(tx_meta.get("frame_bytes_on_wire", int(args.probe_size) + 42))
-    rate_pps = float(tx_meta.get("rate_pps_actual", float(args.probe_rate)))
+    rate_pps = float(tx_meta.get("rate_pps_actual", resolved_probe_rate(point, args)))
     intrusion = rate_pps * frame_bytes / capacity_bytes_per_s(min_bw)
     return {
         "prefix": prefix,
@@ -600,6 +651,8 @@ def run_measure_probe(
         "probe_intrusion_ratio": float(intrusion),
         "probe_frame_bytes_on_wire": int(frame_bytes),
         "probe_rate_pps_actual": rate_pps,
+        "probe_count_policy": "poisson_fixed_count",
+        "n_probe_expected": int(n_probe_expected),
         "probe_injection": "out_of_band",
     }
 
@@ -658,6 +711,7 @@ def _row_from_measurement(
     probe_links = set(probe_links_for_point(point))
     probe_frame = int(probe["probe_frame_bytes_on_wire"])
     probe_rate = float(probe["probe_rate_pps_actual"])
+    probe_rate_configured = resolved_probe_rate(point, args)
     probe_share_actual_by_idx = {
         int(link_idx): (
             probe_load_share(int(link_idx), args, rate_pps=probe_rate, frame_bytes=probe_frame)
@@ -672,6 +726,8 @@ def _row_from_measurement(
     rho_target_total_by_link: Dict[str, float] = {}
     rho_probe_share_by_link: Dict[str, float] = {}
     rho_total_actual_by_link: Dict[str, float] = {}
+    probe_load_share_actual_by_link: Dict[str, float] = {}
+    probe_load_share_configured_by_link: Dict[str, float] = {}
     rate_ratio_by_link: Dict[str, float] = {}
     load_socket_drops = 0
     load_foreign = 0
@@ -693,11 +749,18 @@ def _row_from_measurement(
         rho_probe_actual = 0.0 if inband_link else float(probe_share_actual_by_idx[int(link_idx)])
         rho_total_actual = rho_bg_actual + rho_probe_actual
         rho_target_total = float(spec["rho_target_total"])
+        rho_probe_configured = (
+            probe_load_share(int(link_idx), args, rate_pps=probe_rate_configured)
+            if int(link_idx) in probe_links
+            else 0.0
+        )
         schedule_map[link_name] = schedule
         rho_bg_actual_by_link[link_name] = rho_bg_actual
         rho_target_total_by_link[link_name] = rho_target_total
         rho_probe_share_by_link[link_name] = rho_probe_actual
         rho_total_actual_by_link[link_name] = rho_total_actual
+        probe_load_share_actual_by_link[link_name] = rho_probe_actual
+        probe_load_share_configured_by_link[link_name] = rho_probe_configured
         rate_ratio_by_link[link_name] = float(tx["rates"]["rate_ratio"])
         load_socket_drops += int(rx.get("socket_drops_delta", 0))
         load_foreign += int(rx.get("n_foreign_packets", 0))
@@ -712,6 +775,7 @@ def _row_from_measurement(
                 "rho_bg_actual": rho_bg_actual,
                 "rho_target_total": rho_target_total,
                 "rho_probe_share": rho_probe_actual,
+                "rho_probe_share_configured": rho_probe_configured,
                 "rho_total_actual": rho_total_actual,
                 "probe_traverses_link": bool(spec["probe_traverses_link"]),
                 "rho_actual": rho_total_actual,
@@ -742,6 +806,19 @@ def _row_from_measurement(
         (abs(float(row["rho_total_actual"]) - float(row["rho_target_total"])) for row in load_rows),
         default=0.0,
     )
+    n_probe_expected = int(probe.get("n_probe_expected", expected_probe_count(point, args)))
+    max_probe_share_configured = max(
+        (
+            float(row["rho_probe_share_configured"])
+            for row in load_rows
+            if bool(row.get("probe_traverses_link"))
+        ),
+        default=0.0,
+    )
+    rho_gate = rho_gate_threshold(max_probe_share_configured, n_probe_expected)
+    physical_probe_share = float(probe["probe_intrusion_ratio"])
+    probe_budgeted = bool(float(getattr(args, "carve_out_fraction", 0.0) or 0.0) > 0.0)
+    unbudgeted_probe_intrusion = float(max_abs_total_rho_error) if probe_budgeted else physical_probe_share
     row = {
         **dict(point),
         "phase": "20R.6",
@@ -764,7 +841,20 @@ def _row_from_measurement(
         "n_recv_unique": int(counts["n_recv_unique"]),
         "n_sent": int(counts["n_sent"]),
         "probe_loss": loss,
-        "probe_intrusion_ratio": float(probe["probe_intrusion_ratio"]),
+        "probe_intrusion_ratio": unbudgeted_probe_intrusion,
+        "probe_load_share_physical": physical_probe_share,
+        "probe_budgeted_by_carve_out": probe_budgeted,
+        "probe_rate_pps_configured": float(probe_rate_configured),
+        "probe_count_policy": str(probe.get("probe_count_policy", "poisson")),
+        "n_probe_expected": int(n_probe_expected),
+        "rho_gate": rho_gate,
+        "rho_gate_threshold": float(rho_gate["threshold"]),
+        "rho_gate_floor": float(rho_gate["floor"]),
+        "rho_gate_k_sigma": float(rho_gate["k_sigma"]),
+        "rho_gate_sigma_counting": float(rho_gate["sigma_counting"]),
+        "rho_gate_binding": str(rho_gate["binding"]),
+        "carve_out_fraction": float(getattr(args, "carve_out_fraction", 0.0) or 0.0),
+        "estimator_version": "v2-bg",
         "probe_rate_pps_actual": float(probe["probe_rate_pps_actual"]),
         "probe_frame_bytes_on_wire": int(probe["probe_frame_bytes_on_wire"]),
         "probe_socket_drops": int(probe_rx.get("socket_drops_delta", 0)),
@@ -779,6 +869,8 @@ def _row_from_measurement(
         "rho_target_total_by_link": rho_target_total_by_link,
         "rho_probe_share_by_link": rho_probe_share_by_link,
         "rho_total_actual_by_link": rho_total_actual_by_link,
+        "probe_load_share_actual_by_link": probe_load_share_actual_by_link,
+        "probe_load_share_configured_by_link": probe_load_share_configured_by_link,
         "rate_ratio_by_link": rate_ratio_by_link,
         "rate_ratio": rate_ratio_by_link.get(target_link_name, max(rate_ratio_by_link.values()) if rate_ratio_by_link else 1.0),
         "max_abs_rate_error": float(max_abs_rate_error),
@@ -809,8 +901,12 @@ def gate_live(row: Mapping[str, Any]) -> List[str]:
         bad.append("foreign=%d" % int(row.get("n_foreign", 0)))
     if float(row.get("max_abs_rate_error", 0.0)) > 1e-4:
         bad.append("rate=%.7f" % float(row.get("max_abs_rate_error", 0.0)))
-    if float(row.get("max_abs_rho_error", 0.0)) > 0.002:
-        bad.append("rho=%.5f" % float(row.get("max_abs_rho_error", 0.0)))
+    rho_threshold = float(row.get("rho_gate_threshold", RHO_ERROR_MAX))
+    if float(row.get("max_abs_rho_error", 0.0)) > rho_threshold:
+        bad.append(
+            "rho=%.5f>%.5f"
+            % (float(row.get("max_abs_rho_error", 0.0)), rho_threshold)
+        )
     if float(row.get("n_late_ratio", 0.0)) > 0.001:
         bad.append("late=%.4f" % float(row.get("n_late_ratio", 0.0)))
     if float(row.get("max_late_ms", 0.0)) > 50.0:
@@ -902,8 +998,16 @@ def print_plan(plan: Sequence[Mapping[str, Any]], todo: Sequence[Mapping[str, An
     for point in todo:
         target = point.get("path") or point.get("link")
         print(
-            "%04d %-6s %-7s rho_bar=%.3f seed=%d target=%s"
-            % (int(point["idx"]), point["branch"], point["mode"], float(point["rho_bar"]), int(point["seed"]), target)
+            "%04d %-6s %-7s rho_bar=%.3f seed=%d target=%s probe_rate=%.3fpps"
+            % (
+                int(point["idx"]),
+                point["branch"],
+                point["mode"],
+                float(point["rho_bar"]),
+                int(point["seed"]),
+                target,
+                resolved_probe_rate(point, args),
+            )
         )
 
 
@@ -1109,8 +1213,14 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--calibration", default=D.CALIBRATION)
     ap.add_argument("--duration", type=float, default=DUR)
     ap.add_argument("--warmup", type=float, default=WARM)
-    ap.add_argument("--probe-rate", type=float, default=DEFAULT_PROBE_RATE_PPS)
+    ap.add_argument(
+        "--probe-rate",
+        type=float,
+        default=None,
+        help="fixed probe rate; omitted means derive it from --carve-out-fraction",
+    )
     ap.add_argument("--probe-size", type=int, default=DEFAULT_PROBE_SIZE_BYTES)
+    ap.add_argument("--carve-out-fraction", type=float, default=DEFAULT_CARVE_OUT_FRACTION)
     ap.add_argument(
         "--probe-inband",
         action="store_true",
@@ -1127,8 +1237,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     if not args.state:
         args.state = DEFAULT_STATE[args.branch]
-    if args.probe_rate <= 0.0:
+    if args.probe_rate is not None and args.probe_rate <= 0.0:
         ap.error("--probe-rate phai > 0")
+    if args.carve_out_fraction < 0.0:
+        ap.error("--carve-out-fraction phai >= 0")
     if args.probe_size < 32:
         ap.error("--probe-size qua nho")
     if args.smoke_topo:

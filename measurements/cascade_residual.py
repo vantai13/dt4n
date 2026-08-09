@@ -1,0 +1,303 @@
+#!/usr/bin/env python3
+"""Phase 20R.6-v2 -- measure the cascade residual r = C - sum(B_i).
+
+Estimand: difference between the mean cost measured directly on a 3-link path
+(branch C) and the composed cost of the same three links measured separately
+(branch B), in the same TandemTopo design and paired by seed/trajectory.
+"""
+
+from __future__ import annotations
+
+import argparse
+import json
+import math
+from typing import Any, Dict, List, Mapping, Optional, Sequence, Tuple
+
+import numpy as np
+
+from measurements import residual_spec as RS
+
+
+TANDEM_LINKS = ("L1", "L2", "L3")
+N_BOOT = 2000
+DELTA_LOSS_LEGACY = 0.005
+DELTA_DELAY_MS_LEGACY = 0.44
+
+
+def load_rows(paths: Sequence[str], branch: str) -> List[Dict[str, Any]]:
+    rows: List[Dict[str, Any]] = []
+    for path in paths:
+        with open(path, "r", encoding="utf-8") as f:
+            state = json.load(f)
+        for row in state.get("rows", []):
+            if str(row.get("branch")) == branch:
+                copied = dict(row)
+                copied["_state_file"] = path
+                copied["_probe_size"] = state.get("probe_size_bytes")
+                copied["_probe_rate"] = row.get("probe_rate_pps_configured", state.get("probe_rate_pps"))
+                copied["_carve_out_fraction"] = row.get("carve_out_fraction", state.get("carve_out_fraction"))
+                rows.append(copied)
+    if not rows:
+        raise ValueError(
+            "KHONG co row nao cho nhanh %r trong %s. Join rong -> DUNG (RC8)."
+            % (branch, list(paths))
+        )
+    return rows
+
+
+def bg_loss(row: Mapping[str, Any], link: str) -> float:
+    for load_row in row.get("load_rows", []):
+        if str(load_row.get("link")) == str(link):
+            sent = float(load_row["n_bg_sent"])
+            recv = float(load_row["n_bg_recv"])
+            if sent <= 0:
+                raise ValueError("n_bg_sent = 0 tren %s -- load khong chay?" % link)
+            return 1.0 - recv / sent
+    raise KeyError("khong tim thay load_rows cho link %s" % link)
+
+
+def bg_n(row: Mapping[str, Any], link: str) -> int:
+    for load_row in row.get("load_rows", []):
+        if str(load_row.get("link")) == str(link):
+            return int(load_row["n_bg_sent"])
+    raise KeyError(link)
+
+
+def path_loss(row: Mapping[str, Any]) -> float:
+    sent = float(row["n_sent"])
+    recv = float(row["n_recv_unique"])
+    if sent <= 0:
+        raise ValueError("n_sent = 0 -- dong do khong chay?")
+    return 1.0 - recv / sent
+
+
+def assert_structural_invariant(rows_b: Sequence[Mapping[str, Any]], rows_c: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
+    """Branch B and C must match except for how many links the measured flow crosses."""
+
+    def signature(rows: Sequence[Mapping[str, Any]]) -> Dict[str, set]:
+        return {
+            "probe_size": {row.get("_probe_size") for row in rows},
+            "probe_rate": {row.get("_probe_rate") for row in rows},
+            "carve_out_fraction": {row.get("_carve_out_fraction") for row in rows},
+            "modes": {str(row["mode"]) for row in rows},
+            "rho_bars": {round(float(row["rho_bar"]), 6) for row in rows},
+            "seeds": {int(row["seed"]) for row in rows},
+        }
+
+    sig_b, sig_c = signature(rows_b), signature(rows_c)
+    problems = []
+    for key in ("probe_size", "probe_rate", "carve_out_fraction", "modes", "rho_bars", "seeds"):
+        if sig_b[key] != sig_c[key]:
+            problems.append("%s: B=%s C=%s" % (key, sorted(sig_b[key]), sorted(sig_c[key])))
+    if problems:
+        raise AssertionError(
+            "VI PHAM BAT BIEN CAU TRUC (Amd 14):\n  "
+            + "\n  ".join(problems)
+            + "\nKet qua KHONG duoc bao cao."
+        )
+    return {"branch_b": {key: sorted(val) for key, val in sig_b.items()}, "branch_c": {key: sorted(val) for key, val in sig_c.items()}}
+
+
+def paired_residuals(
+    rows_b: Sequence[Mapping[str, Any]],
+    rows_c: Sequence[Mapping[str, Any]],
+    mode: str,
+    rho_bar: float,
+    channel: str,
+) -> Tuple[np.ndarray, List[int]]:
+    idx_b: Dict[Tuple[int, str], Mapping[str, Any]] = {}
+    for row in rows_b:
+        if str(row["mode"]) == str(mode) and abs(float(row["rho_bar"]) - float(rho_bar)) <= 1e-9:
+            idx_b[(int(row["seed"]), str(row["link"]))] = row
+
+    idx_c: Dict[int, Mapping[str, Any]] = {}
+    for row in rows_c:
+        if str(row["mode"]) == str(mode) and abs(float(row["rho_bar"]) - float(rho_bar)) <= 1e-9:
+            idx_c[int(row["seed"])] = row
+
+    seeds = sorted(set(idx_c) & {seed for seed, _link in idx_b})
+    if not seeds:
+        raise ValueError("khong ghep duoc cap nao cho (%s, %.3f) -- o RONG (RC8)" % (mode, rho_bar))
+
+    vals: List[float] = []
+    kept: List[int] = []
+    for seed in seeds:
+        try:
+            b_rows = [idx_b[(seed, link)] for link in TANDEM_LINKS]
+        except KeyError:
+            continue
+        c_row = idx_c[seed]
+
+        digests = {str(row.get("trajectory_digest")) for row in b_rows}
+        digests.add(str(c_row.get("trajectory_digest")))
+        if len(digests) != 1:
+            raise AssertionError("trajectory_digest lech o seed %d -> khong phai paired that" % seed)
+
+        if channel == "loss":
+            keep = 1.0
+            for link, row in zip(TANDEM_LINKS, b_rows):
+                keep *= 1.0 - bg_loss(row, link)
+            b_val = 1.0 - keep
+            c_val = path_loss(c_row)
+        elif channel == "delay_ms":
+            b_val = float(sum(float(row["q_mean_ms"]) for row in b_rows))
+            c_val = float(c_row["q_mean_ms"])
+        else:
+            raise ValueError("channel khong hop le: %s" % channel)
+
+        vals.append(c_val - b_val)
+        kept.append(seed)
+
+    if len(vals) < 3:
+        raise ValueError("chi ghep duoc %d cap -- qua it de bootstrap" % len(vals))
+    return np.asarray(vals, dtype=float), kept
+
+
+def bootstrap_seed_mean(diffs: np.ndarray, n_boot: int = N_BOOT, seed: int = 20206) -> Dict[str, float]:
+    rng = np.random.default_rng(seed)
+    n = int(diffs.size)
+    means = np.asarray([rng.choice(diffs, size=n, replace=True).mean() for _ in range(int(n_boot))], dtype=float)
+    return {
+        "point": float(diffs.mean()),
+        "se": float(means.std(ddof=1)),
+        "ci90_lo": float(np.percentile(means, 5.0)),
+        "ci90_hi": float(np.percentile(means, 95.0)),
+        "n_pairs": int(n),
+    }
+
+
+def check_estimator_control(rows_b: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
+    """DC-C3: background loss and carve-out/probe loss should agree in branch B."""
+    abs_z = []
+    details = []
+    for row in rows_b:
+        link = str(row["link"])
+        try:
+            p_bg = bg_loss(row, link)
+            p_probe = float(row["probe_loss"])
+            n_bg = bg_n(row, link)
+            n_probe = int(row["n_sent"])
+        except (KeyError, ValueError):
+            continue
+        se = math.sqrt(
+            max(p_bg * (1.0 - p_bg), 1e-12) / max(n_bg, 1)
+            + max(p_probe * (1.0 - p_probe), 1e-12) / max(n_probe, 1)
+        )
+        z = (p_probe - p_bg) / se if se > 0 else 0.0
+        abs_z.append(abs(z))
+        details.append(
+            {
+                "link": link,
+                "mode": str(row["mode"]),
+                "seed": int(row["seed"]),
+                "p_bg": p_bg,
+                "p_carveout": p_probe,
+                "z": z,
+                "n_bg": n_bg,
+                "n_carveout": n_probe,
+            }
+        )
+    max_z = max(abs_z) if abs_z else float("nan")
+    return {
+        "control": "DC-C3 estimator",
+        "max_abs_z": max_z,
+        "threshold_z": 3.0,
+        "pass": bool(max_z <= 3.0),
+        "note": "FAIL -> carve-out thay doi vat ly -> DUNG",
+        "details": details,
+    }
+
+
+def main(argv: Optional[Sequence[str]] = None) -> int:
+    ap = argparse.ArgumentParser(description=__doc__)
+    ap.add_argument("--branch-b", required=True, help="comma-separated branch B state files")
+    ap.add_argument("--branch-c", required=True, help="comma-separated branch C state files")
+    ap.add_argument("--modes", default="poisson,h2")
+    ap.add_argument("--rho-bar", type=float, default=0.925)
+    ap.add_argument("--n-boot", type=int, default=N_BOOT)
+    ap.add_argument("--out", default="results/phase-20R/residual_cascade.json")
+    args = ap.parse_args(argv)
+
+    rows_b = load_rows([part.strip() for part in args.branch_b.split(",") if part.strip()], "B")
+    rows_c = load_rows([part.strip() for part in args.branch_c.split(",") if part.strip()], "C")
+
+    invariant = assert_structural_invariant(rows_b, rows_c)
+    print("=== BAT BIEN CAU TRUC: DAT ===")
+    print("  B: %s" % json.dumps(invariant["branch_b"], sort_keys=True))
+    print("  C: %s" % json.dumps(invariant["branch_c"], sort_keys=True))
+
+    dc3 = check_estimator_control(rows_b)
+    print()
+    print("=== DC-C3 (background vs carve-out) ===")
+    print(
+        "  max |z| = %.3f (nguong 3.0) -> %s"
+        % (dc3["max_abs_z"], "DAT" if dc3["pass"] else "*** KHONG DAT -- DUNG ***")
+    )
+    if not dc3["pass"]:
+        return 2
+
+    records: List[RS.ResidualRecord] = []
+    print()
+    print("=== PHAN DU GHEP r = C - sum(B) ===")
+    hdr = "%-8s %-9s %10s %10s %22s %8s %6s"
+    print(hdr % ("mode", "kenh", "r", "se", "CI90", "n_cap", "CI~0"))
+    for mode in [part.strip() for part in args.modes.split(",") if part.strip()]:
+        for channel in ("loss", "delay_ms"):
+            diffs, seeds = paired_residuals(rows_b, rows_c, mode, args.rho_bar, channel)
+            bs = bootstrap_seed_mean(diffs, args.n_boot)
+            rec = RS.ResidualRecord(
+                estimand=(
+                    "Chenh lech chi phi trung binh do end-to-end tren duong 3-link "
+                    "(nhanh C) tru tong chi phi tung link do rieng (nhanh B), cung "
+                    "topology/session/seed/background/kich-thuoc-goi/carve-out. "
+                    "Bang tra A khong tham gia. Kenh: %s." % channel
+                ),
+                source="cascade",
+                channel=channel,
+                level="per_path",
+                mode=mode,
+                point=bs["point"],
+                se=bs["se"],
+                per_unit={"seed_%d" % seed: float(val) for seed, val in zip(seeds, diffs)},
+                provenance={
+                    **RS.git_commit(),
+                    "branch_b_files": [part.strip() for part in args.branch_b.split(",") if part.strip()],
+                    "branch_c_files": [part.strip() for part in args.branch_c.split(",") if part.strip()],
+                    "rho_bar": float(args.rho_bar),
+                    "n_boot": int(args.n_boot),
+                    "ci90_percentile": [bs["ci90_lo"], bs["ci90_hi"]],
+                    "dc3": dc3,
+                },
+            )
+            records.append(rec)
+            lo, hi = rec.ci90
+            print(
+                hdr
+                % (
+                    mode,
+                    channel,
+                    "%+.6f" % rec.point,
+                    "%.6f" % rec.se,
+                    "[%+.6f, %+.6f]" % (lo, hi),
+                    "%d" % bs["n_pairs"],
+                    "co" if rec.ci_contains_zero else "khong",
+                )
+            )
+
+    print()
+    print("--- Doi chieu voi nguong CU (tham khao, khong phai gate) ---")
+    for rec in records:
+        delta = DELTA_LOSS_LEGACY if rec.channel == "loss" else DELTA_DELAY_MS_LEGACY
+        print(
+            "  %-8s %-9s power_ok(delta=%.4f) = %s [1.645*se = %.6f]"
+            % (rec.mode, rec.channel, delta, rec.power_ok(delta), RS.Z90 * rec.se)
+        )
+
+    RS.save(records, args.out)
+    print()
+    print("-> %s" % args.out)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

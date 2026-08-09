@@ -15,7 +15,7 @@ import random
 import socket
 import struct
 import time
-from typing import Optional, Tuple
+from typing import List, Optional, Tuple
 
 
 MAGIC = b"DT4N"
@@ -230,6 +230,18 @@ def sleep_until(t_target: float, spin_margin: float = 0.0004) -> float:
             return time.monotonic()
 
 
+def poisson_fixed_count_offsets(n_packets: int, duration_s: float, seed: int) -> List[float]:
+    """Poisson arrival times conditioned on exactly ``n_packets`` arrivals."""
+    n = int(n_packets)
+    duration = float(duration_s)
+    if n < 0:
+        raise ValueError("fixed packet count phai >= 0")
+    if duration <= 0.0:
+        raise ValueError("duration phai > 0")
+    rng = random.Random(seed)
+    return sorted(rng.random() * duration for _ in range(n))
+
+
 def run_send(
     dst_ip: str,
     port: int,
@@ -242,6 +254,7 @@ def run_send(
     out_path: str,
     kind: int = KIND_PROBE,
     burst_n: int = 0,
+    fixed_count: Optional[int] = None,
 ) -> dict:
     """Send packets in poisson, cbr, or immediate burst mode."""
     os.makedirs(os.path.dirname(os.path.abspath(out_path)) or ".", exist_ok=True)
@@ -254,8 +267,22 @@ def run_send(
     seq = 0
     t0 = time.monotonic()
 
+    if fixed_count is not None and mode != "poisson":
+        raise ValueError("--fixed-count chi ap dung cho --mode poisson")
+
+    fixed_count_int = None if fixed_count is None else int(fixed_count)
+    if fixed_count_int is not None and fixed_count_int < 0:
+        raise ValueError("--fixed-count phai >= 0")
+
     if mode == "burst":
         for _ in range(int(burst_n)):
+            t_send = time.monotonic()
+            sock.sendto(pack_packet(kind, seq, t_send, run_id, size), addr)
+            recs.append(REC_TX.pack(seq, t_send))
+            seq += 1
+    elif fixed_count_int is not None:
+        for offset in poisson_fixed_count_offsets(fixed_count_int, duration_s, seed):
+            sleep_until(t0 + offset)
             t_send = time.monotonic()
             sock.sendto(pack_packet(kind, seq, t_send, run_id, size), addr)
             recs.append(REC_TX.pack(seq, t_send))
@@ -279,16 +306,20 @@ def run_send(
     with open(out_path, "wb") as f:
         f.write(b"".join(recs))
 
+    accounting_duration = float(duration_s) if fixed_count_int is not None else max(t1 - t0, 1e-9)
     meta = {
         "role": "send",
         "mode": mode,
+        "schedule": "poisson_fixed_count" if fixed_count_int is not None else mode,
         "kind": int(kind),
         "n_sent": seq,
+        "n_fixed_count": fixed_count_int,
         "size_bytes": int(size),
         "frame_bytes_on_wire": int(size) + 42,
         "rate_pps_nominal": float(rate_pps) if mode != "burst" else None,
-        "rate_pps_actual": seq / max(t1 - t0, 1e-9),
+        "rate_pps_actual": seq / max(accounting_duration, 1e-9),
         "duration_s_actual": t1 - t0,
+        "duration_s_accounting": accounting_duration,
         "run_id": int(run_id),
         "seed": int(seed),
         "out": out_path,
@@ -318,6 +349,7 @@ def main() -> None:
     send.add_argument("--size", type=int, default=64, help="UDP payload bytes")
     send.add_argument("--duration", type=float, default=60.0)
     send.add_argument("--burst-n", type=int, default=0)
+    send.add_argument("--fixed-count", type=int, default=None)
     send.add_argument("--run-id", type=int, required=True)
     send.add_argument("--seed", type=int, default=1)
     send.add_argument("--kind", type=int, default=KIND_PROBE)
@@ -339,6 +371,7 @@ def main() -> None:
             args.out,
             kind=args.kind,
             burst_n=args.burst_n,
+            fixed_count=args.fixed_count,
         )
     print(json.dumps(meta, indent=2, sort_keys=True))
 
