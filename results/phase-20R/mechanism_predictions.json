@@ -1,0 +1,346 @@
+{
+  "P1_margin_radius": {
+    "by_mode": {
+      "h2": {
+        "n": 4,
+        "p_one_sided_negative": 0.16666666666666666,
+        "rho": -0.7999999999999999,
+        "supported": false
+      },
+      "poisson": {
+        "n": 4,
+        "p_one_sided_negative": 0.4583333333333333,
+        "rho": -0.19999999999999998,
+        "supported": false
+      }
+    },
+    "note": "The eight cells are not eight independent draws: ar1_matrix seeds only on `seed`, so poisson and h2 at the same rho_bar share the rho trajectory up to the family reliability ceiling. The exact permutation p-value assumes exchangeability across cells and is therefore optimistic. Report it with this caveat, and read the per-family tests as the conservative view.",
+    "pooled": {
+      "n": 8,
+      "p_one_sided_negative": 0.08549107142857143,
+      "rho": -0.5476190476190477
+    },
+    "radius_key": "median_r_bound",
+    "source": "results/phase-20R/margin_radius.json",
+    "statement": "Spearman(median r(s), err) < 0 with p < alpha",
+    "supported": false
+  },
+  "P2_curvature_argmax_alignment": {
+    "axis_fix": "curvature evaluated at PATH level on the rho_bar axis (Amendment 18)",
+    "by_mode": {
+      "h2": {
+        "argmax_identified": false,
+        "argmax_rho_bar_err": 0.7,
+        "err_at_argmax": 0.38982429718875505,
+        "measured_rho_bar": [
+          0.7,
+          0.85,
+          0.925,
+          0.96
+        ],
+        "n_paths": 4,
+        "n_paths_aligned": 0,
+        "paths": [
+          {
+            "aligned": false,
+            "argmax_rho_bar_curvature": 0.86,
+            "argmax_rho_bar_err": 0.7,
+            "d2_loss_path": 7.658947484407707,
+            "gap_grid_steps": 8.000000000000002,
+            "gap_rho_bar": 0.16000000000000003,
+            "path": "P1"
+          },
+          {
+            "aligned": false,
+            "argmax_rho_bar_curvature": 0.86,
+            "argmax_rho_bar_err": 0.7,
+            "d2_loss_path": 11.95187585772195,
+            "gap_grid_steps": 8.000000000000002,
+            "gap_rho_bar": 0.16000000000000003,
+            "path": "P2"
+          },
+          {
+            "aligned": false,
+            "argmax_rho_bar_curvature": 0.78,
+            "argmax_rho_bar_err": 0.7,
+            "d2_loss_path": 6.786530852168626,
+            "gap_grid_steps": 4.0000000000000036,
+            "gap_rho_bar": 0.08000000000000007,
+            "path": "P3"
+          },
+          {
+            "aligned": false,
+            "argmax_rho_bar_curvature": 0.76,
+            "argmax_rho_bar_err": 0.7,
+            "d2_loss_path": 8.714943698282518,
+            "gap_grid_steps": 3.0000000000000027,
+            "gap_rho_bar": 0.06000000000000005,
+            "path": "P4"
+          }
+        ],
+        "reason": "err argmax sits on the edge of the measured rho_bar window",
+        "testable": false
+      },
+      "poisson": {
+        "argmax_identified": true,
+        "argmax_rho_bar_err": 0.85,
+        "err_at_argmax": 0.4300823293172691,
+        "measured_rho_bar": [
+          0.7,
+          0.85,
+          0.925,
+          0.96
+        ],
+        "n_paths": 4,
+        "n_paths_aligned": 0,
+        "paths": [
+          {
+            "aligned": false,
+            "argmax_rho_bar_curvature": 0.94,
+            "argmax_rho_bar_err": 0.85,
+            "d2_loss_path": 5.812824099184765,
+            "gap_grid_steps": 4.499999999999998,
+            "gap_rho_bar": 0.08999999999999997,
+            "path": "P1"
+          },
+          {
+            "aligned": false,
+            "argmax_rho_bar_curvature": 0.94,
+            "argmax_rho_bar_err": 0.85,
+            "d2_loss_path": 6.010028958819135,
+            "gap_grid_steps": 4.499999999999998,
+            "gap_rho_bar": 0.08999999999999997,
+            "path": "P2"
+          },
+          {
+            "aligned": false,
+            "argmax_rho_bar_curvature": 0.94,
+            "argmax_rho_bar_err": 0.85,
+            "d2_loss_path": 8.723416213520519,
+            "gap_grid_steps": 4.499999999999998,
+            "gap_rho_bar": 0.08999999999999997,
+            "path": "P3"
+          },
+          {
+            "aligned": false,
+            "argmax_rho_bar_curvature": 0.94,
+            "argmax_rho_bar_err": 0.85,
+            "d2_loss_path": 9.949287407220174,
+            "gap_grid_steps": 4.499999999999998,
+            "gap_rho_bar": 0.08999999999999997,
+            "path": "P4"
+          }
+        ],
+        "reason": null,
+        "testable": true
+      }
+    },
+    "grid_step": 0.02,
+    "h": 0.02,
+    "max_grid_steps": 1.0,
+    "n_configurations_aligned": 0,
+    "n_configurations_required": 3,
+    "n_testable_modes": 1,
+    "statement": "argmax_rho |d2(loss)/d(rho)2| coincides with argmax_rho err within one grid step, in at least three non-cbr configurations",
+    "supported": false
+  },
+  "P3_channel_dominance": {
+    "cells": [
+      {
+        "abs_d2_delay_ms": 389.53437184114955,
+        "abs_w_d2_loss_ms": 32221.63266029245,
+        "bw": 4.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 10,
+        "ratio": 82.71832985622201,
+        "rho": 0.68
+      },
+      {
+        "abs_d2_delay_ms": 763.5561375361285,
+        "abs_w_d2_loss_ms": 39957.13127222461,
+        "bw": 4.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 10,
+        "ratio": 52.33031247860802,
+        "rho": 0.7
+      },
+      {
+        "abs_d2_delay_ms": 445.76831556345496,
+        "abs_w_d2_loss_ms": 37792.88775035274,
+        "bw": 4.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 10,
+        "ratio": 84.78145805984933,
+        "rho": 0.72
+      },
+      {
+        "abs_d2_delay_ms": 474.0987643355111,
+        "abs_w_d2_loss_ms": 45649.37827783603,
+        "bw": 4.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 10,
+        "ratio": 96.28664259823043,
+        "rho": 0.8
+      },
+      {
+        "abs_d2_delay_ms": 125.0177122491732,
+        "abs_w_d2_loss_ms": 46321.13015200106,
+        "bw": 6.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 13,
+        "ratio": 370.51653976580747,
+        "rho": 1.02
+      },
+      {
+        "abs_d2_delay_ms": 80.74705687289861,
+        "abs_w_d2_loss_ms": 3208.28398622713,
+        "bw": 8.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 18,
+        "ratio": 39.73251918366744,
+        "rho": 0.6
+      },
+      {
+        "abs_d2_delay_ms": 201.99460677664138,
+        "abs_w_d2_loss_ms": 10855.59675899258,
+        "bw": 8.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 18,
+        "ratio": 53.742012879563276,
+        "rho": 0.7
+      },
+      {
+        "abs_d2_delay_ms": 7.177302408901596,
+        "abs_w_d2_loss_ms": 28390.522772911594,
+        "bw": 8.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 18,
+        "ratio": 3955.5979608300268,
+        "rho": 0.8
+      },
+      {
+        "abs_d2_delay_ms": 44.7216120023877,
+        "abs_w_d2_loss_ms": 52607.950394009575,
+        "bw": 8.0,
+        "loss_dominates": true,
+        "mode": "h2",
+        "q": 18,
+        "ratio": 1176.3428919154528,
+        "rho": 0.9
+      },
+      {
+        "abs_d2_delay_ms": 784.593560862666,
+        "abs_w_d2_loss_ms": 2931.860617790523,
+        "bw": 6.0,
+        "loss_dominates": true,
+        "mode": "poisson",
+        "q": 13,
+        "ratio": 3.7367890383486224,
+        "rho": 0.8
+      },
+      {
+        "abs_d2_delay_ms": 1507.7601274907393,
+        "abs_w_d2_loss_ms": 12625.393205653449,
+        "bw": 6.0,
+        "loss_dominates": true,
+        "mode": "poisson",
+        "q": 13,
+        "ratio": 8.373608623451938,
+        "rho": 0.9
+      },
+      {
+        "abs_d2_delay_ms": 168.2307978911922,
+        "abs_w_d2_loss_ms": 15691.871785098769,
+        "bw": 6.0,
+        "loss_dominates": true,
+        "mode": "poisson",
+        "q": 13,
+        "ratio": 93.2758566314826,
+        "rho": 0.94
+      },
+      {
+        "abs_d2_delay_ms": 120.61278793606834,
+        "abs_w_d2_loss_ms": 21696.758593007384,
+        "bw": 6.0,
+        "loss_dominates": true,
+        "mode": "poisson",
+        "q": 13,
+        "ratio": 179.8877131047489,
+        "rho": 0.98
+      },
+      {
+        "abs_d2_delay_ms": 348.78219693139545,
+        "abs_w_d2_loss_ms": 19418.88596274964,
+        "bw": 6.0,
+        "loss_dominates": true,
+        "mode": "poisson",
+        "q": 13,
+        "ratio": 55.67625335696043,
+        "rho": 1.02
+      },
+      {
+        "abs_d2_delay_ms": 1231.7304202064188,
+        "abs_w_d2_loss_ms": 10440.220267066594,
+        "bw": 8.0,
+        "loss_dominates": true,
+        "mode": "poisson",
+        "q": 18,
+        "ratio": 8.476059449207218,
+        "rho": 0.9
+      },
+      {
+        "abs_d2_delay_ms": 365.6658874103796,
+        "abs_w_d2_loss_ms": 7655.6285768088455,
+        "bw": 8.0,
+        "loss_dominates": true,
+        "mode": "poisson",
+        "q": 18,
+        "ratio": 20.93613005857745,
+        "rho": 0.92
+      },
+      {
+        "abs_d2_delay_ms": 342.30399207111805,
+        "abs_w_d2_loss_ms": 15017.719432753745,
+        "bw": 8.0,
+        "loss_dominates": true,
+        "mode": "poisson",
+        "q": 18,
+        "ratio": 43.87246360139914,
+        "rho": 0.94
+      }
+    ],
+    "n_cells": 17,
+    "n_loss_dominates": 17,
+    "ratio_max": 3955.5979608300268,
+    "ratio_median": 55.67625335696043,
+    "ratio_min": 3.7367890383486224,
+    "relevance_rule": "significant_d2_loss, i.e. |d2 loss| > 2.0 * SE (Amendment 16 sec.4)",
+    "source": "results/phase-20R/mechanism_maps.json",
+    "statement": "|w_loss * d2(loss)/d(rho)2| > |d2(delay)/d(rho)2| at substantively relevant cells",
+    "supported": true
+  },
+  "amendments": [
+    "00p-amendment-15",
+    "00q-amendment-16",
+    "00r-amendment-17",
+    "00s-amendment-18"
+  ],
+  "git_commit": "b5897c7a26c90f1f4899e9064cef647650019c61",
+  "git_dirty": false,
+  "phase": "20R.7",
+  "schema": "phase20r7/mechanism_predictions/v1",
+  "summary": {
+    "P1": "not supported",
+    "P2": "not supported",
+    "P3": "supported"
+  },
+  "z": 0.55
+}
