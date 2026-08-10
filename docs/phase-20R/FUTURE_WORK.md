@@ -9,6 +9,8 @@ phase hien tai tru khi chung co kha nang doi ket luan da bao cao.
 - Nhanh C2 hai-link de tach dong gop cua L3 trong residual cascade.
 - Residual cascade tai cac `rho_bar` khac 0.925.
 - Bien the thu 5 cho residual per-path.
+- DC-C3b: h2 background voi h2-like probe de tach khac biet probe/background
+  do qua trinh den.
 
 ## Luat Dung
 

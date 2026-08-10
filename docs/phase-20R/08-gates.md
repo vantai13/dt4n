@@ -1,22 +1,23 @@
 # Phase 20R -- Bay cong, doc duoi bien sai so he thong
 
-> **Luu y ve ten goi.** Con so bao cao o hang G6-PRE den tu contrast
-> `Aprime_minus_A_*`, tuc CHUYEN TOPOLOGY -- khong phai cascade. Cascade la
-> `C - sum(B)` va CHUA duoc do (`has_branch_b = false`, `has_branch_c = false`,
-> `g6_evaluated = false` trong `additivity_check_inband_bg.json`). Chuyen
-> topology la DIEU KIEN TIEN QUYET cua cascade; no FAIL cho h2, nen theo luat
-> dung som cua Amendment 11, B/C khong duoc mo.
+> **Cap nhat 2026-08-10.** Hang G6-PRE van la contrast chuyen topology
+> `A' - A`. Cascade thuc su `C - sum(B)` da duoc do rieng trong Lesson
+> 20R.6-v2 va bao cao o hang G6-CASCADE/G6-BAND ben duoi.
 
-Ngay: 2026-08-07
+Ngay: 2026-08-10
 
 Cot "Duoi bien" tra loi mot cau: *neu phan du cong tinh do duoc o Lesson 20R.6
 la THAT, ket qua co doi khong?* Bien duoc tinh o HAI DAU CI90 cua phan du
 (`measurements/additivity_band.py`), tai diem van hanh sawtooth -- tuc dung
 estimator da sinh ra cac con so headline.
 
-Nguon: `results/phase-20R/additivity_band_sawtooth.json`,
+Nguon cu: `results/phase-20R/additivity_band_sawtooth.json`,
 `results/phase-20R/g6_differential_inband.json`,
 `results/phase-20R/additivity_check_inband_bg.json`.
+
+Nguon cascade v2: `results/phase-20R/residual_cascade.json`,
+`results/phase-20R/band_v2_cascade.json`,
+`results/phase-20R/breakdown_scan_cascade.json`.
 
 | Gate | Tieu chi | Ket qua goc | Duoi bien sai so cong tinh | Phan quyet |
 |---|---|---|---|---|
@@ -26,7 +27,8 @@ Nguon: `results/phase-20R/additivity_band_sawtooth.json`,
 | G4 | `Spearman(err, rho_bar) > 0` | FAIL co chu dich | khong lien quan (bien khong doi hinh dang `err(rho_bar)`) | **FAIL nhu da ky** |
 | G5 | `NC1b = 0`, `NC2 = 0.747-0.751`, `PC1 = 0` | DAT | control noi bo, khong di qua bang tra path | **DAT** |
 | G6-PRE | **dieu kien tien quyet** cua cong tinh: chuyen topology `A' - A` | ABS: h2 FAIL / poisson (loss PASS, delay PASS, **cost INCONCLUSIVE**)<br>DIFF: h2 INCONCLUSIVE / poisson PASS | -- | **co dieu kien** |
-| G6-CASCADE | cong tinh thuc su: `C - sum(B)` | **NOT MEASURED** | -- | **dung som (Amendment 11)** |
+| G6-CASCADE | cong tinh thuc su: `C - sum(B)` | `r_path` am 4/4: poisson/loss `-0.009522` CI90 `[-0.010135,-0.008908]`; poisson/delay `-0.746400 ms`; h2/loss `-0.009351`; h2/delay `-0.449241 ms` | Dau am khop PBOO; twin cong tinh bao thu theo huong da ky | **do xong, bao thu co gioi han** |
+| G6-BAND | band/scan cascade `n=120000` | `safety_published=0.868750`, binding `poisson/loss/common_mode`; `first_broken=K4_path_ranking_preserved` tai `poisson@0.925` | `clip_ratio=43.20%` nen bien am la can duoi; `differential/full/joint` unsupported vi residual muc duong | **LAT K4 trong pham vi cascade** |
 | G7 | moi CI dung `se_batch` | DAT | khong doi | **DAT** |
 | QS-DELAY | tua tinh, kenh delay | Phase T `err_dyn` CI95 [-0.068, -0.000] ms | gate song toi -2.0 ms/link = 29x | **DAT** |
 | QS-LOSS | tua tinh, kenh loss | **CHUA DO** | nguong sup do `[-1e-3, +5e-5]` (8/8 o), `[-1e-3, +1e-3]` (7/8 o) | **CHUA DANH GIA** |

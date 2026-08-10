@@ -80,7 +80,94 @@ def test_loss_composes_multiplicatively():
     assert abs((1.0 - keep) - 0.15) > 1e-3
 
 
-def test_trajectory_digest_mismatch_raises():
+def test_cascade_loss_uses_probe_estimator_not_background_loss():
+    b = []
+    c = []
+    for seed in [101, 102, 103]:
+        digests = {link: "sched-%d-%s" % (seed, link) for link in CR.TANDEM_LINKS}
+        for link in CR.TANDEM_LINKS:
+            b.append(
+                {
+                    "branch": "B",
+                    "mode": "h2",
+                    "rho_bar": 0.925,
+                    "seed": seed,
+                    "link": link,
+                    "probe_loss": 0.01,
+                    "q_mean_ms": 1.0,
+                    "load_schedule_digests": digests,
+                    "load_rows": [{"link": link, "n_bg_sent": 1000, "n_bg_recv": 500}],
+                }
+            )
+        c.append(
+            {
+                "branch": "C",
+                "mode": "h2",
+                "rho_bar": 0.925,
+                "seed": seed,
+                "probe_loss": 0.05,
+                "q_mean_ms": 3.0,
+                "n_sent": 1000,
+                "n_recv_unique": 950,
+                "load_schedule_digests": digests,
+            }
+        )
+
+    diffs, _seeds = CR.paired_residuals(b, c, "h2", 0.925, "loss")
+
+    probe_composed = 1.0 - (0.99 ** 3)
+    assert np.allclose(diffs, 0.05 - probe_composed)
+    assert not np.allclose(diffs, 0.05 - (1.0 - 0.5 ** 3))
+
+
+def test_pairing_checks_traversed_link_only():
+    b = []
+    c = []
+    n_diff_nontarget = 0
+    for seed in [101, 102, 103]:
+        c_digests = {link: "%d-C-%s" % (seed, link) for link in CR.TANDEM_LINKS}
+        for link in CR.TANDEM_LINKS:
+            b_digests = {
+                other: (c_digests[other] if other == link else "%d-Bonly-%s-%s" % (seed, link, other))
+                for other in CR.TANDEM_LINKS
+            }
+            n_diff_nontarget += sum(
+                1 for other in CR.TANDEM_LINKS
+                if other != link and b_digests[other] != c_digests[other]
+            )
+            b.append(
+                {
+                    "branch": "B",
+                    "mode": "h2",
+                    "rho_bar": 0.925,
+                    "seed": seed,
+                    "link": link,
+                    "q_mean_ms": 1.0,
+                    "load_schedule_digests": b_digests,
+                    "load_rows": [{"link": link, "n_bg_sent": 1000, "n_bg_recv": 999}],
+                }
+            )
+        c.append(
+            {
+                "branch": "C",
+                "mode": "h2",
+                "rho_bar": 0.925,
+                "seed": seed,
+                "q_mean_ms": 3.0 + 0.01 * (seed - 101),
+                "n_sent": 1000,
+                "n_recv_unique": 997,
+                "load_schedule_digests": c_digests,
+            }
+        )
+
+    diffs, seeds = CR.paired_residuals(b, c, "h2", 0.925, "delay_ms")
+
+    assert list(seeds) == [101, 102, 103]
+    assert diffs.shape == (3,)
+    assert n_diff_nontarget > 0
+
+
+def test_pairing_rejects_traversed_link_mismatch():
     b = [
         {
             "branch": "B",
@@ -89,11 +176,12 @@ def test_trajectory_digest_mismatch_raises():
             "seed": 101,
             "link": link,
             "q_mean_ms": 1.0,
-            "trajectory_digest": "AAA",
+            "load_schedule_digests": {other: "ok-%s" % other for other in CR.TANDEM_LINKS},
             "load_rows": [{"link": link, "n_bg_sent": 1000, "n_bg_recv": 999}],
         }
         for link in CR.TANDEM_LINKS
     ]
+    b[1]["load_schedule_digests"]["L2"] = "wrong"
     c = [
         {
             "branch": "C",
@@ -103,10 +191,10 @@ def test_trajectory_digest_mismatch_raises():
             "q_mean_ms": 3.0,
             "n_sent": 1000,
             "n_recv_unique": 997,
-            "trajectory_digest": "BBB",
+            "load_schedule_digests": {link: "ok-%s" % link for link in CR.TANDEM_LINKS},
         }
     ]
-    with pytest.raises(AssertionError, match="trajectory_digest"):
+    with pytest.raises(AssertionError, match="lich link L2"):
         CR.paired_residuals(b, c, "h2", 0.925, "delay_ms")
 
 
@@ -139,6 +227,42 @@ def test_variant_decomposition_is_exact():
                 vecs["common_mode"][link] + vecs["differential"][link],
                 abs=1e-12,
             )
+
+
+def test_path_level_residual_rejects_differential():
+    """Cascade residuals at path level must not silently inject differential=0."""
+    with pytest.raises(ValueError, match="muc DUONG|per_path|BOM RONG"):
+        B2.variant_vectors({}, r_endpoint=-0.013, point=-0.01, level="per_path")
+
+
+def test_path_level_residual_only_supports_common_mode():
+    records = [
+        RS.ResidualRecord(
+            estimand="cascade path-level loss residual",
+            source="cascade",
+            channel="loss",
+            level="per_path",
+            mode="h2",
+            point=-0.01,
+            se=0.002,
+            per_unit={},
+        ),
+        RS.ResidualRecord(
+            estimand="cascade path-level loss residual peer",
+            source="cascade",
+            channel="loss",
+            level="per_path",
+            mode="poisson",
+            point=-0.02,
+            se=0.002,
+            per_unit={},
+        ),
+    ]
+
+    assert B2.variant_supported(records[0], "common_mode", records)
+    assert not B2.variant_supported(records[0], "differential", records)
+    assert not B2.variant_supported(records[0], "full", records)
+    assert not B2.variant_supported(records[0], "joint", records)
 
 
 def test_residual_applied_by_link_CLASS_not_by_name():
@@ -308,7 +432,7 @@ def test_pilot_power_only_prints_sd_and_seed_count_not_mean(tmp_path, capsys):
         "rows": [],
     }
     for idx, seed in enumerate([101, 102, 103]):
-        digest = "traj-%d" % seed
+        digests = {link: "sched-%d-%s" % (seed, link) for link in CR.TANDEM_LINKS}
         for link in CR.TANDEM_LINKS:
             state_b["rows"].append(
                 {
@@ -320,7 +444,7 @@ def test_pilot_power_only_prints_sd_and_seed_count_not_mean(tmp_path, capsys):
                     "q_mean_ms": 1.0 + 0.02 * idx,
                     "probe_loss": 0.001,
                     "n_sent": 1000,
-                    "trajectory_digest": digest,
+                    "load_schedule_digests": digests,
                     "load_rows": [{"link": link, "n_bg_sent": 100000, "n_bg_recv": 99900 - idx}],
                 }
             )
@@ -333,7 +457,7 @@ def test_pilot_power_only_prints_sd_and_seed_count_not_mean(tmp_path, capsys):
                 "q_mean_ms": 3.1 + 0.1 * idx,
                 "n_sent": 100000,
                 "n_recv_unique": 99700 - 2 * idx,
-                "trajectory_digest": digest,
+                "load_schedule_digests": digests,
             }
         )
     path_b = tmp_path / "b.json"
@@ -346,9 +470,12 @@ def test_pilot_power_only_prints_sd_and_seed_count_not_mean(tmp_path, capsys):
     out = capsys.readouterr().out
 
     assert "sd(d_s)" in out
-    assert "n_seed_required" in out
+    assert "n_seed_required_conservative" in out
     assert "mean" not in out.lower()
     assert all("point" not in row for row in summary["rows"])
+    row = summary["rows"][0]
+    assert row["sd_d_s_upper_95"] > row["sd_d_s"]
+    assert row["n_seed_required_conservative_95"]["delta_0.005"] >= row["n_seed_required"]["delta_0.005"]
 
 
 def test_joint_qt3_uses_dimensionless_anchor_symmetric_lambda():
@@ -466,6 +593,7 @@ def test_joint_differs_from_full_in_scan_smoke_when_inter_mode_terms_matter():
 def test_independent_variants_canonicalize_joint_only_for_band():
     variants = ["common_mode", "differential", "full", "joint"]
 
+    assert tuple(variants) == B2.DEFAULT_VARIANTS
     assert B2.independent_variants("band", variants) == ["common_mode", "differential", "full"]
     assert B2.independent_variants("scan", variants) == variants
 

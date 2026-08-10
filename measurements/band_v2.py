@@ -27,7 +27,7 @@ G2_FLOOR = 0.03
 R_MAX_DEFAULT = {"loss": 0.05, "delay_ms": 5.0}
 JOINT_LAMBDA_R_MAX_DEFAULT = 10.0
 VARIANTS = ("common_mode", "differential", "full", "joint")
-DEFAULT_VARIANTS = ("common_mode", "differential", "full")
+DEFAULT_VARIANTS = VARIANTS
 BLOCK_LEN_G7 = int(round(float(D.BLOCK_S) / float(D.DT)))
 N_BOOT_BAND = 2000
 TANDEM_CLASS = {str(name): (float(bw), int(q)) for name, _t7_link, bw, q, _base in TANDEM_LINKS}
@@ -156,8 +156,19 @@ def expand_tandem_shifts(per_link: Mapping[str, float]) -> Dict[str, float]:
     return out
 
 
-def variant_vectors(per_link: Mapping[str, float], r_endpoint: float, point: float) -> Dict[str, Dict[str, float]]:
+def variant_vectors(
+    per_link: Mapping[str, float],
+    r_endpoint: float,
+    point: float,
+    level: str = "per_link",
+) -> Dict[str, Dict[str, float]]:
     """Return common/differential/full vectors with one shared scaling rule."""
+    if not per_link:
+        raise ValueError(
+            "Phan du muc DUONG khong tach duoc common/differential: "
+            "khong co thong tin per-link. Chi bien the common_mode duoc ho tro. "
+            "KHONG duoc bom differential = 0 -> BOM RONG IM LANG (RC8)."
+        )
     if abs(float(point)) < 1e-15:
         raise ValueError(
             "point ~ 0 -> khong dinh nghia duoc ti so co gian; "
@@ -186,7 +197,11 @@ def variant_supported(
         if records is None:
             return False
         peers = [other for other in records if str(other.channel) == str(rec.channel)]
-        return len(peers) >= 2 and all(abs(float(other.point)) >= 1e-15 for other in peers)
+        return (
+            len(peers) >= 2
+            and all(abs(float(other.point)) >= 1e-15 for other in peers)
+            and all(link_residuals(other) is not None for other in peers)
+        )
     return False
 
 
@@ -203,7 +218,7 @@ def truth_table_for(rec: RS.ResidualRecord, variant: str, magnitude: float, sign
 
     per_link = link_residuals(rec)
     if per_link is not None:
-        vecs = variant_vectors(per_link, endpoint, rec.point)
+        vecs = variant_vectors(per_link, endpoint, rec.point, level=rec.level)
         if variant not in vecs:
             raise ValueError("variant khong hop le: %s" % variant)
         return LinkShiftTruthTable(expand_tandem_shifts(vecs[variant]), rec.channel, rec.mode)
@@ -246,9 +261,13 @@ def truth_table_for_joint(
             raise ValueError("unknown joint scale rule: %s" % scale_rule)
         per_link = link_residuals(rec)
         if per_link is not None:
-            vec = variant_vectors(per_link, rec_endpoint, rec.point)["full"]
+            vec = variant_vectors(per_link, rec_endpoint, rec.point, level=rec.level)["full"]
             mode_shifts[str(rec.mode)] = expand_tandem_shifts(vec)
             continue
+        if str(rec.level) == "per_path":
+            raise ValueError(
+                "joint khong xac dinh cho phan du muc DUONG; chi common_mode duoc ho tro"
+            )
         per_link_loss, per_link_delay = residual_to_link_shift(rec, rec_endpoint)
         scalar = per_link_loss if rec.channel == "loss" else per_link_delay
         mode_shifts[str(rec.mode)] = {link: float(scalar) for link in T7.LINK_NAMES}
@@ -257,7 +276,10 @@ def truth_table_for_joint(
 
 def unsupported_reason(variant: str) -> str:
     if variant == "joint":
-        return "joint requires non-zero anchor point and at least two mode records in the same channel"
+        return (
+            "joint requires non-zero per-link residuals for at least two mode records "
+            "in the same channel; path-only residual is common-mode only"
+        )
     return "requires per_unit L1/L2/L3; path-only residual is common-mode only"
 
 

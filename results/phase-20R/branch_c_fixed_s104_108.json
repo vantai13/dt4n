@@ -1,0 +1,3877 @@
+{
+ "argv": [
+  "/home/ubuntu/dt4n/measurements/additivity_live.py",
+  "--branch",
+  "C",
+  "--modes",
+  "poisson,h2",
+  "--rho-bar",
+  "0.925",
+  "--seeds",
+  "104,105,106,107,108",
+  "--duration",
+  "660",
+  "--point-timeout",
+  "900",
+  "--state",
+  "results/phase-20R/branch_c_fixed_s104_108.json",
+  "--raw-dir",
+  "results/phase-20R/raw_additivity_fixed_s104_108"
+ ],
+ "branch": "C",
+ "carve_out_fraction": 0.25,
+ "delta_ms": 0.44,
+ "done_idx": [
+  1,
+  2,
+  3,
+  4,
+  5,
+  6,
+  7,
+  8,
+  9,
+  10
+ ],
+ "duration_s": 660.0,
+ "env": {
+  "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+  "git_dirty": true,
+  "git_status_porcelain": [
+   " M docs/phase-20R/00o-amendment-14.md",
+   " M measurements/additivity_live.py",
+   " M measurements/band_v2.py",
+   " M measurements/cascade_residual.py",
+   " M results/phase-20R/branch_b_fixed_pilot3.json",
+   " M results/phase-20R/branch_b_fixed_preflight120.json",
+   " M results/phase-20R/branch_c_fixed_pilot3.json",
+   " M results/phase-20R/branch_c_fixed_preflight120.json",
+   " M results/phase-20R/pilot_power_fixed_pilot3.json",
+   " M test/test_phase20r6_band.py",
+   " M tools/pilot_power_only.py",
+   "?? docs/phase-20R/07b-design-validation-v2.md",
+   "?? results/phase-20R/branch_b_fixed_s104_108.json",
+   "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+   "?? tools/check_phase20r6_structure.py",
+   "?? tools/check_sd_stability.py"
+  ],
+  "machine": "x86_64",
+  "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+  "python_executable": "/usr/bin/python3",
+  "python_version": "3.10.12",
+  "python_version_info": [
+   3,
+   10,
+   12
+  ]
+ },
+ "estimator_version": "v2-bg",
+ "failed_rows": [],
+ "kind": "additivity_live_state",
+ "phase": "20R.6",
+ "plan_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+ "probe_rate_policy": "carve_out_fraction",
+ "probe_rate_pps": null,
+ "probe_size_bytes": 1470,
+ "qdisc_proof": {
+  "access": [
+   {
+    "ifname": "hsrc-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hdst-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hload3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hsink3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpa3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb1-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb2-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   },
+   {
+    "ifname": "hpb3-eth0",
+    "ok": true,
+    "raw": "qdisc noqueue 0: root refcnt 2"
+   }
+  ],
+  "measured": [
+   {
+    "base_ms": 1.107,
+    "bw": 8.0,
+    "idx": 1,
+    "if_fwd": "s0-eth4",
+    "if_rev": "s1-eth3",
+    "link": "L1",
+    "measure_assert": {
+     "bfifo_limit_bytes": 27216,
+     "ceiling_ms": 27.216,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 8Mbit ceil 8Mbit burst 1600b cburst 1600b \n Sent 442 bytes 5 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 5 borrowed: 0 giants: 0\n tokens: 22822 ctokens: 22822\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s0-eth4",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 442 bytes 5 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 27216b\n Sent 442 bytes 5 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 18,
+    "topology_v7_link": "uA"
+   },
+   {
+    "base_ms": 1.712,
+    "bw": 6.0,
+    "idx": 2,
+    "if_fwd": "s1-eth6",
+    "if_rev": "s2-eth3",
+    "link": "L2",
+    "measure_assert": {
+     "bfifo_limit_bytes": 19656,
+     "ceiling_ms": 26.208,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 172 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 2 borrowed: 0 giants: 0\n tokens: 31542 ctokens: 31542\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s1-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 172 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 172 bytes 2 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 13,
+    "topology_v7_link": "ac"
+   },
+   {
+    "base_ms": 2.436,
+    "bw": 4.0,
+    "idx": 3,
+    "if_fwd": "s2-eth6",
+    "if_rev": "s3-eth4",
+    "link": "L3",
+    "measure_assert": {
+     "bfifo_limit_bytes": 15120,
+     "ceiling_ms": 30.24,
+     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 4Mbit ceil 4Mbit burst 1600b cburst 1600b \n Sent 1120 bytes 14 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 14 borrowed: 0 giants: 0\n tokens: 42872 ctokens: 42872\n\n",
+     "direct_packets_stat": 0,
+     "direct_qlen": 1000,
+     "ifname": "s2-eth6",
+     "install_attempts": 1,
+     "install_history": [],
+     "kinds": [
+      "htb",
+      "bfifo"
+     ],
+     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 1120 bytes 14 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 15120b\n Sent 1120 bytes 14 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    },
+    "q": 10,
+    "topology_v7_link": "ad"
+   }
+  ],
+  "qdisc_reinstall_log": [],
+  "sysctl_saved": {
+   "net.ipv6.conf.default.disable_ipv6": "0"
+  }
+ },
+ "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+ "rows": [
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 1.0006346913769557,
+    "L2": 0.9975961436387155,
+    "L3": 0.9962971227564164
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 0.9998781217856407,
+    "L2": 0.9973506487355142,
+    "L3": 0.9989027155685747
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 1.0018185041146606,
+    "L2": 0.9989372611534683,
+    "L3": 0.9966712012388863
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 1.000634958253708,
+    "L2": 0.9975981535318346,
+    "L3": 0.9962976263543135
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 1.0018185041146606,
+     "aggregate_schedule": 1.0006346913769557,
+     "aggregate_with_probe": 0.9998781217856407,
+     "design_target": 1.0,
+     "schedule_bg": 1.000634958253708
+    },
+    "L2": {
+     "actual_bg": 0.9989372611534683,
+     "aggregate_schedule": 0.9975961436387155,
+     "aggregate_with_probe": 0.9973506487355142,
+     "design_target": 1.0,
+     "schedule_bg": 0.9975981535318346
+    },
+    "L3": {
+     "actual_bg": 0.9966712012388863,
+     "aggregate_schedule": 0.9962971227564164,
+     "aggregate_with_probe": 0.9989027155685747,
+     "design_target": 1.0,
+     "schedule_bg": 0.9962976263543135
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 202.83939204426497,
+   "delay_ms": 40.40900561126007,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 1,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 1.0018185041146606,
+      "aggregate_schedule": 1.0006346913769557,
+      "aggregate_with_probe": 0.9998781217856407,
+      "design_target": 1.0,
+      "schedule_bg": 1.000634958253708
+     },
+     "c_a_actual_bg": 1.0018185041146606,
+     "c_a_aggregate_schedule": 1.0006346913769557,
+     "c_a_aggregate_with_probe": 0.9998781217856407,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 1.000634958253708,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 28.431102546164766,
+     "n_bg_recv": 320277,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00017788929668189647,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.999998983499692,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987265520071,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622538247343,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987265520071,
+     "schedule_digest": "5b61099c7aa27038d55e52e5ce54018b560a881920de20f44cbca1e4f34be972",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 0.9989372611534683,
+      "aggregate_schedule": 0.9975961436387155,
+      "aggregate_with_probe": 0.9973506487355142,
+      "design_target": 1.0,
+      "schedule_bg": 0.9975981535318346
+     },
+     "c_a_actual_bg": 0.9989372611534683,
+     "c_a_aggregate_schedule": 0.9975961436387155,
+     "c_a_aggregate_with_probe": 0.9973506487355142,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.9975981535318346,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 28.08542772254441,
+     "n_bg_recv": 259571,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00020290606576411042,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979623248914,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973071756274,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153435392638,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973071756274,
+     "schedule_digest": "c39e459a4ad70d5f638479624edc9e4593f59b4e2539b432e3108f6ed5f6ff05",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 0.9966712012388863,
+      "aggregate_schedule": 0.9962971227564164,
+      "aggregate_with_probe": 0.9989027155685747,
+      "design_target": 1.0,
+      "schedule_bg": 0.9962976263543135
+     },
+     "c_a_actual_bg": 0.9966712012388863,
+     "c_a_aggregate_schedule": 0.9962971227564164,
+     "c_a_aggregate_with_probe": 0.9989027155685747,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.9962976263543135,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 17.001033265842125,
+     "n_bg_recv": 156190,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 5.5677909480092056e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978624087151,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.987496362301,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234168464546,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.987496362301,
+     "schedule_digest": "a7f23c3c6caac4949bef490ddd8d23f83dfb6156b3a24a46fcaa63aaa3274740",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "5b61099c7aa27038d55e52e5ce54018b560a881920de20f44cbca1e4f34be972",
+    "L2": "c39e459a4ad70d5f638479624edc9e4593f59b4e2539b432e3108f6ed5f6ff05",
+    "L3": "a7f23c3c6caac4949bef490ddd8d23f83dfb6156b3a24a46fcaa63aaa3274740"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.05040907891264186,
+   "max_abs_bg_rho_error": 1.5831535454813306e-06,
+   "max_abs_rate_error": 2.1375912848675682e-06,
+   "max_abs_rho_error": 3.6376990001363296e-06,
+   "max_abs_total_rho_error": 3.6376990001363296e-06,
+   "max_late_ms": 28.431102546164766,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00020290606576411042,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 50372,
+   "n_sent": 53046,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 50372,
+    "n_recv_unique": 50372,
+    "n_reorder": 0,
+    "n_sent": 53046
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     25.922342865656805,
+     26.575284527862042,
+     25.772536611223284,
+     25.670033567548938,
+     25.263477281374083,
+     25.95171206663432
+    ],
+    "inflation_factor": 2.8558246566518566,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.17545204366474718,
+    "se_naive_ms": 0.06143656027903534,
+    "spread_ms": 1.3118072464879589
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0001_poisson_r0925_s104_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.6376990001363296e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.05040907891264186,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 51157,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0001_poisson_r0925_s104_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     190
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    190
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9984959669964,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0001_poisson_r0925_s104_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 190,
+    "schedule": "poisson_fixed_count",
+    "seed": 104700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 40.40900561126007,
+   "q_p50_ms": 39.93185699746059,
+   "q_p90_ms": 59.144104997718706,
+   "q_p95_ms": 64.17200499654095,
+   "q_p99_ms": 72.72320600113412,
+   "q_sd_ms": 13.788641800237496,
+   "queue_mean_ms": 25.857005611260075,
+   "queue_sd_ms": 13.788641800237496,
+   "rate_ratio": 0.999998983499692,
+   "rate_ratio_by_link": {
+    "L1": 0.999998983499692,
+    "L2": 0.9999979623248914,
+    "L3": 0.9999978624087151
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987265520071,
+    "L2": 0.9774973071756274,
+    "L3": 0.987496362301
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622538247343,
+    "L2": 0.8129153435392638,
+    "L3": 0.7406234168464546
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987265520071,
+    "L2": 0.9774973071756274,
+    "L3": 0.987496362301
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "5ee9c91a5668cd9a48489dbb95d2269780b554e4fbfe8262f77e801d4bdd0c82",
+   "seed": 104,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "5ee9c91a5668cd9a48489dbb95d2269780b554e4fbfe8262f77e801d4bdd0c82",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T19:02:19Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 0.9991386070760013,
+    "L2": 0.9991381191655623,
+    "L3": 0.9999701041417831
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.0003353984721306,
+    "L2": 0.9987218299621511,
+    "L3": 1.000870291660504
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 1.000885982159276,
+    "L2": 1.0004367082620271,
+    "L3": 1.0009726631086797
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 0.9991380912312063,
+    "L2": 0.9991354475584572,
+    "L3": 0.9999698875465752
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 1.000885982159276,
+     "aggregate_schedule": 0.9991386070760013,
+     "aggregate_with_probe": 1.0003353984721306,
+     "design_target": 1.0,
+     "schedule_bg": 0.9991380912312063
+    },
+    "L2": {
+     "actual_bg": 1.0004367082620271,
+     "aggregate_schedule": 0.9991381191655623,
+     "aggregate_with_probe": 0.9987218299621511,
+     "design_target": 1.0,
+     "schedule_bg": 0.9991354475584572
+    },
+    "L3": {
+     "actual_bg": 1.0009726631086797,
+     "aggregate_schedule": 0.9999701041417831,
+     "aggregate_with_probe": 1.000870291660504,
+     "design_target": 1.0,
+     "schedule_bg": 0.9999698875465752
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 198.70012810283478,
+   "delay_ms": 40.168361308386096,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 2,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 1.000885982159276,
+      "aggregate_schedule": 0.9991386070760013,
+      "aggregate_with_probe": 1.0003353984721306,
+      "design_target": 1.0,
+      "schedule_bg": 0.9991380912312063
+     },
+     "c_a_actual_bg": 1.000885982159276,
+     "c_a_aggregate_schedule": 0.9991386070760013,
+     "c_a_aggregate_with_probe": 1.0003353984721306,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.9991380912312063,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 28.09259563946398,
+     "n_bg_recv": 320245,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0002746361071580156,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999989835587925,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987265953906,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622538681179,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987265953906,
+     "schedule_digest": "2fa5065767a12a080857a789fb45e9334a55df734c522af4c4e06fe617b103a9",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.0004367082620271,
+      "aggregate_schedule": 0.9991381191655623,
+      "aggregate_with_probe": 0.9987218299621511,
+      "design_target": 1.0,
+      "schedule_bg": 0.9991354475584572
+     },
+     "c_a_actual_bg": 1.0004367082620271,
+     "c_a_aggregate_schedule": 0.9991381191655623,
+     "c_a_aggregate_with_probe": 0.9987218299621511,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.9991354475584572,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 23.272192942386027,
+     "n_bg_recv": 259730,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.000244238782864207,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979641385304,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973086499654,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153450136017,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973086499654,
+     "schedule_digest": "db703145da80320f52c513a4fb628ea48ab94b2cefa501569a9ff51aa85be045",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.0009726631086797,
+      "aggregate_schedule": 0.9999701041417831,
+      "aggregate_with_probe": 1.000870291660504,
+      "design_target": 1.0,
+      "schedule_bg": 0.9999698875465752
+     },
+     "c_a_actual_bg": 1.0009726631086797,
+     "c_a_aggregate_schedule": 0.9999701041417831,
+     "c_a_aggregate_with_probe": 1.000870291660504,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.9999698875465752,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 27.72355426714057,
+     "n_bg_recv": 156123,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00022889807230704512,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978633268949,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874963629810269,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234175264815,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874963629810269,
+     "schedule_digest": "622b3f2efbebd8ff0d3c1c5581347bc899b37bf027bba015c11f008f95892d52",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "2fa5065767a12a080857a789fb45e9334a55df734c522af4c4e06fe617b103a9",
+    "L2": "db703145da80320f52c513a4fb628ea48ab94b2cefa501569a9ff51aa85be045",
+    "L3": "622b3f2efbebd8ff0d3c1c5581347bc899b37bf027bba015c11f008f95892d52"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.049199170906350106,
+   "max_abs_bg_rho_error": 1.58247351855767e-06,
+   "max_abs_rate_error": 2.1366731051131183e-06,
+   "max_abs_rho_error": 3.637018973212669e-06,
+   "max_abs_total_rho_error": 3.637018973212669e-06,
+   "max_late_ms": 28.09259563946398,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0002746361071580156,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 50459,
+   "n_sent": 53070,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 50459,
+    "n_recv_unique": 50459,
+    "n_reorder": 0,
+    "n_sent": 53070
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     26.075807932739416,
+     26.65946846355274,
+     24.823470335337966,
+     25.881805367418146,
+     26.031576179816863,
+     24.188510769573895
+    ],
+    "inflation_factor": 6.033357738652892,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.3745764807035615,
+    "se_naive_ms": 0.06208424842833796,
+    "spread_ms": 2.4709576939788462
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0002_poisson_r0925_s105_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.637018973212669e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.049199170906350106,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 51232,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0002_poisson_r0925_s105_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     290
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    290
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9908282109973,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0002_poisson_r0925_s105_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 290,
+    "schedule": "poisson_fixed_count",
+    "seed": 105700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 40.168361308386096,
+   "q_p50_ms": 39.48958699711179,
+   "q_p90_ms": 59.110985995536204,
+   "q_p95_ms": 64.33791999679337,
+   "q_p99_ms": 73.36187300042761,
+   "q_sd_ms": 13.94603490197176,
+   "queue_mean_ms": 25.616361308386097,
+   "queue_sd_ms": 13.94603490197176,
+   "rate_ratio": 0.9999989835587925,
+   "rate_ratio_by_link": {
+    "L1": 0.9999989835587925,
+    "L2": 0.9999979641385304,
+    "L3": 0.9999978633268949
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987265953906,
+    "L2": 0.9774973086499654,
+    "L3": 0.9874963629810269
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622538681179,
+    "L2": 0.8129153450136017,
+    "L3": 0.7406234175264815
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987265953906,
+    "L2": 0.9774973086499654,
+    "L3": 0.9874963629810269
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "41b35784a31f56be6b43cf5cb8c04be467cee8f67c613499940f9aaecdb17060",
+   "seed": 105,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "41b35784a31f56be6b43cf5cb8c04be467cee8f67c613499940f9aaecdb17060",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T19:13:28Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 1.00023212346903,
+    "L2": 1.003056286683752,
+    "L3": 1.0016399011730006
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.0010781191997615,
+    "L2": 1.0034991581808304,
+    "L3": 1.0004754142654413
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 1.0016122467793103,
+    "L2": 1.0037581996468843,
+    "L3": 1.0022200237137044
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 1.0002315351365785,
+    "L2": 1.003057262807405,
+    "L3": 1.001634260552155
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 1.0016122467793103,
+     "aggregate_schedule": 1.00023212346903,
+     "aggregate_with_probe": 1.0010781191997615,
+     "design_target": 1.0,
+     "schedule_bg": 1.0002315351365785
+    },
+    "L2": {
+     "actual_bg": 1.0037581996468843,
+     "aggregate_schedule": 1.003056286683752,
+     "aggregate_with_probe": 1.0034991581808304,
+     "design_target": 1.0,
+     "schedule_bg": 1.003057262807405
+    },
+    "L3": {
+     "actual_bg": 1.0022200237137044,
+     "aggregate_schedule": 1.0016399011730006,
+     "aggregate_with_probe": 1.0004754142654413,
+     "design_target": 1.0,
+     "schedule_bg": 1.001634260552155
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 205.0747249197305,
+   "delay_ms": 40.21032051203542,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 3,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 1.0016122467793103,
+      "aggregate_schedule": 1.00023212346903,
+      "aggregate_with_probe": 1.0010781191997615,
+      "design_target": 1.0,
+      "schedule_bg": 1.0002315351365785
+     },
+     "c_a_actual_bg": 1.0016122467793103,
+     "c_a_aggregate_schedule": 1.00023212346903,
+     "c_a_aggregate_with_probe": 1.0010781191997615,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 1.0002315351365785,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 30.83866587257944,
+     "n_bg_recv": 320308,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0001934936209522383,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999989836587927,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987266687972,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622539415245,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987266687972,
+     "schedule_digest": "8880cc7f7faf3576d213f53d8fe3a32b635d91a5e7c2aea14e9a6520cf0d2363",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.0037581996468843,
+      "aggregate_schedule": 1.003056286683752,
+      "aggregate_with_probe": 1.0034991581808304,
+      "design_target": 1.0,
+      "schedule_bg": 1.003057262807405
+     },
+     "c_a_actual_bg": 1.0037581996468843,
+     "c_a_aggregate_schedule": 1.003056286683752,
+     "c_a_aggregate_with_probe": 1.0034991581808304,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 1.003057262807405,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 19.47923229454318,
+     "n_bg_recv": 259553,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00013151319077303454,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979637991298,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973083740609,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153447376972,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973083740609,
+     "schedule_digest": "c0bacf4e5c5537f5ae0a6b747e3e57247333cf1ee1f4c56f588f3ff6e3c2f458",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.0022200237137044,
+      "aggregate_schedule": 1.0016399011730006,
+      "aggregate_with_probe": 1.0004754142654413,
+      "design_target": 1.0,
+      "schedule_bg": 1.001634260552155
+     },
+     "c_a_actual_bg": 1.0022200237137044,
+     "c_a_aggregate_schedule": 1.0016399011730006,
+     "c_a_aggregate_with_probe": 1.0004754142654413,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 1.001634260552155,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 28.458511987992097,
+     "n_bg_recv": 156119,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00011135581896018411,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.999997863560221,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874963631538343,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234176992887,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874963631538343,
+     "schedule_digest": "fabdb20c6e7c13ba483453d17b77fbddedd7170916855f6ea4201cb29ec90e71",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "8880cc7f7faf3576d213f53d8fe3a32b635d91a5e7c2aea14e9a6520cf0d2363",
+    "L2": "c0bacf4e5c5537f5ae0a6b747e3e57247333cf1ee1f4c56f588f3ff6e3c2f458",
+    "L3": "fabdb20c6e7c13ba483453d17b77fbddedd7170916855f6ea4201cb29ec90e71"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.051164458536217115,
+   "max_abs_bg_rho_error": 1.5823007113446863e-06,
+   "max_abs_rate_error": 2.1364397789769285e-06,
+   "max_abs_rho_error": 3.636846165888663e-06,
+   "max_abs_total_rho_error": 3.636846165888663e-06,
+   "max_late_ms": 30.83866587257944,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0001934936209522383,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 50275,
+   "n_sent": 52986,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 50275,
+    "n_recv_unique": 50275,
+    "n_reorder": 0,
+    "n_sent": 52986
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     25.23180013383812,
+     26.280369840971357,
+     25.517504068720054,
+     25.829846933398333,
+     25.786742347365255,
+     25.296616281304843
+    ],
+    "inflation_factor": 2.5929290506791287,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.15973200832383774,
+    "se_naive_ms": 0.06160292287288055,
+    "spread_ms": 1.048569707133236
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0003_poisson_r0925_s106_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.636846165888663e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.051164458536217115,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 51131,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0003_poisson_r0925_s106_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     390
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    390
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9802987339935,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0003_poisson_r0925_s106_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 390,
+    "schedule": "poisson_fixed_count",
+    "seed": 106700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 40.21032051203542,
+   "q_p50_ms": 39.621725001230836,
+   "q_p90_ms": 59.170037005420774,
+   "q_p95_ms": 64.2171040011784,
+   "q_p99_ms": 72.03842900289268,
+   "q_sd_ms": 13.812661161173327,
+   "queue_mean_ms": 25.658320512035427,
+   "queue_sd_ms": 13.812661161173327,
+   "rate_ratio": 0.9999989836587927,
+   "rate_ratio_by_link": {
+    "L1": 0.9999989836587927,
+    "L2": 0.9999979637991298,
+    "L3": 0.999997863560221
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987266687972,
+    "L2": 0.9774973083740609,
+    "L3": 0.9874963631538343
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622539415245,
+    "L2": 0.8129153447376972,
+    "L3": 0.7406234176992887
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987266687972,
+    "L2": 0.9774973083740609,
+    "L3": 0.9874963631538343
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "0110290560f174e26bbcca38eec1d64039220496d65293bd2459557c3a9f813c",
+   "seed": 106,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "0110290560f174e26bbcca38eec1d64039220496d65293bd2459557c3a9f813c",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T19:24:37Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 0.9997175924754962,
+    "L2": 0.9982946598973118,
+    "L3": 0.998594992328301
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.0008121248551265,
+    "L2": 0.9997750399208527,
+    "L3": 1.000568621325425
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 1.0012544595382908,
+    "L2": 0.9988430256744546,
+    "L3": 0.9999122439179149
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 0.999717982872777,
+    "L2": 0.9982969684406888,
+    "L3": 0.998591966600625
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 1.0012544595382908,
+     "aggregate_schedule": 0.9997175924754962,
+     "aggregate_with_probe": 1.0008121248551265,
+     "design_target": 1.0,
+     "schedule_bg": 0.999717982872777
+    },
+    "L2": {
+     "actual_bg": 0.9988430256744546,
+     "aggregate_schedule": 0.9982946598973118,
+     "aggregate_with_probe": 0.9997750399208527,
+     "design_target": 1.0,
+     "schedule_bg": 0.9982969684406888
+    },
+    "L3": {
+     "actual_bg": 0.9999122439179149,
+     "aggregate_schedule": 0.998594992328301,
+     "aggregate_with_probe": 1.000568621325425,
+     "design_target": 1.0,
+     "schedule_bg": 0.998591966600625
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 205.60864846078138,
+   "delay_ms": 40.07282134439899,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 4,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 1.0012544595382908,
+      "aggregate_schedule": 0.9997175924754962,
+      "aggregate_with_probe": 1.0008121248551265,
+      "design_target": 1.0,
+      "schedule_bg": 0.999717982872777
+     },
+     "c_a_actual_bg": 1.0012544595382908,
+     "c_a_aggregate_schedule": 0.9997175924754962,
+     "c_a_aggregate_with_probe": 1.0008121248551265,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.999717982872777,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 24.79042229242623,
+     "n_bg_recv": 320320,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0002309439992010586,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.999998983702735,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987267010535,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622539737808,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987267010535,
+     "schedule_digest": "fede0b2046cf3113a256363bd872763ed9e4850317cc38dce6d815999fed5c32",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 0.9988430256744546,
+      "aggregate_schedule": 0.9982946598973118,
+      "aggregate_with_probe": 0.9997750399208527,
+      "design_target": 1.0,
+      "schedule_bg": 0.9982969684406888
+     },
+     "c_a_actual_bg": 0.9988430256744546,
+     "c_a_aggregate_schedule": 0.9982946598973118,
+     "c_a_aggregate_with_probe": 0.9997750399208527,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.9982969684406888,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 23.614813304448035,
+     "n_bg_recv": 259620,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00010521055261842763,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979626385287,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973074305886,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153437942249,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973074305886,
+     "schedule_digest": "89ffc7cf4eaa04e6a80bb1a7689f5616e9c5cfdf2c1fca9ab65c49136058e3e5",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 0.9999122439179149,
+      "aggregate_schedule": 0.998594992328301,
+      "aggregate_with_probe": 1.000568621325425,
+      "design_target": 1.0,
+      "schedule_bg": 0.998591966600625
+     },
+     "c_a_actual_bg": 0.9999122439179149,
+     "c_a_aggregate_schedule": 0.998594992328301,
+     "c_a_aggregate_with_probe": 1.000568621325425,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.998591966600625,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 21.587586910754908,
+     "n_bg_recv": 156303,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00033406745688055234,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978634541687,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874963630752893,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234176207438,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874963630752893,
+     "schedule_digest": "a1182884542ec005ec9f7a82f747a88c016f47b19aa9def555b01035d8713b11",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "fede0b2046cf3113a256363bd872763ed9e4850317cc38dce6d815999fed5c32",
+    "L2": "89ffc7cf4eaa04e6a80bb1a7689f5616e9c5cfdf2c1fca9ab65c49136058e3e5",
+    "L3": "a1182884542ec005ec9f7a82f747a88c016f47b19aa9def555b01035d8713b11"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.05137282964860081,
+   "max_abs_bg_rho_error": 1.5823792562930095e-06,
+   "max_abs_rate_error": 2.136545831254999e-06,
+   "max_abs_rho_error": 3.636924710836986e-06,
+   "max_abs_total_rho_error": 3.636924710836986e-06,
+   "max_late_ms": 24.79042229242623,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00033406745688055234,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 50374,
+   "n_sent": 53102,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 50374,
+    "n_recv_unique": 50374,
+    "n_reorder": 0,
+    "n_sent": 53102
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     26.1102212843173,
+     25.445625424335265,
+     25.078800347736976,
+     26.102538213306683,
+     25.10394845352102,
+     25.288130250602116
+    ],
+    "inflation_factor": 3.1608695468825765,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.19276486640155358,
+    "se_naive_ms": 0.06098475863759354,
+    "spread_ms": 1.031420936580325
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0004_poisson_r0925_s107_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.636924710836986e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.05137282964860081,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 51111,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0004_poisson_r0925_s107_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     490
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    490
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.981905280998,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0004_poisson_r0925_s107_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 490,
+    "schedule": "poisson_fixed_count",
+    "seed": 107700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 40.07282134439899,
+   "q_p50_ms": 39.55548499597749,
+   "q_p90_ms": 58.798423996810335,
+   "q_p95_ms": 63.92009300124878,
+   "q_p99_ms": 71.93758600569376,
+   "q_sd_ms": 13.687512482488279,
+   "queue_mean_ms": 25.520821344398986,
+   "queue_sd_ms": 13.687512482488279,
+   "rate_ratio": 0.999998983702735,
+   "rate_ratio_by_link": {
+    "L1": 0.999998983702735,
+    "L2": 0.9999979626385287,
+    "L3": 0.9999978634541687
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987267010535,
+    "L2": 0.9774973074305886,
+    "L3": 0.9874963630752893
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622539737808,
+    "L2": 0.8129153437942249,
+    "L3": 0.7406234176207438
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987267010535,
+    "L2": 0.9774973074305886,
+    "L3": 0.9874963630752893
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "1d1ec09642058dfa158c9a02cc0774ee4bb53df465917fe427c7c4ac31ad9af0",
+   "seed": 107,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "1d1ec09642058dfa158c9a02cc0774ee4bb53df465917fe427c7c4ac31ad9af0",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T19:35:46Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 1.0023636302293677,
+    "L2": 0.996438754385275,
+    "L3": 1.002415989621868
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.0029212107978793,
+    "L2": 0.9973877081729,
+    "L3": 0.9995772581197139
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 1.0044560127568658,
+    "L2": 0.9978466315182715,
+    "L3": 1.0037762214267603
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 1.002360607643204,
+    "L2": 0.9964387272689302,
+    "L3": 1.0024102525960503
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 1.0044560127568658,
+     "aggregate_schedule": 1.0023636302293677,
+     "aggregate_with_probe": 1.0029212107978793,
+     "design_target": 1.0,
+     "schedule_bg": 1.002360607643204
+    },
+    "L2": {
+     "actual_bg": 0.9978466315182715,
+     "aggregate_schedule": 0.996438754385275,
+     "aggregate_with_probe": 0.9973877081729,
+     "design_target": 1.0,
+     "schedule_bg": 0.9964387272689302
+    },
+    "L3": {
+     "actual_bg": 1.0037762214267603,
+     "aggregate_schedule": 1.002415989621868,
+     "aggregate_with_probe": 0.9995772581197139,
+     "design_target": 1.0,
+     "schedule_bg": 1.0024102525960503
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 200.28606957998213,
+   "delay_ms": 40.22995095610813,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 5,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 1.0044560127568658,
+      "aggregate_schedule": 1.0023636302293677,
+      "aggregate_with_probe": 1.0029212107978793,
+      "design_target": 1.0,
+      "schedule_bg": 1.002360607643204
+     },
+     "c_a_actual_bg": 1.0044560127568658,
+     "c_a_aggregate_schedule": 1.0023636302293677,
+     "c_a_aggregate_with_probe": 1.0029212107978793,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 1.002360607643204,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 27.81280440831324,
+     "n_bg_recv": 320281,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00025903178288767386,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999989838800036,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987268311799,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622541039071,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987268311799,
+     "schedule_digest": "ceac78c0f6abf5870f9e24e85c7fba6317a73020009a04e1c2fb06251b4a06ea",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 0.9978466315182715,
+      "aggregate_schedule": 0.996438754385275,
+      "aggregate_with_probe": 0.9973877081729,
+      "design_target": 1.0,
+      "schedule_bg": 0.9964387272689302
+     },
+     "c_a_actual_bg": 0.9978466315182715,
+     "c_a_aggregate_schedule": 0.996438754385275,
+     "c_a_aggregate_with_probe": 0.9973877081729,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 0.9964387272689302,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 30.688358543557115,
+     "n_bg_recv": 259705,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0001953910262913656,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979636597403,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973082607488,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153446243851,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973082607488,
+     "schedule_digest": "c4ce3b231365fa83986a4b07e3b4e3f990f9af6606d0c5954a577f9cce31c0c4",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.0037762214267603,
+      "aggregate_schedule": 1.002415989621868,
+      "aggregate_with_probe": 0.9995772581197139,
+      "design_target": 1.0,
+      "schedule_bg": 1.0024102525960503
+     },
+     "c_a_actual_bg": 1.0037762214267603,
+     "c_a_aggregate_schedule": 1.002415989621868,
+     "c_a_aggregate_with_probe": 0.9995772581197139,
+     "c_a_design_target": 1.0,
+     "c_a_schedule_bg": 1.0024102525960503,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 27.376068181183655,
+     "n_bg_recv": 156196,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00031550815372052165,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978626481045,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.987496362478298,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234170237525,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.987496362478298,
+     "schedule_digest": "0dfff5ff982c9577c2d8266b81e8474f2c72aa16de7f3d0505d83b90f2637ed0",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "ceac78c0f6abf5870f9e24e85c7fba6317a73020009a04e1c2fb06251b4a06ea",
+    "L2": "c4ce3b231365fa83986a4b07e3b4e3f990f9af6606d0c5954a577f9cce31c0c4",
+    "L3": "0dfff5ff982c9577c2d8266b81e8474f2c72aa16de7f3d0505d83b90f2637ed0"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.049672242314647376,
+   "max_abs_bg_rho_error": 1.582976247638257e-06,
+   "max_abs_rate_error": 2.137351895470374e-06,
+   "max_abs_rho_error": 3.6375217021822337e-06,
+   "max_abs_total_rho_error": 3.6375217021822337e-06,
+   "max_late_ms": 30.688358543557115,
+   "mode": "poisson",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00031550815372052165,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 50451,
+   "n_sent": 53088,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 50451,
+    "n_recv_unique": 50451,
+    "n_reorder": 0,
+    "n_sent": 53088
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     25.888521658879874,
+     25.231836762031676,
+     26.026024681140992,
+     25.504234306890314,
+     25.845151498265427,
+     25.567217572871247
+    ],
+    "inflation_factor": 1.9892911431827256,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.12040277943354329,
+    "se_naive_ms": 0.06052546900747134,
+    "spread_ms": 0.7941879191093157
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0005_poisson_r0925_s108_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.6375217021822337e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.049672242314647376,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 51197,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0005_poisson_r0925_s108_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     590
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    590
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9964123210011,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0005_poisson_r0925_s108_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 590,
+    "schedule": "poisson_fixed_count",
+    "seed": 108700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 40.22995095610813,
+   "q_p50_ms": 39.8395980004319,
+   "q_p90_ms": 58.5336529978998,
+   "q_p95_ms": 63.53773399987072,
+   "q_p99_ms": 72.04971199771202,
+   "q_sd_ms": 13.594807201298456,
+   "queue_mean_ms": 25.677950956108127,
+   "queue_sd_ms": 13.594807201298456,
+   "rate_ratio": 0.9999989838800036,
+   "rate_ratio_by_link": {
+    "L1": 0.9999989838800036,
+    "L2": 0.9999979636597403,
+    "L3": 0.9999978626481045
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987268311799,
+    "L2": 0.9774973082607488,
+    "L3": 0.987496362478298
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622541039071,
+    "L2": 0.8129153446243851,
+    "L3": 0.7406234170237525
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987268311799,
+    "L2": 0.9774973082607488,
+    "L3": 0.987496362478298
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "7d27c4e6488217d2f698a72046fb9705b6c20319ed819d033639aa31074f3d2d",
+   "seed": 108,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "7d27c4e6488217d2f698a72046fb9705b6c20319ed819d033639aa31074f3d2d",
+   "vl1g_run_pass": true,
+   "w_loss": 3222.244681647411,
+   "wall_utc": "2026-08-09T19:46:55Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 1.9934392061717394,
+    "L2": 2.006595400988256,
+    "L3": 1.987894559481844
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.596799568415147,
+    "L2": 1.5605201151662185,
+    "L3": 1.4191443335145615
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 1.99411686016315,
+    "L2": 2.0068799079399797,
+    "L3": 1.988002604550769
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 1.9934397462617877,
+    "L2": 2.006587420974633,
+    "L3": 1.987885512037166
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 1.99411686016315,
+     "aggregate_schedule": 1.9934392061717394,
+     "aggregate_with_probe": 1.596799568415147,
+     "design_target": 2.0,
+     "schedule_bg": 1.9934397462617877
+    },
+    "L2": {
+     "actual_bg": 2.0068799079399797,
+     "aggregate_schedule": 2.006595400988256,
+     "aggregate_with_probe": 1.5605201151662185,
+     "design_target": 2.0,
+     "schedule_bg": 2.006587420974633
+    },
+    "L3": {
+     "actual_bg": 1.988002604550769,
+     "aggregate_schedule": 1.987894559481844,
+     "aggregate_with_probe": 1.4191443335145615,
+     "design_target": 2.0,
+     "schedule_bg": 1.987885512037166
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 641.3453022438277,
+   "delay_ms": 45.59262946735968,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 6,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 1.99411686016315,
+      "aggregate_schedule": 1.9934392061717394,
+      "aggregate_with_probe": 1.596799568415147,
+      "design_target": 2.0,
+      "schedule_bg": 1.9934397462617877
+     },
+     "c_a_actual_bg": 1.99411686016315,
+     "c_a_aggregate_schedule": 1.9934392061717394,
+     "c_a_aggregate_with_probe": 1.596799568415147,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 1.9934397462617877,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 21.615320903947577,
+     "n_bg_recv": 312956,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00019661448580630665,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999989837587929,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987267422036,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622540149309,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987267422036,
+     "schedule_digest": "c82bbcaf10ad5a02b4623569f9600fda2d666a860cbecc54d8b333d97e9488c2",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 2.0068799079399797,
+      "aggregate_schedule": 2.006595400988256,
+      "aggregate_with_probe": 1.5605201151662185,
+      "design_target": 2.0,
+      "schedule_bg": 2.006587420974633
+     },
+     "c_a_actual_bg": 2.0068799079399797,
+     "c_a_aggregate_schedule": 2.006595400988256,
+     "c_a_aggregate_with_probe": 1.5605201151662185,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.006587420974633,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 19.901326413673814,
+     "n_bg_recv": 242219,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 3.381767762735174e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979639673142,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.977497308510781,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153448744173,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.977497308510781,
+     "schedule_digest": "de147c0983c2e8de5f87e13f08cab515a1cff705b93f7a8699c56ed3aff399e7",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.988002604550769,
+      "aggregate_schedule": 1.987894559481844,
+      "aggregate_with_probe": 1.4191443335145615,
+      "design_target": 2.0,
+      "schedule_bg": 1.987885512037166
+     },
+     "c_a_actual_bg": 1.988002604550769,
+     "c_a_aggregate_schedule": 1.987894559481844,
+     "c_a_aggregate_with_probe": 1.4191443335145615,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 1.987885512037166,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 13.259832790936343,
+     "n_bg_recv": 144947,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 1.8559303160030685e-05,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978634784109,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874963630932434,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.740623417638698,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874963630932434,
+     "schedule_digest": "539a42a06dad9f172936ea92bad341cd128374cf190ebb8f76e9fc974c9377e9",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "c82bbcaf10ad5a02b4623569f9600fda2d666a860cbecc54d8b333d97e9488c2",
+    "L2": "de147c0983c2e8de5f87e13f08cab515a1cff705b93f7a8699c56ed3aff399e7",
+    "L3": "539a42a06dad9f172936ea92bad341cd128374cf190ebb8f76e9fc974c9377e9"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.13192323643630058,
+   "max_abs_bg_rho_error": 1.5823613020993221e-06,
+   "max_abs_rate_error": 2.136521589091167e-06,
+   "max_abs_rho_error": 3.636906756754321e-06,
+   "max_abs_total_rho_error": 3.636906756754321e-06,
+   "max_late_ms": 21.615320903947577,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00019661448580630665,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 46048,
+   "n_sent": 53046,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 46048,
+    "n_recv_unique": 46048,
+    "n_reorder": 0,
+    "n_sent": 53046
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     31.458848107560463,
+     31.62252971191333,
+     30.65756887787574,
+     30.897234378736265,
+     30.502551462399158,
+     31.112412667994132
+    ],
+    "inflation_factor": 2.5019809298752795,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.18032230502663707,
+    "se_naive_ms": 0.07207181432658877,
+    "spread_ms": 1.1199782495141726
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0006_h2_r0925_s104_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.636906756754321e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.13192323643630058,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 46778,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0006_h2_r0925_s104_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     690
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    690
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9985176949995,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0006_h2_r0925_s104_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 690,
+    "schedule": "poisson_fixed_count",
+    "seed": 104700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 45.59262946735968,
+   "q_p50_ms": 45.030101994958706,
+   "q_p90_ms": 66.0305679988563,
+   "q_p95_ms": 71.38643899761186,
+   "q_p99_ms": 82.60495399681199,
+   "q_sd_ms": 15.465744856397501,
+   "queue_mean_ms": 31.04062946735968,
+   "queue_sd_ms": 15.465744856397501,
+   "rate_ratio": 0.9999989837587929,
+   "rate_ratio_by_link": {
+    "L1": 0.9999989837587929,
+    "L2": 0.9999979639673142,
+    "L3": 0.9999978634784109
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987267422036,
+    "L2": 0.977497308510781,
+    "L3": 0.9874963630932434
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622540149309,
+    "L2": 0.8129153448744173,
+    "L3": 0.740623417638698
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987267422036,
+    "L2": 0.977497308510781,
+    "L3": 0.9874963630932434
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "74a33c004b2380855c9a8866c4eec31da9c016828f34ce10b3247ded30a6028c",
+   "seed": 104,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "74a33c004b2380855c9a8866c4eec31da9c016828f34ce10b3247ded30a6028c",
+   "vl1g_run_pass": true,
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-09T19:58:04Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 1.9921349035748748,
+    "L2": 1.9972874975553823,
+    "L3": 2.0055166399050965
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.5989430613689026,
+    "L2": 1.5579289583027789,
+    "L3": 1.4283560406758011
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 1.9930213180088012,
+    "L2": 1.9983400321360343,
+    "L3": 2.005932110448696
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 1.992135368404983,
+    "L2": 1.9972867912017074,
+    "L3": 2.0055190004350667
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 1.9930213180088012,
+     "aggregate_schedule": 1.9921349035748748,
+     "aggregate_with_probe": 1.5989430613689026,
+     "design_target": 2.0,
+     "schedule_bg": 1.992135368404983
+    },
+    "L2": {
+     "actual_bg": 1.9983400321360343,
+     "aggregate_schedule": 1.9972874975553823,
+     "aggregate_with_probe": 1.5579289583027789,
+     "design_target": 2.0,
+     "schedule_bg": 1.9972867912017074
+    },
+    "L3": {
+     "actual_bg": 2.005932110448696,
+     "aggregate_schedule": 2.0055166399050965,
+     "aggregate_with_probe": 1.4283560406758011,
+     "design_target": 2.0,
+     "schedule_bg": 2.0055190004350667
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 643.7836805715613,
+   "delay_ms": 45.49234624866739,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 7,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 1.9930213180088012,
+      "aggregate_schedule": 1.9921349035748748,
+      "aggregate_with_probe": 1.5989430613689026,
+      "design_target": 2.0,
+      "schedule_bg": 1.992135368404983
+     },
+     "c_a_actual_bg": 1.9930213180088012,
+     "c_a_aggregate_schedule": 1.9921349035748748,
+     "c_a_aggregate_with_probe": 1.5989430613689026,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 1.992135368404983,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 27.37443649675697,
+     "n_bg_recv": 312861,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0002933612962824258,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999989837512303,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987267366522,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622540093794,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987267366522,
+     "schedule_digest": "b507f51fd1e4e001e4c1b1b0b33727a7601531cba63f3952276971470ab5823d",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.9983400321360343,
+      "aggregate_schedule": 1.9972874975553823,
+      "aggregate_with_probe": 1.5579289583027789,
+      "design_target": 2.0,
+      "schedule_bg": 1.9972867912017074
+     },
+     "c_a_actual_bg": 1.9983400321360343,
+     "c_a_aggregate_schedule": 1.9972874975553823,
+     "c_a_aggregate_with_probe": 1.5579289583027789,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 1.9972867912017074,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 35.43616792012472,
+     "n_bg_recv": 242206,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0002479963026005794,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979638703679,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973084319715,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153447956078,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973084319715,
+     "schedule_digest": "06a6f4595ce50545e6a33f5b7fe52be0935a4fff6e4227715564d1a5f9ac9e0b",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 2.005932110448696,
+      "aggregate_schedule": 2.0055166399050965,
+      "aggregate_with_probe": 1.4283560406758011,
+      "design_target": 2.0,
+      "schedule_bg": 2.0055190004350667
+     },
+     "c_a_actual_bg": 2.005932110448696,
+     "c_a_aggregate_schedule": 2.0055166399050965,
+     "c_a_aggregate_with_probe": 1.4283560406758011,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.0055190004350667,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 24.95382699999027,
+     "n_bg_recv": 144756,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00020415233476033754,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978635541689,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874963631493519,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234176948063,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874963631493519,
+     "schedule_digest": "c78e3f0d252b1f126ea1d43d816e35421309002dd9b2775ed1fe4556aadd3ac0",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "b507f51fd1e4e001e4c1b1b0b33727a7601531cba63f3952276971470ab5823d",
+    "L2": "06a6f4595ce50545e6a33f5b7fe52be0935a4fff6e4227715564d1a5f9ac9e0b",
+    "L3": "c78e3f0d252b1f126ea1d43d816e35421309002dd9b2775ed1fe4556aadd3ac0"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.13248539664593934,
+   "max_abs_bg_rho_error": 1.582305193759126e-06,
+   "max_abs_rate_error": 2.1364458311357026e-06,
+   "max_abs_rho_error": 3.6368506483031027e-06,
+   "max_abs_total_rho_error": 3.6368506483031027e-06,
+   "max_late_ms": 35.43616792012472,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0002933612962824258,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 46039,
+   "n_sent": 53070,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 46039,
+    "n_recv_unique": 46039,
+    "n_reorder": 0,
+    "n_sent": 53070
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     31.65398696400772,
+     30.471979529312954,
+     30.35944181647474,
+     30.69488462531002,
+     31.747980351812373,
+     30.696457754230423
+    ],
+    "inflation_factor": 3.414924561477943,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.2475248212914715,
+    "se_naive_ms": 0.07248324723880442,
+    "spread_ms": 1.3885385353376343
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0007_h2_r0925_s105_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.6368506483031027e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.13248539664593934,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 46722,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0007_h2_r0925_s105_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     790
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    790
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9908769729955,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0007_h2_r0925_s105_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 790,
+    "schedule": "poisson_fixed_count",
+    "seed": 105700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 45.49234624866739,
+   "q_p50_ms": 44.825910000687465,
+   "q_p90_ms": 66.30499299298785,
+   "q_p95_ms": 71.94279900376964,
+   "q_p99_ms": 82.56178300452697,
+   "q_sd_ms": 15.552513334411138,
+   "queue_mean_ms": 30.940346248667385,
+   "queue_sd_ms": 15.552513334411138,
+   "rate_ratio": 0.9999989837512303,
+   "rate_ratio_by_link": {
+    "L1": 0.9999989837512303,
+    "L2": 0.9999979638703679,
+    "L3": 0.9999978635541689
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987267366522,
+    "L2": 0.9774973084319715,
+    "L3": 0.9874963631493519
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622540093794,
+    "L2": 0.8129153447956078,
+    "L3": 0.7406234176948063
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987267366522,
+    "L2": 0.9774973084319715,
+    "L3": 0.9874963631493519
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "7f53f8db203197f03462f6cf75a8399a58c1827caa5b5fa8f95a1113dccff6ed",
+   "seed": 105,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "7f53f8db203197f03462f6cf75a8399a58c1827caa5b5fa8f95a1113dccff6ed",
+   "vl1g_run_pass": true,
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-09T20:09:13Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 2.0038367028793767,
+    "L2": 2.0028724774182862,
+    "L3": 2.0117295580776173
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.6105520894997376,
+    "L2": 1.5614303710005424,
+    "L3": 1.4214662781438723
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 2.004090835841688,
+    "L2": 2.0036457111551775,
+    "L3": 2.0117572561710446
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 2.0038333920669817,
+    "L2": 2.0028748706431068,
+    "L3": 2.0117353452838054
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 2.004090835841688,
+     "aggregate_schedule": 2.0038367028793767,
+     "aggregate_with_probe": 1.6105520894997376,
+     "design_target": 2.0,
+     "schedule_bg": 2.0038333920669817
+    },
+    "L2": {
+     "actual_bg": 2.0036457111551775,
+     "aggregate_schedule": 2.0028724774182862,
+     "aggregate_with_probe": 1.5614303710005424,
+     "design_target": 2.0,
+     "schedule_bg": 2.0028748706431068
+    },
+    "L3": {
+     "actual_bg": 2.0117572561710446,
+     "aggregate_schedule": 2.0117295580776173,
+     "aggregate_with_probe": 1.4214662781438723,
+     "design_target": 2.0,
+     "schedule_bg": 2.0117353452838054
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 648.4803383579933,
+   "delay_ms": 45.575703453352155,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 8,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 2.004090835841688,
+      "aggregate_schedule": 2.0038367028793767,
+      "aggregate_with_probe": 1.6105520894997376,
+      "design_target": 2.0,
+      "schedule_bg": 2.0038333920669817
+     },
+     "c_a_actual_bg": 2.004090835841688,
+     "c_a_aggregate_schedule": 2.0038367028793767,
+     "c_a_aggregate_with_probe": 1.6105520894997376,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.0038333920669817,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 23.72224129794631,
+     "n_bg_recv": 312987,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00010610940503832422,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999989836527404,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987266643543,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622539370816,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987266643543,
+     "schedule_digest": "73625b3fe5f86d114a6f42dfc8f987e2ceb94c013305ba3251346a04c024ca5e",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 2.0036457111551775,
+      "aggregate_schedule": 2.0028724774182862,
+      "aggregate_with_probe": 1.5614303710005424,
+      "design_target": 2.0,
+      "schedule_bg": 2.0028748706431068
+     },
+     "c_a_actual_bg": 2.0036457111551775,
+     "c_a_aggregate_schedule": 2.0028724774182862,
+     "c_a_aggregate_with_probe": 1.5614303710005424,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.0028748706431068,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 19.255029590567574,
+     "n_bg_recv": 241792,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00010896807235480004,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979640067146,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973085428103,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153449064466,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973085428103,
+     "schedule_digest": "fc7c83f235c028b62bf753c22162fc6f0e68a216ba45bb76a3d93fe10c80b84a",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 2.0117572561710446,
+      "aggregate_schedule": 2.0117295580776173,
+      "aggregate_with_probe": 1.4214662781438723,
+      "design_target": 2.0,
+      "schedule_bg": 2.0117353452838054
+     },
+     "c_a_actual_bg": 2.0117572561710446,
+     "c_a_aggregate_schedule": 2.0117295580776173,
+     "c_a_aggregate_with_probe": 1.4214662781438723,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.0117353452838054,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 17.818583277403377,
+     "n_bg_recv": 144787,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0001299151221202148,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978618844725,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874963619127328,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234164581874,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874963619127328,
+     "schedule_digest": "00211502af8b8518d240f8e2e483ff1f0eb399dc47eec734fc55c35c1f852b3b",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "73625b3fe5f86d114a6f42dfc8f987e2ceb94c013305ba3251346a04c024ca5e",
+    "L2": "fc7c83f235c028b62bf753c22162fc6f0e68a216ba45bb76a3d93fe10c80b84a",
+    "L3": "00211502af8b8518d240f8e2e483ff1f0eb399dc47eec734fc55c35c1f852b3b"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.1335069641037255,
+   "max_abs_bg_rho_error": 1.5835418126775025e-06,
+   "max_abs_rate_error": 2.1381155275168595e-06,
+   "max_abs_rho_error": 3.6380872673325015e-06,
+   "max_abs_total_rho_error": 3.6380872673325015e-06,
+   "max_late_ms": 23.72224129794631,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0001299151221202148,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 45912,
+   "n_sent": 52986,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 45912,
+    "n_recv_unique": 45912,
+    "n_reorder": 0,
+    "n_sent": 52986
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     30.501615617469422,
+     31.915052933702928,
+     31.217513874184245,
+     30.803269321628274,
+     31.383882233267318,
+     30.322359326902347
+    ],
+    "inflation_factor": 3.3784799921305964,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.2432313895544963,
+    "se_naive_ms": 0.07199432588650775,
+    "spread_ms": 1.5926936068005801
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0008_h2_r0925_s106_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.6380872673325015e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.1335069641037255,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 46672,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0008_h2_r0925_s106_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     890
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    890
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9802807349915,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0008_h2_r0925_s106_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 890,
+    "schedule": "poisson_fixed_count",
+    "seed": 106700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 45.575703453352155,
+   "q_p50_ms": 44.94354500584118,
+   "q_p90_ms": 66.23273299864772,
+   "q_p95_ms": 71.59172700575832,
+   "q_p99_ms": 82.26834600590914,
+   "q_sd_ms": 15.42628588004115,
+   "queue_mean_ms": 31.023703453352155,
+   "queue_sd_ms": 15.42628588004115,
+   "rate_ratio": 0.9999989836527404,
+   "rate_ratio_by_link": {
+    "L1": 0.9999989836527404,
+    "L2": 0.9999979640067146,
+    "L3": 0.9999978618844725
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987266643543,
+    "L2": 0.9774973085428103,
+    "L3": 0.9874963619127328
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622539370816,
+    "L2": 0.8129153449064466,
+    "L3": 0.7406234164581874
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987266643543,
+    "L2": 0.9774973085428103,
+    "L3": 0.9874963619127328
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "8460dac6f446d6f86e1bb89b071f3fff7d6e9a36f5a6d7185050e9d40ff379b8",
+   "seed": 106,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "8460dac6f446d6f86e1bb89b071f3fff7d6e9a36f5a6d7185050e9d40ff379b8",
+   "vl1g_run_pass": true,
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-09T20:20:22Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 2.0023958874970287,
+    "L2": 1.9755885203593864,
+    "L3": 2.0056464335958393
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.6045788611863867,
+    "L2": 1.5455341216693699,
+    "L3": 1.4168510257277542
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 2.0034887426483508,
+    "L2": 1.9769792244450046,
+    "L3": 2.006204229092974
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 2.0023983163757313,
+    "L2": 1.9755853965851053,
+    "L3": 2.0056485628643537
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 2.0034887426483508,
+     "aggregate_schedule": 2.0023958874970287,
+     "aggregate_with_probe": 1.6045788611863867,
+     "design_target": 2.0,
+     "schedule_bg": 2.0023983163757313
+    },
+    "L2": {
+     "actual_bg": 1.9769792244450046,
+     "aggregate_schedule": 1.9755885203593864,
+     "aggregate_with_probe": 1.5455341216693699,
+     "design_target": 2.0,
+     "schedule_bg": 1.9755853965851053
+    },
+    "L3": {
+     "actual_bg": 2.006204229092974,
+     "aggregate_schedule": 2.0056464335958393,
+     "aggregate_with_probe": 1.4168510257277542,
+     "design_target": 2.0,
+     "schedule_bg": 2.0056485628643537
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 650.5574995959294,
+   "delay_ms": 45.823338292718034,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 9,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 2.0034887426483508,
+      "aggregate_schedule": 2.0023958874970287,
+      "aggregate_with_probe": 1.6045788611863867,
+      "design_target": 2.0,
+      "schedule_bg": 2.0023983163757313
+     },
+     "c_a_actual_bg": 2.0034887426483508,
+     "c_a_aggregate_schedule": 2.0023958874970287,
+     "c_a_aggregate_with_probe": 1.6045788611863867,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.0023983163757313,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 45.8366282255156,
+     "n_bg_recv": 312990,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0002746361071580156,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.999998983858782,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987268156019,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.7340622540883291,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987268156019,
+     "schedule_digest": "bb76439480000c1e5794b55567ae164b4f4b2539ab6c4ecba99f6818bfc8ea83",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.9769792244450046,
+      "aggregate_schedule": 1.9755885203593864,
+      "aggregate_with_probe": 1.5455341216693699,
+      "design_target": 2.0,
+      "schedule_bg": 1.9755853965851053
+     },
+     "c_a_actual_bg": 1.9769792244450046,
+     "c_a_aggregate_schedule": 1.9755885203593864,
+     "c_a_aggregate_with_probe": 1.5455341216693699,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 1.9755853965851053,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 27.151428032084368,
+     "n_bg_recv": 242603,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00043587228941920016,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979638551986,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973084196401,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153447832764,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973084196401,
+     "schedule_digest": "405f1d4de23c07df3b8a179b6d32bfe51378cd208c320086468d186ecf9eae43",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 2.006204229092974,
+      "aggregate_schedule": 2.0056464335958393,
+      "aggregate_with_probe": 1.4168510257277542,
+      "design_target": 2.0,
+      "schedule_bg": 2.0056485628643537
+     },
+     "c_a_actual_bg": 2.006204229092974,
+     "c_a_aggregate_schedule": 2.0056464335958393,
+     "c_a_aggregate_with_probe": 1.4168510257277542,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.0056485628643537,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 22.675128711853176,
+     "n_bg_recv": 144729,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0004763554477741209,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978634920588,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.9874963631033515,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234176488061,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.9874963631033515,
+     "schedule_digest": "0c78d8d89da0fe9aa04a25b6ce4a1c49b86842120ff4b51c9053799e00787f2d",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "bb76439480000c1e5794b55567ae164b4f4b2539ab6c4ecba99f6818bfc8ea83",
+    "L2": "405f1d4de23c07df3b8a179b6d32bfe51378cd208c320086468d186ecf9eae43",
+    "L3": "0c78d8d89da0fe9aa04a25b6ce4a1c49b86842120ff4b51c9053799e00787f2d"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.13391209370645174,
+   "max_abs_bg_rho_error": 1.5823511939627721e-06,
+   "max_abs_rate_error": 2.1365079412305477e-06,
+   "max_abs_rho_error": 3.636896648617771e-06,
+   "max_abs_total_rho_error": 3.636896648617771e-06,
+   "max_late_ms": 45.8366282255156,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.0004763554477741209,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 45991,
+   "n_sent": 53102,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 45991,
+    "n_recv_unique": 45991,
+    "n_reorder": 0,
+    "n_sent": 53102
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     31.395360183468373,
+     31.129261962503037,
+     31.7465168418761,
+     30.29164321455937,
+     32.22471864259276,
+     30.867327814739
+    ],
+    "inflation_factor": 3.874837669871202,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.2764780325037407,
+    "se_naive_ms": 0.07135215873776997,
+    "spread_ms": 1.9330754280333906
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0009_h2_r0925_s107_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.636896648617771e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.13391209370645174,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 46676,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0009_h2_r0925_s107_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     990
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    990
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9818099819968,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0009_h2_r0925_s107_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 990,
+    "schedule": "poisson_fixed_count",
+    "seed": 107700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 45.823338292718034,
+   "q_p50_ms": 45.16912199996691,
+   "q_p90_ms": 66.10165599649585,
+   "q_p95_ms": 71.49066799992974,
+   "q_p99_ms": 81.87943499742354,
+   "q_sd_ms": 15.301836014865243,
+   "queue_mean_ms": 31.27133829271803,
+   "queue_sd_ms": 15.301836014865243,
+   "rate_ratio": 0.999998983858782,
+   "rate_ratio_by_link": {
+    "L1": 0.999998983858782,
+    "L2": 0.9999979638551986,
+    "L3": 0.9999978634920588
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987268156019,
+    "L2": 0.9774973084196401,
+    "L3": 0.9874963631033515
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.7340622540883291,
+    "L2": 0.8129153447832764,
+    "L3": 0.7406234176488061
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987268156019,
+    "L2": 0.9774973084196401,
+    "L3": 0.9874963631033515
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "108cb5fac5e0fba1af7b476617d6c11647bc30f990562cd7886cbcbfd94e99ed",
+   "seed": 107,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "108cb5fac5e0fba1af7b476617d6c11647bc30f990562cd7886cbcbfd94e99ed",
+   "vl1g_run_pass": true,
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-09T20:31:31Z"
+  },
+  {
+   "attempt": 1,
+   "branch": "C",
+   "c_a_aggregate_schedule_by_link": {
+    "L1": 2.0063448215115094,
+    "L2": 1.9904250262581207,
+    "L3": 2.0078688193604055
+   },
+   "c_a_aggregate_with_probe_by_link": {
+    "L1": 1.6021954239993197,
+    "L2": 1.5473616077745334,
+    "L3": 1.421109088072338
+   },
+   "c_a_bg_actual_by_link": {
+    "L1": 2.0072917591636457,
+    "L2": 1.990770677226867,
+    "L3": 2.0083042378897407
+   },
+   "c_a_bg_schedule_by_link": {
+    "L1": 2.006348435841593,
+    "L2": 1.9904287664644154,
+    "L3": 2.0078732147175646
+   },
+   "c_a_by_link": {
+    "L1": {
+     "actual_bg": 2.0072917591636457,
+     "aggregate_schedule": 2.0063448215115094,
+     "aggregate_with_probe": 1.6021954239993197,
+     "design_target": 2.0,
+     "schedule_bg": 2.006348435841593
+    },
+    "L2": {
+     "actual_bg": 1.990770677226867,
+     "aggregate_schedule": 1.9904250262581207,
+     "aggregate_with_probe": 1.5473616077745334,
+     "design_target": 2.0,
+     "schedule_bg": 1.9904287664644154
+    },
+    "L3": {
+     "actual_bg": 2.0083042378897407,
+     "aggregate_schedule": 2.0078688193604055,
+     "aggregate_with_probe": 1.421109088072338,
+     "design_target": 2.0,
+     "schedule_bg": 2.0078732147175646
+    }
+   },
+   "carve_out_fraction": 0.25,
+   "cost_ms": 651.0317867270196,
+   "delay_ms": 45.79789112776013,
+   "direct_packets_after": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_before": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "direct_packets_delta": {
+    "L1": 0,
+    "L2": 0,
+    "L3": 0
+   },
+   "env": {
+    "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+    "git_dirty": true,
+    "git_status_porcelain": [
+     " M docs/phase-20R/00o-amendment-14.md",
+     " M measurements/additivity_live.py",
+     " M measurements/band_v2.py",
+     " M measurements/cascade_residual.py",
+     " M results/phase-20R/branch_b_fixed_pilot3.json",
+     " M results/phase-20R/branch_b_fixed_preflight120.json",
+     " M results/phase-20R/branch_c_fixed_pilot3.json",
+     " M results/phase-20R/branch_c_fixed_preflight120.json",
+     " M results/phase-20R/pilot_power_fixed_pilot3.json",
+     " M test/test_phase20r6_band.py",
+     " M tools/pilot_power_only.py",
+     "?? docs/phase-20R/07b-design-validation-v2.md",
+     "?? results/phase-20R/branch_b_fixed_s104_108.json",
+     "?? results/phase-20R/branch_c_fixed_s104_108.json",
+     "?? results/phase-20R/raw_additivity_fixed_s104_108/",
+     "?? tools/check_phase20r6_structure.py",
+     "?? tools/check_sd_stability.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+     3,
+     10,
+     12
+    ]
+   },
+   "estimator_version": "v2-bg",
+   "gate_fail": [],
+   "idx": 10,
+   "link_idx": null,
+   "load_n_foreign": 0,
+   "load_rows": [
+    {
+     "c_a": {
+      "actual_bg": 2.0072917591636457,
+      "aggregate_schedule": 2.0063448215115094,
+      "aggregate_with_probe": 1.6021954239993197,
+      "design_target": 2.0,
+      "schedule_bg": 2.006348435841593
+     },
+     "c_a_actual_bg": 2.0072917591636457,
+     "c_a_aggregate_schedule": 2.0063448215115094,
+     "c_a_aggregate_with_probe": 1.6021954239993197,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.006348435841593,
+     "link": "L1",
+     "link_idx": 1,
+     "max_late_ms": 28.199412365211174,
+     "n_bg_recv": 313006,
+     "n_bg_sent": 320424,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00019661448580630665,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999989836754501,
+     "rho": 0.8575000000000002,
+     "rho_actual": 0.8574987266810248,
+     "rho_bg": 0.7340625000000001,
+     "rho_bg_actual": 0.734062253953752,
+     "rho_probe_share": 0.12343647272727273,
+     "rho_probe_share_configured": 0.12343750000000003,
+     "rho_target_total": 0.8575000000000002,
+     "rho_total_actual": 0.8574987266810248,
+     "schedule_digest": "02a5ded52a56629160a121c62667083711fa03e867e3ffa5f83b45f6e213fe6f",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 1.990770677226867,
+      "aggregate_schedule": 1.9904250262581207,
+      "aggregate_with_probe": 1.5473616077745334,
+      "design_target": 2.0,
+      "schedule_bg": 1.9904287664644154
+     },
+     "c_a_actual_bg": 1.990770677226867,
+     "c_a_aggregate_schedule": 1.9904250262581207,
+     "c_a_aggregate_with_probe": 1.5473616077745334,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 1.9904287664644154,
+     "link": "L2",
+     "link_idx": 2,
+     "max_late_ms": 17.01102903462015,
+     "n_bg_recv": 242206,
+     "n_bg_sent": 266133,
+     "n_foreign": 0,
+     "n_late_ratio": 0.0001503007894548966,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999979637733774,
+     "rho": 0.9775000000000001,
+     "rho_actual": 0.9774973083531263,
+     "rho_bg": 0.8129166666666667,
+     "rho_bg_actual": 0.8129153447167626,
+     "rho_probe_share": 0.16458196363636365,
+     "rho_probe_share_configured": 0.16458333333333336,
+     "rho_target_total": 0.9775000000000001,
+     "rho_total_actual": 0.9774973083531263,
+     "schedule_digest": "8b4b33f1cea3f5ab1d124092684377ed8fb7af63f5783894463c5108354d5595",
+     "socket_drops": 0
+    },
+    {
+     "c_a": {
+      "actual_bg": 2.0083042378897407,
+      "aggregate_schedule": 2.0078688193604055,
+      "aggregate_with_probe": 1.421109088072338,
+      "design_target": 2.0,
+      "schedule_bg": 2.0078732147175646
+     },
+     "c_a_actual_bg": 2.0083042378897407,
+     "c_a_aggregate_schedule": 2.0078688193604055,
+     "c_a_aggregate_with_probe": 1.421109088072338,
+     "c_a_design_target": 2.0,
+     "c_a_schedule_bg": 2.0078732147175646,
+     "link": "L3",
+     "link_idx": 3,
+     "max_late_ms": 26.306896732421592,
+     "n_bg_recv": 144804,
+     "n_bg_sent": 161644,
+     "n_foreign": 0,
+     "n_late_ratio": 0.00032788102249387544,
+     "probe_traverses_link": true,
+     "rate_ratio": 0.9999978635102266,
+     "rho": 0.9875000000000002,
+     "rho_actual": 0.987496363116807,
+     "rho_bg": 0.7406250000000001,
+     "rho_bg_actual": 0.7406234176622615,
+     "rho_probe_share": 0.24687294545454547,
+     "rho_probe_share_configured": 0.24687500000000007,
+     "rho_target_total": 0.9875000000000002,
+     "rho_total_actual": 0.987496363116807,
+     "schedule_digest": "4b25a272f54f38f68904b1087d22202a9f6af7b1cd079211e4cfdc30035b205f",
+     "socket_drops": 0
+    }
+   ],
+   "load_schedule_digests": {
+    "L1": "02a5ded52a56629160a121c62667083711fa03e867e3ffa5f83b45f6e213fe6f",
+    "L2": "8b4b33f1cea3f5ab1d124092684377ed8fb7af63f5783894463c5108354d5595",
+    "L3": "4b25a272f54f38f68904b1087d22202a9f6af7b1cd079211e4cfdc30035b205f"
+   },
+   "load_socket_drops": 0,
+   "loss": 0.13402275467148886,
+   "max_abs_bg_rho_error": 1.5823377386148252e-06,
+   "max_abs_rate_error": 2.1364897734299504e-06,
+   "max_abs_rho_error": 3.636883193158802e-06,
+   "max_abs_total_rho_error": 3.636883193158802e-06,
+   "max_late_ms": 28.199412365211174,
+   "mode": "h2",
+   "n_foreign": 0,
+   "n_late_ratio": 0.00032788102249387544,
+   "n_probe_expected": 53881,
+   "n_recv_unique": 45973,
+   "n_sent": 53088,
+   "owd_counts": {
+    "n_duplicate": 0,
+    "n_owd_negative": 0,
+    "n_recv_total": 45973,
+    "n_recv_unique": 45973,
+    "n_reorder": 0,
+    "n_sent": 53088
+   },
+   "owd_steady_state": {
+    "block_means_ms": [
+     31.707201043762822,
+     32.10242299580198,
+     31.60437589767928,
+     30.969673414107806,
+     30.908394746640468,
+     30.169719791668328
+    ],
+    "inflation_factor": 3.9686773351106757,
+    "n_blocks": 6,
+    "se_batch_means_ms": 0.28421113903479456,
+    "se_naive_ms": 0.0716135666964895,
+    "spread_ms": 1.9327032041336523
+   },
+   "path": "T123",
+   "phase": "20R.6",
+   "pid": "20r6_c_0010_h2_r0925_s108_path",
+   "plan_branch_digest": "f8894f6407f2c3e6b20ecb8d8e352c194df3a89e038de25a3564f6f6f3742067",
+   "probe_budgeted_by_carve_out": true,
+   "probe_count_policy": "poisson_fixed_count",
+   "probe_frame_bytes_on_wire": 1512,
+   "probe_intrusion_ratio": 3.636883193158802e-06,
+   "probe_load_share_actual_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "probe_load_share_configured_by_link": {
+    "L1": 0.12343750000000003,
+    "L2": 0.16458333333333336,
+    "L3": 0.24687500000000007
+   },
+   "probe_load_share_physical": 0.24687294545454547,
+   "probe_loss": 0.13402275467148886,
+   "probe_n_foreign": 0,
+   "probe_rate_pps_actual": 81.63787878787879,
+   "probe_rate_pps_configured": 81.63855820105822,
+   "probe_receiver_meta": {
+    "n_foreign_packets": 0,
+    "n_records": 46665,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0010_h2_r0925_s108_path_probe_path.bin",
+    "port": 5899,
+    "record_struct": "<Qdd",
+    "role": "recv",
+    "run_ids_seen": [
+     1090
+    ],
+    "socket_drops_delta": 0,
+    "socket_rcvbuf_bytes": 16777216
+   },
+   "probe_run_ids_seen": [
+    1090
+   ],
+   "probe_sender_meta": {
+    "duration_s_accounting": 660.0,
+    "duration_s_actual": 659.9965087679884,
+    "frame_bytes_on_wire": 1512,
+    "kind": 1,
+    "mode": "poisson",
+    "n_fixed_count": 53881,
+    "n_sent": 53881,
+    "out": "results/phase-20R/raw_additivity_fixed_s104_108/20r6_c_0010_h2_r0925_s108_path_probe_path_tx.bin",
+    "rate_pps_actual": 81.63787878787879,
+    "rate_pps_nominal": 81.6386,
+    "record_struct": "<Qd",
+    "role": "send",
+    "run_id": 1090,
+    "schedule": "poisson_fixed_count",
+    "seed": 108700,
+    "size_bytes": 1470
+   },
+   "probe_socket_drops": 0,
+   "q_mean_ms": 45.79789112776013,
+   "q_p50_ms": 45.11390400093328,
+   "q_p90_ms": 66.270652001,
+   "q_p95_ms": 71.66214999542385,
+   "q_p99_ms": 81.83869600852299,
+   "q_sd_ms": 15.354890603010295,
+   "queue_mean_ms": 31.24589112776013,
+   "queue_sd_ms": 15.354890603010295,
+   "rate_ratio": 0.9999989836754501,
+   "rate_ratio_by_link": {
+    "L1": 0.9999989836754501,
+    "L2": 0.9999979637733774,
+    "L3": 0.9999978635102266
+   },
+   "raw_dir": "results/phase-20R/raw_additivity_fixed_s104_108",
+   "rho_actual_by_link": {
+    "L1": 0.8574987266810248,
+    "L2": 0.9774973083531263,
+    "L3": 0.987496363116807
+   },
+   "rho_bar": 0.925,
+   "rho_bg_actual_by_link": {
+    "L1": 0.734062253953752,
+    "L2": 0.8129153447167626,
+    "L3": 0.7406234176622615
+   },
+   "rho_gate": {
+    "binding": "counting",
+    "floor": 0.003,
+    "k_sigma": 4.0,
+    "sigma_counting": 0.0010635533730229177,
+    "threshold": 0.004254213492091671
+   },
+   "rho_gate_binding": "counting",
+   "rho_gate_floor": 0.003,
+   "rho_gate_k_sigma": 4.0,
+   "rho_gate_sigma_counting": 0.0010635533730229177,
+   "rho_gate_threshold": 0.004254213492091671,
+   "rho_probe_share_by_link": {
+    "L1": 0.12343647272727273,
+    "L2": 0.16458196363636365,
+    "L3": 0.24687294545454547
+   },
+   "rho_target_total_by_link": {
+    "L1": 0.8575000000000002,
+    "L2": 0.9775000000000001,
+    "L3": 0.9875000000000002
+   },
+   "rho_total_actual_by_link": {
+    "L1": 0.8574987266810248,
+    "L2": 0.9774973083531263,
+    "L3": 0.987496363116807
+   },
+   "runner": "measurements.additivity_live",
+   "schedule_digest": "1494aee1df8559c026cee0907300237145947af41fbd51522e700fd15a70027a",
+   "seed": 108,
+   "socket_drops": 0,
+   "static_ms": 14.552,
+   "trajectory_digest": "1494aee1df8559c026cee0907300237145947af41fbd51522e700fd15a70027a",
+   "vl1g_run_pass": true,
+   "w_loss": 4515.904012589386,
+   "wall_utc": "2026-08-09T20:42:40Z"
+  }
+ ],
+ "runner": "measurements.additivity_live",
+ "timeout_history": [],
+ "warmup_s": 10.0
+}

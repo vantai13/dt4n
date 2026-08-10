@@ -71,6 +71,12 @@ def path_loss(row: Mapping[str, Any]) -> float:
     return 1.0 - recv / sent
 
 
+def measured_probe_loss(row: Mapping[str, Any]) -> float:
+    if row.get("probe_loss") is not None:
+        return float(row["probe_loss"])
+    return path_loss(row)
+
+
 def assert_structural_invariant(rows_b: Sequence[Mapping[str, Any]], rows_c: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     """Branch B and C must match except for how many links the measured flow crosses."""
 
@@ -96,6 +102,15 @@ def assert_structural_invariant(rows_b: Sequence[Mapping[str, Any]], rows_c: Seq
             + "\nKet qua KHONG duoc bao cao."
         )
     return {"branch_b": {key: sorted(val) for key, val in sig_b.items()}, "branch_c": {key: sorted(val) for key, val in sig_c.items()}}
+
+
+def traversed_link_digest(row: Mapping[str, Any], link: str) -> str:
+    """Return the background schedule digest for the link crossed by the probe."""
+    digests = row.get("load_schedule_digests")
+    key = str(link)
+    if not isinstance(digests, Mapping) or key not in digests:
+        raise KeyError("thieu load_schedule_digests[%r] -- state cu?" % key)
+    return str(digests[key])
 
 
 def paired_residuals(
@@ -128,17 +143,21 @@ def paired_residuals(
             continue
         c_row = idx_c[seed]
 
-        digests = {str(row.get("trajectory_digest")) for row in b_rows}
-        digests.add(str(c_row.get("trajectory_digest")))
-        if len(digests) != 1:
-            raise AssertionError("trajectory_digest lech o seed %d -> khong phai paired that" % seed)
+        for link, row in zip(TANDEM_LINKS, b_rows):
+            db = traversed_link_digest(row, link)
+            dc = traversed_link_digest(c_row, link)
+            if db != dc:
+                raise AssertionError(
+                    "lich link %s lech giua B va C o seed %d (B=%s C=%s) "
+                    "-> KHONG phai paired that" % (link, seed, db[:12], dc[:12])
+                )
 
         if channel == "loss":
             keep = 1.0
             for link, row in zip(TANDEM_LINKS, b_rows):
-                keep *= 1.0 - bg_loss(row, link)
+                keep *= 1.0 - measured_probe_loss(row)
             b_val = 1.0 - keep
-            c_val = path_loss(c_row)
+            c_val = measured_probe_loss(c_row)
         elif channel == "delay_ms":
             b_val = float(sum(float(row["q_mean_ms"]) for row in b_rows))
             c_val = float(c_row["q_mean_ms"])
@@ -167,8 +186,9 @@ def bootstrap_seed_mean(diffs: np.ndarray, n_boot: int = N_BOOT, seed: int = 202
 
 
 def check_estimator_control(rows_b: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
-    """DC-C3: background loss and carve-out/probe loss should agree in branch B."""
-    abs_z = []
+    """DC-C3: compare background and probe loss only when arrivals match."""
+    abs_z_applicable = []
+    abs_z_all = []
     details = []
     for row in rows_b:
         link = str(row["link"])
@@ -184,12 +204,16 @@ def check_estimator_control(rows_b: Sequence[Mapping[str, Any]]) -> Dict[str, An
             + max(p_probe * (1.0 - p_probe), 1e-12) / max(n_probe, 1)
         )
         z = (p_probe - p_bg) / se if se > 0 else 0.0
-        abs_z.append(abs(z))
+        applicable = str(row["mode"]) == "poisson"
+        abs_z_all.append(abs(z))
+        if applicable:
+            abs_z_applicable.append(abs(z))
         details.append(
             {
                 "link": link,
                 "mode": str(row["mode"]),
                 "seed": int(row["seed"]),
+                "applicable": bool(applicable),
                 "p_bg": p_bg,
                 "p_carveout": p_probe,
                 "z": z,
@@ -197,13 +221,21 @@ def check_estimator_control(rows_b: Sequence[Mapping[str, Any]]) -> Dict[str, An
                 "n_carveout": n_probe,
             }
         )
-    max_z = max(abs_z) if abs_z else float("nan")
+    max_z_applicable = max(abs_z_applicable) if abs_z_applicable else float("nan")
+    max_z_all = max(abs_z_all) if abs_z_all else float("nan")
     return {
         "control": "DC-C3 estimator",
-        "max_abs_z": max_z,
+        "max_abs_z": max_z_applicable,
+        "max_abs_z_all_modes": max_z_all,
         "threshold_z": 3.0,
-        "pass": bool(max_z <= 3.0),
-        "note": "FAIL -> carve-out thay doi vat ly -> DUNG",
+        "pass": bool(max_z_applicable <= 3.0),
+        "applicable_modes": ["poisson"],
+        "not_applicable_modes": ["h2"],
+        "note": (
+            "DC-C3 gates only rows where probe/background arrival process matches. "
+            "For h2, Poisson probe and h2 background are expected to have different loss; "
+            "see Amd 14 section 38 and DC-C3b."
+        ),
         "details": details,
     }
 
@@ -230,9 +262,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     print()
     print("=== DC-C3 (background vs carve-out) ===")
     print(
-        "  max |z| = %.3f (nguong 3.0) -> %s"
-        % (dc3["max_abs_z"], "DAT" if dc3["pass"] else "*** KHONG DAT -- DUNG ***")
+        "  max |z| applicable = %.3f (nguong 3.0) -> %s"
+        % (dc3["max_abs_z"], "DAT" if dc3["pass"] else "*** KHONG DAT ***")
     )
+    print("  max |z| all modes = %.3f (h2 khong gate)" % dc3["max_abs_z_all_modes"])
     if not dc3["pass"]:
         return 2
 

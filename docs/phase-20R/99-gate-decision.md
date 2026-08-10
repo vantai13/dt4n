@@ -1,7 +1,7 @@
-> **SUPERSEDED cho hang G6 (2026-08-07).** Xem `08-gates.md` va
-> `00n-amendment-13.md` §15. Hang `G6 NOT EVALUATED` duoi day VAN DUNG cho
-> cascade (`C - sum(B)`); dieu kien tien quyet `A' - A` da duoc do va bao cao
-> rieng thanh `G6-PRE`.
+> **SUPERSEDED cho hang G6.** Xem `08-gates.md`, `07b-design-validation-v2.md`,
+> va `00o-amendment-14.md` §42. Hang `G6 NOT EVALUATED` duoi day la trang thai
+> lich su ngay 2026-08-06; cascade `C - sum(B)` da duoc do trong Lesson
+> 20R.6-v2 ngay 2026-08-10.
 
 # Phase 20R -- Gate Decision
 
@@ -9,8 +9,74 @@ Ngay ghi: 2026-08-06
 
 Ket luan ngan: decision-error gates chinh dat tru G4; G4/H3 FAIL nhu thong ke
 da tien dang ky. Muc dich khoa hoc cua G4 van dat bang ket qua phu thuoc che do
-va co che don dinh H7/H8. H6 PASS. `20R-G6` end-to-end additivity khong co
-artifact trong lesson nay, nen khong duoc danh dau PASS neu chua co DC1 rieng.
+va co che don dinh H7/H8. H6 PASS. Phan G6 trong bang lich su ben duoi la
+trang thai truoc Lesson 20R.6-v2; phan cap nhat hien hanh nam o muc
+`Phase 20R.8 -- Nhanh (a) GO`.
+
+## Phase 20R.8 -- Nhanh (a) GO
+
+Dieu kien nhanh (a) duoc thoa tai diem van hanh:
+
+```text
+mode = poisson
+rho_bar = 0.925
+n = 120000
+seeds = 101,102,103,104,105
+
+err_total = 0.295005
+d_sla     = 0.098596
+G3        = Spearman(err,z) positive
+```
+
+`err_total` nam trong `[0.05, 0.40]` va `d_sla` du 3.3 lan floor 0.03. CI95
+baseline cua hai point estimate nay khong duoc luu trong artifact scan; khong
+dien so CI khong co provenance.
+
+## Bien sai so he thong sau Lesson 20R.6-v2
+
+```text
+Transfer topology:
+  artifact = results/phase-20R/breakdown_scan_transfer_qt3_n120k.json
+  safety_published = 3.713970
+  binding = poisson/loss/common_mode
+  first_broken = K4_path_ranking_preserved @ poisson@0.925
+
+Cascade composition:
+  artifact = results/phase-20R/breakdown_scan_cascade.json
+  safety_published = 0.868750
+  binding = poisson/loss/common_mode
+  first_broken = K4_path_ranking_preserved @ poisson@0.925
+  r* = [0.008805, 0.008868]
+```
+
+Ca hai nguon sai so he thong rang buoc cung mot ket luan va cung mot o:
+`K4_path_ranking_preserved` tai `poisson@0.925`.
+
+Kiem co che:
+
+```text
+poisson@0.925 path cost:
+P1 = 112.9658
+P3 = 120.5115
+|P1-P3| = 7.5457  # khe nho nhat trong 6 cap
+```
+
+Cascade lam ranking doi tu `P1,P3,P4,P2` sang `P3,P1,P4,P2`, tuc lat dung cap
+co khe quyet dinh nho nhat. Diem van hanh duoc chon cho Phase 21R cung la o
+co xep hang mong manh nhat duoi phan du ghep. Day la phat hien co che, khong
+phai trung hop.
+
+## Pham vi hieu luc sua doi
+
+```text
+err, d_sla, Spearman(err,z), va thu tu family: giu nguyen hieu luc.
+Xep hang tuyet doi cac duong tai poisson@0.925:
+  chi giu trong pham vi residual cascade |r_path| < khoang 0.00886.
+```
+
+He qua cho Phase 21R: chung nhan phai nham vao HIEU chi phi giua cac duong,
+khong phai chi phi tuyet doi tung duong. Hieu chi phi la dai luong quyet dinh
+argmin, va cung la dai luong mong manh nhat tai diem van hanh GO.
 
 ## Gate Table
 

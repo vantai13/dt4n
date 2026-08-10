@@ -1,7 +1,8 @@
 # AMENDMENT 14 -- Phase 20R.6: tach estimand va chuyen sang band-first
 
 Ngay ky: 2026-08-09
-Trang thai: KY TRUOC KHI CHAY cascade v2. Khong sua sau khi thay ket qua.
+Trang thai: §1-41 KY TRUOC KHI CHAY cascade v2. §42 la phan ket qua append
+sau khi artifact final duoc tao.
 Quan he: BO SUNG cho 07-design-validation.md. KHONG thay the, KHONG xoa.
 
 ---
@@ -149,13 +150,28 @@ nay.
 ## 7. Du doan ky truoc khi chay
 
 ```text
-Dau cua r (loss)      : AM, theo pay-bursts-only-once / arrival smoothing.
-Dau cua r (delay)     : AM.
-Do lon |r| ky vong    : 1e-3..2e-2 loss tuyet doi; 0.1..1.0 ms delay.
-r* du doan            : 0.02..0.05 loss-path neu ket luan dau tien la ranking.
-He so an toan du doan : > 1 neu CI90 nam duoi khoang tren; nguoc lai DAT CO CO.
-Ket luan gay dau tien : K4 la ung vien mong manh nhat.
-I^2 du doan           : < 50%, muc tieu 0..25% voi 8 seed.
+Dau cua r = C - sum(B), kenh loss  : AM, theo pay-bursts-only-once /
+                                      arrival smoothing.
+Dau cua r = C - sum(B), kenh delay : AM.
+Do lon |r| ky vong, loss           : 1e-3 .. 2e-2 loss tuyet doi.
+Do lon |r| ky vong, delay          : 0.1 .. 1.0 ms.
+r* du doan (common_mode, loss)     : 0.02 .. 0.05 loss-path neu ket luan dau
+                                      tien la ranking.
+He so an toan du doan              : > 1 neu CI90 nam duoi khoang tren;
+                                      nguoc lai DAT CO CO.
+Ket luan gay dau tien du doan      : K4_path_ranking_preserved.
+So voi transfer safety 3.714       : cascade thap hon, vi cascade do tuong tac
+                                      lien-link trong cung hang doi/path thay vi
+                                      sai lech topology-transfer mot-link.
+I^2 du doan                        : < 50%, muc tieu 0..25% voi 8 seed.
+```
+
+Neu `r > 0` (nguoc PBOO), ket qua KHONG duoc bao cao ngay. Phai chay checklist:
+
+```text
+(a) co che khuech dai that? (burst amplification qua L1 -> L2 -> L3)
+(b) confound? (probe_intrusion, DC-C2, c_a giua B va C)
+(c) bug? (loss ghep NHAN, digest link dich, bat bien cau truc)
 ```
 
 Neu ket qua inconclusive, ket luan se la:
@@ -508,11 +524,11 @@ safety cong bo phai la min qua bien the.
 Lesson 20R.6 duoc coi la hoan thanh khi:
 
 ```text
-[ ] G6-CASCADE co con so + CI, hoac co van ban ghi ro vi sao khong do duoc.
+[x] G6-CASCADE co con so + CI, hoac co van ban ghi ro vi sao khong do duoc.
 [x] G6-TRANSFER da chuyen thanh scope of validity.
 [x] Bang bien he thong transfer o n=120000, 4 bien the, ca hai dau CI90.
-[ ] safety_published = min qua bien the, kem dien giai.
-[ ] Moi con so trong docs doc truc tiep tu artifact non-smoke.
+[x] safety_published = min qua bien the, kem dien giai.
+[x] Moi con so trong docs doc truc tiep tu artifact non-smoke.
 ```
 
 Khong mo rong them pham vi trong phase nay. Cac cai tien moi nhu bien the thu
@@ -840,3 +856,197 @@ k4_deterministic.n_dependence = "none"
 K1/K2/K3/K5 van phai duoc quyet dinh tai `n` preregistered cua scan cong bo.
 File `n=30000` chi dung de bao vung cho cac K Monte-Carlo, khong dung lam con
 so cong bo cho K1/K2/K3/K5.
+
+## 37. SUA -- guard paired cascade phai kiem link probe di qua
+
+Guard cu trong `cascade_residual.py` so `trajectory_digest`, tuc digest cua ca
+ba link. Dieu nay sai estimand voi thiet ke carve-out:
+
+- Branch B/Li chi carve-out tren link Li; hai link khong duoc probe di qua van
+  chay rho_bg day.
+- Branch C carve-out tren ca ba link, vi probe di het T123.
+
+Vi vay digest ca ba link giua B/Li va C khong the khop, va lech do la dung
+thiet ke. Bat bien dung la:
+
+```text
+load_schedule_digests[link_dich_cua_B/Li]
+  == load_schedule_digests[link_tuong_ung_cua_C]
+```
+
+Guard moi dung `traversed_link_digest(row, link)` va chi so digest cua chinh
+link ma probe di qua. Link khong-dich duoc phep lech; neu chung khong lech thi
+carve-out co the chua duoc ap dung.
+
+He qua: pilot 3 seed fixed-count la paired hop le va duoc tinh vao tap du lieu
+cuoi. Khong chay lai pilot.
+
+## 38. SUA -- DC-C3 la doi chung qua trinh den, khong phai gate chung cho h2
+
+DC-C3 cu so `probe_loss` voi `bg_loss` tren cung link. No chi la gate hop le khi
+probe va background co cung qua trinh den. Voi `poisson`, dieu nay dung va
+nghiem thu theo `|z| <= 3`.
+
+Voi `h2`, background la bursty con probe out-of-band la Poisson fixed-count
+muot hon. Trong FIFO chung, hai luong con co qua trinh den khac nhau co the co
+ti le loss khac nhau; probe mat it hon background la hien tuong vat ly, khong
+phai artifact cua thiet ke. Do do DC-C3 khong gate h2. H2 duoc chuyen thanh
+doi chung co che DC-C3b: chay mot diem h2 voi probe sinh tu h2; neu |z| ve <= 3
+thi xac nhan khac biet do qua trinh den.
+
+Quan trong: `truth_table.loss` cua Phase L cung do loss cua probe, nen Phase L
+va Phase 20R.6 dang nhat quan theo goc nhin probe. DC-C3 h2 khong chan ket qua
+cascade.
+
+## 39. PHAM VI -- can ghi c_a cho cac run carve-out
+
+Phase L co metadata `c_a`, nhung run 20R.6 out-of-band truoc day chua dua c_a
+len row tong hop. Tu nay row live ghi:
+
+```text
+load_rows[].c_a
+c_a_by_link
+c_a_bg_schedule_by_link
+c_a_bg_actual_by_link
+c_a_aggregate_schedule_by_link
+c_a_aggregate_with_probe_by_link
+```
+
+`c_a_aggregate_with_probe_by_link` tai dung lich nen va lich probe fixed-count
+de uoc luong c_a tong hop cua link ma probe di qua. Day la metadata pham vi:
+contrast `C - sum(B)` van dung vi B/C dung cung carve-out, nhung viec bom phan
+du cascade len bang tra gia dinh phan du on dinh theo c_a. Gia dinh nay chua la
+gate da chung minh; neu can mo rong, dua vao `FUTURE_WORK.md`.
+
+## 40. SUA -- loss cascade dung estimator probe, khong dung background loss
+
+Muc nay thay the phan loss estimator o §3.3 cho cascade v2.
+
+Ly do:
+
+1. Nhanh C khong co dai luong "background loss end-to-end": background la
+   link-local (`hload_i -> hsink_i`). Dung `bg_loss` cho B va `probe_loss` cho C
+   la estimator mismatch (RC1).
+2. `truth_table.loss` cua Phase L cung duoc do bang dong probe, nen dung
+   `probe_loss` trong 20R.6 giu estimator nhat quan Phase L -> 20R.6.
+3. Tren link probe di qua, `rho_bg` khop giua B/Li va C. Link khong di qua co
+   lich khac nhau do carve-out, nhung khong anh huong phep do probe tren link
+   dich.
+
+Pham vi can viet ro trong report:
+
+```text
+Phan du cascade do bang dong probe muot nhung trong nen. Voi h2, probe va nen
+co ti le loss khac nhau dang ke vi qua trinh den khac nhau; phan du bao cao la
+cascade ma mot dong tham chieu muot trai qua, nhat quan voi cach bang tra duoc
+do trong Phase L. Viec ngoai suy sang loss cua chinh nen chua duoc kiem.
+```
+
+`bg_loss` chi con la doi chung DC-C3/DC-C3b, khong tham gia estimand cascade.
+
+## 41. SUA -- residual cascade muc duong chi ho tro common_mode
+
+Residual cascade co `level = "per_path"` va khong co `per_unit` theo link. Do
+do:
+
+```text
+supported(common_mode)   = true
+supported(differential)  = false
+supported(full)          = false
+supported(joint)         = false
+```
+
+Khong duoc bom `differential = 0` roi dien giai "differential khong anh huong".
+Do la bom rong im lang (RC8). Scan cascade cong bo chi dung `--variants
+common_mode`.
+
+## 42. KET QUA -- cascade v2 final seed 101-108
+
+Artifact:
+
+```text
+results/phase-20R/residual_cascade.json
+results/phase-20R/band_v2_cascade.json
+results/phase-20R/breakdown_scan_cascade.json
+results/phase-20R/tmux_logs/p20r6_scan_cascade.log
+```
+
+Residual `C - sum(B_i)`:
+
+```text
+mode     channel    r_path       se          CI90
+poisson  loss       -0.009522    0.000373    [-0.010135, -0.008908]
+poisson  delay_ms   -0.746400    0.059438    [-0.844166, -0.648633]
+h2       loss       -0.009351    0.000432    [-0.010062, -0.008641]
+h2       delay_ms   -0.449241    0.030064    [-0.498692, -0.399791]
+```
+
+Moi residual co `n_pairs = 8`, dau am 4/4, khong CI90 nao chua 0. Dau am khop
+du doan pay-bursts-only-once: do tren duong end-to-end nho hon tong ba phep do
+link rieng vi burst da duoc tra/lam phang o node truoc.
+
+DC-C3:
+
+```text
+max |z| applicable = 2.084 <= 3.0  # poisson gate dat
+max |z| all modes  = 28.632        # h2 khong gate theo §38
+```
+
+Band cascade `n=120000`:
+
+```text
+supported(common_mode)  = true  cho 4/4 residual
+supported(differential) = false cho 4/4 residual
+supported(full)         = false cho 4/4 residual
+supported(joint)        = false cho 4/4 residual
+
+poisson/loss/common_mode:
+  d_err = [+0.024084, +0.029663]
+  d_sla shift = [-0.079342, -0.067121]
+  clip_ratio = 43.20%
+  band_is_lower_bound = true
+  worst_endpoint_resolvable = true
+```
+
+Scan cascade `n=120000`, `--variants common_mode`:
+
+```text
+safety_published = 0.868750
+binding          = poisson / loss / common_mode
+r*               = [0.008805, 0.008868]
+first_broken     = K4_path_ranking_preserved
+first_broken_cell= poisson@0.925
+K4 detail        = P1,P3,P4,P2 -> P3,P1,P4,P2
+
+poisson/delay safety = [4.533203, 4.533301], first_broken=K2
+h2/loss safety       > 10.00
+h2/delay safety      > 10.03
+```
+
+Doi chung co che K4: tai `poisson@0.925`, cost baseline cua hai duong bi lat
+la cap gan nhau nhat:
+
+```text
+P1 = 112.9658
+P3 = 120.5115
+|P1-P3| = 7.5457  # nho nhat trong 6 cap
+```
+
+Do do K4 gay o dung cap co khe quyet dinh mong manh nhat, khop dien giai
+decision-margin.
+
+Dien giai da khoa: cascade residual am nen twin cong tinh la bao thu theo
+huong da ky. Tuy nhien do bao thu do duoc lon hon nguong gay cua K4 tai
+`poisson@0.925`, vi vay phat bieu cascade khong duoc danh PASS tuyet doi; no
+duoc bao cao nhu scope-of-validity co safety `0.868750`.
+
+Caveat bat buoc:
+
+1. `clip_ratio=43.20%` tren `poisson/loss/common_mode`, nen bien am la CAN DUOI
+   cua tac dong that trong mo hinh nhieu cong bi chan tai 0.
+2. Residual cascade do o muc duong. Viec bom vao bang tra bang cach chia deu
+   cho 3 link la xap xi tuyen tinh; voi loss per-link toi cap `0.075`, sai so
+   bac hai khong con bo qua duoc.
+3. Cac artifact phan tich nay ghi `git_dirty=true` vi repo chua co commit sach
+   gom code/doc/artifact moi; khong can chay lai du lieu Mininet, nhung khi
+   trich so vao ban nop can tao commit/chinh sach provenance sach.

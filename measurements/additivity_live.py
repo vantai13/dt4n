@@ -35,7 +35,17 @@ from measurements.additivity_check import (
     stable_digest,
 )
 from measurements.provenance import env_fingerprint
-from mininet.load_spec import FRAME_OVERHEAD_BYTES, PAYLOAD_BG, PAYLOAD_PROBE, PROBE_PPS, capacity_bytes_per_s
+from measurements.owd_probe import poisson_fixed_count_offsets
+from mininet.load_spec import (
+    FRAME_OVERHEAD_BYTES,
+    PAYLOAD_BG,
+    PAYLOAD_PROBE,
+    PROBE_PPS,
+    aggregate_ca,
+    build_schedule,
+    capacity_bytes_per_s,
+    merge_schedules,
+)
 from mininet.topology_tandem import TANDEM_BY_IDX, TANDEM_LINKS
 from twin import cost_v2 as C
 
@@ -390,6 +400,55 @@ def rho_gate_threshold(
     }
 
 
+def _offsets_to_gaps(offsets: Sequence[float]) -> List[float]:
+    last = 0.0
+    gaps: List[float] = []
+    for offset in offsets:
+        gaps.append(float(offset) - last)
+        last = float(offset)
+    return gaps
+
+
+def aggregate_ca_with_out_of_band_probe(
+    point: Mapping[str, Any],
+    args: argparse.Namespace,
+    link_idx: int,
+    tx_meta: Mapping[str, Any],
+    probe_traverses_link: bool,
+) -> Optional[float]:
+    """Reconstruct aggregate c_a including the separate fixed-count probe."""
+    ca_meta = tx_meta.get("c_a") if isinstance(tx_meta, Mapping) else None
+    if not bool(probe_traverses_link):
+        if isinstance(ca_meta, Mapping):
+            value = ca_meta.get("schedule_bg", ca_meta.get("aggregate_schedule"))
+            return None if value is None else float(value)
+        return None
+    if bool(getattr(args, "probe_inband", False)):
+        if isinstance(ca_meta, Mapping) and ca_meta.get("aggregate_schedule") is not None:
+            return float(ca_meta["aggregate_schedule"])
+        return None
+
+    try:
+        cfg = tx_meta["config"]
+        rates = tx_meta["rates"]
+        sched = tx_meta["schedule"]
+        n_bg = int(sched["n_bg"])
+        bg_pps = float(rates["bg_pps_target"])
+        if n_bg <= 0 or bg_pps <= 0.0:
+            return None
+        bg_gaps = build_schedule(str(cfg["mode"]), n_bg, 1.0 / bg_pps, int(cfg["seed"]))
+        probe_link_idx = None if str(point["branch"]) == "C" else int(link_idx)
+        offsets = poisson_fixed_count_offsets(
+            expected_probe_count(point, args),
+            float(args.duration),
+            _probe_seed(int(point["seed"]), probe_link_idx),
+        )
+        probe_gaps = _offsets_to_gaps(offsets)
+        return float(aggregate_ca(merge_schedules(bg_gaps, probe_gaps)))
+    except (KeyError, TypeError, ValueError):
+        return None
+
+
 def _load_prefix(raw_dir: str, point: Mapping[str, Any], link_idx: int) -> str:
     return os.path.join(raw_dir, "%s_load_L%d" % (point["pid"], int(link_idx)))
 
@@ -728,6 +787,11 @@ def _row_from_measurement(
     rho_total_actual_by_link: Dict[str, float] = {}
     probe_load_share_actual_by_link: Dict[str, float] = {}
     probe_load_share_configured_by_link: Dict[str, float] = {}
+    ca_by_link: Dict[str, Dict[str, Optional[float]]] = {}
+    ca_bg_schedule_by_link: Dict[str, float] = {}
+    ca_bg_actual_by_link: Dict[str, float] = {}
+    ca_aggregate_schedule_by_link: Dict[str, float] = {}
+    ca_aggregate_with_probe_by_link: Dict[str, float] = {}
     rate_ratio_by_link: Dict[str, float] = {}
     load_socket_drops = 0
     load_foreign = 0
@@ -754,6 +818,21 @@ def _row_from_measurement(
             if int(link_idx) in probe_links
             else 0.0
         )
+        ca_meta = dict(tx.get("c_a", {}) or {})
+        ca_aggregate_with_probe = aggregate_ca_with_out_of_band_probe(
+            point,
+            args,
+            int(link_idx),
+            tx,
+            bool(spec["probe_traverses_link"]),
+        )
+        ca_row = {
+            "design_target": None if ca_meta.get("design_target") is None else float(ca_meta["design_target"]),
+            "schedule_bg": None if ca_meta.get("schedule_bg") is None else float(ca_meta["schedule_bg"]),
+            "actual_bg": None if ca_meta.get("actual_bg") is None else float(ca_meta["actual_bg"]),
+            "aggregate_schedule": None if ca_meta.get("aggregate_schedule") is None else float(ca_meta["aggregate_schedule"]),
+            "aggregate_with_probe": ca_aggregate_with_probe,
+        }
         schedule_map[link_name] = schedule
         rho_bg_actual_by_link[link_name] = rho_bg_actual
         rho_target_total_by_link[link_name] = rho_target_total
@@ -761,6 +840,15 @@ def _row_from_measurement(
         rho_total_actual_by_link[link_name] = rho_total_actual
         probe_load_share_actual_by_link[link_name] = rho_probe_actual
         probe_load_share_configured_by_link[link_name] = rho_probe_configured
+        ca_by_link[link_name] = ca_row
+        if ca_row["schedule_bg"] is not None:
+            ca_bg_schedule_by_link[link_name] = float(ca_row["schedule_bg"])
+        if ca_row["actual_bg"] is not None:
+            ca_bg_actual_by_link[link_name] = float(ca_row["actual_bg"])
+        if ca_row["aggregate_schedule"] is not None:
+            ca_aggregate_schedule_by_link[link_name] = float(ca_row["aggregate_schedule"])
+        if ca_row["aggregate_with_probe"] is not None:
+            ca_aggregate_with_probe_by_link[link_name] = float(ca_row["aggregate_with_probe"])
         rate_ratio_by_link[link_name] = float(tx["rates"]["rate_ratio"])
         load_socket_drops += int(rx.get("socket_drops_delta", 0))
         load_foreign += int(rx.get("n_foreign_packets", 0))
@@ -781,6 +869,12 @@ def _row_from_measurement(
                 "rho_actual": rho_total_actual,
                 "rate_ratio": float(tx["rates"]["rate_ratio"]),
                 "schedule_digest": schedule,
+                "c_a": ca_row,
+                "c_a_design_target": ca_row["design_target"],
+                "c_a_schedule_bg": ca_row["schedule_bg"],
+                "c_a_actual_bg": ca_row["actual_bg"],
+                "c_a_aggregate_schedule": ca_row["aggregate_schedule"],
+                "c_a_aggregate_with_probe": ca_row["aggregate_with_probe"],
                 "n_bg_sent": int(tx["counts"]["n_bg_sent"]),
                 "n_bg_recv": int(rx.get("n_bg", 0)),
                 "socket_drops": int(rx.get("socket_drops_delta", 0)),
@@ -871,6 +965,11 @@ def _row_from_measurement(
         "rho_total_actual_by_link": rho_total_actual_by_link,
         "probe_load_share_actual_by_link": probe_load_share_actual_by_link,
         "probe_load_share_configured_by_link": probe_load_share_configured_by_link,
+        "c_a_by_link": ca_by_link,
+        "c_a_bg_schedule_by_link": ca_bg_schedule_by_link,
+        "c_a_bg_actual_by_link": ca_bg_actual_by_link,
+        "c_a_aggregate_schedule_by_link": ca_aggregate_schedule_by_link,
+        "c_a_aggregate_with_probe_by_link": ca_aggregate_with_probe_by_link,
         "rate_ratio_by_link": rate_ratio_by_link,
         "rate_ratio": rate_ratio_by_link.get(target_link_name, max(rate_ratio_by_link.values()) if rate_ratio_by_link else 1.0),
         "max_abs_rate_error": float(max_abs_rate_error),

@@ -1,2034 +1,2508 @@
 {
- "argv": [
-  "/home/ubuntu/dt4n/measurements/additivity_live.py",
-  "--branch",
-  "B",
-  "--modes",
-  "poisson,h2",
-  "--rho-bar",
-  "0.925",
-  "--seeds",
-  "101",
-  "--duration",
-  "120",
-  "--state",
-  "results/phase-20R/branch_b_fixed_preflight120.json",
-  "--raw-dir",
-  "results/phase-20R/raw_additivity_fixed_preflight120"
- ],
- "branch": "B",
- "carve_out_fraction": 0.25,
- "delta_ms": 0.44,
- "done_idx": [
-  1,
-  2,
-  3,
-  4,
-  5,
-  6
- ],
- "duration_s": 120.0,
- "env": {
-  "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
-  "git_dirty": true,
-  "git_status_porcelain": [
-   " M docs/phase-20R/07-design-validation.md",
-   " M measurements/additivity_check.py",
-   " M measurements/additivity_live.py",
-   " M measurements/owd_probe.py",
-   " M test/test_phase20r_decision.py",
-   " M test/test_phase_l_probe.py",
-   "?? docs/phase-20R/00o-amendment-14.md",
-   "?? docs/phase-20R/FUTURE_WORK.md",
-   "?? measurements/band_v2.py",
-   "?? measurements/cascade_residual.py",
-   "?? measurements/residual_spec.py",
-   "?? measurements/transfer_residual.py",
-   "?? results/phase-20R/band_v2_transfer.json",
-   "?? results/phase-20R/band_v2_transfer_smoke.json",
-   "?? results/phase-20R/branch_b_tmux_preflight.json",
-   "?? results/phase-20R/branch_b_tmux_preflight120.json",
-   "?? results/phase-20R/branch_b_v2_smoke.json",
-   "?? results/phase-20R/branch_c_tmux_preflight.json",
-   "?? results/phase-20R/branch_c_tmux_preflight120.json",
-   "?? results/phase-20R/branch_c_v2_smoke.json",
-   "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
-   "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
-   "?? results/phase-20R/raw_additivity_tmux_preflight/",
-   "?? results/phase-20R/raw_additivity_tmux_preflight120/",
-   "?? results/phase-20R/raw_additivity_v2_smoke/",
-   "?? results/phase-20R/residual_transfer.json",
-   "?? test/test_phase20r6_band.py",
-   "?? tools/pilot_power_only.py"
+  "argv": [
+    "/home/ubuntu/dt4n/measurements/additivity_live.py",
+    "--branch",
+    "B",
+    "--modes",
+    "poisson,h2",
+    "--rho-bar",
+    "0.925",
+    "--seeds",
+    "101",
+    "--duration",
+    "120",
+    "--state",
+    "results/phase-20R/branch_b_fixed_preflight120.json",
+    "--raw-dir",
+    "results/phase-20R/raw_additivity_fixed_preflight120"
   ],
-  "machine": "x86_64",
-  "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
-  "python_executable": "/usr/bin/python3",
-  "python_version": "3.10.12",
-  "python_version_info": [
-   3,
-   10,
-   12
-  ]
- },
- "estimator_version": "v2-bg",
- "failed_rows": [],
- "kind": "additivity_live_state",
- "phase": "20R.6",
- "plan_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
- "probe_rate_policy": "carve_out_fraction",
- "probe_rate_pps": null,
- "probe_size_bytes": 1470,
- "qdisc_proof": {
-  "access": [
-   {
-    "ifname": "hsrc-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hdst-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hload1-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hload2-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hload3-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hsink1-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hsink2-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hsink3-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hpa1-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hpa2-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hpa3-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hpb1-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hpb2-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   },
-   {
-    "ifname": "hpb3-eth0",
-    "ok": true,
-    "raw": "qdisc noqueue 0: root refcnt 2"
-   }
+  "branch": "B",
+  "carve_out_fraction": 0.25,
+  "delta_ms": 0.44,
+  "done_idx": [
+    1,
+    2,
+    3,
+    4,
+    5,
+    6
   ],
-  "measured": [
-   {
-    "base_ms": 1.107,
-    "bw": 8.0,
-    "idx": 1,
-    "if_fwd": "s0-eth4",
-    "if_rev": "s1-eth3",
-    "link": "L1",
-    "measure_assert": {
-     "bfifo_limit_bytes": 27216,
-     "ceiling_ms": 27.216,
-     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 8Mbit ceil 8Mbit burst 1600b cburst 1600b \n Sent 262 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 3 borrowed: 0 giants: 0\n tokens: 23656 ctokens: 23656\n\n",
-     "direct_packets_stat": 0,
-     "direct_qlen": 1000,
-     "ifname": "s0-eth4",
-     "install_attempts": 1,
-     "install_history": [],
-     "kinds": [
-      "htb",
-      "bfifo"
-     ],
-     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 262 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 27216b\n Sent 262 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+  "duration_s": 120.0,
+  "env": {
+    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+    "git_dirty": true,
+    "git_status_porcelain": [
+      " M docs/phase-20R/07-design-validation.md",
+      " M measurements/additivity_check.py",
+      " M measurements/additivity_live.py",
+      " M measurements/owd_probe.py",
+      " M test/test_phase20r_decision.py",
+      " M test/test_phase_l_probe.py",
+      "?? docs/phase-20R/00o-amendment-14.md",
+      "?? docs/phase-20R/FUTURE_WORK.md",
+      "?? measurements/band_v2.py",
+      "?? measurements/cascade_residual.py",
+      "?? measurements/residual_spec.py",
+      "?? measurements/transfer_residual.py",
+      "?? results/phase-20R/band_v2_transfer.json",
+      "?? results/phase-20R/band_v2_transfer_smoke.json",
+      "?? results/phase-20R/branch_b_tmux_preflight.json",
+      "?? results/phase-20R/branch_b_tmux_preflight120.json",
+      "?? results/phase-20R/branch_b_v2_smoke.json",
+      "?? results/phase-20R/branch_c_tmux_preflight.json",
+      "?? results/phase-20R/branch_c_tmux_preflight120.json",
+      "?? results/phase-20R/branch_c_v2_smoke.json",
+      "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+      "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+      "?? results/phase-20R/raw_additivity_tmux_preflight/",
+      "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+      "?? results/phase-20R/raw_additivity_v2_smoke/",
+      "?? results/phase-20R/residual_transfer.json",
+      "?? test/test_phase20r6_band.py",
+      "?? tools/pilot_power_only.py"
+    ],
+    "machine": "x86_64",
+    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+    "python_executable": "/usr/bin/python3",
+    "python_version": "3.10.12",
+    "python_version_info": [
+      3,
+      10,
+      12
+    ]
+  },
+  "estimator_version": "v2-bg",
+  "failed_rows": [],
+  "kind": "additivity_live_state",
+  "phase": "20R.6",
+  "plan_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+  "probe_rate_policy": "carve_out_fraction",
+  "probe_rate_pps": null,
+  "probe_size_bytes": 1470,
+  "qdisc_proof": {
+    "access": [
+      {
+        "ifname": "hsrc-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hdst-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hload1-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hload2-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hload3-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hsink1-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hsink2-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hsink3-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hpa1-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hpa2-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hpa3-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hpb1-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hpb2-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      },
+      {
+        "ifname": "hpb3-eth0",
+        "ok": true,
+        "raw": "qdisc noqueue 0: root refcnt 2"
+      }
+    ],
+    "measured": [
+      {
+        "base_ms": 1.107,
+        "bw": 8.0,
+        "idx": 1,
+        "if_fwd": "s0-eth4",
+        "if_rev": "s1-eth3",
+        "link": "L1",
+        "measure_assert": {
+          "bfifo_limit_bytes": 27216,
+          "ceiling_ms": 27.216,
+          "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 8Mbit ceil 8Mbit burst 1600b cburst 1600b \n Sent 262 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 3 borrowed: 0 giants: 0\n tokens: 23656 ctokens: 23656\n\n",
+          "direct_packets_stat": 0,
+          "direct_qlen": 1000,
+          "ifname": "s0-eth4",
+          "install_attempts": 1,
+          "install_history": [],
+          "kinds": [
+            "htb",
+            "bfifo"
+          ],
+          "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 262 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 27216b\n Sent 262 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+        },
+        "q": 18,
+        "topology_v7_link": "uA"
+      },
+      {
+        "base_ms": 1.712,
+        "bw": 6.0,
+        "idx": 2,
+        "if_fwd": "s1-eth6",
+        "if_rev": "s2-eth3",
+        "link": "L2",
+        "measure_assert": {
+          "bfifo_limit_bytes": 19656,
+          "ceiling_ms": 26.208,
+          "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 3 borrowed: 0 giants: 0\n tokens: 31542 ctokens: 31542\n\n",
+          "direct_packets_stat": 0,
+          "direct_qlen": 1000,
+          "ifname": "s1-eth6",
+          "install_attempts": 1,
+          "install_history": [],
+          "kinds": [
+            "htb",
+            "bfifo"
+          ],
+          "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+        },
+        "q": 13,
+        "topology_v7_link": "ac"
+      },
+      {
+        "base_ms": 2.436,
+        "bw": 4.0,
+        "idx": 3,
+        "if_fwd": "s2-eth6",
+        "if_rev": "s3-eth4",
+        "link": "L3",
+        "measure_assert": {
+          "bfifo_limit_bytes": 15120,
+          "ceiling_ms": 30.24,
+          "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 4Mbit ceil 4Mbit burst 1600b cburst 1600b \n Sent 1550 bytes 19 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 19 borrowed: 0 giants: 0\n tokens: 45497 ctokens: 45497\n\n",
+          "direct_packets_stat": 0,
+          "direct_qlen": 1000,
+          "ifname": "s2-eth6",
+          "install_attempts": 1,
+          "install_history": [],
+          "kinds": [
+            "htb",
+            "bfifo"
+          ],
+          "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 1390 bytes 17 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 15120b\n Sent 1390 bytes 17 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+        },
+        "q": 10,
+        "topology_v7_link": "ad"
+      }
+    ],
+    "qdisc_reinstall_log": [],
+    "sysctl_saved": {
+      "net.ipv6.conf.default.disable_ipv6": "0"
+    }
+  },
+  "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+  "rows": [
+    {
+      "attempt": 1,
+      "branch": "B",
+      "c_a_aggregate_schedule_by_link": {
+        "L1": 0.992328274232328,
+        "L2": 0.9968338693905022,
+        "L3": 0.9915344016720917
+      },
+      "c_a_aggregate_with_probe_by_link": {
+        "L1": 0.9915858073207166,
+        "L2": 0.996822960335752,
+        "L3": 0.9915424824605853
+      },
+      "c_a_bg_actual_by_link": {
+        "L1": 0.9933708195367745,
+        "L2": 0.9999983177377897,
+        "L3": 0.991962909372919
+      },
+      "c_a_bg_schedule_by_link": {
+        "L1": 0.9923145543104538,
+        "L2": 0.996822960335752,
+        "L3": 0.9915424824605853
+      },
+      "c_a_by_link": {
+        "L1": {
+          "actual_bg": 0.9933708195367745,
+          "aggregate_schedule": 0.992328274232328,
+          "aggregate_with_probe": 0.9915858073207166,
+          "design_target": 1.0,
+          "schedule_bg": 0.9923145543104538
+        },
+        "L2": {
+          "actual_bg": 0.9999983177377897,
+          "aggregate_schedule": 0.9968338693905022,
+          "aggregate_with_probe": 0.996822960335752,
+          "design_target": 1.0,
+          "schedule_bg": 0.996822960335752
+        },
+        "L3": {
+          "actual_bg": 0.991962909372919,
+          "aggregate_schedule": 0.9915344016720917,
+          "aggregate_with_probe": 0.9915424824605853,
+          "design_target": 1.0,
+          "schedule_bg": 0.9915424824605853
+        }
+      },
+      "carve_out_fraction": 0.25,
+      "cost_ms": 7.827158756275947,
+      "delay_ms": 6.747559242657203,
+      "direct_packets_after": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_before": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_delta": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "env": {
+        "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+        "git_dirty": true,
+        "git_status_porcelain": [
+          " M docs/phase-20R/07-design-validation.md",
+          " M measurements/additivity_check.py",
+          " M measurements/additivity_live.py",
+          " M measurements/owd_probe.py",
+          " M test/test_phase20r_decision.py",
+          " M test/test_phase_l_probe.py",
+          "?? docs/phase-20R/00o-amendment-14.md",
+          "?? docs/phase-20R/FUTURE_WORK.md",
+          "?? measurements/band_v2.py",
+          "?? measurements/cascade_residual.py",
+          "?? measurements/residual_spec.py",
+          "?? measurements/transfer_residual.py",
+          "?? results/phase-20R/band_v2_transfer.json",
+          "?? results/phase-20R/band_v2_transfer_smoke.json",
+          "?? results/phase-20R/branch_b_fixed_preflight120.json",
+          "?? results/phase-20R/branch_b_tmux_preflight.json",
+          "?? results/phase-20R/branch_b_tmux_preflight120.json",
+          "?? results/phase-20R/branch_b_v2_smoke.json",
+          "?? results/phase-20R/branch_c_tmux_preflight.json",
+          "?? results/phase-20R/branch_c_tmux_preflight120.json",
+          "?? results/phase-20R/branch_c_v2_smoke.json",
+          "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+          "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+          "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+          "?? results/phase-20R/raw_additivity_v2_smoke/",
+          "?? results/phase-20R/residual_transfer.json",
+          "?? test/test_phase20r6_band.py",
+          "?? tools/pilot_power_only.py"
+        ],
+        "machine": "x86_64",
+        "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+        "python_executable": "/usr/bin/python3",
+        "python_version": "3.10.12",
+        "python_version_info": [
+          3,
+          10,
+          12
+        ]
+      },
+      "estimator_version": "v2-bg",
+      "gate_fail": [],
+      "idx": 1,
+      "link": "L1",
+      "link_idx": 1,
+      "load_n_foreign": 0,
+      "load_rows": [
+        {
+          "c_a": {
+            "actual_bg": 0.9933708195367745,
+            "aggregate_schedule": 0.992328274232328,
+            "aggregate_with_probe": 0.9915858073207166,
+            "design_target": 1.0,
+            "schedule_bg": 0.9923145543104538
+          },
+          "c_a_actual_bg": 0.9933708195367745,
+          "c_a_aggregate_schedule": 0.992328274232328,
+          "c_a_aggregate_with_probe": 0.9915858073207166,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.9923145543104538,
+          "link": "L1",
+          "link_idx": 1,
+          "max_late_ms": 15.858199247304583,
+          "n_bg_recv": 58239,
+          "n_bg_sent": 58258,
+          "n_foreign": 0,
+          "n_late_ratio": 0.00022314531909780632,
+          "probe_traverses_link": true,
+          "rate_ratio": 0.9999833751481864,
+          "rho": 0.8575000000000002,
+          "rho_actual": 0.8574929963114031,
+          "rho_bg": 0.7340625000000001,
+          "rho_bg_actual": 0.7340507963114031,
+          "rho_probe_share": 0.1234422,
+          "rho_probe_share_configured": 0.12343750000000003,
+          "rho_target_total": 0.8575000000000002,
+          "rho_total_actual": 0.8574929963114031,
+          "schedule_digest": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 0.9999983177377897,
+            "aggregate_schedule": 0.9968338693905022,
+            "aggregate_with_probe": 0.996822960335752,
+            "design_target": 1.0,
+            "schedule_bg": 0.996822960335752
+          },
+          "c_a_actual_bg": 0.9999983177377897,
+          "c_a_aggregate_schedule": 0.9968338693905022,
+          "c_a_aggregate_with_probe": 0.996822960335752,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.996822960335752,
+          "link": "L2",
+          "link_idx": 2,
+          "max_late_ms": 21.598297709715553,
+          "n_bg_recv": 56794,
+          "n_bg_sent": 58184,
+          "n_foreign": 0,
+          "n_late_ratio": 0.0004640450983088134,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999909936008146,
+          "rho": 0.9775000000000001,
+          "rho_actual": 0.9774911962447963,
+          "rho_bg": 0.9775000000000001,
+          "rho_bg_actual": 0.9774911962447963,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.9775000000000001,
+          "rho_total_actual": 0.9774911962447963,
+          "schedule_digest": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 0.991962909372919,
+            "aggregate_schedule": 0.9915344016720917,
+            "aggregate_with_probe": 0.9915424824605853,
+            "design_target": 1.0,
+            "schedule_bg": 0.9915424824605853
+          },
+          "c_a_actual_bg": 0.991962909372919,
+          "c_a_aggregate_schedule": 0.9915344016720917,
+          "c_a_aggregate_with_probe": 0.9915424824605853,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.9915424824605853,
+          "link": "L3",
+          "link_idx": 3,
+          "max_late_ms": 2.4959181628219085,
+          "n_bg_recv": 37740,
+          "n_bg_sent": 39186,
+          "n_foreign": 0,
+          "n_late_ratio": 5.103863624763946e-05,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999870339580583,
+          "rho": 0.9875000000000002,
+          "rho_actual": 0.9874871960335826,
+          "rho_bg": 0.9875000000000002,
+          "rho_bg_actual": 0.9874871960335826,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.9875000000000002,
+          "rho_total_actual": 0.9874871960335826,
+          "schedule_digest": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec",
+          "socket_drops": 0
+        }
+      ],
+      "load_schedule_digests": {
+        "L1": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
+        "L2": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
+        "L3": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec"
+      },
+      "load_socket_drops": 0,
+      "loss": 0.00033504578959124413,
+      "max_abs_bg_rho_error": 1.2803966417562762e-05,
+      "max_abs_rate_error": 1.6624851813640262e-05,
+      "max_abs_rho_error": 1.2803966417562762e-05,
+      "max_abs_total_rho_error": 1.2803966417562762e-05,
+      "max_late_ms": 21.598297709715553,
+      "mode": "poisson",
+      "n_foreign": 0,
+      "n_late_ratio": 0.0004640450983088134,
+      "n_probe_expected": 9797,
+      "n_recv_unique": 8951,
+      "n_sent": 8954,
+      "owd_counts": {
+        "n_duplicate": 0,
+        "n_owd_negative": 0,
+        "n_recv_total": 8951,
+        "n_recv_unique": 8951,
+        "n_reorder": 0,
+        "n_sent": 8954
+      },
+      "owd_steady_state": {
+        "block_means_ms": [
+          3.9278700237538726,
+          3.487541536717162,
+          3.113185575623706,
+          3.24298511498284,
+          2.7505976515282704,
+          2.918925932125828
+        ],
+        "inflation_factor": 3.7120106672695856,
+        "n_blocks": 6,
+        "se_batch_means_ms": 0.1725433088686209,
+        "se_naive_ms": 0.046482438854502865,
+        "spread_ms": 1.1772723722256022
+      },
+      "phase": "20R.6",
+      "pid": "20r6_b_0001_poisson_r0925_s101_L1",
+      "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+      "probe_budgeted_by_carve_out": true,
+      "probe_count_policy": "poisson_fixed_count",
+      "probe_frame_bytes_on_wire": 1512,
+      "probe_intrusion_ratio": 1.2803966417562762e-05,
+      "probe_load_share_actual_by_link": {
+        "L1": 0.1234422,
+        "L2": 0.0,
+        "L3": 0.0
+      },
+      "probe_load_share_configured_by_link": {
+        "L1": 0.12343750000000003,
+        "L2": 0.0,
+        "L3": 0.0
+      },
+      "probe_load_share_physical": 0.1234422,
+      "probe_loss": 0.00033504578959124413,
+      "probe_n_foreign": 0,
+      "probe_rate_pps_actual": 81.64166666666667,
+      "probe_rate_pps_configured": 81.63855820105822,
+      "probe_receiver_meta": {
+        "n_foreign_packets": 0,
+        "n_records": 9794,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0001_poisson_r0925_s101_L1_probe_L1.bin",
+        "port": 5851,
+        "record_struct": "<Qdd",
+        "role": "recv",
+        "run_ids_seen": [
+          191
+        ],
+        "socket_drops_delta": 0,
+        "socket_rcvbuf_bytes": 16777216
+      },
+      "probe_run_ids_seen": [
+        191
+      ],
+      "probe_sender_meta": {
+        "duration_s_accounting": 120.0,
+        "duration_s_actual": 119.99581898100041,
+        "frame_bytes_on_wire": 1512,
+        "kind": 1,
+        "mode": "poisson",
+        "n_fixed_count": 9797,
+        "n_sent": 9797,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0001_poisson_r0925_s101_L1_probe_L1_tx.bin",
+        "rate_pps_actual": 81.64166666666667,
+        "rate_pps_nominal": 81.6386,
+        "record_struct": "<Qd",
+        "role": "send",
+        "run_id": 191,
+        "schedule": "poisson_fixed_count",
+        "seed": 101701,
+        "size_bytes": 1470
+      },
+      "probe_socket_drops": 0,
+      "q_mean_ms": 6.747559242657203,
+      "q_p50_ms": 4.873487000394846,
+      "q_p90_ms": 12.744803000486456,
+      "q_p95_ms": 16.263461999869207,
+      "q_p99_ms": 23.164647999464535,
+      "q_sd_ms": 4.397690741490588,
+      "queue_mean_ms": 3.2355592426572026,
+      "queue_sd_ms": 4.397690741490588,
+      "rate_ratio": 0.9999833751481864,
+      "rate_ratio_by_link": {
+        "L1": 0.9999833751481864,
+        "L2": 0.9999909936008146,
+        "L3": 0.9999870339580583
+      },
+      "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+      "rho_actual_by_link": {
+        "L1": 0.8574929963114031,
+        "L2": 0.9774911962447963,
+        "L3": 0.9874871960335826
+      },
+      "rho_bar": 0.925,
+      "rho_bg_actual_by_link": {
+        "L1": 0.7340507963114031,
+        "L2": 0.9774911962447963,
+        "L3": 0.9874871960335826
+      },
+      "rho_gate": {
+        "binding": "counting",
+        "floor": 0.003,
+        "k_sigma": 4.0,
+        "sigma_counting": 0.0012470979441306014,
+        "threshold": 0.004988391776522405
+      },
+      "rho_gate_binding": "counting",
+      "rho_gate_floor": 0.003,
+      "rho_gate_k_sigma": 4.0,
+      "rho_gate_sigma_counting": 0.0012470979441306014,
+      "rho_gate_threshold": 0.004988391776522405,
+      "rho_probe_share_by_link": {
+        "L1": 0.1234422,
+        "L2": 0.0,
+        "L3": 0.0
+      },
+      "rho_target_total_by_link": {
+        "L1": 0.8575000000000002,
+        "L2": 0.9775000000000001,
+        "L3": 0.9875000000000002
+      },
+      "rho_total_actual_by_link": {
+        "L1": 0.8574929963114031,
+        "L2": 0.9774911962447963,
+        "L3": 0.9874871960335826
+      },
+      "runner": "measurements.additivity_live",
+      "schedule_digest": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
+      "seed": 101,
+      "socket_drops": 0,
+      "static_ms": 3.512,
+      "trajectory_digest": "da433c1877ac7d01dabd6128afa539563a6d7c6f55528d61339d217322031117",
+      "vl1g_run_pass": true,
+      "w_loss": 3222.244681647411,
+      "wall_utc": "2026-08-09T05:08:07Z"
     },
-    "q": 18,
-    "topology_v7_link": "uA"
-   },
-   {
-    "base_ms": 1.712,
-    "bw": 6.0,
-    "idx": 2,
-    "if_fwd": "s1-eth6",
-    "if_rev": "s2-eth3",
-    "link": "L2",
-    "measure_assert": {
-     "bfifo_limit_bytes": 19656,
-     "ceiling_ms": 26.208,
-     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 6Mbit ceil 6Mbit burst 1600b cburst 1600b \n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 3 borrowed: 0 giants: 0\n tokens: 31542 ctokens: 31542\n\n",
-     "direct_packets_stat": 0,
-     "direct_qlen": 1000,
-     "ifname": "s1-eth6",
-     "install_attempts": 1,
-     "install_history": [],
-     "kinds": [
-      "htb",
-      "bfifo"
-     ],
-     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 19656b\n Sent 266 bytes 3 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    {
+      "attempt": 1,
+      "branch": "B",
+      "c_a_aggregate_schedule_by_link": {
+        "L1": 0.9945110969675571,
+        "L2": 0.9964378473296098,
+        "L3": 0.9915344016720917
+      },
+      "c_a_aggregate_with_probe_by_link": {
+        "L1": 0.9944993386494734,
+        "L2": 0.9971789867025352,
+        "L3": 0.9915424824605853
+      },
+      "c_a_bg_actual_by_link": {
+        "L1": 0.9989889154547403,
+        "L2": 1.0000304662114656,
+        "L3": 0.9926164697236527
+      },
+      "c_a_bg_schedule_by_link": {
+        "L1": 0.9944993386494734,
+        "L2": 0.9964247848880794,
+        "L3": 0.9915424824605853
+      },
+      "c_a_by_link": {
+        "L1": {
+          "actual_bg": 0.9989889154547403,
+          "aggregate_schedule": 0.9945110969675571,
+          "aggregate_with_probe": 0.9944993386494734,
+          "design_target": 1.0,
+          "schedule_bg": 0.9944993386494734
+        },
+        "L2": {
+          "actual_bg": 1.0000304662114656,
+          "aggregate_schedule": 0.9964378473296098,
+          "aggregate_with_probe": 0.9971789867025352,
+          "design_target": 1.0,
+          "schedule_bg": 0.9964247848880794
+        },
+        "L3": {
+          "actual_bg": 0.9926164697236527,
+          "aggregate_schedule": 0.9915344016720917,
+          "aggregate_with_probe": 0.9915424824605853,
+          "design_target": 1.0,
+          "schedule_bg": 0.9915424824605853
+        }
+      },
+      "carve_out_fraction": 0.25,
+      "cost_ms": 93.80439278334603,
+      "delay_ms": 15.406915945417094,
+      "direct_packets_after": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_before": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_delta": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "env": {
+        "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+        "git_dirty": true,
+        "git_status_porcelain": [
+          " M docs/phase-20R/07-design-validation.md",
+          " M measurements/additivity_check.py",
+          " M measurements/additivity_live.py",
+          " M measurements/owd_probe.py",
+          " M test/test_phase20r_decision.py",
+          " M test/test_phase_l_probe.py",
+          "?? docs/phase-20R/00o-amendment-14.md",
+          "?? docs/phase-20R/FUTURE_WORK.md",
+          "?? measurements/band_v2.py",
+          "?? measurements/cascade_residual.py",
+          "?? measurements/residual_spec.py",
+          "?? measurements/transfer_residual.py",
+          "?? results/phase-20R/band_v2_transfer.json",
+          "?? results/phase-20R/band_v2_transfer_smoke.json",
+          "?? results/phase-20R/branch_b_fixed_preflight120.json",
+          "?? results/phase-20R/branch_b_tmux_preflight.json",
+          "?? results/phase-20R/branch_b_tmux_preflight120.json",
+          "?? results/phase-20R/branch_b_v2_smoke.json",
+          "?? results/phase-20R/branch_c_tmux_preflight.json",
+          "?? results/phase-20R/branch_c_tmux_preflight120.json",
+          "?? results/phase-20R/branch_c_v2_smoke.json",
+          "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+          "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+          "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+          "?? results/phase-20R/raw_additivity_v2_smoke/",
+          "?? results/phase-20R/residual_transfer.json",
+          "?? test/test_phase20r6_band.py",
+          "?? tools/pilot_power_only.py"
+        ],
+        "machine": "x86_64",
+        "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+        "python_executable": "/usr/bin/python3",
+        "python_version": "3.10.12",
+        "python_version_info": [
+          3,
+          10,
+          12
+        ]
+      },
+      "estimator_version": "v2-bg",
+      "gate_fail": [],
+      "idx": 2,
+      "link": "L2",
+      "link_idx": 2,
+      "load_n_foreign": 0,
+      "load_rows": [
+        {
+          "c_a": {
+            "actual_bg": 0.9989889154547403,
+            "aggregate_schedule": 0.9945110969675571,
+            "aggregate_with_probe": 0.9944993386494734,
+            "design_target": 1.0,
+            "schedule_bg": 0.9944993386494734
+          },
+          "c_a_actual_bg": 0.9989889154547403,
+          "c_a_aggregate_schedule": 0.9945110969675571,
+          "c_a_aggregate_with_probe": 0.9944993386494734,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.9944993386494734,
+          "link": "L1",
+          "link_idx": 1,
+          "max_late_ms": 19.821681486064335,
+          "n_bg_recv": 68026,
+          "n_bg_sent": 68055,
+          "n_foreign": 0,
+          "n_late_ratio": 0.0005877599000808169,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999918329180608,
+          "rho": 0.8575000000000002,
+          "rho_actual": 0.8574929967272372,
+          "rho_bg": 0.8575000000000002,
+          "rho_bg_actual": 0.8574929967272372,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.8575000000000002,
+          "rho_total_actual": 0.8574929967272372,
+          "schedule_digest": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 1.0000304662114656,
+            "aggregate_schedule": 0.9964378473296098,
+            "aggregate_with_probe": 0.9971789867025352,
+            "design_target": 1.0,
+            "schedule_bg": 0.9964247848880794
+          },
+          "c_a_actual_bg": 1.0000304662114656,
+          "c_a_aggregate_schedule": 0.9964378473296098,
+          "c_a_aggregate_with_probe": 0.9971789867025352,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.9964247848880794,
+          "link": "L2",
+          "link_idx": 2,
+          "max_late_ms": 27.562338387724594,
+          "n_bg_recv": 47244,
+          "n_bg_sent": 48387,
+          "n_foreign": 0,
+          "n_late_ratio": 0.000496000992001984,
+          "probe_traverses_link": true,
+          "rate_ratio": 0.9999810508266492,
+          "rho": 0.9775000000000001,
+          "rho_actual": 0.9774911958948472,
+          "rho_bg": 0.8129166666666667,
+          "rho_bg_actual": 0.8129015958948472,
+          "rho_probe_share": 0.1645896,
+          "rho_probe_share_configured": 0.16458333333333336,
+          "rho_target_total": 0.9775000000000001,
+          "rho_total_actual": 0.9774911958948472,
+          "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 0.9926164697236527,
+            "aggregate_schedule": 0.9915344016720917,
+            "aggregate_with_probe": 0.9915424824605853,
+            "design_target": 1.0,
+            "schedule_bg": 0.9915424824605853
+          },
+          "c_a_actual_bg": 0.9926164697236527,
+          "c_a_aggregate_schedule": 0.9915344016720917,
+          "c_a_aggregate_with_probe": 0.9915424824605853,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.9915424824605853,
+          "link": "L3",
+          "link_idx": 3,
+          "max_late_ms": 19.717387011041865,
+          "n_bg_recv": 37748,
+          "n_bg_sent": 39186,
+          "n_foreign": 0,
+          "n_late_ratio": 0.0001531159087429184,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999870292164693,
+          "rho": 0.9875000000000002,
+          "rho_actual": 0.9874871913512634,
+          "rho_bg": 0.9875000000000002,
+          "rho_bg_actual": 0.9874871913512634,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.9875000000000002,
+          "rho_total_actual": 0.9874871913512634,
+          "schedule_digest": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec",
+          "socket_drops": 0
+        }
+      ],
+      "load_schedule_digests": {
+        "L1": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
+        "L2": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+        "L3": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec"
+      },
+      "load_socket_drops": 0,
+      "loss": 0.024330081847740777,
+      "max_abs_bg_rho_error": 1.5070771819503115e-05,
+      "max_abs_rate_error": 1.894917335076851e-05,
+      "max_abs_rho_error": 1.2808648736761796e-05,
+      "max_abs_total_rho_error": 1.2808648736761796e-05,
+      "max_late_ms": 27.562338387724594,
+      "mode": "poisson",
+      "n_foreign": 0,
+      "n_late_ratio": 0.0005877599000808169,
+      "n_probe_expected": 9797,
+      "n_recv_unique": 8702,
+      "n_sent": 8919,
+      "owd_counts": {
+        "n_duplicate": 0,
+        "n_owd_negative": 0,
+        "n_recv_total": 8702,
+        "n_recv_unique": 8702,
+        "n_reorder": 0,
+        "n_sent": 8919
+      },
+      "owd_steady_state": {
+        "block_means_ms": [
+          10.816373900994378,
+          10.957404254715966,
+          10.278020034505992,
+          10.489225557740195,
+          9.718864542710461,
+          10.026476310493665
+        ],
+        "inflation_factor": 2.240090805237005,
+        "n_blocks": 6,
+        "se_batch_means_ms": 0.19219957780291794,
+        "se_naive_ms": 0.08579990478670928,
+        "spread_ms": 1.2385397120055046
+      },
+      "phase": "20R.6",
+      "pid": "20r6_b_0002_poisson_r0925_s101_L2",
+      "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+      "probe_budgeted_by_carve_out": true,
+      "probe_count_policy": "poisson_fixed_count",
+      "probe_frame_bytes_on_wire": 1512,
+      "probe_intrusion_ratio": 1.2808648736761796e-05,
+      "probe_load_share_actual_by_link": {
+        "L1": 0.0,
+        "L2": 0.1645896,
+        "L3": 0.0
+      },
+      "probe_load_share_configured_by_link": {
+        "L1": 0.0,
+        "L2": 0.16458333333333336,
+        "L3": 0.0
+      },
+      "probe_load_share_physical": 0.1645896,
+      "probe_loss": 0.024330081847740777,
+      "probe_n_foreign": 0,
+      "probe_rate_pps_actual": 81.64166666666667,
+      "probe_rate_pps_configured": 81.63855820105822,
+      "probe_receiver_meta": {
+        "n_foreign_packets": 0,
+        "n_records": 9554,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0002_poisson_r0925_s101_L2_probe_L2.bin",
+        "port": 5852,
+        "record_struct": "<Qdd",
+        "role": "recv",
+        "run_ids_seen": [
+          292
+        ],
+        "socket_drops_delta": 0,
+        "socket_rcvbuf_bytes": 16777216
+      },
+      "probe_run_ids_seen": [
+        292
+      ],
+      "probe_sender_meta": {
+        "duration_s_accounting": 120.0,
+        "duration_s_actual": 119.98954025800049,
+        "frame_bytes_on_wire": 1512,
+        "kind": 1,
+        "mode": "poisson",
+        "n_fixed_count": 9797,
+        "n_sent": 9797,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0002_poisson_r0925_s101_L2_probe_L2_tx.bin",
+        "rate_pps_actual": 81.64166666666667,
+        "rate_pps_nominal": 81.6386,
+        "record_struct": "<Qd",
+        "role": "send",
+        "run_id": 292,
+        "schedule": "poisson_fixed_count",
+        "seed": 101702,
+        "size_bytes": 1470
+      },
+      "probe_socket_drops": 0,
+      "q_mean_ms": 15.406915945417094,
+      "q_p50_ms": 14.569013000186184,
+      "q_p90_ms": 27.35260599995346,
+      "q_p95_ms": 29.392456000027245,
+      "q_p99_ms": 30.945345998520146,
+      "q_sd_ms": 8.00380216531967,
+      "queue_mean_ms": 10.390915945417094,
+      "queue_sd_ms": 8.00380216531967,
+      "rate_ratio": 0.9999810508266492,
+      "rate_ratio_by_link": {
+        "L1": 0.9999918329180608,
+        "L2": 0.9999810508266492,
+        "L3": 0.9999870292164693
+      },
+      "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+      "rho_actual_by_link": {
+        "L1": 0.8574929967272372,
+        "L2": 0.9774911958948472,
+        "L3": 0.9874871913512634
+      },
+      "rho_bar": 0.925,
+      "rho_bg_actual_by_link": {
+        "L1": 0.8574929967272372,
+        "L2": 0.8129015958948472,
+        "L3": 0.9874871913512634
+      },
+      "rho_gate": {
+        "binding": "counting",
+        "floor": 0.003,
+        "k_sigma": 4.0,
+        "sigma_counting": 0.0016627972588408018,
+        "threshold": 0.006651189035363207
+      },
+      "rho_gate_binding": "counting",
+      "rho_gate_floor": 0.003,
+      "rho_gate_k_sigma": 4.0,
+      "rho_gate_sigma_counting": 0.0016627972588408018,
+      "rho_gate_threshold": 0.006651189035363207,
+      "rho_probe_share_by_link": {
+        "L1": 0.0,
+        "L2": 0.1645896,
+        "L3": 0.0
+      },
+      "rho_target_total_by_link": {
+        "L1": 0.8575000000000002,
+        "L2": 0.9775000000000001,
+        "L3": 0.9875000000000002
+      },
+      "rho_total_actual_by_link": {
+        "L1": 0.8574929967272372,
+        "L2": 0.9774911958948472,
+        "L3": 0.9874871913512634
+      },
+      "runner": "measurements.additivity_live",
+      "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
+      "seed": 101,
+      "socket_drops": 0,
+      "static_ms": 5.016,
+      "trajectory_digest": "f482de41f85c481e3160354031d6d9fc32de0e552c4418555f2fae58d62b9eed",
+      "vl1g_run_pass": true,
+      "w_loss": 3222.244681647411,
+      "wall_utc": "2026-08-09T05:10:15Z"
     },
-    "q": 13,
-    "topology_v7_link": "ac"
-   },
-   {
-    "base_ms": 2.436,
-    "bw": 4.0,
-    "idx": 3,
-    "if_fwd": "s2-eth6",
-    "if_rev": "s3-eth4",
-    "link": "L3",
-    "measure_assert": {
-     "bfifo_limit_bytes": 15120,
-     "ceiling_ms": 30.24,
-     "class_raw": "class htb 1:10 root leaf 10: prio 0 rate 4Mbit ceil 4Mbit burst 1600b cburst 1600b \n Sent 1550 bytes 19 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n lended: 19 borrowed: 0 giants: 0\n tokens: 45497 ctokens: 45497\n\n",
-     "direct_packets_stat": 0,
-     "direct_qlen": 1000,
-     "ifname": "s2-eth6",
-     "install_attempts": 1,
-     "install_history": [],
-     "kinds": [
-      "htb",
-      "bfifo"
-     ],
-     "qdisc_raw": "qdisc htb 1: root refcnt 9 r2q 10 default 0x10 direct_packets_stat 0 direct_qlen 1000\n Sent 1390 bytes 17 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\nqdisc bfifo 10: parent 1:10 limit 15120b\n Sent 1390 bytes 17 pkt (dropped 0, overlimits 0 requeues 0) \n backlog 0b 0p requeues 0\n"
+    {
+      "attempt": 1,
+      "branch": "B",
+      "c_a_aggregate_schedule_by_link": {
+        "L1": 0.9945110969675571,
+        "L2": 0.9968338693905022,
+        "L3": 0.992771784594606
+      },
+      "c_a_aggregate_with_probe_by_link": {
+        "L1": 0.9944993386494734,
+        "L2": 0.996822960335752,
+        "L3": 0.999825944304211
+      },
+      "c_a_bg_actual_by_link": {
+        "L1": 0.997988971225063,
+        "L2": 0.997557865998824,
+        "L3": 0.9929558007186405
+      },
+      "c_a_bg_schedule_by_link": {
+        "L1": 0.9944993386494734,
+        "L2": 0.996822960335752,
+        "L3": 0.9927825169387148
+      },
+      "c_a_by_link": {
+        "L1": {
+          "actual_bg": 0.997988971225063,
+          "aggregate_schedule": 0.9945110969675571,
+          "aggregate_with_probe": 0.9944993386494734,
+          "design_target": 1.0,
+          "schedule_bg": 0.9944993386494734
+        },
+        "L2": {
+          "actual_bg": 0.997557865998824,
+          "aggregate_schedule": 0.9968338693905022,
+          "aggregate_with_probe": 0.996822960335752,
+          "design_target": 1.0,
+          "schedule_bg": 0.996822960335752
+        },
+        "L3": {
+          "actual_bg": 0.9929558007186405,
+          "aggregate_schedule": 0.992771784594606,
+          "aggregate_with_probe": 0.999825944304211,
+          "design_target": 1.0,
+          "schedule_bg": 0.9927825169387148
+        }
+      },
+      "carve_out_fraction": 0.25,
+      "cost_ms": 135.47595113814594,
+      "delay_ms": 18.761890003013328,
+      "direct_packets_after": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_before": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_delta": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "env": {
+        "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+        "git_dirty": true,
+        "git_status_porcelain": [
+          " M docs/phase-20R/07-design-validation.md",
+          " M measurements/additivity_check.py",
+          " M measurements/additivity_live.py",
+          " M measurements/owd_probe.py",
+          " M test/test_phase20r_decision.py",
+          " M test/test_phase_l_probe.py",
+          "?? docs/phase-20R/00o-amendment-14.md",
+          "?? docs/phase-20R/FUTURE_WORK.md",
+          "?? measurements/band_v2.py",
+          "?? measurements/cascade_residual.py",
+          "?? measurements/residual_spec.py",
+          "?? measurements/transfer_residual.py",
+          "?? results/phase-20R/band_v2_transfer.json",
+          "?? results/phase-20R/band_v2_transfer_smoke.json",
+          "?? results/phase-20R/branch_b_fixed_preflight120.json",
+          "?? results/phase-20R/branch_b_tmux_preflight.json",
+          "?? results/phase-20R/branch_b_tmux_preflight120.json",
+          "?? results/phase-20R/branch_b_v2_smoke.json",
+          "?? results/phase-20R/branch_c_tmux_preflight.json",
+          "?? results/phase-20R/branch_c_tmux_preflight120.json",
+          "?? results/phase-20R/branch_c_v2_smoke.json",
+          "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+          "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+          "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+          "?? results/phase-20R/raw_additivity_v2_smoke/",
+          "?? results/phase-20R/residual_transfer.json",
+          "?? test/test_phase20r6_band.py",
+          "?? tools/pilot_power_only.py"
+        ],
+        "machine": "x86_64",
+        "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+        "python_executable": "/usr/bin/python3",
+        "python_version": "3.10.12",
+        "python_version_info": [
+          3,
+          10,
+          12
+        ]
+      },
+      "estimator_version": "v2-bg",
+      "gate_fail": [],
+      "idx": 3,
+      "link": "L3",
+      "link_idx": 3,
+      "load_n_foreign": 0,
+      "load_rows": [
+        {
+          "c_a": {
+            "actual_bg": 0.997988971225063,
+            "aggregate_schedule": 0.9945110969675571,
+            "aggregate_with_probe": 0.9944993386494734,
+            "design_target": 1.0,
+            "schedule_bg": 0.9944993386494734
+          },
+          "c_a_actual_bg": 0.997988971225063,
+          "c_a_aggregate_schedule": 0.9945110969675571,
+          "c_a_aggregate_with_probe": 0.9944993386494734,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.9944993386494734,
+          "link": "L1",
+          "link_idx": 1,
+          "max_late_ms": 21.43494902702514,
+          "n_bg_recv": 68021,
+          "n_bg_sent": 68055,
+          "n_foreign": 0,
+          "n_late_ratio": 0.0005436779075747557,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999918329597305,
+          "rho": 0.8575000000000002,
+          "rho_actual": 0.857492996762969,
+          "rho_bg": 0.8575000000000002,
+          "rho_bg_actual": 0.857492996762969,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.8575000000000002,
+          "rho_total_actual": 0.857492996762969,
+          "schedule_digest": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 0.997557865998824,
+            "aggregate_schedule": 0.9968338693905022,
+            "aggregate_with_probe": 0.996822960335752,
+            "design_target": 1.0,
+            "schedule_bg": 0.996822960335752
+          },
+          "c_a_actual_bg": 0.997557865998824,
+          "c_a_aggregate_schedule": 0.9968338693905022,
+          "c_a_aggregate_with_probe": 0.996822960335752,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.996822960335752,
+          "link": "L2",
+          "link_idx": 2,
+          "max_late_ms": 12.930217752000317,
+          "n_bg_recv": 56808,
+          "n_bg_sent": 58184,
+          "n_foreign": 0,
+          "n_late_ratio": 0.00015468169943627113,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.999990993675832,
+          "rho": 0.9775000000000001,
+          "rho_actual": 0.9774911963181259,
+          "rho_bg": 0.9775000000000001,
+          "rho_bg_actual": 0.9774911963181259,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.9775000000000001,
+          "rho_total_actual": 0.9774911963181259,
+          "schedule_digest": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 0.9929558007186405,
+            "aggregate_schedule": 0.992771784594606,
+            "aggregate_with_probe": 0.999825944304211,
+            "design_target": 1.0,
+            "schedule_bg": 0.9927825169387148
+          },
+          "c_a_actual_bg": 0.9929558007186405,
+          "c_a_aggregate_schedule": 0.992771784594606,
+          "c_a_aggregate_with_probe": 0.999825944304211,
+          "c_a_design_target": 1.0,
+          "c_a_schedule_bg": 0.9927825169387148,
+          "link": "L3",
+          "link_idx": 3,
+          "max_late_ms": 12.586721901243436,
+          "n_bg_recv": 28298,
+          "n_bg_sent": 29389,
+          "n_foreign": 0,
+          "n_late_ratio": 6.805267276872299e-05,
+          "probe_traverses_link": true,
+          "rate_ratio": 0.9999700173333628,
+          "rho": 0.9875000000000002,
+          "rho_actual": 0.9874871940875218,
+          "rho_bg": 0.7406250000000001,
+          "rho_bg_actual": 0.7406027940875218,
+          "rho_probe_share": 0.2468844,
+          "rho_probe_share_configured": 0.24687500000000007,
+          "rho_target_total": 0.9875000000000002,
+          "rho_total_actual": 0.9874871940875218,
+          "schedule_digest": "9a5360a07bb8c62b9e0557ceac6ccd82dcf6eb88644c93165d38d34b3e37a10f",
+          "socket_drops": 0
+        }
+      ],
+      "load_schedule_digests": {
+        "L1": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
+        "L2": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
+        "L3": "9a5360a07bb8c62b9e0557ceac6ccd82dcf6eb88644c93165d38d34b3e37a10f"
+      },
+      "load_socket_drops": 0,
+      "loss": 0.03622135271101174,
+      "max_abs_bg_rho_error": 2.2205912478256984e-05,
+      "max_abs_rate_error": 2.998266663722937e-05,
+      "max_abs_rho_error": 1.2805912478319748e-05,
+      "max_abs_total_rho_error": 1.2805912478319748e-05,
+      "max_late_ms": 21.43494902702514,
+      "mode": "poisson",
+      "n_foreign": 0,
+      "n_late_ratio": 0.0005436779075747557,
+      "n_probe_expected": 9797,
+      "n_recv_unique": 8621,
+      "n_sent": 8945,
+      "owd_counts": {
+        "n_duplicate": 0,
+        "n_owd_negative": 0,
+        "n_recv_total": 8621,
+        "n_recv_unique": 8621,
+        "n_reorder": 0,
+        "n_sent": 8945
+      },
+      "owd_steady_state": {
+        "block_means_ms": [
+          12.369165310060628,
+          12.088484132271255,
+          13.228467362189404,
+          12.295621794294062,
+          13.915199937881269,
+          12.521978101961047
+        ],
+        "inflation_factor": 2.733674150185867,
+        "n_blocks": 6,
+        "se_batch_means_ms": 0.28440686841967194,
+        "se_naive_ms": 0.10403832088046581,
+        "spread_ms": 1.8267158056100143
+      },
+      "phase": "20R.6",
+      "pid": "20r6_b_0003_poisson_r0925_s101_L3",
+      "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+      "probe_budgeted_by_carve_out": true,
+      "probe_count_policy": "poisson_fixed_count",
+      "probe_frame_bytes_on_wire": 1512,
+      "probe_intrusion_ratio": 1.2805912478319748e-05,
+      "probe_load_share_actual_by_link": {
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 0.2468844
+      },
+      "probe_load_share_configured_by_link": {
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 0.24687500000000007
+      },
+      "probe_load_share_physical": 0.2468844,
+      "probe_loss": 0.03622135271101174,
+      "probe_n_foreign": 0,
+      "probe_rate_pps_actual": 81.64166666666667,
+      "probe_rate_pps_configured": 81.63855820105822,
+      "probe_receiver_meta": {
+        "n_foreign_packets": 0,
+        "n_records": 9429,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0003_poisson_r0925_s101_L3_probe_L3.bin",
+        "port": 5853,
+        "record_struct": "<Qdd",
+        "role": "recv",
+        "run_ids_seen": [
+          393
+        ],
+        "socket_drops_delta": 0,
+        "socket_rcvbuf_bytes": 16777216
+      },
+      "probe_run_ids_seen": [
+        393
+      ],
+      "probe_sender_meta": {
+        "duration_s_accounting": 120.0,
+        "duration_s_actual": 119.94891459099927,
+        "frame_bytes_on_wire": 1512,
+        "kind": 1,
+        "mode": "poisson",
+        "n_fixed_count": 9797,
+        "n_sent": 9797,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0003_poisson_r0925_s101_L3_probe_L3_tx.bin",
+        "rate_pps_actual": 81.64166666666667,
+        "rate_pps_nominal": 81.6386,
+        "record_struct": "<Qd",
+        "role": "send",
+        "run_id": 393,
+        "schedule": "poisson_fixed_count",
+        "seed": 101703,
+        "size_bytes": 1470
+      },
+      "probe_socket_drops": 0,
+      "q_mean_ms": 18.761890003013328,
+      "q_p50_ms": 18.33149400019704,
+      "q_p90_ms": 32.57018500127981,
+      "q_p95_ms": 34.426621999703116,
+      "q_p99_ms": 35.980088999824716,
+      "q_sd_ms": 9.659889462951131,
+      "queue_mean_ms": 12.737890003013327,
+      "queue_sd_ms": 9.659889462951131,
+      "rate_ratio": 0.9999700173333628,
+      "rate_ratio_by_link": {
+        "L1": 0.9999918329597305,
+        "L2": 0.999990993675832,
+        "L3": 0.9999700173333628
+      },
+      "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+      "rho_actual_by_link": {
+        "L1": 0.857492996762969,
+        "L2": 0.9774911963181259,
+        "L3": 0.9874871940875218
+      },
+      "rho_bar": 0.925,
+      "rho_bg_actual_by_link": {
+        "L1": 0.857492996762969,
+        "L2": 0.9774911963181259,
+        "L3": 0.7406027940875218
+      },
+      "rho_gate": {
+        "binding": "counting",
+        "floor": 0.003,
+        "k_sigma": 4.0,
+        "sigma_counting": 0.0024941958882612027,
+        "threshold": 0.00997678355304481
+      },
+      "rho_gate_binding": "counting",
+      "rho_gate_floor": 0.003,
+      "rho_gate_k_sigma": 4.0,
+      "rho_gate_sigma_counting": 0.0024941958882612027,
+      "rho_gate_threshold": 0.00997678355304481,
+      "rho_probe_share_by_link": {
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 0.2468844
+      },
+      "rho_target_total_by_link": {
+        "L1": 0.8575000000000002,
+        "L2": 0.9775000000000001,
+        "L3": 0.9875000000000002
+      },
+      "rho_total_actual_by_link": {
+        "L1": 0.857492996762969,
+        "L2": 0.9774911963181259,
+        "L3": 0.9874871940875218
+      },
+      "runner": "measurements.additivity_live",
+      "schedule_digest": "9a5360a07bb8c62b9e0557ceac6ccd82dcf6eb88644c93165d38d34b3e37a10f",
+      "seed": 101,
+      "socket_drops": 0,
+      "static_ms": 6.024,
+      "trajectory_digest": "b6815852c97c9a6244bfbd820584fc16db7a1cde9a5ae84ba9c50e1dce38f009",
+      "vl1g_run_pass": true,
+      "w_loss": 3222.244681647411,
+      "wall_utc": "2026-08-09T05:12:24Z"
     },
-    "q": 10,
-    "topology_v7_link": "ad"
-   }
+    {
+      "attempt": 1,
+      "branch": "B",
+      "c_a_aggregate_schedule_by_link": {
+        "L1": 2.020271456421776,
+        "L2": 1.9801678595510457,
+        "L3": 1.9776943469912134
+      },
+      "c_a_aggregate_with_probe_by_link": {
+        "L1": 1.606723972356001,
+        "L2": 1.9801261252402016,
+        "L3": 1.9776984551530714
+      },
+      "c_a_bg_actual_by_link": {
+        "L1": 2.02071527568701,
+        "L2": 1.9814409964747102,
+        "L3": 1.9766362416693515
+      },
+      "c_a_bg_schedule_by_link": {
+        "L1": 2.0202866029201876,
+        "L2": 1.9801261252402016,
+        "L3": 1.9776984551530714
+      },
+      "c_a_by_link": {
+        "L1": {
+          "actual_bg": 2.02071527568701,
+          "aggregate_schedule": 2.020271456421776,
+          "aggregate_with_probe": 1.606723972356001,
+          "design_target": 2.0,
+          "schedule_bg": 2.0202866029201876
+        },
+        "L2": {
+          "actual_bg": 1.9814409964747102,
+          "aggregate_schedule": 1.9801678595510457,
+          "aggregate_with_probe": 1.9801261252402016,
+          "design_target": 2.0,
+          "schedule_bg": 1.9801261252402016
+        },
+        "L3": {
+          "actual_bg": 1.9766362416693515,
+          "aggregate_schedule": 1.9776943469912134,
+          "aggregate_with_probe": 1.9776984551530714,
+          "design_target": 2.0,
+          "schedule_bg": 1.9776984551530714
+        }
+      },
+      "carve_out_fraction": 0.25,
+      "cost_ms": 88.38697647181475,
+      "delay_ms": 11.222210565384547,
+      "direct_packets_after": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_before": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_delta": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "env": {
+        "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+        "git_dirty": true,
+        "git_status_porcelain": [
+          " M docs/phase-20R/07-design-validation.md",
+          " M measurements/additivity_check.py",
+          " M measurements/additivity_live.py",
+          " M measurements/owd_probe.py",
+          " M test/test_phase20r_decision.py",
+          " M test/test_phase_l_probe.py",
+          "?? docs/phase-20R/00o-amendment-14.md",
+          "?? docs/phase-20R/FUTURE_WORK.md",
+          "?? measurements/band_v2.py",
+          "?? measurements/cascade_residual.py",
+          "?? measurements/residual_spec.py",
+          "?? measurements/transfer_residual.py",
+          "?? results/phase-20R/band_v2_transfer.json",
+          "?? results/phase-20R/band_v2_transfer_smoke.json",
+          "?? results/phase-20R/branch_b_fixed_preflight120.json",
+          "?? results/phase-20R/branch_b_tmux_preflight.json",
+          "?? results/phase-20R/branch_b_tmux_preflight120.json",
+          "?? results/phase-20R/branch_b_v2_smoke.json",
+          "?? results/phase-20R/branch_c_tmux_preflight.json",
+          "?? results/phase-20R/branch_c_tmux_preflight120.json",
+          "?? results/phase-20R/branch_c_v2_smoke.json",
+          "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+          "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+          "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+          "?? results/phase-20R/raw_additivity_v2_smoke/",
+          "?? results/phase-20R/residual_transfer.json",
+          "?? test/test_phase20r6_band.py",
+          "?? tools/pilot_power_only.py"
+        ],
+        "machine": "x86_64",
+        "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+        "python_executable": "/usr/bin/python3",
+        "python_version": "3.10.12",
+        "python_version_info": [
+          3,
+          10,
+          12
+        ]
+      },
+      "estimator_version": "v2-bg",
+      "gate_fail": [],
+      "idx": 4,
+      "link": "L1",
+      "link_idx": 1,
+      "load_n_foreign": 0,
+      "load_rows": [
+        {
+          "c_a": {
+            "actual_bg": 2.02071527568701,
+            "aggregate_schedule": 2.020271456421776,
+            "aggregate_with_probe": 1.606723972356001,
+            "design_target": 2.0,
+            "schedule_bg": 2.0202866029201876
+          },
+          "c_a_actual_bg": 2.02071527568701,
+          "c_a_aggregate_schedule": 2.020271456421776,
+          "c_a_aggregate_with_probe": 1.606723972356001,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 2.0202866029201876,
+          "link": "L1",
+          "link_idx": 1,
+          "max_late_ms": 23.4905041197635,
+          "n_bg_recv": 56839,
+          "n_bg_sent": 58258,
+          "n_foreign": 0,
+          "n_late_ratio": 0.000171650245459851,
+          "probe_traverses_link": true,
+          "rate_ratio": 0.9999833720315514,
+          "rho": 0.8575000000000002,
+          "rho_actual": 0.8574929940235969,
+          "rho_bg": 0.7340625000000001,
+          "rho_bg_actual": 0.7340507940235969,
+          "rho_probe_share": 0.1234422,
+          "rho_probe_share_configured": 0.12343750000000003,
+          "rho_target_total": 0.8575000000000002,
+          "rho_total_actual": 0.8574929940235969,
+          "schedule_digest": "77fd5d40493e4f271f9636efe6893bb6c0dfb96144e76c5693160e9db7a72c3d",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 1.9814409964747102,
+            "aggregate_schedule": 1.9801678595510457,
+            "aggregate_with_probe": 1.9801261252402016,
+            "design_target": 2.0,
+            "schedule_bg": 1.9801261252402016
+          },
+          "c_a_actual_bg": 1.9814409964747102,
+          "c_a_aggregate_schedule": 1.9801678595510457,
+          "c_a_aggregate_with_probe": 1.9801261252402016,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 1.9801261252402016,
+          "link": "L2",
+          "link_idx": 2,
+          "max_late_ms": 18.22626050488907,
+          "n_bg_recv": 52598,
+          "n_bg_sent": 58184,
+          "n_foreign": 0,
+          "n_late_ratio": 0.00025780283239378526,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999909939008238,
+          "rho": 0.9775000000000001,
+          "rho_actual": 0.9774911965380553,
+          "rho_bg": 0.9775000000000001,
+          "rho_bg_actual": 0.9774911965380553,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.9775000000000001,
+          "rho_total_actual": 0.9774911965380553,
+          "schedule_digest": "6905a417dbc80d2f38c065c7ae43a3240557e6de4d225469bcc316780327e38a",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 1.9766362416693515,
+            "aggregate_schedule": 1.9776943469912134,
+            "aggregate_with_probe": 1.9776984551530714,
+            "design_target": 2.0,
+            "schedule_bg": 1.9776984551530714
+          },
+          "c_a_actual_bg": 1.9766362416693515,
+          "c_a_aggregate_schedule": 1.9776943469912134,
+          "c_a_aggregate_with_probe": 1.9776984551530714,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 1.9776984551530714,
+          "link": "L3",
+          "link_idx": 3,
+          "max_late_ms": 25.690006808872567,
+          "n_bg_recv": 34214,
+          "n_bg_sent": 39186,
+          "n_foreign": 0,
+          "n_late_ratio": 0.0004083090899811157,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999870322331028,
+          "rho": 0.9875000000000002,
+          "rho_actual": 0.9874871943301892,
+          "rho_bg": 0.9875000000000002,
+          "rho_bg_actual": 0.9874871943301892,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.9875000000000002,
+          "rho_total_actual": 0.9874871943301892,
+          "schedule_digest": "a87dc7fc55c07fbd9624072c934fe257b8513040d5073e0bd9d7a9588bcbee2b",
+          "socket_drops": 0
+        }
+      ],
+      "load_schedule_digests": {
+        "L1": "77fd5d40493e4f271f9636efe6893bb6c0dfb96144e76c5693160e9db7a72c3d",
+        "L2": "6905a417dbc80d2f38c065c7ae43a3240557e6de4d225469bcc316780327e38a",
+        "L3": "a87dc7fc55c07fbd9624072c934fe257b8513040d5073e0bd9d7a9588bcbee2b"
+      },
+      "load_socket_drops": 0,
+      "loss": 0.01708733526915345,
+      "max_abs_bg_rho_error": 1.2805669810989073e-05,
+      "max_abs_rate_error": 1.662796844859038e-05,
+      "max_abs_rho_error": 1.2805669810989073e-05,
+      "max_abs_total_rho_error": 1.2805669810989073e-05,
+      "max_late_ms": 25.690006808872567,
+      "mode": "h2",
+      "n_foreign": 0,
+      "n_late_ratio": 0.0004083090899811157,
+      "n_probe_expected": 9797,
+      "n_recv_unique": 8801,
+      "n_sent": 8954,
+      "owd_counts": {
+        "n_duplicate": 0,
+        "n_owd_negative": 0,
+        "n_recv_total": 8801,
+        "n_recv_unique": 8801,
+        "n_reorder": 0,
+        "n_sent": 8954
+      },
+      "owd_steady_state": {
+        "block_means_ms": [
+          7.6092513573353076,
+          8.26518500919994,
+          7.855133008102737,
+          7.146609008619621,
+          8.72580804904112,
+          6.699265634944376
+        ],
+        "inflation_factor": 3.5337853596131503,
+        "n_blocks": 6,
+        "se_batch_means_ms": 0.3005561516962872,
+        "se_naive_ms": 0.08505218090812103,
+        "spread_ms": 2.0265424140967445
+      },
+      "phase": "20R.6",
+      "pid": "20r6_b_0004_h2_r0925_s101_L1",
+      "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+      "probe_budgeted_by_carve_out": true,
+      "probe_count_policy": "poisson_fixed_count",
+      "probe_frame_bytes_on_wire": 1512,
+      "probe_intrusion_ratio": 1.2805669810989073e-05,
+      "probe_load_share_actual_by_link": {
+        "L1": 0.1234422,
+        "L2": 0.0,
+        "L3": 0.0
+      },
+      "probe_load_share_configured_by_link": {
+        "L1": 0.12343750000000003,
+        "L2": 0.0,
+        "L3": 0.0
+      },
+      "probe_load_share_physical": 0.1234422,
+      "probe_loss": 0.01708733526915345,
+      "probe_n_foreign": 0,
+      "probe_rate_pps_actual": 81.64166666666667,
+      "probe_rate_pps_configured": 81.63855820105822,
+      "probe_receiver_meta": {
+        "n_foreign_packets": 0,
+        "n_records": 9636,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0004_h2_r0925_s101_L1_probe_L1.bin",
+        "port": 5851,
+        "record_struct": "<Qdd",
+        "role": "recv",
+        "run_ids_seen": [
+          491
+        ],
+        "socket_drops_delta": 0,
+        "socket_rcvbuf_bytes": 16777216
+      },
+      "probe_run_ids_seen": [
+        491
+      ],
+      "probe_sender_meta": {
+        "duration_s_accounting": 120.0,
+        "duration_s_actual": 119.99582345899944,
+        "frame_bytes_on_wire": 1512,
+        "kind": 1,
+        "mode": "poisson",
+        "n_fixed_count": 9797,
+        "n_sent": 9797,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0004_h2_r0925_s101_L1_probe_L1_tx.bin",
+        "rate_pps_actual": 81.64166666666667,
+        "rate_pps_nominal": 81.6386,
+        "record_struct": "<Qd",
+        "role": "send",
+        "run_id": 491,
+        "schedule": "poisson_fixed_count",
+        "seed": 101701,
+        "size_bytes": 1470
+      },
+      "probe_socket_drops": 0,
+      "q_mean_ms": 11.222210565384547,
+      "q_p50_ms": 8.634096999912174,
+      "q_p90_ms": 24.449204999427195,
+      "q_p95_ms": 27.77641199895635,
+      "q_p99_ms": 30.23828700020141,
+      "q_sd_ms": 7.97905511154557,
+      "queue_mean_ms": 7.710210565384547,
+      "queue_sd_ms": 7.97905511154557,
+      "rate_ratio": 0.9999833720315514,
+      "rate_ratio_by_link": {
+        "L1": 0.9999833720315514,
+        "L2": 0.9999909939008238,
+        "L3": 0.9999870322331028
+      },
+      "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+      "rho_actual_by_link": {
+        "L1": 0.8574929940235969,
+        "L2": 0.9774911965380553,
+        "L3": 0.9874871943301892
+      },
+      "rho_bar": 0.925,
+      "rho_bg_actual_by_link": {
+        "L1": 0.7340507940235969,
+        "L2": 0.9774911965380553,
+        "L3": 0.9874871943301892
+      },
+      "rho_gate": {
+        "binding": "counting",
+        "floor": 0.003,
+        "k_sigma": 4.0,
+        "sigma_counting": 0.0012470979441306014,
+        "threshold": 0.004988391776522405
+      },
+      "rho_gate_binding": "counting",
+      "rho_gate_floor": 0.003,
+      "rho_gate_k_sigma": 4.0,
+      "rho_gate_sigma_counting": 0.0012470979441306014,
+      "rho_gate_threshold": 0.004988391776522405,
+      "rho_probe_share_by_link": {
+        "L1": 0.1234422,
+        "L2": 0.0,
+        "L3": 0.0
+      },
+      "rho_target_total_by_link": {
+        "L1": 0.8575000000000002,
+        "L2": 0.9775000000000001,
+        "L3": 0.9875000000000002
+      },
+      "rho_total_actual_by_link": {
+        "L1": 0.8574929940235969,
+        "L2": 0.9774911965380553,
+        "L3": 0.9874871943301892
+      },
+      "runner": "measurements.additivity_live",
+      "schedule_digest": "77fd5d40493e4f271f9636efe6893bb6c0dfb96144e76c5693160e9db7a72c3d",
+      "seed": 101,
+      "socket_drops": 0,
+      "static_ms": 3.512,
+      "trajectory_digest": "a79e97686550f1e73ee97cd8be90e5216150b16f279f190af5b8c0e0a0403308",
+      "vl1g_run_pass": true,
+      "w_loss": 4515.904012589386,
+      "wall_utc": "2026-08-09T05:14:32Z"
+    },
+    {
+      "attempt": 1,
+      "branch": "B",
+      "c_a_aggregate_schedule_by_link": {
+        "L1": 2.0239418062542716,
+        "L2": 1.9797515360528857,
+        "L3": 1.9776943469912134
+      },
+      "c_a_aggregate_with_probe_by_link": {
+        "L1": 2.0239547745484052,
+        "L2": 1.5580583074245689,
+        "L3": 1.9776984551530714
+      },
+      "c_a_bg_actual_by_link": {
+        "L1": 2.025803414344975,
+        "L2": 1.980856601519742,
+        "L3": 1.9777447581848198
+      },
+      "c_a_bg_schedule_by_link": {
+        "L1": 2.0239547745484052,
+        "L2": 1.9797015100593256,
+        "L3": 1.9776984551530714
+      },
+      "c_a_by_link": {
+        "L1": {
+          "actual_bg": 2.025803414344975,
+          "aggregate_schedule": 2.0239418062542716,
+          "aggregate_with_probe": 2.0239547745484052,
+          "design_target": 2.0,
+          "schedule_bg": 2.0239547745484052
+        },
+        "L2": {
+          "actual_bg": 1.980856601519742,
+          "aggregate_schedule": 1.9797515360528857,
+          "aggregate_with_probe": 1.5580583074245689,
+          "design_target": 2.0,
+          "schedule_bg": 1.9797015100593256
+        },
+        "L3": {
+          "actual_bg": 1.9777447581848198,
+          "aggregate_schedule": 1.9776943469912134,
+          "aggregate_with_probe": 1.9776984551530714,
+          "design_target": 2.0,
+          "schedule_bg": 1.9776984551530714
+        }
+      },
+      "carve_out_fraction": 0.25,
+      "cost_ms": 268.7577648404578,
+      "delay_ms": 16.10207448480093,
+      "direct_packets_after": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_before": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_delta": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "env": {
+        "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+        "git_dirty": true,
+        "git_status_porcelain": [
+          " M docs/phase-20R/07-design-validation.md",
+          " M measurements/additivity_check.py",
+          " M measurements/additivity_live.py",
+          " M measurements/owd_probe.py",
+          " M test/test_phase20r_decision.py",
+          " M test/test_phase_l_probe.py",
+          "?? docs/phase-20R/00o-amendment-14.md",
+          "?? docs/phase-20R/FUTURE_WORK.md",
+          "?? measurements/band_v2.py",
+          "?? measurements/cascade_residual.py",
+          "?? measurements/residual_spec.py",
+          "?? measurements/transfer_residual.py",
+          "?? results/phase-20R/band_v2_transfer.json",
+          "?? results/phase-20R/band_v2_transfer_smoke.json",
+          "?? results/phase-20R/branch_b_fixed_preflight120.json",
+          "?? results/phase-20R/branch_b_tmux_preflight.json",
+          "?? results/phase-20R/branch_b_tmux_preflight120.json",
+          "?? results/phase-20R/branch_b_v2_smoke.json",
+          "?? results/phase-20R/branch_c_tmux_preflight.json",
+          "?? results/phase-20R/branch_c_tmux_preflight120.json",
+          "?? results/phase-20R/branch_c_v2_smoke.json",
+          "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+          "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+          "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+          "?? results/phase-20R/raw_additivity_v2_smoke/",
+          "?? results/phase-20R/residual_transfer.json",
+          "?? test/test_phase20r6_band.py",
+          "?? tools/pilot_power_only.py"
+        ],
+        "machine": "x86_64",
+        "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+        "python_executable": "/usr/bin/python3",
+        "python_version": "3.10.12",
+        "python_version_info": [
+          3,
+          10,
+          12
+        ]
+      },
+      "estimator_version": "v2-bg",
+      "gate_fail": [],
+      "idx": 5,
+      "link": "L2",
+      "link_idx": 2,
+      "load_n_foreign": 0,
+      "load_rows": [
+        {
+          "c_a": {
+            "actual_bg": 2.025803414344975,
+            "aggregate_schedule": 2.0239418062542716,
+            "aggregate_with_probe": 2.0239547745484052,
+            "design_target": 2.0,
+            "schedule_bg": 2.0239547745484052
+          },
+          "c_a_actual_bg": 2.025803414344975,
+          "c_a_aggregate_schedule": 2.0239418062542716,
+          "c_a_aggregate_with_probe": 2.0239547745484052,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 2.0239547745484052,
+          "link": "L1",
+          "link_idx": 1,
+          "max_late_ms": 18.26007809904695,
+          "n_bg_recv": 66002,
+          "n_bg_sent": 68055,
+          "n_foreign": 0,
+          "n_late_ratio": 0.00045551392256263317,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999918319430602,
+          "rho": 0.8575000000000002,
+          "rho_actual": 0.8574929958911742,
+          "rho_bg": 0.8575000000000002,
+          "rho_bg_actual": 0.8574929958911742,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.8575000000000002,
+          "rho_total_actual": 0.8574929958911742,
+          "schedule_digest": "effe5514661a47597e1c878a109a0db663f5e69683fb96bf1f764ee453c65152",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 1.980856601519742,
+            "aggregate_schedule": 1.9797515360528857,
+            "aggregate_with_probe": 1.5580583074245689,
+            "design_target": 2.0,
+            "schedule_bg": 1.9797015100593256
+          },
+          "c_a_actual_bg": 1.980856601519742,
+          "c_a_aggregate_schedule": 1.9797515360528857,
+          "c_a_aggregate_with_probe": 1.5580583074245689,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 1.9797015100593256,
+          "link": "L2",
+          "link_idx": 2,
+          "max_late_ms": 20.463559510972118,
+          "n_bg_recv": 44102,
+          "n_bg_sent": 48387,
+          "n_foreign": 0,
+          "n_late_ratio": 0.000744001488002976,
+          "probe_traverses_link": true,
+          "rate_ratio": 0.9999810511683096,
+          "rho": 0.9775000000000001,
+          "rho_actual": 0.9774911961725887,
+          "rho_bg": 0.8129166666666667,
+          "rho_bg_actual": 0.8129015961725887,
+          "rho_probe_share": 0.1645896,
+          "rho_probe_share_configured": 0.16458333333333336,
+          "rho_target_total": 0.9775000000000001,
+          "rho_total_actual": 0.9774911961725887,
+          "schedule_digest": "e71bb9600b4ab15ef9787daba7d89ab8f610b1fdf3119d50e2acac97b9af140a",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 1.9777447581848198,
+            "aggregate_schedule": 1.9776943469912134,
+            "aggregate_with_probe": 1.9776984551530714,
+            "design_target": 2.0,
+            "schedule_bg": 1.9776984551530714
+          },
+          "c_a_actual_bg": 1.9777447581848198,
+          "c_a_aggregate_schedule": 1.9776943469912134,
+          "c_a_aggregate_with_probe": 1.9776984551530714,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 1.9776984551530714,
+          "link": "L3",
+          "link_idx": 3,
+          "max_late_ms": 0.0,
+          "n_bg_recv": 34215,
+          "n_bg_sent": 39186,
+          "n_foreign": 0,
+          "n_late_ratio": 0.0,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999870293581211,
+          "rho": 0.9875000000000002,
+          "rho_actual": 0.9874871914911447,
+          "rho_bg": 0.9875000000000002,
+          "rho_bg_actual": 0.9874871914911447,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.9875000000000002,
+          "rho_total_actual": 0.9874871914911447,
+          "schedule_digest": "a87dc7fc55c07fbd9624072c934fe257b8513040d5073e0bd9d7a9588bcbee2b",
+          "socket_drops": 0
+        }
+      ],
+      "load_schedule_digests": {
+        "L1": "effe5514661a47597e1c878a109a0db663f5e69683fb96bf1f764ee453c65152",
+        "L2": "e71bb9600b4ab15ef9787daba7d89ab8f610b1fdf3119d50e2acac97b9af140a",
+        "L3": "a87dc7fc55c07fbd9624072c934fe257b8513040d5073e0bd9d7a9588bcbee2b"
+      },
+      "load_socket_drops": 0,
+      "loss": 0.055947976230519114,
+      "max_abs_bg_rho_error": 1.5070494078006647e-05,
+      "max_abs_rate_error": 1.8948831690401846e-05,
+      "max_abs_rho_error": 1.2808508855433054e-05,
+      "max_abs_total_rho_error": 1.2808508855433054e-05,
+      "max_late_ms": 20.463559510972118,
+      "mode": "h2",
+      "n_foreign": 0,
+      "n_late_ratio": 0.000744001488002976,
+      "n_probe_expected": 9797,
+      "n_recv_unique": 8420,
+      "n_sent": 8919,
+      "owd_counts": {
+        "n_duplicate": 0,
+        "n_owd_negative": 0,
+        "n_recv_total": 8420,
+        "n_recv_unique": 8420,
+        "n_reorder": 0,
+        "n_sent": 8919
+      },
+      "owd_steady_state": {
+        "block_means_ms": [
+          10.746465079414765,
+          11.725773526741579,
+          11.606221640492603,
+          11.48304146174073,
+          10.944004897881342,
+          10.015829595844204
+        ],
+        "inflation_factor": 2.7605029676031676,
+        "n_blocks": 6,
+        "se_batch_means_ms": 0.2657247424503225,
+        "se_naive_ms": 0.09625953877566032,
+        "spread_ms": 1.7099439308973743
+      },
+      "phase": "20R.6",
+      "pid": "20r6_b_0005_h2_r0925_s101_L2",
+      "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+      "probe_budgeted_by_carve_out": true,
+      "probe_count_policy": "poisson_fixed_count",
+      "probe_frame_bytes_on_wire": 1512,
+      "probe_intrusion_ratio": 1.2808508855433054e-05,
+      "probe_load_share_actual_by_link": {
+        "L1": 0.0,
+        "L2": 0.1645896,
+        "L3": 0.0
+      },
+      "probe_load_share_configured_by_link": {
+        "L1": 0.0,
+        "L2": 0.16458333333333336,
+        "L3": 0.0
+      },
+      "probe_load_share_physical": 0.1645896,
+      "probe_loss": 0.055947976230519114,
+      "probe_n_foreign": 0,
+      "probe_rate_pps_actual": 81.64166666666667,
+      "probe_rate_pps_configured": 81.63855820105822,
+      "probe_receiver_meta": {
+        "n_foreign_packets": 0,
+        "n_records": 9231,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0005_h2_r0925_s101_L2_probe_L2.bin",
+        "port": 5852,
+        "record_struct": "<Qdd",
+        "role": "recv",
+        "run_ids_seen": [
+          592
+        ],
+        "socket_drops_delta": 0,
+        "socket_rcvbuf_bytes": 16777216
+      },
+      "probe_run_ids_seen": [
+        592
+      ],
+      "probe_sender_meta": {
+        "duration_s_accounting": 120.0,
+        "duration_s_actual": 119.98955390099945,
+        "frame_bytes_on_wire": 1512,
+        "kind": 1,
+        "mode": "poisson",
+        "n_fixed_count": 9797,
+        "n_sent": 9797,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0005_h2_r0925_s101_L2_probe_L2_tx.bin",
+        "rate_pps_actual": 81.64166666666667,
+        "rate_pps_nominal": 81.6386,
+        "record_struct": "<Qd",
+        "role": "send",
+        "run_id": 592,
+        "schedule": "poisson_fixed_count",
+        "seed": 101702,
+        "size_bytes": 1470
+      },
+      "probe_socket_drops": 0,
+      "q_mean_ms": 16.10207448480093,
+      "q_p50_ms": 15.195875998801435,
+      "q_p90_ms": 29.055973999606444,
+      "q_p95_ms": 30.317795001723802,
+      "q_p99_ms": 31.182256000578867,
+      "q_sd_ms": 8.832828988531924,
+      "queue_mean_ms": 11.086074484800932,
+      "queue_sd_ms": 8.832828988531924,
+      "rate_ratio": 0.9999810511683096,
+      "rate_ratio_by_link": {
+        "L1": 0.9999918319430602,
+        "L2": 0.9999810511683096,
+        "L3": 0.9999870293581211
+      },
+      "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+      "rho_actual_by_link": {
+        "L1": 0.8574929958911742,
+        "L2": 0.9774911961725887,
+        "L3": 0.9874871914911447
+      },
+      "rho_bar": 0.925,
+      "rho_bg_actual_by_link": {
+        "L1": 0.8574929958911742,
+        "L2": 0.8129015961725887,
+        "L3": 0.9874871914911447
+      },
+      "rho_gate": {
+        "binding": "counting",
+        "floor": 0.003,
+        "k_sigma": 4.0,
+        "sigma_counting": 0.0016627972588408018,
+        "threshold": 0.006651189035363207
+      },
+      "rho_gate_binding": "counting",
+      "rho_gate_floor": 0.003,
+      "rho_gate_k_sigma": 4.0,
+      "rho_gate_sigma_counting": 0.0016627972588408018,
+      "rho_gate_threshold": 0.006651189035363207,
+      "rho_probe_share_by_link": {
+        "L1": 0.0,
+        "L2": 0.1645896,
+        "L3": 0.0
+      },
+      "rho_target_total_by_link": {
+        "L1": 0.8575000000000002,
+        "L2": 0.9775000000000001,
+        "L3": 0.9875000000000002
+      },
+      "rho_total_actual_by_link": {
+        "L1": 0.8574929958911742,
+        "L2": 0.9774911961725887,
+        "L3": 0.9874871914911447
+      },
+      "runner": "measurements.additivity_live",
+      "schedule_digest": "e71bb9600b4ab15ef9787daba7d89ab8f610b1fdf3119d50e2acac97b9af140a",
+      "seed": 101,
+      "socket_drops": 0,
+      "static_ms": 5.016,
+      "trajectory_digest": "302cb2caae3da578309f677bf1b9916ded598400c07383430015f853dc2f4652",
+      "vl1g_run_pass": true,
+      "w_loss": 4515.904012589386,
+      "wall_utc": "2026-08-09T05:16:40Z"
+    },
+    {
+      "attempt": 2,
+      "attempt1_fail": [
+        "late=0.0013"
+      ],
+      "branch": "B",
+      "c_a_aggregate_schedule_by_link": {
+        "L1": 2.0239418062542716,
+        "L2": 1.9801678595510457,
+        "L3": 1.9744781883129858
+      },
+      "c_a_aggregate_with_probe_by_link": {
+        "L1": 2.0239547745484052,
+        "L2": 1.9801261252402016,
+        "L3": 1.420159345102277
+      },
+      "c_a_bg_actual_by_link": {
+        "L1": 2.025013527310961,
+        "L2": 1.980971543478332,
+        "L3": 1.974494494948825
+      },
+      "c_a_bg_schedule_by_link": {
+        "L1": 2.0239547745484052,
+        "L2": 1.9801261252402016,
+        "L3": 1.974483545539457
+      },
+      "c_a_by_link": {
+        "L1": {
+          "actual_bg": 2.025013527310961,
+          "aggregate_schedule": 2.0239418062542716,
+          "aggregate_with_probe": 2.0239547745484052,
+          "design_target": 2.0,
+          "schedule_bg": 2.0239547745484052
+        },
+        "L2": {
+          "actual_bg": 1.980971543478332,
+          "aggregate_schedule": 1.9801678595510457,
+          "aggregate_with_probe": 1.9801261252402016,
+          "design_target": 2.0,
+          "schedule_bg": 1.9801261252402016
+        },
+        "L3": {
+          "actual_bg": 1.974494494948825,
+          "aggregate_schedule": 1.9744781883129858,
+          "aggregate_with_probe": 1.420159345102277,
+          "design_target": 2.0,
+          "schedule_bg": 1.974483545539457
+        }
+      },
+      "carve_out_fraction": 0.25,
+      "cost_ms": 344.11383196177485,
+      "delay_ms": 18.988937148184615,
+      "direct_packets_after": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_before": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "direct_packets_delta": {
+        "L1": 0,
+        "L2": 0,
+        "L3": 0
+      },
+      "env": {
+        "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
+        "git_dirty": true,
+        "git_status_porcelain": [
+          " M docs/phase-20R/07-design-validation.md",
+          " M measurements/additivity_check.py",
+          " M measurements/additivity_live.py",
+          " M measurements/owd_probe.py",
+          " M test/test_phase20r_decision.py",
+          " M test/test_phase_l_probe.py",
+          "?? docs/phase-20R/00o-amendment-14.md",
+          "?? docs/phase-20R/FUTURE_WORK.md",
+          "?? measurements/band_v2.py",
+          "?? measurements/cascade_residual.py",
+          "?? measurements/residual_spec.py",
+          "?? measurements/transfer_residual.py",
+          "?? results/phase-20R/band_v2_transfer.json",
+          "?? results/phase-20R/band_v2_transfer_smoke.json",
+          "?? results/phase-20R/branch_b_fixed_preflight120.json",
+          "?? results/phase-20R/branch_b_tmux_preflight.json",
+          "?? results/phase-20R/branch_b_tmux_preflight120.json",
+          "?? results/phase-20R/branch_b_v2_smoke.json",
+          "?? results/phase-20R/branch_c_tmux_preflight.json",
+          "?? results/phase-20R/branch_c_tmux_preflight120.json",
+          "?? results/phase-20R/branch_c_v2_smoke.json",
+          "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
+          "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
+          "?? results/phase-20R/raw_additivity_fixed_preflight120/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight/",
+          "?? results/phase-20R/raw_additivity_tmux_preflight120/",
+          "?? results/phase-20R/raw_additivity_v2_smoke/",
+          "?? results/phase-20R/residual_transfer.json",
+          "?? test/test_phase20r6_band.py",
+          "?? tools/pilot_power_only.py"
+        ],
+        "machine": "x86_64",
+        "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
+        "python_executable": "/usr/bin/python3",
+        "python_version": "3.10.12",
+        "python_version_info": [
+          3,
+          10,
+          12
+        ]
+      },
+      "estimator_version": "v2-bg",
+      "gate_fail": [],
+      "idx": 6,
+      "link": "L3",
+      "link_idx": 3,
+      "load_n_foreign": 0,
+      "load_rows": [
+        {
+          "c_a": {
+            "actual_bg": 2.025013527310961,
+            "aggregate_schedule": 2.0239418062542716,
+            "aggregate_with_probe": 2.0239547745484052,
+            "design_target": 2.0,
+            "schedule_bg": 2.0239547745484052
+          },
+          "c_a_actual_bg": 2.025013527310961,
+          "c_a_aggregate_schedule": 2.0239418062542716,
+          "c_a_aggregate_with_probe": 2.0239547745484052,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 2.0239547745484052,
+          "link": "L1",
+          "link_idx": 1,
+          "max_late_ms": 23.378954449071898,
+          "n_bg_recv": 66008,
+          "n_bg_sent": 68055,
+          "n_foreign": 0,
+          "n_late_ratio": 0.00027918595253838805,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999918303180793,
+          "rho": 0.8575000000000002,
+          "rho_actual": 0.857492994497753,
+          "rho_bg": 0.8575000000000002,
+          "rho_bg_actual": 0.857492994497753,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.8575000000000002,
+          "rho_total_actual": 0.857492994497753,
+          "schedule_digest": "effe5514661a47597e1c878a109a0db663f5e69683fb96bf1f764ee453c65152",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 1.980971543478332,
+            "aggregate_schedule": 1.9801678595510457,
+            "aggregate_with_probe": 1.9801261252402016,
+            "design_target": 2.0,
+            "schedule_bg": 1.9801261252402016
+          },
+          "c_a_actual_bg": 1.980971543478332,
+          "c_a_aggregate_schedule": 1.9801678595510457,
+          "c_a_aggregate_with_probe": 1.9801261252402016,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 1.9801261252402016,
+          "link": "L2",
+          "link_idx": 2,
+          "max_late_ms": 22.940832954191137,
+          "n_bg_recv": 52599,
+          "n_bg_sent": 58184,
+          "n_foreign": 0,
+          "n_late_ratio": 0.00048123195380173246,
+          "probe_traverses_link": false,
+          "rate_ratio": 0.9999909932341551,
+          "rho": 0.9775000000000001,
+          "rho_actual": 0.9774911958863866,
+          "rho_bg": 0.9775000000000001,
+          "rho_bg_actual": 0.9774911958863866,
+          "rho_probe_share": 0.0,
+          "rho_probe_share_configured": 0.0,
+          "rho_target_total": 0.9775000000000001,
+          "rho_total_actual": 0.9774911958863866,
+          "schedule_digest": "6905a417dbc80d2f38c065c7ae43a3240557e6de4d225469bcc316780327e38a",
+          "socket_drops": 0
+        },
+        {
+          "c_a": {
+            "actual_bg": 1.974494494948825,
+            "aggregate_schedule": 1.9744781883129858,
+            "aggregate_with_probe": 1.420159345102277,
+            "design_target": 2.0,
+            "schedule_bg": 1.974483545539457
+          },
+          "c_a_actual_bg": 1.974494494948825,
+          "c_a_aggregate_schedule": 1.9744781883129858,
+          "c_a_aggregate_with_probe": 1.420159345102277,
+          "c_a_design_target": 2.0,
+          "c_a_schedule_bg": 1.974483545539457,
+          "link": "L3",
+          "link_idx": 3,
+          "max_late_ms": 0.0,
+          "n_bg_recv": 26119,
+          "n_bg_sent": 29389,
+          "n_foreign": 0,
+          "n_late_ratio": 0.0,
+          "probe_traverses_link": true,
+          "rate_ratio": 0.9999700158917356,
+          "rho": 0.9875000000000002,
+          "rho_actual": 0.9874871930198168,
+          "rho_bg": 0.7406250000000001,
+          "rho_bg_actual": 0.7406027930198168,
+          "rho_probe_share": 0.2468844,
+          "rho_probe_share_configured": 0.24687500000000007,
+          "rho_target_total": 0.9875000000000002,
+          "rho_total_actual": 0.9874871930198168,
+          "schedule_digest": "4a8e8e657d281a04a5a0fa4d48dace1a1c6b1737c1f96be3938e1674529cd9f6",
+          "socket_drops": 0
+        }
+      ],
+      "load_schedule_digests": {
+        "L1": "effe5514661a47597e1c878a109a0db663f5e69683fb96bf1f764ee453c65152",
+        "L2": "6905a417dbc80d2f38c065c7ae43a3240557e6de4d225469bcc316780327e38a",
+        "L3": "4a8e8e657d281a04a5a0fa4d48dace1a1c6b1737c1f96be3938e1674529cd9f6"
+      },
+      "load_socket_drops": 0,
+      "loss": 0.07199552822806037,
+      "max_abs_bg_rho_error": 2.220698018329248e-05,
+      "max_abs_rate_error": 2.998410826438036e-05,
+      "max_abs_rho_error": 1.2806980183355243e-05,
+      "max_abs_total_rho_error": 1.2806980183355243e-05,
+      "max_late_ms": 23.378954449071898,
+      "mode": "h2",
+      "n_foreign": 0,
+      "n_late_ratio": 0.00048123195380173246,
+      "n_probe_expected": 9797,
+      "n_recv_unique": 8301,
+      "n_sent": 8945,
+      "owd_counts": {
+        "n_duplicate": 0,
+        "n_owd_negative": 0,
+        "n_recv_total": 8301,
+        "n_recv_unique": 8301,
+        "n_reorder": 0,
+        "n_sent": 8945
+      },
+      "owd_steady_state": {
+        "block_means_ms": [
+          14.763298026337386,
+          12.769223808236594,
+          13.000271234836996,
+          12.6877016511182,
+          12.209156355135207,
+          12.348812811705603
+        ],
+        "inflation_factor": 3.288536896617678,
+        "n_blocks": 6,
+        "se_batch_means_ms": 0.3786514064974407,
+        "se_naive_ms": 0.11514281834176494,
+        "spread_ms": 2.5541416712021796
+      },
+      "phase": "20R.6",
+      "pid": "20r6_b_0006_h2_r0925_s101_L3",
+      "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
+      "probe_budgeted_by_carve_out": true,
+      "probe_count_policy": "poisson_fixed_count",
+      "probe_frame_bytes_on_wire": 1512,
+      "probe_intrusion_ratio": 1.2806980183355243e-05,
+      "probe_load_share_actual_by_link": {
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 0.2468844
+      },
+      "probe_load_share_configured_by_link": {
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 0.24687500000000007
+      },
+      "probe_load_share_physical": 0.2468844,
+      "probe_loss": 0.07199552822806037,
+      "probe_n_foreign": 0,
+      "probe_rate_pps_actual": 81.64166666666667,
+      "probe_rate_pps_configured": 81.63855820105822,
+      "probe_receiver_meta": {
+        "n_foreign_packets": 0,
+        "n_records": 9078,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0006_h2_r0925_s101_L3_probe_L3.bin",
+        "port": 5853,
+        "record_struct": "<Qdd",
+        "role": "recv",
+        "run_ids_seen": [
+          693
+        ],
+        "socket_drops_delta": 0,
+        "socket_rcvbuf_bytes": 16777216
+      },
+      "probe_run_ids_seen": [
+        693
+      ],
+      "probe_sender_meta": {
+        "duration_s_accounting": 120.0,
+        "duration_s_actual": 119.94892360900121,
+        "frame_bytes_on_wire": 1512,
+        "kind": 1,
+        "mode": "poisson",
+        "n_fixed_count": 9797,
+        "n_sent": 9797,
+        "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0006_h2_r0925_s101_L3_probe_L3_tx.bin",
+        "rate_pps_actual": 81.64166666666667,
+        "rate_pps_nominal": 81.6386,
+        "record_struct": "<Qd",
+        "role": "send",
+        "run_id": 693,
+        "schedule": "poisson_fixed_count",
+        "seed": 101703,
+        "size_bytes": 1470
+      },
+      "probe_socket_drops": 0,
+      "q_mean_ms": 18.988937148184615,
+      "q_p50_ms": 18.587577000037186,
+      "q_p90_ms": 33.87656900097011,
+      "q_p95_ms": 35.263989000416245,
+      "q_p99_ms": 36.156497999147746,
+      "q_sd_ms": 10.490641895460836,
+      "queue_mean_ms": 12.964937148184616,
+      "queue_sd_ms": 10.490641895460836,
+      "rate_ratio": 0.9999700158917356,
+      "rate_ratio_by_link": {
+        "L1": 0.9999918303180793,
+        "L2": 0.9999909932341551,
+        "L3": 0.9999700158917356
+      },
+      "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
+      "rho_actual_by_link": {
+        "L1": 0.857492994497753,
+        "L2": 0.9774911958863866,
+        "L3": 0.9874871930198168
+      },
+      "rho_bar": 0.925,
+      "rho_bg_actual_by_link": {
+        "L1": 0.857492994497753,
+        "L2": 0.9774911958863866,
+        "L3": 0.7406027930198168
+      },
+      "rho_gate": {
+        "binding": "counting",
+        "floor": 0.003,
+        "k_sigma": 4.0,
+        "sigma_counting": 0.0024941958882612027,
+        "threshold": 0.00997678355304481
+      },
+      "rho_gate_binding": "counting",
+      "rho_gate_floor": 0.003,
+      "rho_gate_k_sigma": 4.0,
+      "rho_gate_sigma_counting": 0.0024941958882612027,
+      "rho_gate_threshold": 0.00997678355304481,
+      "rho_probe_share_by_link": {
+        "L1": 0.0,
+        "L2": 0.0,
+        "L3": 0.2468844
+      },
+      "rho_target_total_by_link": {
+        "L1": 0.8575000000000002,
+        "L2": 0.9775000000000001,
+        "L3": 0.9875000000000002
+      },
+      "rho_total_actual_by_link": {
+        "L1": 0.857492994497753,
+        "L2": 0.9774911958863866,
+        "L3": 0.9874871930198168
+      },
+      "runner": "measurements.additivity_live",
+      "schedule_digest": "4a8e8e657d281a04a5a0fa4d48dace1a1c6b1737c1f96be3938e1674529cd9f6",
+      "seed": 101,
+      "socket_drops": 0,
+      "static_ms": 6.024,
+      "trajectory_digest": "56b52ad013e650e8c9bbf39f610b8440d837f5b90a022db4469d79af8ed06ee3",
+      "vl1g_run_pass": true,
+      "w_loss": 4515.904012589386,
+      "wall_utc": "2026-08-09T05:20:57Z"
+    }
   ],
-  "qdisc_reinstall_log": [],
-  "sysctl_saved": {
-   "net.ipv6.conf.default.disable_ipv6": "0"
-  }
- },
- "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
- "rows": [
-  {
-   "attempt": 1,
-   "branch": "B",
-   "carve_out_fraction": 0.25,
-   "cost_ms": 7.827158756275947,
-   "delay_ms": 6.747559242657203,
-   "direct_packets_after": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_before": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_delta": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "env": {
-    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
-    "git_dirty": true,
-    "git_status_porcelain": [
-     " M docs/phase-20R/07-design-validation.md",
-     " M measurements/additivity_check.py",
-     " M measurements/additivity_live.py",
-     " M measurements/owd_probe.py",
-     " M test/test_phase20r_decision.py",
-     " M test/test_phase_l_probe.py",
-     "?? docs/phase-20R/00o-amendment-14.md",
-     "?? docs/phase-20R/FUTURE_WORK.md",
-     "?? measurements/band_v2.py",
-     "?? measurements/cascade_residual.py",
-     "?? measurements/residual_spec.py",
-     "?? measurements/transfer_residual.py",
-     "?? results/phase-20R/band_v2_transfer.json",
-     "?? results/phase-20R/band_v2_transfer_smoke.json",
-     "?? results/phase-20R/branch_b_fixed_preflight120.json",
-     "?? results/phase-20R/branch_b_tmux_preflight.json",
-     "?? results/phase-20R/branch_b_tmux_preflight120.json",
-     "?? results/phase-20R/branch_b_v2_smoke.json",
-     "?? results/phase-20R/branch_c_tmux_preflight.json",
-     "?? results/phase-20R/branch_c_tmux_preflight120.json",
-     "?? results/phase-20R/branch_c_v2_smoke.json",
-     "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
-     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
-     "?? results/phase-20R/raw_additivity_fixed_preflight120/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
-     "?? results/phase-20R/raw_additivity_v2_smoke/",
-     "?? results/phase-20R/residual_transfer.json",
-     "?? test/test_phase20r6_band.py",
-     "?? tools/pilot_power_only.py"
-    ],
-    "machine": "x86_64",
-    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
-    "python_executable": "/usr/bin/python3",
-    "python_version": "3.10.12",
-    "python_version_info": [
-     3,
-     10,
-     12
-    ]
-   },
-   "estimator_version": "v2-bg",
-   "gate_fail": [],
-   "idx": 1,
-   "link": "L1",
-   "link_idx": 1,
-   "load_n_foreign": 0,
-   "load_rows": [
-    {
-     "link": "L1",
-     "link_idx": 1,
-     "max_late_ms": 15.858199247304583,
-     "n_bg_recv": 58239,
-     "n_bg_sent": 58258,
-     "n_foreign": 0,
-     "n_late_ratio": 0.00022314531909780632,
-     "probe_traverses_link": true,
-     "rate_ratio": 0.9999833751481864,
-     "rho": 0.8575000000000002,
-     "rho_actual": 0.8574929963114031,
-     "rho_bg": 0.7340625000000001,
-     "rho_bg_actual": 0.7340507963114031,
-     "rho_probe_share": 0.1234422,
-     "rho_probe_share_configured": 0.12343750000000003,
-     "rho_target_total": 0.8575000000000002,
-     "rho_total_actual": 0.8574929963114031,
-     "schedule_digest": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
-     "socket_drops": 0
-    },
-    {
-     "link": "L2",
-     "link_idx": 2,
-     "max_late_ms": 21.598297709715553,
-     "n_bg_recv": 56794,
-     "n_bg_sent": 58184,
-     "n_foreign": 0,
-     "n_late_ratio": 0.0004640450983088134,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999909936008146,
-     "rho": 0.9775000000000001,
-     "rho_actual": 0.9774911962447963,
-     "rho_bg": 0.9775000000000001,
-     "rho_bg_actual": 0.9774911962447963,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.9775000000000001,
-     "rho_total_actual": 0.9774911962447963,
-     "schedule_digest": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
-     "socket_drops": 0
-    },
-    {
-     "link": "L3",
-     "link_idx": 3,
-     "max_late_ms": 2.4959181628219085,
-     "n_bg_recv": 37740,
-     "n_bg_sent": 39186,
-     "n_foreign": 0,
-     "n_late_ratio": 5.103863624763946e-05,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999870339580583,
-     "rho": 0.9875000000000002,
-     "rho_actual": 0.9874871960335826,
-     "rho_bg": 0.9875000000000002,
-     "rho_bg_actual": 0.9874871960335826,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.9875000000000002,
-     "rho_total_actual": 0.9874871960335826,
-     "schedule_digest": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec",
-     "socket_drops": 0
-    }
-   ],
-   "load_schedule_digests": {
-    "L1": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
-    "L2": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
-    "L3": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec"
-   },
-   "load_socket_drops": 0,
-   "loss": 0.00033504578959124413,
-   "max_abs_bg_rho_error": 1.2803966417562762e-05,
-   "max_abs_rate_error": 1.6624851813640262e-05,
-   "max_abs_rho_error": 1.2803966417562762e-05,
-   "max_abs_total_rho_error": 1.2803966417562762e-05,
-   "max_late_ms": 21.598297709715553,
-   "mode": "poisson",
-   "n_foreign": 0,
-   "n_late_ratio": 0.0004640450983088134,
-   "n_probe_expected": 9797,
-   "n_recv_unique": 8951,
-   "n_sent": 8954,
-   "owd_counts": {
-    "n_duplicate": 0,
-    "n_owd_negative": 0,
-    "n_recv_total": 8951,
-    "n_recv_unique": 8951,
-    "n_reorder": 0,
-    "n_sent": 8954
-   },
-   "owd_steady_state": {
-    "block_means_ms": [
-     3.9278700237538726,
-     3.487541536717162,
-     3.113185575623706,
-     3.24298511498284,
-     2.7505976515282704,
-     2.918925932125828
-    ],
-    "inflation_factor": 3.7120106672695856,
-    "n_blocks": 6,
-    "se_batch_means_ms": 0.1725433088686209,
-    "se_naive_ms": 0.046482438854502865,
-    "spread_ms": 1.1772723722256022
-   },
-   "phase": "20R.6",
-   "pid": "20r6_b_0001_poisson_r0925_s101_L1",
-   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
-   "probe_budgeted_by_carve_out": true,
-   "probe_count_policy": "poisson_fixed_count",
-   "probe_frame_bytes_on_wire": 1512,
-   "probe_intrusion_ratio": 1.2803966417562762e-05,
-   "probe_load_share_actual_by_link": {
-    "L1": 0.1234422,
-    "L2": 0.0,
-    "L3": 0.0
-   },
-   "probe_load_share_configured_by_link": {
-    "L1": 0.12343750000000003,
-    "L2": 0.0,
-    "L3": 0.0
-   },
-   "probe_load_share_physical": 0.1234422,
-   "probe_loss": 0.00033504578959124413,
-   "probe_n_foreign": 0,
-   "probe_rate_pps_actual": 81.64166666666667,
-   "probe_rate_pps_configured": 81.63855820105822,
-   "probe_receiver_meta": {
-    "n_foreign_packets": 0,
-    "n_records": 9794,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0001_poisson_r0925_s101_L1_probe_L1.bin",
-    "port": 5851,
-    "record_struct": "<Qdd",
-    "role": "recv",
-    "run_ids_seen": [
-     191
-    ],
-    "socket_drops_delta": 0,
-    "socket_rcvbuf_bytes": 16777216
-   },
-   "probe_run_ids_seen": [
-    191
-   ],
-   "probe_sender_meta": {
-    "duration_s_accounting": 120.0,
-    "duration_s_actual": 119.99581898100041,
-    "frame_bytes_on_wire": 1512,
-    "kind": 1,
-    "mode": "poisson",
-    "n_fixed_count": 9797,
-    "n_sent": 9797,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0001_poisson_r0925_s101_L1_probe_L1_tx.bin",
-    "rate_pps_actual": 81.64166666666667,
-    "rate_pps_nominal": 81.6386,
-    "record_struct": "<Qd",
-    "role": "send",
-    "run_id": 191,
-    "schedule": "poisson_fixed_count",
-    "seed": 101701,
-    "size_bytes": 1470
-   },
-   "probe_socket_drops": 0,
-   "q_mean_ms": 6.747559242657203,
-   "q_p50_ms": 4.873487000394846,
-   "q_p90_ms": 12.744803000486456,
-   "q_p95_ms": 16.263461999869207,
-   "q_p99_ms": 23.164647999464535,
-   "q_sd_ms": 4.397690741490588,
-   "queue_mean_ms": 3.2355592426572026,
-   "queue_sd_ms": 4.397690741490588,
-   "rate_ratio": 0.9999833751481864,
-   "rate_ratio_by_link": {
-    "L1": 0.9999833751481864,
-    "L2": 0.9999909936008146,
-    "L3": 0.9999870339580583
-   },
-   "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
-   "rho_actual_by_link": {
-    "L1": 0.8574929963114031,
-    "L2": 0.9774911962447963,
-    "L3": 0.9874871960335826
-   },
-   "rho_bar": 0.925,
-   "rho_bg_actual_by_link": {
-    "L1": 0.7340507963114031,
-    "L2": 0.9774911962447963,
-    "L3": 0.9874871960335826
-   },
-   "rho_gate": {
-    "binding": "counting",
-    "floor": 0.003,
-    "k_sigma": 4.0,
-    "sigma_counting": 0.0012470979441306014,
-    "threshold": 0.004988391776522405
-   },
-   "rho_gate_binding": "counting",
-   "rho_gate_floor": 0.003,
-   "rho_gate_k_sigma": 4.0,
-   "rho_gate_sigma_counting": 0.0012470979441306014,
-   "rho_gate_threshold": 0.004988391776522405,
-   "rho_probe_share_by_link": {
-    "L1": 0.1234422,
-    "L2": 0.0,
-    "L3": 0.0
-   },
-   "rho_target_total_by_link": {
-    "L1": 0.8575000000000002,
-    "L2": 0.9775000000000001,
-    "L3": 0.9875000000000002
-   },
-   "rho_total_actual_by_link": {
-    "L1": 0.8574929963114031,
-    "L2": 0.9774911962447963,
-    "L3": 0.9874871960335826
-   },
-   "runner": "measurements.additivity_live",
-   "schedule_digest": "31f9f69ef20e75afc6491f6215c29e793b11a6644cfce46c32e1a9a131f84432",
-   "seed": 101,
-   "socket_drops": 0,
-   "static_ms": 3.512,
-   "trajectory_digest": "da433c1877ac7d01dabd6128afa539563a6d7c6f55528d61339d217322031117",
-   "vl1g_run_pass": true,
-   "w_loss": 3222.244681647411,
-   "wall_utc": "2026-08-09T05:08:07Z"
-  },
-  {
-   "attempt": 1,
-   "branch": "B",
-   "carve_out_fraction": 0.25,
-   "cost_ms": 93.80439278334603,
-   "delay_ms": 15.406915945417094,
-   "direct_packets_after": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_before": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_delta": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "env": {
-    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
-    "git_dirty": true,
-    "git_status_porcelain": [
-     " M docs/phase-20R/07-design-validation.md",
-     " M measurements/additivity_check.py",
-     " M measurements/additivity_live.py",
-     " M measurements/owd_probe.py",
-     " M test/test_phase20r_decision.py",
-     " M test/test_phase_l_probe.py",
-     "?? docs/phase-20R/00o-amendment-14.md",
-     "?? docs/phase-20R/FUTURE_WORK.md",
-     "?? measurements/band_v2.py",
-     "?? measurements/cascade_residual.py",
-     "?? measurements/residual_spec.py",
-     "?? measurements/transfer_residual.py",
-     "?? results/phase-20R/band_v2_transfer.json",
-     "?? results/phase-20R/band_v2_transfer_smoke.json",
-     "?? results/phase-20R/branch_b_fixed_preflight120.json",
-     "?? results/phase-20R/branch_b_tmux_preflight.json",
-     "?? results/phase-20R/branch_b_tmux_preflight120.json",
-     "?? results/phase-20R/branch_b_v2_smoke.json",
-     "?? results/phase-20R/branch_c_tmux_preflight.json",
-     "?? results/phase-20R/branch_c_tmux_preflight120.json",
-     "?? results/phase-20R/branch_c_v2_smoke.json",
-     "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
-     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
-     "?? results/phase-20R/raw_additivity_fixed_preflight120/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
-     "?? results/phase-20R/raw_additivity_v2_smoke/",
-     "?? results/phase-20R/residual_transfer.json",
-     "?? test/test_phase20r6_band.py",
-     "?? tools/pilot_power_only.py"
-    ],
-    "machine": "x86_64",
-    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
-    "python_executable": "/usr/bin/python3",
-    "python_version": "3.10.12",
-    "python_version_info": [
-     3,
-     10,
-     12
-    ]
-   },
-   "estimator_version": "v2-bg",
-   "gate_fail": [],
-   "idx": 2,
-   "link": "L2",
-   "link_idx": 2,
-   "load_n_foreign": 0,
-   "load_rows": [
-    {
-     "link": "L1",
-     "link_idx": 1,
-     "max_late_ms": 19.821681486064335,
-     "n_bg_recv": 68026,
-     "n_bg_sent": 68055,
-     "n_foreign": 0,
-     "n_late_ratio": 0.0005877599000808169,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999918329180608,
-     "rho": 0.8575000000000002,
-     "rho_actual": 0.8574929967272372,
-     "rho_bg": 0.8575000000000002,
-     "rho_bg_actual": 0.8574929967272372,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.8575000000000002,
-     "rho_total_actual": 0.8574929967272372,
-     "schedule_digest": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
-     "socket_drops": 0
-    },
-    {
-     "link": "L2",
-     "link_idx": 2,
-     "max_late_ms": 27.562338387724594,
-     "n_bg_recv": 47244,
-     "n_bg_sent": 48387,
-     "n_foreign": 0,
-     "n_late_ratio": 0.000496000992001984,
-     "probe_traverses_link": true,
-     "rate_ratio": 0.9999810508266492,
-     "rho": 0.9775000000000001,
-     "rho_actual": 0.9774911958948472,
-     "rho_bg": 0.8129166666666667,
-     "rho_bg_actual": 0.8129015958948472,
-     "rho_probe_share": 0.1645896,
-     "rho_probe_share_configured": 0.16458333333333336,
-     "rho_target_total": 0.9775000000000001,
-     "rho_total_actual": 0.9774911958948472,
-     "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
-     "socket_drops": 0
-    },
-    {
-     "link": "L3",
-     "link_idx": 3,
-     "max_late_ms": 19.717387011041865,
-     "n_bg_recv": 37748,
-     "n_bg_sent": 39186,
-     "n_foreign": 0,
-     "n_late_ratio": 0.0001531159087429184,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999870292164693,
-     "rho": 0.9875000000000002,
-     "rho_actual": 0.9874871913512634,
-     "rho_bg": 0.9875000000000002,
-     "rho_bg_actual": 0.9874871913512634,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.9875000000000002,
-     "rho_total_actual": 0.9874871913512634,
-     "schedule_digest": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec",
-     "socket_drops": 0
-    }
-   ],
-   "load_schedule_digests": {
-    "L1": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
-    "L2": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
-    "L3": "96179650fd9fa1f8fdf5563561c1c7d7ca13fa98f249483513bf052840b6beec"
-   },
-   "load_socket_drops": 0,
-   "loss": 0.024330081847740777,
-   "max_abs_bg_rho_error": 1.5070771819503115e-05,
-   "max_abs_rate_error": 1.894917335076851e-05,
-   "max_abs_rho_error": 1.2808648736761796e-05,
-   "max_abs_total_rho_error": 1.2808648736761796e-05,
-   "max_late_ms": 27.562338387724594,
-   "mode": "poisson",
-   "n_foreign": 0,
-   "n_late_ratio": 0.0005877599000808169,
-   "n_probe_expected": 9797,
-   "n_recv_unique": 8702,
-   "n_sent": 8919,
-   "owd_counts": {
-    "n_duplicate": 0,
-    "n_owd_negative": 0,
-    "n_recv_total": 8702,
-    "n_recv_unique": 8702,
-    "n_reorder": 0,
-    "n_sent": 8919
-   },
-   "owd_steady_state": {
-    "block_means_ms": [
-     10.816373900994378,
-     10.957404254715966,
-     10.278020034505992,
-     10.489225557740195,
-     9.718864542710461,
-     10.026476310493665
-    ],
-    "inflation_factor": 2.240090805237005,
-    "n_blocks": 6,
-    "se_batch_means_ms": 0.19219957780291794,
-    "se_naive_ms": 0.08579990478670928,
-    "spread_ms": 1.2385397120055046
-   },
-   "phase": "20R.6",
-   "pid": "20r6_b_0002_poisson_r0925_s101_L2",
-   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
-   "probe_budgeted_by_carve_out": true,
-   "probe_count_policy": "poisson_fixed_count",
-   "probe_frame_bytes_on_wire": 1512,
-   "probe_intrusion_ratio": 1.2808648736761796e-05,
-   "probe_load_share_actual_by_link": {
-    "L1": 0.0,
-    "L2": 0.1645896,
-    "L3": 0.0
-   },
-   "probe_load_share_configured_by_link": {
-    "L1": 0.0,
-    "L2": 0.16458333333333336,
-    "L3": 0.0
-   },
-   "probe_load_share_physical": 0.1645896,
-   "probe_loss": 0.024330081847740777,
-   "probe_n_foreign": 0,
-   "probe_rate_pps_actual": 81.64166666666667,
-   "probe_rate_pps_configured": 81.63855820105822,
-   "probe_receiver_meta": {
-    "n_foreign_packets": 0,
-    "n_records": 9554,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0002_poisson_r0925_s101_L2_probe_L2.bin",
-    "port": 5852,
-    "record_struct": "<Qdd",
-    "role": "recv",
-    "run_ids_seen": [
-     292
-    ],
-    "socket_drops_delta": 0,
-    "socket_rcvbuf_bytes": 16777216
-   },
-   "probe_run_ids_seen": [
-    292
-   ],
-   "probe_sender_meta": {
-    "duration_s_accounting": 120.0,
-    "duration_s_actual": 119.98954025800049,
-    "frame_bytes_on_wire": 1512,
-    "kind": 1,
-    "mode": "poisson",
-    "n_fixed_count": 9797,
-    "n_sent": 9797,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0002_poisson_r0925_s101_L2_probe_L2_tx.bin",
-    "rate_pps_actual": 81.64166666666667,
-    "rate_pps_nominal": 81.6386,
-    "record_struct": "<Qd",
-    "role": "send",
-    "run_id": 292,
-    "schedule": "poisson_fixed_count",
-    "seed": 101702,
-    "size_bytes": 1470
-   },
-   "probe_socket_drops": 0,
-   "q_mean_ms": 15.406915945417094,
-   "q_p50_ms": 14.569013000186184,
-   "q_p90_ms": 27.35260599995346,
-   "q_p95_ms": 29.392456000027245,
-   "q_p99_ms": 30.945345998520146,
-   "q_sd_ms": 8.00380216531967,
-   "queue_mean_ms": 10.390915945417094,
-   "queue_sd_ms": 8.00380216531967,
-   "rate_ratio": 0.9999810508266492,
-   "rate_ratio_by_link": {
-    "L1": 0.9999918329180608,
-    "L2": 0.9999810508266492,
-    "L3": 0.9999870292164693
-   },
-   "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
-   "rho_actual_by_link": {
-    "L1": 0.8574929967272372,
-    "L2": 0.9774911958948472,
-    "L3": 0.9874871913512634
-   },
-   "rho_bar": 0.925,
-   "rho_bg_actual_by_link": {
-    "L1": 0.8574929967272372,
-    "L2": 0.8129015958948472,
-    "L3": 0.9874871913512634
-   },
-   "rho_gate": {
-    "binding": "counting",
-    "floor": 0.003,
-    "k_sigma": 4.0,
-    "sigma_counting": 0.0016627972588408018,
-    "threshold": 0.006651189035363207
-   },
-   "rho_gate_binding": "counting",
-   "rho_gate_floor": 0.003,
-   "rho_gate_k_sigma": 4.0,
-   "rho_gate_sigma_counting": 0.0016627972588408018,
-   "rho_gate_threshold": 0.006651189035363207,
-   "rho_probe_share_by_link": {
-    "L1": 0.0,
-    "L2": 0.1645896,
-    "L3": 0.0
-   },
-   "rho_target_total_by_link": {
-    "L1": 0.8575000000000002,
-    "L2": 0.9775000000000001,
-    "L3": 0.9875000000000002
-   },
-   "rho_total_actual_by_link": {
-    "L1": 0.8574929967272372,
-    "L2": 0.9774911958948472,
-    "L3": 0.9874871913512634
-   },
-   "runner": "measurements.additivity_live",
-   "schedule_digest": "5ebeb2e712e29a2bb415078dcdeaf0c24803b6839117f07a59f9abb40d9995df",
-   "seed": 101,
-   "socket_drops": 0,
-   "static_ms": 5.016,
-   "trajectory_digest": "f482de41f85c481e3160354031d6d9fc32de0e552c4418555f2fae58d62b9eed",
-   "vl1g_run_pass": true,
-   "w_loss": 3222.244681647411,
-   "wall_utc": "2026-08-09T05:10:15Z"
-  },
-  {
-   "attempt": 1,
-   "branch": "B",
-   "carve_out_fraction": 0.25,
-   "cost_ms": 135.47595113814594,
-   "delay_ms": 18.761890003013328,
-   "direct_packets_after": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_before": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_delta": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "env": {
-    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
-    "git_dirty": true,
-    "git_status_porcelain": [
-     " M docs/phase-20R/07-design-validation.md",
-     " M measurements/additivity_check.py",
-     " M measurements/additivity_live.py",
-     " M measurements/owd_probe.py",
-     " M test/test_phase20r_decision.py",
-     " M test/test_phase_l_probe.py",
-     "?? docs/phase-20R/00o-amendment-14.md",
-     "?? docs/phase-20R/FUTURE_WORK.md",
-     "?? measurements/band_v2.py",
-     "?? measurements/cascade_residual.py",
-     "?? measurements/residual_spec.py",
-     "?? measurements/transfer_residual.py",
-     "?? results/phase-20R/band_v2_transfer.json",
-     "?? results/phase-20R/band_v2_transfer_smoke.json",
-     "?? results/phase-20R/branch_b_fixed_preflight120.json",
-     "?? results/phase-20R/branch_b_tmux_preflight.json",
-     "?? results/phase-20R/branch_b_tmux_preflight120.json",
-     "?? results/phase-20R/branch_b_v2_smoke.json",
-     "?? results/phase-20R/branch_c_tmux_preflight.json",
-     "?? results/phase-20R/branch_c_tmux_preflight120.json",
-     "?? results/phase-20R/branch_c_v2_smoke.json",
-     "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
-     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
-     "?? results/phase-20R/raw_additivity_fixed_preflight120/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
-     "?? results/phase-20R/raw_additivity_v2_smoke/",
-     "?? results/phase-20R/residual_transfer.json",
-     "?? test/test_phase20r6_band.py",
-     "?? tools/pilot_power_only.py"
-    ],
-    "machine": "x86_64",
-    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
-    "python_executable": "/usr/bin/python3",
-    "python_version": "3.10.12",
-    "python_version_info": [
-     3,
-     10,
-     12
-    ]
-   },
-   "estimator_version": "v2-bg",
-   "gate_fail": [],
-   "idx": 3,
-   "link": "L3",
-   "link_idx": 3,
-   "load_n_foreign": 0,
-   "load_rows": [
-    {
-     "link": "L1",
-     "link_idx": 1,
-     "max_late_ms": 21.43494902702514,
-     "n_bg_recv": 68021,
-     "n_bg_sent": 68055,
-     "n_foreign": 0,
-     "n_late_ratio": 0.0005436779075747557,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999918329597305,
-     "rho": 0.8575000000000002,
-     "rho_actual": 0.857492996762969,
-     "rho_bg": 0.8575000000000002,
-     "rho_bg_actual": 0.857492996762969,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.8575000000000002,
-     "rho_total_actual": 0.857492996762969,
-     "schedule_digest": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
-     "socket_drops": 0
-    },
-    {
-     "link": "L2",
-     "link_idx": 2,
-     "max_late_ms": 12.930217752000317,
-     "n_bg_recv": 56808,
-     "n_bg_sent": 58184,
-     "n_foreign": 0,
-     "n_late_ratio": 0.00015468169943627113,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.999990993675832,
-     "rho": 0.9775000000000001,
-     "rho_actual": 0.9774911963181259,
-     "rho_bg": 0.9775000000000001,
-     "rho_bg_actual": 0.9774911963181259,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.9775000000000001,
-     "rho_total_actual": 0.9774911963181259,
-     "schedule_digest": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
-     "socket_drops": 0
-    },
-    {
-     "link": "L3",
-     "link_idx": 3,
-     "max_late_ms": 12.586721901243436,
-     "n_bg_recv": 28298,
-     "n_bg_sent": 29389,
-     "n_foreign": 0,
-     "n_late_ratio": 6.805267276872299e-05,
-     "probe_traverses_link": true,
-     "rate_ratio": 0.9999700173333628,
-     "rho": 0.9875000000000002,
-     "rho_actual": 0.9874871940875218,
-     "rho_bg": 0.7406250000000001,
-     "rho_bg_actual": 0.7406027940875218,
-     "rho_probe_share": 0.2468844,
-     "rho_probe_share_configured": 0.24687500000000007,
-     "rho_target_total": 0.9875000000000002,
-     "rho_total_actual": 0.9874871940875218,
-     "schedule_digest": "9a5360a07bb8c62b9e0557ceac6ccd82dcf6eb88644c93165d38d34b3e37a10f",
-     "socket_drops": 0
-    }
-   ],
-   "load_schedule_digests": {
-    "L1": "1e48b9af118ec9d9f5f091246f27d34818b5206a4175ad7bb12d03c3c412e0d3",
-    "L2": "cba71c07b8b16e68b52cfafaa178bc300c041cca32e951b608f4afd3f43bb26b",
-    "L3": "9a5360a07bb8c62b9e0557ceac6ccd82dcf6eb88644c93165d38d34b3e37a10f"
-   },
-   "load_socket_drops": 0,
-   "loss": 0.03622135271101174,
-   "max_abs_bg_rho_error": 2.2205912478256984e-05,
-   "max_abs_rate_error": 2.998266663722937e-05,
-   "max_abs_rho_error": 1.2805912478319748e-05,
-   "max_abs_total_rho_error": 1.2805912478319748e-05,
-   "max_late_ms": 21.43494902702514,
-   "mode": "poisson",
-   "n_foreign": 0,
-   "n_late_ratio": 0.0005436779075747557,
-   "n_probe_expected": 9797,
-   "n_recv_unique": 8621,
-   "n_sent": 8945,
-   "owd_counts": {
-    "n_duplicate": 0,
-    "n_owd_negative": 0,
-    "n_recv_total": 8621,
-    "n_recv_unique": 8621,
-    "n_reorder": 0,
-    "n_sent": 8945
-   },
-   "owd_steady_state": {
-    "block_means_ms": [
-     12.369165310060628,
-     12.088484132271255,
-     13.228467362189404,
-     12.295621794294062,
-     13.915199937881269,
-     12.521978101961047
-    ],
-    "inflation_factor": 2.733674150185867,
-    "n_blocks": 6,
-    "se_batch_means_ms": 0.28440686841967194,
-    "se_naive_ms": 0.10403832088046581,
-    "spread_ms": 1.8267158056100143
-   },
-   "phase": "20R.6",
-   "pid": "20r6_b_0003_poisson_r0925_s101_L3",
-   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
-   "probe_budgeted_by_carve_out": true,
-   "probe_count_policy": "poisson_fixed_count",
-   "probe_frame_bytes_on_wire": 1512,
-   "probe_intrusion_ratio": 1.2805912478319748e-05,
-   "probe_load_share_actual_by_link": {
-    "L1": 0.0,
-    "L2": 0.0,
-    "L3": 0.2468844
-   },
-   "probe_load_share_configured_by_link": {
-    "L1": 0.0,
-    "L2": 0.0,
-    "L3": 0.24687500000000007
-   },
-   "probe_load_share_physical": 0.2468844,
-   "probe_loss": 0.03622135271101174,
-   "probe_n_foreign": 0,
-   "probe_rate_pps_actual": 81.64166666666667,
-   "probe_rate_pps_configured": 81.63855820105822,
-   "probe_receiver_meta": {
-    "n_foreign_packets": 0,
-    "n_records": 9429,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0003_poisson_r0925_s101_L3_probe_L3.bin",
-    "port": 5853,
-    "record_struct": "<Qdd",
-    "role": "recv",
-    "run_ids_seen": [
-     393
-    ],
-    "socket_drops_delta": 0,
-    "socket_rcvbuf_bytes": 16777216
-   },
-   "probe_run_ids_seen": [
-    393
-   ],
-   "probe_sender_meta": {
-    "duration_s_accounting": 120.0,
-    "duration_s_actual": 119.94891459099927,
-    "frame_bytes_on_wire": 1512,
-    "kind": 1,
-    "mode": "poisson",
-    "n_fixed_count": 9797,
-    "n_sent": 9797,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0003_poisson_r0925_s101_L3_probe_L3_tx.bin",
-    "rate_pps_actual": 81.64166666666667,
-    "rate_pps_nominal": 81.6386,
-    "record_struct": "<Qd",
-    "role": "send",
-    "run_id": 393,
-    "schedule": "poisson_fixed_count",
-    "seed": 101703,
-    "size_bytes": 1470
-   },
-   "probe_socket_drops": 0,
-   "q_mean_ms": 18.761890003013328,
-   "q_p50_ms": 18.33149400019704,
-   "q_p90_ms": 32.57018500127981,
-   "q_p95_ms": 34.426621999703116,
-   "q_p99_ms": 35.980088999824716,
-   "q_sd_ms": 9.659889462951131,
-   "queue_mean_ms": 12.737890003013327,
-   "queue_sd_ms": 9.659889462951131,
-   "rate_ratio": 0.9999700173333628,
-   "rate_ratio_by_link": {
-    "L1": 0.9999918329597305,
-    "L2": 0.999990993675832,
-    "L3": 0.9999700173333628
-   },
-   "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
-   "rho_actual_by_link": {
-    "L1": 0.857492996762969,
-    "L2": 0.9774911963181259,
-    "L3": 0.9874871940875218
-   },
-   "rho_bar": 0.925,
-   "rho_bg_actual_by_link": {
-    "L1": 0.857492996762969,
-    "L2": 0.9774911963181259,
-    "L3": 0.7406027940875218
-   },
-   "rho_gate": {
-    "binding": "counting",
-    "floor": 0.003,
-    "k_sigma": 4.0,
-    "sigma_counting": 0.0024941958882612027,
-    "threshold": 0.00997678355304481
-   },
-   "rho_gate_binding": "counting",
-   "rho_gate_floor": 0.003,
-   "rho_gate_k_sigma": 4.0,
-   "rho_gate_sigma_counting": 0.0024941958882612027,
-   "rho_gate_threshold": 0.00997678355304481,
-   "rho_probe_share_by_link": {
-    "L1": 0.0,
-    "L2": 0.0,
-    "L3": 0.2468844
-   },
-   "rho_target_total_by_link": {
-    "L1": 0.8575000000000002,
-    "L2": 0.9775000000000001,
-    "L3": 0.9875000000000002
-   },
-   "rho_total_actual_by_link": {
-    "L1": 0.857492996762969,
-    "L2": 0.9774911963181259,
-    "L3": 0.9874871940875218
-   },
-   "runner": "measurements.additivity_live",
-   "schedule_digest": "9a5360a07bb8c62b9e0557ceac6ccd82dcf6eb88644c93165d38d34b3e37a10f",
-   "seed": 101,
-   "socket_drops": 0,
-   "static_ms": 6.024,
-   "trajectory_digest": "b6815852c97c9a6244bfbd820584fc16db7a1cde9a5ae84ba9c50e1dce38f009",
-   "vl1g_run_pass": true,
-   "w_loss": 3222.244681647411,
-   "wall_utc": "2026-08-09T05:12:24Z"
-  },
-  {
-   "attempt": 1,
-   "branch": "B",
-   "carve_out_fraction": 0.25,
-   "cost_ms": 88.38697647181475,
-   "delay_ms": 11.222210565384547,
-   "direct_packets_after": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_before": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_delta": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "env": {
-    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
-    "git_dirty": true,
-    "git_status_porcelain": [
-     " M docs/phase-20R/07-design-validation.md",
-     " M measurements/additivity_check.py",
-     " M measurements/additivity_live.py",
-     " M measurements/owd_probe.py",
-     " M test/test_phase20r_decision.py",
-     " M test/test_phase_l_probe.py",
-     "?? docs/phase-20R/00o-amendment-14.md",
-     "?? docs/phase-20R/FUTURE_WORK.md",
-     "?? measurements/band_v2.py",
-     "?? measurements/cascade_residual.py",
-     "?? measurements/residual_spec.py",
-     "?? measurements/transfer_residual.py",
-     "?? results/phase-20R/band_v2_transfer.json",
-     "?? results/phase-20R/band_v2_transfer_smoke.json",
-     "?? results/phase-20R/branch_b_fixed_preflight120.json",
-     "?? results/phase-20R/branch_b_tmux_preflight.json",
-     "?? results/phase-20R/branch_b_tmux_preflight120.json",
-     "?? results/phase-20R/branch_b_v2_smoke.json",
-     "?? results/phase-20R/branch_c_tmux_preflight.json",
-     "?? results/phase-20R/branch_c_tmux_preflight120.json",
-     "?? results/phase-20R/branch_c_v2_smoke.json",
-     "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
-     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
-     "?? results/phase-20R/raw_additivity_fixed_preflight120/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
-     "?? results/phase-20R/raw_additivity_v2_smoke/",
-     "?? results/phase-20R/residual_transfer.json",
-     "?? test/test_phase20r6_band.py",
-     "?? tools/pilot_power_only.py"
-    ],
-    "machine": "x86_64",
-    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
-    "python_executable": "/usr/bin/python3",
-    "python_version": "3.10.12",
-    "python_version_info": [
-     3,
-     10,
-     12
-    ]
-   },
-   "estimator_version": "v2-bg",
-   "gate_fail": [],
-   "idx": 4,
-   "link": "L1",
-   "link_idx": 1,
-   "load_n_foreign": 0,
-   "load_rows": [
-    {
-     "link": "L1",
-     "link_idx": 1,
-     "max_late_ms": 23.4905041197635,
-     "n_bg_recv": 56839,
-     "n_bg_sent": 58258,
-     "n_foreign": 0,
-     "n_late_ratio": 0.000171650245459851,
-     "probe_traverses_link": true,
-     "rate_ratio": 0.9999833720315514,
-     "rho": 0.8575000000000002,
-     "rho_actual": 0.8574929940235969,
-     "rho_bg": 0.7340625000000001,
-     "rho_bg_actual": 0.7340507940235969,
-     "rho_probe_share": 0.1234422,
-     "rho_probe_share_configured": 0.12343750000000003,
-     "rho_target_total": 0.8575000000000002,
-     "rho_total_actual": 0.8574929940235969,
-     "schedule_digest": "77fd5d40493e4f271f9636efe6893bb6c0dfb96144e76c5693160e9db7a72c3d",
-     "socket_drops": 0
-    },
-    {
-     "link": "L2",
-     "link_idx": 2,
-     "max_late_ms": 18.22626050488907,
-     "n_bg_recv": 52598,
-     "n_bg_sent": 58184,
-     "n_foreign": 0,
-     "n_late_ratio": 0.00025780283239378526,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999909939008238,
-     "rho": 0.9775000000000001,
-     "rho_actual": 0.9774911965380553,
-     "rho_bg": 0.9775000000000001,
-     "rho_bg_actual": 0.9774911965380553,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.9775000000000001,
-     "rho_total_actual": 0.9774911965380553,
-     "schedule_digest": "6905a417dbc80d2f38c065c7ae43a3240557e6de4d225469bcc316780327e38a",
-     "socket_drops": 0
-    },
-    {
-     "link": "L3",
-     "link_idx": 3,
-     "max_late_ms": 25.690006808872567,
-     "n_bg_recv": 34214,
-     "n_bg_sent": 39186,
-     "n_foreign": 0,
-     "n_late_ratio": 0.0004083090899811157,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999870322331028,
-     "rho": 0.9875000000000002,
-     "rho_actual": 0.9874871943301892,
-     "rho_bg": 0.9875000000000002,
-     "rho_bg_actual": 0.9874871943301892,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.9875000000000002,
-     "rho_total_actual": 0.9874871943301892,
-     "schedule_digest": "a87dc7fc55c07fbd9624072c934fe257b8513040d5073e0bd9d7a9588bcbee2b",
-     "socket_drops": 0
-    }
-   ],
-   "load_schedule_digests": {
-    "L1": "77fd5d40493e4f271f9636efe6893bb6c0dfb96144e76c5693160e9db7a72c3d",
-    "L2": "6905a417dbc80d2f38c065c7ae43a3240557e6de4d225469bcc316780327e38a",
-    "L3": "a87dc7fc55c07fbd9624072c934fe257b8513040d5073e0bd9d7a9588bcbee2b"
-   },
-   "load_socket_drops": 0,
-   "loss": 0.01708733526915345,
-   "max_abs_bg_rho_error": 1.2805669810989073e-05,
-   "max_abs_rate_error": 1.662796844859038e-05,
-   "max_abs_rho_error": 1.2805669810989073e-05,
-   "max_abs_total_rho_error": 1.2805669810989073e-05,
-   "max_late_ms": 25.690006808872567,
-   "mode": "h2",
-   "n_foreign": 0,
-   "n_late_ratio": 0.0004083090899811157,
-   "n_probe_expected": 9797,
-   "n_recv_unique": 8801,
-   "n_sent": 8954,
-   "owd_counts": {
-    "n_duplicate": 0,
-    "n_owd_negative": 0,
-    "n_recv_total": 8801,
-    "n_recv_unique": 8801,
-    "n_reorder": 0,
-    "n_sent": 8954
-   },
-   "owd_steady_state": {
-    "block_means_ms": [
-     7.6092513573353076,
-     8.26518500919994,
-     7.855133008102737,
-     7.146609008619621,
-     8.72580804904112,
-     6.699265634944376
-    ],
-    "inflation_factor": 3.5337853596131503,
-    "n_blocks": 6,
-    "se_batch_means_ms": 0.3005561516962872,
-    "se_naive_ms": 0.08505218090812103,
-    "spread_ms": 2.0265424140967445
-   },
-   "phase": "20R.6",
-   "pid": "20r6_b_0004_h2_r0925_s101_L1",
-   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
-   "probe_budgeted_by_carve_out": true,
-   "probe_count_policy": "poisson_fixed_count",
-   "probe_frame_bytes_on_wire": 1512,
-   "probe_intrusion_ratio": 1.2805669810989073e-05,
-   "probe_load_share_actual_by_link": {
-    "L1": 0.1234422,
-    "L2": 0.0,
-    "L3": 0.0
-   },
-   "probe_load_share_configured_by_link": {
-    "L1": 0.12343750000000003,
-    "L2": 0.0,
-    "L3": 0.0
-   },
-   "probe_load_share_physical": 0.1234422,
-   "probe_loss": 0.01708733526915345,
-   "probe_n_foreign": 0,
-   "probe_rate_pps_actual": 81.64166666666667,
-   "probe_rate_pps_configured": 81.63855820105822,
-   "probe_receiver_meta": {
-    "n_foreign_packets": 0,
-    "n_records": 9636,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0004_h2_r0925_s101_L1_probe_L1.bin",
-    "port": 5851,
-    "record_struct": "<Qdd",
-    "role": "recv",
-    "run_ids_seen": [
-     491
-    ],
-    "socket_drops_delta": 0,
-    "socket_rcvbuf_bytes": 16777216
-   },
-   "probe_run_ids_seen": [
-    491
-   ],
-   "probe_sender_meta": {
-    "duration_s_accounting": 120.0,
-    "duration_s_actual": 119.99582345899944,
-    "frame_bytes_on_wire": 1512,
-    "kind": 1,
-    "mode": "poisson",
-    "n_fixed_count": 9797,
-    "n_sent": 9797,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0004_h2_r0925_s101_L1_probe_L1_tx.bin",
-    "rate_pps_actual": 81.64166666666667,
-    "rate_pps_nominal": 81.6386,
-    "record_struct": "<Qd",
-    "role": "send",
-    "run_id": 491,
-    "schedule": "poisson_fixed_count",
-    "seed": 101701,
-    "size_bytes": 1470
-   },
-   "probe_socket_drops": 0,
-   "q_mean_ms": 11.222210565384547,
-   "q_p50_ms": 8.634096999912174,
-   "q_p90_ms": 24.449204999427195,
-   "q_p95_ms": 27.77641199895635,
-   "q_p99_ms": 30.23828700020141,
-   "q_sd_ms": 7.97905511154557,
-   "queue_mean_ms": 7.710210565384547,
-   "queue_sd_ms": 7.97905511154557,
-   "rate_ratio": 0.9999833720315514,
-   "rate_ratio_by_link": {
-    "L1": 0.9999833720315514,
-    "L2": 0.9999909939008238,
-    "L3": 0.9999870322331028
-   },
-   "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
-   "rho_actual_by_link": {
-    "L1": 0.8574929940235969,
-    "L2": 0.9774911965380553,
-    "L3": 0.9874871943301892
-   },
-   "rho_bar": 0.925,
-   "rho_bg_actual_by_link": {
-    "L1": 0.7340507940235969,
-    "L2": 0.9774911965380553,
-    "L3": 0.9874871943301892
-   },
-   "rho_gate": {
-    "binding": "counting",
-    "floor": 0.003,
-    "k_sigma": 4.0,
-    "sigma_counting": 0.0012470979441306014,
-    "threshold": 0.004988391776522405
-   },
-   "rho_gate_binding": "counting",
-   "rho_gate_floor": 0.003,
-   "rho_gate_k_sigma": 4.0,
-   "rho_gate_sigma_counting": 0.0012470979441306014,
-   "rho_gate_threshold": 0.004988391776522405,
-   "rho_probe_share_by_link": {
-    "L1": 0.1234422,
-    "L2": 0.0,
-    "L3": 0.0
-   },
-   "rho_target_total_by_link": {
-    "L1": 0.8575000000000002,
-    "L2": 0.9775000000000001,
-    "L3": 0.9875000000000002
-   },
-   "rho_total_actual_by_link": {
-    "L1": 0.8574929940235969,
-    "L2": 0.9774911965380553,
-    "L3": 0.9874871943301892
-   },
-   "runner": "measurements.additivity_live",
-   "schedule_digest": "77fd5d40493e4f271f9636efe6893bb6c0dfb96144e76c5693160e9db7a72c3d",
-   "seed": 101,
-   "socket_drops": 0,
-   "static_ms": 3.512,
-   "trajectory_digest": "a79e97686550f1e73ee97cd8be90e5216150b16f279f190af5b8c0e0a0403308",
-   "vl1g_run_pass": true,
-   "w_loss": 4515.904012589386,
-   "wall_utc": "2026-08-09T05:14:32Z"
-  },
-  {
-   "attempt": 1,
-   "branch": "B",
-   "carve_out_fraction": 0.25,
-   "cost_ms": 268.7577648404578,
-   "delay_ms": 16.10207448480093,
-   "direct_packets_after": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_before": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_delta": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "env": {
-    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
-    "git_dirty": true,
-    "git_status_porcelain": [
-     " M docs/phase-20R/07-design-validation.md",
-     " M measurements/additivity_check.py",
-     " M measurements/additivity_live.py",
-     " M measurements/owd_probe.py",
-     " M test/test_phase20r_decision.py",
-     " M test/test_phase_l_probe.py",
-     "?? docs/phase-20R/00o-amendment-14.md",
-     "?? docs/phase-20R/FUTURE_WORK.md",
-     "?? measurements/band_v2.py",
-     "?? measurements/cascade_residual.py",
-     "?? measurements/residual_spec.py",
-     "?? measurements/transfer_residual.py",
-     "?? results/phase-20R/band_v2_transfer.json",
-     "?? results/phase-20R/band_v2_transfer_smoke.json",
-     "?? results/phase-20R/branch_b_fixed_preflight120.json",
-     "?? results/phase-20R/branch_b_tmux_preflight.json",
-     "?? results/phase-20R/branch_b_tmux_preflight120.json",
-     "?? results/phase-20R/branch_b_v2_smoke.json",
-     "?? results/phase-20R/branch_c_tmux_preflight.json",
-     "?? results/phase-20R/branch_c_tmux_preflight120.json",
-     "?? results/phase-20R/branch_c_v2_smoke.json",
-     "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
-     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
-     "?? results/phase-20R/raw_additivity_fixed_preflight120/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
-     "?? results/phase-20R/raw_additivity_v2_smoke/",
-     "?? results/phase-20R/residual_transfer.json",
-     "?? test/test_phase20r6_band.py",
-     "?? tools/pilot_power_only.py"
-    ],
-    "machine": "x86_64",
-    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
-    "python_executable": "/usr/bin/python3",
-    "python_version": "3.10.12",
-    "python_version_info": [
-     3,
-     10,
-     12
-    ]
-   },
-   "estimator_version": "v2-bg",
-   "gate_fail": [],
-   "idx": 5,
-   "link": "L2",
-   "link_idx": 2,
-   "load_n_foreign": 0,
-   "load_rows": [
-    {
-     "link": "L1",
-     "link_idx": 1,
-     "max_late_ms": 18.26007809904695,
-     "n_bg_recv": 66002,
-     "n_bg_sent": 68055,
-     "n_foreign": 0,
-     "n_late_ratio": 0.00045551392256263317,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999918319430602,
-     "rho": 0.8575000000000002,
-     "rho_actual": 0.8574929958911742,
-     "rho_bg": 0.8575000000000002,
-     "rho_bg_actual": 0.8574929958911742,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.8575000000000002,
-     "rho_total_actual": 0.8574929958911742,
-     "schedule_digest": "effe5514661a47597e1c878a109a0db663f5e69683fb96bf1f764ee453c65152",
-     "socket_drops": 0
-    },
-    {
-     "link": "L2",
-     "link_idx": 2,
-     "max_late_ms": 20.463559510972118,
-     "n_bg_recv": 44102,
-     "n_bg_sent": 48387,
-     "n_foreign": 0,
-     "n_late_ratio": 0.000744001488002976,
-     "probe_traverses_link": true,
-     "rate_ratio": 0.9999810511683096,
-     "rho": 0.9775000000000001,
-     "rho_actual": 0.9774911961725887,
-     "rho_bg": 0.8129166666666667,
-     "rho_bg_actual": 0.8129015961725887,
-     "rho_probe_share": 0.1645896,
-     "rho_probe_share_configured": 0.16458333333333336,
-     "rho_target_total": 0.9775000000000001,
-     "rho_total_actual": 0.9774911961725887,
-     "schedule_digest": "e71bb9600b4ab15ef9787daba7d89ab8f610b1fdf3119d50e2acac97b9af140a",
-     "socket_drops": 0
-    },
-    {
-     "link": "L3",
-     "link_idx": 3,
-     "max_late_ms": 0.0,
-     "n_bg_recv": 34215,
-     "n_bg_sent": 39186,
-     "n_foreign": 0,
-     "n_late_ratio": 0.0,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999870293581211,
-     "rho": 0.9875000000000002,
-     "rho_actual": 0.9874871914911447,
-     "rho_bg": 0.9875000000000002,
-     "rho_bg_actual": 0.9874871914911447,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.9875000000000002,
-     "rho_total_actual": 0.9874871914911447,
-     "schedule_digest": "a87dc7fc55c07fbd9624072c934fe257b8513040d5073e0bd9d7a9588bcbee2b",
-     "socket_drops": 0
-    }
-   ],
-   "load_schedule_digests": {
-    "L1": "effe5514661a47597e1c878a109a0db663f5e69683fb96bf1f764ee453c65152",
-    "L2": "e71bb9600b4ab15ef9787daba7d89ab8f610b1fdf3119d50e2acac97b9af140a",
-    "L3": "a87dc7fc55c07fbd9624072c934fe257b8513040d5073e0bd9d7a9588bcbee2b"
-   },
-   "load_socket_drops": 0,
-   "loss": 0.055947976230519114,
-   "max_abs_bg_rho_error": 1.5070494078006647e-05,
-   "max_abs_rate_error": 1.8948831690401846e-05,
-   "max_abs_rho_error": 1.2808508855433054e-05,
-   "max_abs_total_rho_error": 1.2808508855433054e-05,
-   "max_late_ms": 20.463559510972118,
-   "mode": "h2",
-   "n_foreign": 0,
-   "n_late_ratio": 0.000744001488002976,
-   "n_probe_expected": 9797,
-   "n_recv_unique": 8420,
-   "n_sent": 8919,
-   "owd_counts": {
-    "n_duplicate": 0,
-    "n_owd_negative": 0,
-    "n_recv_total": 8420,
-    "n_recv_unique": 8420,
-    "n_reorder": 0,
-    "n_sent": 8919
-   },
-   "owd_steady_state": {
-    "block_means_ms": [
-     10.746465079414765,
-     11.725773526741579,
-     11.606221640492603,
-     11.48304146174073,
-     10.944004897881342,
-     10.015829595844204
-    ],
-    "inflation_factor": 2.7605029676031676,
-    "n_blocks": 6,
-    "se_batch_means_ms": 0.2657247424503225,
-    "se_naive_ms": 0.09625953877566032,
-    "spread_ms": 1.7099439308973743
-   },
-   "phase": "20R.6",
-   "pid": "20r6_b_0005_h2_r0925_s101_L2",
-   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
-   "probe_budgeted_by_carve_out": true,
-   "probe_count_policy": "poisson_fixed_count",
-   "probe_frame_bytes_on_wire": 1512,
-   "probe_intrusion_ratio": 1.2808508855433054e-05,
-   "probe_load_share_actual_by_link": {
-    "L1": 0.0,
-    "L2": 0.1645896,
-    "L3": 0.0
-   },
-   "probe_load_share_configured_by_link": {
-    "L1": 0.0,
-    "L2": 0.16458333333333336,
-    "L3": 0.0
-   },
-   "probe_load_share_physical": 0.1645896,
-   "probe_loss": 0.055947976230519114,
-   "probe_n_foreign": 0,
-   "probe_rate_pps_actual": 81.64166666666667,
-   "probe_rate_pps_configured": 81.63855820105822,
-   "probe_receiver_meta": {
-    "n_foreign_packets": 0,
-    "n_records": 9231,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0005_h2_r0925_s101_L2_probe_L2.bin",
-    "port": 5852,
-    "record_struct": "<Qdd",
-    "role": "recv",
-    "run_ids_seen": [
-     592
-    ],
-    "socket_drops_delta": 0,
-    "socket_rcvbuf_bytes": 16777216
-   },
-   "probe_run_ids_seen": [
-    592
-   ],
-   "probe_sender_meta": {
-    "duration_s_accounting": 120.0,
-    "duration_s_actual": 119.98955390099945,
-    "frame_bytes_on_wire": 1512,
-    "kind": 1,
-    "mode": "poisson",
-    "n_fixed_count": 9797,
-    "n_sent": 9797,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0005_h2_r0925_s101_L2_probe_L2_tx.bin",
-    "rate_pps_actual": 81.64166666666667,
-    "rate_pps_nominal": 81.6386,
-    "record_struct": "<Qd",
-    "role": "send",
-    "run_id": 592,
-    "schedule": "poisson_fixed_count",
-    "seed": 101702,
-    "size_bytes": 1470
-   },
-   "probe_socket_drops": 0,
-   "q_mean_ms": 16.10207448480093,
-   "q_p50_ms": 15.195875998801435,
-   "q_p90_ms": 29.055973999606444,
-   "q_p95_ms": 30.317795001723802,
-   "q_p99_ms": 31.182256000578867,
-   "q_sd_ms": 8.832828988531924,
-   "queue_mean_ms": 11.086074484800932,
-   "queue_sd_ms": 8.832828988531924,
-   "rate_ratio": 0.9999810511683096,
-   "rate_ratio_by_link": {
-    "L1": 0.9999918319430602,
-    "L2": 0.9999810511683096,
-    "L3": 0.9999870293581211
-   },
-   "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
-   "rho_actual_by_link": {
-    "L1": 0.8574929958911742,
-    "L2": 0.9774911961725887,
-    "L3": 0.9874871914911447
-   },
-   "rho_bar": 0.925,
-   "rho_bg_actual_by_link": {
-    "L1": 0.8574929958911742,
-    "L2": 0.8129015961725887,
-    "L3": 0.9874871914911447
-   },
-   "rho_gate": {
-    "binding": "counting",
-    "floor": 0.003,
-    "k_sigma": 4.0,
-    "sigma_counting": 0.0016627972588408018,
-    "threshold": 0.006651189035363207
-   },
-   "rho_gate_binding": "counting",
-   "rho_gate_floor": 0.003,
-   "rho_gate_k_sigma": 4.0,
-   "rho_gate_sigma_counting": 0.0016627972588408018,
-   "rho_gate_threshold": 0.006651189035363207,
-   "rho_probe_share_by_link": {
-    "L1": 0.0,
-    "L2": 0.1645896,
-    "L3": 0.0
-   },
-   "rho_target_total_by_link": {
-    "L1": 0.8575000000000002,
-    "L2": 0.9775000000000001,
-    "L3": 0.9875000000000002
-   },
-   "rho_total_actual_by_link": {
-    "L1": 0.8574929958911742,
-    "L2": 0.9774911961725887,
-    "L3": 0.9874871914911447
-   },
-   "runner": "measurements.additivity_live",
-   "schedule_digest": "e71bb9600b4ab15ef9787daba7d89ab8f610b1fdf3119d50e2acac97b9af140a",
-   "seed": 101,
-   "socket_drops": 0,
-   "static_ms": 5.016,
-   "trajectory_digest": "302cb2caae3da578309f677bf1b9916ded598400c07383430015f853dc2f4652",
-   "vl1g_run_pass": true,
-   "w_loss": 4515.904012589386,
-   "wall_utc": "2026-08-09T05:16:40Z"
-  },
-  {
-   "attempt": 2,
-   "attempt1_fail": [
-    "late=0.0013"
-   ],
-   "branch": "B",
-   "carve_out_fraction": 0.25,
-   "cost_ms": 344.11383196177485,
-   "delay_ms": 18.988937148184615,
-   "direct_packets_after": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_before": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "direct_packets_delta": {
-    "L1": 0,
-    "L2": 0,
-    "L3": 0
-   },
-   "env": {
-    "git_commit": "b83ae1547392f7b40d93cf5a9867ba6c87edc8b4",
-    "git_dirty": true,
-    "git_status_porcelain": [
-     " M docs/phase-20R/07-design-validation.md",
-     " M measurements/additivity_check.py",
-     " M measurements/additivity_live.py",
-     " M measurements/owd_probe.py",
-     " M test/test_phase20r_decision.py",
-     " M test/test_phase_l_probe.py",
-     "?? docs/phase-20R/00o-amendment-14.md",
-     "?? docs/phase-20R/FUTURE_WORK.md",
-     "?? measurements/band_v2.py",
-     "?? measurements/cascade_residual.py",
-     "?? measurements/residual_spec.py",
-     "?? measurements/transfer_residual.py",
-     "?? results/phase-20R/band_v2_transfer.json",
-     "?? results/phase-20R/band_v2_transfer_smoke.json",
-     "?? results/phase-20R/branch_b_fixed_preflight120.json",
-     "?? results/phase-20R/branch_b_tmux_preflight.json",
-     "?? results/phase-20R/branch_b_tmux_preflight120.json",
-     "?? results/phase-20R/branch_b_v2_smoke.json",
-     "?? results/phase-20R/branch_c_tmux_preflight.json",
-     "?? results/phase-20R/branch_c_tmux_preflight120.json",
-     "?? results/phase-20R/branch_c_v2_smoke.json",
-     "?? results/phase-20R/breakdown_scan_transfer_n30k_bracket.json",
-     "?? results/phase-20R/breakdown_scan_transfer_smoke.json",
-     "?? results/phase-20R/raw_additivity_fixed_preflight120/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight/",
-     "?? results/phase-20R/raw_additivity_tmux_preflight120/",
-     "?? results/phase-20R/raw_additivity_v2_smoke/",
-     "?? results/phase-20R/residual_transfer.json",
-     "?? test/test_phase20r6_band.py",
-     "?? tools/pilot_power_only.py"
-    ],
-    "machine": "x86_64",
-    "platform": "Linux-6.8.0-1061-aws-x86_64-with-glibc2.35",
-    "python_executable": "/usr/bin/python3",
-    "python_version": "3.10.12",
-    "python_version_info": [
-     3,
-     10,
-     12
-    ]
-   },
-   "estimator_version": "v2-bg",
-   "gate_fail": [],
-   "idx": 6,
-   "link": "L3",
-   "link_idx": 3,
-   "load_n_foreign": 0,
-   "load_rows": [
-    {
-     "link": "L1",
-     "link_idx": 1,
-     "max_late_ms": 23.378954449071898,
-     "n_bg_recv": 66008,
-     "n_bg_sent": 68055,
-     "n_foreign": 0,
-     "n_late_ratio": 0.00027918595253838805,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999918303180793,
-     "rho": 0.8575000000000002,
-     "rho_actual": 0.857492994497753,
-     "rho_bg": 0.8575000000000002,
-     "rho_bg_actual": 0.857492994497753,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.8575000000000002,
-     "rho_total_actual": 0.857492994497753,
-     "schedule_digest": "effe5514661a47597e1c878a109a0db663f5e69683fb96bf1f764ee453c65152",
-     "socket_drops": 0
-    },
-    {
-     "link": "L2",
-     "link_idx": 2,
-     "max_late_ms": 22.940832954191137,
-     "n_bg_recv": 52599,
-     "n_bg_sent": 58184,
-     "n_foreign": 0,
-     "n_late_ratio": 0.00048123195380173246,
-     "probe_traverses_link": false,
-     "rate_ratio": 0.9999909932341551,
-     "rho": 0.9775000000000001,
-     "rho_actual": 0.9774911958863866,
-     "rho_bg": 0.9775000000000001,
-     "rho_bg_actual": 0.9774911958863866,
-     "rho_probe_share": 0.0,
-     "rho_probe_share_configured": 0.0,
-     "rho_target_total": 0.9775000000000001,
-     "rho_total_actual": 0.9774911958863866,
-     "schedule_digest": "6905a417dbc80d2f38c065c7ae43a3240557e6de4d225469bcc316780327e38a",
-     "socket_drops": 0
-    },
-    {
-     "link": "L3",
-     "link_idx": 3,
-     "max_late_ms": 0.0,
-     "n_bg_recv": 26119,
-     "n_bg_sent": 29389,
-     "n_foreign": 0,
-     "n_late_ratio": 0.0,
-     "probe_traverses_link": true,
-     "rate_ratio": 0.9999700158917356,
-     "rho": 0.9875000000000002,
-     "rho_actual": 0.9874871930198168,
-     "rho_bg": 0.7406250000000001,
-     "rho_bg_actual": 0.7406027930198168,
-     "rho_probe_share": 0.2468844,
-     "rho_probe_share_configured": 0.24687500000000007,
-     "rho_target_total": 0.9875000000000002,
-     "rho_total_actual": 0.9874871930198168,
-     "schedule_digest": "4a8e8e657d281a04a5a0fa4d48dace1a1c6b1737c1f96be3938e1674529cd9f6",
-     "socket_drops": 0
-    }
-   ],
-   "load_schedule_digests": {
-    "L1": "effe5514661a47597e1c878a109a0db663f5e69683fb96bf1f764ee453c65152",
-    "L2": "6905a417dbc80d2f38c065c7ae43a3240557e6de4d225469bcc316780327e38a",
-    "L3": "4a8e8e657d281a04a5a0fa4d48dace1a1c6b1737c1f96be3938e1674529cd9f6"
-   },
-   "load_socket_drops": 0,
-   "loss": 0.07199552822806037,
-   "max_abs_bg_rho_error": 2.220698018329248e-05,
-   "max_abs_rate_error": 2.998410826438036e-05,
-   "max_abs_rho_error": 1.2806980183355243e-05,
-   "max_abs_total_rho_error": 1.2806980183355243e-05,
-   "max_late_ms": 23.378954449071898,
-   "mode": "h2",
-   "n_foreign": 0,
-   "n_late_ratio": 0.00048123195380173246,
-   "n_probe_expected": 9797,
-   "n_recv_unique": 8301,
-   "n_sent": 8945,
-   "owd_counts": {
-    "n_duplicate": 0,
-    "n_owd_negative": 0,
-    "n_recv_total": 8301,
-    "n_recv_unique": 8301,
-    "n_reorder": 0,
-    "n_sent": 8945
-   },
-   "owd_steady_state": {
-    "block_means_ms": [
-     14.763298026337386,
-     12.769223808236594,
-     13.000271234836996,
-     12.6877016511182,
-     12.209156355135207,
-     12.348812811705603
-    ],
-    "inflation_factor": 3.288536896617678,
-    "n_blocks": 6,
-    "se_batch_means_ms": 0.3786514064974407,
-    "se_naive_ms": 0.11514281834176494,
-    "spread_ms": 2.5541416712021796
-   },
-   "phase": "20R.6",
-   "pid": "20r6_b_0006_h2_r0925_s101_L3",
-   "plan_branch_digest": "200eec38d2b31a368bf49fc4dff081e218657aacbf918300ce21c76f2db9c55d",
-   "probe_budgeted_by_carve_out": true,
-   "probe_count_policy": "poisson_fixed_count",
-   "probe_frame_bytes_on_wire": 1512,
-   "probe_intrusion_ratio": 1.2806980183355243e-05,
-   "probe_load_share_actual_by_link": {
-    "L1": 0.0,
-    "L2": 0.0,
-    "L3": 0.2468844
-   },
-   "probe_load_share_configured_by_link": {
-    "L1": 0.0,
-    "L2": 0.0,
-    "L3": 0.24687500000000007
-   },
-   "probe_load_share_physical": 0.2468844,
-   "probe_loss": 0.07199552822806037,
-   "probe_n_foreign": 0,
-   "probe_rate_pps_actual": 81.64166666666667,
-   "probe_rate_pps_configured": 81.63855820105822,
-   "probe_receiver_meta": {
-    "n_foreign_packets": 0,
-    "n_records": 9078,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0006_h2_r0925_s101_L3_probe_L3.bin",
-    "port": 5853,
-    "record_struct": "<Qdd",
-    "role": "recv",
-    "run_ids_seen": [
-     693
-    ],
-    "socket_drops_delta": 0,
-    "socket_rcvbuf_bytes": 16777216
-   },
-   "probe_run_ids_seen": [
-    693
-   ],
-   "probe_sender_meta": {
-    "duration_s_accounting": 120.0,
-    "duration_s_actual": 119.94892360900121,
-    "frame_bytes_on_wire": 1512,
-    "kind": 1,
-    "mode": "poisson",
-    "n_fixed_count": 9797,
-    "n_sent": 9797,
-    "out": "results/phase-20R/raw_additivity_fixed_preflight120/20r6_b_0006_h2_r0925_s101_L3_probe_L3_tx.bin",
-    "rate_pps_actual": 81.64166666666667,
-    "rate_pps_nominal": 81.6386,
-    "record_struct": "<Qd",
-    "role": "send",
-    "run_id": 693,
-    "schedule": "poisson_fixed_count",
-    "seed": 101703,
-    "size_bytes": 1470
-   },
-   "probe_socket_drops": 0,
-   "q_mean_ms": 18.988937148184615,
-   "q_p50_ms": 18.587577000037186,
-   "q_p90_ms": 33.87656900097011,
-   "q_p95_ms": 35.263989000416245,
-   "q_p99_ms": 36.156497999147746,
-   "q_sd_ms": 10.490641895460836,
-   "queue_mean_ms": 12.964937148184616,
-   "queue_sd_ms": 10.490641895460836,
-   "rate_ratio": 0.9999700158917356,
-   "rate_ratio_by_link": {
-    "L1": 0.9999918303180793,
-    "L2": 0.9999909932341551,
-    "L3": 0.9999700158917356
-   },
-   "raw_dir": "results/phase-20R/raw_additivity_fixed_preflight120",
-   "rho_actual_by_link": {
-    "L1": 0.857492994497753,
-    "L2": 0.9774911958863866,
-    "L3": 0.9874871930198168
-   },
-   "rho_bar": 0.925,
-   "rho_bg_actual_by_link": {
-    "L1": 0.857492994497753,
-    "L2": 0.9774911958863866,
-    "L3": 0.7406027930198168
-   },
-   "rho_gate": {
-    "binding": "counting",
-    "floor": 0.003,
-    "k_sigma": 4.0,
-    "sigma_counting": 0.0024941958882612027,
-    "threshold": 0.00997678355304481
-   },
-   "rho_gate_binding": "counting",
-   "rho_gate_floor": 0.003,
-   "rho_gate_k_sigma": 4.0,
-   "rho_gate_sigma_counting": 0.0024941958882612027,
-   "rho_gate_threshold": 0.00997678355304481,
-   "rho_probe_share_by_link": {
-    "L1": 0.0,
-    "L2": 0.0,
-    "L3": 0.2468844
-   },
-   "rho_target_total_by_link": {
-    "L1": 0.8575000000000002,
-    "L2": 0.9775000000000001,
-    "L3": 0.9875000000000002
-   },
-   "rho_total_actual_by_link": {
-    "L1": 0.857492994497753,
-    "L2": 0.9774911958863866,
-    "L3": 0.9874871930198168
-   },
-   "runner": "measurements.additivity_live",
-   "schedule_digest": "4a8e8e657d281a04a5a0fa4d48dace1a1c6b1737c1f96be3938e1674529cd9f6",
-   "seed": 101,
-   "socket_drops": 0,
-   "static_ms": 6.024,
-   "trajectory_digest": "56b52ad013e650e8c9bbf39f610b8440d837f5b90a022db4469d79af8ed06ee3",
-   "vl1g_run_pass": true,
-   "w_loss": 4515.904012589386,
-   "wall_utc": "2026-08-09T05:20:57Z"
-  }
- ],
- "runner": "measurements.additivity_live",
- "timeout_history": [],
- "warmup_s": 10.0
+  "runner": "measurements.additivity_live",
+  "timeout_history": [],
+  "warmup_s": 10.0
 }

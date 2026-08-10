@@ -1,0 +1,95 @@
+{
+  "branch_b_files": [
+    "results/phase-20R/branch_b_fixed_pilot3.json",
+    "results/phase-20R/branch_b_fixed_s104_108.json"
+  ],
+  "branch_c_files": [
+    "results/phase-20R/branch_c_fixed_pilot3.json",
+    "results/phase-20R/branch_c_fixed_s104_108.json"
+  ],
+  "note": "Only between-seed standard deviations are reported; residual means are intentionally omitted.",
+  "rho_bar": 0.925,
+  "rows": [
+    {
+      "channel": "loss",
+      "early_seeds": [
+        101,
+        102,
+        103
+      ],
+      "late_seeds": [
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "mode": "poisson",
+      "ratio_late_over_early": 0.5695611691380995,
+      "sd_early": 0.0014424542680609863,
+      "sd_late": 0.0008215659393450569,
+      "status": "ok"
+    },
+    {
+      "channel": "delay_ms",
+      "early_seeds": [
+        101,
+        102,
+        103
+      ],
+      "late_seeds": [
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "mode": "poisson",
+      "ratio_late_over_early": 2.3976040865613046,
+      "sd_early": 0.08851869411680854,
+      "sd_late": 0.2122327827515303,
+      "status": "ok"
+    },
+    {
+      "channel": "loss",
+      "early_seeds": [
+        101,
+        102,
+        103
+      ],
+      "late_seeds": [
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "mode": "h2",
+      "ratio_late_over_early": 2.1149360076153374,
+      "sd_early": 0.0007581819744649043,
+      "sd_late": 0.0016035063581207184,
+      "status": "ok"
+    },
+    {
+      "channel": "delay_ms",
+      "early_seeds": [
+        101,
+        102,
+        103
+      ],
+      "late_seeds": [
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "mode": "h2",
+      "ratio_late_over_early": 0.9543400641655846,
+      "sd_early": 0.0761877467583373,
+      "sd_late": 0.07270901912998293,
+      "status": "ok"
+    }
+  ],
+  "schema": "phase20r6/sd_stability/v1"
+}

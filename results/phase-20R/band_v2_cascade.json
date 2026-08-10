@@ -1,0 +1,937 @@
+{
+  "band_joint_identity": "In band reports, joint is identical to full by construction for per-cell metrics; joint only has independent meaning in scan conclusions that include inter-mode K5",
+  "calibration": "results/phase-20R/sla_calibration.json",
+  "calibration_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
+  "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+  "git_dirty": true,
+  "independent_variants": [
+    "common_mode",
+    "differential",
+    "full"
+  ],
+  "is_smoke": false,
+  "joint_scaling_rule": "QT-3 for scan: joint coordinate is dimensionless lambda; lambda=1 perturbs every same-channel mode by its own worst CI90 endpoint. Band rows canonicalize joint to full for per-cell metrics.",
+  "kind": "band",
+  "loss_common_mode_leakage": {
+    "h2": {
+      "cv": 0.01890680079525234,
+      "mean": 2.6120633476716,
+      "note": "uniform link-level loss shift leaks into path-level differential when path loss is nonlinear",
+      "path_derivative": {
+        "P1": 2.6822754180000232,
+        "P2": 2.5624772499528623,
+        "P3": 2.634572476077067,
+        "P4": 2.568928246656448
+      },
+      "range": [
+        2.5624772499528623,
+        2.6822754180000232
+      ],
+      "sd": 0.0493857613790069
+    },
+    "poisson": {
+      "cv": 0.004672367251450005,
+      "mean": 2.934126079492734,
+      "note": "uniform link-level loss shift leaks into path-level differential when path loss is nonlinear",
+      "path_derivative": {
+        "P1": 2.947958652001894,
+        "P2": 2.913433071385066,
+        "P3": 2.94492880679482,
+        "P4": 2.930183787789157
+      },
+      "range": [
+        2.913433071385066,
+        2.947958652001894
+      ],
+      "sd": 0.013709314605447245
+    }
+  },
+  "n": 120000,
+  "n_independent_variants": 3,
+  "phase": "20R.6-v2",
+  "potency_ratio_diff_over_cm": {
+    "h2@0.925|delay_ms": {
+      "differential_over_common_mode": null,
+      "potency_by_variant": {
+        "common_mode": 0.0
+      }
+    },
+    "h2@0.925|loss": {
+      "differential_over_common_mode": null,
+      "potency_by_variant": {
+        "common_mode": 0.0019878738970254724
+      }
+    },
+    "poisson@0.925|delay_ms": {
+      "differential_over_common_mode": null,
+      "potency_by_variant": {
+        "common_mode": 0.0
+      }
+    },
+    "poisson@0.925|loss": {
+      "differential_over_common_mode": null,
+      "potency_by_variant": {
+        "common_mode": 8.780211058901877
+      }
+    }
+  },
+  "residual_file": "results/phase-20R/residual_cascade.json",
+  "residual_sha256": "810969d78a3d11eaa17dbe5aa88001c71a3eee1441ae64d0650c4b95ac75d522",
+  "rho_bar_filter": 0.925,
+  "rows": [
+    {
+      "b_range": [
+        38009,
+        43936
+      ],
+      "band_is_lower_bound": true,
+      "block_inflation_factor_max": 5.2227617309640975,
+      "block_len": 1000,
+      "block_len_requested": 1000,
+      "block_len_truncated": false,
+      "both_endpoints_resolvable": true,
+      "c_range": [
+        23560,
+        26140
+      ],
+      "cell": "poisson@0.925",
+      "channel": "loss",
+      "ci90_block_by_endpoint": [
+        [
+          0.026312436974789917,
+          0.03388294117647059
+        ],
+        [
+          0.021145042016806725,
+          0.0277918487394958
+        ]
+      ],
+      "clip_events": 6220482,
+      "clip_ratio": 0.4319779166666667,
+      "d_d_sla": [
+        -0.07934227304169549,
+        -0.06712115277233746
+      ],
+      "d_err": [
+        0.02408387435514922,
+        0.02966271908258257
+      ],
+      "d_sla": 0.09859570460625558,
+      "d_sla_ci90_block_by_endpoint": [
+        [
+          -0.0831346218487395,
+          -0.07523991596638656
+        ],
+        [
+          -0.0706109243697479,
+          -0.06343025210084034
+        ]
+      ],
+      "d_sla_inflation_factor_max": 6.007583215747438,
+      "d_sla_resolvable": true,
+      "d_sla_se_block_max": 0.0023716770472206414,
+      "d_sla_se_iid_max": 0.0003947805568475288,
+      "d_sla_se_method": "block_bootstrap_paired_samplewise_d_sla_delta",
+      "d_sla_z_max": 33.45407973428607,
+      "equals_full_by_construction": false,
+      "err": 0.2950053754927535,
+      "eval_count": 14400000,
+      "is_algebraic_identity": false,
+      "mc_resolvable": true,
+      "mode": "poisson",
+      "n_blocks": 595,
+      "n_discordant_range": [
+        61569,
+        70076
+      ],
+      "n_total": 599945,
+      "p_mcnemar_min": 0.0,
+      "paired_err_endpoints": [
+        {
+          "b": 43936,
+          "base_d_sla": 0.09859570460625558,
+          "base_err": 0.2950053754927535,
+          "block_len": 1000,
+          "block_len_requested": 1000,
+          "block_len_truncated": false,
+          "c": 26140,
+          "ci90_block": [
+            0.026312436974789917,
+            0.03388294117647059
+          ],
+          "d_d_sla": -0.07934227304169549,
+          "d_err": 0.02966271908258257,
+          "d_sla_block_len": 1000,
+          "d_sla_ci90_block": [
+            -0.0831346218487395,
+            -0.07523991596638656
+          ],
+          "d_sla_inflation_factor": 6.007583215747438,
+          "d_sla_n_blocks": 595,
+          "d_sla_resolvable": true,
+          "d_sla_resolvable_block": true,
+          "d_sla_resolvable_iid": true,
+          "d_sla_se_block": 0.0023716770472206414,
+          "d_sla_se_iid": 0.0003947805568475288,
+          "d_sla_se_method": "paired_sd_of_samplewise_d_sla_delta",
+          "d_sla_se_paired": 0.0003947805568475288,
+          "d_sla_z": 200.9781679099735,
+          "d_sla_z_block": 33.45407973428607,
+          "inflation_factor": 5.2227617309640975,
+          "mc_resolvable": true,
+          "n_blocks": 595,
+          "n_boot": 2000,
+          "n_discordant": 70076,
+          "n_total": 599945,
+          "note": "se_iid_mcnemar gia dinh cap bat dong doc lap; chuoi rho(t) co tuong quan thoi gian. Gate G7 yeu cau block bootstrap, nen dung se_block/ci90_block.",
+          "p_mcnemar": 0.0,
+          "p_mcnemar_exact": null,
+          "p_mcnemar_method": "normal_approx",
+          "perturbed_d_sla": 0.019253431564560084,
+          "perturbed_err": 0.3246680945753361,
+          "r_endpoint": -0.0101350817936804,
+          "resolvable_block": true,
+          "se_block": 0.002304482566232894,
+          "se_iid_mcnemar": 0.0004412383112502238,
+          "se_paired": 0.0004412383112502238,
+          "se_unpaired_for_reference": 0.0006455268116914971
+        },
+        {
+          "b": 38009,
+          "base_d_sla": 0.09859570460625558,
+          "base_err": 0.2950053754927535,
+          "block_len": 1000,
+          "block_len_requested": 1000,
+          "block_len_truncated": false,
+          "c": 23560,
+          "ci90_block": [
+            0.021145042016806725,
+            0.0277918487394958
+          ],
+          "d_d_sla": -0.06712115277233746,
+          "d_err": 0.02408387435514922,
+          "d_sla_block_len": 1000,
+          "d_sla_ci90_block": [
+            -0.0706109243697479,
+            -0.06343025210084034
+          ],
+          "d_sla_inflation_factor": 5.6740726208437895,
+          "d_sla_n_blocks": 595,
+          "d_sla_resolvable": true,
+          "d_sla_resolvable_block": true,
+          "d_sla_resolvable_iid": true,
+          "d_sla_se_block": 0.0021220199877110173,
+          "d_sla_se_iid": 0.0003739853416601941,
+          "d_sla_se_method": "paired_sd_of_samplewise_d_sla_delta",
+          "d_sla_se_paired": 0.0003739853416601941,
+          "d_sla_z": 179.47535717409014,
+          "d_sla_z_block": 31.630782537887296,
+          "inflation_factor": 4.938861947826336,
+          "mc_resolvable": true,
+          "n_blocks": 595,
+          "n_boot": 2000,
+          "n_discordant": 61569,
+          "n_total": 599945,
+          "note": "se_iid_mcnemar gia dinh cap bat dong doc lap; chuoi rho(t) co tuong quan thoi gian. Gate G7 yeu cau block bootstrap, nen dung se_block/ci90_block.",
+          "p_mcnemar": 0.0,
+          "p_mcnemar_exact": null,
+          "p_mcnemar_method": "normal_approx",
+          "perturbed_d_sla": 0.03147455183391811,
+          "perturbed_err": 0.3190892498479027,
+          "r_endpoint": -0.008908490679519442,
+          "resolvable_block": true,
+          "se_block": 0.002042661947409653,
+          "se_iid_mcnemar": 0.000413589602015229,
+          "se_paired": 0.000413589602015229,
+          "se_unpaired_for_reference": 0.0006455268116914971
+        }
+      ],
+      "potency": 8.780211058901877,
+      "potency_abs_d_err": 0.02966271908258257,
+      "potency_endpoint": -0.0101350817936804,
+      "potency_injection_rms": 0.0033783605978934665,
+      "potency_rule": "max_abs_d_err_endpoint / rms_injected_residual_vector",
+      "residual_decomposition": null,
+      "resolvability_rule": "worst-endpoint: band row is resolvable if at least one CI endpoint is distinguishable from zero; the other endpoint may remain within MC noise",
+      "se_block_max": 0.002304482566232894,
+      "se_iid_mcnemar_max": 0.0004412383112502238,
+      "se_monte_carlo": 0.002304482566232894,
+      "se_monte_carlo_method": "block_bootstrap_paired_signed_err",
+      "se_unpaired_for_reference": 0.0006455268116914971,
+      "supported": true,
+      "variant": "common_mode",
+      "worst_endpoint_resolvable": true
+    },
+    {
+      "cell": "poisson@0.925",
+      "channel": "loss",
+      "mode": "poisson",
+      "reason": "requires per_unit L1/L2/L3; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "differential"
+    },
+    {
+      "cell": "poisson@0.925",
+      "channel": "loss",
+      "mode": "poisson",
+      "reason": "requires per_unit L1/L2/L3; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "full"
+    },
+    {
+      "cell": "poisson@0.925",
+      "channel": "loss",
+      "mode": "poisson",
+      "reason": "joint requires non-zero per-link residuals for at least two mode records in the same channel; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "joint"
+    },
+    {
+      "b_range": [
+        0,
+        0
+      ],
+      "band_is_lower_bound": false,
+      "block_inflation_factor_max": null,
+      "block_len": 1000,
+      "block_len_requested": 1000,
+      "block_len_truncated": false,
+      "both_endpoints_resolvable": null,
+      "c_range": [
+        0,
+        0
+      ],
+      "cell": "poisson@0.925",
+      "channel": "delay_ms",
+      "ci90_block_by_endpoint": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "clip_events": 0,
+      "clip_ratio": 0.0,
+      "d_d_sla": [
+        0.001388460608889148,
+        0.0014484661093933612
+      ],
+      "d_err": [
+        0.0,
+        0.0
+      ],
+      "d_sla": 0.09859570460625558,
+      "d_sla_ci90_block_by_endpoint": [
+        [
+          -0.00045075630252100805,
+          0.003637058823529411
+        ],
+        [
+          -0.0001832773109243697,
+          0.003331596638655462
+        ]
+      ],
+      "d_sla_inflation_factor_max": 4.709361947019566,
+      "d_sla_resolvable": false,
+      "d_sla_se_block_max": 0.0012321681134124201,
+      "d_sla_se_iid_max": 0.0002616422622160583,
+      "d_sla_se_method": "block_bootstrap_paired_samplewise_d_sla_delta",
+      "d_sla_z_max": 1.3698565912652594,
+      "equals_full_by_construction": false,
+      "err": 0.2950053754927535,
+      "eval_count": 14400000,
+      "is_algebraic_identity": true,
+      "mc_resolvable": null,
+      "mode": "poisson",
+      "n_blocks": 595,
+      "n_discordant_range": [
+        0,
+        0
+      ],
+      "n_total": 599945,
+      "note_identity": "d_err = 0 la DONG NHAT THUC: moi duong co cung so chang, common-mode delay dich moi duong cung mot hang so nen argmin bat bien.",
+      "p_mcnemar_min": null,
+      "paired_err_endpoints": [
+        {
+          "b": 0,
+          "base_d_sla": 0.09859570460625558,
+          "base_err": 0.2950053754927535,
+          "block_len": 1000,
+          "block_len_requested": 1000,
+          "block_len_truncated": false,
+          "c": 0,
+          "ci90_block": [
+            0.0,
+            0.0
+          ],
+          "d_d_sla": 0.001388460608889148,
+          "d_err": 0.0,
+          "d_sla_block_len": 1000,
+          "d_sla_ci90_block": [
+            -0.00045075630252100805,
+            0.003637058823529411
+          ],
+          "d_sla_inflation_factor": 4.709361947019566,
+          "d_sla_n_blocks": 595,
+          "d_sla_resolvable": false,
+          "d_sla_resolvable_block": false,
+          "d_sla_resolvable_iid": true,
+          "d_sla_se_block": 0.0012321681134124201,
+          "d_sla_se_iid": 0.0002616422622160583,
+          "d_sla_se_method": "paired_sd_of_samplewise_d_sla_delta",
+          "d_sla_se_paired": 0.0002616422622160583,
+          "d_sla_z": 5.306713820348291,
+          "d_sla_z_block": 1.126843483267786,
+          "inflation_factor": null,
+          "mc_resolvable": false,
+          "n_blocks": 595,
+          "n_boot": 2000,
+          "n_discordant": 0,
+          "n_total": 599945,
+          "note": "se_iid_mcnemar gia dinh cap bat dong doc lap; chuoi rho(t) co tuong quan thoi gian. Gate G7 yeu cau block bootstrap, nen dung se_block/ci90_block.",
+          "p_mcnemar": 1.0,
+          "p_mcnemar_exact": 1.0,
+          "p_mcnemar_method": "degenerate",
+          "perturbed_d_sla": 0.09998416521514472,
+          "perturbed_err": 0.2950053754927535,
+          "r_endpoint": -0.8441664663562818,
+          "resolvable_block": false,
+          "se_block": 0.0,
+          "se_iid_mcnemar": 0.0,
+          "se_paired": 0.0,
+          "se_unpaired_for_reference": 0.0006455268116914971
+        },
+        {
+          "b": 0,
+          "base_d_sla": 0.09859570460625558,
+          "base_err": 0.2950053754927535,
+          "block_len": 1000,
+          "block_len_requested": 1000,
+          "block_len_truncated": false,
+          "c": 0,
+          "ci90_block": [
+            0.0,
+            0.0
+          ],
+          "d_d_sla": 0.0014484661093933612,
+          "d_err": 0.0,
+          "d_sla_block_len": 1000,
+          "d_sla_ci90_block": [
+            -0.0001832773109243697,
+            0.003331596638655462
+          ],
+          "d_sla_inflation_factor": 4.405391687248828,
+          "d_sla_n_blocks": 595,
+          "d_sla_resolvable": false,
+          "d_sla_resolvable_block": false,
+          "d_sla_resolvable_iid": true,
+          "d_sla_se_block": 0.0010573852172770105,
+          "d_sla_se_iid": 0.0002400207047054535,
+          "d_sla_se_method": "paired_sd_of_samplewise_d_sla_delta",
+          "d_sla_se_paired": 0.0002400207047054535,
+          "d_sla_z": 6.034754839882989,
+          "d_sla_z_block": 1.3698565912652594,
+          "inflation_factor": null,
+          "mc_resolvable": false,
+          "n_blocks": 595,
+          "n_boot": 2000,
+          "n_discordant": 0,
+          "n_total": 599945,
+          "note": "se_iid_mcnemar gia dinh cap bat dong doc lap; chuoi rho(t) co tuong quan thoi gian. Gate G7 yeu cau block bootstrap, nen dung se_block/ci90_block.",
+          "p_mcnemar": 1.0,
+          "p_mcnemar_exact": 1.0,
+          "p_mcnemar_method": "degenerate",
+          "perturbed_d_sla": 0.10004417071564893,
+          "perturbed_err": 0.2950053754927535,
+          "r_endpoint": -0.6486325716416694,
+          "resolvable_block": false,
+          "se_block": 0.0,
+          "se_iid_mcnemar": 0.0,
+          "se_paired": 0.0,
+          "se_unpaired_for_reference": 0.0006455268116914971
+        }
+      ],
+      "potency": 0.0,
+      "potency_abs_d_err": 0.0,
+      "potency_endpoint": -0.8441664663562818,
+      "potency_injection_rms": 0.2813888221187606,
+      "potency_rule": "max_abs_d_err_endpoint / rms_injected_residual_vector",
+      "residual_decomposition": null,
+      "resolvability_rule": "worst-endpoint: band row is resolvable if at least one CI endpoint is distinguishable from zero; the other endpoint may remain within MC noise",
+      "se_block_max": 0.0,
+      "se_iid_mcnemar_max": 0.0,
+      "se_monte_carlo": 0.0,
+      "se_monte_carlo_method": "algebraic_identity",
+      "se_unpaired_for_reference": 0.0006455268116914971,
+      "supported": true,
+      "variant": "common_mode",
+      "worst_endpoint_resolvable": null
+    },
+    {
+      "cell": "poisson@0.925",
+      "channel": "delay_ms",
+      "mode": "poisson",
+      "reason": "requires per_unit L1/L2/L3; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "differential"
+    },
+    {
+      "cell": "poisson@0.925",
+      "channel": "delay_ms",
+      "mode": "poisson",
+      "reason": "requires per_unit L1/L2/L3; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "full"
+    },
+    {
+      "cell": "poisson@0.925",
+      "channel": "delay_ms",
+      "mode": "poisson",
+      "reason": "joint requires non-zero per-link residuals for at least two mode records in the same channel; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "joint"
+    },
+    {
+      "b_range": [
+        4,
+        4
+      ],
+      "band_is_lower_bound": false,
+      "block_inflation_factor_max": 0.9950944722161766,
+      "block_len": 1000,
+      "block_len_requested": 1000,
+      "block_len_truncated": false,
+      "both_endpoints_resolvable": false,
+      "c_range": [
+        7,
+        8
+      ],
+      "cell": "h2@0.925",
+      "channel": "loss",
+      "ci90_block_by_endpoint": [
+        [
+          -1.680672268907563e-05,
+          3.361344537815126e-06
+        ],
+        [
+          -1.3445378151260504e-05,
+          3.361344537815126e-06
+        ]
+      ],
+      "clip_events": 0,
+      "clip_ratio": 0.0,
+      "d_d_sla": [
+        -0.0063905858036986726,
+        -0.0058038653543241465
+      ],
+      "d_err": [
+        -6.667277833801432e-06,
+        -5.000458375351074e-06
+      ],
+      "d_sla": 0.015814783021776996,
+      "d_sla_ci90_block_by_endpoint": [
+        [
+          -0.007897731092436975,
+          -0.005040168067226891
+        ],
+        [
+          -0.007237058823529413,
+          -0.004542521008403362
+        ]
+      ],
+      "d_sla_inflation_factor_max": 5.270784100481365,
+      "d_sla_resolvable": true,
+      "d_sla_se_block_max": 0.0008772923956396388,
+      "d_sla_se_iid_max": 0.00016644438074394247,
+      "d_sla_se_method": "block_bootstrap_paired_samplewise_d_sla_delta",
+      "d_sla_z_max": 7.284442262877772,
+      "equals_full_by_construction": false,
+      "err": 0.07255831784580254,
+      "eval_count": 14400000,
+      "is_algebraic_identity": false,
+      "mc_resolvable": false,
+      "mode": "h2",
+      "n_blocks": 595,
+      "n_discordant_range": [
+        11,
+        12
+      ],
+      "n_total": 599945,
+      "note_mc": "d_err chua phan biet duoc voi 0 theo block bootstrap ghep cap; tang n hoac tang so seed",
+      "p_mcnemar_min": 0.3876953125,
+      "paired_err_endpoints": [
+        {
+          "b": 4,
+          "base_d_sla": 0.015814783021776996,
+          "base_err": 0.07255831784580254,
+          "block_len": 1000,
+          "block_len_requested": 1000,
+          "block_len_truncated": false,
+          "c": 8,
+          "ci90_block": [
+            -1.680672268907563e-05,
+            3.361344537815126e-06
+          ],
+          "d_d_sla": -0.0063905858036986726,
+          "d_err": -6.667277833801432e-06,
+          "d_sla_block_len": 1000,
+          "d_sla_ci90_block": [
+            -0.007897731092436975,
+            -0.005040168067226891
+          ],
+          "d_sla_inflation_factor": 5.270784100481365,
+          "d_sla_n_blocks": 595,
+          "d_sla_resolvable": true,
+          "d_sla_resolvable_block": true,
+          "d_sla_resolvable_iid": true,
+          "d_sla_se_block": 0.0008772923956396388,
+          "d_sla_se_iid": 0.00016644438074394247,
+          "d_sla_se_method": "paired_sd_of_samplewise_d_sla_delta",
+          "d_sla_se_paired": 0.00016644438074394247,
+          "d_sla_z": 38.394722460050666,
+          "d_sla_z_block": 7.284442262877772,
+          "inflation_factor": 0.9920612081343687,
+          "mc_resolvable": false,
+          "n_blocks": 595,
+          "n_boot": 2000,
+          "n_discordant": 12,
+          "n_total": 599945,
+          "note": "se_iid_mcnemar gia dinh cap bat dong doc lap; chuoi rho(t) co tuong quan thoi gian. Gate G7 yeu cau block bootstrap, nen dung se_block/ci90_block.",
+          "p_mcnemar": 0.3876953125,
+          "p_mcnemar_exact": 0.3876953125,
+          "p_mcnemar_method": "exact_binomial",
+          "perturbed_d_sla": 0.009424197218078323,
+          "perturbed_err": 0.07255165056796874,
+          "r_endpoint": -0.010061922706130285,
+          "resolvable_block": false,
+          "se_block": 5.728193140060803e-06,
+          "se_iid_mcnemar": 5.774031978160922e-06,
+          "se_paired": 5.774031978160922e-06,
+          "se_unpaired_for_reference": 0.0006455268116914971
+        },
+        {
+          "b": 4,
+          "base_d_sla": 0.015814783021776996,
+          "base_err": 0.07255831784580254,
+          "block_len": 1000,
+          "block_len_requested": 1000,
+          "block_len_truncated": false,
+          "c": 7,
+          "ci90_block": [
+            -1.3445378151260504e-05,
+            3.361344537815126e-06
+          ],
+          "d_d_sla": -0.0058038653543241465,
+          "d_err": -5.000458375351074e-06,
+          "d_sla_block_len": 1000,
+          "d_sla_ci90_block": [
+            -0.007237058823529413,
+            -0.004542521008403362
+          ],
+          "d_sla_inflation_factor": 5.103967954112296,
+          "d_sla_n_blocks": 595,
+          "d_sla_resolvable": true,
+          "d_sla_resolvable_block": true,
+          "d_sla_resolvable_iid": true,
+          "d_sla_se_block": 0.0008237602284181514,
+          "d_sla_se_iid": 0.00016139604241724188,
+          "d_sla_se_method": "paired_sd_of_samplewise_d_sla_delta",
+          "d_sla_se_paired": 0.00016139604241724188,
+          "d_sla_z": 35.96039448922771,
+          "d_sla_z_block": 7.045576071897986,
+          "inflation_factor": 0.9950944722161766,
+          "mc_resolvable": false,
+          "n_blocks": 595,
+          "n_boot": 2000,
+          "n_discordant": 11,
+          "n_total": 599945,
+          "note": "se_iid_mcnemar gia dinh cap bat dong doc lap; chuoi rho(t) co tuong quan thoi gian. Gate G7 yeu cau block bootstrap, nen dung se_block/ci90_block.",
+          "p_mcnemar": 0.548828125,
+          "p_mcnemar_exact": 0.548828125,
+          "p_mcnemar_method": "exact_binomial",
+          "perturbed_d_sla": 0.01001091766745285,
+          "perturbed_err": 0.07255331738742718,
+          "r_endpoint": -0.008640886279024923,
+          "resolvable_block": false,
+          "se_block": 5.501095925956203e-06,
+          "se_iid_mcnemar": 5.528214736943219e-06,
+          "se_paired": 5.528214736943219e-06,
+          "se_unpaired_for_reference": 0.0006455268116914971
+        }
+      ],
+      "potency": 0.0019878738970254724,
+      "potency_abs_d_err": 6.667277833801432e-06,
+      "potency_endpoint": -0.010061922706130285,
+      "potency_injection_rms": 0.003353974235376762,
+      "potency_rule": "max_abs_d_err_endpoint / rms_injected_residual_vector",
+      "residual_decomposition": null,
+      "resolvability_rule": "worst-endpoint: band row is resolvable if at least one CI endpoint is distinguishable from zero; the other endpoint may remain within MC noise",
+      "se_block_max": 5.728193140060803e-06,
+      "se_iid_mcnemar_max": 5.774031978160922e-06,
+      "se_monte_carlo": 5.728193140060803e-06,
+      "se_monte_carlo_method": "block_bootstrap_paired_signed_err",
+      "se_unpaired_for_reference": 0.0006455268116914971,
+      "supported": true,
+      "variant": "common_mode",
+      "worst_endpoint_resolvable": false
+    },
+    {
+      "cell": "h2@0.925",
+      "channel": "loss",
+      "mode": "h2",
+      "reason": "requires per_unit L1/L2/L3; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "differential"
+    },
+    {
+      "cell": "h2@0.925",
+      "channel": "loss",
+      "mode": "h2",
+      "reason": "requires per_unit L1/L2/L3; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "full"
+    },
+    {
+      "cell": "h2@0.925",
+      "channel": "loss",
+      "mode": "h2",
+      "reason": "joint requires non-zero per-link residuals for at least two mode records in the same channel; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "joint"
+    },
+    {
+      "b_range": [
+        0,
+        0
+      ],
+      "band_is_lower_bound": false,
+      "block_inflation_factor_max": null,
+      "block_len": 1000,
+      "block_len_requested": 1000,
+      "block_len_truncated": false,
+      "both_endpoints_resolvable": null,
+      "c_range": [
+        0,
+        0
+      ],
+      "cell": "h2@0.925",
+      "channel": "delay_ms",
+      "ci90_block_by_endpoint": [
+        [
+          0.0,
+          0.0
+        ],
+        [
+          0.0,
+          0.0
+        ]
+      ],
+      "clip_events": 0,
+      "clip_ratio": 0.0,
+      "d_d_sla": [
+        0.003376976222820425,
+        0.003525323154622507
+      ],
+      "d_err": [
+        0.0,
+        0.0
+      ],
+      "d_sla": 0.015814783021776996,
+      "d_sla_ci90_block_by_endpoint": [
+        [
+          0.0027730252100840336,
+          0.004428655462184874
+        ],
+        [
+          0.002707310924369748,
+          0.004213529411764706
+        ]
+      ],
+      "d_sla_inflation_factor_max": 4.394497957515695,
+      "d_sla_resolvable": true,
+      "d_sla_se_block_max": 0.0005023550743700816,
+      "d_sla_se_iid_max": 0.00011431455406889615,
+      "d_sla_se_method": "block_bootstrap_paired_samplewise_d_sla_delta",
+      "d_sla_z_max": 7.377850909877095,
+      "equals_full_by_construction": false,
+      "err": 0.07255831784580254,
+      "eval_count": 14400000,
+      "is_algebraic_identity": true,
+      "mc_resolvable": null,
+      "mode": "h2",
+      "n_blocks": 595,
+      "n_discordant_range": [
+        0,
+        0
+      ],
+      "n_total": 599945,
+      "note_identity": "d_err = 0 la DONG NHAT THUC: moi duong co cung so chang, common-mode delay dich moi duong cung mot hang so nen argmin bat bien.",
+      "p_mcnemar_min": null,
+      "paired_err_endpoints": [
+        {
+          "b": 0,
+          "base_d_sla": 0.015814783021776996,
+          "base_err": 0.07255831784580254,
+          "block_len": 1000,
+          "block_len_requested": 1000,
+          "block_len_truncated": false,
+          "c": 0,
+          "ci90_block": [
+            0.0,
+            0.0
+          ],
+          "d_d_sla": 0.003525323154622507,
+          "d_err": 0.0,
+          "d_sla_block_len": 1000,
+          "d_sla_ci90_block": [
+            0.0027730252100840336,
+            0.004428655462184874
+          ],
+          "d_sla_inflation_factor": 4.394497957515695,
+          "d_sla_n_blocks": 595,
+          "d_sla_resolvable": true,
+          "d_sla_resolvable_block": true,
+          "d_sla_resolvable_iid": true,
+          "d_sla_se_block": 0.0005023550743700816,
+          "d_sla_se_iid": 0.00011431455406889615,
+          "d_sla_se_method": "paired_sd_of_samplewise_d_sla_delta",
+          "d_sla_se_paired": 0.00011431455406889615,
+          "d_sla_z": 30.838795491410767,
+          "d_sla_z_block": 7.017592405218594,
+          "inflation_factor": null,
+          "mc_resolvable": false,
+          "n_blocks": 595,
+          "n_boot": 2000,
+          "n_discordant": 0,
+          "n_total": 599945,
+          "note": "se_iid_mcnemar gia dinh cap bat dong doc lap; chuoi rho(t) co tuong quan thoi gian. Gate G7 yeu cau block bootstrap, nen dung se_block/ci90_block.",
+          "p_mcnemar": 1.0,
+          "p_mcnemar_exact": 1.0,
+          "p_mcnemar_method": "degenerate",
+          "perturbed_d_sla": 0.019340106176399502,
+          "perturbed_err": 0.07255831784580254,
+          "r_endpoint": -0.49869213794322576,
+          "resolvable_block": false,
+          "se_block": 0.0,
+          "se_iid_mcnemar": 0.0,
+          "se_paired": 0.0,
+          "se_unpaired_for_reference": 0.0006455268116914971
+        },
+        {
+          "b": 0,
+          "base_d_sla": 0.015814783021776996,
+          "base_err": 0.07255831784580254,
+          "block_len": 1000,
+          "block_len_requested": 1000,
+          "block_len_truncated": false,
+          "c": 0,
+          "ci90_block": [
+            0.0,
+            0.0
+          ],
+          "d_d_sla": 0.003376976222820425,
+          "d_err": 0.0,
+          "d_sla_block_len": 1000,
+          "d_sla_ci90_block": [
+            0.002707310924369748,
+            0.004213529411764706
+          ],
+          "d_sla_inflation_factor": 4.177429398378676,
+          "d_sla_n_blocks": 595,
+          "d_sla_resolvable": true,
+          "d_sla_resolvable_block": true,
+          "d_sla_resolvable_iid": true,
+          "d_sla_se_block": 0.0004577181436804991,
+          "d_sla_se_iid": 0.00010956933080859404,
+          "d_sla_se_method": "paired_sd_of_samplewise_d_sla_delta",
+          "d_sla_se_paired": 0.00010956933080859404,
+          "d_sla_z": 30.820451287775438,
+          "d_sla_z_block": 7.377850909877095,
+          "inflation_factor": null,
+          "mc_resolvable": false,
+          "n_blocks": 595,
+          "n_boot": 2000,
+          "n_discordant": 0,
+          "n_total": 599945,
+          "note": "se_iid_mcnemar gia dinh cap bat dong doc lap; chuoi rho(t) co tuong quan thoi gian. Gate G7 yeu cau block bootstrap, nen dung se_block/ci90_block.",
+          "p_mcnemar": 1.0,
+          "p_mcnemar_exact": 1.0,
+          "p_mcnemar_method": "degenerate",
+          "perturbed_d_sla": 0.01919175924459742,
+          "perturbed_err": 0.07255831784580254,
+          "r_endpoint": -0.39979061599503496,
+          "resolvable_block": false,
+          "se_block": 0.0,
+          "se_iid_mcnemar": 0.0,
+          "se_paired": 0.0,
+          "se_unpaired_for_reference": 0.0006455268116914971
+        }
+      ],
+      "potency": 0.0,
+      "potency_abs_d_err": 0.0,
+      "potency_endpoint": -0.49869213794322576,
+      "potency_injection_rms": 0.16623071264774192,
+      "potency_rule": "max_abs_d_err_endpoint / rms_injected_residual_vector",
+      "residual_decomposition": null,
+      "resolvability_rule": "worst-endpoint: band row is resolvable if at least one CI endpoint is distinguishable from zero; the other endpoint may remain within MC noise",
+      "se_block_max": 0.0,
+      "se_iid_mcnemar_max": 0.0,
+      "se_monte_carlo": 0.0,
+      "se_monte_carlo_method": "algebraic_identity",
+      "se_unpaired_for_reference": 0.0006455268116914971,
+      "supported": true,
+      "variant": "common_mode",
+      "worst_endpoint_resolvable": null
+    },
+    {
+      "cell": "h2@0.925",
+      "channel": "delay_ms",
+      "mode": "h2",
+      "reason": "requires per_unit L1/L2/L3; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "differential"
+    },
+    {
+      "cell": "h2@0.925",
+      "channel": "delay_ms",
+      "mode": "h2",
+      "reason": "requires per_unit L1/L2/L3; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "full"
+    },
+    {
+      "cell": "h2@0.925",
+      "channel": "delay_ms",
+      "mode": "h2",
+      "reason": "joint requires non-zero per-link residuals for at least two mode records in the same channel; path-only residual is common-mode only",
+      "supported": false,
+      "variant": "joint"
+    }
+  ],
+  "schema": "band_v2/v1",
+  "seeds": [
+    101,
+    102,
+    103,
+    104,
+    105
+  ],
+  "truth_table": "results/phase-20R/truth_table.parquet",
+  "truth_table_sha256": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e",
+  "variant_universe": [
+    "common_mode",
+    "differential",
+    "full",
+    "joint"
+  ],
+  "variants": [
+    "common_mode",
+    "differential",
+    "full",
+    "joint"
+  ],
+  "wall_utc": "2026-08-10T01:38:30Z"
+}

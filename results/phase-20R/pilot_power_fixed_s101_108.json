@@ -30,7 +30,12 @@
           "seeds": [
             101,
             102,
-            103
+            103,
+            104,
+            105,
+            106,
+            107,
+            108
           ]
         },
         "branch_c": {
@@ -52,7 +57,12 @@
           "seeds": [
             101,
             102,
-            103
+            103,
+            104,
+            105,
+            106,
+            107,
+            108
           ]
         }
       },
@@ -79,7 +89,12 @@
           "seeds": [
             101,
             102,
-            103
+            103,
+            104,
+            105,
+            106,
+            107,
+            108
           ]
         },
         "branch_c": {
@@ -101,7 +116,12 @@
           "seeds": [
             101,
             102,
-            103
+            103,
+            104,
+            105,
+            106,
+            107,
+            108
           ]
         }
       },
@@ -114,80 +134,100 @@
     {
       "channel": "loss",
       "mode": "poisson",
-      "n_observed_seed": 3,
+      "n_observed_seed": 8,
       "n_seed_required": {
         "delta_0.005": 1,
         "delta_0.01": 1
       },
       "n_seed_required_conservative_95": {
-        "delta_0.005": 5,
-        "delta_0.01": 2
+        "delta_0.005": 1,
+        "delta_0.01": 1
       },
-      "sd_d_s": 0.0014424542680609863,
-      "sd_d_s_upper_95": 0.006369007443956501,
+      "sd_d_s": 0.001144004062344843,
+      "sd_d_s_upper_95": 0.002055947737655369,
       "seed_ids": [
         101,
         102,
-        103
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
       ],
       "status": "ok"
     },
     {
       "channel": "delay_ms",
       "mode": "poisson",
-      "n_observed_seed": 3,
-      "n_seed_required": {
-        "delta_0.44": 1
-      },
-      "n_seed_required_conservative_95": {
-        "delta_0.44": 3
-      },
-      "sd_d_s": 0.08851869411680854,
-      "sd_d_s_upper_95": 0.3908451271159648,
-      "seed_ids": [
-        101,
-        102,
-        103
-      ],
-      "status": "ok"
-    },
-    {
-      "channel": "loss",
-      "mode": "h2",
-      "n_observed_seed": 3,
-      "n_seed_required": {
-        "delta_0.005": 1,
-        "delta_0.01": 1
-      },
-      "n_seed_required_conservative_95": {
-        "delta_0.005": 2,
-        "delta_0.01": 1
-      },
-      "sd_d_s": 0.0007581819744649043,
-      "sd_d_s_upper_95": 0.003347673992972962,
-      "seed_ids": [
-        101,
-        102,
-        103
-      ],
-      "status": "ok"
-    },
-    {
-      "channel": "delay_ms",
-      "mode": "h2",
-      "n_observed_seed": 3,
+      "n_observed_seed": 8,
       "n_seed_required": {
         "delta_0.44": 1
       },
       "n_seed_required_conservative_95": {
         "delta_0.44": 2
       },
-      "sd_d_s": 0.0761877467583373,
-      "sd_d_s_upper_95": 0.33639910601422773,
+      "sd_d_s": 0.18126941825708087,
+      "sd_d_s_upper_95": 0.325768467646762,
       "seed_ids": [
         101,
         102,
-        103
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "status": "ok"
+    },
+    {
+      "channel": "loss",
+      "mode": "h2",
+      "n_observed_seed": 8,
+      "n_seed_required": {
+        "delta_0.005": 1,
+        "delta_0.01": 1
+      },
+      "n_seed_required_conservative_95": {
+        "delta_0.005": 1,
+        "delta_0.01": 1
+      },
+      "sd_d_s": 0.0012900147622542176,
+      "sd_d_s_upper_95": 0.002318350973826455,
+      "seed_ids": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
+      ],
+      "status": "ok"
+    },
+    {
+      "channel": "delay_ms",
+      "mode": "h2",
+      "n_observed_seed": 8,
+      "n_seed_required": {
+        "delta_0.44": 1
+      },
+      "n_seed_required_conservative_95": {
+        "delta_0.44": 1
+      },
+      "sd_d_s": 0.09140112223211809,
+      "sd_d_s_upper_95": 0.16426159369322288,
+      "seed_ids": [
+        101,
+        102,
+        103,
+        104,
+        105,
+        106,
+        107,
+        108
       ],
       "status": "ok"
     }

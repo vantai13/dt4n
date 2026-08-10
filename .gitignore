@@ -69,10 +69,12 @@ results/**/*
 !results/phase-*/**/*.md
 !results/phase-*/**/*.csv
 !results/phase-*/**/*.png
+!results/phase-*/**/*.sha256
 !results/phase-*/*.json
 !results/phase-*/*.md
 !results/phase-*/*.csv
 !results/phase-*/*.png
+!results/phase-*/*.sha256
 
 # Phase L raw binary traces stay outside git; commit manifest + metadata.
 results/phase-L/raw/*.bin
@@ -85,6 +87,7 @@ results/phase-20R/raw/*.json
 !results/phase-20R/raw/MANIFEST.sha256.json
 !results/phase-20R/*.parquet
 !results/phase-20R/truth_table.parquet
+results/**/raw_additivity_*/
 
 # Historical local experiment outputs kept on this workstation. They are not
 # part of Phase 20R provenance and would otherwise make live git fingerprints

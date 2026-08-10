@@ -1,0 +1,457 @@
+{
+  "band_joint_identity": "In band reports, joint is identical to full by construction for per-cell metrics; joint only has independent meaning in scan conclusions that include inter-mode K5",
+  "baseline": {
+    "K1_err_in_g1_band": true,
+    "K2_d_sla_floor": true,
+    "K3_spearman_err_z_positive": true,
+    "K4_path_ranking_preserved": true,
+    "K5_family_order_preserved": true,
+    "per_cell": {
+      "h2@0.925": {
+        "d_sla": 0.018240021341158423,
+        "err_total": 0.07612124445630064
+      },
+      "poisson@0.925": {
+        "d_sla": 0.08567808196338658,
+        "err_total": 0.27016572743339223
+      }
+    },
+    "rankings": {
+      "h2@0.925": [
+        "P1",
+        "P3",
+        "P4",
+        "P2"
+      ],
+      "poisson@0.925": [
+        "P1",
+        "P3",
+        "P4",
+        "P2"
+      ]
+    },
+    "spearman_err_z": {
+      "h2@0.925": {
+        "n": 6,
+        "rho": 1.0
+      },
+      "poisson@0.925": {
+        "n": 6,
+        "rho": 1.0
+      }
+    }
+  },
+  "calibration": "results/phase-20R/sla_calibration.json",
+  "calibration_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
+  "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+  "git_dirty": true,
+  "independent_variants": [
+    "common_mode"
+  ],
+  "is_smoke": true,
+  "joint_scaling_rule": "QT-3 for scan: joint coordinate is dimensionless lambda; lambda=1 perturbs every same-channel mode by its own worst CI90 endpoint. Band rows canonicalize joint to full for per-cell metrics.",
+  "kind": "scan",
+  "n": 30000,
+  "n_independent_variants": 1,
+  "phase": "20R.6-v2",
+  "residual_file": "results/phase-20R/residual_cascade.json",
+  "residual_sha256": "810969d78a3d11eaa17dbe5aa88001c71a3eee1441ae64d0650c4b95ac75d522",
+  "rho_bar_filter": 0.925,
+  "safety_published": {
+    "binding": {
+      "bound": "bracket_lo",
+      "channel": "loss",
+      "first_broken": [
+        "K2_d_sla_floor"
+      ],
+      "first_broken_cell": [
+        "poisson@0.925"
+      ],
+      "hi": 0.8658854166666665,
+      "mode": "poisson",
+      "scan_axis": "residual_native_unit",
+      "value": 0.859375,
+      "variant": "common_mode"
+    },
+    "candidates": [
+      {
+        "bound": "bracket_lo",
+        "channel": "loss",
+        "first_broken": [
+          "K2_d_sla_floor"
+        ],
+        "first_broken_cell": [
+          "poisson@0.925"
+        ],
+        "hi": 0.8658854166666665,
+        "mode": "poisson",
+        "scan_axis": "residual_native_unit",
+        "value": 0.859375,
+        "variant": "common_mode"
+      },
+      {
+        "bound": "bracket_lo",
+        "channel": "delay_ms",
+        "first_broken": [
+          "K2_d_sla_floor"
+        ],
+        "first_broken_cell": [
+          "poisson@0.925"
+        ],
+        "hi": 4.283142089843749,
+        "mode": "poisson",
+        "scan_axis": "residual_native_unit",
+        "value": 4.283040364583333,
+        "variant": "common_mode"
+      },
+      {
+        "bound": "lower",
+        "channel": "loss",
+        "first_broken": null,
+        "first_broken_cell": [],
+        "mode": "h2",
+        "scan_axis": "residual_native_unit",
+        "value": 10.0,
+        "variant": "common_mode"
+      },
+      {
+        "bound": "lower",
+        "channel": "delay_ms",
+        "first_broken": null,
+        "first_broken_cell": [],
+        "mode": "h2",
+        "scan_axis": "residual_native_unit",
+        "value": 10.0262258406994,
+        "variant": "common_mode"
+      }
+    ],
+    "rule": "min over supported variants; bracket rows use conservative lo; joint uses QT-3 lambda directly",
+    "value": 0.859375
+  },
+  "scan_split_policy": {
+    "K1_K2_K3_K5": "monte_carlo_at_requested_n",
+    "K4_path_ranking_preserved": "deterministic_path_ranking_no_seed_no_n"
+  },
+  "scans": [
+    {
+      "channel": "loss",
+      "first_broken": [
+        "K2_d_sla_floor"
+      ],
+      "first_broken_cell": [
+        "poisson@0.925"
+      ],
+      "first_broken_detail": {
+        "K2_d_sla_floor": {
+          "poisson@0.925": {
+            "base_d_sla": 0.08567808196338658,
+            "floor": 0.03,
+            "perturbed_d_sla": 0.029884290906665778
+          }
+        }
+      },
+      "k4_deterministic": {
+        "baseline_broken": false,
+        "first_broken": [
+          "K4_path_ranking_preserved"
+        ],
+        "first_broken_cell": [
+          "poisson@0.925"
+        ],
+        "first_broken_detail": {
+          "K4_path_ranking_preserved": {
+            "poisson@0.925": {
+              "base": [
+                "P1",
+                "P3",
+                "P4",
+                "P2"
+              ],
+              "pert": [
+                "P3",
+                "P1",
+                "P4",
+                "P2"
+              ]
+            }
+          }
+        },
+        "method": "deterministic_path_ranking",
+        "n_dependence": "none",
+        "r_star": 0.008841803127299307,
+        "r_star_bracket": {
+          "bracket_width": 6.598360542760771e-05,
+          "r_star": 0.008841803127299307,
+          "r_star_hi": 0.008841803127299307,
+          "r_star_lo": 0.0087758195218717
+        },
+        "safety_factor": {
+          "bound": "bracket",
+          "hi": 0.8723958333333334,
+          "lo": 0.8658854166666665
+        }
+      },
+      "mode": "poisson",
+      "r_ci90": [
+        -0.0101350817936804,
+        -0.008908490679519442
+      ],
+      "r_max": 0.101350817936804,
+      "r_point": -0.009521786236599921,
+      "r_star": 0.0087758195218717,
+      "r_star_bracket": {
+        "bracket_width": 6.598360542760598e-05,
+        "r_star": 0.0087758195218717,
+        "r_star_hi": 0.0087758195218717,
+        "r_star_lo": 0.008709835916444093
+      },
+      "residual_decomposition": null,
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 0.8658854166666665,
+        "lo": 0.859375
+      },
+      "scan_axis": "residual_native_unit",
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": false,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 0.03378360597893467
+        }
+      ],
+      "variant": "common_mode"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": [
+        "K2_d_sla_floor"
+      ],
+      "first_broken_cell": [
+        "poisson@0.925"
+      ],
+      "first_broken_detail": {
+        "K2_d_sla_floor": {
+          "poisson@0.925": {
+            "base_d_sla": 0.08567808196338658,
+            "floor": 0.03,
+            "perturbed_d_sla": 0.02999766581079729
+          }
+        }
+      },
+      "k4_deterministic": {
+        "baseline_broken": false,
+        "first_broken": null,
+        "first_broken_cell": [],
+        "first_broken_detail": {},
+        "method": "deterministic_path_ranking",
+        "n_dependence": "none",
+        "r_star": null,
+        "r_star_bracket": null,
+        "safety_factor": {
+          "bound": "lower",
+          "value": 10.0
+        }
+      },
+      "mode": "poisson",
+      "r_ci90": [
+        -0.8441664663562818,
+        -0.6486325716416694
+      ],
+      "r_max": 8.441664663562818,
+      "r_point": -0.7463995189989756,
+      "r_star": 3.615684922885258,
+      "r_star_bracket": {
+        "bracket_width": 8.587305362484088e-05,
+        "r_star": 3.615684922885258,
+        "r_star_hi": 3.615684922885258,
+        "r_star_lo": 3.615599049831633
+      },
+      "residual_decomposition": null,
+      "safety_factor": {
+        "bound": "bracket",
+        "hi": 4.283142089843749,
+        "lo": 4.283040364583333
+      },
+      "scan_axis": "residual_native_unit",
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 2.813888221187606
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": false,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": false,
+          "r": 5.627776442375212
+        }
+      ],
+      "variant": "common_mode"
+    },
+    {
+      "channel": "loss",
+      "first_broken": null,
+      "first_broken_cell": [],
+      "first_broken_detail": {},
+      "k4_deterministic": {
+        "baseline_broken": false,
+        "first_broken": null,
+        "first_broken_cell": [],
+        "first_broken_detail": {},
+        "method": "deterministic_path_ranking",
+        "n_dependence": "none",
+        "r_star": null,
+        "r_star_bracket": null,
+        "safety_factor": {
+          "bound": "lower",
+          "value": 10.0
+        }
+      },
+      "mode": "h2",
+      "r_ci90": [
+        -0.010061922706130285,
+        -0.008640886279024923
+      ],
+      "r_max": 0.10061922706130286,
+      "r_point": -0.009351404492577604,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": null,
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0
+      },
+      "scan_axis": "residual_native_unit",
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 0.03353974235376762
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 0.06707948470753523
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 0.10061922706130286
+        }
+      ],
+      "variant": "common_mode"
+    },
+    {
+      "channel": "delay_ms",
+      "first_broken": null,
+      "first_broken_cell": [],
+      "first_broken_detail": {},
+      "k4_deterministic": {
+        "baseline_broken": false,
+        "first_broken": null,
+        "first_broken_cell": [],
+        "first_broken_detail": {},
+        "method": "deterministic_path_ranking",
+        "n_dependence": "none",
+        "r_star": null,
+        "r_star_bracket": null,
+        "safety_factor": {
+          "bound": "lower",
+          "value": 10.0262258406994
+        }
+      },
+      "mode": "h2",
+      "r_ci90": [
+        -0.49869213794322576,
+        -0.39979061599503496
+      ],
+      "r_max": 5.0,
+      "r_point": -0.44924137696913036,
+      "r_star": null,
+      "r_star_bracket": null,
+      "residual_decomposition": null,
+      "safety_factor": {
+        "bound": "lower",
+        "value": 10.0262258406994
+      },
+      "scan_axis": "residual_native_unit",
+      "supported": true,
+      "trace": [
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 1.6666666666666667
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 3.3333333333333335
+        },
+        {
+          "K1_err_in_g1_band": true,
+          "K2_d_sla_floor": true,
+          "K3_spearman_err_z_positive": true,
+          "K4_path_ranking_preserved": true,
+          "K5_family_order_preserved": true,
+          "holds": true,
+          "r": 5.0
+        }
+      ],
+      "variant": "common_mode"
+    }
+  ],
+  "schema": "band_v2/v1",
+  "seeds": [
+    101,
+    102,
+    103,
+    104,
+    105
+  ],
+  "truth_table": "results/phase-20R/truth_table.parquet",
+  "truth_table_sha256": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e",
+  "variant_universe": [
+    "common_mode",
+    "differential",
+    "full",
+    "joint"
+  ],
+  "variants": [
+    "common_mode"
+  ],
+  "wall_utc": "2026-08-10T01:52:11Z"
+}
