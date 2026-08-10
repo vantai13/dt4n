@@ -215,6 +215,14 @@ xap xi tuyen tinh, kem chinh xac hon khi loss per-link len toi cap `0.075`.
 Tat ca artifact phan tich van co `git_dirty=true` vi repo dang chua commit code
 va artifact ket qua.
 
+Ghi chu provenance sau commit: cac artifact cascade final ghi
+`git_commit = c4fb70d75605e2539b357841c39be8cd547c6307` voi
+`git_dirty = true` tai thoi diem sinh so. Toan bo code, docs, compact JSON, va
+manifest raw sha256 da duoc commit tai `2570585`. Cac input chinh
+(`truth_table`, `calibration`, `residual`, va raw manifest) co sha256 trong
+artifact/manifest, nen so lieu co the tai lap tu checkpoint da commit ma khong
+can chay lai Mininet.
+
 ## 9. Threats And Scope
 
 - Cascade loss la loss cua dong tham chieu probe trong nen, khong phai loss cua
