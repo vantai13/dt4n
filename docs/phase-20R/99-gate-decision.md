@@ -208,3 +208,24 @@ diagnostic, and tau scaling. The paper claim should emphasize:
    after the n=800k conservative CI recheck;
 6. z/tau scaling is empirically stable within 0.029 absolute spread.
 ```
+
+## Lesson 20R.7 -- DONG
+
+```text
+Amendment ky trong lesson: 00q-16, 00r-17, 00s-18
+
+Amd 15 sec.8 (nguong gay khep kin)  : 3/3 PASS
+Amd 15 sec.7 P1 ban kinh le          : NOT SUPPORTED (p = 0.085491)
+Amd 15 sec.7 P2 vi tri dinh do cong  : NOT SUPPORTED (lech 4.5 buoc luoi;
+                                       h2 khong kiem duoc)
+Amd 15 sec.7 P3 kenh loss chi phoi   : SUPPORTED (17/17 o, 3.74x - 3955.60x)
+
+Thu hoi ky thuat: `curvature_cost` voi h < buoc luoi khong duoc dung cho ban do.
+                  `grad_cost` (bac 1) van hop le. Ket qua K4 khong bi anh huong.
+
+He qua cho 20R.8 va 21R:
+  - chung nhan phai nham vao HIEU chi phi giua cac duong (da ghi tu 20R.6)
+  - va vao thong ke le DA CHUAN HOA, khong phai gia tri le tho
+  - gia thuyet ung vien cho lesson sau: P[r(s) < sigma_rho]
+    (hien la POST-HOC, phai tien dang ky va kiem tren du lieu chua dung)
+```
