@@ -349,3 +349,17 @@ the cliff and asked the agent to distinguish two mostly uncongested worlds.
 This keeps the behavior gates necessary, but their scenarios must be calibrated
 whenever the link model changes. `LOAD_PRESETS` now uses deterministic rev5
 slices below/around/above the measured cliff and sets `drift_sigma=0.0`.
+
+## 2026-08-12 - Phase 21R complete: age-conditional conformal certificate
+
+### QD-29: Proceed to Phase 22 with explicit post-selection and K=4 scope
+
+Phase 21R closes as GO. The final status is 11 PASS gates and 1 PASS_MARGINAL
+gate (G2 eta2), with G5 completed by block-bootstrap CI for `Var(e_model)`,
+`Var(e_stale)`, and `Cov`. The fixed-sigma headline path remains the controlled
+analysis; the operational-sigma path is robustness evidence and is reported
+separately.
+
+Phase 22 must address three scoped gaps: simultaneous coverage for all K=4
+actions, coverage after selection, and sensitivity of the observed q_hat
+age-shape ratio to tau/AoI/real telemetry.

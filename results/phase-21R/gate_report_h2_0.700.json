@@ -1,0 +1,412 @@
+{
+ "G11_all_pass": true,
+ "G11_measurement_floor": [
+  {
+   "cell": "cbr@0.700",
+   "floor_delay_ms": 0.005724143983398946,
+   "floor_loss_ms": 0.0,
+   "floor_total_ms": 0.005724143983398946,
+   "loss_over_delay": 0.0,
+   "pass_G11": true,
+   "qhat_first": 0.010342376306653023,
+   "qhat_over_floor": 1.8067987696759178,
+   "w_loss": 1245.6355455410035
+  },
+  {
+   "cell": "cbr@0.850",
+   "floor_delay_ms": 0.0031239422480594777,
+   "floor_loss_ms": 0.0,
+   "floor_total_ms": 0.0031239422480594777,
+   "loss_over_delay": 0.0,
+   "pass_G11": true,
+   "qhat_first": 0.00809874664992094,
+   "qhat_over_floor": 2.5924764310069106,
+   "w_loss": 1245.6355455410035
+  },
+  {
+   "cell": "h2@0.700",
+   "floor_delay_ms": 0.19465500685498693,
+   "floor_loss_ms": 1.7553781876987875,
+   "floor_total_ms": 1.7661379203058845,
+   "loss_over_delay": 9.017893842342827,
+   "pass_G11": true,
+   "qhat_first": 27.33264923095703,
+   "qhat_over_floor": 15.475942686414422,
+   "w_loss": 2861.395300891912
+  },
+  {
+   "cell": "h2@0.850",
+   "floor_delay_ms": 0.20516976564337386,
+   "floor_loss_ms": 4.687321041966303,
+   "floor_total_ms": 4.691809158863372,
+   "loss_over_delay": 22.846061295960176,
+   "pass_G11": true,
+   "qhat_first": 81.45970916748047,
+   "qhat_over_floor": 17.362110522674097,
+   "w_loss": 4021.4160578887495
+  },
+  {
+   "cell": "h2@0.925",
+   "floor_delay_ms": 0.10314536602522506,
+   "floor_loss_ms": 5.220637869278533,
+   "floor_total_ms": 5.221656703449354,
+   "loss_over_delay": 50.61437144933668,
+   "pass_G11": true,
+   "qhat_first": 48.002803802490234,
+   "qhat_over_floor": 9.193021779999487,
+   "w_loss": 4515.904012589386
+  },
+  {
+   "cell": "h2@0.960",
+   "floor_delay_ms": 0.1655901677586135,
+   "floor_loss_ms": 5.920383484630954,
+   "floor_total_ms": 5.922698769036738,
+   "loss_over_delay": 35.75323079122247,
+   "pass_G11": true,
+   "qhat_first": 24.348594665527344,
+   "qhat_over_floor": 4.111064164333209,
+   "w_loss": 4722.690139052064
+  },
+  {
+   "cell": "poisson@0.700",
+   "floor_delay_ms": 0.05145745425681364,
+   "floor_loss_ms": 0.09130148558145831,
+   "floor_total_ms": 0.10480377315714023,
+   "loss_over_delay": 1.7743101927621847,
+   "pass_G11": true,
+   "qhat_first": 1.0082603693008423,
+   "qhat_over_floor": 9.620458681283175,
+   "w_loss": 1656.4432584423428
+  },
+  {
+   "cell": "poisson@0.850",
+   "floor_delay_ms": 0.18617416617270416,
+   "floor_loss_ms": 0.7214118799937754,
+   "floor_total_ms": 0.7450475962958709,
+   "loss_over_delay": 3.8749300981133916,
+   "pass_G11": true,
+   "qhat_first": 15.166260719299316,
+   "qhat_over_floor": 20.356096435584686,
+   "w_loss": 2424.3596038611254
+  },
+  {
+   "cell": "poisson@0.925",
+   "floor_delay_ms": 0.1734751142799666,
+   "floor_loss_ms": 1.474980247564279,
+   "floor_total_ms": 1.485146573904148,
+   "loss_over_delay": 8.50254662570131,
+   "pass_G11": true,
+   "qhat_first": 24.30529022216797,
+   "qhat_over_floor": 16.365583471181775,
+   "w_loss": 3222.244681647411
+  },
+  {
+   "cell": "poisson@0.960",
+   "floor_delay_ms": 0.19067085224921074,
+   "floor_loss_ms": 2.1369056761059877,
+   "floor_total_ms": 2.1453953580800507,
+   "loss_over_delay": 11.207301225637822,
+   "pass_G11": true,
+   "qhat_first": 17.829147338867188,
+   "qhat_over_floor": 8.310425056024537,
+   "w_loss": 3655.8944289989972
+  }
+ ],
+ "G5_complete": true,
+ "G5_decomposition_ci": {
+  "by_bin": {
+   "0": {
+    "cov_e": -0.3283965357747648,
+    "cov_e_ci95": [
+     -0.46058706944518457,
+     -0.18785288355347696
+    ],
+    "cov_excludes_zero": true,
+    "identity_ok": true,
+    "n_blocks": 1000,
+    "n_boot": 2000,
+    "rms_e_model": 2.0490650069934935,
+    "rms_e_model_ci95": [
+     2.0265783968040845,
+     2.0705554746171715
+    ],
+    "rms_e_stale": 3.6600070270312104,
+    "rms_e_stale_ci95": [
+     3.613872448139409,
+     3.7086924423593652
+    ],
+    "rms_total": 4.115522539028738,
+    "rms_total_ci95": [
+     4.063058842361219,
+     4.16723854077786
+    ],
+    "seed": 9906,
+    "share_cov": -0.03877739172162894,
+    "share_cov_ci95": [
+     -0.05524740298859849,
+     -0.021694977815477228
+    ],
+    "share_model": 0.24789142523443566,
+    "share_model_ci95": [
+     0.24057232143416873,
+     0.2554502341462871
+    ],
+    "share_stale": 0.7908859664871932,
+    "share_stale_ci95": [
+     0.7769897425975638,
+     0.8044577189855436
+    ]
+   },
+   "1": {
+    "cov_e": -0.6645300391618117,
+    "cov_e_ci95": [
+     -0.8425069872255541,
+     -0.47590059982908345
+    ],
+    "cov_excludes_zero": true,
+    "identity_ok": true,
+    "n_blocks": 1000,
+    "n_boot": 2000,
+    "rms_e_model": 2.055267073792096,
+    "rms_e_model_ci95": [
+     2.032321673840455,
+     2.0759364380481644
+    ],
+    "rms_e_stale": 5.043709115095493,
+    "rms_e_stale_ci95": [
+     4.982043494637027,
+     5.106589245744319
+    ],
+    "rms_total": 5.322975136517892,
+    "rms_total_ci95": [
+     5.256531328637739,
+     5.38565814596217
+    ],
+    "seed": 9907,
+    "share_cov": -0.0469067926176964,
+    "share_cov_ci95": [
+     -0.06006750504795622,
+     -0.033274042635779
+    ],
+    "share_model": 0.14908283892118626,
+    "share_model_ci95": [
+     0.14453233260274737,
+     0.1536853362033346
+    ],
+    "share_stale": 0.8978239536965102,
+    "share_stale_ci95": [
+     0.8855179462782798,
+     0.9100204608752802
+    ]
+   },
+   "2": {
+    "cov_e": -0.9511934685970096,
+    "cov_e_ci95": [
+     -1.1552271216834338,
+     -0.7451843077138098
+    ],
+    "cov_excludes_zero": true,
+    "identity_ok": true,
+    "n_blocks": 1000,
+    "n_boot": 2000,
+    "rms_e_model": 2.0534694675329974,
+    "rms_e_model_ci95": [
+     2.0304033604263996,
+     2.075204637097059
+    ],
+    "rms_e_stale": 6.406917959365735,
+    "rms_e_stale_ci95": [
+     6.3298547912975724,
+     6.490359874045974
+    ],
+    "rms_total": 6.585054871065193,
+    "rms_total_ci95": [
+     6.502226072449598,
+     6.668824644168117
+    ],
+    "seed": 9908,
+    "share_cov": -0.043871255070855875,
+    "share_cov_ci95": [
+     -0.05358260917517292,
+     -0.03410101442885278
+    ],
+    "share_model": 0.09724285552829405,
+    "share_model_ci95": [
+     0.09413503768367305,
+     0.10011083916466607
+    ],
+    "share_stale": 0.9466283995425618,
+    "share_stale_ci95": [
+     0.9379088694551548,
+     0.9559353508777222
+    ]
+   },
+   "3": {
+    "cov_e": -1.5288186985686705,
+    "cov_e_ci95": [
+     -1.693343326581738,
+     -1.3419755534875686
+    ],
+    "cov_excludes_zero": true,
+    "identity_ok": true,
+    "n_blocks": 1000,
+    "n_boot": 2000,
+    "rms_e_model": 2.0539334761297043,
+    "rms_e_model_ci95": [
+     2.0314568713456818,
+     2.0764236590730922
+    ],
+    "rms_e_stale": 8.084263916800015,
+    "rms_e_stale_ci95": [
+     7.979682827587563,
+     8.188190149819036
+    ],
+    "rms_total": 8.155754312367657,
+    "rms_total_ci95": [
+     8.055268688260766,
+     8.258054569820489
+    ],
+    "seed": 9909,
+    "share_cov": -0.045968222698339604,
+    "share_cov_ci95": [
+     -0.051197350834377285,
+     -0.040219268493737366
+    ],
+    "share_model": 0.06342266366180484,
+    "share_model_ci95": [
+     0.061447090719435375,
+     0.06542816691811486
+    ],
+    "share_stale": 0.9825455590365348,
+    "share_stale_ci95": [
+     0.9770661472934413,
+     0.9875922709932653
+    ]
+   }
+  },
+  "note": "G5 requires Var(e_model), Var(e_stale), and Cov with CI. The 2*Cov term is part of the variance identity and must not be dropped.",
+  "pooled": {
+   "cov_e": -1.1323761216997874,
+   "cov_e_ci95": [
+    -1.2883492278866597,
+    -0.9814338531508326
+   ],
+   "cov_excludes_zero": true,
+   "identity_ok": true,
+   "n_blocks": 1000,
+   "n_boot": 2000,
+   "rms_e_model": 2.053669816660368,
+   "rms_e_model_ci95": [
+    2.0323326332747826,
+    2.0746565948599494
+   ],
+   "rms_e_stale": 6.916167982826169,
+   "rms_e_stale_ci95": [
+    6.838683269150944,
+    6.9950651495804985
+   ],
+   "rms_total": 7.0559327547201045,
+   "rms_total_ci95": [
+    6.980231980975334,
+    7.134988521634608
+   ],
+   "seed": 9905,
+   "share_cov": -0.04548957006125966,
+   "share_cov_ci95": [
+    -0.05205468523901845,
+    -0.03920112132640691
+   ],
+   "share_model": 0.08471345099287918,
+   "share_model_ci95": [
+    0.0823741788438255,
+    0.08707766986657889
+   ],
+   "share_stale": 0.9607761190683805,
+   "share_stale_ci95": [
+    0.9551087670013158,
+    0.9670186460685579
+   ]
+  }
+ },
+ "calib": "results/phase-21R/calib_set_h2_0.700.parquet",
+ "limitations": [
+  {
+   "id": "L1",
+   "resolved_by": "Phase 23 direct telemetry validation",
+   "scope": "construct validity",
+   "text": "e_model is PCHIP sparse-grid generalization error against a denser measured lookup table.",
+   "title": "Ground truth is not pure physics"
+  },
+  {
+   "id": "L2",
+   "resolved_by": "larger truth-table measurement campaign",
+   "scope": "measurement validity",
+   "text": "For the main cell, the inherited 1.4851 ms measurement floor accounts for about half of observed e_model variance.",
+   "title": "A large share of e_model variance is measurement noise"
+  },
+  {
+   "id": "L3",
+   "resolved_by": "Phase 23",
+   "scope": "external validity",
+   "text": "The main experiments use AR(1), tau=1.0, while measured telemetry has a different time scale.",
+   "title": "Guarantees are for synthetic rho"
+  },
+  {
+   "id": "L4",
+   "resolved_by": "report A/B side by side",
+   "scope": "statistical conclusion validity",
+   "text": "Variant B is the reported pooled-row approximation with block-level effective n.",
+   "title": "Exact finite-sample guarantee belongs to Variant A"
+  },
+  {
+   "id": "L5",
+   "resolved_by": "Phase 22 selective conformal",
+   "scope": "post-selection validity",
+   "text": "Marginal violation 0.0913 becomes 0.1214 on the accepted set.",
+   "title": "Coverage is not preserved after selection"
+  },
+  {
+   "id": "L6",
+   "resolved_by": "Phase 22 simultaneous coverage",
+   "scope": "construct validity",
+   "text": "s_margin certifies the stale top-2 pair, not all four action costs.",
+   "title": "The certificate is pairwise, not simultaneous over K=4"
+  },
+  {
+   "id": "L7",
+   "resolved_by": "add traffic families",
+   "scope": "external validity",
+   "text": "The fixed-sigma path has three nondegenerate cells, with only h2@0.700 outside poisson.",
+   "title": "Robustness has only one second traffic family on the fixed path"
+  },
+  {
+   "id": "L8",
+   "resolved_by": "Phase 22/23 sensitivity checks",
+   "scope": "external validity",
+   "text": "It is observed on synthetic AR(1), tau=1.0, over the current AoI range.",
+   "title": "The 2.17 age-shape ratio is not proven as a law"
+  },
+  {
+   "id": "L9",
+   "resolved_by": "independent seed design",
+   "scope": "statistical conclusion validity",
+   "text": "Several cells share rho trajectories by seed, making pooled p-values optimistic.",
+   "title": "Operating cells are not independent"
+  },
+  {
+   "id": "L10",
+   "resolved_by": "Phase 23",
+   "scope": "internal validity",
+   "text": "s_margin reduces but does not remove the inherited ranking-risk condition.",
+   "title": "Absolute path ranking inherits the Phase 20R residual bound"
+  }
+ ],
+ "n_limitations": 10,
+ "provenance": {
+  "git_dirty": true,
+  "git_hash": "8d8ee8b80bc78ca9cb4b853a08e93a0899b91158",
+  "n_boot": 2000,
+  "script": "cert/gate_report.py",
+  "timestamp_utc": "2026-08-12T13:33:25.867080+00:00"
+ }
+}

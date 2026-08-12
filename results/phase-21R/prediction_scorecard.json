@@ -1,0 +1,301 @@
+{
+ "G11_all_pass": true,
+ "G11_measurement_floor": [
+  {
+   "cell": "cbr@0.700",
+   "floor_delay_ms": 0.005724143983398946,
+   "floor_loss_ms": 0.0,
+   "floor_total_ms": 0.005724143983398946,
+   "loss_over_delay": 0.0,
+   "pass_G11": true,
+   "qhat_first": 0.010342376306653023,
+   "qhat_over_floor": 1.8067987696759178,
+   "w_loss": 1245.6355455410035
+  },
+  {
+   "cell": "cbr@0.850",
+   "floor_delay_ms": 0.0031239422480594777,
+   "floor_loss_ms": 0.0,
+   "floor_total_ms": 0.0031239422480594777,
+   "loss_over_delay": 0.0,
+   "pass_G11": true,
+   "qhat_first": 0.00809874664992094,
+   "qhat_over_floor": 2.5924764310069106,
+   "w_loss": 1245.6355455410035
+  },
+  {
+   "cell": "h2@0.700",
+   "floor_delay_ms": 0.19465500685498693,
+   "floor_loss_ms": 1.7553781876987875,
+   "floor_total_ms": 1.7661379203058845,
+   "loss_over_delay": 9.017893842342827,
+   "pass_G11": true,
+   "qhat_first": 27.33264923095703,
+   "qhat_over_floor": 15.475942686414422,
+   "w_loss": 2861.395300891912
+  },
+  {
+   "cell": "h2@0.850",
+   "floor_delay_ms": 0.20516976564337386,
+   "floor_loss_ms": 4.687321041966303,
+   "floor_total_ms": 4.691809158863372,
+   "loss_over_delay": 22.846061295960176,
+   "pass_G11": true,
+   "qhat_first": 81.45970916748047,
+   "qhat_over_floor": 17.362110522674097,
+   "w_loss": 4021.4160578887495
+  },
+  {
+   "cell": "h2@0.925",
+   "floor_delay_ms": 0.10314536602522506,
+   "floor_loss_ms": 5.220637869278533,
+   "floor_total_ms": 5.221656703449354,
+   "loss_over_delay": 50.61437144933668,
+   "pass_G11": true,
+   "qhat_first": 48.002803802490234,
+   "qhat_over_floor": 9.193021779999487,
+   "w_loss": 4515.904012589386
+  },
+  {
+   "cell": "h2@0.960",
+   "floor_delay_ms": 0.1655901677586135,
+   "floor_loss_ms": 5.920383484630954,
+   "floor_total_ms": 5.922698769036738,
+   "loss_over_delay": 35.75323079122247,
+   "pass_G11": true,
+   "qhat_first": 24.348594665527344,
+   "qhat_over_floor": 4.111064164333209,
+   "w_loss": 4722.690139052064
+  },
+  {
+   "cell": "poisson@0.700",
+   "floor_delay_ms": 0.05145745425681364,
+   "floor_loss_ms": 0.09130148558145831,
+   "floor_total_ms": 0.10480377315714023,
+   "loss_over_delay": 1.7743101927621847,
+   "pass_G11": true,
+   "qhat_first": 1.0082603693008423,
+   "qhat_over_floor": 9.620458681283175,
+   "w_loss": 1656.4432584423428
+  },
+  {
+   "cell": "poisson@0.850",
+   "floor_delay_ms": 0.18617416617270416,
+   "floor_loss_ms": 0.7214118799937754,
+   "floor_total_ms": 0.7450475962958709,
+   "loss_over_delay": 3.8749300981133916,
+   "pass_G11": true,
+   "qhat_first": 15.166260719299316,
+   "qhat_over_floor": 20.356096435584686,
+   "w_loss": 2424.3596038611254
+  },
+  {
+   "cell": "poisson@0.925",
+   "floor_delay_ms": 0.1734751142799666,
+   "floor_loss_ms": 1.474980247564279,
+   "floor_total_ms": 1.485146573904148,
+   "loss_over_delay": 8.50254662570131,
+   "pass_G11": true,
+   "qhat_first": 24.30529022216797,
+   "qhat_over_floor": 16.365583471181775,
+   "w_loss": 3222.244681647411
+  },
+  {
+   "cell": "poisson@0.960",
+   "floor_delay_ms": 0.19067085224921074,
+   "floor_loss_ms": 2.1369056761059877,
+   "floor_total_ms": 2.1453953580800507,
+   "loss_over_delay": 11.207301225637822,
+   "pass_G11": true,
+   "qhat_first": 17.829147338867188,
+   "qhat_over_floor": 8.310425056024537,
+   "w_loss": 3655.8944289989972
+  }
+ ],
+ "limitations": [
+  {
+   "id": "L1",
+   "resolved_by": "Phase 23 direct telemetry validation",
+   "scope": "construct validity",
+   "text": "e_model is PCHIP sparse-grid generalization error against a denser measured lookup table.",
+   "title": "Ground truth is not pure physics"
+  },
+  {
+   "id": "L2",
+   "resolved_by": "larger truth-table measurement campaign",
+   "scope": "measurement validity",
+   "text": "For the main cell, the inherited 1.4851 ms measurement floor accounts for about half of observed e_model variance.",
+   "title": "A large share of e_model variance is measurement noise"
+  },
+  {
+   "id": "L3",
+   "resolved_by": "Phase 23",
+   "scope": "external validity",
+   "text": "The main experiments use AR(1), tau=1.0, while measured telemetry has a different time scale.",
+   "title": "Guarantees are for synthetic rho"
+  },
+  {
+   "id": "L4",
+   "resolved_by": "report A/B side by side",
+   "scope": "statistical conclusion validity",
+   "text": "Variant B is the reported pooled-row approximation with block-level effective n.",
+   "title": "Exact finite-sample guarantee belongs to Variant A"
+  },
+  {
+   "id": "L5",
+   "resolved_by": "Phase 22 selective conformal",
+   "scope": "post-selection validity",
+   "text": "Marginal violation 0.0913 becomes 0.1214 on the accepted set.",
+   "title": "Coverage is not preserved after selection"
+  },
+  {
+   "id": "L6",
+   "resolved_by": "Phase 22 simultaneous coverage",
+   "scope": "construct validity",
+   "text": "s_margin certifies the stale top-2 pair, not all four action costs.",
+   "title": "The certificate is pairwise, not simultaneous over K=4"
+  },
+  {
+   "id": "L7",
+   "resolved_by": "add traffic families",
+   "scope": "external validity",
+   "text": "The fixed-sigma path has three nondegenerate cells, with only h2@0.700 outside poisson.",
+   "title": "Robustness has only one second traffic family on the fixed path"
+  },
+  {
+   "id": "L8",
+   "resolved_by": "Phase 22/23 sensitivity checks",
+   "scope": "external validity",
+   "text": "It is observed on synthetic AR(1), tau=1.0, over the current AoI range.",
+   "title": "The 2.17 age-shape ratio is not proven as a law"
+  },
+  {
+   "id": "L9",
+   "resolved_by": "independent seed design",
+   "scope": "statistical conclusion validity",
+   "text": "Several cells share rho trajectories by seed, making pooled p-values optimistic.",
+   "title": "Operating cells are not independent"
+  },
+  {
+   "id": "L10",
+   "resolved_by": "Phase 23",
+   "scope": "internal validity",
+   "text": "s_margin reduces but does not remove the inherited ranking-risk condition.",
+   "title": "Absolute path ranking inherits the Phase 20R residual bound"
+  }
+ ],
+ "n_limitations": 10,
+ "prediction_scorecard": {
+  "amendment_checks": [
+   {
+    "hit": true,
+    "name": "C2_nonbinding_at_go_cell",
+    "observed": "regret|accept(kappa=1)=0.176 << eps_regret=3.222",
+    "source": "Amendment 1"
+   },
+   {
+    "hit": true,
+    "name": "dimensionless_kappa_needed",
+    "observed": "h2 has larger qhat but higher acceptance than poisson",
+    "source": "Amendment 1"
+   },
+   {
+    "hit": true,
+    "name": "qhat_approximately_1p645_rms",
+    "observed": "ratios 1.01-1.02 on main cell",
+    "source": "Amendment 4"
+   }
+  ],
+  "n": 6,
+  "n_amendment_hit": 3,
+  "n_distinct_root_cause_families": 2,
+  "n_distinct_root_causes": 3,
+  "n_hit": 0,
+  "n_miss": 6,
+  "note": "The numeric preregistration intervals are preserved as written. Misses are interpreted by root cause, not repaired after the fact.",
+  "root_cause_families": {
+   "jensen": 1,
+   "scale_mismatch": 5
+  },
+  "root_causes": {
+   "jensen": 1,
+   "level_channel_mismatch": 1,
+   "scale_mismatch": 4
+  },
+  "rows": [
+   {
+    "hi": 2.2,
+    "hit": false,
+    "lo": 1.5,
+    "name": "qhat_B1_ms",
+    "observed": 11.587758,
+    "rel_miss": 0.8101444645288587,
+    "root_cause": "scale_mismatch",
+    "root_cause_family": "scale_mismatch",
+    "source": "preregistration"
+   },
+   {
+    "hi": 3.0,
+    "hit": false,
+    "lo": 2.0,
+    "name": "qhat_B4_ms",
+    "observed": 24.322243,
+    "rel_miss": 0.8766561126784236,
+    "root_cause": "scale_mismatch",
+    "root_cause_family": "scale_mismatch",
+    "source": "preregistration"
+   },
+   {
+    "hi": 1.6,
+    "hit": false,
+    "lo": 1.2,
+    "name": "ratio_B4_over_B1",
+    "observed": 2.151,
+    "rel_miss": 0.25615992561599243,
+    "root_cause": "scale_mismatch",
+    "root_cause_family": "scale_mismatch",
+    "source": "preregistration"
+   },
+   {
+    "hi": 0.87,
+    "hit": false,
+    "lo": 0.75,
+    "name": "p_accept_kappa1",
+    "observed": 0.28354,
+    "rel_miss": 1.6451294350003525,
+    "root_cause": "scale_mismatch",
+    "root_cause_family": "scale_mismatch",
+    "source": "preregistration"
+   },
+   {
+    "hi": 0.1,
+    "hit": false,
+    "lo": 0.05,
+    "name": "z_cross_s",
+    "observed": 0.007085,
+    "rel_miss": 6.057163020465773,
+    "root_cause": "level_channel_mismatch",
+    "root_cause_family": "scale_mismatch",
+    "source": "preregistration"
+   },
+   {
+    "hi": 0.31,
+    "hit": false,
+    "lo": 0.27,
+    "name": "err_anchor",
+    "observed": 0.220835,
+    "rel_miss": 0.2226322820205131,
+    "root_cause": "jensen",
+    "root_cause_family": "jensen",
+    "source": "preregistration"
+   }
+  ]
+ },
+ "provenance": {
+  "git_dirty": true,
+  "git_hash": "8d8ee8b80bc78ca9cb4b853a08e93a0899b91158",
+  "n_boot": 2000,
+  "script": "cert/gate_report.py",
+  "timestamp_utc": "2026-08-12T13:33:27.527391+00:00"
+ }
+}
