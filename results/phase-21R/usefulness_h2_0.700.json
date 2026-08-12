@@ -1,0 +1,263 @@
+{
+ "C2_mapping": {
+  "all_zero": false,
+  "eps_regret_ms": 2.861395300891912,
+  "kappa_C2_by_bin": {
+   "0": 0.580420692520897,
+   "1": 0.67688234199793,
+   "2": 0.7399482322483562,
+   "3": 0.7886920267306398
+  },
+  "nonbinding_at_kappa1": true,
+  "regret_given_accept_at_kappa1": 0.04584111148621693
+ },
+ "G12": {
+  "acceptance_rate": 0.4966167767072627,
+  "kappa": 1.0,
+  "pass": true
+ },
+ "H7": {
+  "anchor_err": 0.12653635139919234,
+  "best_point": {
+   "acceptance_rate": 0.7466692801724913,
+   "err_given_accept": 0.05321850472797407,
+   "kappa": 0.5,
+   "risk_ratio": 0.4205787834049541
+  },
+  "max_risk_ratio": 0.5,
+  "min_acceptance_rate": 0.1,
+  "n_points": 6,
+  "pass": true,
+  "threshold_risk": 0.06326817569959617
+ },
+ "PC1": {
+  "anchor_err": 0.12653635139919234,
+  "pass": null,
+  "reason": "khong phai o suy bien"
+ },
+ "anchor_err_declared": 0.12725899924495848,
+ "anchor_err_on_test": 0.12653635139919234,
+ "aurc": 0.03323276239634359,
+ "bootstrap_kappa_0.5": {
+  "acceptance_ci95": [
+   0.7304593305258763,
+   0.762630322579978
+  ],
+  "err_given_accept_ci95": [
+   0.04780513955816329,
+   0.05877225005023458
+  ],
+  "kappa": 0.5,
+  "n_boot": 1000
+ },
+ "bootstrap_kappa_1.0": {
+  "acceptance_ci95": [
+   0.47718704434492676,
+   0.5168826588424111
+  ],
+  "err_given_accept_ci95": [
+   0.01540815484961297,
+   0.021248207503899597
+  ],
+  "kappa": 1.0,
+  "n_boot": 1000
+ },
+ "cell": "h2@0.700",
+ "curve": [
+  {
+   "acceptance_rate": 1.0,
+   "coverage_violation_given_accept": 0.09329015715037192,
+   "d_sla_given_accept": 0.001102072736800629,
+   "err_given_accept": 0.12653635139919234,
+   "err_given_reject": null,
+   "err_ratio_to_test_anchor": 1.0,
+   "kappa": 0.0,
+   "n_accept": 499967,
+   "p_mtrue_neg_given_accept": 0.12607232077317104,
+   "regret_given_accept": 0.49282021673703036
+  },
+  {
+   "acceptance_rate": 0.8721215600229615,
+   "coverage_violation_given_accept": 0.09811206516952885,
+   "d_sla_given_accept": 0.00046326875091736385,
+   "err_given_accept": 0.08423464332892999,
+   "err_given_reject": 0.41503089074841637,
+   "err_ratio_to_test_anchor": 0.6656952124626192,
+   "kappa": 0.25,
+   "n_accept": 436032,
+   "p_mtrue_neg_given_accept": 0.08375532071040658,
+   "regret_given_accept": 0.2866297866609218
+  },
+  {
+   "acceptance_rate": 0.7466692801724913,
+   "coverage_violation_given_accept": 0.10446813640138224,
+   "d_sla_given_accept": 0.00015268811443572367,
+   "err_given_accept": 0.05321850472797407,
+   "err_given_reject": 0.3426340431243437,
+   "err_ratio_to_test_anchor": 0.4205787834049541,
+   "kappa": 0.5,
+   "n_accept": 373310,
+   "p_mtrue_neg_given_accept": 0.05273097425731965,
+   "regret_given_accept": 0.1590385108854076
+  },
+  {
+   "acceptance_rate": 0.6204449493666582,
+   "coverage_violation_given_accept": 0.11393221191352731,
+   "d_sla_given_accept": -9.671117529867634e-06,
+   "err_given_accept": 0.03184699002585412,
+   "err_given_reject": 0.2813216346533871,
+   "err_ratio_to_test_anchor": 0.2516825376557949,
+   "kappa": 0.75,
+   "n_accept": 310202,
+   "p_mtrue_neg_given_accept": 0.031269946679905354,
+   "regret_given_accept": 0.08624040804066609
+  },
+  {
+   "acceptance_rate": 0.4966167767072627,
+   "coverage_violation_given_accept": 0.12519533452547807,
+   "d_sla_given_accept": -0.00013693554363410822,
+   "err_given_accept": 0.018200344755368678,
+   "err_given_reject": 0.2334161120492699,
+   "err_ratio_to_test_anchor": 0.14383491031720114,
+   "kappa": 1.0,
+   "n_accept": 248292,
+   "p_mtrue_neg_given_accept": 0.017696905256713868,
+   "regret_given_accept": 0.04584111148621693
+  },
+  {
+   "acceptance_rate": 0.3784409771044889,
+   "coverage_violation_given_accept": 0.13979852860344172,
+   "d_sla_given_accept": -0.00016384085239524757,
+   "err_given_accept": 0.008799839330260876,
+   "err_given_reject": 0.1982211295569879,
+   "err_ratio_to_test_anchor": 0.069543962924136,
+   "kappa": 1.25,
+   "n_accept": 189208,
+   "p_mtrue_neg_given_accept": 0.008551435457274534,
+   "regret_given_accept": 0.02008010383511736
+  },
+  {
+   "acceptance_rate": 0.27905241745955234,
+   "coverage_violation_given_accept": 0.15603833224624955,
+   "d_sla_given_accept": -0.00022219514467770952,
+   "err_given_accept": 0.004522746331988217,
+   "err_given_reject": 0.17376335136634763,
+   "err_ratio_to_test_anchor": 0.035742664317228647,
+   "kappa": 1.5,
+   "n_accept": 139517,
+   "p_mtrue_neg_given_accept": 0.00432205394324706,
+   "regret_given_accept": 0.012004958255284682
+  },
+  {
+   "acceptance_rate": 0.13975122358075634,
+   "coverage_violation_given_accept": 0.18501237995734998,
+   "d_sla_given_accept": 0.0,
+   "err_given_accept": 0.0007585407393625395,
+   "err_given_reject": 0.14696951378296938,
+   "err_ratio_to_test_anchor": 0.005994646842388576,
+   "kappa": 2.0,
+   "n_accept": 69871,
+   "p_mtrue_neg_given_accept": 0.0007585407393625395,
+   "regret_given_accept": 0.001054022032882965
+  },
+  {
+   "acceptance_rate": 0.029707960725407878,
+   "coverage_violation_given_accept": 0.21732983235709957,
+   "d_sla_given_accept": 0.0,
+   "err_given_accept": 0.0,
+   "err_given_reject": 0.13041058390398957,
+   "err_ratio_to_test_anchor": 0.0,
+   "kappa": 3.0,
+   "n_accept": 14853,
+   "p_mtrue_neg_given_accept": 0.0,
+   "regret_given_accept": 0.0
+  },
+  {
+   "acceptance_rate": 0.005464360647802755,
+   "coverage_violation_given_accept": 0.2485358711566618,
+   "d_sla_given_accept": 0.0,
+   "err_given_accept": 0.0,
+   "err_given_reject": 0.12723159069655193,
+   "err_ratio_to_test_anchor": 0.0,
+   "kappa": 4.0,
+   "n_accept": 2732,
+   "p_mtrue_neg_given_accept": 0.0,
+   "regret_given_accept": 0.0
+  },
+  {
+   "acceptance_rate": 0.00010800712847047906,
+   "coverage_violation_given_accept": null,
+   "d_sla_given_accept": null,
+   "err_given_accept": null,
+   "err_given_reject": 0.12655001970342838,
+   "err_ratio_to_test_anchor": null,
+   "kappa": 6.0,
+   "n_accept": 54,
+   "p_mtrue_neg_given_accept": null,
+   "regret_given_accept": null
+  },
+  {
+   "acceptance_rate": 0.0,
+   "coverage_violation_given_accept": null,
+   "d_sla_given_accept": null,
+   "err_given_accept": null,
+   "err_given_reject": 0.12653635139919234,
+   "err_ratio_to_test_anchor": null,
+   "kappa": 8.0,
+   "n_accept": 0,
+   "p_mtrue_neg_given_accept": null,
+   "regret_given_accept": null
+  }
+ ],
+ "degenerate_cell": false,
+ "discrimination_at_kappa_0.25": {
+  "err_given_accept": 0.08423464332892999,
+  "err_given_reject": 0.41503089074841637,
+  "kappa": 0.25,
+  "ratio_reject_over_accept": 4.927080763288232
+ },
+ "discrimination_at_kappa_1.0": {
+  "err_given_accept": 0.018200344755368678,
+  "err_given_reject": 0.2334161120492699,
+  "kappa": 1.0,
+  "ratio_reject_over_accept": 12.82481816617334
+ },
+ "discrimination_at_kappa_2.0": {
+  "err_given_accept": 0.0007585407393625395,
+  "err_given_reject": 0.14696951378296938,
+  "kappa": 2.0,
+  "ratio_reject_over_accept": 193.75296033075196
+ },
+ "n_test_rows": 499967,
+ "post_selection": {
+  "alpha": 0.1,
+  "certification_holds_after_selection": true,
+  "corr_score_vs_gap": 0.18344673783276766,
+  "coverage_holds_after_selection": false,
+  "kappa": 1.0,
+  "median_slack_given_accept": 6.446191787719727,
+  "n_accept": 248292,
+  "note": "Conformal marginal coverage does not automatically hold after selection. The operational certificate can still hold because accepted rows have m_hat >= q_hat and failure requires s_signed > m_hat.",
+  "p_mtrue_neg_given_accept": 0.017696905256713868,
+  "p_mtrue_neg_marginal": 0.12607232077317104,
+  "p_signed_failure_given_accept": 0.017696905256713868,
+  "violation_given_accept": 0.12519533452547807,
+  "violation_inflation": 1.3419993957527485,
+  "violation_marginal": 0.09329015715037192
+ },
+ "provenance": {
+  "alpha": 0.1,
+  "calib": "results/phase-21R/calib_set_h2_0.700.parquet",
+  "git_dirty": true,
+  "git_hash": "63afa37317e3794a94e51fc3fc9a3f1451363dd1",
+  "n_boot": 1000,
+  "script": "cert/usefulness_v2.py",
+  "timestamp_utc": "2026-08-12T08:52:04.895611+00:00"
+ },
+ "qhat": {
+  "0": 6.819676876068115,
+  "1": 8.855583190917969,
+  "2": 11.003175735473633,
+  "3": 13.541350364685059
+ }
+}

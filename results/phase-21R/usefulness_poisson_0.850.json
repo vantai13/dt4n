@@ -1,0 +1,263 @@
+{
+ "C2_mapping": {
+  "all_zero": false,
+  "eps_regret_ms": 2.4243596038611255,
+  "kappa_C2_by_bin": {
+   "0": 0.23865469968563602,
+   "1": 0.4332515997026649,
+   "2": 0.5488273913271073,
+   "3": 0.638790805110349
+  },
+  "nonbinding_at_kappa1": true,
+  "regret_given_accept_at_kappa1": 0.039557145600209745
+ },
+ "G12": {
+  "acceptance_rate": 0.24087989807327284,
+  "kappa": 1.0,
+  "pass": true
+ },
+ "H7": {
+  "anchor_err": 0.22072656795348494,
+  "best_point": {
+   "acceptance_rate": 0.5489862330913841,
+   "err_given_accept": 0.09430367064395664,
+   "kappa": 0.5,
+   "risk_ratio": 0.42724204665670257
+  },
+  "max_risk_ratio": 0.5,
+  "min_acceptance_rate": 0.1,
+  "n_points": 4,
+  "pass": true,
+  "threshold_risk": 0.11036328397674247
+ },
+ "PC1": {
+  "anchor_err": 0.22072656795348494,
+  "pass": null,
+  "reason": "khong phai o suy bien"
+ },
+ "anchor_err_declared": 0.2190620484126627,
+ "anchor_err_on_test": 0.22072656795348494,
+ "aurc": 0.09056751396410716,
+ "bootstrap_kappa_0.5": {
+  "acceptance_ci95": [
+   0.5330377076998164,
+   0.5647031482448952
+  ],
+  "err_given_accept_ci95": [
+   0.08692085395771264,
+   0.10210830311034239
+  ],
+  "kappa": 0.5,
+  "n_boot": 1000
+ },
+ "bootstrap_kappa_1.0": {
+  "acceptance_ci95": [
+   0.22630560619616258,
+   0.2546902902110256
+  ],
+  "err_given_accept_ci95": [
+   0.020289019936305275,
+   0.028929046892561813
+  ],
+  "kappa": 1.0,
+  "n_boot": 1000
+ },
+ "cell": "poisson@0.850",
+ "curve": [
+  {
+   "acceptance_rate": 1.0,
+   "coverage_violation_given_accept": 0.09233009378618989,
+   "d_sla_given_accept": 0.059735942572209766,
+   "err_given_accept": 0.22072656795348494,
+   "err_given_reject": null,
+   "err_ratio_to_test_anchor": 1.0,
+   "kappa": 0.0,
+   "n_accept": 499967,
+   "p_mtrue_neg_given_accept": 0.20931981510779712,
+   "regret_given_accept": 0.5117866445091617
+  },
+  {
+   "acceptance_rate": 0.7591081011346749,
+   "coverage_violation_given_accept": 0.09541826843271528,
+   "d_sla_given_accept": 0.04168060938689797,
+   "err_given_accept": 0.1486526721278216,
+   "err_given_reject": 0.447848685630781,
+   "err_ratio_to_test_anchor": 0.6734697753246818,
+   "kappa": 0.25,
+   "n_accept": 379529,
+   "p_mtrue_neg_given_accept": 0.13943861997370424,
+   "regret_given_accept": 0.31659921106826744
+  },
+  {
+   "acceptance_rate": 0.5489862330913841,
+   "coverage_violation_given_accept": 0.09712724291829856,
+   "d_sla_given_accept": 0.026669095546042444,
+   "err_given_accept": 0.09430367064395664,
+   "err_given_reject": 0.37461195962606214,
+   "err_ratio_to_test_anchor": 0.42724204665670257,
+   "kappa": 0.5,
+   "n_accept": 274475,
+   "p_mtrue_neg_given_accept": 0.08623007559887057,
+   "regret_given_accept": 0.18315124862542526
+  },
+  {
+   "acceptance_rate": 0.37275660193572774,
+   "coverage_violation_given_accept": 0.09950312825300753,
+   "d_sla_given_accept": 0.01469688677119217,
+   "err_given_accept": 0.053502248264168356,
+   "err_given_reject": 0.32010420885137486,
+   "err_ratio_to_test_anchor": 0.24239151978951265,
+   "kappa": 0.75,
+   "n_accept": 186366,
+   "p_mtrue_neg_given_accept": 0.0477340287391477,
+   "regret_given_accept": 0.09511175901629486
+  },
+  {
+   "acceptance_rate": 0.24087989807327284,
+   "coverage_violation_given_accept": 0.1016258137372127,
+   "d_sla_given_accept": 0.007124352331606218,
+   "err_given_accept": 0.024544971436163146,
+   "err_given_reject": 0.282977854479824,
+   "err_ratio_to_test_anchor": 0.11120080225836546,
+   "kappa": 1.0,
+   "n_accept": 120432,
+   "p_mtrue_neg_given_accept": 0.0210907400026571,
+   "regret_given_accept": 0.039557145600209745
+  },
+  {
+   "acceptance_rate": 0.14802576970080025,
+   "coverage_violation_given_accept": 0.10517781861420387,
+   "d_sla_given_accept": 0.0035266457680250786,
+   "err_given_accept": 0.010944762728353692,
+   "err_given_reject": 0.25717498632497493,
+   "err_ratio_to_test_anchor": 0.049585162447051453,
+   "kappa": 1.25,
+   "n_accept": 74008,
+   "p_mtrue_neg_given_accept": 0.009350340503729326,
+   "regret_given_accept": 0.016723641123783283
+  },
+  {
+   "acceptance_rate": 0.0908699974198297,
+   "coverage_violation_given_accept": 0.11170540588131714,
+   "d_sla_given_accept": 0.0025532664201443917,
+   "err_given_accept": 0.007241591829547455,
+   "err_given_reject": 0.24206496749425238,
+   "err_ratio_to_test_anchor": 0.032807975481562876,
+   "kappa": 1.5,
+   "n_accept": 45432,
+   "p_mtrue_neg_given_accept": 0.005766860362739919,
+   "regret_given_accept": 0.009550889791447617
+  },
+  {
+   "acceptance_rate": 0.032380137089047877,
+   "coverage_violation_given_accept": 0.11921675211563407,
+   "d_sla_given_accept": 0.0,
+   "err_given_accept": 6.177033788374823e-05,
+   "err_given_reject": 0.2281108276936942,
+   "err_ratio_to_test_anchor": 0.0002798500355279636,
+   "kappa": 2.0,
+   "n_accept": 16189,
+   "p_mtrue_neg_given_accept": 6.177033788374823e-05,
+   "regret_given_accept": 2.045665538968574e-05
+  },
+  {
+   "acceptance_rate": 0.004340286458906288,
+   "coverage_violation_given_accept": 0.11705069124423963,
+   "d_sla_given_accept": 0.0,
+   "err_given_accept": 0.0,
+   "err_given_reject": 0.22168876067955412,
+   "err_ratio_to_test_anchor": 0.0,
+   "kappa": 3.0,
+   "n_accept": 2170,
+   "p_mtrue_neg_given_accept": 0.0,
+   "regret_given_accept": 0.0
+  },
+  {
+   "acceptance_rate": 0.00045402996597775455,
+   "coverage_violation_given_accept": 0.09691629955947137,
+   "d_sla_given_accept": 0.0,
+   "err_given_accept": 0.0,
+   "err_given_reject": 0.22082682995157482,
+   "err_ratio_to_test_anchor": 0.0,
+   "kappa": 4.0,
+   "n_accept": 227,
+   "p_mtrue_neg_given_accept": 0.0,
+   "regret_given_accept": 0.0
+  },
+  {
+   "acceptance_rate": 1.8001188078413174e-05,
+   "coverage_violation_given_accept": null,
+   "d_sla_given_accept": null,
+   "err_given_accept": null,
+   "err_given_reject": 0.2207305413654747,
+   "err_ratio_to_test_anchor": null,
+   "kappa": 6.0,
+   "n_accept": 9,
+   "p_mtrue_neg_given_accept": null,
+   "regret_given_accept": null
+  },
+  {
+   "acceptance_rate": 0.0,
+   "coverage_violation_given_accept": null,
+   "d_sla_given_accept": null,
+   "err_given_accept": null,
+   "err_given_reject": 0.22072656795348494,
+   "err_ratio_to_test_anchor": null,
+   "kappa": 8.0,
+   "n_accept": 0,
+   "p_mtrue_neg_given_accept": null,
+   "regret_given_accept": null
+  }
+ ],
+ "degenerate_cell": false,
+ "discrimination_at_kappa_0.25": {
+  "err_given_accept": 0.1486526721278216,
+  "err_given_reject": 0.447848685630781,
+  "kappa": 0.25,
+  "ratio_reject_over_accept": 3.012718703406088
+ },
+ "discrimination_at_kappa_1.0": {
+  "err_given_accept": 0.024544971436163146,
+  "err_given_reject": 0.282977854479824,
+  "kappa": 1.0,
+  "ratio_reject_over_accept": 11.528954320268662
+ },
+ "discrimination_at_kappa_2.0": {
+  "err_given_accept": 6.177033788374823e-05,
+  "err_given_reject": 0.2281108276936942,
+  "kappa": 2.0,
+  "ratio_reject_over_accept": 3692.886189533215
+ },
+ "n_test_rows": 499967,
+ "post_selection": {
+  "alpha": 0.1,
+  "certification_holds_after_selection": true,
+  "corr_score_vs_gap": 0.03118162126646851,
+  "coverage_holds_after_selection": false,
+  "kappa": 1.0,
+  "median_slack_given_accept": 1.773451328277588,
+  "n_accept": 120432,
+  "note": "Conformal marginal coverage does not automatically hold after selection. The operational certificate can still hold because accepted rows have m_hat >= q_hat and failure requires s_signed > m_hat.",
+  "p_mtrue_neg_given_accept": 0.0210907400026571,
+  "p_mtrue_neg_marginal": 0.20931981510779712,
+  "p_signed_failure_given_accept": 0.0210907400026571,
+  "violation_given_accept": 0.1016258137372127,
+  "violation_inflation": 1.1006791997043677,
+  "violation_marginal": 0.09233009378618989
+ },
+ "provenance": {
+  "alpha": 0.1,
+  "calib": "results/phase-21R/calib_set_poisson_0.850.parquet",
+  "git_dirty": true,
+  "git_hash": "63afa37317e3794a94e51fc3fc9a3f1451363dd1",
+  "n_boot": 1000,
+  "script": "cert/usefulness_v2.py",
+  "timestamp_utc": "2026-08-12T08:52:03.927480+00:00"
+ },
+ "qhat": {
+  "0": 3.1843101978302,
+  "1": 4.277664661407471,
+  "2": 5.3734636306762695,
+  "3": 6.711788177490234
+ }
+}
