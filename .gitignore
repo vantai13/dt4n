@@ -133,3 +133,11 @@ scratch/
 
 # Phase 21 calibration tables are generated locally; commit checksums instead.
 cert/*.parquet
+
+# --- Phase 21R: cho phep commit artifact ket qua ---
+!results/phase-21R/
+!results/phase-21R/**/*.json
+!results/phase-21R/**/*.parquet
+!results/phase-21R/**/*.csv
+!results/phase-21R/.gitkeep
+!docs/phase-21R/**
