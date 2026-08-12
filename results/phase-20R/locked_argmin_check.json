@@ -1,0 +1,171 @@
+{
+  "config": {
+    "dt": 0.005,
+    "n": 60000,
+    "seeds": [
+      101
+    ],
+    "sigma_rho": 0.0096,
+    "tau": 1.0
+  },
+  "criterion": "lock_ratio = min_t(cost_second - cost_best) / max_t|cost_twin - cost_true|",
+  "interpretation": "lock_ratio > 1 => argmin cannot flip => err = 0 is forced",
+  "phase": "20R.8",
+  "rows": [
+    {
+      "argmin_locked": true,
+      "feasible": true,
+      "lock_ratio": 5.9069569756912275,
+      "max_abs_twin_error_ms": 0.18993490101721733,
+      "min_cost_gap_ms": 1.1219372884908747,
+      "mode": "poisson",
+      "n_distinct_optimal_paths": 1,
+      "opt_path_share": {
+        "P1": 1.0,
+        "P2": 0.0,
+        "P3": 0.0,
+        "P4": 0.0
+      },
+      "rho_bar": 0.635,
+      "seed": 101,
+      "w_loss": 1445.8513839840425
+    },
+    {
+      "argmin_locked": true,
+      "feasible": true,
+      "lock_ratio": 5.333277478325815,
+      "max_abs_twin_error_ms": 0.19986991161454526,
+      "min_cost_gap_ms": 1.0659616982088256,
+      "mode": "poisson",
+      "n_distinct_optimal_paths": 1,
+      "opt_path_share": {
+        "P1": 1.0,
+        "P2": 0.0,
+        "P3": 0.0,
+        "P4": 0.0
+      },
+      "rho_bar": 0.65,
+      "seed": 101,
+      "w_loss": 1477.5011369065082
+    },
+    {
+      "argmin_locked": true,
+      "feasible": true,
+      "lock_ratio": 1.3659914759139815,
+      "max_abs_twin_error_ms": 0.3758499754093947,
+      "min_cost_gap_ms": 0.5134078626317127,
+      "mode": "poisson",
+      "n_distinct_optimal_paths": 1,
+      "opt_path_share": {
+        "P1": 1.0,
+        "P2": 0.0,
+        "P3": 0.0,
+        "P4": 0.0
+      },
+      "rho_bar": 0.7,
+      "seed": 101,
+      "w_loss": 1658.7620771692289
+    },
+    {
+      "argmin_locked": false,
+      "feasible": true,
+      "lock_ratio": 3.560179841369467e-05,
+      "max_abs_twin_error_ms": 3.2054402245689957,
+      "min_cost_gap_ms": 0.00011411943670225355,
+      "mode": "poisson",
+      "n_distinct_optimal_paths": 3,
+      "opt_path_share": {
+        "P1": 0.6566833333333333,
+        "P2": 0.0,
+        "P3": 0.32453333333333334,
+        "P4": 0.018783333333333332
+      },
+      "rho_bar": 0.85,
+      "seed": 101,
+      "w_loss": 2424.5644960041177
+    },
+    {
+      "argmin_locked": false,
+      "feasible": true,
+      "lock_ratio": 3.678182677021071e-05,
+      "max_abs_twin_error_ms": 5.467759048177939,
+      "min_cost_gap_ms": 0.00020111416613133315,
+      "mode": "h2",
+      "n_distinct_optimal_paths": 3,
+      "opt_path_share": {
+        "P1": 0.7165166666666667,
+        "P2": 0.0,
+        "P3": 0.2768833333333333,
+        "P4": 0.0066
+      },
+      "rho_bar": 0.635,
+      "seed": 101,
+      "w_loss": 2408.968724478668
+    },
+    {
+      "argmin_locked": false,
+      "feasible": true,
+      "lock_ratio": 3.1096158341115706e-05,
+      "max_abs_twin_error_ms": 5.809653747152424,
+      "min_cost_gap_ms": 0.00018065791282850796,
+      "mode": "h2",
+      "n_distinct_optimal_paths": 3,
+      "opt_path_share": {
+        "P1": 0.8002166666666667,
+        "P2": 0.0,
+        "P3": 0.19876666666666667,
+        "P4": 0.0010166666666666666
+      },
+      "rho_bar": 0.65,
+      "seed": 101,
+      "w_loss": 2503.5441562620404
+    },
+    {
+      "argmin_locked": false,
+      "feasible": true,
+      "lock_ratio": 5.33990664186934e-07,
+      "max_abs_twin_error_ms": 9.411226639782768,
+      "min_cost_gap_ms": 5.025507164191367e-06,
+      "mode": "h2",
+      "n_distinct_optimal_paths": 2,
+      "opt_path_share": {
+        "P1": 0.8424333333333334,
+        "P2": 0.0,
+        "P3": 0.15756666666666666,
+        "P4": 0.0
+      },
+      "rho_bar": 0.7,
+      "seed": 101,
+      "w_loss": 2857.8155439629954
+    },
+    {
+      "argmin_locked": false,
+      "feasible": true,
+      "lock_ratio": 0.0005231873941590727,
+      "max_abs_twin_error_ms": 9.089103642656596,
+      "min_cost_gap_ms": 0.004755304450043241,
+      "mode": "h2",
+      "n_distinct_optimal_paths": 2,
+      "opt_path_share": {
+        "P1": 0.9944166666666666,
+        "P2": 0.0,
+        "P3": 0.005583333333333333,
+        "P4": 0.0
+      },
+      "rho_bar": 0.85,
+      "seed": 101,
+      "w_loss": 4012.4909687655027
+    }
+  ],
+  "schema": "phase20r8/locked_argmin/v1",
+  "summary": {
+    "locked_cells": [
+      "poisson@0.635",
+      "poisson@0.650",
+      "poisson@0.700"
+    ],
+    "n_cells": 8,
+    "n_locked": 3,
+    "n_unlocked": 5
+  }
+}

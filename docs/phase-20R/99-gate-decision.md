@@ -1,231 +1,202 @@
-> **SUPERSEDED cho hang G6.** Xem `08-gates.md`, `07b-design-validation-v2.md`,
-> va `00o-amendment-14.md` §42. Hang `G6 NOT EVALUATED` duoi day la trang thai
-> lich su ngay 2026-08-06; cascade `C - sum(B)` da duoc do trong Lesson
-> 20R.6-v2 ngay 2026-08-10.
+# Phase 20R -- Gate Decision (FINAL)
 
-# Phase 20R -- Gate Decision
+Ngay: 2026-08-12      Tag du kien: phase-20R-complete
 
-Ngay ghi: 2026-08-06
+Thay the ban 2026-08-06. Ban cu giu nguyen trong lich su git; khong sua nguoc
+ket qua Phase 20R sau ranh gioi nay. Moi phat hien sau tag phai di vao erratum.
 
-Ket luan ngan: decision-error gates chinh dat tru G4; G4/H3 FAIL nhu thong ke
-da tien dang ky. Muc dich khoa hoc cua G4 van dat bang ket qua phu thuoc che do
-va co che don dinh H7/H8. H6 PASS. Phan G6 trong bang lich su ben duoi la
-trang thai truoc Lesson 20R.6-v2; phan cap nhat hien hanh nam o muc
-`Phase 20R.8 -- Nhanh (a) GO`.
+## 1. Phan quyet
 
-## Phase 20R.8 -- Nhanh (a) GO
-
-Dieu kien nhanh (a) duoc thoa tai diem van hanh:
+GO -- nhanh (a), tai diem van hanh:
 
 ```text
 mode = poisson
 rho_bar = 0.925
+z = 0.55
+tau = 1.0
 n = 120000
-seeds = 101,102,103,104,105
+seeds = 101..105
 
 err_total = 0.295005
 d_sla     = 0.098596
-G3        = Spearman(err,z) positive
 ```
 
-`err_total` nam trong `[0.05, 0.40]` va `d_sla` du 3.3 lan floor 0.03. CI95
-baseline cua hai point estimate nay khong duoc luu trong artifact scan; khong
-dien so CI khong co provenance.
+Hai so tren lay tu `results/phase-20R/additivity_band_sawtooth.json`; day la
+mat sawtooth operational da dung cho gate. `err_total` nam trong `[0.05,0.40]`
+va `d_sla` lon hon 3.3x san 0.03.
 
-## Bien sai so he thong sau Lesson 20R.6-v2
+## 2. Bang gate
+
+| Gate | Ket qua | Ghi chu |
+|---|---|---|
+| G1 | DAT tren 6 o | `err(0.55)` trong `[0.05,0.40]` |
+| G2 | DAT co co | 5/6 o giu DAT o dau xau nhat; `poisson@0.700` mong manh va khong dung lam GO |
+| G3 | DAT moi o | Spearman(err,z) duong |
+| G4 | **FAIL nhu da ky** | H3 don dieu theo `rho_bar` bi bac bo |
+| G5 | DAT | NC1b=0, NC2 trong `[0.747,0.751]`, PC1 cbr=0 |
+| G6-CASCADE | do xong, bao thu co gioi han | `r_path` am 4/4 |
+| G6-BAND | LAT K4 trong pham vi cascade | binding `poisson/loss/common_mode`, first broken tai `poisson@0.925` |
+| G7 | DAT | moi CI dung `se_batch` |
+| QS-DELAY | DAT | Phase T residual delay nho hon bien sup do 29x |
+| QS-LOSS | **DAT o GO; h2 khong ket luan duoc** | Amd 20, `results/phase-20R/qs_loss_residual.json` |
+| ERR0 | DAT | Amd 19, `err=0` co co che khoa argmin |
+
+## 3. Dong gop chinh
+
+Phase 20R khong dong bang mot con so don le. Ket qua chinh la mot ho duong
+cong:
 
 ```text
-Transfer topology:
-  artifact = results/phase-20R/breakdown_scan_transfer_qt3_n120k.json
-  safety_published = 3.713970
-  binding = poisson/loss/common_mode
-  first_broken = K4_path_ranking_preserved @ poisson@0.925
+Decision error is band-limited in offered load, and band location depends on
+traffic family, not load level alone.
 
-Cascade composition:
-  artifact = results/phase-20R/breakdown_scan_cascade.json
-  safety_published = 0.868750
-  binding = poisson/loss/common_mode
-  first_broken = K4_path_ranking_preserved @ poisson@0.925
-  r* = [0.008805, 0.008868]
+poisson peak measured near rho_bar = 0.88
+h2 peak sits at/lower than left edge of the original operational window
+cbr remains zero over the reported reliable band
 ```
 
-Ca hai nguon sai so he thong rang buoc cung mot ket luan va cung mot o:
-`K4_path_ranking_preserved` tai `poisson@0.925`.
+Do do monotonicity in load -- gia dinh ngam cua nhieu metric fidelity dong nhat
+nhu MAPE -- bi bac bo. Mot twin dat tai mot tai co the khong dat o tai thap hon.
 
-Kiem co che:
+## 4. G4 FAIL
+
+Tien dang ky yeu cau ghi FAIL neu H3 khong dat. Ket qua operational:
 
 ```text
-poisson@0.925 path cost:
-P1 = 112.9658
-P3 = 120.5115
-|P1-P3| = 7.5457  # khe nho nhat trong 6 cap
+poisson Spearman(err,rho_bar) = +0.2   exact p = 0.9167
+h2      Spearman(err,rho_bar) = -1.0   exact p = 0.0833
 ```
 
-Cascade lam ranking doi tu `P1,P3,P4,P2` sang `P3,P1,P4,P2`, tuc lat dung cap
-co khe quyet dinh nho nhat. Diem van hanh duoc chon cho Phase 21R cung la o
-co xep hang mong manh nhat duoi phan du ghep. Day la phat hien co che, khong
-phai trung hop.
-
-## Pham vi hieu luc sua doi
+Khong goi fail la pass. Muc dich khoa hoc cua G4 la kiem tra lieu regime van
+hanh co la bien dieu kien hay khong; muc dich do van DAT bang bang chung khac:
 
 ```text
-err, d_sla, Spearman(err,z), va thu tu family: giu nguyen hieu luc.
-Xep hang tuyet doi cac duong tai poisson@0.925:
-  chi giu trong pham vi residual cascade |r_path| < khoang 0.00886.
+poisson err qua rho_bar: 0.1879 .. 0.4301   ti so 2.3x
+h2      err qua rho_bar: 0.0017 .. 0.3898   ti so 229x
 ```
 
-He qua cho Phase 21R: chung nhan phai nham vao HIEU chi phi giua cac duong,
-khong phai chi phi tuyet doi tung duong. Hieu chi phi la dai luong quyet dinh
-argmin, va cung la dai luong mong manh nhat tai diem van hanh GO.
-
-## Gate Table
+Confound da biet:
 
 ```text
-Gate    Status          Evidence
-G1      PASS            poisson@0.700, z=0.55: err=0.187870 in [0.05,0.40]
-G2      PASS            same cell: d_sla_ci95_lo=0.065583 >= 0.03
-G3      PASS            same cell: Spearman(err,z)=1.0, exact p=0.002778
-G4      FAIL            H3 monotonic theo rho_bar bi bac bo; khong co p<0.05
-G5      PASS            NC1b=0, NC2 in [0.74692,0.75124], PC1 cbr=0
-G6      NOT EVALUATED   no end-to-end additivity DC1 artifact in decision-error v2
-G7      PASS            CI95 from paired block bootstrap, not naive iid SE
-H6      PASS            max spread across tau at fixed z/tau = 0.029201 < 0.05
-H7      PASS/PARTIAL    poisson unimodal PASS; h2 peak below left edge PARTIAL; delay-only PASS
-H8      PASS            H8b inconclusive at n=200k, PASS after n=800k CI recheck
+sigma_rho bi buoc vao rho_bar qua sigma_max_regime().
+Khi rho_bar tang, sigma co the giam cung luc.
+
+=> Headline khoa hoc dung mat sigma co dinh / unimodal khi noi ve hinh dang.
+=> Mat operational/sawtooth tra loi cau hoi ky thuat: he chay duoc o dau.
 ```
 
-## 20R-G4
+## 5. `err = 0` la che do, khong phai bug
 
-Operational calibration does not support the original monotonic story:
+Gia tri bien `err_total = 0.000000` trong poisson tai tai thap duoc giai thich
+bang khoa argmin:
 
 ```text
-poisson: 0.1879, 0.4301, 0.3756, 0.2650
-h2     : 0.3898, 0.3340, 0.1047, 0.0017
-rho_bar: 0.700,  0.850,  0.925,  0.960
+lock_ratio = min_t(cost_second - cost_best) / max_t|cost_twin - cost_true|
 ```
 
-Nhu da tien dang ky, G4 FAIL. Operational calibration:
+Representative artifact `results/phase-20R/locked_argmin_check.json`:
 
 ```text
-poisson Spearman(err,rho_bar) = +0.2, exact p = 0.9167
-h2      Spearman(err,rho_bar) = -1.0, exact p = 0.0833
+poisson@0.635  opt_share {P1:1.000}  gap 1.1219  twin_err 0.1899  ratio 5.91
+poisson@0.650  opt_share {P1:1.000}  gap 1.0660  twin_err 0.1999  ratio 5.33
+poisson@0.700  opt_share {P1:1.000}  gap 0.5134  twin_err 0.3758  ratio 1.37
+poisson@0.850  3 duong tung toi uu   gap 0.0001  ratio 0.00
 ```
 
-Constant-sigma diagnostic cung khong cuu monotonic law:
+`ratio > 1` nghia la sai so twin khong bao gio dong duoc khe giua duong tot nhat
+va duong nhi. `err = 0` la he qua co hoc.
+
+## 6. QS-LOSS
+
+QS-LOSS duoc do bang tai phan tich Phase T, khong chay Mininet moi:
 
 ```text
-poisson constant-sigma: 0.0000, 0.2870, 0.2905, 0.2650
-h2 constant-sigma     : 0.1672, 0.0058, 0.0011, 0.0017
+r_loss = (loss_do_dong - loss_QS_packet_weighted_dong)
+       - (loss_do_control - loss_QS_packet_weighted_control)
 ```
 
-Khong goi fail la pass. Tuy vay muc dich cua G4 la chung minh che do van hanh
-la bien dieu kien. Muc dich do DAT bang thong ke khac:
+Decision CI trong artifact la seed-cluster, packet-weighted, normal CI95:
 
 ```text
-poisson err qua rho_bar: 0.1879 .. 0.4301  ti so 2.3x
-h2 err qua rho_bar     : 0.0017 .. 0.3898  ti so 229x
+poisson a=0.9 : -0.000305  CI95 [-0.000555, -0.000055]  -> PASS
+h2      a=0.9 : -0.000526  CI95 [-0.001037, -0.000015]  -> KHONG KET LUAN DUOC
+nguong sup do: [-0.001, +0.00005]
 ```
 
-Bien thien nay lon hon CI block bootstrap nhieu lan. Ket qua H7 con cho thay
-phu thuoc che do co dang don dinh/loss-driven, khong phai don dieu.
-
-## H8 Mechanism
-
-Bien dung cua he thong la:
+Ba dieu phai noi cung luc:
 
 ```text
-R = sd(cost_margin) / mean(cost_margin)
+1. O GO la poisson, nen ket luan headline khong phu thuoc vao h2.
+2. h2 cham/vuot can -0.001; khong duoc goi la PASS.
+3. a=0.2 gan 0 hon ro so voi a=0.9, dung ky vong loss phi tuyen manh hon delay.
 ```
 
-`R` duoc tinh tu twin va phan phoi rho, khong can measured truth. Phep kiem tau
-sau Amendment 9:
+## 7. Pham vi hieu luc
 
 ```text
-constant-sigma max |R_tau - R_tau=1| = 0.018882 < 0.02
-operational max |R_tau - R_tau=1|   = 0.018696 < 0.02
-
-tau=0.2  Spearman(R, err) = 1.000000
-tau=1.0  Spearman(R, err) = 1.000000
-tau=5.0  Spearman(R, err) = 1.000000
-all tau  Spearman(R, err) = 0.988696
+- Xep hang tuyet doi cac duong tai poisson@0.925 chi giu trong
+  |r_path| < khoang 0.00886. Phase 21R phai chung nhan HIEU chi phi giua
+  cac duong, khong chi phi tuyet doi tung duong.
+- Path p95/p99 KHONG cong tinh. Moi phat bieu ve duoi phai do end-to-end.
+- cbr, rho >= 0.95: `is_reliable = False`, loai khoi moi gate.
+- QS-LOSS ap residual do o `(bw=6,q=13)` cho moi link: ngoai suy common-mode,
+  chua co bang chung differential theo link class.
+- Lo poisson onset giua 0.700 va 0.780 chua duoc lap day bang scan moi; khong
+  ve noi suy qua lo nhu the da do.
 ```
 
-H8b, tuc `R` gan doc lap voi `tau`, khong duoc danh PASS tron voi artifact
-cu `n=200000`. Worst point cu:
+## 8. Ban giao cho 21R
+
+21R duoc phep dung tu 20R:
 
 ```text
-tau=5, poisson rho_bar=0.85
-point |Delta R| = 0.018882
-conservative CI signed range = [-0.025670, +0.062551]
+[v] truth_table.parquet
+[v] cost_v2.py va golden tests lien quan
+[v] sla_calibration.json
+[v] diem van hanh poisson@0.925 da qua G1/G2/G3/G7
+[v] san nhieu 0.4646 ms lam moc so voi q_hat
+[v] r_path ~= 0.00886 lam bien cascade cho ranking tuyet doi
 ```
 
-Khoang CI bao thu cu cham/vuot nguong `+-0.02`, nen ket luan dung tai thoi
-diem do la `KHONG KET LUAN DUOC`. Phep va `n=800000`, 5 seed, `n_boot=2000`
-da duoc chay rieng tai `results/phase-20R/margin_cv_ci_n800k.json` va cuu
-duoc H8b:
+21R khong duoc gia dinh:
 
 ```text
-max |Delta R| = 0.006670
-conservative signed CI envelope = [-0.016592, +0.015376]
-threshold = +-0.020000
+[x] xep hang tuyet doi cac duong on dinh ngoai bien cascade
+[x] err don dieu theo tai
+[x] QS-LOSS PASS tren h2
+[x] p95/p99 cong tinh duoc
 ```
 
-Ket luan co che: `rho_bar` la bien thiet ke; `R` la bien he thong phan ung
-theo. `R` du doan thu hang risk tot; H8a/H8b/H8c PASS sau artifact n800k.
-
-## Prediction Decision
-
-Prediction at `z=0.55` matched the measured run tightly:
+Ba gia thuyet ung vien ban giao cho 21R, bat buoc tien dang ky truoc khi dung:
 
 ```text
-h2      0.700  ratio=1.002
-h2      0.850  ratio=1.032
-h2      0.925  ratio=1.166
-poisson 0.700  ratio=1.012
-poisson 0.850  ratio=0.982
-poisson 0.925  ratio=0.958
-poisson 0.960  ratio=1.008
+H9-post  P[r(s) < sigma_rho] vs err
+H10      chuyen kenh la dieu kien CAN, khong DU
+H11      err(rho_bar, sigma) co tach thanh f(rho_bar) * g(sigma) hay khong
 ```
 
-`h2@0.960` is handled by Amendment 6 near-zero absolute law:
+Ca ba la THAM DO cua 20R, khong tinh la bang chung confirmatory cua 20R.
+
+## 9. Threats to Validity
 
 ```text
-predicted=0.000330, measured=0.001675, abs_gap=0.001345 <= 0.02
+R-20R-1  Truth table la noi suy theo rho, khong do lien tuc.
+R-20R-2  Cac o chia se seed/trajectory family, khong doc lap hoan toan.
+R-20R-3  Operational sigma thay doi cung rho_bar.
+R-20R-4  G2 mong manh tai poisson@0.700; khong dung lam GO.
+R-20R-5  Conformal 21R phai chung nhan difference, khong absolute path cost.
+R-QS-1   QS-LOSS la reanalysis tren bw=6,q=13, khong live multi-link.
+R-QS-2   h2 QS-LOSS chua ket luan duoc.
+R-QS-3   Common-mode loss residual khong chung minh differential residual.
+R-QS-4   Packet-weighted estimator tranh Jensen, nhung van dua tren model loss
+         Phase L de tinh QS expectation.
+R-ONSET  Chua lap day poisson onset 0.700..0.775.
 ```
 
-## Final Read
-
-Phase 20R.5 establishes the main decision-error result: measured truth, paired
-block CI, sawtooth operational point, prediction validation, deconfounded sigma
-diagnostic, and tau scaling. The paper claim should emphasize:
+## 10. Trang thai
 
 ```text
-1. staleness dominates model error in substantive cells;
-2. model and stale error can cancel, so do not add them;
-3. operational err is not monotonic in rho_bar;
-4. the true mechanism is loss-driven and band/unimodal, not delay-driven;
-5. cost-margin CV `R` collapses family/rho effects and is stable across tau
-   after the n=800k conservative CI recheck;
-6. z/tau scaling is empirically stable within 0.029 absolute spread.
-```
-
-## Lesson 20R.7 -- DONG
-
-```text
-Amendment ky trong lesson: 00q-16, 00r-17, 00s-18
-
-Amd 15 sec.8 (nguong gay khep kin)  : 3/3 PASS
-Amd 15 sec.7 P1 ban kinh le          : NOT SUPPORTED (p = 0.085491)
-Amd 15 sec.7 P2 vi tri dinh do cong  : NOT SUPPORTED (lech 4.5 buoc luoi;
-                                       h2 khong kiem duoc)
-Amd 15 sec.7 P3 kenh loss chi phoi   : SUPPORTED (17/17 o, 3.74x - 3955.60x)
-
-Thu hoi ky thuat: `curvature_cost` voi h < buoc luoi khong duoc dung cho ban do.
-                  `grad_cost` (bac 1) van hop le. Ket qua K4 khong bi anh huong.
-
-He qua cho 20R.8 va 21R:
-  - chung nhan phai nham vao HIEU chi phi giua cac duong (da ghi tu 20R.6)
-  - va vao thong ke le DA CHUAN HOA, khong phai gia tri le tho
-  - gia thuyet ung vien cho lesson sau: P[r(s) < sigma_rho]
-    (hien la POST-HOC, phai tien dang ky va kiem tren du lieu chua dung)
+DONG. Tag: phase-20R-complete
+Moi sua doi sau tag phai la ERRATUM, khong sua nguoc docs/phase-20R/ hay
+results/phase-20R/.
 ```

@@ -31,7 +31,7 @@ Nguon cascade v2: `results/phase-20R/residual_cascade.json`,
 | G6-BAND | band/scan cascade `n=120000` | `safety_published=0.868750`, binding `poisson/loss/common_mode`; `first_broken=K4_path_ranking_preserved` tai `poisson@0.925` | `clip_ratio=43.20%` nen bien am la can duoi; `differential/full/joint` unsupported vi residual muc duong | **LAT K4 trong pham vi cascade** |
 | G7 | moi CI dung `se_batch` | DAT | khong doi | **DAT** |
 | QS-DELAY | tua tinh, kenh delay | Phase T `err_dyn` CI95 [-0.068, -0.000] ms | gate song toi -2.0 ms/link = 29x | **DAT** |
-| QS-LOSS | tua tinh, kenh loss | **CHUA DO** | nguong sup do `[-1e-3, +5e-5]` (8/8 o), `[-1e-3, +1e-3]` (7/8 o) | **CHUA DANH GIA** |
+| QS-LOSS | tua tinh, kenh loss | Phase T reanalysis, Amd 20 | poisson a=0.9 `-0.000305`, CI95 `[-0.000555,-0.000055]`; h2 a=0.9 `-0.000526`, CI95 `[-0.001037,-0.000015]` | **DAT o GO; h2 KHONG KET LUAN DUOC** |
 
 ## Bang bien day du (sawtooth, 5 seed, n = 120k)
 
