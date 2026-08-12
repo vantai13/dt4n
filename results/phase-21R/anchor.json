@@ -1,0 +1,171 @@
+{
+  "definition": "always trust twin on sawtooth AoI, sigma=0.0096, n=200000, seeds=101..105",
+  "kind": "anchor_summary",
+  "notes": {
+    "diagnosis": "prediction used err(z_max) instead of E_z[err(z)] over sawtooth AoI",
+    "main_cell": "poisson@0.925",
+    "main_err_anchor_measured": 0.2208351459330263,
+    "prediction_interval_preregistered": [
+      0.27,
+      0.31
+    ],
+    "prediction_status": "missed_low"
+  },
+  "phase": "21R.2",
+  "rows": [
+    {
+      "cell": "poisson@0.925",
+      "clip_fraction_max": 0.0,
+      "d_sla_anchor": 0.06012530689187906,
+      "d_sla_ci95": [
+        0.05671004405965619,
+        0.06362880412032358
+      ],
+      "eps_regret_ms": 3.2222446816474113,
+      "err_anchor": 0.2208351459330263,
+      "err_ci95": [
+        0.21346328040950452,
+        0.2278945481799798
+      ],
+      "n_blocks": 1000,
+      "n_calib_blocks": 500,
+      "n_rows": 999945,
+      "n_test_blocks": 500,
+      "pair_ok_rate": 0.9875713164224033,
+      "report": "results/phase-21R/calib_set_poisson_0.925.json",
+      "role_after_amendment_2": "main"
+    },
+    {
+      "cell": "poisson@0.850",
+      "clip_fraction_max": 0.0,
+      "d_sla_anchor": 0.059699283460590336,
+      "d_sla_ci95": [
+        0.056252568427704784,
+        0.06315692732558136
+      ],
+      "eps_regret_ms": 2.4243596038611255,
+      "err_anchor": 0.2190620484126627,
+      "err_ci95": [
+        0.21174865925176936,
+        0.22611250085945378
+      ],
+      "n_blocks": 1000,
+      "n_calib_blocks": 500,
+      "n_rows": 999945,
+      "n_test_blocks": 500,
+      "pair_ok_rate": 0.9826490456975133,
+      "report": "results/phase-21R/calib_set_poisson_0.850.json",
+      "role_after_amendment_2": "secondary"
+    },
+    {
+      "cell": "h2@0.700",
+      "clip_fraction_max": 0.0,
+      "d_sla_anchor": 0.0010230562680947452,
+      "d_sla_ci95": [
+        0.000646040621840243,
+        0.001446024999999999
+      ],
+      "eps_regret_ms": 2.861395300891912,
+      "err_anchor": 0.12725899924495848,
+      "err_ci95": [
+        0.12058821729019224,
+        0.13435921822548047
+      ],
+      "n_blocks": 1000,
+      "n_calib_blocks": 500,
+      "n_rows": 999945,
+      "n_test_blocks": 500,
+      "pair_ok_rate": 0.99948097145343,
+      "report": "results/phase-21R/calib_set_h2_0.700.json",
+      "role_after_amendment_2": "secondary"
+    },
+    {
+      "cell": "cbr@0.700",
+      "clip_fraction_max": 0.0,
+      "d_sla_anchor": 0.0,
+      "d_sla_ci95": [
+        0.0,
+        0.0
+      ],
+      "eps_regret_ms": 1.2456355455410035,
+      "err_anchor": 0.0,
+      "err_ci95": [
+        0.0,
+        0.0
+      ],
+      "n_blocks": 1000,
+      "n_calib_blocks": 500,
+      "n_rows": 999945,
+      "n_test_blocks": 500,
+      "pair_ok_rate": 1.0,
+      "report": "results/phase-21R/calib_set_cbr_0.700.json",
+      "role_after_amendment_2": "positive_control"
+    },
+    {
+      "cell": "poisson@0.700",
+      "clip_fraction_max": 0.0,
+      "d_sla_anchor": 0.0,
+      "d_sla_ci95": [
+        0.0,
+        0.0
+      ],
+      "eps_regret_ms": 1.656443258442343,
+      "err_anchor": 0.0,
+      "err_ci95": [
+        0.0,
+        0.0
+      ],
+      "n_blocks": 1000,
+      "n_calib_blocks": 500,
+      "n_rows": 999945,
+      "n_test_blocks": 500,
+      "pair_ok_rate": 1.0,
+      "report": "results/phase-21R/calib_set_poisson_0.700.json",
+      "role_after_amendment_2": "positive_control_sigma_fixed"
+    },
+    {
+      "cell": "h2@0.850",
+      "clip_fraction_max": 0.0,
+      "d_sla_anchor": 0.00011800649035696964,
+      "d_sla_ci95": [
+        -6.500000000000001e-05,
+        0.00032702499999999983
+      ],
+      "eps_regret_ms": 4.021416057888749,
+      "err_anchor": 0.004847266599662982,
+      "err_ci95": [
+        0.0036066806117290152,
+        0.006278099999999995
+      ],
+      "n_blocks": 1000,
+      "n_calib_blocks": 500,
+      "n_rows": 999945,
+      "n_test_blocks": 500,
+      "pair_ok_rate": 1.0,
+      "report": "results/phase-21R/calib_set_h2_0.850.json",
+      "role_after_amendment_2": "excluded_err_lt_0.01"
+    },
+    {
+      "cell": "h2@0.925",
+      "clip_fraction_max": 0.0,
+      "d_sla_anchor": 9.400517028436417e-05,
+      "d_sla_ci95": [
+        -8.302500000000001e-05,
+        0.00030704999999999963
+      ],
+      "eps_regret_ms": 4.515904012589387,
+      "err_anchor": 0.0011750646285545706,
+      "err_ci95": [
+        0.0005439000000000002,
+        0.00193505
+      ],
+      "n_blocks": 1000,
+      "n_calib_blocks": 500,
+      "n_rows": 999945,
+      "n_test_blocks": 500,
+      "pair_ok_rate": 1.0,
+      "report": "results/phase-21R/calib_set_h2_0.925.json",
+      "role_after_amendment_2": "excluded_err_lt_0.01"
+    }
+  ]
+}
