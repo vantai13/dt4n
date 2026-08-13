@@ -45,7 +45,23 @@ Noi dung : y_hat = c_fresh[old] dich ca vector rho 8 chieu di cung mot luong.
            Vong poll that cho AoI trai theo link.
 Huong    : rms_es(z) lom => Jensen => E_l[rms_es(z_l)] <= rms_es(z_bar)
            => gia dinh dong nhat la bao thu, khong phai lac quan.
-Phase 22 : Giai quyet o 22.7 bang ba ho so U0/U1/U2.
+Phase 22 : Da dong o 22.7. U1/U2 khong tao hieu ung >2% tren o chinh;
+           PC4 bat duoc cho vo va dinh luong dieu kien sd(d) << tau.
+```
+
+### L13 -- Dinh luat ti so tuoi can AoI dong nhat
+
+```text
+Ngay phat hien : 2026-08-13
+Noi dung : R_inf(tau) cua Lesson 22.6 duoc dan voi mot tuoi chung z cho ca
+           vector rho 8 link. Khi AoI trai qua link rat rong, ti so B3/B0
+           khong con theo luat nay.
+Do duoc  : poisson@0.925
+             U0/U1/U2 (sd(d) <= 14.79 ms): ratio B3/B0 = 2.0736 - 2.1099
+             PC4      (sd(d) = 165.36 ms): ratio B3/B0 = 3.4604
+Dieu kien: sd(d) << tau. Voi U1, sd(d)/tau = 0.0148; voi PC4 = 0.165.
+Phase 23 : Neu lich poll that co sd(d) lon, mo rong dinh luat ratio sang
+           trong-so-theo-link / phi tuyen cost quanh cliff.
 ```
 
 ## 3. Ba nhan cho moi so ke thua
@@ -140,4 +156,28 @@ L8: dong. Ratio ~2.17 la gia tri bao hoa cua
     sqrt((1-exp(-z3/tau))/(1-exp(-z0/tau))) khi A/rms_em lon.
     PC22-1 cbr@0.700 cho A/rms_em ~0.02 va ratio ~1.0, dung la cho
     ly thuyet tien doan se vo.
+```
+
+## 7. Cap nhat sau Lesson 22.7
+
+`cert/aoi_profiles.py` da so sanh U0/U1/U2/PC4 tai cung tuoi trung binh bang
+cach can giua offset tung link.
+
+```text
+poisson@0.925:
+  U1/U0 qhat ratio = 0.9962, 0.9989, 1.0042, 1.0013
+  U2/U0 qhat ratio = 1.0139, 0.9998, 0.9998, 1.0016
+  PC4/U0           = 0.5649, 0.7875, 0.8715, 0.9311
+  coverage         = 0.9053 - 0.9087
+```
+
+Ket luan:
+
+```text
+L12: dong. Voi lich poll thuc te sd(d) <= 15 ms va tau=1 s, Jensen gap
+     du kien ~0.07%, nho hon san nhieu qhat. Khong co hieu ung thuc te nao
+     lon hon 2% tren o chinh.
+
+L13: mo. Dinh luat ti so tuoi cua Lesson 22.6 giu cho U0/U1/U2 nhung vo o
+     PC4, nen dieu kien ap dung phai ghi la sd(d) << tau / AoI gan dong nhat.
 ```

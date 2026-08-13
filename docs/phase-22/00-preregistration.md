@@ -319,6 +319,25 @@ Du doan cau truc (hinh dang, thu hang, vung hong) phai duoc tach khoi du doan
 mot con so.
 ```
 
+### P16. Phan tich cong suat truoc khi du doan mot dau
+
+Them sau Lesson 22.7.
+
+```text
+Truoc khi viet mot dong du doan dang "X > Y", "X < Y", hoac "ti so < 1",
+phai uoc luong:
+  1. do lon du kien cua hieu ung, uu tien tu mo hinh co che;
+  2. san nhieu cua phep do, uu tien bootstrap / artifact truoc do.
+
+Neu do lon du kien nam duoi san nhieu, khong duoc khoa du doan ve DAU.
+Thay vao do khoa du doan ve CAN:
+  "|ti so - 1| < epsilon o muc tin cay 95%"
+
+Lesson 22.7 la vi du: Jensen du doan U1/U2 chi ~0.05-0.07% tren rms, trong
+khi san nhieu qhat khoang 1%. Du doan dung phai la "khong co hieu ung lon hon
+2%", khong phai "U1 < U0".
+```
+
 ## Bang du doan -- dien truoc, doi chieu sau
 
 | Dai luong | Du doan | Do duoc | KQ |
