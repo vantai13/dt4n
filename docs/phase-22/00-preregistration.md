@@ -303,6 +303,22 @@ Du doan sau nay phai noi ro he so cua nhom nao, hoac du doan hinh dang phan bo
 he so. Khong duoc viet "he so nhan cua Mondrian" nhu mot so don.
 ```
 
+### P15. Quy tac dinh danh du doan
+
+Them sau Lesson 22.5.
+
+```text
+Moi dong trong bang du doan phai xac dinh day du:
+  1. THU TUC nao: khong duoc viet "C3" chung chung neu C3 co nhieu post variant.
+  2. NHOM/SLOT nao: khong duoc viet "he so nhan" chung chung.
+  3. TAP HANG nao: calib/test, z-bin, m_hat-bin, score-level.
+
+Neu mot lesson sau se chon giua nhieu thu tuc, bang du doan phai co mot dong
+cho moi thu tuc, khong phai mot dong cho "thu tuc thang" sau khi nhin du lieu.
+Du doan cau truc (hinh dang, thu hang, vung hong) phai duoc tach khoi du doan
+mot con so.
+```
+
 ## Bang du doan -- dien truoc, doi chieu sau
 
 | Dai luong | Du doan | Do duoc | KQ |
