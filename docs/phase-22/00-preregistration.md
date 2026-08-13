@@ -4,6 +4,8 @@
 Ngay ky : 2026-08-13
 Nguoi ky: vantai (Codex-assisted)
 Tag du kien: phase-22-start
+Revision 2: 2026-08-13, sau dry-run Lesson 22.1 tren du lieu TONG HOP sinh
+tu `topology_v7`; chua cham bat ky artifact 21R/22 that nao.
 
 Tien de: Phase 21R PASS tai tag `phase-21R-complete` (11 PASS / 1 PASS_MARGINAL).
 
@@ -91,6 +93,26 @@ PHU   : s_margin = |e(a2) - e(a1)|              (21R)
         s_pair_j = |e(a_j) - e(a1)|, j = 2,3,4 (Bonferroni/Sidak)
         s_signed = m_hat - m_true               (mot phia)
 a1 chi duoc chon tu y_hat. Kiem bang inspect.signature (GS-1).
+```
+
+### P2b. Chi so cua ho so sanh
+
+```text
+Cot j danh theo HANG THEO TWIN (rank slot), khong theo danh tinh duong.
+Cot 0 = a1 vs hang 2, cot 1 = a1 vs hang 3, cot 2 = a1 vs hang 4.
+Ly do: slot theo hang dinh nghia duoc o moi hang va kha hoan doi; slot theo
+danh tinh cho 12 nhom, nhieu nhom co the rong.
+He qua ve phat bieu: bao dam la ve THU HANG THEO TWIN, khong phai ve mot cap
+duong cu the. Phai viet dung trong luan van.
+```
+
+### P2c. Hieu chuan theo slot, khong gop
+
+```text
+Moi slot hieu chuan rieng, n_eff = so KHOI calib.
+Khong gop 3 score trong cung mot hang vao pool 3n.
+Ly do: 3 score trong cung hang phu thuoc do chung e(a1); gop lam phong n gia
+tao, cung loai loi voi positive-control V3 cua Phase 21R.
 ```
 
 ### P3. Muc tin cay
@@ -212,12 +234,14 @@ bai toan -- (a) lap tren muc alpha, (c) lap tren tap hieu chuan.
 
 | Dai luong | Du doan | Do duoc | KQ |
 |---|---:|---:|---:|
-| q_hat_Bonferroni(B0) / q_hat_21R(B0) | 1.27 - 1.32 | ______ | ___ |
-| q_hat_Sidak(B0) / q_hat_21R(B0) | 1.26 - 1.31 | ______ | ___ |
-| q_hat_maxscore(B0) / q_hat_21R(B0) | 1.10 - 1.28 | ______ | ___ |
+| q_hat_Bonferroni(B0) / q_hat_21R(B0) | 1.28 - 1.33 | ______ | ___ |
+| q_hat_Sidak(B0) / q_hat_21R(B0) | 1.27 - 1.32 | ______ | ___ |
+| q_hat_maxscore(B0) / q_hat_21R(B0) | 1.22 - 1.30 | ______ | ___ |
+| q_hat_maxscore / q_hat_Bonferroni | 0.94 - 0.98 | ______ | ___ |
 | bao phu dong thoi (Bonferroni) | 0.90 +/- 0.02 | ______ | ___ |
-| bao phu tung cai khi dung dong thoi | 0.96 - 0.98 | ______ | ___ |
-| doi chung am: bao phu dong thoi, alpha | 0.73 - 0.85 | ______ | ___ |
+| bao phu tung cai khi dung dong thoi | 0.955 - 0.975 | ______ | ___ |
+| doi chung am: bao phu dong thoi, alpha | 0.74 - 0.80 | ______ | ___ |
+| corr giua cac cot s_pair | 0.20 - 0.35 | ______ | ___ |
 | vi pham sau chon loc, truoc sua | 0.115 - 0.130 | ______ | ___ |
 | vi pham sau chon loc, sau sua (a) diem bat dong | <= 0.10 | ______ | ___ |
 | vi pham sau chon loc, sau sua (b) Mondrian-m | <= 0.10 | ______ | ___ |
