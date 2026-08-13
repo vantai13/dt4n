@@ -1,0 +1,927 @@
+{
+ "artifact_paths": {
+  "aoi": "results/phase-22/aoi_profiles_poisson_0.925.json",
+  "calib": "results/phase-22/calib_set_v3_poisson_0.925.json",
+  "conformal": "results/phase-22/conformal_sim_poisson_0.925.json",
+  "matrix": "results/phase-22/config_matrix_poisson_0.925.json",
+  "selective": "results/phase-22/selective_poisson_0.925.json",
+  "tau": "results/phase-22/tau_sweep_poisson_0.925.json"
+ },
+ "cell": "poisson_0.925",
+ "gate_summary": {
+  "decision": "GO",
+  "gates_blocking": [],
+  "gates_error": 0,
+  "gates_fail": 0,
+  "gates_not_run": [],
+  "gates_not_run_count": 0,
+  "gates_pass": 17,
+  "gates_total": 17,
+  "hit_rate": 0.65625,
+  "hit_rate_by_lesson": {
+   "22.3": "4/7",
+   "22.4": "5/6",
+   "22.5": "2/7",
+   "22.6": "7/7",
+   "22.7": "3/5"
+  },
+  "predictions_hit": 21,
+  "predictions_miss": 11,
+  "predictions_scored": 32,
+  "rule": "GO requires zero FAIL/ERROR and zero NOT_RUN. Prediction hit rate is REPORTED, never a gate: a missed prediction with an understood mechanism is a result, not a defect."
+ },
+ "gates": [
+  {
+   "claim": "U0 reproduces calib_set_v2 bit-for-bit",
+   "evidence": {
+    "V22_1_worst": 0.0
+   },
+   "id": "G22-2",
+   "kind": "reproduction",
+   "lesson": "22.2",
+   "needs": [
+    "calib"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "every (z_bin x m_hat_bin) cell has at least 9 calibration blocks",
+   "evidence": {
+    "min_calib_blocks_per_z_x_mhat_cell": 433,
+    "threshold": 9
+   },
+   "id": "G22-3",
+   "kind": "positive",
+   "lesson": "22.2",
+   "needs": [
+    "calib"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "corrected procedures achieve simultaneous coverage",
+   "evidence": {
+    "coverage_simultaneous_marginal": {
+     "bonferroni": 0.9252950694745853,
+     "maxscore": 0.906661839681419,
+     "sidak": 0.9205267547658146
+    },
+    "value": true
+   },
+   "id": "G22-4",
+   "kind": "positive",
+   "lesson": "22.3",
+   "needs": [
+    "conformal"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "negative control collapses without correction",
+   "evidence": {
+    "value": true
+   },
+   "id": "G22-5",
+   "kind": "negative_control",
+   "lesson": "22.3",
+   "needs": [
+    "conformal"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "uncorrected slot 1 equals the 21R qhat exactly",
+   "evidence": {
+    "value": true
+   },
+   "id": "V22-6",
+   "kind": "reproduction",
+   "lesson": "22.3",
+   "needs": [
+    "conformal"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "row split collapses the coverage variance",
+   "evidence": {
+    "coverage_sd_block": [
+     0.004431628187817857,
+     0.004303757050531558,
+     0.004189600816306954,
+     0.004332323767022013
+    ],
+    "coverage_sd_row": [
+     0.0014624654326500538,
+     0.001367710857540461,
+     0.001122919648484078,
+     0.000802375970541721
+    ],
+    "sd_ratio_row_over_block": 0.27556275910643724
+   },
+   "id": "PC22-3",
+   "kind": "positive_control",
+   "lesson": "22.3",
+   "needs": [
+    "conformal"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "post-selection validity is restored at kappa=1",
+   "evidence": {
+    "value": true
+   },
+   "id": "G22-6",
+   "kind": "positive",
+   "lesson": "22.4",
+   "needs": [
+    "selective"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "fixed points terminate",
+   "evidence": {
+    "fcr_n_iter_kappa1": 6,
+    "selective_n_iter_kappa1": 8
+   },
+   "id": "G22-7",
+   "kind": "positive",
+   "lesson": "22.4",
+   "needs": [
+    "selective"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "kappa=0 reduces to 21R",
+   "evidence": {
+    "value": true
+   },
+   "id": "NC22-2",
+   "kind": "negative_control",
+   "lesson": "22.4",
+   "needs": [
+    "selective"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "H22-7 holds for the full C3 claim",
+   "evidence": {
+    "acceptance": 0.49112641434334664,
+    "err_given_accept": 0.08086028336733904,
+    "kappa": 0.5,
+    "risk_ratio": 0.3635825715367868
+   },
+   "id": "G22-8",
+   "kind": "positive",
+   "lesson": "22.5",
+   "needs": [
+    "matrix"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "risk-coverage curves are monotone in kappa",
+   "evidence": {
+    "value": true
+   },
+   "id": "G22-9",
+   "kind": "positive",
+   "lesson": "22.5",
+   "needs": [
+    "matrix"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "frontier is not degraded: AURC(C3)/AURC(C0) < 1.02",
+   "evidence": {
+    "aurc_C0": 0.0913345715838349,
+    "aurc_C3": 0.09108538163849242,
+    "aurc_C3_over_C0": 0.9972716799233711,
+    "threshold": 1.02
+   },
+   "id": "G22-9b",
+   "kind": "positive",
+   "lesson": "22.5",
+   "needs": [
+    "matrix"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "all five tau ratios lie inside signed bands",
+   "evidence": {
+    "ratio_measured": [
+     1.977949756247702,
+     2.0989601786571823,
+     2.14319323216089,
+     2.0834100434350473,
+     2.00755705975703
+    ]
+   },
+   "id": "G22-10",
+   "kind": "positive",
+   "lesson": "22.6",
+   "needs": [
+    "tau"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "AR(1) amplitude A is independent of tau",
+   "evidence": {
+    "A_span_pct": 0.7623412299969916,
+    "threshold_pct": 2.0
+   },
+   "id": "G22-11",
+   "kind": "positive",
+   "lesson": "22.6",
+   "needs": [
+    "tau"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "realistic AoI profiles are indistinguishable from uniform",
+   "evidence": {
+    "U1_max_abs_ratio_deviation": 0.0042228913206801,
+    "U2_max_abs_ratio_deviation": 0.013948477632257372,
+    "threshold": 0.02
+   },
+   "id": "G22-12",
+   "kind": "positive",
+   "lesson": "22.7",
+   "needs": [
+    "aoi"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "extreme AoI offset is visible",
+   "evidence": {
+    "PC4_ratio_vs_U0": {
+     "0": 0.5648579972503517,
+     "1": 0.7875296476591713,
+     "2": 0.8714741779115974,
+     "3": 0.9311275850266927
+    }
+   },
+   "id": "PC22-4",
+   "kind": "positive_control",
+   "lesson": "22.7",
+   "needs": [
+    "aoi"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "coverage holds under every AoI profile",
+   "evidence": {
+    "PC4": 0.9053207188630804,
+    "U0": 0.9086871856656533,
+    "U1": 0.9082809150894495,
+    "U2": 0.9058472942980025
+   },
+   "id": "G22-13",
+   "kind": "positive",
+   "lesson": "22.7",
+   "needs": [
+    "aoi"
+   ],
+   "status": "PASS"
+  }
+ ],
+ "go_conditions": [
+  {
+   "evidence": {
+    "cells": [
+     {
+      "H22_7_C3": false,
+      "aurc_C0": null,
+      "aurc_C3": null,
+      "aurc_C3_over_C0": null,
+      "cell": "cbr@0.700",
+      "frontier_not_degraded": false
+     },
+     {
+      "H22_7_C3": true,
+      "aurc_C0": 0.03323635215930115,
+      "aurc_C3": 0.03352202871502009,
+      "aurc_C3_over_C0": 1.0085953041522033,
+      "cell": "h2@0.700",
+      "frontier_not_degraded": true
+     },
+     {
+      "H22_7_C3": false,
+      "aurc_C0": 0.0,
+      "aurc_C3": 0.0,
+      "aurc_C3_over_C0": null,
+      "cell": "poisson@0.700",
+      "frontier_not_degraded": false
+     },
+     {
+      "H22_7_C3": true,
+      "aurc_C0": 0.0905691443163081,
+      "aurc_C3": 0.09134187715859293,
+      "aurc_C3_over_C0": 1.0085319658048895,
+      "cell": "poisson@0.850",
+      "frontier_not_degraded": true
+     },
+     {
+      "H22_7_C3": true,
+      "aurc_C0": 0.0913345715838349,
+      "aurc_C3": 0.09108538163849242,
+      "aurc_C3_over_C0": 0.9972716799233711,
+      "cell": "poisson@0.925",
+      "frontier_not_degraded": true
+     }
+    ],
+    "n_cells": 5,
+    "n_evaluable": 3,
+    "n_evaluable_frontier_pass": 3,
+    "note": "Use this before claiming frontier invariance in the abstract; degenerate cells need a lower-scope claim."
+   },
+   "id": "GO-1",
+   "status": "CONDITION",
+   "text": "Before putting frontier invariance in the abstract, confirm AURC(C3)/AURC(C0) < 1.02 on all non-degenerate cells."
+  },
+  {
+   "evidence": {
+    "available": true,
+    "baseline": "maxscore",
+    "intervals": [
+     {
+      "ci95_contains_zero": true,
+      "ci95_high": 0.20652632713317876,
+      "ci95_low": -0.42741358280181885,
+      "delta_mean": -0.09830235004425049,
+      "procedure": "bonferroni",
+      "slot": 1,
+      "z_bin": "0"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 0.7305724143981934,
+      "ci95_low": 0.20442557334899905,
+      "delta_mean": 0.46647134304046634,
+      "procedure": "bonferroni",
+      "slot": 2,
+      "z_bin": "0"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 1.7938259840011597,
+      "ci95_low": 1.2914179563522339,
+      "delta_mean": 1.555025701522827,
+      "procedure": "bonferroni",
+      "slot": 3,
+      "z_bin": "0"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": -0.003383231163024855,
+      "ci95_low": -0.5990432739257813,
+      "delta_mean": -0.2812071466445923,
+      "procedure": "sidak",
+      "slot": 1,
+      "z_bin": "0"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 0.5393573522567751,
+      "ci95_low": 0.04203443527221681,
+      "delta_mean": 0.2820959711074829,
+      "procedure": "sidak",
+      "slot": 2,
+      "z_bin": "0"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 1.6033960819244386,
+      "ci95_low": 1.1042821645736693,
+      "delta_mean": 1.3492104530334472,
+      "procedure": "sidak",
+      "slot": 3,
+      "z_bin": "0"
+     },
+     {
+      "ci95_contains_zero": true,
+      "ci95_high": 0.2896767616271973,
+      "ci95_low": -0.4661395072937012,
+      "delta_mean": -0.11206183433532715,
+      "procedure": "bonferroni",
+      "slot": 1,
+      "z_bin": "1"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 1.035264825820923,
+      "ci95_low": 0.28814797401428227,
+      "delta_mean": 0.6182144546508789,
+      "procedure": "bonferroni",
+      "slot": 2,
+      "z_bin": "1"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 2.495633268356323,
+      "ci95_low": 1.7388079166412354,
+      "delta_mean": 2.0940933418273926,
+      "procedure": "bonferroni",
+      "slot": 3,
+      "z_bin": "1"
+     },
+     {
+      "ci95_contains_zero": true,
+      "ci95_high": 0.025147294998168996,
+      "ci95_low": -0.7110480785369873,
+      "delta_mean": -0.36404225349426267,
+      "procedure": "sidak",
+      "slot": 1,
+      "z_bin": "1"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 0.7686820507049561,
+      "ci95_low": 0.03643012046813966,
+      "delta_mean": 0.35056730270385744,
+      "procedure": "sidak",
+      "slot": 2,
+      "z_bin": "1"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 2.2169455528259276,
+      "ci95_low": 1.4920371055603028,
+      "delta_mean": 1.8258333492279053,
+      "procedure": "sidak",
+      "slot": 3,
+      "z_bin": "1"
+     },
+     {
+      "ci95_contains_zero": true,
+      "ci95_high": 0.17396583557128956,
+      "ci95_low": -0.560675573348999,
+      "delta_mean": -0.18191120147705078,
+      "procedure": "bonferroni",
+      "slot": 1,
+      "z_bin": "2"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 1.5767546176910405,
+      "ci95_low": 0.45060157775878906,
+      "delta_mean": 0.9978474044799804,
+      "procedure": "bonferroni",
+      "slot": 2,
+      "z_bin": "2"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 2.6992075920104983,
+      "ci95_low": 1.830723190307617,
+      "delta_mean": 2.273419361114502,
+      "procedure": "bonferroni",
+      "slot": 3,
+      "z_bin": "2"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": -0.06424818038940423,
+      "ci95_low": -0.8745524406433105,
+      "delta_mean": -0.44712592124938966,
+      "procedure": "sidak",
+      "slot": 1,
+      "z_bin": "2"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 1.2007550716400148,
+      "ci95_low": 0.1546414852142334,
+      "delta_mean": 0.6550543117523193,
+      "procedure": "sidak",
+      "slot": 2,
+      "z_bin": "2"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 2.351730966567993,
+      "ci95_low": 1.5254151344299316,
+      "delta_mean": 1.9429526901245118,
+      "procedure": "sidak",
+      "slot": 3,
+      "z_bin": "2"
+     },
+     {
+      "ci95_contains_zero": true,
+      "ci95_high": 0.4261152267456055,
+      "ci95_low": -0.732384204864502,
+      "delta_mean": -0.098305025100708,
+      "procedure": "bonferroni",
+      "slot": 1,
+      "z_bin": "3"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 1.8701979637145996,
+      "ci95_low": 0.7047857284545899,
+      "delta_mean": 1.1970799922943116,
+      "procedure": "bonferroni",
+      "slot": 2,
+      "z_bin": "3"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 4.068956947326661,
+      "ci95_low": 3.084060859680176,
+      "delta_mean": 3.564279680252075,
+      "procedure": "bonferroni",
+      "slot": 3,
+      "z_bin": "3"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": -0.015703153610229326,
+      "ci95_low": -1.086546516418457,
+      "delta_mean": -0.49886456489562986,
+      "procedure": "sidak",
+      "slot": 1,
+      "z_bin": "3"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 1.4168085098266603,
+      "ci95_low": 0.28643321990966797,
+      "delta_mean": 0.7684179401397705,
+      "procedure": "sidak",
+      "slot": 2,
+      "z_bin": "3"
+     },
+     {
+      "ci95_contains_zero": false,
+      "ci95_high": 3.6023256301879885,
+      "ci95_low": 2.6688097953796386,
+      "delta_mean": 3.1263852596282957,
+      "procedure": "sidak",
+      "slot": 3,
+      "z_bin": "3"
+     }
+    ],
+    "n_boot": 200,
+    "n_intervals": 24,
+    "n_intervals_containing_zero": 5,
+    "note": "Use paired deltas before ranking FWER procedures; if a delta CI contains 0, report no statistical separation.",
+    "procedures": [
+     "bonferroni",
+     "sidak"
+    ]
+   },
+   "id": "GO-2",
+   "status": "CONDITION",
+   "text": "Rank FWER procedures only with paired bootstrap deltas."
+  },
+  {
+   "evidence": {
+    "record_in_future_work": true
+   },
+   "id": "GO-3",
+   "status": "FUTURE_WORK",
+   "text": "Amendment 1 (studentized max-score) was signed but not run in Phase 22."
+  }
+ ],
+ "lesson": "22.8",
+ "phase": "22",
+ "phase_statement": {
+  "available": true,
+  "can_say": "Simultaneous K=4 and post-selection-valid certification is feasible on the main cell; the cost is a shift along the risk-coverage curve, not a degraded frontier.",
+  "cannot_say": "Do not claim a universal frontier law, an FWER ranking, or completion of Amendment 1 without the recorded GO conditions.",
+  "cell": "poisson@0.925",
+  "frontier": {
+   "aurc_C0": 0.0913345715838349,
+   "aurc_C3": 0.09108538163849242,
+   "aurc_C3_over_C0": 0.9972716799233711,
+   "risk_delta_pct_at_same_acceptance": {
+    "0.30": -4.293107980230781,
+    "0.50": -0.8144562856047588,
+    "0.70": 0.25521982747056526
+   }
+  },
+  "operating_point": {
+   "acceptance": 0.49112641434334664,
+   "config": "C3",
+   "err_given_accept": 0.08086028336733904,
+   "err_reject_over_accept": 4.439767581335249,
+   "kappa": 0.5,
+   "risk_ratio_vs_anchor": 0.3635825715367868,
+   "violation_given_accept": 0.07944711195819945
+  }
+ },
+ "prediction_summary": {
+  "hit_rate": 0.65625,
+  "hit_rate_by_lesson": {
+   "22.3": "4/7",
+   "22.4": "5/6",
+   "22.5": "2/7",
+   "22.6": "7/7",
+   "22.7": "3/5"
+  },
+  "n_hit": 21,
+  "n_miss": 11,
+  "n_not_run": 0,
+  "n_scored": 32,
+  "note": "All signed misses M1..M10 are retained to prevent selective reporting."
+ },
+ "provenance": {
+  "git_dirty": true,
+  "git_hash": "660d82391a48bb5b4a19222f51645d16a581ae64",
+  "read_only": true,
+  "script": "cert/gate_report_22.py",
+  "timestamp_utc": "2026-08-13T15:49:20.555364+00:00"
+ },
+ "scorecard": [
+  {
+   "hi": 1.33,
+   "id": "P1",
+   "lesson": "22.3",
+   "lo": 1.28,
+   "observed": 1.3103617956083813,
+   "verdict": "HIT",
+   "what": "qhat_bonferroni_B0 / qhat_21R_B0"
+  },
+  {
+   "hi": 1.32,
+   "id": "P2",
+   "lesson": "22.3",
+   "lo": 1.27,
+   "observed": 1.2955160816565705,
+   "verdict": "HIT",
+   "what": "qhat_sidak_B0 / qhat_21R_B0"
+  },
+  {
+   "hi": 1.3,
+   "id": "P3",
+   "lesson": "22.3",
+   "lo": 1.22,
+   "observed": 1.3179418047354687,
+   "verdict": "MISS",
+   "what": "qhat_maxscore_B0 / qhat_21R_B0"
+  },
+  {
+   "hi": 0.975,
+   "id": "P4",
+   "lesson": "22.3",
+   "lo": 0.955,
+   "observed": 0.971828807367953,
+   "verdict": "HIT",
+   "what": "pointwise coverage under simultaneous correction"
+  },
+  {
+   "hi": 0.8,
+   "id": "P5",
+   "lesson": "22.3",
+   "lo": 0.74,
+   "observed": 0.770630861636868,
+   "verdict": "HIT",
+   "what": "negative-control simultaneous coverage"
+  },
+  {
+   "hi": 0.98,
+   "id": "M1",
+   "lesson": "22.3",
+   "lo": 0.94,
+   "observed": 1.0057846689002163,
+   "verdict": "MISS",
+   "what": "qhat_maxscore / qhat_bonferroni"
+  },
+  {
+   "hi": 0.92,
+   "id": "M2",
+   "lesson": "22.3",
+   "lo": 0.88,
+   "observed": 0.9252950694745853,
+   "verdict": "MISS",
+   "what": "simultaneous coverage (bonferroni)"
+  },
+  {
+   "hi": 0.13,
+   "id": "P6",
+   "lesson": "22.4",
+   "lo": 0.115,
+   "observed": 0.12143507121040045,
+   "verdict": "HIT",
+   "what": "violation|accept before repair"
+  },
+  {
+   "hi": 0.1,
+   "id": "P7",
+   "lesson": "22.4",
+   "lo": 0.0,
+   "observed": 0.01603109059995142,
+   "verdict": "HIT",
+   "what": "violation|accept after fcr"
+  },
+  {
+   "hi": 0.1,
+   "id": "P8",
+   "lesson": "22.4",
+   "lo": 0.0,
+   "observed": 0.0883805096445592,
+   "verdict": "HIT",
+   "what": "violation|accept after mondrian"
+  },
+  {
+   "hi": 0.1,
+   "id": "P9",
+   "lesson": "22.4",
+   "lo": 0.0,
+   "observed": 0.0848574960141877,
+   "verdict": "HIT",
+   "what": "violation|accept after selective"
+  },
+  {
+   "hi": 12,
+   "id": "P10",
+   "lesson": "22.4",
+   "lo": 3,
+   "observed": 8,
+   "verdict": "HIT",
+   "what": "fixed-point iterations"
+  },
+  {
+   "hi": 1.58,
+   "id": "M3",
+   "lesson": "22.4",
+   "lo": 1.45,
+   "observed": 1.6237040914288912,
+   "verdict": "MISS",
+   "what": "fcr multiplier at the fixed point"
+  },
+  {
+   "hi": null,
+   "id": "P11",
+   "lesson": "22.5",
+   "lo": 3.0,
+   "observed": 4.439767581335249,
+   "verdict": "HIT",
+   "what": "err|reject / err|accept at operating point"
+  },
+  {
+   "hi": 1.88,
+   "id": "M4",
+   "lesson": "22.5",
+   "lo": 1.72,
+   "observed": 1.2980053182974343,
+   "verdict": "MISS",
+   "what": "C3 multiplier at the operating point"
+  },
+  {
+   "hi": 0.11,
+   "id": "M5",
+   "lesson": "22.5",
+   "lo": 0.075,
+   "observed": 0.1435814763774409,
+   "verdict": "MISS",
+   "what": "C3 acceptance at kappa=1"
+  },
+  {
+   "hi": 0.42,
+   "id": "M6",
+   "lesson": "22.5",
+   "lo": 0.3,
+   "observed": 0.49112641434334664,
+   "verdict": "MISS",
+   "what": "C3 acceptance at kappa=0.5"
+  },
+  {
+   "hi": 0.24,
+   "id": "M7",
+   "lesson": "22.5",
+   "lo": 0.15,
+   "observed": 0.2733880436108783,
+   "verdict": "MISS",
+   "what": "C3 acceptance at kappa=0.75"
+  },
+  {
+   "hi": 0.075,
+   "id": "M8",
+   "lesson": "22.5",
+   "lo": 0.045,
+   "observed": 0.08086028336733904,
+   "verdict": "MISS",
+   "what": "C3 err|accept at kappa=0.5"
+  },
+  {
+   "id": "S1",
+   "lesson": "22.5",
+   "observed": true,
+   "verdict": "HIT",
+   "what": "H22-7 holds at kappa in {0.5, 0.75}"
+  },
+  {
+   "hi": 2.16,
+   "id": "P12",
+   "lesson": "22.6",
+   "lo": 1.77,
+   "observed": 1.977949756247702,
+   "verdict": "HIT",
+   "what": "ratio at tau=0.50"
+  },
+  {
+   "hi": 2.29,
+   "id": "P13",
+   "lesson": "22.6",
+   "lo": 1.87,
+   "observed": 2.0989601786571823,
+   "verdict": "HIT",
+   "what": "ratio at tau=1.00"
+  },
+  {
+   "hi": 2.3,
+   "id": "P14",
+   "lesson": "22.6",
+   "lo": 1.88,
+   "observed": 2.14319323216089,
+   "verdict": "HIT",
+   "what": "ratio at tau=2.00"
+  },
+  {
+   "hi": 2.27,
+   "id": "P15",
+   "lesson": "22.6",
+   "lo": 1.86,
+   "observed": 2.0834100434350473,
+   "verdict": "HIT",
+   "what": "ratio at tau=2.87"
+  },
+  {
+   "hi": 2.17,
+   "id": "P16",
+   "lesson": "22.6",
+   "lo": 1.77,
+   "observed": 2.00755705975703,
+   "verdict": "HIT",
+   "what": "ratio at tau=5.00"
+  },
+  {
+   "id": "S2",
+   "lesson": "22.6",
+   "observed": true,
+   "verdict": "HIT",
+   "what": "ratio over tau is hump-shaped"
+  },
+  {
+   "id": "S3",
+   "lesson": "22.6",
+   "observed": true,
+   "verdict": "HIT",
+   "what": "A is independent of tau (<2%)"
+  },
+  {
+   "hi": 0.02,
+   "id": "P17",
+   "lesson": "22.7",
+   "lo": 0.0,
+   "observed": 0.0042228913206801,
+   "verdict": "HIT",
+   "what": "max |qhat(U1)/qhat(U0)-1|"
+  },
+  {
+   "hi": 0.02,
+   "id": "P18",
+   "lesson": "22.7",
+   "lo": 0.0,
+   "observed": 0.013948477632257372,
+   "verdict": "HIT",
+   "what": "max |qhat(U2)/qhat(U0)-1|"
+  },
+  {
+   "hi": 1.0,
+   "id": "M9",
+   "lesson": "22.7",
+   "lo": 0.95,
+   "observed": 1.00422289132068,
+   "verdict": "MISS",
+   "what": "qhat(U1)/qhat(U0) at B2 (sign prediction)"
+  },
+  {
+   "hi": 1.0,
+   "id": "M10",
+   "lesson": "22.7",
+   "lo": 0.96,
+   "observed": 1.0139484776322574,
+   "verdict": "MISS",
+   "what": "qhat(U2)/qhat(U0) at B0 (sign prediction)"
+  },
+  {
+   "id": "S4",
+   "lesson": "22.7",
+   "observed": true,
+   "verdict": "HIT",
+   "what": "PC4 makes the Jensen effect visible"
+  }
+ ]
+}

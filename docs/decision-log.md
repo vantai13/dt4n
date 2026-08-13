@@ -363,3 +363,39 @@ separately.
 Phase 22 must address three scoped gaps: simultaneous coverage for all K=4
 actions, coverage after selection, and sensitivity of the observed q_hat
 age-shape ratio to tau/AoI/real telemetry.
+
+## 2026-08-13 - Phase 22 complete: simultaneous and post-selection-valid certificate
+
+### QD-30: Phase 22 GO is scoped to the main fixed-sigma cell
+
+Phase 22 closes as GO on `poisson@0.925`: 17/17 gates PASS, 0 FAIL, 0
+NOT_RUN. The full C3 operating point is `kappa=0.5`, acceptance `0.4911`,
+`err|accept=0.0809`, `violation|accept=0.0794 <= alpha`, and
+`err|reject / err|accept=4.44`.
+
+The phase statement is scoped: simultaneous K=4 and post-selection-valid
+certification is feasible on the main cell. The observed cost is a shift along
+the risk-coverage curve, not a degraded frontier: AURC C0 `0.0913` vs C3
+`0.0911`.
+
+### QD-31: Prediction hit rate is reported, never used as a gate
+
+The honest prediction scorecard is 21/32 = 65.6%. All signed misses M1..M10
+remain in the table. Dropping them would be selective reporting, which is the
+failure mode Phase 22 was designed to prevent.
+
+The hit rate correlates with the origin of the prediction: the mechanism-based
+tau model in Lesson 22.6 scored 7/7, while extrapolating one multiplier across
+a family in Lesson 22.5 scored 2/7.
+
+### QD-32: GO has three recorded conditions
+
+GO-1: before claiming frontier invariance in an abstract, confirm
+AURC(C3)/AURC(C0) < 1.02 on all non-degenerate cells. Current scan: 3/3
+evaluable cells pass; 2 cells are degenerate/not evaluable.
+
+GO-2: do not rank FWER procedures without paired bootstrap deltas. The current
+artifact has 200 paired bootstrap draws, and 5/24 delta intervals contain zero.
+
+GO-3: Amendment 1, studentized max-score, was signed but not run in Phase 22.
+It must be recorded as future work or run as exploratory.

@@ -302,10 +302,12 @@ def evaluate_config(
     n = int(acc.sum())
     err_acc = float(wrong[acc].mean()) if n else float("nan")
     viol_acc = float(viol[acc].mean()) if n else float("nan")
+    qhat_slot1_mean = float(np.mean([float(v[0]) for v in fit["_q"].values()]))
     return {
         "config": str(fit["config"]),
         "post": str(fit["post"]),
         "kappa": kappa,
+        "qhat_slot1_mean": qhat_slot1_mean,
         "acceptance": float(acc.mean()),
         "err_given_accept": err_acc,
         "err_given_reject": float(wrong[~acc].mean()) if (~acc).any() else float("nan"),

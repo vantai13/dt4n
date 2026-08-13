@@ -1,0 +1,704 @@
+{
+ "artifact_paths": {
+  "aoi": "results/phase-22/aoi_profiles_cbr_0.700.json",
+  "calib": "results/phase-22/calib_set_v3_cbr_0.700.json",
+  "conformal": "results/phase-22/conformal_sim_cbr_0.700.json",
+  "matrix": "results/phase-22/config_matrix_cbr_0.700.json",
+  "selective": "results/phase-22/selective_cbr_0.700.json",
+  "tau": "results/phase-22/tau_sweep_cbr_0.700.json"
+ },
+ "cell": "cbr_0.700",
+ "gate_summary": {
+  "decision": "NO_GO",
+  "gates_blocking": [
+   "G22-8",
+   "G22-9b",
+   "G22-10"
+  ],
+  "gates_error": 0,
+  "gates_fail": 3,
+  "gates_not_run": [
+   "G22-12",
+   "PC22-4",
+   "G22-13"
+  ],
+  "gates_not_run_count": 3,
+  "gates_pass": 11,
+  "gates_total": 17,
+  "hit_rate": 0.2962962962962963,
+  "hit_rate_by_lesson": {
+   "22.3": "2/7",
+   "22.4": "3/6",
+   "22.5": "1/7",
+   "22.6": "2/7",
+   "22.7": "0/0"
+  },
+  "predictions_hit": 8,
+  "predictions_miss": 19,
+  "predictions_scored": 27,
+  "rule": "GO requires zero FAIL/ERROR and zero NOT_RUN. Prediction hit rate is REPORTED, never a gate: a missed prediction with an understood mechanism is a result, not a defect."
+ },
+ "gates": [
+  {
+   "claim": "U0 reproduces calib_set_v2 bit-for-bit",
+   "evidence": {
+    "V22_1_worst": 0.0
+   },
+   "id": "G22-2",
+   "kind": "reproduction",
+   "lesson": "22.2",
+   "needs": [
+    "calib"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "every (z_bin x m_hat_bin) cell has at least 9 calibration blocks",
+   "evidence": {
+    "min_calib_blocks_per_z_x_mhat_cell": 403,
+    "threshold": 9
+   },
+   "id": "G22-3",
+   "kind": "positive",
+   "lesson": "22.2",
+   "needs": [
+    "calib"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "corrected procedures achieve simultaneous coverage",
+   "evidence": {
+    "coverage_simultaneous_marginal": {
+     "bonferroni": 0.9271191898665312,
+     "maxscore": 0.8998293887396568,
+     "sidak": 0.9225648892826926
+    },
+    "value": true
+   },
+   "id": "G22-4",
+   "kind": "positive",
+   "lesson": "22.3",
+   "needs": [
+    "conformal"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "negative control collapses without correction",
+   "evidence": {
+    "value": true
+   },
+   "id": "G22-5",
+   "kind": "negative_control",
+   "lesson": "22.3",
+   "needs": [
+    "conformal"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "uncorrected slot 1 equals the 21R qhat exactly",
+   "evidence": {
+    "value": true
+   },
+   "id": "V22-6",
+   "kind": "reproduction",
+   "lesson": "22.3",
+   "needs": [
+    "conformal"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "row split collapses the coverage variance",
+   "evidence": {
+    "coverage_sd_block": [
+     0.008285132824881327,
+     0.006656475113564249,
+     0.007052485377510556,
+     0.008078715450512374
+    ],
+    "coverage_sd_row": [
+     0.0022919826894991207,
+     0.0013927101610030981,
+     0.001503602080044891,
+     0.0007159588112361277
+    ],
+    "sd_ratio_row_over_block": 0.19633196844474804
+   },
+   "id": "PC22-3",
+   "kind": "positive_control",
+   "lesson": "22.3",
+   "needs": [
+    "conformal"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "post-selection validity is restored at kappa=1",
+   "evidence": {
+    "value": true
+   },
+   "id": "G22-6",
+   "kind": "positive",
+   "lesson": "22.4",
+   "needs": [
+    "selective"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "fixed points terminate",
+   "evidence": {
+    "fcr_n_iter_kappa1": 2,
+    "selective_n_iter_kappa1": 1
+   },
+   "id": "G22-7",
+   "kind": "positive",
+   "lesson": "22.4",
+   "needs": [
+    "selective"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "kappa=0 reduces to 21R",
+   "evidence": {
+    "value": true
+   },
+   "id": "NC22-2",
+   "kind": "negative_control",
+   "lesson": "22.4",
+   "needs": [
+    "selective"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "H22-7 holds for the full C3 claim",
+   "evidence": {
+    "acceptance": null,
+    "err_given_accept": null,
+    "kappa": null,
+    "risk_ratio": null
+   },
+   "id": "G22-8",
+   "kind": "positive",
+   "lesson": "22.5",
+   "needs": [
+    "matrix"
+   ],
+   "status": "FAIL"
+  },
+  {
+   "claim": "risk-coverage curves are monotone in kappa",
+   "evidence": {
+    "value": true
+   },
+   "id": "G22-9",
+   "kind": "positive",
+   "lesson": "22.5",
+   "needs": [
+    "matrix"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "frontier is not degraded: AURC(C3)/AURC(C0) < 1.02",
+   "evidence": {
+    "aurc_C0": null,
+    "aurc_C3": null,
+    "aurc_C3_over_C0": null,
+    "threshold": 1.02
+   },
+   "id": "G22-9b",
+   "kind": "positive",
+   "lesson": "22.5",
+   "needs": [
+    "matrix"
+   ],
+   "status": "FAIL"
+  },
+  {
+   "claim": "all five tau ratios lie inside signed bands",
+   "evidence": {
+    "ratio_measured": [
+     0.9874460921486667,
+     1.001104200158989,
+     0.9963800541614983,
+     0.9981589661194763,
+     0.9984191769875762
+    ]
+   },
+   "id": "G22-10",
+   "kind": "positive",
+   "lesson": "22.6",
+   "needs": [
+    "tau"
+   ],
+   "status": "FAIL"
+  },
+  {
+   "claim": "AR(1) amplitude A is independent of tau",
+   "evidence": {
+    "A_span_pct": 0.17583762568014538,
+    "threshold_pct": 2.0
+   },
+   "id": "G22-11",
+   "kind": "positive",
+   "lesson": "22.6",
+   "needs": [
+    "tau"
+   ],
+   "status": "PASS"
+  },
+  {
+   "claim": "realistic AoI profiles are indistinguishable from uniform",
+   "evidence": {
+    "missing_artifacts": [
+     "aoi"
+    ]
+   },
+   "id": "G22-12",
+   "kind": "positive",
+   "lesson": "22.7",
+   "needs": [
+    "aoi"
+   ],
+   "status": "NOT_RUN"
+  },
+  {
+   "claim": "extreme AoI offset is visible",
+   "evidence": {
+    "missing_artifacts": [
+     "aoi"
+    ]
+   },
+   "id": "PC22-4",
+   "kind": "positive_control",
+   "lesson": "22.7",
+   "needs": [
+    "aoi"
+   ],
+   "status": "NOT_RUN"
+  },
+  {
+   "claim": "coverage holds under every AoI profile",
+   "evidence": {
+    "missing_artifacts": [
+     "aoi"
+    ]
+   },
+   "id": "G22-13",
+   "kind": "positive",
+   "lesson": "22.7",
+   "needs": [
+    "aoi"
+   ],
+   "status": "NOT_RUN"
+  }
+ ],
+ "go_conditions": [
+  {
+   "evidence": {
+    "cells": [
+     {
+      "H22_7_C3": false,
+      "aurc_C0": null,
+      "aurc_C3": null,
+      "aurc_C3_over_C0": null,
+      "cell": "cbr@0.700",
+      "frontier_not_degraded": false
+     },
+     {
+      "H22_7_C3": true,
+      "aurc_C0": 0.03323635215930115,
+      "aurc_C3": 0.03352202871502009,
+      "aurc_C3_over_C0": 1.0085953041522033,
+      "cell": "h2@0.700",
+      "frontier_not_degraded": true
+     },
+     {
+      "H22_7_C3": false,
+      "aurc_C0": 0.0,
+      "aurc_C3": 0.0,
+      "aurc_C3_over_C0": null,
+      "cell": "poisson@0.700",
+      "frontier_not_degraded": false
+     },
+     {
+      "H22_7_C3": true,
+      "aurc_C0": 0.0905691443163081,
+      "aurc_C3": 0.09134187715859293,
+      "aurc_C3_over_C0": 1.0085319658048895,
+      "cell": "poisson@0.850",
+      "frontier_not_degraded": true
+     },
+     {
+      "H22_7_C3": true,
+      "aurc_C0": 0.0913345715838349,
+      "aurc_C3": 0.09108538163849242,
+      "aurc_C3_over_C0": 0.9972716799233711,
+      "cell": "poisson@0.925",
+      "frontier_not_degraded": true
+     }
+    ],
+    "n_cells": 5,
+    "n_evaluable": 3,
+    "n_evaluable_frontier_pass": 3,
+    "note": "Use this before claiming frontier invariance in the abstract; degenerate cells need a lower-scope claim."
+   },
+   "id": "GO-1",
+   "status": "CONDITION",
+   "text": "Before putting frontier invariance in the abstract, confirm AURC(C3)/AURC(C0) < 1.02 on all non-degenerate cells."
+  },
+  {
+   "evidence": {
+    "available": false
+   },
+   "id": "GO-2",
+   "status": "CONDITION",
+   "text": "Rank FWER procedures only with paired bootstrap deltas."
+  },
+  {
+   "evidence": {
+    "record_in_future_work": true
+   },
+   "id": "GO-3",
+   "status": "FUTURE_WORK",
+   "text": "Amendment 1 (studentized max-score) was signed but not run in Phase 22."
+  }
+ ],
+ "lesson": "22.8",
+ "phase": "22",
+ "phase_statement": {
+  "available": true,
+  "can_say": "Simultaneous K=4 and post-selection-valid certification is feasible on the main cell; the cost is a shift along the risk-coverage curve, not a degraded frontier.",
+  "cannot_say": "Do not claim a universal frontier law, an FWER ranking, or completion of Amendment 1 without the recorded GO conditions.",
+  "cell": "cbr@0.700",
+  "frontier": {
+   "aurc_C0": null,
+   "aurc_C3": null,
+   "aurc_C3_over_C0": null,
+   "risk_delta_pct_at_same_acceptance": {
+    "0.30": null,
+    "0.50": null,
+    "0.70": null
+   }
+  },
+  "operating_point": {
+   "acceptance": 1.0,
+   "config": "C3",
+   "err_given_accept": 0.0,
+   "err_reject_over_accept": null,
+   "kappa": 0.5,
+   "risk_ratio_vs_anchor": null,
+   "violation_given_accept": 0.07501295085475641
+  }
+ },
+ "prediction_summary": {
+  "hit_rate": 0.2962962962962963,
+  "hit_rate_by_lesson": {
+   "22.3": "2/7",
+   "22.4": "3/6",
+   "22.5": "1/7",
+   "22.6": "2/7",
+   "22.7": "0/0"
+  },
+  "n_hit": 8,
+  "n_miss": 19,
+  "n_not_run": 5,
+  "n_scored": 27,
+  "note": "All signed misses M1..M10 are retained to prevent selective reporting."
+ },
+ "provenance": {
+  "git_dirty": true,
+  "git_hash": "660d82391a48bb5b4a19222f51645d16a581ae64",
+  "read_only": true,
+  "script": "cert/gate_report_22.py",
+  "timestamp_utc": "2026-08-13T15:49:43.744559+00:00"
+ },
+ "scorecard": [
+  {
+   "hi": 1.33,
+   "id": "P1",
+   "lesson": "22.3",
+   "lo": 1.28,
+   "observed": 1.1967911596013434,
+   "verdict": "MISS",
+   "what": "qhat_bonferroni_B0 / qhat_21R_B0"
+  },
+  {
+   "hi": 1.32,
+   "id": "P2",
+   "lesson": "22.3",
+   "lo": 1.27,
+   "observed": 1.1875360954872614,
+   "verdict": "MISS",
+   "what": "qhat_sidak_B0 / qhat_21R_B0"
+  },
+  {
+   "hi": 1.3,
+   "id": "P3",
+   "lesson": "22.3",
+   "lo": 1.22,
+   "observed": 1.7167043729924911,
+   "verdict": "MISS",
+   "what": "qhat_maxscore_B0 / qhat_21R_B0"
+  },
+  {
+   "hi": 0.975,
+   "id": "P4",
+   "lesson": "22.3",
+   "lo": 0.955,
+   "observed": 0.9708100734648486,
+   "verdict": "HIT",
+   "what": "pointwise coverage under simultaneous correction"
+  },
+  {
+   "hi": 0.8,
+   "id": "P5",
+   "lesson": "22.3",
+   "lo": 0.74,
+   "observed": 0.7944184316164867,
+   "verdict": "HIT",
+   "what": "negative-control simultaneous coverage"
+  },
+  {
+   "hi": 0.98,
+   "id": "M1",
+   "lesson": "22.3",
+   "lo": 0.94,
+   "observed": 1.4344226720093196,
+   "verdict": "MISS",
+   "what": "qhat_maxscore / qhat_bonferroni"
+  },
+  {
+   "hi": 0.92,
+   "id": "M2",
+   "lesson": "22.3",
+   "lo": 0.88,
+   "observed": 0.9271191898665312,
+   "verdict": "MISS",
+   "what": "simultaneous coverage (bonferroni)"
+  },
+  {
+   "hi": 0.13,
+   "id": "P6",
+   "lesson": "22.4",
+   "lo": 0.115,
+   "observed": 0.07897321223200732,
+   "verdict": "MISS",
+   "what": "violation|accept before repair"
+  },
+  {
+   "hi": 0.1,
+   "id": "P7",
+   "lesson": "22.4",
+   "lo": 0.0,
+   "observed": 0.07897321223200732,
+   "verdict": "HIT",
+   "what": "violation|accept after fcr"
+  },
+  {
+   "hi": 0.1,
+   "id": "P8",
+   "lesson": "22.4",
+   "lo": 0.0,
+   "observed": 0.08312948654611205,
+   "verdict": "HIT",
+   "what": "violation|accept after mondrian"
+  },
+  {
+   "hi": 0.1,
+   "id": "P9",
+   "lesson": "22.4",
+   "lo": 0.0,
+   "observed": 0.07897321223200732,
+   "verdict": "HIT",
+   "what": "violation|accept after selective"
+  },
+  {
+   "hi": 12,
+   "id": "P10",
+   "lesson": "22.4",
+   "lo": 3,
+   "observed": 1,
+   "verdict": "MISS",
+   "what": "fixed-point iterations"
+  },
+  {
+   "hi": 1.58,
+   "id": "M3",
+   "lesson": "22.4",
+   "lo": 1.45,
+   "observed": 1.0,
+   "verdict": "MISS",
+   "what": "fcr multiplier at the fixed point"
+  },
+  {
+   "hi": null,
+   "id": "P11",
+   "lesson": "22.5",
+   "lo": 3.0,
+   "observed": null,
+   "verdict": "HIT",
+   "what": "err|reject / err|accept at operating point"
+  },
+  {
+   "hi": 1.88,
+   "id": "M4",
+   "lesson": "22.5",
+   "lo": 1.72,
+   "observed": 1.1824330060950519,
+   "verdict": "MISS",
+   "what": "C3 multiplier at the operating point"
+  },
+  {
+   "hi": 0.11,
+   "id": "M5",
+   "lesson": "22.5",
+   "lo": 0.075,
+   "observed": 1.0,
+   "verdict": "MISS",
+   "what": "C3 acceptance at kappa=1"
+  },
+  {
+   "hi": 0.42,
+   "id": "M6",
+   "lesson": "22.5",
+   "lo": 0.3,
+   "observed": 1.0,
+   "verdict": "MISS",
+   "what": "C3 acceptance at kappa=0.5"
+  },
+  {
+   "hi": 0.24,
+   "id": "M7",
+   "lesson": "22.5",
+   "lo": 0.15,
+   "observed": 1.0,
+   "verdict": "MISS",
+   "what": "C3 acceptance at kappa=0.75"
+  },
+  {
+   "hi": 0.075,
+   "id": "M8",
+   "lesson": "22.5",
+   "lo": 0.045,
+   "observed": 0.0,
+   "verdict": "MISS",
+   "what": "C3 err|accept at kappa=0.5"
+  },
+  {
+   "id": "S1",
+   "lesson": "22.5",
+   "observed": false,
+   "verdict": "MISS",
+   "what": "H22-7 holds at kappa in {0.5, 0.75}"
+  },
+  {
+   "hi": 2.16,
+   "id": "P12",
+   "lesson": "22.6",
+   "lo": 1.77,
+   "observed": 0.9874460921486667,
+   "verdict": "MISS",
+   "what": "ratio at tau=0.50"
+  },
+  {
+   "hi": 2.29,
+   "id": "P13",
+   "lesson": "22.6",
+   "lo": 1.87,
+   "observed": 1.001104200158989,
+   "verdict": "MISS",
+   "what": "ratio at tau=1.00"
+  },
+  {
+   "hi": 2.3,
+   "id": "P14",
+   "lesson": "22.6",
+   "lo": 1.88,
+   "observed": 0.9963800541614983,
+   "verdict": "MISS",
+   "what": "ratio at tau=2.00"
+  },
+  {
+   "hi": 2.27,
+   "id": "P15",
+   "lesson": "22.6",
+   "lo": 1.86,
+   "observed": 0.9981589661194763,
+   "verdict": "MISS",
+   "what": "ratio at tau=2.87"
+  },
+  {
+   "hi": 2.17,
+   "id": "P16",
+   "lesson": "22.6",
+   "lo": 1.77,
+   "observed": 0.9984191769875762,
+   "verdict": "MISS",
+   "what": "ratio at tau=5.00"
+  },
+  {
+   "id": "S2",
+   "lesson": "22.6",
+   "observed": true,
+   "verdict": "HIT",
+   "what": "ratio over tau is hump-shaped"
+  },
+  {
+   "id": "S3",
+   "lesson": "22.6",
+   "observed": true,
+   "verdict": "HIT",
+   "what": "A is independent of tau (<2%)"
+  },
+  {
+   "hi": 0.02,
+   "id": "P17",
+   "lesson": "22.7",
+   "lo": 0.0,
+   "observed": null,
+   "verdict": "NOT_RUN",
+   "what": "max |qhat(U1)/qhat(U0)-1|"
+  },
+  {
+   "hi": 0.02,
+   "id": "P18",
+   "lesson": "22.7",
+   "lo": 0.0,
+   "observed": null,
+   "verdict": "NOT_RUN",
+   "what": "max |qhat(U2)/qhat(U0)-1|"
+  },
+  {
+   "hi": 1.0,
+   "id": "M9",
+   "lesson": "22.7",
+   "lo": 0.95,
+   "observed": null,
+   "verdict": "NOT_RUN",
+   "what": "qhat(U1)/qhat(U0) at B2 (sign prediction)"
+  },
+  {
+   "hi": 1.0,
+   "id": "M10",
+   "lesson": "22.7",
+   "lo": 0.96,
+   "observed": null,
+   "verdict": "NOT_RUN",
+   "what": "qhat(U2)/qhat(U0) at B0 (sign prediction)"
+  },
+  {
+   "id": "S4",
+   "lesson": "22.7",
+   "observed": null,
+   "verdict": "NOT_RUN",
+   "what": "PC4 makes the Jensen effect visible"
+  }
+ ]
+}
