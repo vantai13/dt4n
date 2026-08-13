@@ -272,6 +272,37 @@ Thu tu bat buoc: split theo block -> tinh canh m_hat tren CALIB -> gan bin cho
 tat ca hang. Tinh canh tren toan bo du lieu la ro ri taxonomy vao test.
 ```
 
+### D8. Pham vi cua P(accept) trong diem bat dong FCR
+
+Them sau Lesson 22.4.
+
+```text
+CHINH: p_scope = "global"
+       P(accept) do tren toan bo tap CALIB, bao dam P(viol|accept) <= alpha
+       theo bien. Ly do: on dinh tren o chinh; ban per-bin sup do tai B3.
+
+PHU:   p_scope = "per_bin"
+       Bao dam manh hon neu ton tai, nhung khong kha thi tai poisson@0.925:
+       B3 di vao trang thai hap thu P(accept)=0, q_hat=inf.
+
+Gioi han dung luong huu han:
+       FCR can P(accept) >= 1/(alpha*(n_eff+1)).
+       Voi n_eff=500 va alpha=0.10, nguong la 0.01996.
+
+Moi P(accept) dung trong fixed point phai do tren CALIB, khong do tren TEST.
+```
+
+### D9. He so nhan cua thu tuc thich ung khong phai mot so
+
+Them sau Lesson 22.4.
+
+```text
+Voi FCR global, co the bao cao mot he so theo z-bin.
+Voi Mondrian/selective/adaptive taxonomy, "he so nhan" la mot mang theo nhom.
+Du doan sau nay phai noi ro he so cua nhom nao, hoac du doan hinh dang phan bo
+he so. Khong duoc viet "he so nhan cua Mondrian" nhu mot so don.
+```
+
 ## Bang du doan -- dien truoc, doi chieu sau
 
 | Dai luong | Du doan | Do duoc | KQ |
