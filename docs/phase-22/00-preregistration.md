@@ -201,6 +201,11 @@ z_bar giu nguyen o ca ba ho so bang cach bu offset trung binh vao d_sync.
 Khong them ho so sau khi thay ket qua.
 ```
 
+Ghi chu thuc thi Lesson 22.2: `dt = 5 ms`, nen offset thuc te bi luong tu hoa
+ve boi so 5 ms. P11 khoa ho so danh nghia; artifact phai bao cao ca
+`offset_ms_nominal`, `offset_steps`, `offset_ms_realised`, `link_order`, va
+kiem `|realised - nominal| <= dt/2`.
+
 ### P12. Luoi tau
 
 ```text
@@ -229,6 +234,31 @@ Neu P_i cham 0: bao cao suy bien, khong ngoai suy.
 
 Quan sat dang ghi: thu tuc (a) va thu tuc (c) la hai diem bat dong cua cung mot
 bai toan -- (a) lap tren muc alpha, (c) lap tren tap hieu chuan.
+
+### D5. Sao chep co canh, khong refactor artifact da khoa
+
+```text
+Khong sua `cert/build_calib_set_v2.py` de tach logic chon hang vi v2 da la
+evidence dong cua 21R. v3 duoc phep sao chep logic chon hang, nhung bat buoc
+co V22-1 approval test: U0 shared columns phai khop artifact v2 bit-for-bit.
+G22-2 duoc siết thanh max|diff| == 0.0 tren tat ca cot dung chung.
+```
+
+### D6. Khong luu z_s_per_link trong parquet
+
+```text
+Khong luu ma tran (n,8) `z_s_per_link`. Tuoi tung link suy ra duoc tu ho so
+offset + sawtooth age, nen luu ma tran se tao du lieu du thua va co the mau
+thuan. Metadata bat buoc gom offset_ms_nominal, offset_steps,
+offset_ms_realised, va link_order.
+```
+
+### D7. Bin m_hat tinh sau split, chi tren calib
+
+```text
+Thu tu bat buoc: split theo block -> tinh canh m_hat tren CALIB -> gan bin cho
+tat ca hang. Tinh canh tren toan bo du lieu la ro ri taxonomy vao test.
+```
 
 ## Bang du doan -- dien truoc, doi chieu sau
 
