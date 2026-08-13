@@ -8,12 +8,12 @@ Ngay: 2026-08-13
 |---|---|---|
 | L1 | Ground truth la bang tra do day, khong phai chan ly vat ly | Ghi pham vi -> P23-C |
 | L2 | 48.1% phuong sai e_model la nhieu do | Ghi pham vi va dung trong mo hinh tien doan L22.6 |
-| L3 | Bao dam cho AR(1) tong hop, tau = 1.0 | Giai quyet mot phan o 22.6 bang quet tau |
+| L3 | Bao dam cho AR(1) tong hop, tau = 1.0 | Da dong mot phan o 22.6: AR(1) giu tren tau in [0.5, 5.0], gom tau=2.87; tai that de Phase 23 |
 | L4 | Bao dam chinh xac thuoc Variant A; B la xap xi headline | Ghi pham vi, bao cao A/B song song |
 | L5 | Bao phu khong giu sau chon loc (0.0913 -> 0.1214) | Giai quyet o 22.4 |
 | L6 | Chung nhan la cap, khong dong thoi tren K=4 | Giai quyet o 22.1 va 22.3 |
 | L7 | Duong co dinh chi co 1 ho tai ngoai poisson | De Phase 23 |
-| L8 | Ti so tuoi 2.17 la quan sat, chua la dinh luat | Giai quyet o 22.6 |
+| L8 | Ti so tuoi 2.17 la quan sat, chua la dinh luat | Da dong o 22.6: la gioi han bao hoa R_inf khi A/rms_em lon; cbr xac nhan cho vo |
 | L9 | Cac o van hanh chia trajectory theo seed -> p-value lac quan | Ghi pham vi (R22-6) |
 | L10 | Xep hang tuyet doi ke thua gia dinh residual-bound cua 20R | De Phase 23 |
 
@@ -114,3 +114,30 @@ duoc dang ky moi tai day. Hai sua nghi trong nhat truoc khi ky la:
 
 1. Thu tuc sau chon loc phai la diem bat dong, khong phai cong thuc mot buoc.
 2. Mo hinh Lesson 22.6 phai dung cov_e va du doan R(tau) hinh chuong.
+
+## 6. Cap nhat sau Lesson 22.6
+
+`cert/tau_sweep.py` da chay tren du lieu that cho tau
+`{0.5, 1.0, 2.0, 2.87, 5.0}` voi block_s = 5*tau.
+
+```text
+poisson@0.925:
+  A      = 25.976 -> 26.175, span 0.762%
+  c      = 0.88837 -> 0.89770, span 1.046%
+  rms_em = 2.1339 -> 2.1482, span 0.664%
+  R      = 1.9779 -> 2.0990 -> 2.1432 -> 2.0834 -> 2.0076
+  R_inf(1.0) = 2.1614
+```
+
+Ket luan:
+
+```text
+L3: dong mot phan. Bao dam AR(1) khong con chi tau=1.0; no giu tren
+    [0.5, 5.0], gom tau=2.87 cua tai loi that. Van chua dong cho tai
+    khong-AR(1).
+
+L8: dong. Ratio ~2.17 la gia tri bao hoa cua
+    sqrt((1-exp(-z3/tau))/(1-exp(-z0/tau))) khi A/rms_em lon.
+    PC22-1 cbr@0.700 cho A/rms_em ~0.02 va ratio ~1.0, dung la cho
+    ly thuyet tien doan se vo.
+```
