@@ -15,6 +15,7 @@ Tai lieu bat buoc doc kem:
 docs/phase-21R/99-gate-decision.md          (L1-L10)
 docs/phase-21R/00b..00i-amendment-1..8.md
 docs/phase-22/01-inherited-audit.md         (L11, L12 -- PHAT HIEN MOI)
+docs/phase-22/00b-amendment-1.md            (P3c, exploratory studentized max)
 ```
 
 ## Cau hoi cua phase
@@ -132,6 +133,17 @@ Max-score  : hieu chuan s_sim o alpha, khong chia
 Phase 22 dung alpha/(K-1) = 0.0333 (K-1 khang dinh, deu la hieu voi a1).
 Ca hai hop le; alpha/(K-1) chat hon.
 Bao cao song song ca hai o Lesson 22.3 de dong chenh lech nay cong khai.
+```
+
+### P3c. Bridge half-normal la score-dependent
+
+Them sau Lesson 22.3, xem `docs/phase-22/00b-amendment-1.md`.
+
+```text
+1.645*rms co the dung lam bridge ratio cho cung mot score.
+Voi s_sim, chi bao cao qhat/(1.645*rms(s_sim)) de giai thich theo z-bin.
+Khong dung bridge nay lam du doan absolute qhat confirmatory, va khong thay
+qhat conformal bang proxy half-normal.
 ```
 
 ### P4. Che do
