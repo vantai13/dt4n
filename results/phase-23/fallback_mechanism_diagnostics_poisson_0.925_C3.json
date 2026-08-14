@@ -769,10 +769,10 @@
   "calib": "results/phase-22/calib_set_v3.parquet",
   "fine_grid_csv": "results/phase-23/fallback_fine_grid_poisson_0.925_C3_exploratory.csv",
   "git_dirty_before_write": false,
-  "git_hash": "bd633c37ce81bd0f0aac1c0cd6298ca38bee8fb3",
+  "git_hash": "b75cf0ddc132524abd2ed1dd8a9c990bf6a12b65",
   "inference_json": "results/phase-23/fallback_inference_poisson_0.925_C3_k0.25.json",
   "script": "cert/fallback.py helpers via mechanism diagnostic writer",
-  "timestamp_utc": "2026-08-14T09:00:34.116867+00:00"
+  "timestamp_utc": "2026-08-14T09:34:27.334420+00:00"
  },
  "rowset": "test rows unless noted",
  "scale_argmin_disagreement": {
@@ -818,7 +818,9 @@
    "steps": 59
   },
   "at_sticky_age_ms": 293.90258982967504,
-  "exp_fit_intercept": -0.24945520058450124,
+  "exp_fit_intercept": 0.0,
+  "fit_note": "tau_a_s_exp_fit fixes p_infinity=sum_i P(a*=i)^2 and regresses through the origin; tau_a_s_free_intercept_fit preserves the old two-parameter diagnostic.",
+  "free_intercept_exp_fit_intercept": -0.24945520058450124,
   "p_infinity": 0.5462368372791131,
   "points": [
    {
@@ -906,6 +908,7 @@
     "steps": 200
    }
   ],
-  "tau_a_s_exp_fit": 0.7992089918600481
+  "tau_a_s_exp_fit": 0.5882831296891937,
+  "tau_a_s_free_intercept_fit": 0.7992089918600481
  }
 }

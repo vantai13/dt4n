@@ -356,13 +356,16 @@ Ham tu tuong quan cua chan ly tren test rows:
 | 500 ms | 0.731347 |
 | 1000 ms | 0.651949 |
 
-Fit mũ ve `p_infinity = 0.546237` cho `tau_a = 0.799 s`. Tai sticky age cua
-F1@0.20 (`293.9 ms`, effective lag `295 ms`), `P(a*(t)=a*(t-L)) = 0.7831`,
-khong phai xap xi `0.67` nhu uoc luong tho. Do do co che "hai luc triet tieu"
-ban dau chua duoc xac nhan bang ham tu tuong quan marginal; can mot diagnostic
-co dieu kien theo last accepted row neu muon giai thich chinh xac F1. Bai hoc
-phuong phap van dung: moi ham cua `rho(t)` ke thua thang thoi gian AR(1), nen
-khong duoc uoc luong sticky_age bang gia dinh doc lap theo hang.
+Voi `p_infinity = sum_i P(a*=i)^2 = 0.546237` co dinh, fit mot tham so qua
+goc cho `tau_a = 0.588 s`. Fit hai tham so voi intercept tu do cho so cu
+`tau_a = 0.799 s` va intercept `-0.249`; so do chi giu nhu diagnostic vi no
+ngoai suy ve mot diem cat khong hop le tai lag 0. Tai sticky age cua F1@0.20
+(`293.9 ms`, effective lag `295 ms`), `P(a*(t)=a*(t-L)) = 0.7831`, khong phai
+xap xi `0.67` nhu uoc luong tho. Do do co che "hai luc triet tieu" ban dau
+chua duoc xac nhan bang ham tu tuong quan marginal; can mot diagnostic co dieu
+kien theo last accepted row neu muon giai thich chinh xac F1. Bai hoc phuong
+phap van dung: moi ham cua `rho(t)` ke thua thang thoi gian AR(1), nen khong
+duoc uoc luong sticky_age bang gia dinh doc lap theo hang.
 
 ### Diem cat kappa gan 0.40
 
