@@ -328,6 +328,18 @@ def run_report(
         payload = risk_decomposition(test, accept, res)
         payload.update({k: v for k, v in res.items() if k != "a_chosen" and k != "wait_s"})
         policies[policy] = payload
+    anchor = {
+        "%s_system" % scale: float(loss_of(test, test["a_twin"].to_numpy(np.int64), scale).mean())
+        for scale in SCALES
+    }
+    p_acc = float(accept.mean())
+    p_rej = 1.0 - p_acc
+    err_accept = float(policies["static"]["err_accept"])
+    break_even = (
+        float((anchor["err_system"] - p_acc * err_accept) / p_rej)
+        if p_rej > 0.0
+        else float("nan")
+    )
     return {
         "config": config,
         "kappa": float(kappa),
@@ -340,6 +352,8 @@ def run_report(
             "n_accept": int(accept.sum()),
             "n_reject": int((~accept).sum()),
         },
+        "anchor": anchor,
+        "break_even_err_reject": break_even,
         "fit": fit,
         "policies": policies,
         "gates": {
