@@ -8,19 +8,20 @@ File nay dong vai tro PLAN tracked cho Phase 23 tu cac nguon da co:
 ```text
 docs/phase-23/00-preregistration.md
 docs/phase-23/01-inherited-audit.md
-docs/phase-23/00b..00f-amendment-*.md
+docs/phase-23/00b..00g-amendment-*.md
 ```
 
 ## Scope dang duoc phep chay
 
-Lesson 23.1 duoc phep chay sau khi 5 amendment duoi day duoc commit:
+Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 
 ```text
 23-1  cong bo day du P(a*=P1) la pilot/description
 23-2  chuyen thang risk chinh cua cau chuyen he thong sang regret
-23-3  chot F3-a va bao cao F3-idl/F3-exp
+23-3  chot F3-a va bao cao F3-idl/F3-exp (superseded boi 23-6)
 23-4  sua G23-5 thanh ba menh de co y nghia
 23-5  them sticky diagnostics: sticky_age, reject_run_len, initial_state_share
+23-6  rut lai F3 look-ahead accounting; F3-a == F1 theo installed path
 ```
 
 Lesson 23.2 va 23.3 chi duoc chay theo cac dong prediction da khoa trong
@@ -38,7 +39,7 @@ do sau khi da nhin ket qua.
 1. Khi nhieu hang bi reject, fallback nao lam risk_system tot hon neo?
 2. F2 STATIC co vuot nguong hoa von err|fallback < 0.3592 hay khong?
 3. F1 STICKY gan F2 hay gan F3, va dieu nay duoc giai thich bang sticky_age?
-4. F3-idl co con dung khi tinh them exposure window thanh F3-exp?
+4. F3-a co suy bien thanh F1 sau khi cham theo installed path khong?
 5. Ket luan he thong co giu tren regret, err, va sla_rate hay chi mot thang?
 ```
 
@@ -48,15 +49,15 @@ do sau khi da nhin ket qua.
 F2 STATIC : reject -> duong tinh ngan nhat P1.
 F1 STICKY : reject -> quyet dinh accept gan nhat trong cung block, neu chua co
             thi P1.
-F3 WAIT   : F3-a, cho mot lan den refresh ke tiep trong cung block; neu lan do
-            accept thi dung a_twin moi, neu van reject thi dung F1 tai hang goc.
+F3 WAIT   : F3-a, cho mot lan den refresh ke tiep trong cung block, nhung
+            row-level installed path trong luc cho giong F1 STICKY.
 ```
 
-F3 duoc bao cao o hai muc:
+Sau Amendment 23-6, F3-idl/F3-exp cu bi rut lai:
 
 ```text
-F3-idl : bo qua exposure window trong luc cho.
-F3-exp : tinh trung binh co trong so thoi gian voi duong sticky trong luc cho.
+F3-a action risk : bang F1 STICKY.
+F3 delay/horizon : chi la diagnostic, khong tao chinh sach row-level moi.
 ```
 
 ## Artifact dau vao
