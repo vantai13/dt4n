@@ -274,6 +274,10 @@ def build_one_v3(
         "pair_ok": MS.pair_is_true_contender(y_true, y_hat),
         "viol_twin": viol[cur, a_twin],
         "viol_star": viol[cur, a_star],
+        **{
+            "sla_viol_p%d" % j: viol[cur, j]
+            for j in range(len(T7.PATH_NAMES))
+        },
         "s_sim": pair_s.max(axis=1).astype(np.float32),
         "a_star_rank": SS.a_star_rank_by_twin(y_true, y_hat).astype(np.int8),
         "aoi_profile": np.full(len(cur), aoi_profile, dtype=object),
@@ -391,6 +395,22 @@ def validate_v3(df: pd.DataFrame, v2_path: str | None, alpha: float = ALPHA) -> 
         fail.append("s_margin != |s_signed|")
     if (df["regret"] < -1e-4).any():
         fail.append("regret am")
+
+    sla_cols = ["sla_viol_p%d" % j for j in range(len(T7.PATH_NAMES))]
+    missing_sla = [c for c in sla_cols if c not in df.columns]
+    if missing_sla:
+        fail.append("thieu cot SLA theo duong: %s" % missing_sla)
+    else:
+        mat = np.column_stack([df[c].to_numpy(bool) for c in sla_cols])
+        rows = np.arange(len(df))
+        twin = mat[rows, df["a_twin"].to_numpy(np.int64)]
+        star = mat[rows, df["a_star"].to_numpy(np.int64)]
+        out["V23_sla_twin_match"] = bool(np.array_equal(twin, df["viol_twin"].to_numpy(bool)))
+        out["V23_sla_star_match"] = bool(np.array_equal(star, df["viol_star"].to_numpy(bool)))
+        if not out["V23_sla_twin_match"]:
+            fail.append("sla_viol_p* khong tai tao viol_twin")
+        if not out["V23_sla_star_match"]:
+            fail.append("sla_viol_p* khong tai tao viol_star")
 
     out["n_rows"] = int(len(df))
     out["n_blocks"] = int(df["block_id"].nunique())
