@@ -1,0 +1,111 @@
+"""Gates for Phase 23 Lesson 23.1 fallback semantics."""
+
+from __future__ import annotations
+
+import os
+
+import numpy as np
+import pandas as pd
+import pytest
+
+from cert import fallback as FB
+
+
+ARTIFACT = "results/phase-22/calib_set_v3.parquet"
+
+
+@pytest.fixture(scope="module")
+def df() -> pd.DataFrame:
+    if not os.path.exists(ARTIFACT):
+        pytest.skip("thieu artifact Phase 23 fallback: %s" % ARTIFACT)
+    return FB.sort_for_stateful(pd.read_parquet(ARTIFACT))
+
+
+@pytest.fixture(scope="module")
+def accept(df: pd.DataFrame) -> np.ndarray:
+    rng = np.random.default_rng(23100)
+    return rng.random(len(df)) < 0.4911
+
+
+def test_NC23_5_fallback_equals_twin_reproduces_anchor(df: pd.DataFrame) -> None:
+    """If chosen actions equal twin actions, measured system risk is the anchor."""
+    acc = np.zeros(len(df), bool)
+    res = {"a_chosen": df["a_twin"].to_numpy(np.int64)}
+    out = FB.risk_decomposition(df, acc, res)
+    assert abs(out["err_system"] - 0.2208351459330263) < 1e-9
+    assert abs(out["sla_system"] - df["viol_twin"].mean()) < 1e-12
+
+
+def test_NC23_1_accept_all_uses_no_fallback(df: pd.DataFrame) -> None:
+    acc = np.ones(len(df), bool)
+    for policy in FB.POLICIES:
+        out = FB.risk_decomposition(df, acc, FB.apply_fallback(df, acc, policy))
+        assert abs(out["err_system"] - 0.2208351459330263) < 1e-9, policy
+
+
+def test_regret_reconstruction_matches_stored_column(df: pd.DataFrame) -> None:
+    got = FB.loss_of(df, df["a_twin"].to_numpy(), "regret")
+    assert np.abs(got - df["regret"].to_numpy(np.float64)).max() < 1e-4
+
+
+def test_G23_1_every_row_has_exactly_one_action(df: pd.DataFrame, accept: np.ndarray) -> None:
+    for policy in FB.POLICIES:
+        a = FB.apply_fallback(df, accept, policy)["a_chosen"]
+        assert a.shape == (len(df),)
+        assert np.isfinite(a).all()
+        assert a.min() >= 0 and a.max() < FB.K_ACTIONS
+
+
+def test_G23_2_static_is_a_pure_function(df: pd.DataFrame, accept: np.ndarray) -> None:
+    perm = np.random.default_rng(1).permutation(len(df))
+    a1 = FB.fallback_static(df, accept)
+    a2 = FB.fallback_static(df.iloc[perm].reset_index(drop=True), accept[perm])
+    assert np.array_equal(a1[perm], a2)
+
+
+def test_G23_3_sticky_resets_at_block_start_and_is_deterministic(
+    df: pd.DataFrame,
+    accept: np.ndarray,
+) -> None:
+    a1 = FB.fallback_sticky(df, accept)
+    a2 = FB.fallback_sticky(df, accept)
+    assert np.array_equal(a1, a2)
+
+    p = FB.path_static_shortest()
+    first = df.groupby("block_id", sort=False).head(1).index.to_numpy()
+    rej_first = first[~accept[first]]
+    assert np.all(a1[rej_first] == p)
+
+
+def test_G23_3b_sticky_rejects_unsorted_input(df: pd.DataFrame, accept: np.ndarray) -> None:
+    perm = np.random.default_rng(2).permutation(len(df))
+    with pytest.raises(ValueError):
+        FB.fallback_sticky(df.iloc[perm].reset_index(drop=True), accept[perm])
+
+
+def test_G23_4_total_probability_identity(df: pd.DataFrame, accept: np.ndarray) -> None:
+    for policy in FB.POLICIES:
+        out = FB.risk_decomposition(df, accept, FB.apply_fallback(df, accept, policy))
+        for scale in FB.SCALES:
+            assert out["%s_identity_residual" % scale] < 1e-9, (policy, scale)
+
+
+def test_G23_5_decision_delay_profile(df: pd.DataFrame, accept: np.ndarray) -> None:
+    res = FB.apply_fallback(df, accept, "wait")
+    out = FB.risk_decomposition(df, accept, res)
+
+    z = df["z_s"].to_numpy(np.float64)
+    expect = (FB.Z_MAX - z) + FB.DT
+    rej = ~accept
+    got = res["wait_s"]
+    mask = rej & (got > 0)
+    assert np.abs(got[mask] - expect[mask]).max() < 1e-9
+
+    assert 0.0 < out["decision_delay_ms_mean_given_reject"] < 252.5
+    assert out["decision_delay_ms_max"] <= (FB.T_SYNC + FB.DT) * 1e3 + 1e-9
+
+
+def test_G23_5d_wait_availability_reported(df: pd.DataFrame, accept: np.ndarray) -> None:
+    res = FB.apply_fallback(df, accept, "wait")
+    share = res["n_no_refresh_in_block"] / max(res["n_reject"], 1)
+    assert 0.0 <= share < 0.20
