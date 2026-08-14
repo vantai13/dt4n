@@ -19,7 +19,26 @@ results/phase-23/fallback_fine_grid_poisson_0.925_C3_exploratory.json
 results/phase-23/fallback_fine_grid_poisson_0.925_C3_exploratory.csv
 results/phase-23/fallback_fine_grid_err_reject_poisson_0.925_C3_exploratory.png
 results/phase-23/fallback_v23_3_seed_split_poisson_0.925_C3_k0.25.json
+results/phase-23/fallback_mechanism_diagnostics_poisson_0.925_C3.json
 ```
+
+## Phat bieu cua Lesson 23.1
+
+Chung toi chi ra rang nguong hoa von cua moi fallback la mot dong nhat thuc:
+no bang dung `err|reject` cua chinh bo uoc luong bi tu choi. Mot fallback chi
+cai thien risk he thong neu no vuot twin tren chinh tap ma certificate danh dau
+la khong dang tin.
+
+Tren topology 4-duong, F3 WAIT bi rut lai vi look-ahead bias va suy bien thanh
+F1 theo installed-path accounting. Tai `kappa=0.5`, ca ba fallback lam he thong
+te hon anchor. Tren luoi P8, `F2 STATIC @ kappa=0.25` cai thien ca ba thang
+rui ro voi CI ghep cap khong chua 0 va giu tren split seed doc lap.
+
+Co che: dieu kien `m_hat < kappa*q_hat(z)` chon cac hang ma khoang cach twin
+nhin thay nho hon do bat dinh cua chinh twin. Khi do argmin cua twin giau nhieu
+hon tin hieu, va chinh sach hop ly la co ve prior cau truc P1. Gia tri khoa hoc
+cua certificate la value of information: o cung coverage, no tot hon bo chon
+ngau nhien 4.31 diem phan tram err.
 
 ## 2. Controls first
 
@@ -39,7 +58,7 @@ Full regression sau inference controls:
 
 ```text
 /tmp/dt4n-venv/bin/python -m pytest -q
-757 passed, 1 skipped, 2 warnings in 295.56s (0:04:55)
+758 passed, 1 skipped, 2 warnings in 287.75s (0:04:47)
 ```
 
 ## 3. Dong nhat thuc hoa von
@@ -136,6 +155,17 @@ Hai duong `err|reject(twin)` va `err|reject(F2)` bien thien khac nhau theo
 kappa: twin cao o vung reject cuc kho roi giam ve marginal; F2 gan phang hon
 vi no la prior hang. Chung cat nhau giua `kappa=0.25` va `kappa=0.5`.
 
+Khi chuyen tu tap toan the sang tap reject tai `kappa=0.25`, ca twin lan P1
+deu xau di, nhung muc suy giam bat doi xung:
+
+| Policy | err bien | err tren reject | suy giam |
+|---|---:|---:|---:|
+| twin | 0.222399 | 0.438556 | +0.216157 |
+| P1 prior | 0.340276 | 0.392267 | +0.051991 |
+
+Twin suy giam nhanh hon prior `4.16x`. Day la noi dung dinh luong cua cau
+"tin hieu o day la nhieu"; khong nen viet tat thanh "prior mien nhiem".
+
 ## 7. Quet toan luoi P8
 
 Luoi P8:
@@ -210,8 +240,17 @@ Con so de dua vao abstract nen la `value_of_information` tren err:
 random + F2 - cert + F2 = +0.043079
 ```
 
-Nghia la o cung coverage, chung nhan tiet kiem 4.31 diem phan tram loi so voi
-chon reject ngau nhien.
+Phan ra thanh hai ve:
+
+```text
+risk(random+F2) - anchor = +0.030950  # tranh tac hai cua abstain bua bai
+anchor - risk(cert+F2)   = +0.012129  # thu loi ich cua abstain co chon loc
+VOI                     = +0.043079
+```
+
+Ty trong xap xi: 71.8% tranh tac hai, 28.2% thu loi ich. Nghia la o cung
+coverage, chung nhan khong chi tranh chi phi abstain; no dao nguoc dau cua chi
+phi do.
 
 ## 9. Luoi min [KHAM PHA] sau Amendment 23-7
 
@@ -262,6 +301,89 @@ Paired block bootstrap tren `risk(F2 STATIC) - anchor`:
 V23-3 PASS tren ca ba thang: ket qua `kappa=0.25` khong bien mat tren split
 seed doc lap.
 
+## 10b. Mechanism diagnostics sau V23-3
+
+Artifact:
+
+```text
+results/phase-23/fallback_mechanism_diagnostics_poisson_0.925_C3.json
+```
+
+### F1 low-kappa counter-control
+
+Ket qua quyet dinh cho co che shrinkage: F1 khong thang ro tai `kappa=0.20`
+hay `0.25`, trong khi F2 thang ro o cung vung.
+
+| kappa | policy | err_system | delta err vs anchor | CI95 | err\|reject | sticky_age |
+|---:|---|---:|---:|---:|---:|---:|
+| 0.20 | F1 STICKY | 0.222883 | +0.000484 | [-0.004618, +0.005390] | 0.460078 | 293.903 ms |
+| 0.20 | F2 STATIC | 0.209172 | -0.013227 | n/a | 0.393694 | 293.903 ms |
+| 0.25 | F1 STICKY | 0.224463 | +0.002064 | [-0.003238, +0.007420] | 0.446433 | 318.937 ms |
+| 0.25 | F2 STATIC | 0.210270 | -0.012129 | [-0.018938, -0.005413] | 0.392267 | 318.937 ms |
+
+Diagnostic F6:
+
+```text
+F6a delta err(F1@0.20) trong +/-0.003 va CI chua 0: PASS
+F6b sticky_age_ms_mean < 20 ms: FAIL (do duoc 293.9 ms)
+F6c err|reject(F1) gan err|reject(twin) trong +/-0.02: PASS
+```
+
+Nhanh fail quan trong khong kich hoat: F1 khong co CI am ro. Co che shrinkage
+dung vung: F2 thang rieng vi prior P1 khong nhieu, khong phai vi bat ky
+fallback nao cung vo hai o kappa thap. F6b fail cho thay truc giac "accept cach
+nhau 6 ms" sai voi metric sticky_age; reject set van co cum theo tuoi.
+
+### Diem cat kappa gan 0.40
+
+Noi suy tu `kappa=0.25` va `0.50` du doan diem cat gan `0.398`. CSV luoi min
+co `kappa=0.40`:
+
+```text
+static_err_system(0.40) - anchor = +0.003182
+err|reject(twin) = 0.390164
+err|reject(F2)   = 0.397886
+```
+
+Du doan `|delta| < 0.003` truot rat sat (`+0.000182`). Ket luan dung: diem cat
+gan 0.40 nhung hai duong co do cong nhe; khong can lam min lan hai.
+
+### Ba thang bat dong argmin
+
+| Scale | best kappa tren luoi min | system risk |
+|---|---:|---:|
+| err | 0.20 | 0.209172 |
+| regret | 0.20 | 1.567691 ms |
+| sla_rate | 0.25 | 0.145156 |
+
+`err` va `regret` chon `kappa=0.20`, `sla_rate` chon `kappa=0.25`. Khoang cach
+`err(k=0.20) - err(k=0.25) = -0.001098`, nho hon nua do rong CI ghep cap
+`0.006762`; bat dong khong co y nghia thong ke, nhung co y nghia cau truc.
+`sla` khong phai ban min cua `err`: no hoi duong co vuot nguong tuyet doi hay
+khong, khong hoi duong co phai argmin hay khong. Ban giao cho G23-9 o Lesson
+23.2: do Spearman tren toan luoi coverage, khong gop ba thang thanh mot chi so.
+
+### Cuc tri phang
+
+Luoi min phan giai cuc tri: `kappa=0.20` co lang gieng hai phia va khong nam o
+bien. Nhung cuc tri phang: `kappa=0.20` va `0.25` khong phan biet duoc trong
+sai so do. Ve van hanh, day la tin tot: vung `[0.15, 0.30]` la plateau
+exploratory; gate van cham o luoi goc `kappa=0.25`.
+
+### Oracle-switch bound
+
+Oracle switch chi duoc chon giua twin va P1 o tung hang, nen la can duoi cho
+khong gian policy Lesson 23.1:
+
+| Scale | anchor twin | F2@0.25 | oracle switch | room closed by F2 |
+|---|---:|---:|---:|---:|
+| err | 0.222399 | 0.210270 | 0.093956 | 9.44% |
+| regret | 1.767461 | 1.598988 | 0.644484 | 15.00% |
+| sla_rate | 0.153950 | 0.145156 | 0.112257 | 21.09% |
+
+Ket qua nay dong khung trung thuc: certificate da chung minh tin hieu ton tai
+va khai thac duoc, nhung con nhieu room cho bo chon tot hon trong Phase 24.
+
 ## 11. Doi chieu du doan F0..F6
 
 | ID | Du doan | Do duoc sau audit | KQ |
@@ -273,6 +395,9 @@ seed doc lap.
 | F4 | thu tu `F2 > F1 > F3` | dung tai k=0.5, dao tai k=0.25 | VOID |
 | F5 | delay F3 100-250 ms | 204.271 ms given reject | HIT diagnostic |
 | F6 | best fallback beats anchor err 0.2224 | P8 best: F2, k=0.25, err=0.210270; CI paired PASS | HIT tren grid; FAIL tai k=0.5 |
+| F6a | F1@0.20 delta err gan 0, CI chua 0 | +0.000484, CI [-0.004618, +0.005390] | HIT diagnostic |
+| F6b | F1@0.20 sticky_age < 20 ms | 293.903 ms | MISS diagnostic |
+| F6c | F1@0.20 err\|reject gan twin trong +/-0.02 | 0.460078 vs 0.457734 | HIT diagnostic |
 
 Du doan trung nho artifact F3 cu khong duoc cham la HIT. F4 bi cham VOID vi
 vi pham P15: du doan thu tu cho mot ho kappa nhung khong dinh danh mien.
@@ -291,6 +416,9 @@ vi pham P15: du doan thu tu cho mot ho kappa nhung khong dinh danh mien.
 | G23-14c matched random control, all scales | PASS |
 | PC23-1b random + F2 worse than anchor | PASS |
 | V23-3 independent seed split | PASS |
+| F1 low-kappa counter-control: CI contains 0 | PASS |
+| F6b sticky-age subprediction | FAIL |
+| oracle-switch bound computed | PASS |
 
 ## 13. Ket luan Lesson 23.1
 
@@ -304,6 +432,8 @@ Thong diep dung sau audit khong phai "F3 wait giam loi 17.6%". Thong diep dung:
    va sla_rate; CI ghep cap xac nhan khong phai nhieu.
 5. Gia tri khoa hoc cua certificate la value of information: o cung coverage,
    random + F2 te hon cert + F2 4.31 diem phan tram err.
+6. Doi chung F1 o kappa thap khong thang ro, nen co che shrinkage ve prior
+   dung vung; chi truc giac phu ve sticky_age bi sai.
 ```
 
 Gia tri cua certificate trong Phase 23 vi vay la ba lop: bao dam formal tren
