@@ -90,6 +90,20 @@ def test_G23_4_total_probability_identity(df: pd.DataFrame, accept: np.ndarray) 
             assert out["%s_identity_residual" % scale] < 1e-9, (policy, scale)
 
 
+def test_G23_4b_break_even_is_twin_risk_given_reject(
+    df: pd.DataFrame,
+    accept: np.ndarray,
+) -> None:
+    """Break-even fallback loss equals twin loss on the same reject rows."""
+    twin = FB.loss_of(df, df["a_twin"].to_numpy(np.int64), "err")
+    acc = np.asarray(accept, bool)
+    p_acc = float(acc.mean())
+    p_rej = 1.0 - p_acc
+
+    break_even = (float(twin.mean()) - p_acc * float(twin[acc].mean())) / p_rej
+    assert abs(break_even - float(twin[~acc].mean())) < 1e-12
+
+
 def test_G23_5_decision_delay_profile(df: pd.DataFrame, accept: np.ndarray) -> None:
     res = FB.apply_fallback(df, accept, "wait")
     out = FB.risk_decomposition(df, accept, res)

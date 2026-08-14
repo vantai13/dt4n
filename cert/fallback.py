@@ -3,8 +3,8 @@
 
 Phase 22 measured risk on the accept branch.  A router cannot abstain: when the
 certificate rejects, traffic still needs a path.  This module turns rejection
-into three measurable fallback policies and decomposes total system risk via
-the law of total probability.
+into row-level fallback policies and decomposes total system risk via the law
+of total probability.
 """
 
 from __future__ import annotations
@@ -166,29 +166,43 @@ def fallback_wait(
     accept: np.ndarray,
     secondary: str = "sticky",
 ) -> Dict[str, Any]:
-    """F3-a -- wait once for the next refresh, then fall back to F1/F2."""
+    """F3-a -- physical installed-path accounting for one-refresh wait.
+
+    While the controller waits, the data plane keeps forwarding on the route
+    that is already installed.  With the preregistered sticky secondary, this is
+    exactly F1 at row level; the wait horizon is only a diagnostic.  Scoring
+    ``a_twin`` from the next refresh on the original row would use future
+    information and is intentionally not done here.
+    """
     assert_time_ordered(df)
     acc = np.asarray(accept, bool)
-    a_twin = df["a_twin"].to_numpy(np.int64)
     z = df["z_s"].to_numpy(np.float64)
 
     if secondary == "sticky":
-        base = fallback_sticky(df, acc)
+        a_chosen = fallback_sticky(df, acc)
+        equivalent = "sticky"
     elif secondary == "static":
-        base = fallback_static(df, acc)
+        a_chosen = fallback_static(df, acc)
+        equivalent = "static"
     else:
         raise ValueError("secondary phai la 'sticky' hoac 'static'")
 
     nxt = _next_refresh_index(df)
-    a_chosen = np.where(acc, a_twin, base)
     wait_s = np.zeros(len(df), dtype=np.float64)
 
     can_wait = (~acc) & (nxt >= 0)
     tgt = nxt[can_wait]
     retry_ok = acc[tgt]
     idx = np.flatnonzero(can_wait)
-    a_chosen[idx[retry_ok]] = a_twin[tgt[retry_ok]]
     wait_s[idx] = (Z_MAX - z[idx]) + DT
+
+    horizon = 0.500 - z[idx] if idx.size else np.array([], dtype=np.float64)
+    a_star = df["a_star"].to_numpy(np.int64)
+    drift = (
+        float((a_star[idx] == a_star[tgt]).mean())
+        if idx.size
+        else float("nan")
+    )
 
     return {
         "a_chosen": a_chosen,
@@ -198,6 +212,11 @@ def fallback_wait(
         "n_no_refresh_in_block": int(((~acc) & (nxt < 0)).sum()),
         "retry_accept_rate": float(retry_ok.mean()) if retry_ok.size else float("nan"),
         "secondary": secondary,
+        "installed_path_equivalent": equivalent,
+        "lookahead_future_share": float((horizon > 0).mean()) if horizon.size else float("nan"),
+        "lookahead_horizon_ms_mean": float(horizon.mean() * 1e3) if horizon.size else float("nan"),
+        "lookahead_horizon_ms_max": float(horizon.max() * 1e3) if horizon.size else float("nan"),
+        "a_star_agree_over_wait": drift,
     }
 
 
@@ -241,6 +260,27 @@ def _initial_state_share(df: pd.DataFrame, acc: np.ndarray) -> float:
     return float(initial.sum() / max(int(reject.sum()), 1))
 
 
+def sticky_diagnostics(df: pd.DataFrame, accept: np.ndarray) -> Dict[str, Any]:
+    """Diagnostics explaining why F1 can be close to F2."""
+    acc = np.asarray(accept, bool)
+    rej = ~acc
+    p_static = path_static_shortest()
+    a_twin = df["a_twin"].to_numpy(np.int64)
+    a_stky = fallback_sticky(df, acc)
+    return {
+        "p_sticky_equals_static_given_reject": (
+            float((a_stky[rej] == p_static).mean()) if rej.any() else float("nan")
+        ),
+        "p_twin_equals_static_marginal": float((a_twin == p_static).mean()),
+        "p_twin_equals_static_given_accept": (
+            float((a_twin[acc] == p_static).mean()) if acc.any() else float("nan")
+        ),
+        "sticky_age_ms_mean": _mean_sticky_age_ms(df, acc),
+        "reject_run_len_mean": _mean_reject_run(df, acc),
+        "initial_state_share": _initial_state_share(df, acc),
+    }
+
+
 def risk_decomposition(
     df: pd.DataFrame,
     accept: np.ndarray,
@@ -263,10 +303,8 @@ def risk_decomposition(
         "decision_delay_ms_mean": float(wait.mean() * 1e3),
         "decision_delay_ms_mean_given_reject": float(wait[~acc].mean() * 1e3) if (~acc).any() else 0.0,
         "decision_delay_ms_max": float(wait.max() * 1e3),
-        "sticky_age_ms_mean": _mean_sticky_age_ms(df, acc),
-        "reject_run_len_mean": _mean_reject_run(df, acc),
-        "initial_state_share": _initial_state_share(df, acc),
     }
+    out.update(sticky_diagnostics(df, acc))
 
     for scale in scales:
         per_row = loss_of(df, a, scale)
@@ -328,17 +366,23 @@ def run_report(
         payload = risk_decomposition(test, accept, res)
         payload.update({k: v for k, v in res.items() if k != "a_chosen" and k != "wait_s"})
         policies[policy] = payload
-    anchor = {
-        "%s_system" % scale: float(loss_of(test, test["a_twin"].to_numpy(np.int64), scale).mean())
-        for scale in SCALES
-    }
+    a_twin = test["a_twin"].to_numpy(np.int64)
+    anchor = {}
+    for scale in SCALES:
+        per_row = loss_of(test, a_twin, scale)
+        anchor["%s_accept" % scale] = float(per_row[accept].mean()) if accept.any() else float("nan")
+        anchor["%s_reject" % scale] = float(per_row[~accept].mean()) if (~accept).any() else float("nan")
+        anchor["%s_system" % scale] = float(per_row.mean())
     p_acc = float(accept.mean())
     p_rej = 1.0 - p_acc
-    err_accept = float(policies["static"]["err_accept"])
+    err_accept = float(anchor["err_accept"])
     break_even = (
         float((anchor["err_system"] - p_acc * err_accept) / p_rej)
         if p_rej > 0.0
         else float("nan")
+    )
+    break_even_identity_residual = (
+        float(abs(break_even - anchor["err_reject"])) if p_rej > 0.0 else 0.0
     )
     return {
         "config": config,
@@ -354,6 +398,7 @@ def run_report(
         },
         "anchor": anchor,
         "break_even_err_reject": break_even,
+        "break_even_err_reject_identity_residual": break_even_identity_residual,
         "fit": fit,
         "policies": policies,
         "gates": {
@@ -361,6 +406,7 @@ def run_report(
             "G23_4_identity": bool(
                 all(policies[p]["%s_identity_residual" % s] < 1e-9 for p in POLICIES for s in SCALES)
             ),
+            "G23_4b_break_even_identity": bool(break_even_identity_residual < 1e-12),
             "G23_5_delay": bool(
                 0.0 < policies["wait"]["decision_delay_ms_mean_given_reject"] < 252.5
                 and policies["wait"]["decision_delay_ms_max"] <= (T_SYNC + DT) * 1e3 + 1e-9
