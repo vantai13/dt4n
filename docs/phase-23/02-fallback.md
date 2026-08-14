@@ -2,7 +2,7 @@
 
 Ngay: 2026-08-14
 
-Trang thai: da chay lai sau Amendments 23-6..23-8. F3-a cu bi rut lai vi
+Trang thai: da chay lai sau Amendments 23-6..23-9. F3-a cu bi rut lai vi
 look-ahead accounting; artifact hien hanh dung row-level installed-path
 accounting. Ket qua `F2 STATIC @ kappa=0.25` da co paired CI, doi chung ngau
 nhien cung coverage, luoi min [KHAM PHA], va V23-3 seed split.
@@ -36,9 +36,11 @@ rui ro voi CI ghep cap khong chua 0 va giu tren split seed doc lap.
 
 Co che: dieu kien `m_hat < kappa*q_hat(z)` chon cac hang ma khoang cach twin
 nhin thay nho hon do bat dinh cua chinh twin. Khi do argmin cua twin giau nhieu
-hon tin hieu, va chinh sach hop ly la co ve prior cau truc P1. Gia tri khoa hoc
-cua certificate la value of information: o cung coverage, no tot hon bo chon
-ngau nhien 4.31 diem phan tram err.
+hon tin hieu, va chinh sach hop ly la co ve prior cau truc P1. Prior P1 cung
+xau di tren tap reject, nhung khoan phat cua no gan nhu hang so; twin moi la
+doi tuong suy giam manh theo kappa. Gia tri khoa hoc cua certificate la value
+of information: o cung coverage, no tot hon bo chon ngau nhien 4.31 diem phan
+tram err.
 
 ## 2. Controls first
 
@@ -58,7 +60,7 @@ Full regression sau inference controls:
 
 ```text
 /tmp/dt4n-venv/bin/python -m pytest -q
-758 passed, 1 skipped, 2 warnings in 287.75s (0:04:47)
+759 passed, 1 skipped, 2 warnings in 292.50s (0:04:52)
 ```
 
 ## 3. Dong nhat thuc hoa von
@@ -155,16 +157,20 @@ Hai duong `err|reject(twin)` va `err|reject(F2)` bien thien khac nhau theo
 kappa: twin cao o vung reject cuc kho roi giam ve marginal; F2 gan phang hon
 vi no la prior hang. Chung cat nhau giua `kappa=0.25` va `kappa=0.5`.
 
-Khi chuyen tu tap toan the sang tap reject tai `kappa=0.25`, ca twin lan P1
-deu xau di, nhung muc suy giam bat doi xung:
+Khi chuyen tu tap toan the sang tap reject, ca twin lan P1 deu xau di. Bat bien
+moi la do suy giam cua P1 gan nhu hang so trong khi twin thay doi manh theo
+kappa:
 
-| Policy | err bien | err tren reject | suy giam |
-|---|---:|---:|---:|
-| twin | 0.222399 | 0.438556 | +0.216157 |
-| P1 prior | 0.340276 | 0.392267 | +0.051991 |
+| kappa | p_reject | err\|reject(twin) | err\|reject(P1) | suy giam twin | suy giam P1 |
+|---:|---:|---:|---:|---:|---:|
+| 0.20 | 0.206540 | 0.457734 | 0.393694 | +0.235335 | +0.053417 |
+| 0.25 | 0.262027 | 0.438556 | 0.392267 | +0.216157 | +0.051991 |
+| 0.50 | 0.508874 | 0.359001 | 0.391007 | +0.136602 | +0.050731 |
 
-Twin suy giam nhanh hon prior `4.16x`. Day la noi dung dinh luong cua cau
-"tin hieu o day la nhieu"; khong nen viet tat thanh "prior mien nhiem".
+Do suy giam cua P1 chi bien thien khoang 5%, trong khi suy giam cua twin bien
+thien khoang 72%. Day la phat bieu sach hon ti so `4.16x`: prior khong mien
+nhiem voi tap kho, nhung no tra mot khoan phat gan co dinh; twin tra khoan
+phat phu thuoc manh vao do yeu cua tin hieu.
 
 ## 7. Quet toan luoi P8
 
@@ -324,7 +330,7 @@ hay `0.25`, trong khi F2 thang ro o cung vung.
 Diagnostic F6:
 
 ```text
-F6a delta err(F1@0.20) trong +/-0.003 va CI chua 0: PASS
+F6a delta err(F1@0.20) trong +/-0.003 va CI chua 0: HIT_WRONG_MECHANISM
 F6b sticky_age_ms_mean < 20 ms: FAIL (do duoc 293.9 ms)
 F6c err|reject(F1) gan err|reject(twin) trong +/-0.02: PASS
 ```
@@ -332,21 +338,50 @@ F6c err|reject(F1) gan err|reject(twin) trong +/-0.02: PASS
 Nhanh fail quan trong khong kich hoat: F1 khong co CI am ro. Co che shrinkage
 dung vung: F2 thang rieng vi prior P1 khong nhieu, khong phai vi bat ky
 fallback nao cung vo hai o kappa thap. F6b fail cho thay truc giac "accept cach
-nhau 6 ms" sai voi metric sticky_age; reject set van co cum theo tuoi.
+nhau 6 ms" sai voi metric sticky_age; reject set van co cum theo tuoi. Theo
+quy tac scoring, F6a khong duoc tinh la HIT co che: no trung so nhung co che
+`sticky_age << tau` bi bac.
+
+### Truth persistence
+
+Ham tu tuong quan cua chan ly tren test rows:
+
+| lag | agreement |
+|---:|---:|
+| 50 ms | 0.906058 |
+| 100 ms | 0.868387 |
+| 170 ms | 0.830632 |
+| 250 ms | 0.798702 |
+| 295 ms | 0.783124 |
+| 500 ms | 0.731347 |
+| 1000 ms | 0.651949 |
+
+Fit mũ ve `p_infinity = 0.546237` cho `tau_a = 0.799 s`. Tai sticky age cua
+F1@0.20 (`293.9 ms`, effective lag `295 ms`), `P(a*(t)=a*(t-L)) = 0.7831`,
+khong phai xap xi `0.67` nhu uoc luong tho. Do do co che "hai luc triet tieu"
+ban dau chua duoc xac nhan bang ham tu tuong quan marginal; can mot diagnostic
+co dieu kien theo last accepted row neu muon giai thich chinh xac F1. Bai hoc
+phuong phap van dung: moi ham cua `rho(t)` ke thua thang thoi gian AR(1), nen
+khong duoc uoc luong sticky_age bang gia dinh doc lap theo hang.
 
 ### Diem cat kappa gan 0.40
 
 Noi suy tu `kappa=0.25` va `0.50` du doan diem cat gan `0.398`. CSV luoi min
-co `kappa=0.40`:
+co `kappa=0.35` va `0.40`:
 
 ```text
+static_err_system(0.35) - anchor = -0.002280
+err|reject(twin) = 0.405573
+err|reject(F2)   = 0.399333
+
 static_err_system(0.40) - anchor = +0.003182
 err|reject(twin) = 0.390164
 err|reject(F2)   = 0.397886
 ```
 
-Du doan `|delta| < 0.003` truot rat sat (`+0.000182`). Ket luan dung: diem cat
-gan 0.40 nhung hai duong co do cong nhe; khong can lam min lan hai.
+Du doan `|delta(0.40)| < 0.003` truot rat sat (`+0.000182`). Chon diem
+`0.35` van am nhe, `0.40` duong nhe, nen vung co loi cua F2 STATIC ket thuc
+trong khoang `(0.35, 0.40)`, xap xi `kappa* ~ 0.38`. Khong lam min lan hai.
 
 ### Ba thang bat dong argmin
 
@@ -381,8 +416,15 @@ khong gian policy Lesson 23.1:
 | regret | 1.767461 | 1.598988 | 0.644484 | 15.00% |
 | sla_rate | 0.153950 | 0.145156 | 0.112257 | 21.09% |
 
+Voi `err`, oracle switch bang `P(twin sai AND P1 sai) = 0.093956`. Neu hai loi
+doc lap, tich la `0.075677`; do duoc cao hon 24.15%, tuong quan Bernoulli
+`0.0928`. Nghia la co mot lop hang kho cho ca twin lan prior. Neu hai chinh
+sach sai cung cho, bo chon giua chung khong the cuu nhung hang do; Phase 24 can
+nguon thong tin hoac hanh dong thu ba sai o cho khac.
+
 Ket qua nay dong khung trung thuc: certificate da chung minh tin hieu ton tai
-va khai thac duoc, nhung con nhieu room cho bo chon tot hon trong Phase 24.
+va khai thac duoc, nhung F2@0.25 moi dong 9.44% room oracle tren err. Du dia
+con lai chu yeu nam o hanh dong thay the/fallback tot hon, khong chi o bo chon.
 
 ## 11. Doi chieu du doan F0..F6
 
@@ -395,12 +437,14 @@ va khai thac duoc, nhung con nhieu room cho bo chon tot hon trong Phase 24.
 | F4 | thu tu `F2 > F1 > F3` | dung tai k=0.5, dao tai k=0.25 | VOID |
 | F5 | delay F3 100-250 ms | 204.271 ms given reject | HIT diagnostic |
 | F6 | best fallback beats anchor err 0.2224 | P8 best: F2, k=0.25, err=0.210270; CI paired PASS | HIT tren grid; FAIL tai k=0.5 |
-| F6a | F1@0.20 delta err gan 0, CI chua 0 | +0.000484, CI [-0.004618, +0.005390] | HIT diagnostic |
-| F6b | F1@0.20 sticky_age < 20 ms | 293.903 ms | MISS diagnostic |
+| F6a | F1@0.20 delta err gan 0, CI chua 0 | +0.000484, CI [-0.004618, +0.005390], nhung sticky_age co che sai | HIT_WRONG_MECHANISM |
+| F6b | F1@0.20 sticky_age < 20 ms | 293.903 ms | MISS diagnostic (47x) |
 | F6c | F1@0.20 err\|reject gan twin trong +/-0.02 | 0.460078 vs 0.457734 | HIT diagnostic |
+| K40 | `abs(delta(F2@0.40)) < 0.003` | +0.003182 | MISS, sat |
 
 Du doan trung nho artifact F3 cu khong duoc cham la HIT. F4 bi cham VOID vi
-vi pham P15: du doan thu tu cho mot ho kappa nhung khong dinh danh mien.
+vi pham P15: du doan thu tu cho mot ho kappa nhung khong dinh danh mien. F6a
+tao them nhan moi: trung so nhung bi bac co che khong duoc tinh la HIT co che.
 
 ## 12. Gates
 
@@ -419,6 +463,8 @@ vi pham P15: du doan thu tu cho mot ho kappa nhung khong dinh danh mien.
 | F1 low-kappa counter-control: CI contains 0 | PASS |
 | F6b sticky-age subprediction | FAIL |
 | oracle-switch bound computed | PASS |
+| truth persistence diagnostic | PASS |
+| kappa=0.40 crossing prediction | FAIL, sat |
 
 ## 13. Ket luan Lesson 23.1
 
@@ -433,7 +479,10 @@ Thong diep dung sau audit khong phai "F3 wait giam loi 17.6%". Thong diep dung:
 5. Gia tri khoa hoc cua certificate la value of information: o cung coverage,
    random + F2 te hon cert + F2 4.31 diem phan tram err.
 6. Doi chung F1 o kappa thap khong thang ro, nen co che shrinkage ve prior
-   dung vung; chi truc giac phu ve sticky_age bi sai.
+   dung vung; nhung F6a la HIT_WRONG_MECHANISM vi sticky_age doc lap-theo-hang
+   bi bac boi thang thoi gian AR(1).
+7. Oracle switch cho thay loi twin va loi P1 tuong quan duong; room con lai
+   nam o hanh dong/fallback moi, khong chi o bo chon reject.
 ```
 
 Gia tri cua certificate trong Phase 23 vi vay la ba lop: bao dam formal tren
