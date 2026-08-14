@@ -12,11 +12,16 @@ import hashlib
 import json
 import os
 import subprocess
+import sys
 from datetime import datetime, timezone
 from typing import Any, Dict, Mapping, Sequence
 
 import numpy as np
 import pandas as pd
+
+ROOT = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+if ROOT not in sys.path:
+    sys.path.insert(0, ROOT)
 
 from cert import fallback as FB
 from cert import threshold_families as TF
