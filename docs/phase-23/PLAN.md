@@ -8,6 +8,9 @@ File nay dong vai tro PLAN tracked cho Phase 23 tu cac nguon da co:
 ```text
 docs/phase-23/00-preregistration.md
 docs/phase-23/01-inherited-audit.md
+docs/phase-23/02-fallback.md
+docs/phase-23/03-threshold-families.md
+docs/phase-23/04-baselines.md
 docs/phase-23/00b..00o-amendment-*.md
 ```
 
