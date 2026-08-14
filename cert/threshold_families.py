@@ -297,6 +297,21 @@ def _spearman_no_scipy(x: Sequence[float], y: Sequence[float]) -> float:
     return float(np.dot(da, db) / denom) if denom > 0.0 else float("nan")
 
 
+def _spearman_pandas_check(x: Sequence[float], y: Sequence[float]) -> float:
+    """Independent Spearman implementation for audit only."""
+    a = np.asarray(x, dtype=np.float64)
+    b = np.asarray(y, dtype=np.float64)
+    mask = np.isfinite(a) & np.isfinite(b)
+    if int(mask.sum()) < 2:
+        return float("nan")
+    ra = pd.Series(a[mask]).rank(method="average").to_numpy(np.float64)
+    rb = pd.Series(b[mask]).rank(method="average").to_numpy(np.float64)
+    da = ra - ra.mean()
+    db = rb - rb.mean()
+    denom = float(np.sqrt(np.dot(da, da) * np.dot(db, db)))
+    return float(np.dot(da, db) / denom) if denom > 0.0 else float("nan")
+
+
 def scale_agreement(sweep: pd.DataFrame, scales: Sequence[str] = FB.SCALES) -> Dict[str, Any]:
     """G23-9: agreement among risk scales over the whole coverage sweep."""
     out: Dict[str, Any] = {}
@@ -310,6 +325,74 @@ def scale_agreement(sweep: pd.DataFrame, scales: Sequence[str] = FB.SCALES) -> D
     return out
 
 
+def scale_agreement_self_check(
+    sweep: pd.DataFrame,
+    scales: Sequence[str] = FB.SCALES,
+    tol: float = 1e-12,
+) -> Dict[str, Any]:
+    """Internal consistency check for G23-9.
+
+    Equal Spearman values are not by themselves bugs: they can arise from the
+    same rank permutation.  The audit recomputes every pair through pandas ranks
+    and checks the one hard implication: if rank(A) == rank(B), then Spearman
+    with any third variable must also match.
+    """
+    pairs: Dict[str, Dict[str, Any]] = {}
+    for i, a in enumerate(scales):
+        for b in scales[i + 1:]:
+            col_a = sweep["%s_system" % a]
+            col_b = sweep["%s_system" % b]
+            rho = _spearman_no_scipy(col_a, col_b)
+            rho_check = _spearman_pandas_check(col_a, col_b)
+            ranks_a = _rank_average(np.asarray(col_a, dtype=np.float64))
+            ranks_b = _rank_average(np.asarray(col_b, dtype=np.float64))
+            key = "%s_%s" % (a, b)
+            pairs[key] = {
+                "spearman": rho,
+                "spearman_pandas_rank_check": rho_check,
+                "abs_diff_vs_check": float(abs(rho - rho_check)),
+                "rank_order_identical": bool(np.array_equal(np.argsort(ranks_a), np.argsort(ranks_b))),
+            }
+
+    implication_ok = True
+    implications = []
+    scale_list = list(scales)
+    for i, a in enumerate(scale_list):
+        for b in scale_list[i + 1:]:
+            ab = pairs["%s_%s" % (a, b)]["spearman"]
+            if abs(float(ab) - 1.0) >= float(tol):
+                continue
+            for c in scale_list:
+                if c in (a, b):
+                    continue
+                ac_key = "%s_%s" % tuple(sorted((a, c), key=scale_list.index))
+                bc_key = "%s_%s" % tuple(sorted((b, c), key=scale_list.index))
+                ac = pairs[ac_key]["spearman"]
+                bc = pairs[bc_key]["spearman"]
+                ok = bool(abs(float(ac) - float(bc)) < float(tol))
+                implication_ok = implication_ok and ok
+                implications.append(
+                    {
+                        "rank_identical_pair": "%s_%s" % (a, b),
+                        "third_scale": c,
+                        "rho_%s_%s" % (a, c): ac,
+                        "rho_%s_%s" % (b, c): bc,
+                        "pass": ok,
+                    }
+                )
+    return {
+        "pairs": pairs,
+        "max_abs_diff_vs_pandas_rank_check": float(
+            max(v["abs_diff_vs_check"] for v in pairs.values())
+        ),
+        "rank_identity_implications": implications,
+        "pass": bool(
+            max(v["abs_diff_vs_check"] for v in pairs.values()) < float(tol)
+            and implication_ok
+        ),
+    }
+
+
 def pareto_front(sweep: pd.DataFrame, scales: Sequence[str] = FB.SCALES) -> pd.DataFrame:
     """Non-dominated operating points across the requested risk scales."""
     cols = ["%s_system" % s for s in scales]
@@ -319,6 +402,111 @@ def pareto_front(sweep: pd.DataFrame, scales: Sequence[str] = FB.SCALES) -> pd.D
         dominated = np.all(vals <= vals[i], axis=1) & np.any(vals < vals[i], axis=1)
         keep[i] = not bool(dominated.any())
     return sweep[keep].copy().sort_values(["family", "coverage", "param"]).reset_index(drop=True)
+
+
+def pareto_audit(candidates: pd.DataFrame, front: pd.DataFrame) -> Dict[str, Any]:
+    """Record whether Pareto was computed on the combined candidate set."""
+    candidate_counts = candidates["family"].value_counts().sort_index().to_dict()
+    survivor_counts = front["family"].value_counts().sort_index().to_dict()
+    families_considered = sorted(str(x) for x in candidate_counts)
+    families_surviving = sorted(str(x) for x in survivor_counts)
+    return {
+        "n_candidates_considered": int(len(candidates)),
+        "candidate_family_counts": {str(k): int(v) for k, v in candidate_counts.items()},
+        "n_pareto_survivors": int(len(front)),
+        "survivor_family_counts": {str(k): int(v) for k, v in survivor_counts.items()},
+        "families_considered": families_considered,
+        "families_surviving": families_surviving,
+        "single_family_complete_dominance_on_grid": bool(
+            len(families_considered) > 1 and len(families_surviving) == 1
+        ),
+    }
+
+
+def aurc_system(sweep: pd.DataFrame, scale: str = "err") -> float:
+    """Area under whole-system risk as a ranking-quality summary."""
+    x, y = _collapse_by_coverage(sweep, "%s_system" % scale)
+    if len(x) < 2:
+        return float("nan")
+    return float(np.trapezoid(y, x))
+
+
+def aurc_system_by_scale(sweep: pd.DataFrame, scales: Sequence[str] = FB.SCALES) -> Dict[str, float]:
+    return {scale: aurc_system(sweep, scale) for scale in scales}
+
+
+def additive_local_degeneracy_report(
+    mhat: np.ndarray,
+    qhat_rows: np.ndarray,
+    qhat_by_bin: Mapping[int, float],
+    operating_eps: float,
+) -> Dict[str, Any]:
+    """G23-7b: the shift family loses age bins one by one before full coverage."""
+    thresholds = [
+        {"z_bin": int(z), "epsilon_star": float(q)}
+        for z, q in sorted(qhat_by_bin.items(), key=lambda item: float(item[1]))
+    ]
+    for row in thresholds:
+        eps = float(row["epsilon_star"])
+        acc = accept_additive(mhat, qhat_rows, eps)
+        row["coverage_at_epsilon_star"] = float(acc.mean())
+        row["n_degenerate_age_bins"] = int(sum(eps >= float(q) for q in qhat_by_bin.values()))
+
+    op_acc = accept_additive(mhat, qhat_rows, float(operating_eps))
+    first = thresholds[0]
+    return {
+        "definition": "age bin is locally degenerate once q_hat_slot1(z) - epsilon <= 0",
+        "thresholds_by_onset": thresholds,
+        "first_local_degeneracy_epsilon": float(first["epsilon_star"]),
+        "first_local_degeneracy_coverage": float(first["coverage_at_epsilon_star"]),
+        "operating_epsilon": float(operating_eps),
+        "operating_coverage": float(op_acc.mean()),
+        "operating_minus_first_epsilon": float(float(operating_eps) - float(first["epsilon_star"])),
+        "operating_minus_first_coverage": float(float(op_acc.mean()) - float(first["coverage_at_epsilon_star"])),
+        "operating_degenerate_age_bins": int(
+            sum(float(operating_eps) >= float(q) for q in qhat_by_bin.values())
+        ),
+        "degenerate_bin_count_monotone": bool(
+            all(
+                int(a["n_degenerate_age_bins"]) <= int(b["n_degenerate_age_bins"])
+                for a, b in zip(thresholds, thresholds[1:])
+            )
+        ),
+    }
+
+
+def reject_risk_summary(
+    sweep: pd.DataFrame,
+    scale: str = "err",
+    operational_param_range: tuple[float, float] = (0.05, 0.50),
+) -> Dict[str, Any]:
+    """Summarize risk on the reject branch and its local flatness."""
+    col = "%s_reject" % scale
+    finite = sweep[np.isfinite(sweep[col].to_numpy(np.float64))].copy()
+    best = finite.loc[finite[col].idxmin()]
+    lo, hi = operational_param_range
+    band = finite[(finite["param"] >= float(lo)) & (finite["param"] <= float(hi))]
+    band_best = band.loc[band[col].idxmin()] if len(band) else best
+    return {
+        "scale": scale,
+        "global_min": {
+            "family": str(best["family"]),
+            "param": float(best["param"]),
+            "coverage": float(best["coverage"]),
+            col: float(best[col]),
+            "%s_system" % scale: float(best["%s_system" % scale]),
+        },
+        "operational_param_range": [float(lo), float(hi)],
+        "operational_range_min": {
+            "family": str(band_best["family"]),
+            "param": float(band_best["param"]),
+            "coverage": float(band_best["coverage"]),
+            col: float(band_best[col]),
+            "%s_system" % scale: float(band_best["%s_system" % scale]),
+        },
+        "operational_range_reject_risk_min": float(band[col].min()) if len(band) else float("nan"),
+        "operational_range_reject_risk_max": float(band[col].max()) if len(band) else float("nan"),
+    }
 
 
 def slot_reject_diagnostics(
@@ -472,6 +660,28 @@ def run_report(
             }
         )
     pareto = pareto_front(combined)
+    paired_078 = paired_family_delta_at_coverage(
+        test,
+        qhat_rows,
+        sweep_mul,
+        sweep_add,
+        target=0.78,
+        policy=policy,
+        scale="err",
+        n_boot=n_boot,
+    )
+    scale_check = {
+        "multiplicative": scale_agreement_self_check(sweep_mul),
+        "additive": scale_agreement_self_check(sweep_add),
+        "combined": scale_agreement_self_check(combined),
+    }
+    pareto_meta = pareto_audit(combined, pareto)
+    local_degen = additive_local_degeneracy_report(
+        mhat,
+        qhat_rows,
+        q_by_age,
+        operating_eps=float(paired_078["eps_interpolated"]),
+    )
     out: Dict[str, Any] = {
         "cell": "poisson@0.925",
         "config": config,
@@ -491,17 +701,23 @@ def run_report(
             "additive": scale_agreement(sweep_add),
             "combined": scale_agreement(combined),
         },
+        "scale_agreement_self_check": scale_check,
+        "aurc_system": {
+            "multiplicative": aurc_system_by_scale(sweep_mul),
+            "additive": aurc_system_by_scale(sweep_add),
+            "diff_mul_minus_add": {
+                scale: float(aurc_system(sweep_mul, scale) - aurc_system(sweep_add, scale))
+                for scale in FB.SCALES
+            },
+        },
         "pareto_front": pareto.to_dict(orient="records"),
-        "paired_delta_at_coverage_0.78": paired_family_delta_at_coverage(
-            test,
-            qhat_rows,
-            sweep_mul,
-            sweep_add,
-            target=0.78,
-            policy=policy,
-            scale="err",
-            n_boot=n_boot,
-        ),
+        "pareto_audit": pareto_meta,
+        "paired_delta_at_coverage_0.78": paired_078,
+        "local_degeneracy_additive": local_degen,
+        "reject_risk_summary": {
+            "multiplicative_err": reject_risk_summary(sweep_mul, "err"),
+            "additive_err": reject_risk_summary(sweep_add, "err"),
+        },
         "gates": {
             "V23_4_additive_delta0_equals_multiplicative_kappa1": bool(
                 np.array_equal(
@@ -524,6 +740,18 @@ def run_report(
             "G23_8_full_coverage_is_anchor": bool(
                 abs(sweep_mul.loc[sweep_mul["param"] == 0.0, "err_system"].iloc[0] - FB.loss_of(test, test["a_twin"].to_numpy(np.int64), "err").mean())
                 < 1e-12
+            ),
+            "G23_7b_local_degeneracy_cascade_reported": bool(
+                local_degen["first_local_degeneracy_epsilon"] < paired_078["eps_interpolated"]
+                and local_degen["operating_degenerate_age_bins"] >= 1
+                and local_degen["degenerate_bin_count_monotone"]
+            ),
+            "G23_9_scale_agreement_self_check": bool(
+                all(v["pass"] for v in scale_check.values())
+            ),
+            "G23_9b_pareto_front_uses_combined_sweep": bool(
+                pareto_meta["n_candidates_considered"] == len(sweep_mul) + len(sweep_add)
+                and len(pareto_meta["families_considered"]) == 2
             ),
         },
         "fit_public": {k: v for k, v in fit.items() if k != "_q"},
@@ -566,6 +794,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     print(pd.DataFrame(report["compare_families_at_coverage"]).to_string(index=False))
     print("scale_agreement")
     print(json.dumps(report["scale_agreement"], indent=1, sort_keys=True))
+    print("scale_agreement_self_check")
+    print(json.dumps(report["scale_agreement_self_check"], indent=1, sort_keys=True))
+    print("pareto_audit")
+    print(json.dumps(report["pareto_audit"], indent=1, sort_keys=True))
+    print("local_degeneracy_additive")
+    print(json.dumps(report["local_degeneracy_additive"], indent=1, sort_keys=True))
+    print("aurc_system")
+    print(json.dumps(report["aurc_system"], indent=1, sort_keys=True))
     return 0
 
 

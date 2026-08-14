@@ -134,3 +134,70 @@ def test_T5_T6_age_conditioning_ratio_moves_as_predicted(qhat_by_bin: dict[int, 
     assert r_lo < r_mul < r_hi
     assert 1.2 <= r_lo <= 1.8
     assert r_hi > 2.5
+
+
+def test_G23_7b_additive_local_degeneracy_cascade_is_reported(
+    test_df: pd.DataFrame,
+    qrows: np.ndarray,
+    qhat_by_bin: dict[int, float],
+) -> None:
+    """The shift family starts degenerating before the full-coverage interval."""
+    m = test_df[list(TF.MHAT_COLS)].to_numpy(np.float64)
+    eps_operating = 21.14238882667379
+    out = TF.additive_local_degeneracy_report(m, qrows, qhat_by_bin, eps_operating)
+
+    assert out["first_local_degeneracy_epsilon"] == pytest.approx(min(qhat_by_bin.values()))
+    assert out["first_local_degeneracy_coverage"] < out["operating_coverage"] < 1.0
+    assert out["operating_degenerate_age_bins"] == 2
+    assert out["degenerate_bin_count_monotone"] is True
+
+
+def test_G23_9_scale_agreement_self_check_passes(
+    test_df: pd.DataFrame,
+    qrows: np.ndarray,
+    qhat_by_bin: dict[int, float],
+) -> None:
+    """G23-9 Spearman values must pass an independent rank recomputation."""
+    qbar = TF.qbar_from_age_bins(qhat_by_bin)
+    sweeps = [
+        TF.sweep_family(test_df, qrows, "multiplicative", TF.KAPPA_GRID),
+        TF.sweep_family(test_df, qrows, "additive", TF.eps_grid_from_delta(qbar)),
+    ]
+    for sweep in sweeps:
+        out = TF.scale_agreement_self_check(sweep)
+        assert out["pass"] is True
+        assert out["max_abs_diff_vs_pandas_rank_check"] < 1e-12
+
+
+def test_G23_9b_pareto_front_considers_combined_sweeps(
+    test_df: pd.DataFrame,
+    qrows: np.ndarray,
+    qhat_by_bin: dict[int, float],
+) -> None:
+    """A one-family Pareto front is a result only after both families are considered."""
+    qbar = TF.qbar_from_age_bins(qhat_by_bin)
+    mul = TF.sweep_family(test_df, qrows, "multiplicative", TF.KAPPA_GRID)
+    add = TF.sweep_family(test_df, qrows, "additive", TF.eps_grid_from_delta(qbar))
+    combined = pd.concat([mul, add], ignore_index=True, sort=False)
+    front = TF.pareto_front(combined)
+    audit = TF.pareto_audit(combined, front)
+
+    assert audit["n_candidates_considered"] == len(TF.KAPPA_GRID) + len(TF.DELTA_GRID)
+    assert audit["candidate_family_counts"] == {"additive": 14, "multiplicative": 19}
+    assert audit["survivor_family_counts"] == {"multiplicative": 2}
+    assert audit["single_family_complete_dominance_on_grid"] is True
+
+
+def test_aurc_system_and_reject_risk_summaries_are_reported(
+    test_df: pd.DataFrame,
+    qrows: np.ndarray,
+) -> None:
+    """AURC summarizes the ranking, while reject risk is a branch diagnostic."""
+    sweep = TF.sweep_family(test_df, qrows, "multiplicative", TF.KAPPA_GRID)
+    aurc = TF.aurc_system_by_scale(sweep)
+    reject = TF.reject_risk_summary(sweep, "err")
+
+    assert set(aurc) == set(FB.SCALES)
+    assert all(np.isfinite(v) and v > 0.0 for v in aurc.values())
+    assert reject["global_min"]["param"] in (6.0, 8.0)
+    assert reject["operational_range_min"]["param"] == 0.5
