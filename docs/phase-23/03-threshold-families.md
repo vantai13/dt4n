@@ -87,9 +87,9 @@ CONG khong phang o coverage 0.30 nhu du doan. Ly do thuc nghiem: tai
 
 | coverage | epsilon noi suy | r_CONG | r_NHAN | prediction |
 |---:|---:|---:|---:|---|
-| 0.30 | 7.172372 | 3.108050 | 2.105339 | T5 FAIL |
-| 0.50 | 13.333832 | 10.551382 | 2.105339 | diagnostic |
-| 0.78 | 21.142389 | inf | 2.105339 | T6 direction HIT, range MISS |
+| 0.30 | 7.387378 | 3.166978 | 2.105339 | T5 FAIL |
+| 0.50 | 13.176642 | 9.762092 | 2.105339 | diagnostic |
+| 0.78 | 20.895185 | inf | 2.105339 | T6 direction HIT, range MISS |
 
 `r_CONG = inf` tai coverage cao khong phai loi tinh. No la dau vet cua thoai
 hoa cuc bo: `epsilon` da vuot nguong cua cac bin tuoi tre, nen mot so bin
@@ -104,15 +104,15 @@ Chuoi thoai hoa cuc bo cua ho CONG:
 | 2 | 25.212436 | 0.908750 | 3 |
 | 3 | 31.746064 | 1.000000 | 4 |
 
-Diem van hanh `coverage ~= 0.78` cua ho CONG dung `epsilon = 21.142389`, lon
-hon onset dau tien `6.063550` va nam sau onset thu hai. Noi cach khac, tai
+Diem van hanh `coverage ~= 0.78` cua ho CONG dung `epsilon = 20.895185`, lon
+hon onset dau tien `5.816346` va nam sau onset thu hai. Noi cach khac, tai
 diem van hanh, hai bin tuoi tre nhat da co nguong khong duong theo phep do
 gom-theo-tuoi slot 1. Day la co che manh hon ket qua G23-7: G23-7 chi bat
 thoai hoa toan cuc, con G23-7b cho thay thoai hoa bat dau som hon nhieu.
 
 Hai bin da thoai hoa nay chiem `145000 / 499967 = 29.00%` test rows
 (`290000 / 999945 = 29.00%` tren toan artifact). So voi coverage CONG tai diem
-van hanh `0.787930`, do la `36.81%` nhanh accept: hon mot phan ba cac quyet
+van hanh `0.780492`, do la `37.16%` nhanh accept: hon mot phan ba cac quyet
 dinh duoc CONG chap nhan la chap nhan vo dieu kien theo age-bin, khong phai vi
 hang do vuot qua mot phep kiem tra margin.
 
@@ -122,12 +122,12 @@ Risk toan he thong voi fallback F2 STATIC:
 
 | coverage | err NHAN | err CONG | NHAN-CONG | regret NHAN | regret CONG | sla NHAN | sla CONG |
 |---:|---:|---:|---:|---:|---:|---:|---:|
-| 0.30 | 0.274667 | 0.272975 | +0.001692 | 2.562068 | 2.571643 | 0.172240 | 0.172543 |
-| 0.50 | 0.237484 | 0.239513 | -0.002028 | 1.988702 | 2.053445 | 0.155783 | 0.157868 |
-| 0.78 | 0.209438 | 0.216905 | -0.007467 | 1.575283 | 1.681166 | 0.145521 | 0.149265 |
+| 0.30 | 0.274667 | 0.271652 | +0.003014 | 2.562068 | 2.560187 | 0.172240 | 0.171800 |
+| 0.50 | 0.237484 | 0.237752 | -0.000268 | 1.988702 | 2.029071 | 0.155783 | 0.157050 |
+| 0.78 | 0.209438 | 0.215212 | -0.005774 | 1.575283 | 1.659869 | 0.145521 | 0.148238 |
 
 T7 truot tren thang err: tai coverage 0.30, NHAN khong thang CONG; no te hon
-`0.001692` err. Tuy vay NHAN da tot hon nhe tren regret va sla, nen day la mot
+`0.003014` err. Tuy vay NHAN va CONG van gan nhau trong vung coverage thap, nen day la mot
 bat dong thang rui ro cuc bo, khong phai loi thiet bi.
 
 T8 truot theo huong co gia tri khoa hoc. Tai coverage van hanh, hai ho phan
@@ -135,12 +135,12 @@ biet duoc:
 
 ```text
 coverage_mul = 0.777689
-coverage_add = 0.787930
-accept intersection = 0.723118
-accept symmetric difference = 0.119384
+coverage_add = 0.780492
+accept intersection = 0.717959
+accept symmetric difference = 0.122262
 
-delta_err(NHAN - CONG) = -0.004500
-CI95 paired block bootstrap = [-0.007578, -0.001432]
+delta_err(NHAN - CONG) = -0.005538
+CI95 paired block bootstrap = [-0.008569, -0.002476]
 ```
 
 Nhanh FAIL cua Amendment 23-10 khong kich hoat theo chieu CONG thang. Ket qua
@@ -174,8 +174,8 @@ Spearman tren toan luoi coverage:
 | sweep | rho(err,regret) | rho(err,sla) | rho(regret,sla) | min |
 |---|---:|---:|---:|---:|
 | NHAN | 1.000000 | 0.978873 | 0.978873 | 0.978873 |
-| CONG | 0.995565 | 0.995565 | 0.986696 | 0.986696 |
-| combined | 0.998318 | 0.990582 | 0.985873 | 0.985873 |
+| CONG | 0.999129 | 0.993031 | 0.989547 | 0.989547 |
+| combined | 0.999091 | 0.991822 | 0.989096 | 0.989096 |
 
 Ba thang dong bien manh. Vi vay Lesson 23.4 co the ve mot duong
 risk-coverage chinh, nhung van nen giu mat Pareto nho vi argmin dia phuong
@@ -186,12 +186,13 @@ Nghi ngo "Spearman co bug do hai cap trung 16 chu so" duoc kiem bang
 tat ca cac cap, `max_abs_diff_vs_pandas_rank_check = 0.0` o ca ba sweep.
 Voi NHAN, `rho(err,regret)=1.0` vi hai thang co cung thu hang tren luoi; he qua
 bat buoc `rho(err,sla)=rho(regret,sla)` duoc thoa. Voi CONG, hai gia tri
-`0.995565` trung nhau la trung ve rank geometry, khong phai ghi de sai khoa.
+mot so gia tri gan nhau la rank geometry cua thong ke roi rac, khong phai ghi
+de sai khoa.
 
 Mat Pareto duoc tinh tren sweep gop, khong chi tren NHAN:
 
 ```text
-n_candidates_considered = 33 = 19 NHAN + 14 CONG
+n_candidates_considered = 43 = 19 NHAN + 24 CONG
 n_pareto_survivors = 2
 families_surviving = {NHAN}
 ```
@@ -212,16 +213,17 @@ AURC he thong, do tren toan bang xep hang:
 | family | AURC err | AURC regret | AURC sla |
 |---|---:|---:|---:|
 | NHAN | 0.252450 | 2.251942 | 0.164305 |
-| CONG | 0.254346 | 2.288677 | 0.165724 |
-| NHAN-CONG | -0.001896 | -0.036735 | -0.001420 |
+| CONG | 0.253738 | 2.280195 | 0.165395 |
+| NHAN-CONG | -0.001288 | -0.028253 | -0.001090 |
 
 NHAN co AURC nho hon tren ca ba thang, nen ket luan khong chi dua vao ba lat
 cat coverage. Tuy nhien, AURC nay chi duoc giu nhu bang phu:
 
 1. Luu y mat do luoi: voi thang err, neu lay duong NHAN mau lai tren luoi thua
    cua CONG, AURC(NHAN) tang tu `0.252450` len `0.253428`. Do lech
-   `+0.000978` bang 52% hieu AURC goc `-0.001896`, nen bien do AURC giua hai
-   ho bi confound boi mat do nut coverage.
+   `+0.000978` bang 52% hieu AURC tren luoi cu `-0.001896`. Sau khi lam day
+   luoi CONG, hieu AURC err con `-0.001288`; canh bao mat do luoi van dung,
+   nhung da nho hon.
 2. Luu y headline: `AURC_system_err(C3+F2) = 0.252450` lon hon neo
    `0.222399`. Day khong phai C3 te o diem van hanh; no chi cho thay AURC toan
    dai bi chi phoi boi coverage thap, noi fallback P1 duoc dung gan moi hang va
@@ -263,10 +265,10 @@ nhanh accept/reject cung doi.
 
 | ID | Noi dung | Do duoc | KQ |
 |---|---|---|---|
-| T5 | `r_CONG(0.30) < r_NHAN`, range [1.2,1.8] | 3.108 > 2.105 | FAIL; co che tang theo coverage dung |
+| T5 | `r_CONG(0.30) < r_NHAN`, range [1.2,1.8] | 3.167 > 2.105 | FAIL; co che tang theo coverage dung |
 | T6 | `r_CONG(0.78) > r_NHAN`, range [2.5,6.0] | inf > 2.105 | HIT direction; thoai hoa cuc bo |
-| T7 | `err_system(NHAN) < err_system(CONG)` at 0.30 | +0.001692 | FAIL |
-| T8 | two families indistinguishable at 0.78 | CI95 [-0.007578,-0.001432] | FAIL, useful |
+| T7 | `err_system(NHAN) < err_system(CONG)` at 0.30 | +0.003014 | FAIL |
+| T8 | two families indistinguishable at 0.78 | CI95 [-0.008569,-0.002476] | FAIL, useful |
 | T9 | slot1 CONG share exceeds NHAN by >0.05 | -0.000728 at 0.78 | FAIL; slot 1 chi phoi ca hai ho |
 
 ## 8. Conclusion
