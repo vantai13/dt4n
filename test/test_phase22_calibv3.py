@@ -53,6 +53,13 @@ def test_GC1_profiles_locked():
         V3.offset_steps("U9")
 
 
+def test_GC1b_cell_cli_alias_is_parseable():
+    assert V3.parse_cell_arg("poisson_0.925") == ("poisson", 0.925)
+    assert V3.parse_cell_arg("h2_0.700") == ("h2", 0.700)
+    with pytest.raises(ValueError):
+        V3.parse_cell_arg("poisson")
+
+
 def test_GC2_offset_quantisation_is_reported_not_hidden():
     steps = V3.offset_steps("U1", DT)
     realised_ms = steps * DT * 1000.0

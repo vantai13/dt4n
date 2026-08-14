@@ -23,6 +23,7 @@ import argparse
 import hashlib
 import json
 import os
+import re
 import subprocess
 from datetime import datetime, timezone
 from typing import Any, Dict, Mapping, Sequence, Tuple
@@ -124,6 +125,14 @@ def _load_cell(mode: str, rho_bar: float) -> Mapping[str, Any]:
     if key not in cells:
         raise SystemExit("o %s khong kha thi trong sla_calibration.json" % (key,))
     return cells[key]
+
+
+def parse_cell_arg(cell: str) -> Tuple[str, float]:
+    """Parse CLI cell names such as ``poisson_0.925``."""
+    match = re.match(r"^(.+)_([0-9]+(?:\.[0-9]+)?)$", str(cell))
+    if not match:
+        raise ValueError("cell phai co dang <mode>_<rho>, vi du poisson_0.925")
+    return str(match.group(1)), float(match.group(2))
 
 
 def offset_steps(profile: str, dt: float = DT) -> np.ndarray:
@@ -518,8 +527,9 @@ def staleness_path_diagnostic(mode: str, rho_bar: float, seed: int = 101, n: int
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--mode", required=True)
-    parser.add_argument("--rho-bar", type=float, required=True)
+    parser.add_argument("--cell", help="shortcut for --mode/--rho-bar, e.g. poisson_0.925")
+    parser.add_argument("--mode")
+    parser.add_argument("--rho-bar", type=float)
     parser.add_argument("--out", default=OUT_PARQUET)
     parser.add_argument("--report", default=OUT_REPORT)
     parser.add_argument("--n", type=int, default=N)
@@ -528,6 +538,17 @@ def main() -> None:
     parser.add_argument("--v3-split", action="store_true", help="positive control: split by sample")
     parser.add_argument("--v3", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
+
+    if args.cell:
+        mode, rho_bar = parse_cell_arg(args.cell)
+        if args.mode is not None and args.mode != mode:
+            parser.error("--cell mau thuan voi --mode")
+        if args.rho_bar is not None and abs(float(args.rho_bar) - rho_bar) > 1e-12:
+            parser.error("--cell mau thuan voi --rho-bar")
+        args.mode = mode
+        args.rho_bar = rho_bar
+    if args.mode is None or args.rho_bar is None:
+        parser.error("can --cell hoac ca --mode va --rho-bar")
 
     v3_split = bool(args.v3_split or args.v3)
     print("building %s@%.3f profile=%s split=%s" % (args.mode, args.rho_bar, args.aoi_profile, "sample_V3" if v3_split else "block"))

@@ -23,6 +23,44 @@ e32c72ab9bf0b852009c10128e7b91943bff47c434d8f79941feaebdd4f1fa89  results/phase-
 Neu mot sha256 thay doi, moi ket qua Phase 23 phu thuoc artifact do phai bi
 coi la vo hieu cho den khi rebuild va ghi amendment.
 
+## 1b. Lenh tai tao artifact nang
+
+`results/phase-22/calib_set_v3.parquet` nang khoang 67 MB va khong duoc commit
+do quy tac `.gitignore` cho parquet Phase 22. Tai tao local bang:
+
+```bash
+python -m cert.build_calib_set_v3 \
+  --cell poisson_0.925 \
+  --aoi-profile U0 \
+  --out results/phase-22/calib_set_v3.parquet
+```
+
+Lenh tuong duong cu van hop le:
+
+```bash
+python -m cert.build_calib_set_v3 \
+  --mode poisson \
+  --rho-bar 0.925 \
+  --aoi-profile U0 \
+  --out results/phase-22/calib_set_v3.parquet
+```
+
+Xac minh:
+
+```bash
+sha256sum -c results/phase-23/INHERITED.sha256
+```
+
+Dong sha256 cua parquet phai khop:
+
+```text
+d6904df8bfb919776e859ab186090df5a821c847859a37d532cf800f0f256234
+```
+
+Neu khong khop, mot trong ba thu da doi: code sinh, phien ban numpy/pandas/
+pyarrow, hoac seed. Phien ban dung khi ky da duoc ghi bang comment trong
+`results/phase-23/INHERITED.sha256`.
+
 ## 2. Bang gioi han L1..L13
 
 | ID | Gioi han | Trang thai tai dau Phase 23 |
