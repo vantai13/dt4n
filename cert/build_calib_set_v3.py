@@ -247,6 +247,7 @@ def build_one_v3(
 
     a1, a2, m_hat_v2, m_true_v2 = MS.margins(y_true, y_hat)
     r = np.arange(len(cur))
+    y_hat_a1 = y_hat[r, a1]
     m_mid = y_mid[r, a2] - y_mid[r, a1]
 
     a_twin = arr["a_fresh"][old] if aoi_profile == "U0" else np.asarray(y_hat).argmin(axis=1)
@@ -270,6 +271,7 @@ def build_one_v3(
         "a2": a2.astype(np.int8),
         "a_twin": a_twin.astype(np.int8),
         "a_star": a_star.astype(np.int8),
+        "y_hat_a1": y_hat_a1.astype(np.float32),
         "m_hat": m_hat_v2.astype(np.float32),
         "m_true": m_true_v2.astype(np.float32),
         "m_mid": m_mid.astype(np.float32),

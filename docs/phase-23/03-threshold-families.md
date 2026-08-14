@@ -110,6 +110,12 @@ diem van hanh, hai bin tuoi tre nhat da co nguong khong duong theo phep do
 gom-theo-tuoi slot 1. Day la co che manh hon ket qua G23-7: G23-7 chi bat
 thoai hoa toan cuc, con G23-7b cho thay thoai hoa bat dau som hon nhieu.
 
+Hai bin da thoai hoa nay chiem `145000 / 499967 = 29.00%` test rows
+(`290000 / 999945 = 29.00%` tren toan artifact). So voi coverage CONG tai diem
+van hanh `0.787930`, do la `36.81%` nhanh accept: hon mot phan ba cac quyet
+dinh duoc CONG chap nhan la chap nhan vo dieu kien theo age-bin, khong phai vi
+hang do vuot qua mot phep kiem tra margin.
+
 ## 3. Matched-coverage comparison
 
 Risk toan he thong voi fallback F2 STATIC:
@@ -210,7 +216,30 @@ AURC he thong, do tren toan bang xep hang:
 | NHAN-CONG | -0.001896 | -0.036735 | -0.001420 |
 
 NHAN co AURC nho hon tren ca ba thang, nen ket luan khong chi dua vao ba lat
-cat coverage.
+cat coverage. Tuy nhien, AURC nay chi duoc giu nhu bang phu:
+
+1. Luu y mat do luoi: voi thang err, neu lay duong NHAN mau lai tren luoi thua
+   cua CONG, AURC(NHAN) tang tu `0.252450` len `0.253428`. Do lech
+   `+0.000978` bang 52% hieu AURC goc `-0.001896`, nen bien do AURC giua hai
+   ho bi confound boi mat do nut coverage.
+2. Luu y headline: `AURC_system_err(C3+F2) = 0.252450` lon hon neo
+   `0.222399`. Day khong phai C3 te o diem van hanh; no chi cho thay AURC toan
+   dai bi chi phoi boi coverage thap, noi fallback P1 duoc dung gan moi hang va
+   he thong te hon neo.
+
+Chi so van hanh thay the cho C3+F2:
+
+```text
+dai coverage co loi          = [0.6151, 1.0000]
+max reject share van co loi   = 38.49%
+improvement area err          = 0.003368
+best improvement              = 0.013227 tai coverage 0.79345
+partial AURC [0.60,1.00]      = 0.214012
+partial-AURC / neo            = 0.9623
+```
+
+Ket luan Lesson 23.2 van dua tren paired delta tai coverage khop va Pareto
+trong sweep gop, khong dua vao AURC toan dai.
 
 ## 6. Reject-branch diagnostic
 

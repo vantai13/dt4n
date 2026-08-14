@@ -52,6 +52,14 @@ def test_per_path_sla_columns_exist(df: pd.DataFrame) -> None:
         assert "sla_viol_p%d" % j in df.columns, "thieu sla_viol_p%d" % j
 
 
+def test_y_hat_a1_exists_for_relative_margin_baseline(df: pd.DataFrame) -> None:
+    """B5 needs the actual twin cost scale of the chosen path, not a proxy."""
+    assert "y_hat_a1" in df.columns
+    values = df["y_hat_a1"].to_numpy(np.float64)
+    assert np.isfinite(values).all()
+    assert float(values.min()) > 0.0
+
+
 def test_per_path_sla_agrees_with_twin_and_star(df: pd.DataFrame) -> None:
     """Positive control: new columns must reproduce twin/star SLA flags."""
     k = len(T7.PATH_NAMES)

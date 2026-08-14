@@ -183,7 +183,10 @@ def test_G23_9b_pareto_front_considers_combined_sweeps(
     audit = TF.pareto_audit(combined, front)
 
     assert audit["n_candidates_considered"] == len(TF.KAPPA_GRID) + len(TF.DELTA_GRID)
-    assert audit["candidate_family_counts"] == {"additive": 14, "multiplicative": 19}
+    assert audit["candidate_family_counts"] == {
+        "additive": len(TF.DELTA_GRID),
+        "multiplicative": len(TF.KAPPA_GRID),
+    }
     assert audit["survivor_family_counts"] == {"multiplicative": 2}
     assert audit["single_family_complete_dominance_on_grid"] is True
 
