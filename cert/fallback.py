@@ -435,6 +435,26 @@ def matched_coverage_control(
     }
 
 
+def oracle_switch_bound(df: pd.DataFrame, scale: str = "err") -> Dict[str, Any]:
+    """Best possible row-wise switch between twin and static P1."""
+    p1 = path_static_shortest()
+    a_twin = df["a_twin"].to_numpy(np.int64)
+    a_p1 = np.full(len(df), p1, dtype=np.int64)
+    l_twin = loss_of(df, a_twin, scale)
+    l_p1 = loss_of(df, a_p1, scale)
+    oracle = np.minimum(l_twin, l_p1)
+    return {
+        "scale": scale,
+        "oracle_switch": float(oracle.mean()),
+        "anchor_twin": float(l_twin.mean()),
+        "always_p1": float(l_p1.mean()),
+        "share_switch_to_p1": float((l_p1 < l_twin).mean()),
+        "share_twin_better": float((l_twin < l_p1).mean()),
+        "share_tie": float((l_twin == l_p1).mean()),
+        "room_closed_by_oracle_vs_anchor": float(l_twin.mean() - oracle.mean()),
+    }
+
+
 def fit_accept_mask(
     df: pd.DataFrame,
     config: str = "C3",

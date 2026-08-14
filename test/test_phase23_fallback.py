@@ -148,3 +148,12 @@ def test_G23_14c_matched_random_control_reports_value_of_information() -> None:
     assert out["coverage"] == pytest.approx(float(acc.mean()))
     assert out["risk_random_mean"] > out["risk_anchor"]
     assert out["value_of_information"] > 0.0
+
+
+def test_oracle_switch_bound_is_below_twin_and_static(df: pd.DataFrame) -> None:
+    for scale in FB.SCALES:
+        out = FB.oracle_switch_bound(df, scale)
+        assert out["oracle_switch"] <= out["anchor_twin"] + 1e-12
+        assert out["oracle_switch"] <= out["always_p1"] + 1e-12
+        total = out["share_switch_to_p1"] + out["share_twin_better"] + out["share_tie"]
+        assert total == pytest.approx(1.0)
