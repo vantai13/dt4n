@@ -31,6 +31,7 @@ BASELINE_COVERAGES = tuple(np.linspace(0.0, 1.0, 101))
 DEFAULT_ARTIFACT = "results/phase-22/calib_set_v3.parquet"
 DEFAULT_OUT_JSON = "results/phase-23/baseline_rankings_poisson_0.925_C3_static.json"
 DEFAULT_OUT_CSV = "results/phase-23/baseline_rankings_poisson_0.925_C3_static.csv"
+DEFAULT_AUDIT_JSON = "results/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json"
 
 
 def _git(*cmd: str) -> str:
@@ -252,6 +253,100 @@ def beneficial_band(sweep: pd.DataFrame, anchor: float, scale: str = "err") -> D
     }
 
 
+def paired_ranking_delta_at_coverage(
+    df: pd.DataFrame,
+    score_a: np.ndarray,
+    score_b: np.ndarray,
+    coverage: float,
+    label_a: str,
+    label_b: str,
+    policy: str = "static",
+    scale: str = "err",
+    n_boot: int = 2000,
+    seed: int = 23330,
+) -> Dict[str, Any]:
+    """Paired block-bootstrap CI for ranking A minus ranking B at one coverage."""
+    acc_a = _accept_at_coverage(np.asarray(score_a, dtype=np.float64), float(coverage))
+    acc_b = _accept_at_coverage(np.asarray(score_b, dtype=np.float64), float(coverage))
+    chosen_a = FB.apply_fallback(df, acc_a, policy)["a_chosen"]
+    chosen_b = FB.apply_fallback(df, acc_b, policy)["a_chosen"]
+    loss_a = FB.loss_of(df, chosen_a, scale)
+    loss_b = FB.loss_of(df, chosen_b, scale)
+    diff = loss_a - loss_b
+
+    blocks = df["block_id"].to_numpy()
+    _uniq, inv = np.unique(blocks, return_inverse=True)
+    n_blk = int(inv.max() + 1)
+    sum_d = np.bincount(inv, weights=diff, minlength=n_blk)
+    cnt = np.bincount(inv, minlength=n_blk).astype(np.float64)
+    rng = np.random.default_rng(int(seed))
+    draws = np.empty(int(n_boot), dtype=np.float64)
+    for i in range(int(n_boot)):
+        pick = rng.integers(0, n_blk, size=n_blk)
+        draws[i] = sum_d[pick].sum() / cnt[pick].sum()
+    ci = np.quantile(draws, [0.025, 0.975])
+
+    cov_a = float(acc_a.mean())
+    cov_b = float(acc_b.mean())
+    risk_a = float(loss_a.mean())
+    risk_b = float(loss_b.mean())
+    accept_a = float(loss_a[acc_a].mean()) if acc_a.any() else float("nan")
+    accept_b = float(loss_b[acc_b].mean()) if acc_b.any() else float("nan")
+    reject_a = float(loss_a[~acc_a].mean()) if (~acc_a).any() else float("nan")
+    reject_b = float(loss_b[~acc_b].mean()) if (~acc_b).any() else float("nan")
+    cov_mean = 0.5 * (cov_a + cov_b)
+    accept_delta = float(accept_a - accept_b)
+    reject_delta = float(reject_a - reject_b)
+    return {
+        "coverage_target": float(coverage),
+        "coverage_a": cov_a,
+        "coverage_b": cov_b,
+        "label_a": str(label_a),
+        "label_b": str(label_b),
+        "scale": str(scale),
+        "policy": str(policy),
+        "risk_a": risk_a,
+        "risk_b": risk_b,
+        "delta_a_minus_b": float(diff.mean()),
+        "delta_ci95": [float(ci[0]), float(ci[1])],
+        "delta_half_width_ci95": float((ci[1] - ci[0]) / 2.0),
+        "ci_excludes_zero": bool(float(ci[1]) < 0.0 or float(ci[0]) > 0.0),
+        "accept_risk_a": accept_a,
+        "accept_risk_b": accept_b,
+        "accept_delta_a_minus_b": accept_delta,
+        "reject_risk_a": reject_a,
+        "reject_risk_b": reject_b,
+        "reject_delta_a_minus_b": reject_delta,
+        "accept_contribution": float(cov_mean * accept_delta),
+        "reject_contribution": float((1.0 - cov_mean) * reject_delta),
+        "n_boot": int(n_boot),
+        "seed": int(seed),
+        "n_blocks": int(n_blk),
+    }
+
+
+def wasted_abstention_report(
+    df: pd.DataFrame,
+    accept: np.ndarray,
+) -> Dict[str, Any]:
+    """Rows with a_twin == static P1 cannot change action under F2 rejection."""
+    p1 = FB.path_static_shortest()
+    free = df["a_twin"].to_numpy(np.int64) == int(p1)
+    reject = ~np.asarray(accept, dtype=bool)
+    wasted = reject & free
+    actionable_reject = reject & (~free)
+    return {
+        "static_path": int(p1),
+        "p_a_twin_eq_p1": float(free.mean()),
+        "coverage": float((~reject).mean()),
+        "reject_share": float(reject.mean()),
+        "wasted_reject_share_total_rows": float(wasted.mean()),
+        "wasted_reject_given_reject": float(wasted.mean() / max(float(reject.mean()), 1e-12)),
+        "actionable_reject_share_total_rows": float(actionable_reject.mean()),
+        "actionable_reject_given_reject": float(actionable_reject.mean() / max(float(reject.mean()), 1e-12)),
+    }
+
+
 def _row_at_target(sweep: pd.DataFrame, target: float) -> Dict[str, Any]:
     delta = (sweep["coverage_target"].astype(float) - float(target)).abs()
     row = sweep.loc[delta.idxmin()].to_dict()
@@ -397,6 +492,84 @@ def run_report(
     }
 
 
+def run_c3_b2_audit(
+    df: pd.DataFrame,
+    config: str = "C3",
+    policy: str = "static",
+    coverages: Sequence[float] = (0.70, 0.78, 0.85),
+    scales: Sequence[str] = FB.SCALES,
+    n_boot: int = 2000,
+    seed: int = 23330,
+) -> Dict[str, Any]:
+    """Audit the missing C3-vs-B2 comparison and wasted abstention."""
+    _calib, test, qhat_rows, _fit, _q_by_age, _qbar = TF.fit_c3_inputs(df, config=config)
+    score_c3 = score_C3(test, qhat_rows)
+    score_b2 = score_B2_constant_gap(test)
+    rows = []
+    for coverage in coverages:
+        for scale_idx, scale in enumerate(scales):
+            rows.append(
+                paired_ranking_delta_at_coverage(
+                    test,
+                    score_c3,
+                    score_b2,
+                    float(coverage),
+                    label_a="C3_conformal",
+                    label_b="B2_constant_gap",
+                    policy=policy,
+                    scale=scale,
+                    n_boot=int(n_boot),
+                    seed=int(seed) + int(1000 * float(coverage)) + scale_idx,
+                )
+            )
+    accept_c3_078 = _accept_at_coverage(score_c3, 0.78)
+    anchor_err = float(FB.loss_of(test, test["a_twin"].to_numpy(np.int64), "err").mean())
+    b6sys_078 = paired_ranking_delta_at_coverage(
+        test,
+        score_c3,
+        score_B6sys_system_oracle(test, policy=policy, scale="err"),
+        0.78,
+        label_a="C3_conformal",
+        label_b="B6_sys_oracle",
+        policy=policy,
+        scale="err",
+        n_boot=1,
+        seed=int(seed),
+    )
+    row_078_err = next(
+        r for r in rows if abs(float(r["coverage_target"]) - 0.78) < 1e-12 and r["scale"] == "err"
+    )
+    gap_closed_by_c3 = (anchor_err - float(row_078_err["risk_a"])) / max(
+        anchor_err - b6sys_078["risk_b"], 1e-12
+    )
+    return {
+        "cell": "poisson@0.925",
+        "config": config,
+        "policy": policy,
+        "n_test": int(len(test)),
+        "coverages": [float(x) for x in coverages],
+        "scales": [str(x) for x in scales],
+        "c3_minus_b2_paired_block_bootstrap": rows,
+        "wasted_abstention_C3_at_078": wasted_abstention_report(test, accept_c3_078),
+        "gap_closed_by_C3_vs_B6sys_at_078": float(gap_closed_by_c3),
+        "n_boot": int(n_boot),
+        "seed": int(seed),
+    }
+
+
+def write_json_report(report: Dict[str, Any], out_json: str) -> None:
+    os.makedirs(os.path.dirname(out_json), exist_ok=True)
+    payload = dict(report)
+    payload["provenance"] = {
+        "created_utc": datetime.now(timezone.utc).isoformat(),
+        "git_hash": _git("git", "rev-parse", "HEAD"),
+        "git_dirty_before_write": bool(_git("git", "status", "--porcelain")),
+    }
+    with open(out_json, "w", encoding="utf-8") as f:
+        json.dump(_json_clean(payload), f, indent=2, sort_keys=True)
+        f.write("\n")
+
+
 def write_report(report: Dict[str, Any], out_json: str, out_csv: str) -> None:
     os.makedirs(os.path.dirname(out_json), exist_ok=True)
     os.makedirs(os.path.dirname(out_csv), exist_ok=True)
@@ -458,6 +631,39 @@ def _print_summary(report: Dict[str, Any], out_json: str, out_csv: str) -> None:
     print("wrote_csv=%s" % out_csv)
 
 
+def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
+    print("=== Phase 23.3 C3-vs-B2 paired bootstrap audit ===")
+    for row in report["c3_minus_b2_paired_block_bootstrap"]:
+        if abs(float(row["coverage_target"]) - 0.78) >= 1e-12:
+            continue
+        print(
+            "{scale}: C3-B2={delta_a_minus_b:+.9f} "
+            "CI95=[{lo:+.9f}, {hi:+.9f}] excludes_zero={excludes}".format(
+                scale=row["scale"],
+                delta_a_minus_b=row["delta_a_minus_b"],
+                lo=row["delta_ci95"][0],
+                hi=row["delta_ci95"][1],
+                excludes=row["ci_excludes_zero"],
+            )
+        )
+    print()
+    print("=== Wasted abstention, C3 at coverage 0.78 ===")
+    wasted = report["wasted_abstention_C3_at_078"]
+    for key in (
+        "p_a_twin_eq_p1",
+        "coverage",
+        "reject_share",
+        "wasted_reject_share_total_rows",
+        "wasted_reject_given_reject",
+        "actionable_reject_share_total_rows",
+        "actionable_reject_given_reject",
+    ):
+        print("%s=%.9f" % (key, wasted[key]))
+    print()
+    print("gap_closed_by_C3_vs_B6sys_at_078=%.9f" % report["gap_closed_by_C3_vs_B6sys_at_078"])
+    print("wrote_json=%s" % out_json)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--artifact", default=DEFAULT_ARTIFACT)
@@ -466,9 +672,32 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--target-coverage", type=float, default=0.78)
     parser.add_argument("--out-json", default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-csv", default=DEFAULT_OUT_CSV)
+    parser.add_argument("--audit-c3-b2", action="store_true")
+    parser.add_argument("--out-audit-json", default=DEFAULT_AUDIT_JSON)
+    parser.add_argument("--n-boot", type=int, default=2000)
+    parser.add_argument("--seed", type=int, default=23330)
     args = parser.parse_args(argv)
 
     df = pd.read_parquet(args.artifact)
+    if args.audit_c3_b2:
+        report = run_c3_b2_audit(
+            df,
+            config=args.config,
+            policy=args.policy,
+            n_boot=int(args.n_boot),
+            seed=int(args.seed),
+        )
+        report["input_artifact"] = {
+            "path": args.artifact,
+            "sha256": _sha256(args.artifact),
+            "rows": int(len(df)),
+            "columns": int(len(df.columns)),
+            "has_y_hat_a1": bool("y_hat_a1" in df.columns),
+        }
+        write_json_report(report, args.out_audit_json)
+        _print_c3_b2_audit_summary(report, args.out_audit_json)
+        return 0
+
     report = run_report(
         df,
         config=args.config,

@@ -60,3 +60,22 @@ def test_G23_12c_B6sys_matches_closed_form(df: pd.DataFrame) -> None:
     for (coverage_expected, err_expected), (_, row) in zip(closed["knees"], sweep.iterrows()):
         assert float(row["coverage"]) == pytest.approx(coverage_expected, abs=1e-6)
         assert float(row["err_system"]) == pytest.approx(err_expected, abs=1e-9)
+
+
+def test_paired_ranking_delta_reports_block_ci(df: pd.DataFrame) -> None:
+    """Generic paired ranking CI returns the fields used by the C3-vs-B2 audit."""
+    out = BL.paired_ranking_delta_at_coverage(
+        df,
+        BL.score_B2_constant_gap(df),
+        BL.score_B3_aoi(df),
+        0.50,
+        "B2",
+        "B3",
+        scale="err",
+        n_boot=5,
+    )
+    assert out["coverage_a"] == pytest.approx(0.50, abs=1e-5)
+    assert out["coverage_b"] == pytest.approx(0.50, abs=1e-5)
+    assert len(out["delta_ci95"]) == 2
+    assert out["n_boot"] == 5
+    assert out["n_blocks"] == df["block_id"].nunique()
