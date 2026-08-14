@@ -1,4 +1,21 @@
 {
+ "aurc_system": {
+  "additive": {
+   "err": 0.25434582372280096,
+   "regret": 2.288677192629946,
+   "sla": 0.16572429492103455
+  },
+  "diff_mul_minus_add": {
+   "err": -0.0018959511932986617,
+   "regret": -0.03673544625429015,
+   "sla": -0.0014195496523705387
+  },
+  "multiplicative": {
+   "err": 0.2524498725295023,
+   "regret": 2.251941746375656,
+   "sla": 0.164304745268664
+  }
+ },
  "cell": "poisson@0.925",
  "compare_families_at_coverage": [
   {
@@ -204,7 +221,10 @@
  "gates": {
   "G23_6b_regret_equals_additive": true,
   "G23_7_additive_degenerates_at_delta_1.5": true,
+  "G23_7b_local_degeneracy_cascade_reported": true,
   "G23_8_full_coverage_is_anchor": true,
+  "G23_9_scale_agreement_self_check": true,
+  "G23_9b_pareto_front_uses_combined_sweep": true,
   "V23_4_additive_delta0_equals_multiplicative_kappa1": true
  },
  "kappa_grid": [
@@ -228,6 +248,43 @@
   6.0,
   8.0
  ],
+ "local_degeneracy_additive": {
+  "definition": "age bin is locally degenerate once q_hat_slot1(z) - epsilon <= 0",
+  "degenerate_bin_count_monotone": true,
+  "first_local_degeneracy_coverage": 0.5767420649762884,
+  "first_local_degeneracy_epsilon": 15.078838959503173,
+  "operating_coverage": 0.7879300033802231,
+  "operating_degenerate_age_bins": 2,
+  "operating_epsilon": 21.14238882667379,
+  "operating_minus_first_coverage": 0.21118793840393468,
+  "operating_minus_first_epsilon": 6.063549867170618,
+  "thresholds_by_onset": [
+   {
+    "coverage_at_epsilon_star": 0.5767420649762884,
+    "epsilon_star": 15.078838959503173,
+    "n_degenerate_age_bins": 1,
+    "z_bin": 0
+   },
+   {
+    "coverage_at_epsilon_star": 0.7655985295029472,
+    "epsilon_star": 20.370154431152343,
+    "n_degenerate_age_bins": 2,
+    "z_bin": 1
+   },
+   {
+    "coverage_at_epsilon_star": 0.9087499774985149,
+    "epsilon_star": 25.21243578262329,
+    "n_degenerate_age_bins": 3,
+    "z_bin": 2
+   },
+   {
+    "coverage_at_epsilon_star": 1.0,
+    "epsilon_star": 31.746063507634886,
+    "n_degenerate_age_bins": 4,
+    "z_bin": 3
+   }
+  ]
+ },
  "paired_delta_at_coverage_0.78": {
   "accept_intersection": 0.7231177257699009,
   "accept_symmetric_difference": 0.11938387933603618,
@@ -248,6 +305,25 @@
   "policy": "static",
   "scale": "err",
   "seed": 23202
+ },
+ "pareto_audit": {
+  "candidate_family_counts": {
+   "additive": 14,
+   "multiplicative": 19
+  },
+  "families_considered": [
+   "additive",
+   "multiplicative"
+  ],
+  "families_surviving": [
+   "multiplicative"
+  ],
+  "n_candidates_considered": 33,
+  "n_pareto_survivors": 2,
+  "single_family_complete_dominance_on_grid": true,
+  "survivor_family_counts": {
+   "multiplicative": 2
+  }
  },
  "pareto_front": [
   {
@@ -300,10 +376,10 @@
  "policy": "static",
  "provenance": {
   "git_dirty_before_write": false,
-  "git_hash": "c21a2a6f192ea98780716bd74799b439bdfe793c",
+  "git_hash": "e7dd1a02231e5d05cc2c85d912ce6b2574bb3f7a",
   "input": "results/phase-22/calib_set_v3.parquet",
   "script": "cert/threshold_families.py",
-  "timestamp_utc": "2026-08-14T09:32:20.821859+00:00"
+  "timestamp_utc": "2026-08-14T10:15:14.906747+00:00"
  },
  "qbar_slot1_age_bins": 23.101873170228423,
  "qhat_slot1_by_age_bin": {
@@ -311,6 +387,31 @@
   "1": 20.370154431152343,
   "2": 25.21243578262329,
   "3": 31.746063507634886
+ },
+ "reject_risk_summary": {
+  "multiplicative_err": {
+   "global_min": {
+    "coverage": 0.0,
+    "err_reject": 0.34027645824624425,
+    "err_system": 0.34027645824624425,
+    "family": "multiplicative",
+    "param": 6.0
+   },
+   "operational_param_range": [
+    0.05,
+    0.5
+   ],
+   "operational_range_min": {
+    "coverage": 0.49112641434334664,
+    "err_reject": 0.39100699630532193,
+    "err_system": 0.23868575325971514,
+    "family": "multiplicative",
+    "param": 0.5
+   },
+   "operational_range_reject_risk_max": 0.41324958058600914,
+   "operational_range_reject_risk_min": 0.39100699630532193,
+   "scale": "err"
+  }
  },
  "scale_agreement": {
   "additive": {
@@ -330,6 +431,91 @@
    "spearman_err_regret": 1.0,
    "spearman_err_sla": 0.9788732394366197,
    "spearman_regret_sla": 0.9788732394366197
+  }
+ },
+ "scale_agreement_self_check": {
+  "additive": {
+   "max_abs_diff_vs_pandas_rank_check": 0.0,
+   "pairs": {
+    "err_regret": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": false,
+     "spearman": 0.9955654101995566,
+     "spearman_pandas_rank_check": 0.9955654101995566
+    },
+    "err_sla": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": false,
+     "spearman": 0.9955654101995566,
+     "spearman_pandas_rank_check": 0.9955654101995566
+    },
+    "regret_sla": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": false,
+     "spearman": 0.9866962305986696,
+     "spearman_pandas_rank_check": 0.9866962305986696
+    }
+   },
+   "pass": true,
+   "rank_identity_implications": []
+  },
+  "combined": {
+   "max_abs_diff_vs_pandas_rank_check": 0.0,
+   "pairs": {
+    "err_regret": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": false,
+     "spearman": 0.9983181971072991,
+     "spearman_pandas_rank_check": 0.9983181971072991
+    },
+    "err_sla": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": false,
+     "spearman": 0.9905819038008745,
+     "spearman_pandas_rank_check": 0.9905819038008745
+    },
+    "regret_sla": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": false,
+     "spearman": 0.9858728557013118,
+     "spearman_pandas_rank_check": 0.9858728557013118
+    }
+   },
+   "pass": true,
+   "rank_identity_implications": []
+  },
+  "multiplicative": {
+   "max_abs_diff_vs_pandas_rank_check": 0.0,
+   "pairs": {
+    "err_regret": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": true,
+     "spearman": 1.0,
+     "spearman_pandas_rank_check": 1.0
+    },
+    "err_sla": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": false,
+     "spearman": 0.9788732394366197,
+     "spearman_pandas_rank_check": 0.9788732394366197
+    },
+    "regret_sla": {
+     "abs_diff_vs_check": 0.0,
+     "rank_order_identical": false,
+     "spearman": 0.9788732394366197,
+     "spearman_pandas_rank_check": 0.9788732394366197
+    }
+   },
+   "pass": true,
+   "rank_identity_implications": [
+    {
+     "pass": true,
+     "rank_identical_pair": "err_regret",
+     "rho_err_sla": 0.9788732394366197,
+     "rho_regret_sla": 0.9788732394366197,
+     "third_scale": "sla"
+    }
+   ]
   }
  },
  "slot_diagnostics_at_coverage": [

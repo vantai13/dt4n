@@ -20,8 +20,8 @@ Lenh:
 Targeted tests:
 
 ```text
-test/test_phase23_fallback.py test/test_phase23_thresholds.py
-21 passed in 9.78s
+test/test_phase23_thresholds.py
+10 passed in 10.13s
 ```
 
 Targeted Phase 22/23 regression:
@@ -30,13 +30,13 @@ Targeted Phase 22/23 regression:
 test/test_phase23_fallback.py test/test_phase23_thresholds.py
 test/test_phase23_fallback_audit.py test/test_phase23_prereg.py
 test/test_phase22_matrix.py
-40 passed in 108.23s (0:01:48)
+44 passed in 110.35s (0:01:50)
 ```
 
 Full suite:
 
 ```text
-765 passed, 1 skipped, 2 warnings in 293.75s (0:04:53)
+769 passed, 1 skipped, 2 warnings in 293.76s (0:04:53)
 ```
 
 ## 1. Measurement device
@@ -58,7 +58,10 @@ V23-4 va G23-6b deu xanh:
 | V23-4 `CONG(delta=0) == NHAN(kappa=1)` bitwise | PASS |
 | G23-6b `CONG == REGRET` bitwise tren luoi epsilon | PASS |
 | G23-7 CONG thoai hoa tren interval | PASS |
+| G23-7b CONG thoai hoa cuc bo theo age bin | PASS |
 | G23-8 full coverage quy ve neo twin | PASS |
+| G23-9 Spearman self-check bang rank doc lap | PASS |
+| G23-9b Pareto tinh tren sweep gop 33 ung vien | PASS |
 
 ## 2. Shape of age conditioning
 
@@ -88,9 +91,24 @@ CONG khong phang o coverage 0.30 nhu du doan. Ly do thuc nghiem: tai
 | 0.50 | 13.333832 | 10.551382 | 2.105339 | diagnostic |
 | 0.78 | 21.142389 | inf | 2.105339 | T6 direction HIT, range MISS |
 
-`r_CONG = inf` tai coverage cao nghia la nguong bin tre nhat da cham san
-khong duong. Ho CONG khong chi "manh hon"; no bat dau mat hinh dang co dieu
-kien o dau tre cua dai tuoi.
+`r_CONG = inf` tai coverage cao khong phai loi tinh. No la dau vet cua thoai
+hoa cuc bo: `epsilon` da vuot nguong cua cac bin tuoi tre, nen mot so bin
+khong con kha nang loc hang.
+
+Chuoi thoai hoa cuc bo cua ho CONG:
+
+| onset z_bin | epsilon* | coverage tai epsilon* | so bin da thoai hoa |
+|---:|---:|---:|---:|
+| 0 | 15.078839 | 0.576742 | 1 |
+| 1 | 20.370154 | 0.765599 | 2 |
+| 2 | 25.212436 | 0.908750 | 3 |
+| 3 | 31.746064 | 1.000000 | 4 |
+
+Diem van hanh `coverage ~= 0.78` cua ho CONG dung `epsilon = 21.142389`, lon
+hon onset dau tien `6.063550` va nam sau onset thu hai. Noi cach khac, tai
+diem van hanh, hai bin tuoi tre nhat da co nguong khong duong theo phep do
+gom-theo-tuoi slot 1. Day la co che manh hon ket qua G23-7: G23-7 chi bat
+thoai hoa toan cuc, con G23-7b cho thay thoai hoa bat dau som hon nhieu.
 
 ## 3. Matched-coverage comparison
 
@@ -125,7 +143,9 @@ nguoc lai: NHAN van thang ro o diem van hanh Phase 23.
 ## 4. Slot diagnostic
 
 T9 du doan slot hep nhat se chi phoi CONG nhieu hon NHAN. Thuc te slot 1 chi
-phoi gan nhu tat ca quyet dinh reject o ca hai ho:
+phoi gan nhu tat ca quyet dinh reject o ca hai ho. Bang duoi dung diagnostic
+`slot1_decides_share`; artifact cung luu `slot1_rejects_given_reject`, cho
+ket luan y het nhung gan truc tiep voi reject rows:
 
 | coverage | slot1 share NHAN | slot1 share CONG | CONG-NHAN |
 |---:|---:|---:|---:|
@@ -134,7 +154,12 @@ phoi gan nhu tat ca quyet dinh reject o ca hai ho:
 | 0.78 | 0.999960 | 0.999232 | -0.000728 |
 
 T9 FAIL. Co che GO-2 "slot hep chi phoi" dung theo nghia rong, nhung no chi
-phoi ca hai ho, khong phai rieng CONG.
+phoi ca hai ho, khong phai rieng CONG. Tai coverage 0.78, ty le slot reject
+cua NHAN la `[0.222271, 0.006822, 0.000000]`; cua CONG la
+`[0.211302, 0.016235, 0.000102]`. Slot 3 gan nhu khong bao gio la rang buoc
+chat. Dieu nay khong rut lai gia tri cua K=4, vi hieu chinh dong thoi van can
+cho claim formal; nhung loi ich van hanh trong artifact nay tap trung gan het
+vao cap slot 1 `{a1, a2}`.
 
 ## 5. G23-9 and Pareto
 
@@ -150,24 +175,72 @@ Ba thang dong bien manh. Vi vay Lesson 23.4 co the ve mot duong
 risk-coverage chinh, nhung van nen giu mat Pareto nho vi argmin dia phuong
 khong trung tuyet doi.
 
-Mat Pareto co 2 diem, deu thuoc ho NHAN:
+Nghi ngo "Spearman co bug do hai cap trung 16 chu so" duoc kiem bang
+`scale_agreement_self_check`: tinh lai Spearman bang `pandas.rank` doc lap cho
+tat ca cac cap, `max_abs_diff_vs_pandas_rank_check = 0.0` o ca ba sweep.
+Voi NHAN, `rho(err,regret)=1.0` vi hai thang co cung thu hang tren luoi; he qua
+bat buoc `rho(err,sla)=rho(regret,sla)` duoc thoa. Voi CONG, hai gia tri
+`0.995565` trung nhau la trung ve rank geometry, khong phai ghi de sai khoa.
+
+Mat Pareto duoc tinh tren sweep gop, khong chi tren NHAN:
+
+```text
+n_candidates_considered = 33 = 19 NHAN + 14 CONG
+n_pareto_survivors = 2
+families_surviving = {NHAN}
+```
+
+Vi da xet du ca 14 diem CONG ma khong diem nao song sot, ket qua manh hon
+"NHAN thang tai coverage 0.78": tren luoi Lesson 23.2, NHAN troi hoan toan
+CONG theo mat Pareto ba thang.
+
+Hai diem song sot:
 
 | family | param | coverage | err | regret | sla |
 |---|---:|---:|---:|---:|---:|
 | NHAN | 0.25 | 0.737973 | 0.210270 | 1.598988 | 0.145156 |
 | NHAN | 0.20 | 0.793460 | 0.209172 | 1.567691 | 0.145638 |
 
-## 6. Prediction ledger
+AURC he thong, do tren toan bang xep hang:
+
+| family | AURC err | AURC regret | AURC sla |
+|---|---:|---:|---:|
+| NHAN | 0.252450 | 2.251942 | 0.164305 |
+| CONG | 0.254346 | 2.288677 | 0.165724 |
+| NHAN-CONG | -0.001896 | -0.036735 | -0.001420 |
+
+NHAN co AURC nho hon tren ca ba thang, nen ket luan khong chi dua vao ba lat
+cat coverage.
+
+## 6. Reject-branch diagnostic
+
+`err_reject(F2)` cua NHAN xac nhan do phang cua nhanh fallback, nhung khong
+dung neu goi `kappa=0.25` la cuc tieu toan luoi. Tren toan luoi, min nam o bien
+reject-gan-het:
+
+```text
+global min err_reject = 0.340276 tai kappa=6.0/8.0, coverage=0
+operational band kappa in [0.05, 0.50]:
+  min = 0.391007 tai kappa=0.50
+  max = 0.413250
+```
+
+Trong vung van hanh gan `0.20..0.35`, `kappa=0.25` van la diem tot ve
+`err_reject` cuc bo, nhung `err_system` lai tot hon tai `kappa=0.20`. Day la
+vi toi uu nhanh reject khac voi toi uu toan he: khi coverage doi, trong so cua
+nhanh accept/reject cung doi.
+
+## 7. Prediction ledger
 
 | ID | Noi dung | Do duoc | KQ |
 |---|---|---|---|
-| T5 | `r_CONG(0.30) < r_NHAN`, range [1.2,1.8] | 3.108 > 2.105 | FAIL |
-| T6 | `r_CONG(0.78) > r_NHAN`, range [2.5,6.0] | inf > 2.105 | HIT direction, MISS range |
+| T5 | `r_CONG(0.30) < r_NHAN`, range [1.2,1.8] | 3.108 > 2.105 | FAIL; co che tang theo coverage dung |
+| T6 | `r_CONG(0.78) > r_NHAN`, range [2.5,6.0] | inf > 2.105 | HIT direction; thoai hoa cuc bo |
 | T7 | `err_system(NHAN) < err_system(CONG)` at 0.30 | +0.001692 | FAIL |
 | T8 | two families indistinguishable at 0.78 | CI95 [-0.007578,-0.001432] | FAIL, useful |
-| T9 | slot1 CONG share exceeds NHAN by >0.05 | -0.000728 at 0.78 | FAIL |
+| T9 | slot1 CONG share exceeds NHAN by >0.05 | -0.000728 at 0.78 | FAIL; slot 1 chi phoi ca hai ho |
 
-## 7. Conclusion
+## 8. Conclusion
 
 Lesson 23.2 khong ung ho cau chuyen "CONG co the thang o coverage cao vi dieu
 kien theo tuoi manh hon". CONG that su tro nen manh hon, nhung manh qua nhanh:
@@ -180,3 +253,5 @@ Ket luan van hanh sau Lesson 23.2:
    tot hon tren artifact nay.
 3. G23-9 khong ep chuyen sang mot mat Pareto lon; chi can bao cao hai diem
    Pareto NHAN `kappa=0.20` va `0.25` khi noi ve argmin.
+4. Co che thua cua CONG la thoai hoa cuc bo cua ho dich tren nguong duong:
+   tai diem van hanh, cac bin tuoi tre da mat kha nang loc.
