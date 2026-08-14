@@ -359,6 +359,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--calib", required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--cell-label", default="poisson@0.925")
     parser.add_argument("--config", default="C3")
     parser.add_argument("--kappa", type=float, default=0.5)
     parser.add_argument("--alpha", type=float)
@@ -374,7 +375,7 @@ def main() -> None:
         multiplicity=str(args.multiplicity),
     )
     out = {
-        "cell": "poisson@0.925" if "poisson_0.925" in os.path.basename(args.calib) else "unknown",
+        "cell": str(args.cell_label),
         **report,
         "provenance": {
             "script": "cert/fallback.py",
