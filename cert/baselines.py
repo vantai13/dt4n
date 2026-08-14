@@ -71,12 +71,17 @@ def _json_clean(value: Any) -> Any:
 def _accept_at_coverage(score: np.ndarray, coverage: float) -> np.ndarray:
     s = np.asarray(score, dtype=np.float64)
     c = float(np.clip(coverage, 0.0, 1.0))
+    n = len(s)
     if c <= 0.0:
-        return np.zeros(len(s), dtype=bool)
+        return np.zeros(n, dtype=bool)
     if c >= 1.0:
-        return np.ones(len(s), dtype=bool)
-    threshold = float(np.quantile(s, 1.0 - c))
-    return s >= threshold
+        return np.ones(n, dtype=bool)
+    k = int(np.floor(c * n + 0.5))
+    k = max(0, min(n, k))
+    order = np.argsort(-s, kind="mergesort")
+    accept = np.zeros(n, dtype=bool)
+    accept[order[:k]] = True
+    return accept
 
 
 def score_B1_random(df: pd.DataFrame, seed: int = 23301) -> np.ndarray:
