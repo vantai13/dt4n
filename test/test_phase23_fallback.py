@@ -123,3 +123,28 @@ def test_G23_5d_wait_availability_reported(df: pd.DataFrame, accept: np.ndarray)
     res = FB.apply_fallback(df, accept, "wait")
     share = res["n_no_refresh_in_block"] / max(res["n_reject"], 1)
     assert 0.0 <= share < 0.20
+
+
+def test_G23_14b_paired_delta_zeroes_accept_branch() -> None:
+    if not os.path.exists(ARTIFACT):
+        pytest.skip("thieu artifact Phase 23 fallback: %s" % ARTIFACT)
+    raw = pd.read_parquet(ARTIFACT)
+    test, acc, _fit = FB.fit_accept_mask(raw, config="C3", kappa=0.25)
+
+    out = FB.paired_block_bootstrap_delta(test, acc, "static", "err", n_boot=20, seed=7)
+    dec = FB.risk_decomposition(test, acc, FB.apply_fallback(test, acc, "static"))
+    assert out["nonzero_diff_on_accept"] == 0
+    assert out["delta_point"] == pytest.approx(dec["err_system"] - out["risk_anchor"])
+    assert out["n_blocks"] == test["block_id"].nunique()
+
+
+def test_G23_14c_matched_random_control_reports_value_of_information() -> None:
+    if not os.path.exists(ARTIFACT):
+        pytest.skip("thieu artifact Phase 23 fallback: %s" % ARTIFACT)
+    raw = pd.read_parquet(ARTIFACT)
+    test, acc, _fit = FB.fit_accept_mask(raw, config="C3", kappa=0.25)
+
+    out = FB.matched_coverage_control(test, acc, "static", "err", n_rep=20, seed=8)
+    assert out["coverage"] == pytest.approx(float(acc.mean()))
+    assert out["risk_random_mean"] > out["risk_anchor"]
+    assert out["value_of_information"] > 0.0

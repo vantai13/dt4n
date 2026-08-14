@@ -331,6 +331,110 @@ def risk_decomposition(
     return out
 
 
+def paired_block_bootstrap_delta(
+    df: pd.DataFrame,
+    accept: np.ndarray,
+    policy: str,
+    scale: str = "err",
+    n_boot: int = 2000,
+    seed: int = 23101,
+) -> Dict[str, Any]:
+    """Paired block-bootstrap CI for fallback system risk minus twin anchor."""
+    acc = np.asarray(accept, bool)
+    a_fb = apply_fallback(df, acc, policy)["a_chosen"]
+    a_tw = df["a_twin"].to_numpy(np.int64)
+
+    loss_fb = loss_of(df, a_fb, scale)
+    loss_tw = loss_of(df, a_tw, scale)
+    diff = loss_fb - loss_tw
+
+    blocks = df["block_id"].to_numpy()
+    uniq, inv = np.unique(blocks, return_inverse=True)
+    n_blk = len(uniq)
+    sum_d = np.bincount(inv, weights=diff, minlength=n_blk)
+    cnt = np.bincount(inv, minlength=n_blk).astype(np.float64)
+
+    rng = np.random.default_rng(int(seed))
+    draws = np.empty(int(n_boot), dtype=np.float64)
+    for b in range(int(n_boot)):
+        pick = rng.integers(0, n_blk, size=n_blk)
+        draws[b] = sum_d[pick].sum() / cnt[pick].sum()
+
+    point = float(diff.mean())
+    ci = np.quantile(draws, [0.025, 0.975])
+    return {
+        "scale": scale,
+        "policy": policy,
+        "delta_point": point,
+        "delta_ci95": [float(ci[0]), float(ci[1])],
+        "delta_se": float(draws.std(ddof=1)),
+        "risk_fallback": float(loss_fb.mean()),
+        "risk_anchor": float(loss_tw.mean()),
+        "n_boot": int(n_boot),
+        "seed": int(seed),
+        "n_blocks": int(n_blk),
+        "n_rows": int(len(df)),
+        "n_reject": int((~acc).sum()),
+        "p_reject": float((~acc).mean()),
+        "nonzero_diff_on_accept": int((diff[acc] != 0).sum()),
+        "share_rows_contributing": float((diff != 0).mean()),
+        "ci_excludes_zero": bool(ci[0] > 0.0 or ci[1] < 0.0),
+        "ci_strictly_improves_anchor": bool(ci[1] < 0.0),
+    }
+
+
+def matched_coverage_control(
+    df: pd.DataFrame,
+    accept_cert: np.ndarray,
+    policy: str = "static",
+    scale: str = "err",
+    seed: int = 23102,
+    n_rep: int = 200,
+) -> Dict[str, Any]:
+    """Random-reject control at the same coverage as the certificate."""
+    acc_cert = np.asarray(accept_cert, bool)
+    p_acc = float(acc_cert.mean())
+    rng = np.random.default_rng(int(seed))
+
+    a_cert = apply_fallback(df, acc_cert, policy)["a_chosen"]
+    a_twin = df["a_twin"].to_numpy(np.int64)
+    loss_cert = loss_of(df, a_cert, scale)
+    loss_twin = loss_of(df, a_twin, scale)
+    r_cert = float(loss_cert.mean())
+    r_anchor = float(loss_twin.mean())
+
+    reps = np.empty(int(n_rep), dtype=np.float64)
+    if policy == "static":
+        lm = loss_matrix(df, scale)
+        loss_static = lm[:, path_static_shortest()]
+        for i in range(int(n_rep)):
+            acc_rnd = rng.random(len(df)) < p_acc
+            reps[i] = float(np.where(acc_rnd, loss_twin, loss_static).mean())
+    else:
+        for i in range(int(n_rep)):
+            acc_rnd = rng.random(len(df)) < p_acc
+            a_rnd = apply_fallback(df, acc_rnd, policy)["a_chosen"]
+            reps[i] = float(loss_of(df, a_rnd, scale).mean())
+
+    ci = np.quantile(reps, [0.025, 0.975])
+    return {
+        "scale": scale,
+        "policy": policy,
+        "coverage": p_acc,
+        "risk_anchor": r_anchor,
+        "risk_cert": r_cert,
+        "risk_random_mean": float(reps.mean()),
+        "risk_random_ci95": [float(ci[0]), float(ci[1])],
+        "risk_random_se": float(reps.std(ddof=1)),
+        "value_of_information": float(reps.mean() - r_cert),
+        "n_rep": int(n_rep),
+        "seed": int(seed),
+        "cert_better_than_random_ci95": bool(r_cert < ci[0]),
+        "random_worse_than_anchor": bool(reps.mean() > r_anchor),
+        "random_ci_low_above_anchor": bool(ci[0] > r_anchor),
+    }
+
+
 def fit_accept_mask(
     df: pd.DataFrame,
     config: str = "C3",
