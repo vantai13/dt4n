@@ -24,6 +24,21 @@ test/test_phase23_fallback.py test/test_phase23_thresholds.py
 21 passed in 9.78s
 ```
 
+Targeted Phase 22/23 regression:
+
+```text
+test/test_phase23_fallback.py test/test_phase23_thresholds.py
+test/test_phase23_fallback_audit.py test/test_phase23_prereg.py
+test/test_phase22_matrix.py
+40 passed in 108.23s (0:01:48)
+```
+
+Full suite:
+
+```text
+765 passed, 1 skipped, 2 warnings in 293.75s (0:04:53)
+```
+
 ## 1. Measurement device
 
 Lesson 23.2 viet lai moi ho nguong thanh mot bang xep hang:
