@@ -455,6 +455,60 @@ def oracle_switch_bound(df: pd.DataFrame, scale: str = "err") -> Dict[str, Any]:
     }
 
 
+def truth_persistence_at_lag(
+    df: pd.DataFrame,
+    lags_ms: Sequence[float] = (50, 100, 150, 200, 250, 294, 300, 400, 500),
+) -> Dict[str, Any]:
+    """Autocorrelation of the true best path within each block."""
+    a_star = df["a_star"].to_numpy(np.int64)
+    blk = df["block_id"].to_numpy()
+    probs = np.bincount(a_star, minlength=K_ACTIONS).astype(np.float64)
+    probs /= probs.sum()
+    p_inf = float(np.square(probs).sum())
+
+    points = []
+    out: Dict[str, Any] = {
+        "p_infinity": p_inf,
+        "a_star_probs": [float(x) for x in probs],
+    }
+    for lag_ms in lags_ms:
+        steps = int(round(float(lag_ms) / (DT * 1e3)))
+        if steps <= 0 or steps >= len(df):
+            continue
+        same_blk = blk[steps:] == blk[:-steps]
+        if not same_blk.any():
+            continue
+        agree = float((a_star[steps:][same_blk] == a_star[:-steps][same_blk]).mean())
+        effective_ms = float(steps * DT * 1e3)
+        key = "agree_%gms" % float(lag_ms)
+        row = {
+            "requested_lag_ms": float(lag_ms),
+            "effective_lag_ms": effective_ms,
+            "steps": int(steps),
+            "agree": agree,
+            "n_pairs": int(same_blk.sum()),
+        }
+        out[key] = agree
+        points.append(row)
+
+    fit = []
+    for row in points:
+        ratio = (row["agree"] - p_inf) / max(1.0 - p_inf, 1e-12)
+        if 0.0 < ratio < 1.0:
+            fit.append((row["effective_lag_ms"] / 1e3, np.log(ratio)))
+    if len(fit) >= 2:
+        x = np.asarray([p[0] for p in fit], dtype=np.float64)
+        y = np.asarray([p[1] for p in fit], dtype=np.float64)
+        slope, intercept = np.polyfit(x, y, 1)
+        out["tau_a_s_exp_fit"] = float(-1.0 / slope) if slope < 0.0 else float("nan")
+        out["exp_fit_intercept"] = float(intercept)
+    else:
+        out["tau_a_s_exp_fit"] = float("nan")
+        out["exp_fit_intercept"] = float("nan")
+    out["points"] = points
+    return out
+
+
 def fit_accept_mask(
     df: pd.DataFrame,
     config: str = "C3",
