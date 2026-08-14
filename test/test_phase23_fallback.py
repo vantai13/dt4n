@@ -161,7 +161,11 @@ def test_oracle_switch_bound_is_below_twin_and_static(df: pd.DataFrame) -> None:
 
 def test_truth_persistence_reports_lagged_agreement(df: pd.DataFrame) -> None:
     out = FB.truth_persistence_at_lag(df, lags_ms=(50, 300, 500))
+    probs = df["a_star"].value_counts(normalize=True)
     assert 0.0 < out["p_infinity"] < 1.0
+    assert out["p_infinity"] == pytest.approx(float((probs**2).sum()))
     assert len(out["points"]) == 3
     assert out["agree_50ms"] >= out["agree_500ms"]
     assert out["tau_a_s_exp_fit"] > 0.0
+    assert out["exp_fit_intercept"] == 0.0
+    assert out["tau_a_s_free_intercept_fit"] > out["tau_a_s_exp_fit"]

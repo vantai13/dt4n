@@ -8,7 +8,7 @@ File nay dong vai tro PLAN tracked cho Phase 23 tu cac nguon da co:
 ```text
 docs/phase-23/00-preregistration.md
 docs/phase-23/01-inherited-audit.md
-docs/phase-23/00b..00j-amendment-*.md
+docs/phase-23/00b..00k-amendment-*.md
 ```
 
 ## Scope dang duoc phep chay
@@ -25,10 +25,12 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 23-7  lam min luoi kappa MOT LAN vi argmin o bien khong-suy-bien dau tien
 23-8  khoa du doan shrinkage C3-vs-B2 cho Lesson 23.3
 23-9  khoa doi chung F1 low-kappa truoc paired-CI diagnostic rieng
+23-10 khoa khung Lesson 23.2: ho nguong nhu ranking, B6-sys, T5..T9
 ```
 
-Lesson 23.2 va 23.3 chi duoc chay theo cac dong prediction da khoa trong
-`00-preregistration.md`.
+Lesson 23.2 duoc phep chay theo Amendment 23-10. Lesson 23.3 chi duoc chay
+theo cac dong prediction da khoa trong `00-preregistration.md` va bo sung
+B6-sys cua Amendment 23-10.
 
 ## Scope bi chan
 

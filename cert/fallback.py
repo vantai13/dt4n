@@ -499,12 +499,19 @@ def truth_persistence_at_lag(
     if len(fit) >= 2:
         x = np.asarray([p[0] for p in fit], dtype=np.float64)
         y = np.asarray([p[1] for p in fit], dtype=np.float64)
-        slope, intercept = np.polyfit(x, y, 1)
-        out["tau_a_s_exp_fit"] = float(-1.0 / slope) if slope < 0.0 else float("nan")
-        out["exp_fit_intercept"] = float(intercept)
+        slope_fixed = float(np.dot(x, y) / np.dot(x, x))
+        out["tau_a_s_exp_fit"] = float(-1.0 / slope_fixed) if slope_fixed < 0.0 else float("nan")
+        out["exp_fit_intercept"] = 0.0
+        slope_free, intercept_free = np.polyfit(x, y, 1)
+        out["tau_a_s_free_intercept_fit"] = (
+            float(-1.0 / slope_free) if slope_free < 0.0 else float("nan")
+        )
+        out["free_intercept_exp_fit_intercept"] = float(intercept_free)
     else:
         out["tau_a_s_exp_fit"] = float("nan")
         out["exp_fit_intercept"] = float("nan")
+        out["tau_a_s_free_intercept_fit"] = float("nan")
+        out["free_intercept_exp_fit_intercept"] = float("nan")
     out["points"] = points
     return out
 
