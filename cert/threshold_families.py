@@ -486,7 +486,7 @@ def reject_risk_summary(
     best = finite.loc[finite[col].idxmin()]
     lo, hi = operational_param_range
     band = finite[(finite["param"] >= float(lo)) & (finite["param"] <= float(hi))]
-    band_best = band.loc[band[col].idxmin()] if len(band) else best
+    band_best = band.loc[band[col].idxmin()] if len(band) else None
     return {
         "scale": scale,
         "global_min": {
@@ -497,13 +497,17 @@ def reject_risk_summary(
             "%s_system" % scale: float(best["%s_system" % scale]),
         },
         "operational_param_range": [float(lo), float(hi)],
-        "operational_range_min": {
-            "family": str(band_best["family"]),
-            "param": float(band_best["param"]),
-            "coverage": float(band_best["coverage"]),
-            col: float(band_best[col]),
-            "%s_system" % scale: float(band_best["%s_system" % scale]),
-        },
+        "operational_range_min": (
+            {
+                "family": str(band_best["family"]),
+                "param": float(band_best["param"]),
+                "coverage": float(band_best["coverage"]),
+                col: float(band_best[col]),
+                "%s_system" % scale: float(band_best["%s_system" % scale]),
+            }
+            if band_best is not None
+            else None
+        ),
         "operational_range_reject_risk_min": float(band[col].min()) if len(band) else float("nan"),
         "operational_range_reject_risk_max": float(band[col].max()) if len(band) else float("nan"),
     }
@@ -716,7 +720,6 @@ def run_report(
         "local_degeneracy_additive": local_degen,
         "reject_risk_summary": {
             "multiplicative_err": reject_risk_summary(sweep_mul, "err"),
-            "additive_err": reject_risk_summary(sweep_add, "err"),
         },
         "gates": {
             "V23_4_additive_delta0_equals_multiplicative_kappa1": bool(
