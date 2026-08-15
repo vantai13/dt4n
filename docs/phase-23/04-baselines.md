@@ -159,7 +159,10 @@ Paired block bootstrap cho C3 - B2:
 | 0.85 | sla | -0.000322021 | [-0.001322416, +0.000680095] | yes |
 
 Ket luan: trong cac coverage 0.70, 0.78, 0.85 va tren ca ba thang, C3 va B2
-khong phan biet duoc bang paired block bootstrap.
+khong phan biet duoc bang paired block bootstrap. Tren thang `err`, dau cua
+`C3 - B2` dao chieu `-, +, -` qua ba coverage 0.70/0.78/0.85, trong khi bien
+do lon nhat `0.000686` nho hon ro so voi nua do rong CI. Vi vay diem 0.78
+khong phai mot hieu ung that rieng; no la nhieu quanh mot hieu gan 0.
 
 ## Wasted Abstention
 
@@ -170,6 +173,9 @@ Tai C3 coverage 0.78:
 
 ```text
 P(a_twin = P1)                     = 0.619176866
+P(a_twin = P1 | accept)            = 0.653105079
+P(a_twin = P1 | reject)            = 0.498886293
+P(a_star = P1) reference           = 0.659723542
 reject_share                       = 0.220000520
 wasted_reject_share_total_rows     = 0.109755244
 wasted_reject_given_reject         = 0.498886293
@@ -180,6 +186,8 @@ actionable_reject_given_reject     = 0.501113707
 Tai B2 coverage 0.78:
 
 ```text
+P(a_twin = P1 | accept)            = 0.651471637
+P(a_twin = P1 | reject)            = 0.504677570
 wasted_reject_share_total_rows     = 0.111029328
 wasted_reject_given_reject         = 0.504677570
 actionable_reject_share_total_rows = 0.108971192
@@ -200,6 +208,52 @@ Doc so nay: khoang mot nua ngan sach reject cua C3 va B2 tai 0.78 nam tren
 cac hang ma reject khong doi hanh dong. Tuy vay intervention rate that cua hai
 chinh sach chi lech 0.001274, nen so sanh C3 vs B2 tai matched coverage 0.78
 la hop le theo L20.
+
+## Co Che Argmin
+
+Khong dung moc "dong xu 0.500". He co `K = 4` hanh dong, va ngay ca moc
+`1/K` cung khong dung vi cac hanh dong co phan phoi bien khac nhau. Moc dung
+la chance agreement tinh tu chinh tap con:
+
+```text
+agreement_independent = sum_j P(a_twin=j) * P(a_star=j)
+```
+
+Tai coverage 0.78:
+
+| Bo chon | tieu chi reject | agree(acc) | ind(acc) | kappa(acc) | agree(rej) | ind(rej) | kappa(rej) |
+|---|---|---:|---:|---:|---:|---:|---:|
+| B1 random | ngau nhien | 0.777457 | 0.531683 | 0.524803 | 0.778113 | 0.531097 | 0.526796 |
+| B3 AoI | tuoi z | 0.794832 | 0.531726 | 0.561864 | 0.716509 | 0.530942 | 0.395617 |
+| B2 constant gap | m_hat | 0.841525 | 0.549225 | 0.648440 | 0.550962 | 0.481408 | 0.134122 |
+| C3 conformal | m_hat/q_hat | 0.842741 | 0.549907 | 0.650607 | 0.546653 | 0.481257 | 0.126067 |
+
+Doc bang: B1 random gan nhu khong lam thay doi thong tin argmin; B3 AoI lam
+giam mot phan nhung van giu `kappa(rej)=0.396`. Hai bo chon dua tren `m_hat`
+la B2 va C3 lam giam manh hon nhieu, xuong `kappa(rej)=0.134` va `0.126`.
+Do do co che khong rieng cua conformal: dieu kien `m_hat` nho moi la nguon
+lam argmin mat thong tin; `q_hat(z)` chi thay doi nhe.
+
+Overlap de dong no co che L20:
+
+```text
+accept_overlap(C3, B2) @0.78:
+  intersection     = 0.758604068
+  share_of_C3      = 0.972569966
+  jaccard          = 0.946604571
+  independent_ref  = 0.779999480
+
+accept_overlap(C3, B3) @0.78:
+  intersection     = 0.617652765
+  share_of_C3      = 0.791863047
+  jaccard          = 0.655441459
+  independent_ref  = 0.779999480
+```
+
+Ket qua nay cham diem du doan L20: du doan `abs_gap < 0.005` trung so, va co
+che "tap C3/B2 gan trung nhau" cung duoc xac nhan (`share_of_C3=0.97257`).
+Co che #3 va #6 hop nhat thanh mot cau: tin hieu khai thac duoc nam chu yeu o
+`m_hat`, khong nam o tuoi.
 
 Ket luan hien tai:
 
