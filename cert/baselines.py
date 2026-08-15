@@ -244,6 +244,34 @@ def accept_overlap(score_a: np.ndarray, score_b: np.ndarray, coverage: float) ->
     }
 
 
+def _accept_at_coverage_tiebreak(
+    score: np.ndarray,
+    coverage: float,
+    mode: str = "rowsort",
+    seed: int = 23399,
+) -> np.ndarray:
+    """Accept top-k with either stable row-order ties or seeded random ties."""
+    s = np.asarray(score, dtype=np.float64)
+    c = float(np.clip(coverage, 0.0, 1.0))
+    n = len(s)
+    if c <= 0.0:
+        return np.zeros(n, dtype=bool)
+    if c >= 1.0:
+        return np.ones(n, dtype=bool)
+    k = int(np.floor(c * n + 0.5))
+    k = max(0, min(n, k))
+    if mode == "rowsort":
+        order = np.argsort(-s, kind="mergesort")
+    elif mode == "random":
+        jitter = np.random.default_rng(int(seed)).random(n)
+        order = np.lexsort((jitter, -s))
+    else:
+        raise ValueError("mode must be 'rowsort' or 'random'")
+    accept = np.zeros(n, dtype=bool)
+    accept[order[:k]] = True
+    return accept
+
+
 def beneficial_band(sweep: pd.DataFrame, anchor: float, scale: str = "err") -> Dict[str, float | bool]:
     """Coverage band where a system-risk curve beats the twin anchor."""
     s = sweep.sort_values("coverage")
@@ -267,6 +295,45 @@ def beneficial_band(sweep: pd.DataFrame, anchor: float, scale: str = "err") -> D
         "best_coverage": float(grid[gain.argmax()]),
         "partial_aurc_060_100": partial,
         "partial_aurc_060_100_ratio_vs_anchor": float(partial / float(anchor)),
+    }
+
+
+def tie_break_sensitivity_report(
+    df: pd.DataFrame,
+    scores: Dict[str, np.ndarray],
+    coverage: float = 0.78,
+    policy: str = "static",
+    seeds: Sequence[int] = (23399, 23400, 23401),
+) -> Dict[str, Any]:
+    """Audit whether stable top-k tie-breaking affects err_system conclusions."""
+    rows = []
+    for name, score in scores.items():
+        risks = []
+        acc = _accept_at_coverage_tiebreak(score, float(coverage), "rowsort")
+        chosen = FB.apply_fallback(df, acc, policy)["a_chosen"]
+        rowsort = float(FB.loss_of(df, chosen, "err").mean())
+        risks.append(rowsort)
+        random_rows = []
+        for seed in seeds:
+            acc = _accept_at_coverage_tiebreak(score, float(coverage), "random", int(seed))
+            chosen = FB.apply_fallback(df, acc, policy)["a_chosen"]
+            risk = float(FB.loss_of(df, chosen, "err").mean())
+            risks.append(risk)
+            random_rows.append({"seed": int(seed), "err_system": risk})
+        rows.append(
+            {
+                "selector": str(name),
+                "coverage_target": float(coverage),
+                "rowsort_err_system": rowsort,
+                "random_tie_err_system": random_rows,
+                "spread": float(max(risks) - min(risks)),
+            }
+        )
+    return {
+        "coverage_target": float(coverage),
+        "policy": str(policy),
+        "seeds": [int(x) for x in seeds],
+        "rows": rows,
     }
 
 
@@ -1018,6 +1085,16 @@ def run_c3_b2_audit(
         "C3_B2": accept_overlap(score_c3, score_b2, 0.78),
         "C3_B3": accept_overlap(score_c3, score_b3, 0.78),
     }
+    tie_break = tie_break_sensitivity_report(
+        test,
+        scores={
+            "B3_aoi": score_b3,
+            "B2_constant_gap": score_b2,
+            "C3_conformal": score_c3,
+        },
+        coverage=0.78,
+        policy=policy,
+    )
     anchor_err = float(FB.loss_of(test, test["a_twin"].to_numpy(np.int64), "err").mean())
     b6sys_078 = paired_ranking_delta_at_coverage(
         test,
@@ -1053,6 +1130,7 @@ def run_c3_b2_audit(
         "gamma_sweep_at_078": gamma_sweep,
         "gamma_closure_G23_21b_at_078": gamma_closure,
         "accept_overlap_at_078": overlaps,
+        "tie_break_sensitivity_at_078": tie_break,
         "gap_closed_by_C3_vs_B6sys_at_078": float(gap_closed_by_c3),
         "n_boot": int(n_boot),
         "seed": int(seed),
@@ -1331,6 +1409,22 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
         )
     )
     print("interpretation=%s" % closure["interpretation"])
+    print()
+    print("=== Tie-break sensitivity at coverage 0.78 ===")
+    print("%-18s %11s %11s %11s %11s %11s" % ("selector", "rowsort", "rand_s1", "rand_s2", "rand_s3", "spread"))
+    for row in report["tie_break_sensitivity_at_078"]["rows"]:
+        vals = [x["err_system"] for x in row["random_tie_err_system"]]
+        print(
+            "%-18s %11.9f %11.9f %11.9f %11.9f %11.9f"
+            % (
+                row["selector"],
+                row["rowsort_err_system"],
+                vals[0],
+                vals[1],
+                vals[2],
+                row["spread"],
+            )
+        )
     print()
     print("gap_closed_by_C3_vs_B6sys_at_078=%.9f" % report["gap_closed_by_C3_vs_B6sys_at_078"])
     print("wrote_json=%s" % out_json)

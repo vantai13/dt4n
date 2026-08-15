@@ -163,6 +163,26 @@ def test_G23_21b_gamma_closure_adjudicates_b2_b3_claim(df: pd.DataFrame) -> None
     assert len(out["paired_gamma0p5_minus_gamma1"]["delta_ci95"]) == 2
 
 
+def test_tie_break_sensitivity_is_small_for_baseline_conclusions(df: pd.DataFrame) -> None:
+    """Stable top-k tie handling must not drive the C3-vs-B3 conclusion."""
+    raw = pd.read_parquet(ARTIFACT)
+    _calib, test, qhat_rows, _fit, _q_by_age, _qbar = TF.fit_c3_inputs(raw, config="C3")
+    out = BL.tie_break_sensitivity_report(
+        test,
+        {
+            "B3_aoi": BL.score_B3_aoi(test),
+            "B2_constant_gap": BL.score_B2_constant_gap(test),
+            "C3_conformal": BL.score_C3(test, qhat_rows),
+        },
+        coverage=0.78,
+        policy="static",
+    )
+    spreads = {row["selector"]: row["spread"] for row in out["rows"]}
+    assert spreads["B3_aoi"] < 0.001
+    assert spreads["B2_constant_gap"] < 0.001
+    assert spreads["C3_conformal"] < 0.001
+
+
 def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
     """The C3-vs-B2 audit records the mechanism checks needed to close 23.3."""
     raw = pd.read_parquet(ARTIFACT)
@@ -174,6 +194,7 @@ def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
     assert out["gamma_sweep_at_078"]["gamma0_matches_B2"]["accept_bitwise_identical"] is True
     assert "gamma_closure_G23_21b_at_078" in out
     assert out["gamma_closure_G23_21b_at_078"]["checks"]["b2_to_b3_interpolation_supported"] is False
+    assert "tie_break_sensitivity_at_078" in out
     assert "accept_overlap_at_078" in out
     assert out["accept_overlap_at_078"]["C3_B2"]["coverage_target"] == pytest.approx(0.78)
     assert out["accept_overlap_at_078"]["C3_B3"]["coverage_target"] == pytest.approx(0.78)

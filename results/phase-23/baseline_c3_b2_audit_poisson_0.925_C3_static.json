@@ -592,6 +592,359 @@
     0.78,
     0.85
   ],
+  "gamma_closure_G23_21b_at_078": {
+    "b3_reference": {
+      "coverage": 0.7799994799656778,
+      "err_system": 0.2349595073274836
+    },
+    "checks": {
+      "b2_to_b3_interpolation_supported": false,
+      "err_system_monotone_non_decreasing_for_gamma_ge1": false,
+      "gamma_max_within_0p002_of_B3": false,
+      "no_gamma_gt2_beats_gamma1": true,
+      "paired_gamma0p5_minus_gamma1_ci_contains_zero": true
+    },
+    "coverage_target": 0.78,
+    "gamma0_matches_B2": {
+      "accept_bitwise_identical": true,
+      "accept_disagree_count": 0,
+      "score_max_abs_diff": 0.0
+    },
+    "gamma_rows": [
+      {
+        "abs_err_gap_to_B3": 0.025545686015277014,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": -0.012984857000562039,
+        "err_accept": 0.1584746675419387,
+        "err_gap_to_B3": -0.025545686015277014,
+        "err_reject": 0.3900157282736174,
+        "err_system": 0.2094138213122066,
+        "gamma": 0.0,
+        "guarantee_preserving": false,
+        "jaccard_with_B3_aoi": 0.639517529292564,
+        "overlap_with_B2_gamma0": 1.0,
+        "overlap_with_B3_aoi": 0.7801289316723679,
+        "overlap_with_C3_gamma1": 0.9725699662028751
+      },
+      {
+        "abs_err_gap_to_B3": 0.025967713869115366,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": -0.013406884854400392,
+        "err_accept": 0.15765153574340854,
+        "err_gap_to_B3": -0.025967713869115366,
+        "err_reject": 0.3910157919140309,
+        "err_system": 0.20899179345836824,
+        "gamma": 0.5,
+        "guarantee_preserving": false,
+        "jaccard_with_B3_aoi": 0.6477090036399896,
+        "overlap_with_B2_gamma0": 0.9858580315610784,
+        "overlap_with_B3_aoi": 0.786193438536928,
+        "overlap_with_C3_gamma1": 0.9867119346417966
+      },
+      {
+        "abs_err_gap_to_B3": 0.025429678358771662,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": -0.012868849344056688,
+        "err_accept": 0.15725920189551099,
+        "err_gap_to_B3": -0.025429678358771662,
+        "err_reject": 0.3948523996981626,
+        "err_system": 0.20952982896871195,
+        "gamma": 1.0,
+        "guarantee_preserving": true,
+        "jaccard_with_B3_aoi": 0.6554414592628125,
+        "overlap_with_B2_gamma0": 0.9725699662028751,
+        "overlap_with_B3_aoi": 0.7918630472800751,
+        "overlap_with_C3_gamma1": 1.0
+      },
+      {
+        "abs_err_gap_to_B3": 0.02464562661135633,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": -0.012084797596641356,
+        "err_accept": 0.15812592634380754,
+        "err_gap_to_B3": -0.02464562661135633,
+        "err_reject": 0.39534334003072924,
+        "err_system": 0.21031388071612728,
+        "gamma": 1.5,
+        "guarantee_preserving": false,
+        "jaccard_with_B3_aoi": 0.6630588676799208,
+        "overlap_with_B2_gamma0": 0.9595767922989737,
+        "overlap_with_B3_aoi": 0.7973967495268915,
+        "overlap_with_C3_gamma1": 0.9870068260960987
+      },
+      {
+        "abs_err_gap_to_B3": 0.025409677038684547,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": -0.012848848023969572,
+        "err_accept": 0.15733100155394975,
+        "err_gap_to_B3": -0.025409677038684547,
+        "err_reject": 0.39468875292064043,
+        "err_system": 0.20954983028879906,
+        "gamma": 2.0,
+        "guarantee_preserving": false,
+        "jaccard_with_B3_aoi": 0.6693663690144945,
+        "overlap_with_B2_gamma0": 0.9488324862683154,
+        "overlap_with_B3_aoi": 0.8019406421966593,
+        "overlap_with_C3_gamma1": 0.9762625200654403
+      },
+      {
+        "abs_err_gap_to_B3": 0.023861574863941026,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": -0.011300745849226052,
+        "err_accept": 0.15914394292952863,
+        "err_gap_to_B3": -0.023861574863941026,
+        "err_reject": 0.3952978825925286,
+        "err_system": 0.21109793246354258,
+        "gamma": 3.0,
+        "guarantee_preserving": false,
+        "jaccard_with_B3_aoi": 0.6807159465324303,
+        "overlap_with_B2_gamma0": 0.9300184114838426,
+        "overlap_with_B3_aoi": 0.810030925138599,
+        "overlap_with_C3_gamma1": 0.9574484452809675
+      },
+      {
+        "abs_err_gap_to_B3": 0.02019733302397958,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": -0.007636504009264605,
+        "err_accept": 0.1628134183304528,
+        "err_gap_to_B3": -0.02019733302397958,
+        "err_reject": 0.39894356913621776,
+        "err_system": 0.21476217430350403,
+        "gamma": 5.0,
+        "guarantee_preserving": false,
+        "jaccard_with_B3_aoi": 0.698267433986339,
+        "overlap_with_B2_gamma0": 0.9015165113571674,
+        "overlap_with_B3_aoi": 0.8223291809197536,
+        "overlap_with_C3_gamma1": 0.9289465451542923
+      },
+      {
+        "abs_err_gap_to_B3": 0.008808581366370194,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": 0.02136941038108517,
+        "err_accept": 0.22728694733495053,
+        "err_gap_to_B3": 0.008808581366370194,
+        "err_reject": 0.30220104915767365,
+        "err_system": 0.2437680886938538,
+        "gamma": 20.0,
+        "guarantee_preserving": false,
+        "jaccard_with_B3_aoi": 0.7232954256713015,
+        "overlap_with_B2_gamma0": 0.7462651356244262,
+        "overlap_with_B3_aoi": 0.8394328852692743,
+        "overlap_with_C3_gamma1": 0.748824280593065
+      },
+      {
+        "abs_err_gap_to_B3": 0.013102864789076074,
+        "coverage": 0.7799994799656778,
+        "delta_vs_anchor": 0.02566369380379105,
+        "err_accept": 0.23327196172052495,
+        "err_gap_to_B3": 0.013102864789076074,
+        "err_reject": 0.30050094096897073,
+        "err_system": 0.24806237211655968,
+        "gamma": 100.0,
+        "guarantee_preserving": false,
+        "jaccard_with_B3_aoi": 0.7233868134441972,
+        "overlap_with_B2_gamma0": 0.7179478631908794,
+        "overlap_with_B3_aoi": 0.8394944278336504,
+        "overlap_with_C3_gamma1": 0.7208993420074158
+      }
+    ],
+    "gate": "G23-21b",
+    "hypothesis": "C3(gamma) is a parametric interpolation from B2 at gamma=0 to B3 as gamma->infinity.",
+    "interpretation": "Under C3 Mondrian keys z_bin x m_hat_bin, gamma->infinity ranks by the qhat cell/slot structure, not by age alone. Therefore the simple B2-to-B3 interpolation claim is rejected for this implementation.",
+    "paired_gamma0p5_minus_gamma1": {
+      "accept_contribution": 0.0003060201973330242,
+      "accept_delta_a_minus_b": 0.00039233384789755243,
+      "accept_risk_a": 0.15765153574340854,
+      "accept_risk_b": 0.15725920189551099,
+      "ci_excludes_zero": false,
+      "coverage_a": 0.7799994799656778,
+      "coverage_b": 0.7799994799656778,
+      "coverage_target": 0.78,
+      "delta_a_minus_b": -0.0005380355103436826,
+      "delta_ci95": [
+        -0.0019321764598995484,
+        0.000872232396461851
+      ],
+      "delta_half_width_ci95": 0.0014022044281806997,
+      "label_a": "C3_gamma0.5",
+      "label_b": "C3_gamma1.0",
+      "n_blocks": 500,
+      "n_boot": 2000,
+      "policy": "static",
+      "reject_contribution": -0.0008440557076767019,
+      "reject_delta_a_minus_b": -0.003836607784131696,
+      "reject_risk_a": 0.3910157919140309,
+      "reject_risk_b": 0.3948523996981626,
+      "risk_a": 0.20899179345836824,
+      "risk_b": 0.20952982896871195,
+      "scale": "err",
+      "seed": 23555
+    },
+    "policy": "static",
+    "qhat_monotonicity": {
+      "all_cell_level_monotone_by_z_bin": true,
+      "all_row_level_monotone_by_z_s": false,
+      "cell_level_by_z_bin": [
+        {
+          "m_hat_bin": 0,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            14.448726654052734,
+            19.42462158203125,
+            23.85668182373047,
+            29.519119262695312
+          ],
+          "slot": 1
+        },
+        {
+          "m_hat_bin": 0,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            15.55774974822998,
+            20.199079513549805,
+            25.880577087402344,
+            31.882583618164062
+          ],
+          "slot": 2
+        },
+        {
+          "m_hat_bin": 0,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            16.793746948242188,
+            21.90081024169922,
+            26.764217376708984,
+            34.4526481628418
+          ],
+          "slot": 3
+        },
+        {
+          "m_hat_bin": 1,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            14.705740928649902,
+            19.639711380004883,
+            24.141277313232422,
+            30.109203338623047
+          ],
+          "slot": 1
+        },
+        {
+          "m_hat_bin": 1,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            14.841486930847168,
+            21.139982223510742,
+            27.17767906188965,
+            32.679893493652344
+          ],
+          "slot": 2
+        },
+        {
+          "m_hat_bin": 1,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            16.704023361206055,
+            23.18229866027832,
+            28.854230880737305,
+            36.468387603759766
+          ],
+          "slot": 3
+        },
+        {
+          "m_hat_bin": 2,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            14.491121292114258,
+            19.64421844482422,
+            24.18600082397461,
+            31.032629013061523
+          ],
+          "slot": 1
+        },
+        {
+          "m_hat_bin": 2,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            15.507418632507324,
+            20.74239730834961,
+            25.214012145996094,
+            33.26856231689453
+          ],
+          "slot": 2
+        },
+        {
+          "m_hat_bin": 2,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            16.67698860168457,
+            22.844120025634766,
+            27.09413719177246,
+            34.78444290161133
+          ],
+          "slot": 3
+        },
+        {
+          "m_hat_bin": 3,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            16.66973304748535,
+            22.77189064025879,
+            28.66551971435547,
+            36.31851577758789
+          ],
+          "slot": 1
+        },
+        {
+          "m_hat_bin": 3,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            16.786792755126953,
+            22.873130798339844,
+            28.02680206298828,
+            35.426971435546875
+          ],
+          "slot": 2
+        },
+        {
+          "m_hat_bin": 3,
+          "monotone_by_z_bin": true,
+          "qhat_by_z_bin": [
+            16.953039169311523,
+            22.937410354614258,
+            28.833620071411133,
+            37.75986099243164
+          ],
+          "slot": 3
+        }
+      ],
+      "keys": [
+        "z_bin",
+        "m_hat_bin"
+      ],
+      "n_score_slots": 3,
+      "note": "C3 has K-1 score slots. Under keys z_bin x m_hat_bin, qhat can be monotone in age within each m_hat_bin while not row-level monotone in z_s.",
+      "row_level_by_z_s": [
+        {
+          "min_step": -6.799396514892578,
+          "monotone_by_z_s": false,
+          "n_down_steps": 167008,
+          "slot": 1
+        },
+        {
+          "min_step": -3.5443878173828125,
+          "monotone_by_z_s": false,
+          "n_down_steps": 166212,
+          "slot": 2
+        },
+        {
+          "min_step": -3.3072128295898438,
+          "monotone_by_z_s": false,
+          "n_down_steps": 162988,
+          "slot": 3
+        }
+      ]
+    }
+  },
   "gamma_sweep_at_078": {
     "anchor_err": 0.22239867831276863,
     "best": {
@@ -694,9 +1047,9 @@
   "n_test": 499967,
   "policy": "static",
   "provenance": {
-    "created_utc": "2026-08-15T03:09:08.193482+00:00",
-    "git_dirty_before_write": false,
-    "git_hash": "807a2996e73c55fc568c43c3a8451d4e9e223045"
+    "created_utc": "2026-08-15T03:28:14.577521+00:00",
+    "git_dirty_before_write": true,
+    "git_hash": "ea1620557e59248ea1940ff24715752a2f0504f3"
   },
   "scales": [
     "err",
@@ -704,6 +1057,77 @@
     "sla"
   ],
   "seed": 23330,
+  "tie_break_sensitivity_at_078": {
+    "coverage_target": 0.78,
+    "policy": "static",
+    "rows": [
+      {
+        "coverage_target": 0.78,
+        "random_tie_err_system": [
+          {
+            "err_system": 0.23495350693145747,
+            "seed": 23399
+          },
+          {
+            "err_system": 0.23495150679944876,
+            "seed": 23400
+          },
+          {
+            "err_system": 0.23495550706346618,
+            "seed": 23401
+          }
+        ],
+        "rowsort_err_system": 0.2349595073274836,
+        "selector": "B3_aoi",
+        "spread": 8.000528034846077e-06
+      },
+      {
+        "coverage_target": 0.78,
+        "random_tie_err_system": [
+          {
+            "err_system": 0.209313814711771,
+            "seed": 23399
+          },
+          {
+            "err_system": 0.20934181655989295,
+            "seed": 23400
+          },
+          {
+            "err_system": 0.20933781629587553,
+            "seed": 23401
+          }
+        ],
+        "rowsort_err_system": 0.2094138213122066,
+        "selector": "B2_constant_gap",
+        "spread": 0.00010000660043560372
+      },
+      {
+        "coverage_target": 0.78,
+        "random_tie_err_system": [
+          {
+            "err_system": 0.20952982896871195,
+            "seed": 23399
+          },
+          {
+            "err_system": 0.20952982896871195,
+            "seed": 23400
+          },
+          {
+            "err_system": 0.20952982896871195,
+            "seed": 23401
+          }
+        ],
+        "rowsort_err_system": 0.20952982896871195,
+        "selector": "C3_conformal",
+        "spread": 0.0
+      }
+    ],
+    "seeds": [
+      23399,
+      23400,
+      23401
+    ]
+  },
   "wasted_abstention_B2_at_078": {
     "actionable_reject_given_reject": 0.49532242960915696,
     "actionable_reject_share_total_rows": 0.10897119209867852,
