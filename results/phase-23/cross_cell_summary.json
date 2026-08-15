@@ -1,0 +1,196 @@
+{
+  "provenance": {
+    "git_dirty_before_write": false,
+    "git_hash": "e36b8c398620853e892b413ea00177047754ac86",
+    "script": "cert/phase23_cross_cell.py",
+    "timestamp_utc": "2026-08-15T08:35:03.050340+00:00"
+  },
+  "rows": [
+    {
+      "anchor_err": 0.22239867831276863,
+      "best_delta_vs_anchor_at_078": -0.012984857000562039,
+      "best_err_system_at_078": 0.2094138213122066,
+      "best_selector_at_078": "B2_constant_gap",
+      "c3_band_high": 0.99995,
+      "c3_band_low": 0.6076,
+      "c3_beneficial": true,
+      "c3_delta_vs_anchor_at_078": -0.012868849344056688,
+      "c3_err_system_at_078": 0.20952982896871195,
+      "c3_improvement_area": 0.0034038491000160107,
+      "c3_partial_aurc_060_100": 0.21389852561272008,
+      "c3_partial_aurc_060_100_ratio_vs_anchor": 0.961779661801342,
+      "cell": "poisson@0.925",
+      "gap_closed_C3_vs_B6sys_at_078": 0.10019153806624399
+    },
+    {
+      "anchor_err": 0.22072656795348494,
+      "best_delta_vs_anchor_at_078": 0.0031202059335916077,
+      "best_err_system_at_078": 0.22384677388707655,
+      "best_selector_at_078": "C3_conformal",
+      "c3_band_high": 0.9892000000000001,
+      "c3_band_low": 0.8091,
+      "c3_beneficial": true,
+      "c3_delta_vs_anchor_at_078": 0.0031202059335916077,
+      "c3_err_system_at_078": 0.22384677388707655,
+      "c3_improvement_area": 0.0005961486418169557,
+      "c3_partial_aurc_060_100": 0.22545362076354108,
+      "c3_partial_aurc_060_100_ratio_vs_anchor": 1.0214158760038905,
+      "cell": "poisson@0.850",
+      "gap_closed_C3_vs_B6sys_at_078": -0.03177577708070223
+    },
+    {
+      "anchor_err": 0.12653635139919234,
+      "best_delta_vs_anchor_at_078": -0.0013780909540029584,
+      "best_err_system_at_078": 0.12515826044518938,
+      "best_selector_at_078": "B3_aoi",
+      "c3_band_high": 0.99995,
+      "c3_band_low": 0.84285,
+      "c3_beneficial": true,
+      "c3_delta_vs_anchor_at_078": 0.0038662551728414207,
+      "c3_err_system_at_078": 0.13040260657203376,
+      "c3_improvement_area": 0.00027437739803829397,
+      "c3_partial_aurc_060_100": 0.13090319911700996,
+      "c3_partial_aurc_060_100_ratio_vs_anchor": 1.0345106182494646,
+      "cell": "h2@0.700",
+      "gap_closed_C3_vs_B6sys_at_078": -0.0860487891737895
+    }
+  ],
+  "selector_rows_at_078": [
+    {
+      "band_high": null,
+      "band_low": null,
+      "beneficial_band": false,
+      "cell": "poisson@0.925",
+      "err_delta_vs_anchor_at_078": 0.026395742118979854,
+      "err_system_at_078": 0.2487944204317485,
+      "selector": "B1_random"
+    },
+    {
+      "band_high": 0.99995,
+      "band_low": 0.63465,
+      "beneficial_band": true,
+      "cell": "poisson@0.925",
+      "err_delta_vs_anchor_at_078": -0.012984857000562039,
+      "err_system_at_078": 0.2094138213122066,
+      "selector": "B2_constant_gap"
+    },
+    {
+      "band_high": null,
+      "band_low": null,
+      "beneficial_band": false,
+      "cell": "poisson@0.925",
+      "err_delta_vs_anchor_at_078": 0.012560829014714975,
+      "err_system_at_078": 0.2349595073274836,
+      "selector": "B3_aoi"
+    },
+    {
+      "band_high": 0.99995,
+      "band_low": 0.6399,
+      "beneficial_band": true,
+      "cell": "poisson@0.925",
+      "err_delta_vs_anchor_at_078": -0.011976790468170878,
+      "err_system_at_078": 0.21042188784459775,
+      "selector": "B5_relative_margin"
+    },
+    {
+      "band_high": 0.99995,
+      "band_low": 0.6076,
+      "beneficial_band": true,
+      "cell": "poisson@0.925",
+      "err_delta_vs_anchor_at_078": -0.012868849344056688,
+      "err_system_at_078": 0.20952982896871195,
+      "selector": "C3_conformal"
+    },
+    {
+      "band_high": null,
+      "band_low": null,
+      "beneficial_band": false,
+      "cell": "poisson@0.850",
+      "err_delta_vs_anchor_at_078": 0.027553818552024434,
+      "err_system_at_078": 0.24828038650550938,
+      "selector": "B1_random"
+    },
+    {
+      "band_high": 0.98665,
+      "band_low": 0.8178000000000001,
+      "beneficial_band": true,
+      "cell": "poisson@0.850",
+      "err_delta_vs_anchor_at_078": 0.0046643078443177055,
+      "err_system_at_078": 0.22539087579780265,
+      "selector": "B2_constant_gap"
+    },
+    {
+      "band_high": null,
+      "band_low": null,
+      "beneficial_band": false,
+      "cell": "poisson@0.850",
+      "err_delta_vs_anchor_at_078": 0.01555102636774025,
+      "err_system_at_078": 0.2362775943212252,
+      "selector": "B3_aoi"
+    },
+    {
+      "band_high": 0.9880000000000001,
+      "band_low": 0.81835,
+      "beneficial_band": true,
+      "cell": "poisson@0.850",
+      "err_delta_vs_anchor_at_078": 0.004788316028857903,
+      "err_system_at_078": 0.22551488398234285,
+      "selector": "B5_relative_margin"
+    },
+    {
+      "band_high": 0.9892000000000001,
+      "band_low": 0.8091,
+      "beneficial_band": true,
+      "cell": "poisson@0.850",
+      "err_delta_vs_anchor_at_078": 0.0031202059335916077,
+      "err_system_at_078": 0.22384677388707655,
+      "selector": "C3_conformal"
+    },
+    {
+      "band_high": null,
+      "band_low": null,
+      "beneficial_band": false,
+      "cell": "h2@0.700",
+      "err_delta_vs_anchor_at_078": 0.007024463614598575,
+      "err_system_at_078": 0.1335608150137909,
+      "selector": "B1_random"
+    },
+    {
+      "band_high": 0.99995,
+      "band_low": 0.8744500000000001,
+      "beneficial_band": true,
+      "cell": "h2@0.700",
+      "err_delta_vs_anchor_at_078": 0.0075044952966895895,
+      "err_system_at_078": 0.13404084669588193,
+      "selector": "B2_constant_gap"
+    },
+    {
+      "band_high": 0.99995,
+      "band_low": 0.5999,
+      "beneficial_band": true,
+      "cell": "h2@0.700",
+      "err_delta_vs_anchor_at_078": -0.0013780909540029584,
+      "err_system_at_078": 0.12515826044518938,
+      "selector": "B3_aoi"
+    },
+    {
+      "band_high": 0.99995,
+      "band_low": 0.86865,
+      "beneficial_band": true,
+      "cell": "h2@0.700",
+      "err_delta_vs_anchor_at_078": 0.008276546252052652,
+      "err_system_at_078": 0.134812897651245,
+      "selector": "B5_relative_margin"
+    },
+    {
+      "band_high": 0.99995,
+      "band_low": 0.84285,
+      "beneficial_band": true,
+      "cell": "h2@0.700",
+      "err_delta_vs_anchor_at_078": 0.0038662551728414207,
+      "err_system_at_078": 0.13040260657203376,
+      "selector": "C3_conformal"
+    }
+  ],
+  "table": "cross-cell C3 four-column summary"
+}

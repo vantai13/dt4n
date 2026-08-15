@@ -1,13 +1,13 @@
-# 99 -- Gate decision, Phase 23 through Lesson 23.3
+# 99 -- Gate decision, Phase 23 through Lesson 23.4
 
 Ngay checkpoint: 2026-08-15
 
-Trang thai: Lessons 23.0--23.3 da dong so cho o chinh `poisson@0.925`,
-fallback F2 STATIC. Lesson 23.4 chua chay. Day la checkpoint de tiep tuc
-23.4, khong phai GO/NO-GO cuoi Phase 23.
+Trang thai: Lessons 23.0--23.4 da chay. Ket luan cu "C3 giu cross-cell" bi
+rut lai; ket luan moi la law co dieu kien `lift > swing` trong Amendment 23-19
+va `05-cross-cell.md`.
 
-Artifact provenance git hash: `eafa328` (`git_dirty_before_write=false`).
-Latest artifact refresh commit: `982aa0c`.
+Latest cross-cell artifact commit before this document: `095a34d`.
+Latest lift-law artifact commit: `d180804`.
 
 ## Artifacts
 
@@ -21,6 +21,10 @@ Latest artifact refresh commit: `982aa0c`.
 | `results/phase-23/g23_17b_code_sanity.json` | G23-17b cross-cell code sanity |
 | `results/phase-23/g23_17c_scale_and_sla.json` | G23-17c scale/SLA comparability and Mechanism #8 |
 | `results/phase-23/g23_23_lift_law.json` | G23-23 lift-vs-swing law for cross-cell benefit |
+| `results/phase-23/cross_cell_summary.json` | Lesson 23.4 cross-cell C3 summary and selector table |
+| `results/phase-23/cross_cell_err_panels.png` | Three-panel err_system coverage figure |
+| `results/phase-23/baseline_rankings_poisson_0.850_C3_static.json` | Lesson 23.4 baseline ranking sweep for poisson@0.850 |
+| `results/phase-23/baseline_rankings_h2_0.700_C3_static.json` | Lesson 23.4 baseline ranking sweep for h2@0.700 |
 
 Lenh tai tao audit cuoi:
 
@@ -55,7 +59,11 @@ repo. Ten chuan trong repo la `PC23-1`.
 | G23-21c | 23.3 | PASS | C3 Mondrian cells have finite-sample support; min effective blocks = 433 >= 29 actual and >= 39 conservative |
 | tie-break audit | 23.3 | PASS | max spread = 0.000100, far below C3-B3 gap 0.025430 |
 | G23-17a/b/c | 23.4 preflight | ADJUDICATED | `poisson@0.850` is a scale-invariance control; `h2@0.700` is the real regime shift; cross-cell regret needs three-factor decomposition |
-| G23-23 | 23.4 preflight | NEW GATE | benefit iff `lift=twin_deg-prior_deg` exceeds `swing=err_P1-err_neo`; must reconstruct delta at 0.78 |
+| artifact parity | 23.4 preflight | PASS | both new cell parquets rebuilt to 45 columns with `y_hat_a1` and `sla_viol_p0..p3`; builder fail=[] |
+| G23-23 | 23.4 | PASS | benefit iff `lift=twin_deg-prior_deg` exceeds `swing=err_P1-err_neo`; max delta identity error 2.17e-17 |
+| G23-15 | 23.4 | FAIL | B3 beats C3 at `h2@0.700` around the operating point |
+| G23-17 | 23.4 | FAIL | main-cell C3 conclusion does not hold on both new cells |
+| S7 | 23.4 | FAIL | threshold-family Pareto front contains additive and multiplicative survivors in both new cells |
 
 G23-21b measured:
 
@@ -169,7 +177,7 @@ relative to B2 is a formal guarantee at no measurable system-risk cost.
 
 ## Before Lesson 23.4
 
-Lesson 23.4 may proceed only with these constraints:
+Lesson 23.4 was run with these constraints:
 
 ```text
 1. Do not use gamma != 1 as a certified operating point unless a new conformal
@@ -186,13 +194,25 @@ Lesson 23.4 may proceed only with these constraints:
 7. For Lesson 23.4 cross-cell reporting, use Amendment 23-18: headline `err`;
    decompose `regret`; do not headline `sla_rate`; use `gap_closed` rather
    than `delta/neo`.
-8. Before sweeping `poisson@0.850` or `h2@0.700`, run G23-21c on that exact
-   artifact with the exact `cell_label` and stop if any conservative thin cell
-   or nonfinite qhat appears.
-9. Use Amendment 23-19 for cross-cell interpretation: report G23-23 lift law,
-   mark G23-15/G23-17 as FAIL if B3 beats C3 or if C3 loses to always-trust in
-   either new cell.
+8. G23-21c was rerun on 45-column artifacts; both cells pass conservative
+   action-split support, with min effective blocks 433 and 397.
+9. Amendment 23-19 governs cross-cell interpretation: report G23-23 lift law,
+   mark G23-15/G23-17 as FAIL because B3 beats C3 in `h2@0.700` and C3 loses
+   to always-trust at 0.78 in both new cells.
 ```
+
+## Lesson 23.4 cross-cell result
+
+| Cell | C3 beneficial band | Improvement area | partial AURC [0.6,1] | gap_closed @0.78 |
+|---|---:|---:|---:|---:|
+| poisson@0.925 | [0.6076, 0.99995] | 0.003403849 | 0.213898526 | +0.100191538 |
+| poisson@0.850 | [0.8091, 0.9892] | 0.000596149 | 0.225453621 | -0.031775777 |
+| h2@0.700 | [0.84285, 0.99995] | 0.000274377 | 0.130903199 | -0.086048789 |
+
+Tai coverage 0.78, C3 thua always-trust o hai cell moi. O `h2@0.700`, B3 AoI
+la selector duy nhat co loi trong bang chinh (`delta=-0.001378091`) va tot hon
+C3 (`delta=+0.003866255`). Day la dao nguoc ket luan van hanh, khong phai
+NO-GO: ket qua moi la dieu kien `lift > swing`.
 
 ## Verification
 
