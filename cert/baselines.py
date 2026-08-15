@@ -372,6 +372,7 @@ def argmin_information_report(
             return {
                 "share": float("nan"),
                 "p_a_twin_eq_p1": float("nan"),
+                "p_a_star_eq_p1": float("nan"),
                 "agreement": float("nan"),
                 "agreement_independent": float("nan"),
                 "excess_agreement": float("nan"),
@@ -389,6 +390,7 @@ def argmin_information_report(
         return {
             "share": float(m.mean()),
             "p_a_twin_eq_p1": float((twin == int(p1)).mean()),
+            "p_a_star_eq_p1": float((star == int(p1)).mean()),
             "agreement": agree,
             "agreement_independent": agree_ind,
             "excess_agreement": excess,
@@ -417,6 +419,177 @@ def argmin_information_report(
         "uniform_reference_note": (
             "For K=%d actions, neither 'coin flip 0.5' nor uniform 1/K is the right "
             "baseline. Use agreement_independent from the subset marginals." % int(n_actions)
+        ),
+        "rows": rows,
+    }
+
+
+def break_even_identity_report(
+    df: pd.DataFrame,
+    scores: Dict[str, np.ndarray],
+    coverage: float = 0.78,
+    policy: str = "static",
+    tol: float = 1e-9,
+    argmin_info: Mapping[str, Any] | None = None,
+) -> Dict[str, Any]:
+    """G23-21: system delta is a reject-branch argmin identity on err."""
+    if policy != "static":
+        raise ValueError("break-even identity is implemented only for static fallback")
+    if STAR_COL not in df.columns:
+        raise KeyError("break-even identity audit requires %s" % STAR_COL)
+
+    p1 = FB.path_static_shortest()
+    a_twin = df["a_twin"].to_numpy(np.int64)
+    a_star = df[STAR_COL].to_numpy(np.int64)
+    anchor_err = float(FB.loss_of(df, a_twin, "err").mean())
+    loss_twin = FB.loss_of(df, a_twin, "err")
+    loss_p1 = FB.loss_of(df, np.full(len(df), int(p1), dtype=np.int64), "err")
+    info = (
+        argmin_info
+        if argmin_info is not None
+        else argmin_information_report(df, scores=scores, coverage=coverage)
+    )
+    info_by_selector = {str(row["selector"]): row for row in info["rows"]}
+
+    rows = []
+    for name, score in scores.items():
+        acc = _accept_at_coverage(np.asarray(score, dtype=np.float64), float(coverage))
+        reject = ~acc
+        chosen = FB.apply_fallback(df, acc, policy)["a_chosen"]
+        system_err = float(FB.loss_of(df, chosen, "err").mean())
+        delta = float(system_err - anchor_err)
+        reject_share = float(reject.mean())
+        if reject.any():
+            p_twin_correct = float((a_twin[reject] == a_star[reject]).mean())
+            p_p1_correct = float((a_star[reject] == int(p1)).mean())
+            err_twin_reject = float(loss_twin[reject].mean())
+            err_p1_reject = float(loss_p1[reject].mean())
+            reconstructed = float(reject_share * (p_twin_correct - p_p1_correct))
+        else:
+            p_twin_correct = float("nan")
+            p_p1_correct = float("nan")
+            err_twin_reject = float("nan")
+            err_p1_reject = float("nan")
+            reconstructed = 0.0
+        identity_error = float(abs(delta - reconstructed))
+        argmin_row = info_by_selector[str(name)]
+        kappa_accept = float(argmin_row["accept"]["kappa"])
+        kappa_reject = float(argmin_row["reject"]["kappa"])
+        rows.append(
+            {
+                "selector": str(name),
+                "coverage": float(acc.mean()),
+                "reject_share": reject_share,
+                "system_err": system_err,
+                "anchor_err": anchor_err,
+                "delta_vs_anchor": delta,
+                "delta_reconstructed": reconstructed,
+                "abs_identity_error": identity_error,
+                "p_a_twin_eq_a_star_given_reject": p_twin_correct,
+                "p_a_star_eq_p1_given_reject": p_p1_correct,
+                "err_twin_given_reject": err_twin_reject,
+                "err_p1_given_reject": err_p1_reject,
+                "break_even_pass": bool(p_twin_correct < p_p1_correct),
+                "kappa_accept": kappa_accept,
+                "kappa_reject": kappa_reject,
+                "kappa_separation_accept_minus_reject": float(kappa_accept - kappa_reject),
+            }
+        )
+
+    return {
+        "gate": "G23-21",
+        "coverage_target": float(coverage),
+        "policy": str(policy),
+        "static_path": int(p1),
+        "anchor_err": anchor_err,
+        "identity": (
+            "delta_vs_anchor = P(reject) * "
+            "[P(a_twin=a_star|reject) - P(a_star=P1|reject)]"
+        ),
+        "tolerance": float(tol),
+        "pass": bool(all(float(row["abs_identity_error"]) <= float(tol) for row in rows)),
+        "rows": rows,
+    }
+
+
+def gamma_sweep_report(
+    df: pd.DataFrame,
+    qhat_rows: np.ndarray,
+    gammas: Sequence[float] = (0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0),
+    coverage: float = 0.78,
+    policy: str = "static",
+) -> Dict[str, Any]:
+    """C3(gamma): score = min_j m_hat_j / q_hat_j(z)^gamma."""
+    if policy != "static":
+        raise ValueError("gamma sweep is implemented only for static fallback")
+    m = df[list(TF.MHAT_COLS)].to_numpy(np.float64)
+    q = np.asarray(qhat_rows, dtype=np.float64)
+    q_safe = np.maximum(q, 1e-12)
+    anchor = float(FB.loss_of(df, df["a_twin"].to_numpy(np.int64), "err").mean())
+    score_b2 = score_B2_constant_gap(df)
+    score_gamma0 = TF.score_multiplicative(m, np.ones_like(q_safe))
+    score_gamma1 = TF.score_multiplicative(m, q_safe)
+    acc_b2 = _accept_at_coverage(score_b2, float(coverage))
+    acc_g0 = _accept_at_coverage(score_gamma0, float(coverage))
+
+    rows = []
+    gamma1_err = None
+    for gamma in gammas:
+        g = float(gamma)
+        score = TF.score_multiplicative(m, np.power(q_safe, g))
+        acc = _accept_at_coverage(score, float(coverage))
+        chosen = FB.apply_fallback(df, acc, policy)["a_chosen"]
+        per_row = FB.loss_of(df, chosen, "err")
+        err_system = float(per_row.mean())
+        if abs(g - 1.0) < 1e-12:
+            gamma1_err = err_system
+        overlap_c3 = accept_overlap(score, score_gamma1, float(coverage))
+        overlap_b2 = accept_overlap(score, score_b2, float(coverage))
+        rows.append(
+            {
+                "gamma": g,
+                "coverage": float(acc.mean()),
+                "err_system": err_system,
+                "delta_vs_anchor": float(err_system - anchor),
+                "err_accept": float(per_row[acc].mean()) if acc.any() else float("nan"),
+                "err_reject": float(per_row[~acc].mean()) if (~acc).any() else float("nan"),
+                "overlap_with_C3_gamma1": float(overlap_c3["share_of_a"]),
+                "overlap_with_B2_gamma0": float(overlap_b2["share_of_a"]),
+            }
+        )
+
+    best = min(rows, key=lambda row: float(row["err_system"]))
+    if gamma1_err is None:
+        acc = _accept_at_coverage(score_gamma1, float(coverage))
+        chosen = FB.apply_fallback(df, acc, policy)["a_chosen"]
+        gamma1_err = float(FB.loss_of(df, chosen, "err").mean())
+    best_improvement_vs_gamma1 = float(gamma1_err - float(best["err_system"]))
+    improves_after_2 = [
+        row for row in rows if float(row["gamma"]) > 2.0 and float(row["err_system"]) < gamma1_err
+    ]
+    return {
+        "coverage_target": float(coverage),
+        "policy": str(policy),
+        "anchor_err": anchor,
+        "gamma0_matches_B2": {
+            "score_max_abs_diff": float(np.max(np.abs(score_gamma0 - score_b2))),
+            "accept_bitwise_identical": bool(np.array_equal(acc_g0, acc_b2)),
+            "accept_disagree_count": int((acc_g0 != acc_b2).sum()),
+        },
+        "prediction_signed_before_run": (
+            "best err_system at gamma in [0, 1.5], no interior optimum above 2, "
+            "and improvement vs gamma=1 below 0.001"
+        ),
+        "best": {
+            "gamma": float(best["gamma"]),
+            "err_system": float(best["err_system"]),
+            "delta_vs_anchor": float(best["delta_vs_anchor"]),
+            "improvement_vs_gamma1": best_improvement_vs_gamma1,
+        },
+        "prediction_pass": bool(
+            float(best["gamma"]) <= 1.5
+            and len(improves_after_2) == 0
+            and best_improvement_vs_gamma1 < 0.001
         ),
         "rows": rows,
     }
@@ -637,6 +810,20 @@ def run_c3_b2_audit(
         },
         coverage=0.78,
     )
+    audit_scores = {
+        "B1_random": score_b1,
+        "B3_aoi": score_b3,
+        "B2_constant_gap": score_b2,
+        "C3_conformal": score_c3,
+    }
+    break_even = break_even_identity_report(
+        test,
+        scores=audit_scores,
+        coverage=0.78,
+        policy=policy,
+        argmin_info=argmin_info,
+    )
+    gamma_sweep = gamma_sweep_report(test, qhat_rows, coverage=0.78, policy=policy)
     overlaps = {
         "C3_B2": accept_overlap(score_c3, score_b2, 0.78),
         "C3_B3": accept_overlap(score_c3, score_b3, 0.78),
@@ -672,6 +859,8 @@ def run_c3_b2_audit(
         "wasted_abstention_B2_at_078": wasted_abstention_report(test, accept_b2_078),
         "L20_intervention_rate_check": _intervention_rate_check(test, accept_c3_078, accept_b2_078),
         "argmin_information_at_078": argmin_info,
+        "break_even_identity_at_078": break_even,
+        "gamma_sweep_at_078": gamma_sweep,
         "accept_overlap_at_078": overlaps,
         "gap_closed_by_C3_vs_B6sys_at_078": float(gap_closed_by_c3),
         "n_boot": int(n_boot),
@@ -822,6 +1011,39 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
             )
         )
     print()
+    print("=== Break-even identity, G23-21 at coverage 0.78 ===")
+    be = report["break_even_identity_at_078"]
+    print("gate=%s pass=%s tolerance=%.1e" % (be["gate"], be["pass"], be["tolerance"]))
+    print(
+        "%-18s %9s %9s %10s %10s %6s %11s %11s %9s"
+        % (
+            "selector",
+            "kap_rej",
+            "sep",
+            "twin|rej",
+            "P1*|rej",
+            "beats",
+            "delta",
+            "recon",
+            "abs_err",
+        )
+    )
+    for row in be["rows"]:
+        print(
+            "%-18s %9.6f %9.4f %10.6f %10.6f %6s %+11.9f %+11.9f %.1e"
+            % (
+                row["selector"],
+                row["kappa_reject"],
+                row["kappa_separation_accept_minus_reject"],
+                row["p_a_twin_eq_a_star_given_reject"],
+                row["p_a_star_eq_p1_given_reject"],
+                "yes" if row["break_even_pass"] else "no",
+                row["delta_vs_anchor"],
+                row["delta_reconstructed"],
+                row["abs_identity_error"],
+            )
+        )
+    print()
     print("=== Accept overlap at coverage 0.78 ===")
     for key, overlap in report["accept_overlap_at_078"].items():
         print(
@@ -832,6 +1054,40 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
                 overlap["share_of_a"],
                 overlap["jaccard"],
                 overlap["independence_reference"],
+            )
+        )
+    print()
+    print("=== Gamma sweep, score=min_j m_hat_j/q_hat_j^gamma at coverage 0.78 ===")
+    gamma = report["gamma_sweep_at_078"]
+    g0 = gamma["gamma0_matches_B2"]
+    print(
+        "gamma0_matches_B2=%s disagree=%d max_abs_score_diff=%.3g"
+        % (g0["accept_bitwise_identical"], g0["accept_disagree_count"], g0["score_max_abs_diff"])
+    )
+    print(
+        "best_gamma=%.3f best_err=%.9f improvement_vs_gamma1=%.9f prediction_pass=%s"
+        % (
+            gamma["best"]["gamma"],
+            gamma["best"]["err_system"],
+            gamma["best"]["improvement_vs_gamma1"],
+            gamma["prediction_pass"],
+        )
+    )
+    print(
+        "%7s %11s %12s %11s %11s %10s %10s"
+        % ("gamma", "err_system", "delta_anchor", "err_accept", "err_reject", "ov_C3", "ov_B2")
+    )
+    for row in gamma["rows"]:
+        print(
+            "%7.3f %11.9f %+12.9f %11.9f %11.9f %10.6f %10.6f"
+            % (
+                row["gamma"],
+                row["err_system"],
+                row["delta_vs_anchor"],
+                row["err_accept"],
+                row["err_reject"],
+                row["overlap_with_C3_gamma1"],
+                row["overlap_with_B2_gamma0"],
             )
         )
     print()

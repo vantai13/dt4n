@@ -10,6 +10,7 @@ import pytest
 
 from cert import baselines as BL
 from cert import fallback as FB
+from cert import threshold_families as TF
 
 
 ARTIFACT = "results/phase-22/calib_set_v3.parquet"
@@ -113,8 +114,31 @@ def test_argmin_information_report_uses_chance_agreement(df: pd.DataFrame) -> No
             assert stats["excess_agreement"] == pytest.approx(
                 stats["agreement"] - stats["agreement_independent"]
             )
+            assert 0.0 <= stats["p_a_star_eq_p1"] <= 1.0
             assert len(stats["a_twin_distribution"]) == FB.K_ACTIONS
             assert len(stats["a_star_distribution"]) == FB.K_ACTIONS
+
+
+def test_G23_21_break_even_identity_reconstructs_delta(df: pd.DataFrame) -> None:
+    """Static-fallback err delta must be reconstructed from reject argmin rates."""
+    raw = pd.read_parquet(ARTIFACT)
+    _calib, test, qhat_rows, _fit, _q_by_age, _qbar = TF.fit_c3_inputs(raw, config="C3")
+    out = BL.break_even_identity_report(
+        test,
+        {
+            "B1_random": BL.score_B1_random(test),
+            "B3_aoi": BL.score_B3_aoi(test),
+            "B2_constant_gap": BL.score_B2_constant_gap(test),
+            "C3_conformal": BL.score_C3(test, qhat_rows),
+        },
+        coverage=0.78,
+        policy="static",
+    )
+    assert out["gate"] == "G23-21"
+    assert out["pass"] is True
+    for row in out["rows"]:
+        assert row["abs_identity_error"] <= 1e-9
+        assert row["delta_vs_anchor"] == pytest.approx(row["delta_reconstructed"], abs=1e-9)
 
 
 def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
@@ -122,6 +146,10 @@ def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
     raw = pd.read_parquet(ARTIFACT)
     out = BL.run_c3_b2_audit(raw, coverages=[0.78], scales=["err"], n_boot=3)
     assert "argmin_information_at_078" in out
+    assert "break_even_identity_at_078" in out
+    assert out["break_even_identity_at_078"]["pass"] is True
+    assert "gamma_sweep_at_078" in out
+    assert out["gamma_sweep_at_078"]["gamma0_matches_B2"]["accept_bitwise_identical"] is True
     assert "accept_overlap_at_078" in out
     assert out["accept_overlap_at_078"]["C3_B2"]["coverage_target"] == pytest.approx(0.78)
     assert out["accept_overlap_at_078"]["C3_B3"]["coverage_target"] == pytest.approx(0.78)
