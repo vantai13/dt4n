@@ -1,0 +1,102 @@
+{
+  "checks": {
+    "all_regret_ratios_match_m_true_ratios_within_tol": false,
+    "poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol": true,
+    "sla_t_delay_same_across_cells": false,
+    "sla_t_loss_same_across_cells": false,
+    "sla_thresholds_same_across_cells": false
+  },
+  "gate": "G23-17c",
+  "interpretation": {
+    "regret_cross_cell": "Regret is not directly comparable across cells when the regret ratio tracks the m_true scale ratio; use within-cell regret or normalized regret for cross-cell tables.",
+    "sla_cross_cell": "SLA thresholds differ across cells; SLA is not a clean cross-cell headline unless thresholds are fixed or a separate normalization is preregistered."
+  },
+  "provenance": {
+    "created_utc": "2026-08-15T07:46:49.707634+00:00",
+    "git_dirty_before_write": false,
+    "git_hash": "58bf03b2afd3452452570dc80bc2dfbdfb5a7e2b"
+  },
+  "purpose": "Check whether cross-cell regret differences track the true-margin scale, and whether SLA thresholds are comparable across cells.",
+  "ratio_tolerance": 0.15,
+  "rows": [
+    {
+      "abs_ratio_gap": 0.0,
+      "artifact": "results/phase-22/calib_set_v3_poisson_0.925.parquet",
+      "artifact_sha256": "bf704ca60cb62deb5834631ac239a4554d4317bb5bf5242ea108ae78fdb29aa5",
+      "cell": "poisson@0.925",
+      "eps_regret_ms": 3.2222446816474113,
+      "median_m_true_1": 10.784947395324707,
+      "median_m_true_1_ratio_vs_poisson_0p925": 1.0,
+      "metadata": {
+        "eps_regret_ms": 3.2222446816474113,
+        "path": "results/phase-22/calib_set_v3_poisson_0.925.json",
+        "sha256": "214d4d10b19efefdc8ae853425f040d43731b7df15365c07b24d424dc84e64c9",
+        "t_delay_ms": 32.22244681647411,
+        "t_loss": 0.029211978731282062
+      },
+      "n_blocks": 500,
+      "n_rows": 499967,
+      "n_rows_total": 999945,
+      "ratio_gap_fraction_of_m_true_ratio": 0.0,
+      "regret_neo": 1.767460655872071,
+      "regret_neo_ratio_vs_poisson_0p925": 1.0,
+      "regret_ratio_matches_m_true_ratio_within_tol": true,
+      "rowset": "test",
+      "t_delay_ms": 32.22244681647411,
+      "t_loss": 0.029211978731282062
+    },
+    {
+      "abs_ratio_gap": 0.008254291995445973,
+      "artifact": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
+      "artifact_sha256": "e520f85bb3abb01f6cb8100807b0f388d2b251cb3f6bca89706885c00f38e449",
+      "cell": "poisson@0.850",
+      "eps_regret_ms": 2.4243596038611255,
+      "median_m_true_1": 3.211915969848633,
+      "median_m_true_1_ratio_vs_poisson_0p925": 0.29781470897493706,
+      "metadata": {
+        "eps_regret_ms": 2.4243596038611255,
+        "path": "results/phase-22/calib_set_v3_poisson_0.850.json",
+        "sha256": "98f7dd715ccc0c14ca6b2011b6d883bd3749cd92fa0ac18444d16abe6c38a0c2",
+        "t_delay_ms": 24.243596038611255,
+        "t_loss": 0.0072216594767288275
+      },
+      "n_blocks": 500,
+      "n_rows": 499967,
+      "n_rows_total": 999945,
+      "ratio_gap_fraction_of_m_true_ratio": 0.02771619986083569,
+      "regret_neo": 0.5117866445091617,
+      "regret_neo_ratio_vs_poisson_0p925": 0.2895604169794911,
+      "regret_ratio_matches_m_true_ratio_within_tol": true,
+      "rowset": "test",
+      "t_delay_ms": 24.243596038611255,
+      "t_loss": 0.0072216594767288275
+    },
+    {
+      "abs_ratio_gap": 0.6069389222538454,
+      "artifact": "results/phase-22/calib_set_v3_h2_0.700.parquet",
+      "artifact_sha256": "c6bc3ffa06997f72368c2741455cc5bafa57d2995b29c566b0be75327c4c5de7",
+      "cell": "h2@0.700",
+      "eps_regret_ms": 2.861395300891912,
+      "median_m_true_1": 9.552966117858887,
+      "median_m_true_1_ratio_vs_poisson_0p925": 0.8857684481613803,
+      "metadata": {
+        "eps_regret_ms": 2.861395300891912,
+        "path": "results/phase-22/calib_set_v3_h2_0.700.json",
+        "sha256": "2698b45d9ecf0944f3de86b23978c6c9f603b3b0c4416613ddd8b4492cf06526",
+        "t_delay_ms": 28.613953008919122,
+        "t_loss": 0.02645414317289722
+      },
+      "n_blocks": 500,
+      "n_rows": 499967,
+      "n_rows_total": 999945,
+      "ratio_gap_fraction_of_m_true_ratio": 0.6852117204148434,
+      "regret_neo": 0.49282021673703036,
+      "regret_neo_ratio_vs_poisson_0p925": 0.27882952590753496,
+      "regret_ratio_matches_m_true_ratio_within_tol": false,
+      "rowset": "test",
+      "t_delay_ms": 28.613953008919122,
+      "t_loss": 0.02645414317289722
+    }
+  ],
+  "rowset": "test"
+}
