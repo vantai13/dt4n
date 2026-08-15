@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""G23-17a: marginal break-even probabilities before Phase 23.4 sweeps."""
+"""G23-17a/G23-17b audits before Phase 23.4 sweeps."""
 
 from __future__ import annotations
 
@@ -27,7 +27,8 @@ DEFAULT_CELLS: Mapping[str, str] = {
     "poisson@0.850": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
     "h2@0.700": "results/phase-22/calib_set_v3_h2_0.700.parquet",
 }
-DEFAULT_OUT_JSON = "results/phase-23/g23_17a_cell_margins.json"
+DEFAULT_OUT_G23_17A_JSON = "results/phase-23/g23_17a_cell_margins.json"
+DEFAULT_OUT_G23_17B_JSON = "results/phase-23/g23_17b_code_sanity.json"
 
 
 def _git(*cmd: str) -> str:
@@ -59,18 +60,21 @@ def _json_clean(value: Any) -> Any:
     return value
 
 
+def _select_rowset(df: pd.DataFrame, rowset: str) -> pd.DataFrame:
+    if rowset == "test":
+        return df[~df["is_calib"]]
+    if rowset == "calib":
+        return df[df["is_calib"]]
+    if rowset == "all":
+        return df
+    raise ValueError("rowset must be one of: test, calib, all")
+
+
 def cell_margin_row(cell: str, path: str, rowset: str = "test") -> Dict[str, Any]:
     """Compute the three marginal probabilities behind the break-even identity."""
     cols = ["is_calib", "block_id", "a_twin", "a_star"]
     df = pd.read_parquet(path, columns=cols)
-    if rowset == "test":
-        d = df[~df["is_calib"]]
-    elif rowset == "calib":
-        d = df[df["is_calib"]]
-    elif rowset == "all":
-        d = df
-    else:
-        raise ValueError("rowset must be one of: test, calib, all")
+    d = _select_rowset(df, rowset)
 
     p1 = int(FB.path_static_shortest())
     a_twin = d["a_twin"].to_numpy(np.int64)
@@ -120,6 +124,82 @@ def run_report(cells: Mapping[str, str], rowset: str = "test") -> Dict[str, Any]
     }
 
 
+def cell_code_sanity_row(cell: str, path: str, rowset: str = "test") -> Dict[str, Any]:
+    """G23-17b: sanity checks before trusting the G23-17a marginal table."""
+    cols = ["is_calib", "block_id", "a_twin", "a_star", "m_true_1", "m_hat_1"]
+    df = pd.read_parquet(path, columns=cols)
+    d = _select_rowset(df, rowset)
+    p1 = int(FB.path_static_shortest())
+    a_star = d["a_star"].to_numpy(np.int64)
+    a_twin = d["a_twin"].to_numpy(np.int64)
+    star_dist = np.bincount(a_star, minlength=FB.K_ACTIONS).astype(np.float64)
+    star_dist = star_dist / max(float(len(a_star)), 1.0)
+    twin_dist = np.bincount(a_twin, minlength=FB.K_ACTIONS).astype(np.float64)
+    twin_dist = twin_dist / max(float(len(a_twin)), 1.0)
+    return {
+        "cell": str(cell),
+        "artifact": str(path),
+        "artifact_sha256": _sha256(path),
+        "rowset": str(rowset),
+        "n_rows_total": int(len(df)),
+        "n_rows": int(len(d)),
+        "n_blocks": int(d["block_id"].nunique()),
+        "static_path": p1,
+        "p_a_star_eq_p1": float((a_star == p1).mean()),
+        "p_a_twin_eq_p1": float((a_twin == p1).mean()),
+        "a_star_distribution": [float(x) for x in star_dist],
+        "a_twin_distribution": [float(x) for x in twin_dist],
+        "median_m_true_1": float(np.median(d["m_true_1"].to_numpy(np.float64))),
+        "median_m_hat_1": float(np.median(d["m_hat_1"].to_numpy(np.float64))),
+    }
+
+
+def run_code_sanity_report(
+    cells: Mapping[str, str],
+    rowset: str = "test",
+) -> Dict[str, Any]:
+    rows = [cell_code_sanity_row(cell, path, rowset=rowset) for cell, path in cells.items()]
+    by_cell = {row["cell"]: row for row in rows}
+    ref = by_cell["poisson@0.925"]
+    h2 = by_cell["h2@0.700"]
+    p1_values = {int(row["static_path"]) for row in rows}
+    return {
+        "gate": "G23-17b",
+        "rowset": str(rowset),
+        "purpose": (
+            "Rule out implementation mistakes before interpreting the G23-17a "
+            "drop in err_P1 for h2@0.700."
+        ),
+        "checks": {
+            "static_path_same_across_cells": bool(len(p1_values) == 1),
+            "static_path_values": sorted(int(x) for x in p1_values),
+            "h2_median_m_true_1_at_least_30pct_lower_vs_poisson_0p925": bool(
+                float(h2["median_m_true_1"]) <= 0.70 * float(ref["median_m_true_1"])
+            ),
+            "h2_p_a_star_eq_p1_above_poisson_0p925": bool(
+                float(h2["p_a_star_eq_p1"]) > float(ref["p_a_star_eq_p1"])
+            ),
+        },
+        "reference_poisson_0.925": {
+            "p_a_star_eq_p1": ref["p_a_star_eq_p1"],
+            "median_m_true_1": ref["median_m_true_1"],
+            "median_m_hat_1": ref["median_m_hat_1"],
+        },
+        "h2_vs_poisson_0.925": {
+            "p_a_star_eq_p1_delta": float(
+                h2["p_a_star_eq_p1"] - ref["p_a_star_eq_p1"]
+            ),
+            "median_m_true_1_ratio": float(
+                h2["median_m_true_1"] / max(float(ref["median_m_true_1"]), 1e-12)
+            ),
+            "median_m_hat_1_ratio": float(
+                h2["median_m_hat_1"] / max(float(ref["median_m_hat_1"]), 1e-12)
+            ),
+        },
+        "rows": rows,
+    }
+
+
 def write_json_report(report: Dict[str, Any], out_json: str) -> None:
     os.makedirs(os.path.dirname(out_json), exist_ok=True)
     payload = dict(report)
@@ -133,7 +213,7 @@ def write_json_report(report: Dict[str, Any], out_json: str) -> None:
         f.write("\n")
 
 
-def _print_summary(report: Dict[str, Any], out_json: str) -> None:
+def _print_g23_17a_summary(report: Dict[str, Any], out_json: str) -> None:
     print("=== G23-17a: marginal break-even probabilities before Phase 23.4 ===")
     print("rowset=%s" % report["rowset"])
     print(
@@ -157,15 +237,69 @@ def _print_summary(report: Dict[str, Any], out_json: str) -> None:
     print("wrote_json=%s" % out_json)
 
 
+def _fmt_dist(values: Sequence[float]) -> str:
+    return "[" + ",".join("%.4f" % float(x) for x in values) + "]"
+
+
+def _print_g23_17b_summary(report: Dict[str, Any], out_json: str) -> None:
+    print("=== G23-17b: code sanity before trusting G23-17a ===")
+    print("rowset=%s" % report["rowset"])
+    print(
+        "%-16s %4s %10s %-29s %14s %14s"
+        % ("cell", "P1", "a*=P1", "a*dist", "med_m_true_1", "med_m_hat_1")
+    )
+    for row in report["rows"]:
+        print(
+            "%-16s %4d %10.6f %-29s %14.6f %14.6f"
+            % (
+                row["cell"],
+                row["static_path"],
+                row["p_a_star_eq_p1"],
+                _fmt_dist(row["a_star_distribution"]),
+                row["median_m_true_1"],
+                row["median_m_hat_1"],
+            )
+        )
+    checks = report["checks"]
+    print()
+    print("checks:")
+    for key in (
+        "static_path_same_across_cells",
+        "h2_median_m_true_1_at_least_30pct_lower_vs_poisson_0p925",
+        "h2_p_a_star_eq_p1_above_poisson_0p925",
+    ):
+        print("  %s=%s" % (key, checks[key]))
+    h2 = report["h2_vs_poisson_0.925"]
+    print(
+        "h2_vs_poisson_0.925: p_a_star_eq_p1_delta=%+.6f "
+        "median_m_true_1_ratio=%.6f median_m_hat_1_ratio=%.6f"
+        % (
+            h2["p_a_star_eq_p1_delta"],
+            h2["median_m_true_1_ratio"],
+            h2["median_m_hat_1_ratio"],
+        )
+    )
+    print("wrote_json=%s" % out_json)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
+    parser.add_argument("--audit", choices=("g23-17a", "g23-17b"), default="g23-17a")
     parser.add_argument("--rowset", choices=("test", "calib", "all"), default="test")
-    parser.add_argument("--out-json", default=DEFAULT_OUT_JSON)
+    parser.add_argument("--out-json", default=None)
     args = parser.parse_args(argv)
 
+    if args.audit == "g23-17b":
+        report = run_code_sanity_report(DEFAULT_CELLS, rowset=args.rowset)
+        out_json = args.out_json or DEFAULT_OUT_G23_17B_JSON
+        write_json_report(report, out_json)
+        _print_g23_17b_summary(report, out_json)
+        return 0
+
     report = run_report(DEFAULT_CELLS, rowset=args.rowset)
-    write_json_report(report, args.out_json)
-    _print_summary(report, args.out_json)
+    out_json = args.out_json or DEFAULT_OUT_G23_17A_JSON
+    write_json_report(report, out_json)
+    _print_g23_17a_summary(report, out_json)
     return 0
 
 
