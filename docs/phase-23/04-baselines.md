@@ -129,6 +129,27 @@ partial_AURC_060_100/anchor(B2) = 0.967010
 Day la bai hoc "point vs band": so mot diem 0.78 mong manh; so tren dai
 van hanh on dinh hon va dung voi Amendment 23-12.
 
+Ghi chu ve luoi: Amendment 23-12 bao cao `beneficial_band` tren luoi kappa min
+cua Lesson 23.1:
+
+```text
+beneficial_band (luoi kappa min, Lesson 23.1)  = [0.6151, 1.0000]
+best improvement                               = 0.013227 @ coverage 0.79345
+improvement_area                               = 0.003368
+```
+
+Bang tren bao cao cung dai tren luoi coverage deu cua Lesson 23.3:
+
+```text
+beneficial_band (luoi coverage deu, 23.3)      = [0.6076, 0.99995]
+best improvement                               = 0.013668874 @ coverage 0.81000
+improvement_area                               = 0.003403849
+```
+
+Chenh lech `0.0075` o band_low la hieu ung luoi/noi suy, khong phai hai
+artifact mau thuan. Headline cua 23.3 dung luoi coverage deu vi day la truc so
+sanh chung cho moi baseline.
+
 ## C3 vs B2 mechanism
 
 C3 tot hon B2 tren nhanh accept, nhung phan bu reject cua C3 te hon cho P1.
@@ -208,6 +229,40 @@ Doc so nay: khoang mot nua ngan sach reject cua C3 va B2 tai 0.78 nam tren
 cac hang ma reject khong doi hanh dong. Tuy vay intervention rate that cua hai
 chinh sach chi lech 0.001274, nen so sanh C3 vs B2 tai matched coverage 0.78
 la hop le theo L20.
+
+## C3-A va B2-A dong bang ly thuyet
+
+Y tuong C3-A: dung lang phi ngan sach reject len cac hang ma `a_twin == P1`;
+chi reject cac hang co the can thiep that. Y tuong nay sai theo cau truc voi
+fallback F2 STATIC.
+
+Menh de: voi bat ky score C va nguong k, dat
+
+```text
+C(k)   = accept/reject theo score C
+C-A(k) = C(k), nhung ep accept moi hang co a_twin == P1
+```
+
+Khi do `risk(C-A(k)) = risk(C(k))` voi moi k va moi thang do.
+
+Chung minh: hai chinh sach chi khac nhau tren tap
+`D = {row: a_twin == P1 va C(k) reject}`. Tren D:
+
+```text
+C(k)   reject -> hanh dong = P1
+C-A(k) accept -> hanh dong = a_twin = P1
+```
+
+Cung mot hanh dong nen cung ton that per-row; ngoai D hai chinh sach dong
+nhat. Do do risk trung binh bang nhau tren toan bo tap. He qua:
+`min_k risk(C-A(k)) = min_k risk(C(k))`.
+
+Vay C3-A khong the tot hon C3; no chi la phep tham so hoa lai cung mot ho
+chinh sach theo truc coverage khac. Ghi chu: ti le reject vo ich gan nhu bang
+nhau o ca C3 va B2 (`0.4989` vs `0.5047` given reject), nen ket luan nay ap
+dung nguyen ven cho B2-A. "Tiet kiem ngan sach reject" la mot truc doc sai cho
+F2 STATIC: coverage la dai luong dan xuat tu nguong, khong phai ngan sach chi
+phi.
 
 ## Co che #7 -- nguong hoa von la nguong cung
 
@@ -307,8 +362,10 @@ Hanh dong 1 gan nhu chet: twin khong bao gio chon, va chan ly chi chon voi xac
 suat `1.4e-5`. Threat moi:
 
 ```text
-L21  Khong gian hanh dong hieu dung la 3, nhung bonferroni tra gia theo K=4
-     danh nghia. Chi phi cua hanh dong chet chua duoc luong hoa.
+L21  Khong gian hanh dong hieu dung la 3 trong khi thiet ke danh nghia co
+     K=4 action, tuc K-1=3 score slots. Neu action chet co the loai hop le,
+     so so sanh hieu dung co the la 2 thay vi 3. Chi phi cua slot/action chet
+     chua duoc luong hoa.
 ```
 
 Tren tap reject, B2/C3 lam phan phoi `a_twin` gian ra, con B3 gan nhu giu
@@ -325,31 +382,92 @@ Doc co che: `m_hat` nho bat che do twin ban khoan, argmin gian ra. `z` lon bat
 che do twin tu tin nhung sai, argmin giu hinh dang gan nhu cu. Conformal theo
 tuoi vi vay dang chuan hoa mot tin hieu co that nhung yeu hon nguong van hanh.
 
-## Gamma sweep
+## Gamma sweep va G23-21b
 
 Thuc nghiem re de xem tuoi dang bi duoi-trong-so hay that su khong them nhieu
 o bien:
 
 ```text
-score_gamma = min_j m_hat_j / q_hat_j(z)^gamma
+score_gamma = min_j m_hat_j / q_hat_j(z_bin, m_hat_bin)^gamma
 ```
 
 Pre-check: `gamma=0` trung bitwise voi B2 (`disagree=0`,
-`max_abs_score_diff=0`). `gamma=1` la C3 hien tai.
+`max_abs_score_diff=0`). `gamma=1` la C3 hien tai va la diem duy nhat trong
+bang con giu bao dam conformal da hieu chuan.
 
-| gamma | err_system | delta vs anchor | err\|accept | err\|reject | overlap C3 | overlap B2 |
-|---:|---:|---:|---:|---:|---:|---:|
-| 0.0 | 0.209413821 | -0.012984857 | 0.158474668 | 0.390015728 | 0.972570 | 1.000000 |
-| 0.5 | 0.208991793 | -0.013406885 | 0.157651536 | 0.391015792 | 0.986712 | 0.985858 |
-| 1.0 | 0.209529829 | -0.012868849 | 0.157259202 | 0.394852400 | 1.000000 | 0.972570 |
-| 1.5 | 0.210313881 | -0.012084798 | 0.158125926 | 0.395343340 | 0.987007 | 0.959577 |
-| 2.0 | 0.209549830 | -0.012848848 | 0.157331002 | 0.394688753 | 0.976263 | 0.948832 |
-| 3.0 | 0.211097932 | -0.011300746 | 0.159143943 | 0.395297883 | 0.957448 | 0.930018 |
-| 5.0 | 0.214762174 | -0.007636504 | 0.162813418 | 0.398943569 | 0.928947 | 0.901517 |
+| gamma | err_system | delta vs anchor | overlap C3 | overlap B2 | guarantee? |
+|---:|---:|---:|---:|---:|:--:|
+| 0.0 | 0.209413821 | -0.012984857 | 0.972570 | 1.000000 | no |
+| 0.5 | 0.208991793 | -0.013406885 | 0.986712 | 0.985858 | no |
+| 1.0 | 0.209529829 | -0.012868849 | 1.000000 | 0.972570 | yes |
+| 1.5 | 0.210313881 | -0.012084798 | 0.987007 | 0.959577 | no |
+| 2.0 | 0.209549830 | -0.012848848 | 0.976263 | 0.948832 | no |
+| 3.0 | 0.211097932 | -0.011300746 | 0.957448 | 0.930018 | no |
+| 5.0 | 0.214762174 | -0.007636504 | 0.928947 | 0.901517 | no |
 
-Ket qua: best trong luoi la `gamma=0.5`, `err_system=0.208991793`, cai thien so
-voi C3 gamma=1 la `0.000538036`. Du doan "best trong [0,1.5], khong co cuc tri
-noi o gamma > 2, cai thien < 0.001" PASS.
+Khong doc `gamma=0.5` nhu diem van hanh hop le. No duoc chon tren cung tap test
+nen bi winner's curse, va `gamma != 1` khong guarantee-preserving: `q_hat^gamma`
+khong con la phan vi conformal da hieu chuan. Doc dung: chieu gamma la mot
+diagnostic do chi phi cua bao dam. Gia tri do duoc:
+
+```text
+gamma0.5 - gamma1, err delta = -0.000538036
+CI95 paired block bootstrap  = [-0.001932176, +0.000872232]
+CI chua 0                    = True
+```
+
+Vay chi phi diem cua bao dam formal, tren diagnostic nay, la khoang `0.000538`
+err va khong phan biet duoc voi 0 bang CI ghep cap.
+
+G23-21b kiem tra them gia thuyet "gamma noi B2 voi B3":
+
+```text
+qhat slots = 3, keys = z_bin,m_hat_bin
+qhat monotone theo z trong moi m_hat_bin = True
+qhat monotone theo z_s o row-level       = False
+```
+
+Do C3 dung Mondrian key `z_bin x m_hat_bin`, `gamma -> infinity` khong xep hang
+theo tuoi thuan B3; no xep theo cau truc cell/slot cua `q_hat`. Ket qua:
+
+| gamma | err_system | gap vs B3 | overlap B3 |
+|---:|---:|---:|---:|
+| 0.0 | 0.209413821 | -0.025545686 | 0.780129 |
+| 0.5 | 0.208991793 | -0.025967714 | 0.786193 |
+| 1.0 | 0.209529829 | -0.025429678 | 0.791863 |
+| 2.0 | 0.209549830 | -0.025409677 | 0.801941 |
+| 3.0 | 0.211097932 | -0.023861575 | 0.810031 |
+| 5.0 | 0.214762174 | -0.020197333 | 0.822329 |
+| 20.0 | 0.243768089 | +0.008808581 | 0.839433 |
+| 100.0 | 0.248062372 | +0.013102865 | 0.839494 |
+
+Check G23-21b:
+
+```text
+b2_to_b3_interpolation_supported            = False
+gamma_max_within_0.002_of_B3                = False
+no_gamma_gt2_beats_gamma1                   = True
+err_system_monotone_for_gamma_ge1           = False
+paired_gamma0.5_minus_gamma1_CI_contains_0  = True
+```
+
+Ket luan: khong co gamma > 2 nao thang C3 trong luoi da do, va loi ich
+`gamma=0.5` khong phan biet duoc. Nhung phat bieu "ho gamma noi B2-B3" bi bac
+cho implementation C3 hien tai; nguyen nhan la `q_hat` khong phai ham cua tuoi
+don thuan.
+
+## Tie-break sensitivity
+
+Tai coverage 0.78, thay stable row-order tie-break bang random tie-break ba seed:
+
+| Selector | rowsort | rand s1 | rand s2 | rand s3 | spread |
+|---|---:|---:|---:|---:|---:|
+| B3 AoI | 0.234959507 | 0.234953507 | 0.234951507 | 0.234955507 | 0.000008001 |
+| B2 constant gap | 0.209413821 | 0.209313815 | 0.209341817 | 0.209337816 | 0.000100007 |
+| C3 conformal | 0.209529829 | 0.209529829 | 0.209529829 | 0.209529829 | 0.000000000 |
+
+Spread B3 chi bang `0.000008`, nho hon nhieu so voi `|C3-B3| = 0.025430`.
+Ket luan C3 vuot B3 tai 0.78 khong phu thuoc quy tac pha hoa.
 
 ## Ket luan hien tai
 
@@ -364,8 +482,8 @@ Khong duoc ket luan B3 vo tin hieu: B3 co 31.7% suc tach kappa cua C3 nhung
 chua vuot nguong hoa von cua fallback P1.
 
 Nhung B2 constant gap la doi thu that: tai coverage 0.78, C3 khong phan biet
-duoc voi B2 tren err/regret/sla. Gamma sweep cho thay tang trong so tuoi khong
-tao them loi ich he thong dang ke tai o nay.
+duoc voi B2 tren err/regret/sla. Gamma sweep khong cap phep chon gamma khac 1;
+no do chi phi cua bao dam formal, va chi phi do nho hon thanh sai so.
 
 C3 co beneficial band tu 0.607600 tro len, tuc co the reject toi da 39.24%
 ma van thang neo always-trust tren err_system.

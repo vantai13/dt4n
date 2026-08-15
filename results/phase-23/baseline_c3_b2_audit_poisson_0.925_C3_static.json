@@ -959,8 +959,9 @@
       "accept_disagree_count": 0,
       "score_max_abs_diff": 0.0
     },
+    "numerical_prediction_pass": true,
     "policy": "static",
-    "prediction_pass": true,
+    "prediction_scope": "Numerical diagnostic only. gamma != 1 is not guarantee-preserving and must not be reported as a certified operating point.",
     "prediction_signed_before_run": "best err_system at gamma in [0, 1.5], no interior optimum above 2, and improvement vs gamma=1 below 0.001",
     "rows": [
       {
@@ -1047,9 +1048,9 @@
   "n_test": 499967,
   "policy": "static",
   "provenance": {
-    "created_utc": "2026-08-15T03:28:14.577521+00:00",
+    "created_utc": "2026-08-15T03:32:31.300923+00:00",
     "git_dirty_before_write": true,
-    "git_hash": "ea1620557e59248ea1940ff24715752a2f0504f3"
+    "git_hash": "5eef5cdb53ef230a2fa9b52793c65103bf08ae0a"
   },
   "scales": [
     "err",

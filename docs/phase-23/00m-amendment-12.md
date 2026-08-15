@@ -32,7 +32,7 @@ Phase 23 phai bao cao:
 Voi C3 + F2 STATIC hien tai:
 
 ```text
-dai co loi                  = [0.6151, 1.0000]
+dai co loi                  = [0.6151, 1.0000]  (luoi kappa min, Lesson 23.1)
 tu choi toi da van co loi    = 38.49%
 dien tich cai thien err      = 0.003368
 best improvement             = 0.013227 tai coverage 0.79345
@@ -43,3 +43,16 @@ partial-AURC ratio           = 0.9623
 
 AURC toan dai van duoc bao cao trong bang phu, kem canh bao rang no khong
 phai headline cho `risk_system` hinh chu U.
+
+Ghi chu sau Lesson 23.3: `04-baselines.md` bao cao cung dai co loi tren luoi
+coverage deu dung chung cho moi baseline:
+
+```text
+dai co loi                  = [0.6076, 0.99995]  (luoi coverage deu, 23.3)
+dien tich cai thien err      = 0.003403849
+best improvement             = 0.013668874 tai coverage 0.81000
+```
+
+Chenh lech `band_low = 0.6151` vs `0.6076` la hieu ung luoi/noi suy, khong
+phai mau thuan artifact. Con so headline trong bang so sanh baseline dung luoi
+coverage deu.

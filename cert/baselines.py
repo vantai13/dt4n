@@ -650,6 +650,11 @@ def gamma_sweep_report(
     improves_after_2 = [
         row for row in rows if float(row["gamma"]) > 2.0 and float(row["err_system"]) < gamma1_err
     ]
+    numerical_prediction_pass = bool(
+        float(best["gamma"]) <= 1.5
+        and len(improves_after_2) == 0
+        and best_improvement_vs_gamma1 < 0.001
+    )
     return {
         "coverage_target": float(coverage),
         "policy": str(policy),
@@ -663,17 +668,17 @@ def gamma_sweep_report(
             "best err_system at gamma in [0, 1.5], no interior optimum above 2, "
             "and improvement vs gamma=1 below 0.001"
         ),
+        "prediction_scope": (
+            "Numerical diagnostic only. gamma != 1 is not guarantee-preserving "
+            "and must not be reported as a certified operating point."
+        ),
         "best": {
             "gamma": float(best["gamma"]),
             "err_system": float(best["err_system"]),
             "delta_vs_anchor": float(best["delta_vs_anchor"]),
             "improvement_vs_gamma1": best_improvement_vs_gamma1,
         },
-        "prediction_pass": bool(
-            float(best["gamma"]) <= 1.5
-            and len(improves_after_2) == 0
-            and best_improvement_vs_gamma1 < 0.001
-        ),
+        "numerical_prediction_pass": numerical_prediction_pass,
         "rows": rows,
     }
 
@@ -1334,12 +1339,12 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
         % (g0["accept_bitwise_identical"], g0["accept_disagree_count"], g0["score_max_abs_diff"])
     )
     print(
-        "best_gamma=%.3f best_err=%.9f improvement_vs_gamma1=%.9f prediction_pass=%s"
+        "best_gamma=%.3f best_err=%.9f improvement_vs_gamma1=%.9f numerical_prediction_pass=%s"
         % (
             gamma["best"]["gamma"],
             gamma["best"]["err_system"],
             gamma["best"]["improvement_vs_gamma1"],
-            gamma["prediction_pass"],
+            gamma["numerical_prediction_pass"],
         )
     )
     print(
