@@ -6,7 +6,8 @@ Trang thai: Lessons 23.0--23.3 da dong so cho o chinh `poisson@0.925`,
 fallback F2 STATIC. Lesson 23.4 chua chay. Day la checkpoint de tiep tuc
 23.4, khong phai GO/NO-GO cuoi Phase 23.
 
-Commit code/artifact checkpoint: `5eef5cd`
+Artifact provenance git hash: `eafa328` (`git_dirty_before_write=false`).
+Latest artifact refresh commit: `982aa0c`.
 
 ## Artifacts
 
@@ -144,4 +145,9 @@ Lesson 23.4 may proceed only with these constraints:
 ```text
 /tmp/dt4n-venv/bin/python -m pytest test/test_phase23_baselines.py -q
 10 passed in 11.64s
+
+/tmp/dt4n-venv/bin/python -m pytest \
+  test/test_phase23_baselines.py test/test_phase23_thresholds.py \
+  test/test_phase23_prereg.py -q
+25 passed in 24.40s
 ```
