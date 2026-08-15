@@ -133,6 +133,10 @@ Max-score  : hieu chuan s_sim o alpha, khong chia
 Phase 22 dung alpha/(K-1) = 0.0333 (K-1 khang dinh, deu la hieu voi a1).
 Ca hai hop le; alpha/(K-1) chat hon.
 Bao cao song song ca hai o Lesson 22.3 de dong chenh lech nay cong khai.
+
+Ghi chu sau Amendment 23-16: voi C3 Phase 23, phat bieu chinh thuc duoc
+supersede thanh theorem tren `K-1` bien voi `alpha/(K-1)`. Wording
+MASTER_PLAN `alpha/K` chi con la ban cu theo cach chan `K` chi phi tuyet doi.
 ```
 
 ### P3c. Bridge half-normal la score-dependent

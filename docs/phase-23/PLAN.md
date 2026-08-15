@@ -33,12 +33,16 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 23-12 khoa chi so headline Phase 23 cho risk_system hinh chu U
 23-13 ha B4 variance proxy thanh gate vi B4 dong nhat B3
 23-14 tach B6 du doan va B6-sys he thong; them gate dang dong
+23-15 them G23-21/G23-21b va chance-agreement cho co che break-even
+23-16 sua dinh ly C3 tu K khoang chi phi sang K-1 bien, khop alpha/3 trong code
 ```
 
 Lesson 23.2 duoc phep chay theo Amendment 23-10. Lesson 23.3 chi duoc chay
 theo cac dong prediction da khoa trong `00-preregistration.md` va bo sung
 B6-sys/B4 gates cua Amendments 23-10, 23-13, va 23-14. Lesson 23.4 phai dung
-headline metrics cua Amendment 23-12 thay vi AURC toan dai.
+headline metrics cua Amendment 23-12 thay vi AURC toan dai, va phai dung
+dinh ly C3 da sua trong Amendment 23-16: certificate tren `K-1` bien, khong
+tren `K` chi phi tuyet doi.
 
 ## Scope bi chan
 

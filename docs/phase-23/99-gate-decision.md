@@ -149,6 +149,7 @@ relative to B2 is a formal guarantee at no measurable system-risk cost.
 | L22 | model selection | Gamma sweep is on test; gamma != 1 is not guarantee-preserving. | Closed as diagnostic only |
 | L23 | taxonomy | C3 uses `z_bin x m_hat_bin`; age-only asymptotic arguments can fail. | Closed by G23-21b for current artifact |
 | L24 | finite cells | Mondrian cells could be too thin, making `q_hat=+inf` or weak. | Closed by G23-21c for current artifact; min effective blocks 433 |
+| L25 | theorem statement | Old MASTER_PLAN wording used `alpha/K` for K cost intervals, while Phase 22--23 code certifies K-1 margins with `alpha/(K-1)`. | Closed by Amendment 23-16; optional dead-action pruning remains separate |
 
 ## Before Lesson 23.4
 
@@ -163,6 +164,9 @@ Lesson 23.4 may proceed only with these constraints:
    paired CIs exclude 0.
 5. Preserve the C3 taxonomy as `z_bin x m_hat_bin`; do not collapse it to
    age-only notation in claims about guarantees.
+6. State the C3 theorem on `K-1` margins with `alpha/(K-1)`, per
+   `00q-amendment-16.md`; do not use the superseded `alpha/K` cost-interval
+   wording.
 ```
 
 ## Verification

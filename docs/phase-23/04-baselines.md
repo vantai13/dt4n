@@ -368,6 +368,11 @@ L21  Khong gian hanh dong hieu dung la 3 trong khi thiet ke danh nghia co
      chua duoc luong hoa.
 ```
 
+Ghi chu sau Amendment 23-16: phan dinh ly C3 da duoc chot theo `K-1=3` bien
+voi `alpha/(K-1)`, khop code Phase 22--23. L21 con lai chi la cau hoi optional
+ve pruning action chet de co the giam tiep xuong `K_eff-1=2`; chua co artifact
+va khong duoc dung cho cac ket qua hien tai.
+
 Tren tap reject, B2/C3 lam phan phoi `a_twin` gian ra, con B3 gan nhu giu
 hinh dang bien:
 
