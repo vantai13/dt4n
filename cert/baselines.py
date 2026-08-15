@@ -32,6 +32,7 @@ DEFAULT_ARTIFACT = "results/phase-22/calib_set_v3.parquet"
 DEFAULT_OUT_JSON = "results/phase-23/baseline_rankings_poisson_0.925_C3_static.json"
 DEFAULT_OUT_CSV = "results/phase-23/baseline_rankings_poisson_0.925_C3_static.csv"
 DEFAULT_AUDIT_JSON = "results/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json"
+STAR_COL = "a_star"
 
 
 def _git(*cmd: str) -> str:
@@ -333,17 +334,91 @@ def wasted_abstention_report(
     p1 = FB.path_static_shortest()
     free = df["a_twin"].to_numpy(np.int64) == int(p1)
     reject = ~np.asarray(accept, dtype=bool)
+    accept_mask = ~reject
     wasted = reject & free
     actionable_reject = reject & (~free)
+    a_star = df[STAR_COL].to_numpy(np.int64)
     return {
         "static_path": int(p1),
         "p_a_twin_eq_p1": float(free.mean()),
+        "p_a_twin_eq_p1_given_accept": float(free[accept_mask].mean()) if accept_mask.any() else float("nan"),
+        "p_a_twin_eq_p1_given_reject": float(free[reject].mean()) if reject.any() else float("nan"),
+        "p_a_star_eq_p1_reference": float((a_star == int(p1)).mean()),
         "coverage": float((~reject).mean()),
         "reject_share": float(reject.mean()),
         "wasted_reject_share_total_rows": float(wasted.mean()),
         "wasted_reject_given_reject": float(wasted.mean() / max(float(reject.mean()), 1e-12)),
         "actionable_reject_share_total_rows": float(actionable_reject.mean()),
         "actionable_reject_given_reject": float(actionable_reject.mean() / max(float(reject.mean()), 1e-12)),
+    }
+
+
+def argmin_information_report(
+    df: pd.DataFrame,
+    scores: Dict[str, np.ndarray],
+    coverage: float = 0.78,
+    n_actions: int = FB.K_ACTIONS,
+) -> Dict[str, Any]:
+    """Audit whether a_twin keeps information about a_star on accept/reject sets."""
+    if STAR_COL not in df.columns:
+        raise KeyError("argmin information audit requires %s" % STAR_COL)
+    p1 = FB.path_static_shortest()
+    a_twin = df["a_twin"].to_numpy(np.int64)
+    a_star = df[STAR_COL].to_numpy(np.int64)
+
+    def _stats(mask: np.ndarray) -> Dict[str, Any]:
+        m = np.asarray(mask, dtype=bool)
+        if not m.any():
+            return {
+                "share": float("nan"),
+                "p_a_twin_eq_p1": float("nan"),
+                "agreement": float("nan"),
+                "agreement_independent": float("nan"),
+                "excess_agreement": float("nan"),
+                "kappa": float("nan"),
+                "a_twin_distribution": [],
+                "a_star_distribution": [],
+            }
+        twin = a_twin[m]
+        star = a_star[m]
+        p_twin = np.bincount(twin, minlength=int(n_actions)).astype(np.float64) / float(len(twin))
+        p_star = np.bincount(star, minlength=int(n_actions)).astype(np.float64) / float(len(star))
+        agree = float((twin == star).mean())
+        agree_ind = float(np.dot(p_twin, p_star))
+        excess = float(agree - agree_ind)
+        return {
+            "share": float(m.mean()),
+            "p_a_twin_eq_p1": float((twin == int(p1)).mean()),
+            "agreement": agree,
+            "agreement_independent": agree_ind,
+            "excess_agreement": excess,
+            "kappa": float(excess / max(1.0 - agree_ind, 1e-12)),
+            "a_twin_distribution": [float(x) for x in p_twin],
+            "a_star_distribution": [float(x) for x in p_star],
+        }
+
+    rows = []
+    for name, score in scores.items():
+        acc = _accept_at_coverage(np.asarray(score, dtype=np.float64), float(coverage))
+        rows.append(
+            {
+                "selector": str(name),
+                "accept": _stats(acc),
+                "reject": _stats(~acc),
+            }
+        )
+
+    return {
+        "coverage_target": float(coverage),
+        "static_path": int(p1),
+        "star_col": STAR_COL,
+        "n_actions": int(n_actions),
+        "marginal": _stats(np.ones(len(df), dtype=bool)),
+        "uniform_reference_note": (
+            "For K=%d actions, neither 'coin flip 0.5' nor uniform 1/K is the right "
+            "baseline. Use agreement_independent from the subset marginals." % int(n_actions)
+        ),
+        "rows": rows,
     }
 
 
@@ -531,6 +606,8 @@ def run_c3_b2_audit(
     _calib, test, qhat_rows, _fit, _q_by_age, _qbar = TF.fit_c3_inputs(df, config=config)
     score_c3 = score_C3(test, qhat_rows)
     score_b2 = score_B2_constant_gap(test)
+    score_b1 = score_B1_random(test)
+    score_b3 = score_B3_aoi(test)
     rows = []
     for coverage in coverages:
         for scale_idx, scale in enumerate(scales):
@@ -550,6 +627,20 @@ def run_c3_b2_audit(
             )
     accept_c3_078 = _accept_at_coverage(score_c3, 0.78)
     accept_b2_078 = _accept_at_coverage(score_b2, 0.78)
+    argmin_info = argmin_information_report(
+        test,
+        scores={
+            "B1_random": score_b1,
+            "B3_aoi": score_b3,
+            "B2_constant_gap": score_b2,
+            "C3_conformal": score_c3,
+        },
+        coverage=0.78,
+    )
+    overlaps = {
+        "C3_B2": accept_overlap(score_c3, score_b2, 0.78),
+        "C3_B3": accept_overlap(score_c3, score_b3, 0.78),
+    }
     anchor_err = float(FB.loss_of(test, test["a_twin"].to_numpy(np.int64), "err").mean())
     b6sys_078 = paired_ranking_delta_at_coverage(
         test,
@@ -580,6 +671,8 @@ def run_c3_b2_audit(
         "wasted_abstention_C3_at_078": wasted_abstention_report(test, accept_c3_078),
         "wasted_abstention_B2_at_078": wasted_abstention_report(test, accept_b2_078),
         "L20_intervention_rate_check": _intervention_rate_check(test, accept_c3_078, accept_b2_078),
+        "argmin_information_at_078": argmin_info,
+        "accept_overlap_at_078": overlaps,
         "gap_closed_by_C3_vs_B6sys_at_078": float(gap_closed_by_c3),
         "n_boot": int(n_boot),
         "seed": int(seed),
@@ -684,6 +777,9 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
         print(label + ":")
         for key in (
             "p_a_twin_eq_p1",
+            "p_a_twin_eq_p1_given_accept",
+            "p_a_twin_eq_p1_given_reject",
+            "p_a_star_eq_p1_reference",
             "coverage",
             "reject_share",
             "wasted_reject_share_total_rows",
@@ -704,6 +800,40 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
     ):
         print("%s=%.9f" % (key, l20[key]))
     print("comparable_at_matched_coverage=%s" % l20["comparable_at_matched_coverage"])
+    print()
+    print("=== Argmin information, chance agreement at coverage 0.78 ===")
+    print(
+        "%-18s %10s %10s %10s %10s %10s %10s"
+        % ("selector", "agr_acc", "ind_acc", "kap_acc", "agr_rej", "ind_rej", "kap_rej")
+    )
+    for row in report["argmin_information_at_078"]["rows"]:
+        acc = row["accept"]
+        rej = row["reject"]
+        print(
+            "%-18s %10.6f %10.6f %10.6f %10.6f %10.6f %10.6f"
+            % (
+                row["selector"],
+                acc["agreement"],
+                acc["agreement_independent"],
+                acc["kappa"],
+                rej["agreement"],
+                rej["agreement_independent"],
+                rej["kappa"],
+            )
+        )
+    print()
+    print("=== Accept overlap at coverage 0.78 ===")
+    for key, overlap in report["accept_overlap_at_078"].items():
+        print(
+            "%s: intersection=%.9f share_of_a=%.9f jaccard=%.9f independence_ref=%.9f"
+            % (
+                key,
+                overlap["intersection"],
+                overlap["share_of_a"],
+                overlap["jaccard"],
+                overlap["independence_reference"],
+            )
+        )
     print()
     print("gap_closed_by_C3_vs_B6sys_at_078=%.9f" % report["gap_closed_by_C3_vs_B6sys_at_078"])
     print("wrote_json=%s" % out_json)

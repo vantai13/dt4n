@@ -91,3 +91,37 @@ def test_L20_intervention_rate_check_reports_actionable_gap(df: pd.DataFrame) ->
     assert out["abs_gap"] == pytest.approx(abs(out["gap_a_minus_b"]))
     assert out["tolerance"] == pytest.approx(0.01)
     assert isinstance(out["comparable_at_matched_coverage"], bool)
+
+
+def test_argmin_information_report_uses_chance_agreement(df: pd.DataFrame) -> None:
+    """Argmin mechanism audit must use subset marginals, not a fixed 0.5 baseline."""
+    out = BL.argmin_information_report(
+        df,
+        {
+            "B1": BL.score_B1_random(df),
+            "B2": BL.score_B2_constant_gap(df),
+        },
+        coverage=0.78,
+    )
+    assert out["star_col"] == "a_star"
+    assert out["n_actions"] == FB.K_ACTIONS
+    assert len(out["rows"]) == 2
+    for row in out["rows"]:
+        for branch in ("accept", "reject"):
+            stats = row[branch]
+            assert 0.0 <= stats["agreement_independent"] <= 1.0
+            assert stats["excess_agreement"] == pytest.approx(
+                stats["agreement"] - stats["agreement_independent"]
+            )
+            assert len(stats["a_twin_distribution"]) == FB.K_ACTIONS
+            assert len(stats["a_star_distribution"]) == FB.K_ACTIONS
+
+
+def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
+    """The C3-vs-B2 audit records the mechanism checks needed to close 23.3."""
+    raw = pd.read_parquet(ARTIFACT)
+    out = BL.run_c3_b2_audit(raw, coverages=[0.78], scales=["err"], n_boot=3)
+    assert "argmin_information_at_078" in out
+    assert "accept_overlap_at_078" in out
+    assert out["accept_overlap_at_078"]["C3_B2"]["coverage_target"] == pytest.approx(0.78)
+    assert out["accept_overlap_at_078"]["C3_B3"]["coverage_target"] == pytest.approx(0.78)
