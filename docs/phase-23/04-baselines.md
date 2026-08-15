@@ -499,6 +499,32 @@ Ket luan G23-21c: PASS. Khong co cell nao thieu support theo split thuc te
 `alpha=0.1/4`. Do do ket qua C3 hien tai khong bi treo boi van de "thin
 Mondrian cell".
 
+## Co che #8 -- phan ra regret cross-cell
+
+Sau G23-17c, `regret` khong duoc doc nhu mot headline tho giua cac cell. Dong
+nhat thuc can bao cao la:
+
+```text
+regret_ratio = err_ratio x normpen_ratio x scale_ratio
+normpen      = (regret / err) / median_m_true_1
+```
+
+Ket qua tren TEST split:
+
+| Cell | err_r | normpen_r | scale_r | product | regret_r |
+|---|---:|---:|---:|---:|---:|
+| poisson@0.850 | 0.9925 | 0.9796 | 0.2978 | 0.28954 | 0.2896 |
+| h2@0.700 | 0.5690 | 0.5533 | 0.8858 | 0.27882 | 0.2788 |
+
+Doc dung: `poisson@0.850` la doi chung bat bien theo thang, vi hai thua so
+that gan 1 va thang margin giai thich chenh lech regret. `h2@0.700` thi khac:
+hai thua so that cung giam quanh 0.55, nen regret giam la hieu ung quyet dinh
+that, khong phai chi artifact don vi.
+
+Quy tac khoa trong Amendment 23-18: headline cross-cell la `err`; `regret`
+cross-cell phai kem phan ra ba thua so; `sla_rate` khong lam headline vi
+threshold `t_d`/`t_l` khac nhau giua cell.
+
 ## Tie-break sensitivity
 
 Tai coverage 0.78, thay stable row-order tie-break bang random tie-break ba seed:

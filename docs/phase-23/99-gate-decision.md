@@ -17,6 +17,9 @@ Latest artifact refresh commit: `982aa0c`.
 | `results/phase-23/threshold_families_poisson_0.925_C3_static.json` | Lesson 23.2 threshold-family sweep |
 | `results/phase-23/baseline_rankings_poisson_0.925_C3_static.json` | Lesson 23.3 baseline ranking sweep |
 | `results/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json` | C3-B2, argmin, gamma, tie-break audit |
+| `results/phase-23/g23_17a_cell_margins.json` | G23-17a marginal priors for three cells |
+| `results/phase-23/g23_17b_code_sanity.json` | G23-17b cross-cell code sanity |
+| `results/phase-23/g23_17c_scale_and_sla.json` | G23-17c scale/SLA comparability and Mechanism #8 |
 
 Lenh tai tao audit cuoi:
 
@@ -50,6 +53,7 @@ repo. Ten chuan trong repo la `PC23-1`.
 | G23-21b | 23.3 | ADJUDICATED | simple B2-to-B3 gamma interpolation rejected; no gamma > 2 beats gamma=1; gamma0.5-vs-gamma1 CI contains 0 |
 | G23-21c | 23.3 | PASS | C3 Mondrian cells have finite-sample support; min effective blocks = 433 >= 29 actual and >= 39 conservative |
 | tie-break audit | 23.3 | PASS | max spread = 0.000100, far below C3-B3 gap 0.025430 |
+| G23-17a/b/c | 23.4 preflight | ADJUDICATED | `poisson@0.850` is a scale-invariance control; `h2@0.700` is the real regime shift; cross-cell regret needs three-factor decomposition |
 
 G23-21b measured:
 
@@ -126,6 +130,10 @@ relative to B2 is a formal guarantee at no measurable system-risk cost.
 7. Sua notation age-only thanh `q_hat(z_bin,m_hat_bin)` cho C3. Cac bang
    marginal theo age bin chi la tom tat/diagnostic, khong phai taxonomy
    guarantee cua C3.
+8. Khoa Mechanism #8 cho cross-cell regret:
+   `regret_ratio = err_ratio x normpen_ratio x scale_ratio`. Headline
+   cross-cell la `err`; `regret` phai kem phan ra; `sla_rate` khong lam
+   headline vi `t_d`/`t_l` khac nhau giua cell.
 
 ## No da tra
 
@@ -167,6 +175,12 @@ Lesson 23.4 may proceed only with these constraints:
 6. State the C3 theorem on `K-1` margins with `alpha/(K-1)`, per
    `00q-amendment-16.md`; do not use the superseded `alpha/K` cost-interval
    wording.
+7. For Lesson 23.4 cross-cell reporting, use Amendment 23-18: headline `err`;
+   decompose `regret`; do not headline `sla_rate`; use `gap_closed` rather
+   than `delta/neo`.
+8. Before sweeping `poisson@0.850` or `h2@0.700`, run G23-21c on that exact
+   artifact with the exact `cell_label` and stop if any conservative thin cell
+   or nonfinite qhat appears.
 ```
 
 ## Verification
