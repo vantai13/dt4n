@@ -63,9 +63,11 @@ V23-4 va G23-6b deu xanh:
 | G23-9 Spearman self-check bang rank doc lap | PASS |
 | G23-9b Pareto tinh tren sweep gop 33 ung vien | PASS |
 
-## 2. Shape of age conditioning
+## 2. Shape of age marginal
 
-`q_hat_slot1(z)` gom C3 theo `z_bin` tren CALIB:
+`q_hat_slot1(z)` duoi day la marginal co trong so theo `z_bin` tren CALIB,
+sau khi aggregate C3 that su tren key `z_bin x m_hat_bin`; no khong phai
+taxonomy age-only cua C3:
 
 | z_bin | q_hat_slot1 |
 |---:|---:|

@@ -91,7 +91,10 @@ P6  `m_hat_bin` tinh bang quantile tren calib sau split.
 P7  Split block 5.0 s, 50/50, seed 7000; validation theo seed
     calib `{101,102,103}` / test `{104,105}`.
 
-P8  Accept theo ho NHAN mac dinh: `m_hat >= kappa * q_hat(z)`.
+P8  Accept theo ho NHAN mac dinh: `m_hat >= kappa * q_hat(z_bin,m_hat_bin)`.
+    Ghi chu sau G23-21b/G23-21c: notation age-only trong cac ghi chu cu la
+    shorthand; implementation C3 that su dung Mondrian key 2D `z_bin x
+    m_hat_bin`, voi 3 score slots.
 
 P9  `eps_regret = 0.10 * T_delay` theo o, khong dat lai nguong theo ket qua.
 

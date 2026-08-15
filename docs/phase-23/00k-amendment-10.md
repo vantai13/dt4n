@@ -55,7 +55,9 @@ Luoi khong thu nguyen:
 
 ```text
 epsilon = delta * q_bar
-q_bar = mean_z q_hat_slot1(z), q_hat_slot1(z) gom C3 theo z_bin tren CALIB
+q_bar = mean_z q_hat_slot1(z), trong do q_hat_slot1(z) la marginal co trong so
+        theo z_bin sau khi aggregate C3 that su tren key z_bin x m_hat_bin
+        tren CALIB
 delta in {-4,-3,-2,-1.5,-1,-0.5,-0.25,0,0.25,0.5,0.75,1,1.25,1.5}
 ```
 

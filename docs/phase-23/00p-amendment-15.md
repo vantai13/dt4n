@@ -69,6 +69,28 @@ Dien giai: gia thuyet noi B2-B3 bi bac cho implementation C3 hien tai, vi C3
 condition theo `z_bin x m_hat_bin`; khi gamma lon, ranking bi cau truc cell/slot
 cua `q_hat` chi phoi, khong phai tuoi thuan B3.
 
+## G23-21c -- qhat cell sample support
+
+Vi C3 condition theo `z_bin x m_hat_bin`, moi cell Mondrian phai co du sample
+hieu dung de `q_hat` huu han. Audit dem theo `block_id.nunique()` trong tung
+cell, dung voi implementation conformal.
+
+```text
+keys = z_bin,m_hat_bin
+n_cells = 16
+score_slots = 3
+alpha_each_actual = 0.033333333
+n_min_actual = 29
+n_min_if_split_over_4_actions = 39
+min_n_eff_blocks_per_cell = 433
+cells_below_actual = 0
+cells_below_conservative = 0
+cells_with_nonfinite_qhat = 0
+```
+
+Ket qua: `G23-21c PASS`. C3 hien tai khong bi blocker "thin Mondrian cell";
+ngay ca threshold bao thu 39 block/cell cung duoc vuot voi margin lon.
+
 ## G23-20 -- chance agreement la moc bat buoc
 
 Moi phat bieu dang "argmin mat thong tin" hoac "X dong thuan voi chan ly" phai

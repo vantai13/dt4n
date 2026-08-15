@@ -602,7 +602,7 @@ def gamma_sweep_report(
     coverage: float = 0.78,
     policy: str = "static",
 ) -> Dict[str, Any]:
-    """C3(gamma): score = min_j m_hat_j / q_hat_j(z)^gamma."""
+    """C3(gamma): score = min_j m_hat_j / q_hat_j(cell)^gamma."""
     if policy != "static":
         raise ValueError("gamma sweep is implemented only for static fallback")
     m = df[list(TF.MHAT_COLS)].to_numpy(np.float64)
@@ -751,6 +751,106 @@ def qhat_monotonicity_report(
         "all_cell_level_monotone_by_z_bin": bool(
             cell_rows and all(row["monotone_by_z_bin"] for row in cell_rows)
         ),
+    }
+
+
+def _finite_conformal_n_min(alpha_each: float) -> int:
+    """Smallest effective n for conformal_level(n, alpha_each) to be finite."""
+    if not (0.0 < float(alpha_each) < 1.0):
+        raise ValueError("alpha_each must be in (0, 1)")
+    return int(np.ceil(1.0 / float(alpha_each)) - 1)
+
+
+def qhat_cell_sample_report(
+    calib: pd.DataFrame,
+    fit: Mapping[str, Any],
+    conservative_action_count: int = FB.K_ACTIONS,
+) -> Dict[str, Any]:
+    """G23-21c: sample support for each C3 Mondrian qhat cell."""
+    keys = list(fit.get("keys", []))
+    if not keys:
+        raise KeyError("fit must contain Mondrian/grouping keys")
+    alpha_family = float(fit["alpha_family"])
+    alpha_each_actual = float(fit["alpha_each_base"])
+    n_min_actual = _finite_conformal_n_min(alpha_each_actual)
+    alpha_each_conservative = alpha_family / float(int(conservative_action_count))
+    n_min_conservative = _finite_conformal_n_min(alpha_each_conservative)
+    score_cols = list(fit.get("score_cols", []))
+    q_cells = fit.get("_q", {})
+
+    rows = []
+    for key, sub in calib.groupby(keys, sort=True):
+        key_tuple = key if isinstance(key, tuple) else (key,)
+        key_tuple = tuple(int(x) if isinstance(x, np.integer) else x for x in key_tuple)
+        n_rows = int(len(sub))
+        n_eff_blocks = int(sub["block_id"].nunique())
+        qhat = np.asarray(q_cells[key_tuple], dtype=np.float64)
+        finite = bool(np.isfinite(qhat).all())
+        rows.append(
+            {
+                "cell": {str(k): _json_clean(v) for k, v in zip(keys, key_tuple)},
+                "n_rows": n_rows,
+                "n_eff_blocks": n_eff_blocks,
+                "n_score_slots": int(len(score_cols)),
+                "qhat_all_finite": finite,
+                "passes_actual_score_slot_n_min": bool(n_eff_blocks >= n_min_actual),
+                "passes_conservative_action_split_n_min": bool(
+                    n_eff_blocks >= n_min_conservative
+                ),
+                "margin_blocks_vs_actual_n_min": int(n_eff_blocks - n_min_actual),
+                "margin_blocks_vs_conservative_n_min": int(n_eff_blocks - n_min_conservative),
+            }
+        )
+
+    n_cells = len(rows)
+    total_rows = int(sum(row["n_rows"] for row in rows))
+    total_eff_block_memberships = int(sum(row["n_eff_blocks"] for row in rows))
+    below_actual = [
+        row for row in rows if not row["passes_actual_score_slot_n_min"]
+    ]
+    below_conservative = [
+        row for row in rows if not row["passes_conservative_action_split_n_min"]
+    ]
+    nonfinite = [row for row in rows if not row["qhat_all_finite"]]
+    rows_sorted = sorted(rows, key=lambda row: (row["n_eff_blocks"], row["n_rows"]))
+    return {
+        "gate": "G23-21c",
+        "keys": keys,
+        "n_cells": int(n_cells),
+        "n_calib_rows": int(len(calib)),
+        "n_calib_blocks": int(calib["block_id"].nunique()),
+        "n_score_slots_actual": int(len(score_cols)),
+        "alpha_family": alpha_family,
+        "alpha_each_actual_score_slots": alpha_each_actual,
+        "n_min_actual_score_slots": int(n_min_actual),
+        "alpha_each_conservative_if_split_over_actions": alpha_each_conservative,
+        "n_min_conservative_if_split_over_actions": int(n_min_conservative),
+        "min_n_rows_per_cell": int(min(row["n_rows"] for row in rows)) if rows else 0,
+        "min_n_eff_blocks_per_cell": int(min(row["n_eff_blocks"] for row in rows)) if rows else 0,
+        "max_n_eff_blocks_per_cell": int(max(row["n_eff_blocks"] for row in rows)) if rows else 0,
+        "cells_below_actual_score_slot_n_min": int(len(below_actual)),
+        "cells_below_conservative_action_split_n_min": int(len(below_conservative)),
+        "cells_with_nonfinite_qhat": int(len(nonfinite)),
+        "row_share_in_actual_thin_cells": float(
+            sum(row["n_rows"] for row in below_actual) / max(total_rows, 1)
+        ),
+        "eff_block_membership_share_in_actual_thin_cells": float(
+            sum(row["n_eff_blocks"] for row in below_actual)
+            / max(total_eff_block_memberships, 1)
+        ),
+        "pass_actual_score_slot_split": bool(
+            n_cells > 0 and not below_actual and not nonfinite
+        ),
+        "pass_conservative_action_split": bool(
+            n_cells > 0 and not below_conservative and not nonfinite
+        ),
+        "counting_note": (
+            "The implementation computes conformal_level from block_id.nunique() "
+            "inside each qhat cell; n_rows is reported as a sanity check but the "
+            "finite-qhat guarantee uses n_eff_blocks."
+        ),
+        "thin_cells_by_effective_blocks": rows_sorted[: min(10, len(rows_sorted))],
+        "cells": rows,
     }
 
 
@@ -1029,7 +1129,7 @@ def run_c3_b2_audit(
     seed: int = 23330,
 ) -> Dict[str, Any]:
     """Audit the missing C3-vs-B2 comparison and wasted abstention."""
-    _calib, test, qhat_rows, fit, _q_by_age, _qbar = TF.fit_c3_inputs(df, config=config)
+    calib, test, qhat_rows, fit, _q_by_age, _qbar = TF.fit_c3_inputs(df, config=config)
     score_c3 = score_C3(test, qhat_rows)
     score_b2 = score_B2_constant_gap(test)
     score_b1 = score_B1_random(test)
@@ -1086,6 +1186,7 @@ def run_c3_b2_audit(
         n_boot=int(n_boot),
         seed=int(seed) + 225,
     )
+    qhat_cell_sample = qhat_cell_sample_report(calib, fit)
     overlaps = {
         "C3_B2": accept_overlap(score_c3, score_b2, 0.78),
         "C3_B3": accept_overlap(score_c3, score_b3, 0.78),
@@ -1134,6 +1235,7 @@ def run_c3_b2_audit(
         "break_even_identity_at_078": break_even,
         "gamma_sweep_at_078": gamma_sweep,
         "gamma_closure_G23_21b_at_078": gamma_closure,
+        "qhat_cell_sample_G23_21c": qhat_cell_sample,
         "accept_overlap_at_078": overlaps,
         "tie_break_sensitivity_at_078": tie_break,
         "gap_closed_by_C3_vs_B6sys_at_078": float(gap_closed_by_c3),
@@ -1414,6 +1516,60 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
         )
     )
     print("interpretation=%s" % closure["interpretation"])
+    print()
+    print("=== Qhat cell sample support, G23-21c ===")
+    sample = report["qhat_cell_sample_G23_21c"]
+    print(
+        "gate=%s keys=%s cells=%d calib_rows=%d calib_blocks=%d score_slots=%d"
+        % (
+            sample["gate"],
+            ",".join(sample["keys"]),
+            sample["n_cells"],
+            sample["n_calib_rows"],
+            sample["n_calib_blocks"],
+            sample["n_score_slots_actual"],
+        )
+    )
+    print(
+        "actual alpha_each=%.9f n_min=%d pass=%s"
+        % (
+            sample["alpha_each_actual_score_slots"],
+            sample["n_min_actual_score_slots"],
+            sample["pass_actual_score_slot_split"],
+        )
+    )
+    print(
+        "conservative action-split alpha_each=%.9f n_min=%d pass=%s"
+        % (
+            sample["alpha_each_conservative_if_split_over_actions"],
+            sample["n_min_conservative_if_split_over_actions"],
+            sample["pass_conservative_action_split"],
+        )
+    )
+    print(
+        "min_rows=%d min_eff_blocks=%d max_eff_blocks=%d below_actual=%d below_conservative=%d nonfinite_qhat=%d"
+        % (
+            sample["min_n_rows_per_cell"],
+            sample["min_n_eff_blocks_per_cell"],
+            sample["max_n_eff_blocks_per_cell"],
+            sample["cells_below_actual_score_slot_n_min"],
+            sample["cells_below_conservative_action_split_n_min"],
+            sample["cells_with_nonfinite_qhat"],
+        )
+    )
+    print("%-20s %10s %10s %10s %10s" % ("cell", "n_rows", "n_blocks", "margin29", "margin39"))
+    for row in sample["thin_cells_by_effective_blocks"][:5]:
+        cell = ",".join("%s=%s" % (k, v) for k, v in row["cell"].items())
+        print(
+            "%-20s %10d %10d %+10d %+10d"
+            % (
+                cell,
+                row["n_rows"],
+                row["n_eff_blocks"],
+                row["margin_blocks_vs_actual_n_min"],
+                row["margin_blocks_vs_conservative_n_min"],
+            )
+        )
     print()
     print("=== Tie-break sensitivity at coverage 0.78 ===")
     print("%-18s %11s %11s %11s %11s %11s" % ("selector", "rowsort", "rand_s1", "rand_s2", "rand_s3", "spread"))

@@ -451,10 +451,48 @@ err_system_monotone_for_gamma_ge1           = False
 paired_gamma0.5_minus_gamma1_CI_contains_0  = True
 ```
 
-Ket luan: khong co gamma > 2 nao thang C3 trong luoi da do, va loi ich
-`gamma=0.5` khong phan biet duoc. Nhung phat bieu "ho gamma noi B2-B3" bi bac
-cho implementation C3 hien tai; nguyen nhan la `q_hat` khong phai ham cua tuoi
-don thuan.
+Ket luan G23-21b: REFUTED. Du doan ky truoc "gamma noi B2 voi B3" duoc giu
+lai trong log nay, nhung no TRUOT CO CHE cho implementation C3 hien tai.
+Nguyen nhan khong phai gamma sweep bi nhieu, ma la taxonomy ban dau bi doc sai:
+C3 khong dung notation age-only; C3 dung `q_hat(z_bin,m_hat_bin)` voi 3 score
+slots. Vi vay `cell_mono_by_z=True` van co the dong thoi voi
+`row_mono_by_z=False`, va khi `gamma` lon ranking bi cau truc cell/slot
+`q_hat` chi phoi thay vi hoi tu ve B3 AoI.
+
+Bai hoc phuong phap: truoc khi gan mot truc tham so voi mot co che vat ly
+don gian, phai kiem tra taxonomy that su cua certificate. Mot marginal theo
+age bin co the dung de ve hinh dang, nhung khong duoc thay cho key conformal
+that su khi suy luan co che.
+
+## G23-21c -- qhat cell sample support
+
+Sau khi G23-21b xac nhan C3 la Mondrian 2D, guarantee formal phu thuoc vao
+moi cell `z_bin x m_hat_bin` co du mau hieu dung de threshold `q_hat` khong
+roi vao `+inf`. Code hien tai tinh conformal level bang
+`block_id.nunique()` trong tung cell, nen audit bao cao ca so dong va so block
+hieu dung.
+
+```text
+gate=G23-21c keys=z_bin,m_hat_bin cells=16 calib_rows=499978 calib_blocks=500 score_slots=3
+actual alpha_each=0.033333333 n_min=29 pass=True
+conservative action-split alpha_each=0.025000000 n_min=39 pass=True
+min_rows=11241 min_eff_blocks=433 max_eff_blocks=484 below_actual=0 below_conservative=0 nonfinite_qhat=0
+```
+
+Nam cell mong nhat theo effective blocks:
+
+| cell | n_rows | n_eff_blocks | margin vs 29 | margin vs 39 |
+|---|---:|---:|---:|---:|
+| z_bin=0,m_hat_bin=3 | 11250 | 433 | +404 | +394 |
+| z_bin=1,m_hat_bin=3 | 25000 | 433 | +404 | +394 |
+| z_bin=2,m_hat_bin=3 | 25000 | 433 | +404 | +394 |
+| z_bin=3,m_hat_bin=3 | 63794 | 438 | +409 | +399 |
+| z_bin=0,m_hat_bin=0 | 11241 | 451 | +422 | +412 |
+
+Ket luan G23-21c: PASS. Khong co cell nao thieu support theo split thuc te
+`alpha=0.1/3`, va cung qua ca diagnostic bao thu neu chia theo 4 action
+`alpha=0.1/4`. Do do ket qua C3 hien tai khong bi treo boi van de "thin
+Mondrian cell".
 
 ## Tie-break sensitivity
 

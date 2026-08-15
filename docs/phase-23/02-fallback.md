@@ -34,13 +34,13 @@ F1 theo installed-path accounting. Tai `kappa=0.5`, ca ba fallback lam he thong
 te hon anchor. Tren luoi P8, `F2 STATIC @ kappa=0.25` cai thien ca ba thang
 rui ro voi CI ghep cap khong chua 0 va giu tren split seed doc lap.
 
-Co che: dieu kien `m_hat < kappa*q_hat(z)` chon cac hang ma khoang cach twin
-nhin thay nho hon do bat dinh cua chinh twin. Khi do argmin cua twin giau nhieu
-hon tin hieu, va chinh sach hop ly la co ve prior cau truc P1. Prior P1 cung
-xau di tren tap reject, nhung khoan phat cua no gan nhu hang so; twin moi la
-doi tuong suy giam manh theo kappa. Gia tri khoa hoc cua certificate la value
-of information: o cung coverage, no tot hon bo chon ngau nhien 4.31 diem phan
-tram err.
+Co che: dieu kien `m_hat < kappa*q_hat(z_bin,m_hat_bin)` chon cac hang ma
+khoang cach twin nhin thay nho hon do bat dinh cua chinh twin trong o Mondrian
+2D. Khi do argmin cua twin giau nhieu hon tin hieu, va chinh sach hop ly la co
+ve prior cau truc P1. Prior P1 cung xau di tren tap reject, nhung khoan phat
+cua no gan nhu hang so; twin moi la doi tuong suy giam manh theo kappa. Gia
+tri khoa hoc cua certificate la value of information: o cung coverage, no tot
+hon bo chon ngau nhien 4.31 diem phan tram err.
 
 ## 2. Controls first
 
@@ -138,7 +138,7 @@ F2 STATIC tai `kappa=0.25` duoc doc nhu shrinkage ve prior:
 
 ```text
 m_hat lon          -> argmin(twin) mang tin hieu -> tin twin
-m_hat < k*q_hat(z) -> tin hieu yeu hon do bat dinh -> co ve prior P1
+m_hat < k*q_hat(z_bin,m_hat_bin) -> tin hieu yeu hon do bat dinh -> co ve prior P1
 ```
 
 `P1` la prior cau truc cua topology: duong ngan nhat theo thiet ke va khong co

@@ -48,6 +48,7 @@ repo. Ten chuan trong repo la `PC23-1`.
 |---|---:|---|---|
 | L20 | 23.3 | PASS | intervention-rate C3-B2 gap = 0.001274 <= 0.010 |
 | G23-21b | 23.3 | ADJUDICATED | simple B2-to-B3 gamma interpolation rejected; no gamma > 2 beats gamma=1; gamma0.5-vs-gamma1 CI contains 0 |
+| G23-21c | 23.3 | PASS | C3 Mondrian cells have finite-sample support; min effective blocks = 433 >= 29 actual and >= 39 conservative |
 | tie-break audit | 23.3 | PASS | max spread = 0.000100, far below C3-B3 gap 0.025430 |
 
 G23-21b measured:
@@ -60,6 +61,23 @@ row-level qhat monotone by z  = False
 b2_to_b3_interpolation_supported = False
 no_gamma_gt2_beats_gamma1        = True
 paired gamma0.5-gamma1 CI95      = [-0.001932176, +0.000872232]
+```
+
+G23-21c measured:
+
+```text
+keys = z_bin,m_hat_bin
+n_cells = 16
+n_calib_rows = 499978
+n_calib_blocks = 500
+n_score_slots = 3
+actual alpha_each = 0.033333333
+actual n_min = 29
+conservative action-split n_min = 39
+min_n_eff_blocks_per_cell = 433
+cells_below_actual = 0
+cells_below_conservative = 0
+cells_with_nonfinite_qhat = 0
 ```
 
 ## Ket qua chinh 23.3
@@ -105,6 +123,9 @@ relative to B2 is a formal guarantee at no measurable system-risk cost.
    `z_bin x m_hat_bin`, nen gamma lon di theo cell/slot `q_hat`, khong ve B3.
 6. Ghi nhan hai luoi `beneficial_band`: Lesson 23.1 dung luoi kappa min
    `[0.6151,1.0000]`; Lesson 23.3 dung luoi coverage deu `[0.6076,0.99995]`.
+7. Sua notation age-only thanh `q_hat(z_bin,m_hat_bin)` cho C3. Cac bang
+   marginal theo age bin chi la tom tat/diagnostic, khong phai taxonomy
+   guarantee cua C3.
 
 ## No da tra
 
@@ -115,6 +136,7 @@ relative to B2 is a formal guarantee at no measurable system-risk cost.
 | Co che argmin | CLOSED | `04-baselines.md` |
 | G23-21 break-even identity | CLOSED | `test_phase23_baselines.py` |
 | G23-21b gamma closure | CLOSED as rejected mechanism | `baseline_c3_b2_audit_*.json` |
+| G23-21c qhat cell sample support | CLOSED | `baseline_c3_b2_audit_*.json`, `test_phase23_baselines.py` |
 | tie-break sensitivity | CLOSED | `baseline_c3_b2_audit_*.json` |
 | grid labels for beneficial band | CLOSED | `00m-amendment-12.md`, `04-baselines.md` |
 
@@ -126,6 +148,7 @@ relative to B2 is a formal guarantee at no measurable system-risk cost.
 | L21 | multiplicity | Effective action space is 3, while nominal design has K=4 actions and K-1=3 score slots. Cost of the dead action/slot is not quantified. | Open |
 | L22 | model selection | Gamma sweep is on test; gamma != 1 is not guarantee-preserving. | Closed as diagnostic only |
 | L23 | taxonomy | C3 uses `z_bin x m_hat_bin`; age-only asymptotic arguments can fail. | Closed by G23-21b for current artifact |
+| L24 | finite cells | Mondrian cells could be too thin, making `q_hat=+inf` or weak. | Closed by G23-21c for current artifact; min effective blocks 433 |
 
 ## Before Lesson 23.4
 
@@ -138,16 +161,18 @@ Lesson 23.4 may proceed only with these constraints:
 3. Any argmin-information claim must report chance agreement and kappa.
 4. Any cross-cell claim must keep C3-vs-B2 as "reported, not thresholded" unless
    paired CIs exclude 0.
+5. Preserve the C3 taxonomy as `z_bin x m_hat_bin`; do not collapse it to
+   age-only notation in claims about guarantees.
 ```
 
 ## Verification
 
 ```text
 /tmp/dt4n-venv/bin/python -m pytest test/test_phase23_baselines.py -q
-10 passed in 11.64s
+11 passed in 14.42s
 
 /tmp/dt4n-venv/bin/python -m pytest \
   test/test_phase23_baselines.py test/test_phase23_thresholds.py \
   test/test_phase23_prereg.py -q
-25 passed in 24.40s
+26 passed in 25.49s
 ```

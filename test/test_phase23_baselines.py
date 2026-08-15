@@ -163,6 +163,23 @@ def test_G23_21b_gamma_closure_adjudicates_b2_b3_claim(df: pd.DataFrame) -> None
     assert len(out["paired_gamma0p5_minus_gamma1"]["delta_ci95"]) == 2
 
 
+def test_G23_21c_qhat_cells_have_finite_sample_support(df: pd.DataFrame) -> None:
+    """Every C3 Mondrian qhat cell must have enough effective blocks."""
+    raw = pd.read_parquet(ARTIFACT)
+    calib, _test, _qhat_rows, fit, _q_by_age, _qbar = TF.fit_c3_inputs(raw, config="C3")
+    out = BL.qhat_cell_sample_report(calib, fit)
+    assert out["gate"] == "G23-21c"
+    assert out["keys"] == ["z_bin", "m_hat_bin"]
+    assert out["n_score_slots_actual"] == len(TF.MHAT_COLS)
+    assert out["alpha_each_actual_score_slots"] == pytest.approx(0.10 / len(TF.MHAT_COLS))
+    assert out["n_min_actual_score_slots"] == 29
+    assert out["n_min_conservative_if_split_over_actions"] == 39
+    assert out["pass_actual_score_slot_split"] is True
+    assert out["cells_below_actual_score_slot_n_min"] == 0
+    assert out["cells_with_nonfinite_qhat"] == 0
+    assert out["min_n_eff_blocks_per_cell"] >= out["n_min_actual_score_slots"]
+
+
 def test_tie_break_sensitivity_is_small_for_baseline_conclusions(df: pd.DataFrame) -> None:
     """Stable top-k tie handling must not drive the C3-vs-B3 conclusion."""
     raw = pd.read_parquet(ARTIFACT)
@@ -194,6 +211,8 @@ def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
     assert out["gamma_sweep_at_078"]["gamma0_matches_B2"]["accept_bitwise_identical"] is True
     assert "gamma_closure_G23_21b_at_078" in out
     assert out["gamma_closure_G23_21b_at_078"]["checks"]["b2_to_b3_interpolation_supported"] is False
+    assert "qhat_cell_sample_G23_21c" in out
+    assert out["qhat_cell_sample_G23_21c"]["pass_actual_score_slot_split"] is True
     assert "tie_break_sensitivity_at_078" in out
     assert "accept_overlap_at_078" in out
     assert out["accept_overlap_at_078"]["C3_B2"]["coverage_target"] == pytest.approx(0.78)
