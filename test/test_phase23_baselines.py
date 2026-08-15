@@ -79,3 +79,15 @@ def test_paired_ranking_delta_reports_block_ci(df: pd.DataFrame) -> None:
     assert len(out["delta_ci95"]) == 2
     assert out["n_boot"] == 5
     assert out["n_blocks"] == df["block_id"].nunique()
+
+
+def test_L20_intervention_rate_check_reports_actionable_gap(df: pd.DataFrame) -> None:
+    """Matched coverage audit must expose true intervention-rate comparability."""
+    accept_a = BL._accept_at_coverage(BL.score_B2_constant_gap(df), 0.78)
+    accept_b = BL._accept_at_coverage(BL.score_B3_aoi(df), 0.78)
+    out = BL._intervention_rate_check(df, accept_a, accept_b)
+    assert out["intervention_rate_a"] >= 0.0
+    assert out["intervention_rate_b"] >= 0.0
+    assert out["abs_gap"] == pytest.approx(abs(out["gap_a_minus_b"]))
+    assert out["tolerance"] == pytest.approx(0.01)
+    assert isinstance(out["comparable_at_matched_coverage"], bool)

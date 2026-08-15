@@ -347,6 +347,32 @@ def wasted_abstention_report(
     }
 
 
+def _intervention_rate_check(
+    df: pd.DataFrame,
+    accept_a: np.ndarray,
+    accept_b: np.ndarray,
+    tol: float = 0.01,
+) -> Dict[str, Any]:
+    """L20: matched coverage is comparable only when actual intervention matches."""
+    a = wasted_abstention_report(df, accept_a)
+    b = wasted_abstention_report(df, accept_b)
+    ir_a = float(a["actionable_reject_share_total_rows"])
+    ir_b = float(b["actionable_reject_share_total_rows"])
+    gap = float(ir_a - ir_b)
+    return {
+        "intervention_rate_a": ir_a,
+        "intervention_rate_b": ir_b,
+        "gap_a_minus_b": gap,
+        "abs_gap": abs(gap),
+        "tolerance": float(tol),
+        "comparable_at_matched_coverage": bool(abs(gap) <= float(tol)),
+        "note": (
+            "PASS -> comparison at matched coverage is valid. "
+            "FAIL -> compare at matched intervention rate instead of matched coverage."
+        ),
+    }
+
+
 def _row_at_target(sweep: pd.DataFrame, target: float) -> Dict[str, Any]:
     delta = (sweep["coverage_target"].astype(float) - float(target)).abs()
     row = sweep.loc[delta.idxmin()].to_dict()
@@ -523,6 +549,7 @@ def run_c3_b2_audit(
                 )
             )
     accept_c3_078 = _accept_at_coverage(score_c3, 0.78)
+    accept_b2_078 = _accept_at_coverage(score_b2, 0.78)
     anchor_err = float(FB.loss_of(test, test["a_twin"].to_numpy(np.int64), "err").mean())
     b6sys_078 = paired_ranking_delta_at_coverage(
         test,
@@ -551,6 +578,8 @@ def run_c3_b2_audit(
         "scales": [str(x) for x in scales],
         "c3_minus_b2_paired_block_bootstrap": rows,
         "wasted_abstention_C3_at_078": wasted_abstention_report(test, accept_c3_078),
+        "wasted_abstention_B2_at_078": wasted_abstention_report(test, accept_b2_078),
+        "L20_intervention_rate_check": _intervention_rate_check(test, accept_c3_078, accept_b2_078),
         "gap_closed_by_C3_vs_B6sys_at_078": float(gap_closed_by_c3),
         "n_boot": int(n_boot),
         "seed": int(seed),
@@ -648,17 +677,33 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
         )
     print()
     print("=== Wasted abstention, C3 at coverage 0.78 ===")
-    wasted = report["wasted_abstention_C3_at_078"]
-    for key in (
-        "p_a_twin_eq_p1",
-        "coverage",
-        "reject_share",
-        "wasted_reject_share_total_rows",
-        "wasted_reject_given_reject",
-        "actionable_reject_share_total_rows",
-        "actionable_reject_given_reject",
+    for label, wasted in (
+        ("C3", report["wasted_abstention_C3_at_078"]),
+        ("B2", report["wasted_abstention_B2_at_078"]),
     ):
-        print("%s=%.9f" % (key, wasted[key]))
+        print(label + ":")
+        for key in (
+            "p_a_twin_eq_p1",
+            "coverage",
+            "reject_share",
+            "wasted_reject_share_total_rows",
+            "wasted_reject_given_reject",
+            "actionable_reject_share_total_rows",
+            "actionable_reject_given_reject",
+        ):
+            print("  %s=%.9f" % (key, wasted[key]))
+    print()
+    print("=== L20 intervention-rate check, C3 vs B2 at coverage 0.78 ===")
+    l20 = report["L20_intervention_rate_check"]
+    for key in (
+        "intervention_rate_a",
+        "intervention_rate_b",
+        "gap_a_minus_b",
+        "abs_gap",
+        "tolerance",
+    ):
+        print("%s=%.9f" % (key, l20[key]))
+    print("comparable_at_matched_coverage=%s" % l20["comparable_at_matched_coverage"])
     print()
     print("gap_closed_by_C3_vs_B6sys_at_078=%.9f" % report["gap_closed_by_C3_vs_B6sys_at_078"])
     print("wrote_json=%s" % out_json)
