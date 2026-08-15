@@ -20,6 +20,7 @@ Latest artifact refresh commit: `982aa0c`.
 | `results/phase-23/g23_17a_cell_margins.json` | G23-17a marginal priors for three cells |
 | `results/phase-23/g23_17b_code_sanity.json` | G23-17b cross-cell code sanity |
 | `results/phase-23/g23_17c_scale_and_sla.json` | G23-17c scale/SLA comparability and Mechanism #8 |
+| `results/phase-23/g23_23_lift_law.json` | G23-23 lift-vs-swing law for cross-cell benefit |
 
 Lenh tai tao audit cuoi:
 
@@ -54,6 +55,7 @@ repo. Ten chuan trong repo la `PC23-1`.
 | G23-21c | 23.3 | PASS | C3 Mondrian cells have finite-sample support; min effective blocks = 433 >= 29 actual and >= 39 conservative |
 | tie-break audit | 23.3 | PASS | max spread = 0.000100, far below C3-B3 gap 0.025430 |
 | G23-17a/b/c | 23.4 preflight | ADJUDICATED | `poisson@0.850` is a scale-invariance control; `h2@0.700` is the real regime shift; cross-cell regret needs three-factor decomposition |
+| G23-23 | 23.4 preflight | NEW GATE | benefit iff `lift=twin_deg-prior_deg` exceeds `swing=err_P1-err_neo`; must reconstruct delta at 0.78 |
 
 G23-21b measured:
 
@@ -134,6 +136,11 @@ relative to B2 is a formal guarantee at no measurable system-risk cost.
    `regret_ratio = err_ratio x normpen_ratio x scale_ratio`. Headline
    cross-cell la `err`; `regret` phai kem phan ra; `sla_rate` khong lam
    headline vi `t_d`/`t_l` khac nhau giua cell.
+9. Sau G23-21c tren hai cell moi, rut lai ket luan "C3 thang cross-cell".
+   Tai coverage 0.78, C3 thua always-trust o ca `poisson@0.850` va
+   `h2@0.700`; B3 la bo chon duy nhat co loi o `h2@0.700`.
+10. Khoa Co che #9: `delta_vs_anchor = reject_share * (swing - lift)`. Ket
+    qua co loi khi va chi khi `lift > swing`.
 
 ## No da tra
 
@@ -147,6 +154,7 @@ relative to B2 is a formal guarantee at no measurable system-risk cost.
 | G23-21c qhat cell sample support | CLOSED | `baseline_c3_b2_audit_*.json`, `test_phase23_baselines.py` |
 | tie-break sensitivity | CLOSED | `baseline_c3_b2_audit_*.json` |
 | grid labels for beneficial band | CLOSED | `00m-amendment-12.md`, `04-baselines.md` |
+| artifact parity for new cells | CLOSED | rebuilt 45-column `calib_set_v3_poisson_0.850.parquet` and `calib_set_v3_h2_0.700.parquet`; hashes in `INHERITED.sha256` |
 
 ## Threats to validity
 
@@ -181,6 +189,9 @@ Lesson 23.4 may proceed only with these constraints:
 8. Before sweeping `poisson@0.850` or `h2@0.700`, run G23-21c on that exact
    artifact with the exact `cell_label` and stop if any conservative thin cell
    or nonfinite qhat appears.
+9. Use Amendment 23-19 for cross-cell interpretation: report G23-23 lift law,
+   mark G23-15/G23-17 as FAIL if B3 beats C3 or if C3 loses to always-trust in
+   either new cell.
 ```
 
 ## Verification

@@ -38,6 +38,8 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 23-17 chay G23-17a ba xac suat bien truoc moi sweep Lesson 23.4
 23-18 khoa quy tac so sanh cross-cell: err headline, regret phan ra ba thua so,
       SLA khong lam headline, va E4-moi S1--S7
+23-19 rebuild parity artifact cho hai cell moi; khoa Co che #9 lift>swing va
+      gate G23-23; ghi G23-15/G23-17 FAIL
 ```
 
 Lesson 23.2 duoc phep chay theo Amendment 23-10. Lesson 23.3 chi duoc chay
@@ -46,7 +48,8 @@ B6-sys/B4 gates cua Amendments 23-10, 23-13, va 23-14. Lesson 23.4 phai dung
 headline metrics cua Amendment 23-12 thay vi AURC toan dai, va phai dung
 dinh ly C3 da sua trong Amendment 23-16: certificate tren `K-1` bien, khong
 tren `K` chi phi tuyet doi. Truoc bat ky sweep 23.4 nao, phai doc G23-17a/b/c
-trong Amendments 23-17 va 23-18, va phai chay lai G23-21c tren hai cell moi.
+trong Amendments 23-17 va 23-18, phai dung artifact 45 cot da khoa trong
+Amendment 23-19, va phai bao cao G23-23 lift law khi dien giai cross-cell.
 
 ## Scope bi chan
 

@@ -172,6 +172,11 @@ thien khoang 72%. Day la phat bieu sach hon ti so `4.16x`: prior khong mien
 nhiem voi tap kho, nhung no tra mot khoan phat gan co dinh; twin tra khoan
 phat phu thuoc manh vao do yeu cua tin hieu.
 
+Gioi han sau Amendment 23-19: phat bieu "prior tra khoan phat gan co dinh"
+chi duoc doc theo truc quet `kappa` trong cell `poisson@0.925`. Giua cac cell
+tai coverage co dinh, C3 cho twin_deg gan bat bien nhung prior_deg bien thien
+manh; do do khong duoc ngoai suy Co che #2 thanh invariant cross-cell.
+
 ## 7. Quet toan luoi P8
 
 Luoi P8:
