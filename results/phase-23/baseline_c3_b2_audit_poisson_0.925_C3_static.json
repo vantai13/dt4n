@@ -1048,9 +1048,404 @@
   "n_test": 499967,
   "policy": "static",
   "provenance": {
-    "created_utc": "2026-08-15T03:32:48.751026+00:00",
+    "created_utc": "2026-08-15T03:49:32.896170+00:00",
     "git_dirty_before_write": false,
-    "git_hash": "eafa3284fe407ad49e0af3cecc4abdd386febe37"
+    "git_hash": "61b09f65721ae261764d056c7ea38bcbe1bdad77"
+  },
+  "qhat_cell_sample_G23_21c": {
+    "alpha_each_actual_score_slots": 0.03333333333333333,
+    "alpha_each_conservative_if_split_over_actions": 0.025,
+    "alpha_family": 0.1,
+    "cells": [
+      {
+        "cell": {
+          "m_hat_bin": 0,
+          "z_bin": 0
+        },
+        "margin_blocks_vs_actual_n_min": 422,
+        "margin_blocks_vs_conservative_n_min": 412,
+        "n_eff_blocks": 451,
+        "n_rows": 11241,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 1,
+          "z_bin": 0
+        },
+        "margin_blocks_vs_actual_n_min": 438,
+        "margin_blocks_vs_conservative_n_min": 428,
+        "n_eff_blocks": 467,
+        "n_rows": 11250,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 2,
+          "z_bin": 0
+        },
+        "margin_blocks_vs_actual_n_min": 452,
+        "margin_blocks_vs_conservative_n_min": 442,
+        "n_eff_blocks": 481,
+        "n_rows": 11259,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 3,
+          "z_bin": 0
+        },
+        "margin_blocks_vs_actual_n_min": 404,
+        "margin_blocks_vs_conservative_n_min": 394,
+        "n_eff_blocks": 433,
+        "n_rows": 11250,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 0,
+          "z_bin": 1
+        },
+        "margin_blocks_vs_actual_n_min": 422,
+        "margin_blocks_vs_conservative_n_min": 412,
+        "n_eff_blocks": 451,
+        "n_rows": 24980,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 1,
+          "z_bin": 1
+        },
+        "margin_blocks_vs_actual_n_min": 438,
+        "margin_blocks_vs_conservative_n_min": 428,
+        "n_eff_blocks": 467,
+        "n_rows": 25000,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 2,
+          "z_bin": 1
+        },
+        "margin_blocks_vs_actual_n_min": 452,
+        "margin_blocks_vs_conservative_n_min": 442,
+        "n_eff_blocks": 481,
+        "n_rows": 25020,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 3,
+          "z_bin": 1
+        },
+        "margin_blocks_vs_actual_n_min": 404,
+        "margin_blocks_vs_conservative_n_min": 394,
+        "n_eff_blocks": 433,
+        "n_rows": 25000,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 0,
+          "z_bin": 2
+        },
+        "margin_blocks_vs_actual_n_min": 422,
+        "margin_blocks_vs_conservative_n_min": 412,
+        "n_eff_blocks": 451,
+        "n_rows": 24980,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 1,
+          "z_bin": 2
+        },
+        "margin_blocks_vs_actual_n_min": 438,
+        "margin_blocks_vs_conservative_n_min": 428,
+        "n_eff_blocks": 467,
+        "n_rows": 25000,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 2,
+          "z_bin": 2
+        },
+        "margin_blocks_vs_actual_n_min": 452,
+        "margin_blocks_vs_conservative_n_min": 442,
+        "n_eff_blocks": 481,
+        "n_rows": 25020,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 3,
+          "z_bin": 2
+        },
+        "margin_blocks_vs_actual_n_min": 404,
+        "margin_blocks_vs_conservative_n_min": 394,
+        "n_eff_blocks": 433,
+        "n_rows": 25000,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 0,
+          "z_bin": 3
+        },
+        "margin_blocks_vs_actual_n_min": 434,
+        "margin_blocks_vs_conservative_n_min": 424,
+        "n_eff_blocks": 463,
+        "n_rows": 63699,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 1,
+          "z_bin": 3
+        },
+        "margin_blocks_vs_actual_n_min": 443,
+        "margin_blocks_vs_conservative_n_min": 433,
+        "n_eff_blocks": 472,
+        "n_rows": 63772,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 2,
+          "z_bin": 3
+        },
+        "margin_blocks_vs_actual_n_min": 455,
+        "margin_blocks_vs_conservative_n_min": 445,
+        "n_eff_blocks": 484,
+        "n_rows": 63713,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 3,
+          "z_bin": 3
+        },
+        "margin_blocks_vs_actual_n_min": 409,
+        "margin_blocks_vs_conservative_n_min": 399,
+        "n_eff_blocks": 438,
+        "n_rows": 63794,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      }
+    ],
+    "cells_below_actual_score_slot_n_min": 0,
+    "cells_below_conservative_action_split_n_min": 0,
+    "cells_with_nonfinite_qhat": 0,
+    "counting_note": "The implementation computes conformal_level from block_id.nunique() inside each qhat cell; n_rows is reported as a sanity check but the finite-qhat guarantee uses n_eff_blocks.",
+    "eff_block_membership_share_in_actual_thin_cells": 0.0,
+    "gate": "G23-21c",
+    "keys": [
+      "z_bin",
+      "m_hat_bin"
+    ],
+    "max_n_eff_blocks_per_cell": 484,
+    "min_n_eff_blocks_per_cell": 433,
+    "min_n_rows_per_cell": 11241,
+    "n_calib_blocks": 500,
+    "n_calib_rows": 499978,
+    "n_cells": 16,
+    "n_min_actual_score_slots": 29,
+    "n_min_conservative_if_split_over_actions": 39,
+    "n_score_slots_actual": 3,
+    "pass_actual_score_slot_split": true,
+    "pass_conservative_action_split": true,
+    "row_share_in_actual_thin_cells": 0.0,
+    "thin_cells_by_effective_blocks": [
+      {
+        "cell": {
+          "m_hat_bin": 3,
+          "z_bin": 0
+        },
+        "margin_blocks_vs_actual_n_min": 404,
+        "margin_blocks_vs_conservative_n_min": 394,
+        "n_eff_blocks": 433,
+        "n_rows": 11250,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 3,
+          "z_bin": 1
+        },
+        "margin_blocks_vs_actual_n_min": 404,
+        "margin_blocks_vs_conservative_n_min": 394,
+        "n_eff_blocks": 433,
+        "n_rows": 25000,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 3,
+          "z_bin": 2
+        },
+        "margin_blocks_vs_actual_n_min": 404,
+        "margin_blocks_vs_conservative_n_min": 394,
+        "n_eff_blocks": 433,
+        "n_rows": 25000,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 3,
+          "z_bin": 3
+        },
+        "margin_blocks_vs_actual_n_min": 409,
+        "margin_blocks_vs_conservative_n_min": 399,
+        "n_eff_blocks": 438,
+        "n_rows": 63794,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 0,
+          "z_bin": 0
+        },
+        "margin_blocks_vs_actual_n_min": 422,
+        "margin_blocks_vs_conservative_n_min": 412,
+        "n_eff_blocks": 451,
+        "n_rows": 11241,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 0,
+          "z_bin": 1
+        },
+        "margin_blocks_vs_actual_n_min": 422,
+        "margin_blocks_vs_conservative_n_min": 412,
+        "n_eff_blocks": 451,
+        "n_rows": 24980,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 0,
+          "z_bin": 2
+        },
+        "margin_blocks_vs_actual_n_min": 422,
+        "margin_blocks_vs_conservative_n_min": 412,
+        "n_eff_blocks": 451,
+        "n_rows": 24980,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 0,
+          "z_bin": 3
+        },
+        "margin_blocks_vs_actual_n_min": 434,
+        "margin_blocks_vs_conservative_n_min": 424,
+        "n_eff_blocks": 463,
+        "n_rows": 63699,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 1,
+          "z_bin": 0
+        },
+        "margin_blocks_vs_actual_n_min": 438,
+        "margin_blocks_vs_conservative_n_min": 428,
+        "n_eff_blocks": 467,
+        "n_rows": 11250,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      },
+      {
+        "cell": {
+          "m_hat_bin": 1,
+          "z_bin": 1
+        },
+        "margin_blocks_vs_actual_n_min": 438,
+        "margin_blocks_vs_conservative_n_min": 428,
+        "n_eff_blocks": 467,
+        "n_rows": 25000,
+        "n_score_slots": 3,
+        "passes_actual_score_slot_n_min": true,
+        "passes_conservative_action_split_n_min": true,
+        "qhat_all_finite": true
+      }
+    ]
   },
   "scales": [
     "err",
