@@ -141,6 +141,28 @@ def test_G23_21_break_even_identity_reconstructs_delta(df: pd.DataFrame) -> None
         assert row["delta_vs_anchor"] == pytest.approx(row["delta_reconstructed"], abs=1e-9)
 
 
+def test_G23_21b_gamma_closure_adjudicates_b2_b3_claim(df: pd.DataFrame) -> None:
+    """C3(gamma) is not a pure B2-to-B3 interpolation under C3 Mondrian keys."""
+    raw = pd.read_parquet(ARTIFACT)
+    _calib, test, qhat_rows, fit, _q_by_age, _qbar = TF.fit_c3_inputs(raw, config="C3")
+    out = BL.gamma_closure_report(
+        test,
+        qhat_rows,
+        fit,
+        gammas=(0.0, 0.5, 1.0, 2.0, 3.0, 20.0, 100.0),
+        coverage=0.78,
+        policy="static",
+        n_boot=3,
+    )
+    assert out["gate"] == "G23-21b"
+    assert out["qhat_monotonicity"]["n_score_slots"] == len(TF.MHAT_COLS)
+    assert out["qhat_monotonicity"]["all_cell_level_monotone_by_z_bin"] is True
+    assert out["qhat_monotonicity"]["all_row_level_monotone_by_z_s"] is False
+    assert out["checks"]["b2_to_b3_interpolation_supported"] is False
+    assert out["checks"]["no_gamma_gt2_beats_gamma1"] is True
+    assert len(out["paired_gamma0p5_minus_gamma1"]["delta_ci95"]) == 2
+
+
 def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
     """The C3-vs-B2 audit records the mechanism checks needed to close 23.3."""
     raw = pd.read_parquet(ARTIFACT)
@@ -150,6 +172,8 @@ def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
     assert out["break_even_identity_at_078"]["pass"] is True
     assert "gamma_sweep_at_078" in out
     assert out["gamma_sweep_at_078"]["gamma0_matches_B2"]["accept_bitwise_identical"] is True
+    assert "gamma_closure_G23_21b_at_078" in out
+    assert out["gamma_closure_G23_21b_at_078"]["checks"]["b2_to_b3_interpolation_supported"] is False
     assert "accept_overlap_at_078" in out
     assert out["accept_overlap_at_078"]["C3_B2"]["coverage_target"] == pytest.approx(0.78)
     assert out["accept_overlap_at_078"]["C3_B3"]["coverage_target"] == pytest.approx(0.78)

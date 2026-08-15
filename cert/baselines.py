@@ -134,6 +134,22 @@ def score_C3(df: pd.DataFrame, qhat_rows: np.ndarray) -> np.ndarray:
     )
 
 
+def score_C3_gamma(df: pd.DataFrame, qhat_rows: np.ndarray, gamma: float) -> np.ndarray:
+    """Stable ranking score for C3(gamma): min_j m_hat_j / q_hat_j^gamma."""
+    m = df[list(TF.MHAT_COLS)].to_numpy(np.float64)
+    q = np.asarray(qhat_rows, dtype=np.float64)
+    g = float(gamma)
+    if abs(g) < 1e-12:
+        return TF.score_multiplicative(m, np.ones_like(q))
+    if (m < 0.0).any():
+        with np.errstate(over="ignore", divide="ignore", invalid="ignore"):
+            return TF.score_multiplicative(m, np.power(np.maximum(q, 1e-12), g))
+    with np.errstate(divide="ignore", invalid="ignore"):
+        log_m = np.where(m > 0.0, np.log(m), -np.inf)
+        log_q = np.log(np.maximum(q, 1e-300))
+    return (log_m - g * log_q).min(axis=1)
+
+
 def score_B6sys_system_oracle(
     df: pd.DataFrame,
     policy: str = "static",
@@ -536,7 +552,7 @@ def gamma_sweep_report(
     gamma1_err = None
     for gamma in gammas:
         g = float(gamma)
-        score = TF.score_multiplicative(m, np.power(q_safe, g))
+        score = score_C3_gamma(df, q_safe, g)
         acc = _accept_at_coverage(score, float(coverage))
         chosen = FB.apply_fallback(df, acc, policy)["a_chosen"]
         per_row = FB.loss_of(df, chosen, "err")
@@ -592,6 +608,171 @@ def gamma_sweep_report(
             and best_improvement_vs_gamma1 < 0.001
         ),
         "rows": rows,
+    }
+
+
+def qhat_monotonicity_report(
+    df: pd.DataFrame,
+    qhat_rows: np.ndarray,
+    fit: Mapping[str, Any],
+) -> Dict[str, Any]:
+    """Check how qhat varies with age under the actual C3 taxonomy."""
+    q = np.asarray(qhat_rows, dtype=np.float64)
+    order = np.argsort(df["z_s"].to_numpy(np.float64), kind="mergesort")
+    row_level = []
+    for j in range(q.shape[1]):
+        dif = np.diff(q[order, j])
+        row_level.append(
+            {
+                "slot": int(j + 1),
+                "monotone_by_z_s": bool(np.all(dif >= -1e-12)),
+                "n_down_steps": int((dif < -1e-12).sum()),
+                "min_step": float(dif.min()) if len(dif) else 0.0,
+            }
+        )
+
+    cell_rows = []
+    keys = list(fit.get("keys", []))
+    q_cells = fit.get("_q", {})
+    if keys == ["z_bin", "m_hat_bin"]:
+        z_bins = sorted(int(x) for x in df["z_bin"].unique())
+        m_bins = sorted(int(x) for x in df["m_hat_bin"].unique())
+        for m_bin in m_bins:
+            for j in range(q.shape[1]):
+                vals = [float(q_cells[(z, m_bin)][j]) for z in z_bins]
+                cell_rows.append(
+                    {
+                        "m_hat_bin": int(m_bin),
+                        "slot": int(j + 1),
+                        "qhat_by_z_bin": vals,
+                        "monotone_by_z_bin": bool(
+                            all(vals[i + 1] >= vals[i] - 1e-12 for i in range(len(vals) - 1))
+                        ),
+                    }
+                )
+    elif keys == ["z_bin"]:
+        z_bins = sorted(int(x) for x in df["z_bin"].unique())
+        for j in range(q.shape[1]):
+            vals = [float(q_cells[(z,)][j]) for z in z_bins]
+            cell_rows.append(
+                {
+                    "slot": int(j + 1),
+                    "qhat_by_z_bin": vals,
+                    "monotone_by_z_bin": bool(
+                        all(vals[i + 1] >= vals[i] - 1e-12 for i in range(len(vals) - 1))
+                    ),
+                }
+            )
+
+    return {
+        "keys": keys,
+        "n_score_slots": int(q.shape[1]),
+        "note": (
+            "C3 has K-1 score slots. Under keys z_bin x m_hat_bin, qhat can be "
+            "monotone in age within each m_hat_bin while not row-level monotone in z_s."
+        ),
+        "row_level_by_z_s": row_level,
+        "all_row_level_monotone_by_z_s": bool(
+            all(row["monotone_by_z_s"] for row in row_level)
+        ),
+        "cell_level_by_z_bin": cell_rows,
+        "all_cell_level_monotone_by_z_bin": bool(
+            cell_rows and all(row["monotone_by_z_bin"] for row in cell_rows)
+        ),
+    }
+
+
+def gamma_closure_report(
+    df: pd.DataFrame,
+    qhat_rows: np.ndarray,
+    fit: Mapping[str, Any],
+    gammas: Sequence[float] = (0.0, 0.5, 1.0, 1.5, 2.0, 3.0, 5.0, 20.0, 100.0),
+    coverage: float = 0.78,
+    policy: str = "static",
+    n_boot: int = 2000,
+    seed: int = 23555,
+) -> Dict[str, Any]:
+    """G23-21b: adjudicate whether C3(gamma) is a B2-to-B3 interpolation."""
+    if policy != "static":
+        raise ValueError("gamma closure is implemented only for static fallback")
+    q = np.asarray(qhat_rows, dtype=np.float64)
+    qmono = qhat_monotonicity_report(df, q, fit)
+    rep = gamma_sweep_report(df, q, gammas=gammas, coverage=coverage, policy=policy)
+    score_b3 = score_B3_aoi(df)
+    b3_sweep = sweep_ranking(df, score_b3, [coverage], policy=policy, scales=("err",), label="B3_aoi")
+    err_b3 = float(b3_sweep["err_system"].iloc[0])
+    enriched_rows = []
+    for row in rep["rows"]:
+        score = score_C3_gamma(df, q, float(row["gamma"]))
+        overlap = accept_overlap(score, score_b3, float(coverage))
+        r = dict(row)
+        r["err_gap_to_B3"] = float(float(row["err_system"]) - err_b3)
+        r["abs_err_gap_to_B3"] = abs(float(r["err_gap_to_B3"]))
+        r["overlap_with_B3_aoi"] = float(overlap["share_of_a"])
+        r["jaccard_with_B3_aoi"] = float(overlap["jaccard"])
+        r["guarantee_preserving"] = bool(abs(float(row["gamma"]) - 1.0) < 1e-12)
+        enriched_rows.append(r)
+
+    gamma1_err = float(next(row["err_system"] for row in enriched_rows if abs(row["gamma"] - 1.0) < 1e-12))
+    gamma05_score = score_C3_gamma(df, q, 0.5)
+    gamma1_score = score_C3_gamma(df, q, 1.0)
+    paired = paired_ranking_delta_at_coverage(
+        df,
+        gamma05_score,
+        gamma1_score,
+        float(coverage),
+        label_a="C3_gamma0.5",
+        label_b="C3_gamma1.0",
+        policy=policy,
+        scale="err",
+        n_boot=int(n_boot),
+        seed=int(seed),
+    )
+    high_rows = [row for row in enriched_rows if float(row["gamma"]) > 2.0]
+    ge1_rows = [row for row in enriched_rows if float(row["gamma"]) >= 1.0]
+    monotone_ge1 = all(
+        float(ge1_rows[i + 1]["err_system"]) >= float(ge1_rows[i]["err_system"]) - 1e-12
+        for i in range(len(ge1_rows) - 1)
+    )
+    max_gamma_row = max(enriched_rows, key=lambda row: float(row["gamma"]))
+    closes_to_b3 = bool(float(max_gamma_row["abs_err_gap_to_B3"]) < 0.002)
+    no_high_gamma_beats_gamma1 = bool(
+        all(float(row["err_system"]) >= gamma1_err - 1e-12 for row in high_rows)
+    )
+    paired_contains_zero = bool(not paired["ci_excludes_zero"])
+    supported = bool(
+        qmono["all_row_level_monotone_by_z_s"]
+        and closes_to_b3
+        and no_high_gamma_beats_gamma1
+        and paired_contains_zero
+    )
+    return {
+        "gate": "G23-21b",
+        "coverage_target": float(coverage),
+        "policy": str(policy),
+        "hypothesis": "C3(gamma) is a parametric interpolation from B2 at gamma=0 to B3 as gamma->infinity.",
+        "qhat_monotonicity": qmono,
+        "b3_reference": {
+            "err_system": err_b3,
+            "coverage": float(b3_sweep["coverage"].iloc[0]),
+        },
+        "gamma_rows": enriched_rows,
+        "gamma0_matches_B2": rep["gamma0_matches_B2"],
+        "checks": {
+            "gamma_max_within_0p002_of_B3": closes_to_b3,
+            "no_gamma_gt2_beats_gamma1": no_high_gamma_beats_gamma1,
+            "err_system_monotone_non_decreasing_for_gamma_ge1": bool(monotone_ge1),
+            "paired_gamma0p5_minus_gamma1_ci_contains_zero": paired_contains_zero,
+            "b2_to_b3_interpolation_supported": supported,
+        },
+        "paired_gamma0p5_minus_gamma1": paired,
+        "interpretation": (
+            "Under C3 Mondrian keys z_bin x m_hat_bin, gamma->infinity ranks by "
+            "the qhat cell/slot structure, not by age alone. Therefore the simple "
+            "B2-to-B3 interpolation claim is rejected for this implementation."
+            if not supported
+            else "The B2-to-B3 interpolation claim is supported on this implementation."
+        ),
     }
 
 
@@ -776,7 +957,7 @@ def run_c3_b2_audit(
     seed: int = 23330,
 ) -> Dict[str, Any]:
     """Audit the missing C3-vs-B2 comparison and wasted abstention."""
-    _calib, test, qhat_rows, _fit, _q_by_age, _qbar = TF.fit_c3_inputs(df, config=config)
+    _calib, test, qhat_rows, fit, _q_by_age, _qbar = TF.fit_c3_inputs(df, config=config)
     score_c3 = score_C3(test, qhat_rows)
     score_b2 = score_B2_constant_gap(test)
     score_b1 = score_B1_random(test)
@@ -824,6 +1005,15 @@ def run_c3_b2_audit(
         argmin_info=argmin_info,
     )
     gamma_sweep = gamma_sweep_report(test, qhat_rows, coverage=0.78, policy=policy)
+    gamma_closure = gamma_closure_report(
+        test,
+        qhat_rows,
+        fit,
+        coverage=0.78,
+        policy=policy,
+        n_boot=int(n_boot),
+        seed=int(seed) + 225,
+    )
     overlaps = {
         "C3_B2": accept_overlap(score_c3, score_b2, 0.78),
         "C3_B3": accept_overlap(score_c3, score_b3, 0.78),
@@ -861,6 +1051,7 @@ def run_c3_b2_audit(
         "argmin_information_at_078": argmin_info,
         "break_even_identity_at_078": break_even,
         "gamma_sweep_at_078": gamma_sweep,
+        "gamma_closure_G23_21b_at_078": gamma_closure,
         "accept_overlap_at_078": overlaps,
         "gap_closed_by_C3_vs_B6sys_at_078": float(gap_closed_by_c3),
         "n_boot": int(n_boot),
@@ -1090,6 +1281,56 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
                 row["overlap_with_B2_gamma0"],
             )
         )
+    print()
+    print("=== Gamma closure, G23-21b at coverage 0.78 ===")
+    closure = report["gamma_closure_G23_21b_at_078"]
+    qmono = closure["qhat_monotonicity"]
+    checks = closure["checks"]
+    print(
+        "qhat slots=%d keys=%s cell_mono_by_z=%s row_mono_by_z=%s"
+        % (
+            qmono["n_score_slots"],
+            ",".join(qmono["keys"]),
+            qmono["all_cell_level_monotone_by_z_bin"],
+            qmono["all_row_level_monotone_by_z_s"],
+        )
+    )
+    print(
+        "b2_to_b3_supported=%s gamma_max_close_to_B3=%s no_gamma_gt2_beats_gamma1=%s "
+        "monotone_ge1=%s paired_CI_contains_0=%s"
+        % (
+            checks["b2_to_b3_interpolation_supported"],
+            checks["gamma_max_within_0p002_of_B3"],
+            checks["no_gamma_gt2_beats_gamma1"],
+            checks["err_system_monotone_non_decreasing_for_gamma_ge1"],
+            checks["paired_gamma0p5_minus_gamma1_ci_contains_zero"],
+        )
+    )
+    print("B3_reference_err=%.9f" % closure["b3_reference"]["err_system"])
+    print("%7s %11s %11s %10s %10s %10s" % ("gamma", "err_system", "gap_to_B3", "ov_C3", "ov_B2", "ov_B3"))
+    for row in closure["gamma_rows"]:
+        print(
+            "%7.1f %11.9f %+11.9f %10.6f %10.6f %10.6f"
+            % (
+                row["gamma"],
+                row["err_system"],
+                row["err_gap_to_B3"],
+                row["overlap_with_C3_gamma1"],
+                row["overlap_with_B2_gamma0"],
+                row["overlap_with_B3_aoi"],
+            )
+        )
+    paired = closure["paired_gamma0p5_minus_gamma1"]
+    print(
+        "paired gamma0.5-gamma1 err delta={delta:+.9f} CI95=[{lo:+.9f}, {hi:+.9f}] "
+        "excludes_zero={excludes}".format(
+            delta=paired["delta_a_minus_b"],
+            lo=paired["delta_ci95"][0],
+            hi=paired["delta_ci95"][1],
+            excludes=paired["ci_excludes_zero"],
+        )
+    )
+    print("interpretation=%s" % closure["interpretation"])
     print()
     print("gap_closed_by_C3_vs_B6sys_at_078=%.9f" % report["gap_closed_by_C3_vs_B6sys_at_078"])
     print("wrote_json=%s" % out_json)
