@@ -209,7 +209,7 @@ cac hang ma reject khong doi hanh dong. Tuy vay intervention rate that cua hai
 chinh sach chi lech 0.001274, nen so sanh C3 vs B2 tai matched coverage 0.78
 la hop le theo L20.
 
-## Co Che Argmin
+## Co che #7 -- nguong hoa von la nguong cung
 
 Khong dung moc "dong xu 0.500". He co `K = 4` hanh dong, va ngay ca moc
 `1/K` cung khong dung vi cac hanh dong co phan phoi bien khac nhau. Moc dung
@@ -219,7 +219,53 @@ la chance agreement tinh tu chinh tap con:
 agreement_independent = sum_j P(a_twin=j) * P(a_star=j)
 ```
 
-Tai coverage 0.78:
+Voi F2 STATIC va thang `err`, reject co ich khi fallback P1 dung tren tap reject
+nhieu hon twin:
+
+```text
+reject co ich  <=>  P(a_twin = a* | rej) < P(a* = P1 | rej)
+delta_vs_anchor = P(rej) * [P(a_twin=a*|rej) - P(a*=P1|rej)]
+```
+
+Cot `delta do duoc` ben duoi la `err_system - err_anchor`, nen so am la co loi:
+
+| Bo chon | kap_rej | do tach | P(a_twin=a*\|rej) | P(a*=P1\|rej) | vuot? | delta do duoc |
+|---|---:|---:|---:|---:|:--:|---:|
+| B1 random | 0.526796 | -0.0020 | 0.778113 | 0.658133 | KHONG | +0.026396 |
+| B3 AoI | 0.395617 | +0.1662 | 0.716509 | 0.659415 | KHONG | +0.012561 |
+| B2 constant gap | 0.134122 | +0.5143 | 0.550962 | 0.609984 | CO | -0.012985 |
+| C3 conformal | 0.126067 | +0.5245 | 0.546653 | 0.605148 | CO | -0.012869 |
+
+Tai tao khep kin, dung cung cong thuc G23-21:
+
+```text
+B1: 0.220000520 * (0.778113153 - 0.658132790) = +0.026395742
+B3: 0.220000520 * (0.716509232 - 0.659414690) = +0.012560829
+B2: 0.220000520 * (0.550962334 - 0.609984272) = -0.012984857
+C3: 0.220000520 * (0.546652969 - 0.605147600) = -0.012868849
+```
+
+Gate moi:
+
+```text
+G23-21  delta_vs_anchor tai coverage c phai bang
+        P(reject) * [P(a_twin=a*|reject) - P(a*=P1|reject)]
+        cho moi selector static-fallback tren thang err.
+
+Ket qua @0.78: PASS, max_abs_identity_error <= 1.6e-17.
+```
+
+Doc bang:
+
+1. B1 cho do tach gan 0, dung vai tro doi chung am.
+2. B3 cho do tach `+0.1662`, bang 31.7% cua C3. Tuoi co mang tin hieu ve do
+   tin cay cua argmin; ket luan cu "tin hieu khong nam o tuoi" bi rut lai.
+3. B3 that bai vi chua vuot nguong hoa von, khong phai vi khong co tin hieu.
+   `P(a*=P1|rej)` la nguong cung cua fallback; bo chon yeu co the lam hai thay
+   vi tao mot phan loi ich.
+4. B2 va C3 vuot nguong vi day `P(a_twin=a*|rej)` xuong duoi nguong P1.
+
+Bang chance-agreement day du tai coverage 0.78:
 
 | Bo chon | tieu chi reject | agree(acc) | ind(acc) | kappa(acc) | agree(rej) | ind(rej) | kappa(rej) |
 |---|---|---:|---:|---:|---:|---:|---:|
@@ -227,12 +273,6 @@ Tai coverage 0.78:
 | B3 AoI | tuoi z | 0.794832 | 0.531726 | 0.561864 | 0.716509 | 0.530942 | 0.395617 |
 | B2 constant gap | m_hat | 0.841525 | 0.549225 | 0.648440 | 0.550962 | 0.481408 | 0.134122 |
 | C3 conformal | m_hat/q_hat | 0.842741 | 0.549907 | 0.650607 | 0.546653 | 0.481257 | 0.126067 |
-
-Doc bang: B1 random gan nhu khong lam thay doi thong tin argmin; B3 AoI lam
-giam mot phan nhung van giu `kappa(rej)=0.396`. Hai bo chon dua tren `m_hat`
-la B2 va C3 lam giam manh hon nhieu, xuong `kappa(rej)=0.134` va `0.126`.
-Do do co che khong rieng cua conformal: dieu kien `m_hat` nho moi la nguon
-lam argmin mat thong tin; `q_hat(z)` chi thay doi nhe.
 
 Overlap de dong no co che L20:
 
@@ -250,12 +290,68 @@ accept_overlap(C3, B3) @0.78:
   independent_ref  = 0.779999480
 ```
 
-Ket qua nay cham diem du doan L20: du doan `abs_gap < 0.005` trung so, va co
-che "tap C3/B2 gan trung nhau" cung duoc xac nhan (`share_of_C3=0.97257`).
-Co che #3 va #6 hop nhat thanh mot cau: tin hieu khai thac duoc nam chu yeu o
-`m_hat`, khong nam o tuoi.
+Ket qua nay noi hai dieu cung luc: `m_hat` la tin hieu manh hon o diem van
+hanh, nhung tuoi khong vo dung. `corr(z, m_hat) ~= 0` chi noi hai bo loc chon
+hai tap gan doc lap; no khong noi tuoi khong mang tin hieu ve `a_twin = a*`.
 
-Ket luan hien tai:
+## Phan phoi argmin va L21
+
+Phan phoi bien:
+
+```text
+a_twin_distribution = [0.619176866, 0.000000000, 0.369222369, 0.011600766]
+a_star_distribution = [0.659723542, 0.000014001, 0.333091984, 0.007170473]
+```
+
+Hanh dong 1 gan nhu chet: twin khong bao gio chon, va chan ly chi chon voi xac
+suat `1.4e-5`. Threat moi:
+
+```text
+L21  Khong gian hanh dong hieu dung la 3, nhung bonferroni tra gia theo K=4
+     danh nghia. Chi phi cua hanh dong chet chua duoc luong hoa.
+```
+
+Tren tap reject, B2/C3 lam phan phoi `a_twin` gian ra, con B3 gan nhu giu
+hinh dang bien:
+
+```text
+marginal  [0.6192, 0.0000, 0.3692, 0.0116]
+B3 reject [0.6184, 0.0000, 0.3700, 0.0116]
+B2 reject [0.5047, 0.0000, 0.4607, 0.0346]
+C3 reject [0.4989, 0.0000, 0.4689, 0.0322]
+```
+
+Doc co che: `m_hat` nho bat che do twin ban khoan, argmin gian ra. `z` lon bat
+che do twin tu tin nhung sai, argmin giu hinh dang gan nhu cu. Conformal theo
+tuoi vi vay dang chuan hoa mot tin hieu co that nhung yeu hon nguong van hanh.
+
+## Gamma sweep
+
+Thuc nghiem re de xem tuoi dang bi duoi-trong-so hay that su khong them nhieu
+o bien:
+
+```text
+score_gamma = min_j m_hat_j / q_hat_j(z)^gamma
+```
+
+Pre-check: `gamma=0` trung bitwise voi B2 (`disagree=0`,
+`max_abs_score_diff=0`). `gamma=1` la C3 hien tai.
+
+| gamma | err_system | delta vs anchor | err\|accept | err\|reject | overlap C3 | overlap B2 |
+|---:|---:|---:|---:|---:|---:|---:|
+| 0.0 | 0.209413821 | -0.012984857 | 0.158474668 | 0.390015728 | 0.972570 | 1.000000 |
+| 0.5 | 0.208991793 | -0.013406885 | 0.157651536 | 0.391015792 | 0.986712 | 0.985858 |
+| 1.0 | 0.209529829 | -0.012868849 | 0.157259202 | 0.394852400 | 1.000000 | 0.972570 |
+| 1.5 | 0.210313881 | -0.012084798 | 0.158125926 | 0.395343340 | 0.987007 | 0.959577 |
+| 2.0 | 0.209549830 | -0.012848848 | 0.157331002 | 0.394688753 | 0.976263 | 0.948832 |
+| 3.0 | 0.211097932 | -0.011300746 | 0.159143943 | 0.395297883 | 0.957448 | 0.930018 |
+| 5.0 | 0.214762174 | -0.007636504 | 0.162813418 | 0.398943569 | 0.928947 | 0.901517 |
+
+Ket qua: best trong luoi la `gamma=0.5`, `err_system=0.208991793`, cai thien so
+voi C3 gamma=1 la `0.000538036`. Du doan "best trong [0,1.5], khong co cuc tri
+noi o gamma > 2, cai thien < 0.001" PASS.
+
+## Ket luan hien tai
 
 ```text
 C3 vuot B3 ro tren err_system tai diem van hanh 0.78:
@@ -264,13 +360,14 @@ C3 vuot B3 ro tren err_system tai diem van hanh 0.78:
   diff C3 - B3 = -0.025429678
 
 B3 khong co beneficial band trong luoi 0.00--1.00 buoc 0.01.
-C3 co beneficial band tu 0.607600 tro len, tuc co the reject toi da 39.24%
-ma van thang neo always-trust tren err_system.
+Khong duoc ket luan B3 vo tin hieu: B3 co 31.7% suc tach kappa cua C3 nhung
+chua vuot nguong hoa von cua fallback P1.
 
 Nhung B2 constant gap la doi thu that: tai coverage 0.78, C3 khong phan biet
-duoc voi B2 tren err/regret/sla. Dong gop chac chan cua C3 so voi B2 hien la
-bao dam hinh thuc voi chi phi risk he thong khong do duoc, khong phai cai thien
-rui ro diem van hanh.
+duoc voi B2 tren err/regret/sla. Gamma sweep cho thay tang trong so tuoi khong
+tao them loi ich he thong dang ke tai o nay.
 
+C3 co beneficial band tu 0.607600 tro len, tuc co the reject toi da 39.24%
+ma van thang neo always-trust tren err_system.
 C3 dong duoc 10.02% khoang cach tu neo always-trust toi B6-sys oracle tai 0.78.
 ```
