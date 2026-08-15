@@ -1,0 +1,68 @@
+{
+  "definition": "mass_pos=P(twin correct, P1 wrong); mass_neg=P(twin wrong, P1 correct); swing=mass_pos-mass_neg.",
+  "gate": "G23-17a",
+  "identity": "random-reject delta at reject share r is r * swing.",
+  "provenance": {
+    "created_utc": "2026-08-15T04:04:34.561837+00:00",
+    "git_dirty_before_write": false,
+    "git_hash": "1be90cd5a861c8d83cd900b6dda69935714d9f7c"
+  },
+  "reference_poisson_0.925": {
+    "D": 1.917747636918573,
+    "swing": 0.11787777993347562
+  },
+  "rows": [
+    {
+      "D_mass_pos_over_mass_neg": 1.917747636918573,
+      "artifact": "results/phase-22/calib_set_v3_poisson_0.925.parquet",
+      "artifact_sha256": "bf704ca60cb62deb5834631ac239a4554d4317bb5bf5242ea108ae78fdb29aa5",
+      "both_wrong": 0.09395620110927322,
+      "cell": "poisson@0.925",
+      "err_P1": 0.34027645824624425,
+      "err_neo": 0.22239867831276863,
+      "mass_neg": 0.12844247720349541,
+      "mass_pos": 0.24632025713697103,
+      "n_blocks": 500,
+      "n_rows": 499967,
+      "n_rows_total": 999945,
+      "rowset": "test",
+      "static_path": 0,
+      "swing_mass_pos_minus_mass_neg": 0.11787777993347562
+    },
+    {
+      "D_mass_pos_over_mass_neg": 2.267303540147472,
+      "artifact": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
+      "artifact_sha256": "e520f85bb3abb01f6cb8100807b0f388d2b251cb3f6bca89706885c00f38e449",
+      "both_wrong": 0.12253208711774977,
+      "cell": "poisson@0.850",
+      "err_P1": 0.34516878113955524,
+      "err_neo": 0.22072656795348494,
+      "mass_neg": 0.09819448083573518,
+      "mass_pos": 0.22263669402180547,
+      "n_blocks": 500,
+      "n_rows": 499967,
+      "n_rows_total": 999945,
+      "rowset": "test",
+      "static_path": 0,
+      "swing_mass_pos_minus_mass_neg": 0.1244422131860703
+    },
+    {
+      "D_mass_pos_over_mass_neg": 1.6881232193732196,
+      "artifact": "results/phase-22/calib_set_v3_h2_0.700.parquet",
+      "artifact_sha256": "c6bc3ffa06997f72368c2741455cc5bafa57d2995b29c566b0be75327c4c5de7",
+      "both_wrong": 0.08160538595547306,
+      "cell": "h2@0.700",
+      "err_P1": 0.15745439198987132,
+      "err_neo": 0.12653635139919234,
+      "mass_neg": 0.04493096544371927,
+      "mass_pos": 0.07584900603439826,
+      "n_blocks": 500,
+      "n_rows": 499967,
+      "n_rows_total": 999945,
+      "rowset": "test",
+      "static_path": 0,
+      "swing_mass_pos_minus_mass_neg": 0.030918040590678986
+    }
+  ],
+  "rowset": "test"
+}
