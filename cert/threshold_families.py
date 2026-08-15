@@ -378,6 +378,14 @@ def scale_agreement_self_check(
                 "abs_diff_vs_check": float(abs(rho - rho_check)),
                 "rank_order_identical": bool(np.array_equal(np.argsort(ranks_a), np.argsort(ranks_b))),
             }
+    if not pairs:
+        return {
+            "pairs": pairs,
+            "max_abs_diff_vs_pandas_rank_check": 0.0,
+            "rank_identity_implications": [],
+            "pass": True,
+            "note": "No scale pairs available for Spearman self-check.",
+        }
 
     implication_ok = True
     implications = []
@@ -661,13 +669,29 @@ def run_report(
     policy: str = "static",
     cell_label: str = "poisson@0.925",
     input_path: str = "results/phase-22/calib_set_v3.parquet",
+    scales: Sequence[str] = FB.SCALES,
     targets: Sequence[float] = MATCHED_COVERAGE,
     n_boot: int = 1000,
 ) -> Dict[str, Any]:
     calib, test, qhat_rows, fit, q_by_age, qbar = fit_c3_inputs(df, config=config)
+    eval_scales, skipped_scales = FB.available_scales(test, scales)
     eps_grid = eps_grid_from_delta(qbar)
-    sweep_mul = sweep_family(test, qhat_rows, "multiplicative", KAPPA_GRID, policy=policy)
-    sweep_add = sweep_family(test, qhat_rows, "additive", eps_grid, policy=policy)
+    sweep_mul = sweep_family(
+        test,
+        qhat_rows,
+        "multiplicative",
+        KAPPA_GRID,
+        policy=policy,
+        scales=eval_scales,
+    )
+    sweep_add = sweep_family(
+        test,
+        qhat_rows,
+        "additive",
+        eps_grid,
+        policy=policy,
+        scales=eval_scales,
+    )
     comparison = compare_families_at_coverage(sweep_mul, sweep_add, targets=targets)
     combined = pd.concat([sweep_mul, sweep_add], ignore_index=True, sort=False)
     mhat = test[list(MHAT_COLS)].to_numpy(np.float64)
@@ -690,7 +714,7 @@ def run_report(
                 ),
             }
         )
-    pareto = pareto_front(combined)
+    pareto = pareto_front(combined, scales=eval_scales)
     paired_078 = paired_family_delta_at_coverage(
         test,
         qhat_rows,
@@ -702,9 +726,9 @@ def run_report(
         n_boot=n_boot,
     )
     scale_check = {
-        "multiplicative": scale_agreement_self_check(sweep_mul),
-        "additive": scale_agreement_self_check(sweep_add),
-        "combined": scale_agreement_self_check(combined),
+        "multiplicative": scale_agreement_self_check(sweep_mul, scales=eval_scales),
+        "additive": scale_agreement_self_check(sweep_add, scales=eval_scales),
+        "combined": scale_agreement_self_check(combined, scales=eval_scales),
     }
     pareto_meta = pareto_audit(combined, pareto)
     local_degen = additive_local_degeneracy_report(
@@ -717,6 +741,9 @@ def run_report(
         "cell": str(cell_label),
         "config": config,
         "policy": policy,
+        "requested_scales": [str(x) for x in scales],
+        "scales": [str(x) for x in eval_scales],
+        "skipped_scales": skipped_scales,
         "qbar_slot1_age_bins": qbar,
         "qhat_slot1_by_age_bin": q_by_age,
         "delta_grid": [float(x) for x in DELTA_GRID],
@@ -728,17 +755,17 @@ def run_report(
         "conditioning_ratios_at_coverage": conditioning_ratios_at_targets(sweep_add, q_by_age, targets),
         "slot_diagnostics_at_coverage": slot_targets,
         "scale_agreement": {
-            "multiplicative": scale_agreement(sweep_mul),
-            "additive": scale_agreement(sweep_add),
-            "combined": scale_agreement(combined),
+            "multiplicative": scale_agreement(sweep_mul, scales=eval_scales),
+            "additive": scale_agreement(sweep_add, scales=eval_scales),
+            "combined": scale_agreement(combined, scales=eval_scales),
         },
         "scale_agreement_self_check": scale_check,
         "aurc_system": {
-            "multiplicative": aurc_system_by_scale(sweep_mul),
-            "additive": aurc_system_by_scale(sweep_add),
+            "multiplicative": aurc_system_by_scale(sweep_mul, scales=eval_scales),
+            "additive": aurc_system_by_scale(sweep_add, scales=eval_scales),
             "diff_mul_minus_add": {
                 scale: float(aurc_system(sweep_mul, scale) - aurc_system(sweep_add, scale))
-                for scale in FB.SCALES
+                for scale in eval_scales
             },
         },
         "pareto_front": pareto.to_dict(orient="records"),
@@ -802,6 +829,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap.add_argument("--cell-label", default="poisson@0.925")
     ap.add_argument("--config", default="C3")
     ap.add_argument("--policy", default="static", choices=("static", "sticky", "wait"))
+    ap.add_argument("--scales", nargs="+", choices=FB.SCALES, default=list(FB.SCALES))
     ap.add_argument("--out-json", default="results/phase-23/threshold_families_poisson_0.925_C3_static.json")
     ap.add_argument("--out-csv", default="results/phase-23/threshold_families_poisson_0.925_C3_static.csv")
     ap.add_argument("--n-boot", type=int, default=1000)
@@ -814,6 +842,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         policy=args.policy,
         cell_label=args.cell_label,
         input_path=args.input,
+        scales=args.scales,
         n_boot=int(args.n_boot),
     )
     os.makedirs(os.path.dirname(args.out_json), exist_ok=True)
@@ -828,6 +857,9 @@ def main(argv: Sequence[str] | None = None) -> int:
 
     print("wrote", args.out_json)
     print("wrote", args.out_csv)
+    if report.get("skipped_scales"):
+        print("skipped_scales")
+        print(json.dumps(report["skipped_scales"], indent=1, sort_keys=True))
     print("compare_families_at_coverage")
     print(pd.DataFrame(report["compare_families_at_coverage"]).to_string(index=False))
     print("scale_agreement")

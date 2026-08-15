@@ -82,6 +82,30 @@ def test_paired_ranking_delta_reports_block_ci(df: pd.DataFrame) -> None:
     assert out["n_blocks"] == df["block_id"].nunique()
 
 
+def test_available_scales_skips_missing_sla_columns() -> None:
+    """Cell-specific artifacts can be usable for err/regret while lacking SLA cols."""
+    d = pd.DataFrame(
+        {
+            "a_star": [0],
+            "a1": [0],
+            "a_rank_1": [1],
+            "a_rank_2": [2],
+            "a_rank_3": [3],
+            "m_true_1": [1.0],
+            "m_true_2": [2.0],
+            "m_true_3": [3.0],
+        }
+    )
+    scales, skipped = FB.available_scales(d, FB.SCALES)
+    assert scales == ("err", "regret")
+    assert skipped["sla"]["missing_columns"] == [
+        "sla_viol_p0",
+        "sla_viol_p1",
+        "sla_viol_p2",
+        "sla_viol_p3",
+    ]
+
+
 def test_L20_intervention_rate_check_reports_actionable_gap(df: pd.DataFrame) -> None:
     """Matched coverage audit must expose true intervention-rate comparability."""
     accept_a = BL._accept_at_coverage(BL.score_B2_constant_gap(df), 0.78)

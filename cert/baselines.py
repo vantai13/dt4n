@@ -1054,17 +1054,22 @@ def run_report(
     config: str = "C3",
     policy: str = "static",
     cell_label: str = "poisson@0.925",
+    scales: Sequence[str] = FB.SCALES,
     coverages: Sequence[float] = BASELINE_COVERAGES,
     target_coverage: float = 0.78,
 ) -> Dict[str, Any]:
     """Run the Lesson 23.3 baseline sweep after the three prerequisite gates."""
     _calib, test, qhat_rows, fit, q_by_age, qbar = TF.fit_c3_inputs(df, config=config)
+    eval_scales, skipped_scales = FB.available_scales(test, scales)
     anchor = {
         scale: float(FB.loss_of(test, test["a_twin"].to_numpy(np.int64), scale).mean())
-        for scale in FB.SCALES
+        for scale in eval_scales
     }
     static_action = np.full(len(test), FB.path_static_shortest(), dtype=np.int64)
-    static = {scale: float(FB.loss_of(test, static_action, scale).mean()) for scale in FB.SCALES}
+    static = {
+        scale: float(FB.loss_of(test, static_action, scale).mean())
+        for scale in eval_scales
+    }
 
     scores = {
         "B1_random": score_B1_random(test),
@@ -1077,7 +1082,7 @@ def run_report(
         "B6_sys_oracle": score_B6sys_system_oracle(test, policy=policy, scale="err"),
     }
     sweeps = {
-        label: sweep_ranking(test, score, coverages, policy=policy, label=label)
+        label: sweep_ranking(test, score, coverages, policy=policy, scales=eval_scales, label=label)
         for label, score in scores.items()
     }
     combined = pd.concat(sweeps.values(), ignore_index=True, sort=False)
@@ -1092,6 +1097,9 @@ def run_report(
         "cell": str(cell_label),
         "config": config,
         "policy": policy,
+        "requested_scales": [str(x) for x in scales],
+        "scales": [str(x) for x in eval_scales],
+        "skipped_scales": skipped_scales,
         "coverage_grid": [float(x) for x in coverages],
         "target_coverage": float(target_coverage),
         "n_test": int(len(test)),
@@ -1132,13 +1140,14 @@ def run_c3_b2_audit(
 ) -> Dict[str, Any]:
     """Audit the missing C3-vs-B2 comparison and wasted abstention."""
     calib, test, qhat_rows, fit, _q_by_age, _qbar = TF.fit_c3_inputs(df, config=config)
+    eval_scales, skipped_scales = FB.available_scales(test, scales)
     score_c3 = score_C3(test, qhat_rows)
     score_b2 = score_B2_constant_gap(test)
     score_b1 = score_B1_random(test)
     score_b3 = score_B3_aoi(test)
     rows = []
     for coverage in coverages:
-        for scale_idx, scale in enumerate(scales):
+        for scale_idx, scale in enumerate(eval_scales):
             rows.append(
                 paired_ranking_delta_at_coverage(
                     test,
@@ -1228,7 +1237,9 @@ def run_c3_b2_audit(
         "policy": policy,
         "n_test": int(len(test)),
         "coverages": [float(x) for x in coverages],
-        "scales": [str(x) for x in scales],
+        "requested_scales": [str(x) for x in scales],
+        "scales": [str(x) for x in eval_scales],
+        "skipped_scales": skipped_scales,
         "c3_minus_b2_paired_block_bootstrap": rows,
         "wasted_abstention_C3_at_078": wasted_abstention_report(test, accept_c3_078),
         "wasted_abstention_B2_at_078": wasted_abstention_report(test, accept_b2_078),
@@ -1278,6 +1289,8 @@ def write_report(report: Dict[str, Any], out_json: str, out_csv: str) -> None:
 def _print_summary(report: Dict[str, Any], out_json: str, out_csv: str) -> None:
     gates = report["gates"]
     print("=== Phase 23.3 baseline gates ===")
+    if report.get("skipped_scales"):
+        print("skipped_scales=%s" % json.dumps(report["skipped_scales"], sort_keys=True))
     print("PC23-1 random baseline:", "PASS" if gates["PC23_1"]["pass"] else "FAIL")
     print("G23-10b B4 == B3:", "PASS" if gates["G23_10b"]["pass"] else "FAIL")
     print("G23-12c B6-sys closed form:", "PASS" if gates["G23_12c"]["pass"] else "FAIL")
@@ -1322,6 +1335,8 @@ def _print_summary(report: Dict[str, Any], out_json: str, out_csv: str) -> None:
 
 def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
     print("=== Phase 23.3 C3-vs-B2 paired bootstrap audit ===")
+    if report.get("skipped_scales"):
+        print("skipped_scales=%s" % json.dumps(report["skipped_scales"], sort_keys=True))
     for row in report["c3_minus_b2_paired_block_bootstrap"]:
         if abs(float(row["coverage_target"]) - 0.78) >= 1e-12:
             continue
@@ -1599,6 +1614,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--cell-label", default="poisson@0.925")
     parser.add_argument("--config", default="C3")
     parser.add_argument("--policy", default="static")
+    parser.add_argument("--scales", nargs="+", choices=FB.SCALES, default=list(FB.SCALES))
     parser.add_argument("--target-coverage", type=float, default=0.78)
     parser.add_argument("--out-json", default=DEFAULT_OUT_JSON)
     parser.add_argument("--out-csv", default=DEFAULT_OUT_CSV)
@@ -1615,6 +1631,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             config=args.config,
             policy=args.policy,
             cell_label=args.cell_label,
+            scales=args.scales,
             n_boot=int(args.n_boot),
             seed=int(args.seed),
         )
@@ -1634,6 +1651,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         config=args.config,
         policy=args.policy,
         cell_label=args.cell_label,
+        scales=args.scales,
         target_coverage=float(args.target_coverage),
     )
     report["input_artifact"] = {

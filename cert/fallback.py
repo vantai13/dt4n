@@ -81,6 +81,44 @@ def relcost_matrix(df: pd.DataFrame, k: int = K_ACTIONS) -> np.ndarray:
     return out
 
 
+def scale_required_columns(scale: str, k: int = K_ACTIONS) -> tuple[str, ...]:
+    """Columns needed to evaluate one loss scale."""
+    if scale == "err":
+        return ("a_star",)
+    if scale == "regret":
+        return (
+            ("a1",)
+            + tuple("a_rank_%d" % slot for slot in range(1, k))
+            + tuple("m_true_%d" % slot for slot in range(1, k))
+        )
+    if scale == "sla":
+        return tuple("sla_viol_p%d" % j for j in range(k))
+    raise ValueError("scale phai thuoc %r, nhan duoc %r" % (SCALES, scale))
+
+
+def available_scales(
+    df: pd.DataFrame,
+    scales: Sequence[str] = SCALES,
+    k: int = K_ACTIONS,
+) -> tuple[tuple[str, ...], Dict[str, Any]]:
+    """Return evaluable scales and a report of scales skipped for missing columns."""
+    available = []
+    skipped: Dict[str, Any] = {}
+    for scale in scales:
+        required = scale_required_columns(str(scale), k=k)
+        missing = [c for c in required if c not in df.columns]
+        if missing:
+            skipped[str(scale)] = {
+                "reason": "missing_columns",
+                "missing_columns": missing,
+            }
+            continue
+        available.append(str(scale))
+    if not available:
+        raise ValueError("khong co scale nao du cot de danh gia")
+    return tuple(available), skipped
+
+
 def loss_matrix(df: pd.DataFrame, scale: str, k: int = K_ACTIONS) -> np.ndarray:
     """Loss for every action at every row, shape (n, k)."""
     n = len(df)
@@ -296,7 +334,11 @@ def risk_decomposition(
     a = np.asarray(result["a_chosen"], dtype=np.int64)
     wait = np.asarray(result.get("wait_s", np.zeros(len(df))), dtype=np.float64)
     p_acc = float(acc.mean())
+    eval_scales, skipped_scales = available_scales(df, scales)
     out: Dict[str, Any] = {
+        "requested_scales": [str(x) for x in scales],
+        "scales": [str(x) for x in eval_scales],
+        "skipped_scales": skipped_scales,
         "p_accept": p_acc,
         "p_reject": 1.0 - p_acc,
         "n_rows": int(len(df)),
@@ -306,7 +348,7 @@ def risk_decomposition(
     }
     out.update(sticky_diagnostics(df, acc))
 
-    for scale in scales:
+    for scale in eval_scales:
         per_row = loss_of(df, a, scale)
         r_acc = float(per_row[acc].mean()) if acc.any() else float("nan")
         r_rej = float(per_row[~acc].mean()) if (~acc).any() else float("nan")
@@ -545,15 +587,16 @@ def run_report(
     multiplicity: str = "bonferroni",
 ) -> Dict[str, Any]:
     test, accept, fit = fit_accept_mask(df, config, kappa, alpha=alpha, multiplicity=multiplicity)
+    scales, skipped_scales = available_scales(test, SCALES)
     policies = {}
     for policy in POLICIES:
         res = apply_fallback(test, accept, policy)
-        payload = risk_decomposition(test, accept, res)
+        payload = risk_decomposition(test, accept, res, scales=scales)
         payload.update({k: v for k, v in res.items() if k != "a_chosen" and k != "wait_s"})
         policies[policy] = payload
     a_twin = test["a_twin"].to_numpy(np.int64)
     anchor = {}
-    for scale in SCALES:
+    for scale in scales:
         per_row = loss_of(test, a_twin, scale)
         anchor["%s_accept" % scale] = float(per_row[accept].mean()) if accept.any() else float("nan")
         anchor["%s_reject" % scale] = float(per_row[~accept].mean()) if (~accept).any() else float("nan")
@@ -574,6 +617,9 @@ def run_report(
         "kappa": float(kappa),
         "multiplicity": multiplicity,
         "rowset": "test rows",
+        "requested_scales": [str(x) for x in SCALES],
+        "scales": [str(x) for x in scales],
+        "skipped_scales": skipped_scales,
         "n_test_rows": int(len(test)),
         "p_static": int(path_static_shortest()),
         "accept": {
@@ -589,7 +635,7 @@ def run_report(
         "gates": {
             "G23_1_every_policy_has_rows": bool(all(policies[p]["n_rows"] == len(test) for p in POLICIES)),
             "G23_4_identity": bool(
-                all(policies[p]["%s_identity_residual" % s] < 1e-9 for p in POLICIES for s in SCALES)
+                all(policies[p]["%s_identity_residual" % s] < 1e-9 for p in POLICIES for s in scales)
             ),
             "G23_4b_break_even_identity": bool(break_even_identity_residual < 1e-12),
             "G23_5_delay": bool(
