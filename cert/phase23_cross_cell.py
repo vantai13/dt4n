@@ -7,7 +7,9 @@ import argparse
 import csv
 import json
 import os
+import struct
 import subprocess
+import zlib
 from datetime import datetime, timezone
 from typing import Any, Dict, Mapping, Sequence
 
@@ -303,7 +305,11 @@ def write_err_panels(
     out_png: str,
     selectors: Sequence[str] = PLOT_SELECTORS,
 ) -> None:
-    import matplotlib.pyplot as plt
+    try:
+        import matplotlib.pyplot as plt
+    except ModuleNotFoundError:
+        _write_err_panels_png_stdlib(baseline_paths, out_png, selectors)
+        return
 
     os.makedirs(os.path.dirname(out_png), exist_ok=True)
     fig, axes = plt.subplots(1, 3, figsize=(13.5, 4.0), sharey=False)
@@ -327,6 +333,172 @@ def write_err_panels(
     fig.tight_layout(rect=(0, 0.12, 1, 1))
     fig.savefig(out_png, dpi=180)
     plt.close(fig)
+
+
+def _png_chunk(kind: bytes, data: bytes) -> bytes:
+    return (
+        struct.pack(">I", len(data))
+        + kind
+        + data
+        + struct.pack(">I", zlib.crc32(kind + data) & 0xFFFFFFFF)
+    )
+
+
+def _write_png(path: str, width: int, height: int, pixels: bytearray) -> None:
+    raw = bytearray()
+    stride = width * 3
+    for y in range(height):
+        raw.append(0)
+        raw.extend(pixels[y * stride : (y + 1) * stride])
+    payload = (
+        b"\x89PNG\r\n\x1a\n"
+        + _png_chunk(b"IHDR", struct.pack(">IIBBBBB", width, height, 8, 2, 0, 0, 0))
+        + _png_chunk(b"IDAT", zlib.compress(bytes(raw), level=9))
+        + _png_chunk(b"IEND", b"")
+    )
+    with open(path, "wb") as f:
+        f.write(payload)
+
+
+def _set_px(pixels: bytearray, width: int, height: int, x: int, y: int, color: tuple[int, int, int]) -> None:
+    if x < 0 or x >= width or y < 0 or y >= height:
+        return
+    idx = (y * width + x) * 3
+    pixels[idx : idx + 3] = bytes(color)
+
+
+def _draw_line(
+    pixels: bytearray,
+    width: int,
+    height: int,
+    x0: int,
+    y0: int,
+    x1: int,
+    y1: int,
+    color: tuple[int, int, int],
+    thickness: int = 1,
+) -> None:
+    dx = abs(x1 - x0)
+    sx = 1 if x0 < x1 else -1
+    dy = -abs(y1 - y0)
+    sy = 1 if y0 < y1 else -1
+    err = dx + dy
+    x, y = x0, y0
+    while True:
+        for ox in range(-(thickness // 2), thickness // 2 + 1):
+            for oy in range(-(thickness // 2), thickness // 2 + 1):
+                _set_px(pixels, width, height, x + ox, y + oy, color)
+        if x == x1 and y == y1:
+            break
+        e2 = 2 * err
+        if e2 >= dy:
+            err += dy
+            x += sx
+        if e2 <= dx:
+            err += dx
+            y += sy
+
+
+def _draw_rect(
+    pixels: bytearray,
+    width: int,
+    height: int,
+    left: int,
+    top: int,
+    right: int,
+    bottom: int,
+    color: tuple[int, int, int],
+) -> None:
+    _draw_line(pixels, width, height, left, top, right, top, color)
+    _draw_line(pixels, width, height, right, top, right, bottom, color)
+    _draw_line(pixels, width, height, right, bottom, left, bottom, color)
+    _draw_line(pixels, width, height, left, bottom, left, top, color)
+
+
+def _write_err_panels_png_stdlib(
+    baseline_paths: Mapping[str, str],
+    out_png: str,
+    selectors: Sequence[str],
+) -> None:
+    """Tiny dependency-free PNG renderer for CI environments without matplotlib."""
+    os.makedirs(os.path.dirname(out_png), exist_ok=True)
+    width, height = 1350, 430
+    pixels = bytearray([255] * width * height * 3)
+    panel_gap = 26
+    outer = 34
+    panel_w = (width - 2 * outer - 2 * panel_gap) // 3
+    plot_top, plot_bottom = 28, 360
+    colors = {
+        "C3_conformal": (207, 50, 60),
+        "B2_constant_gap": (36, 100, 190),
+        "B3_aoi": (40, 140, 90),
+        "B6_sys_oracle": (126, 80, 170),
+        "neo": (20, 20, 20),
+    }
+    grid = (224, 226, 229)
+    axis = (70, 73, 77)
+    for idx, (_cell, path) in enumerate(baseline_paths.items()):
+        baseline = _load_json(path)
+        left = outer + idx * (panel_w + panel_gap)
+        right = left + panel_w
+        series = []
+        anchor = float(baseline["anchor_always_trust"]["err"])
+        y_values = [anchor]
+        for selector in selectors:
+            if selector not in baseline["sweeps"]:
+                continue
+            sweep = baseline["sweeps"][selector]
+            pts = [(float(row["coverage"]), float(row["err_system"])) for row in sweep]
+            series.append((selector, pts))
+            y_values.extend(y for _x, y in pts)
+        y_min, y_max = min(y_values), max(y_values)
+        pad = max((y_max - y_min) * 0.12, 1e-4)
+        y_min -= pad
+        y_max += pad
+
+        def tx(x: float) -> int:
+            return int(round(left + float(x) * (right - left)))
+
+        def ty(y: float) -> int:
+            return int(round(plot_bottom - (float(y) - y_min) / (y_max - y_min) * (plot_bottom - plot_top)))
+
+        _draw_rect(pixels, width, height, left, plot_top, right, plot_bottom, axis)
+        for frac in (0.25, 0.50, 0.75):
+            x = tx(frac)
+            _draw_line(pixels, width, height, x, plot_top, x, plot_bottom, grid)
+        for frac in (0.25, 0.50, 0.75):
+            y = int(round(plot_top + frac * (plot_bottom - plot_top)))
+            _draw_line(pixels, width, height, left, y, right, y, grid)
+        y_anchor = ty(anchor)
+        dash = 10
+        x = left
+        while x < right:
+            _draw_line(pixels, width, height, x, y_anchor, min(x + dash, right), y_anchor, colors["neo"])
+            x += dash * 2
+        for selector, pts in series:
+            color = colors.get(selector, (90, 90, 90))
+            for (x0, y0), (x1, y1) in zip(pts, pts[1:]):
+                _draw_line(
+                    pixels,
+                    width,
+                    height,
+                    tx(x0),
+                    ty(y0),
+                    tx(x1),
+                    ty(y1),
+                    color,
+                    thickness=2,
+                )
+    # Legend swatches, in the same order as PLOT_SELECTORS plus neo.
+    x = outer
+    y = 390
+    for key in ("neo",) + tuple(selectors):
+        color = colors.get(key, (90, 90, 90))
+        for xx in range(x, x + 28):
+            for yy in range(y, y + 8):
+                _set_px(pixels, width, height, xx, yy, color)
+        x += 70
+    _write_png(out_png, width, height, pixels)
 
 
 def _parse_mapping(values: Sequence[str] | None, default: Mapping[str, str]) -> Dict[str, str]:
