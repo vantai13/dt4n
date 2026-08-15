@@ -1,4 +1,13 @@
 {
+  "L20_intervention_rate_check": {
+    "abs_gap": 0.001274084089549904,
+    "comparable_at_matched_coverage": true,
+    "gap_a_minus_b": 0.001274084089549904,
+    "intervention_rate_a": 0.11024527618822842,
+    "intervention_rate_b": 0.10897119209867852,
+    "note": "PASS -> comparison at matched coverage is valid. FAIL -> compare at matched intervention rate instead of matched coverage.",
+    "tolerance": 0.01
+  },
   "c3_minus_b2_paired_block_bootstrap": [
     {
       "accept_contribution": -0.001894125012250825,
@@ -51,9 +60,9 @@
       "policy": "static",
       "reject_contribution": 0.037261715431032065,
       "reject_delta_a_minus_b": 0.12420580091277289,
-      "reject_risk_a": 3.3589564539067265,
-      "reject_risk_b": 3.2347506529939536,
-      "risk_a": 1.647552608744086,
+      "reject_risk_a": 3.358956453906727,
+      "reject_risk_b": 3.234750652993954,
+      "risk_a": 1.6475526087440857,
       "risk_b": 1.6477557230726607,
       "scale": "regret",
       "seed": 24031
@@ -136,11 +145,11 @@
       "n_blocks": 500,
       "n_boot": 2000,
       "policy": "static",
-      "reject_contribution": 0.03020035046005921,
-      "reject_delta_a_minus_b": 0.13727399578577204,
-      "reject_risk_a": 3.283852627286562,
+      "reject_contribution": 0.030200350460059307,
+      "reject_delta_a_minus_b": 0.13727399578577248,
+      "reject_risk_a": 3.2838526272865622,
       "reject_risk_b": 3.1465786315007898,
-      "risk_a": 1.5812005500180581,
+      "risk_a": 1.581200550018058,
       "risk_b": 1.5866973583500705,
       "scale": "regret",
       "seed": 24111
@@ -206,8 +215,8 @@
     {
       "accept_contribution": -0.030486582338809517,
       "accept_delta_a_minus_b": -0.035866563237548776,
-      "accept_risk_a": 1.2846716646500511,
-      "accept_risk_b": 1.3205382278876,
+      "accept_risk_a": 1.2846716646500513,
+      "accept_risk_b": 1.3205382278876001,
       "ci_excludes_zero": false,
       "coverage_a": 0.8500001000066004,
       "coverage_b": 0.8500001000066004,
@@ -227,8 +236,8 @@
       "reject_delta_a_minus_b": 0.13166395150152255,
       "reject_risk_a": 3.271912141072048,
       "reject_risk_b": 3.1402481895705256,
-      "risk_a": 1.5827575373761866,
-      "risk_b": 1.5934945401570317,
+      "risk_a": 1.5827575373761869,
+      "risk_b": 1.593494540157032,
       "scale": "regret",
       "seed": 24181
     },
@@ -281,9 +290,9 @@
   "n_test": 499967,
   "policy": "static",
   "provenance": {
-    "created_utc": "2026-08-14T14:54:12.992584+00:00",
+    "created_utc": "2026-08-15T02:40:08.384377+00:00",
     "git_dirty_before_write": false,
-    "git_hash": "a3515d9e9a6d73e6968d3a1b7f0ac2bdbb6d028a"
+    "git_hash": "ebe5f3a46bd9a6eb341e9a3cd251525c27fe58f7"
   },
   "scales": [
     "err",
@@ -291,6 +300,16 @@
     "sla"
   ],
   "seed": 23330,
+  "wasted_abstention_B2_at_078": {
+    "actionable_reject_given_reject": 0.49532242960915696,
+    "actionable_reject_share_total_rows": 0.10897119209867852,
+    "coverage": 0.7799994799656778,
+    "p_a_twin_eq_p1": 0.6191768656731345,
+    "reject_share": 0.22000052003432227,
+    "static_path": 0,
+    "wasted_reject_given_reject": 0.504677570390843,
+    "wasted_reject_share_total_rows": 0.11102932793564375
+  },
   "wasted_abstention_C3_at_078": {
     "actionable_reject_given_reject": 0.501113707235915,
     "actionable_reject_share_total_rows": 0.11024527618822842,

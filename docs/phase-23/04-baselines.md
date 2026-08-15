@@ -177,9 +177,29 @@ actionable_reject_share_total_rows = 0.110245276
 actionable_reject_given_reject     = 0.501113707
 ```
 
-Doc so nay: khoang mot nua ngan sach reject cua C3 tai 0.78 nam tren cac hang
-ma reject khong doi hanh dong. Day mo ra cau hoi 23.3b/C3-A, nhung chua chay
-C3-A trong artifact nay.
+Tai B2 coverage 0.78:
+
+```text
+wasted_reject_share_total_rows     = 0.111029328
+wasted_reject_given_reject         = 0.504677570
+actionable_reject_share_total_rows = 0.108971192
+actionable_reject_given_reject     = 0.495322430
+```
+
+L20 intervention-rate check:
+
+```text
+intervention_rate(C3) = 0.110245276
+intervention_rate(B2) = 0.108971192
+gap C3 - B2           = 0.001274084
+abs_gap               = 0.001274084 <= 0.010000000
+comparable_at_matched_coverage = True
+```
+
+Doc so nay: khoang mot nua ngan sach reject cua C3 va B2 tai 0.78 nam tren
+cac hang ma reject khong doi hanh dong. Tuy vay intervention rate that cua hai
+chinh sach chi lech 0.001274, nen so sanh C3 vs B2 tai matched coverage 0.78
+la hop le theo L20.
 
 Ket luan hien tai:
 
