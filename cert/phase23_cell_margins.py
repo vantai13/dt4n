@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""G23-17a/G23-17b audits before Phase 23.4 sweeps."""
+"""G23-17a/G23-17b/G23-17c audits before Phase 23.4 sweeps."""
 
 from __future__ import annotations
 
@@ -29,6 +29,7 @@ DEFAULT_CELLS: Mapping[str, str] = {
 }
 DEFAULT_OUT_G23_17A_JSON = "results/phase-23/g23_17a_cell_margins.json"
 DEFAULT_OUT_G23_17B_JSON = "results/phase-23/g23_17b_code_sanity.json"
+DEFAULT_OUT_G23_17C_JSON = "results/phase-23/g23_17c_scale_and_sla.json"
 
 
 def _git(*cmd: str) -> str:
@@ -58,6 +59,25 @@ def _json_clean(value: Any) -> Any:
     if isinstance(value, np.generic):
         return _json_clean(value.item())
     return value
+
+
+def _meta_path(path: str) -> str:
+    if not path.endswith(".parquet"):
+        raise ValueError("artifact path must end with .parquet: %s" % path)
+    return path[:-8] + ".json"
+
+
+def _load_meta(path: str) -> Dict[str, Any]:
+    meta_path = _meta_path(path)
+    with open(meta_path, "r", encoding="utf-8") as f:
+        meta = json.load(f)
+    return {
+        "path": meta_path,
+        "sha256": _sha256(meta_path),
+        "t_delay_ms": float(meta["t_delay_ms"]),
+        "t_loss": float(meta["t_loss"]),
+        "eps_regret_ms": float(meta["eps_regret_ms"]),
+    }
 
 
 def _select_rowset(df: pd.DataFrame, rowset: str) -> pd.DataFrame:
@@ -200,6 +220,113 @@ def run_code_sanity_report(
     }
 
 
+def cell_scale_sla_row(cell: str, path: str, rowset: str = "test") -> Dict[str, Any]:
+    """G23-17c: compare regret scale and SLA thresholds across cells."""
+    cols = [
+        "is_calib",
+        "block_id",
+        "a_twin",
+        "a1",
+        "a_rank_1",
+        "a_rank_2",
+        "a_rank_3",
+        "m_true_1",
+        "m_true_2",
+        "m_true_3",
+    ]
+    df = pd.read_parquet(path, columns=cols)
+    d = _select_rowset(df, rowset)
+    a_twin = d["a_twin"].to_numpy(np.int64)
+    regret_neo = float(FB.loss_of(d, a_twin, "regret").mean())
+    meta = _load_meta(path)
+    return {
+        "cell": str(cell),
+        "artifact": str(path),
+        "artifact_sha256": _sha256(path),
+        "metadata": meta,
+        "rowset": str(rowset),
+        "n_rows_total": int(len(df)),
+        "n_rows": int(len(d)),
+        "n_blocks": int(d["block_id"].nunique()),
+        "regret_neo": regret_neo,
+        "median_m_true_1": float(np.median(d["m_true_1"].to_numpy(np.float64))),
+        "t_delay_ms": float(meta["t_delay_ms"]),
+        "t_loss": float(meta["t_loss"]),
+        "eps_regret_ms": float(meta["eps_regret_ms"]),
+    }
+
+
+def run_scale_sla_report(
+    cells: Mapping[str, str],
+    rowset: str = "test",
+    ratio_tol: float = 0.15,
+) -> Dict[str, Any]:
+    rows = [cell_scale_sla_row(cell, path, rowset=rowset) for cell, path in cells.items()]
+    by_cell = {row["cell"]: row for row in rows}
+    ref = by_cell["poisson@0.925"]
+    enriched = []
+    for row in rows:
+        r = dict(row)
+        r["regret_neo_ratio_vs_poisson_0p925"] = float(
+            r["regret_neo"] / max(float(ref["regret_neo"]), 1e-12)
+        )
+        r["median_m_true_1_ratio_vs_poisson_0p925"] = float(
+            r["median_m_true_1"] / max(float(ref["median_m_true_1"]), 1e-12)
+        )
+        ratio_gap = abs(
+            float(r["regret_neo_ratio_vs_poisson_0p925"])
+            - float(r["median_m_true_1_ratio_vs_poisson_0p925"])
+        )
+        r["abs_ratio_gap"] = float(ratio_gap)
+        r["ratio_gap_fraction_of_m_true_ratio"] = float(
+            ratio_gap / max(abs(float(r["median_m_true_1_ratio_vs_poisson_0p925"])), 1e-12)
+        )
+        r["regret_ratio_matches_m_true_ratio_within_tol"] = bool(
+            r["ratio_gap_fraction_of_m_true_ratio"] <= float(ratio_tol)
+        )
+        enriched.append(r)
+
+    t_delay_values = [float(row["t_delay_ms"]) for row in enriched]
+    t_loss_values = [float(row["t_loss"]) for row in enriched]
+    t_delay_same = bool(np.allclose(t_delay_values, t_delay_values[0], rtol=0.0, atol=1e-12))
+    t_loss_same = bool(np.allclose(t_loss_values, t_loss_values[0], rtol=0.0, atol=1e-12))
+    poisson_0850 = by_cell["poisson@0.850"]["cell"]
+    poisson_0850_row = next(row for row in enriched if row["cell"] == poisson_0850)
+    return {
+        "gate": "G23-17c",
+        "rowset": str(rowset),
+        "ratio_tolerance": float(ratio_tol),
+        "purpose": (
+            "Check whether cross-cell regret differences track the true-margin "
+            "scale, and whether SLA thresholds are comparable across cells."
+        ),
+        "checks": {
+            "poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol": bool(
+                poisson_0850_row["regret_ratio_matches_m_true_ratio_within_tol"]
+            ),
+            "all_regret_ratios_match_m_true_ratios_within_tol": bool(
+                all(row["regret_ratio_matches_m_true_ratio_within_tol"] for row in enriched)
+            ),
+            "sla_t_delay_same_across_cells": t_delay_same,
+            "sla_t_loss_same_across_cells": t_loss_same,
+            "sla_thresholds_same_across_cells": bool(t_delay_same and t_loss_same),
+        },
+        "interpretation": {
+            "regret_cross_cell": (
+                "Regret is not directly comparable across cells when the regret "
+                "ratio tracks the m_true scale ratio; use within-cell regret or "
+                "normalized regret for cross-cell tables."
+            ),
+            "sla_cross_cell": (
+                "SLA thresholds differ across cells; SLA is not a clean cross-cell "
+                "headline unless thresholds are fixed or a separate normalization "
+                "is preregistered."
+            ),
+        },
+        "rows": enriched,
+    }
+
+
 def write_json_report(report: Dict[str, Any], out_json: str) -> None:
     os.makedirs(os.path.dirname(out_json), exist_ok=True)
     payload = dict(report)
@@ -282,12 +409,51 @@ def _print_g23_17b_summary(report: Dict[str, Any], out_json: str) -> None:
     print("wrote_json=%s" % out_json)
 
 
+def _print_g23_17c_summary(report: Dict[str, Any], out_json: str) -> None:
+    print("=== G23-17c: regret scale and SLA threshold comparability ===")
+    print("rowset=%s ratio_tol=%.3f" % (report["rowset"], report["ratio_tolerance"]))
+    print(
+        "%-16s %12s %9s %12s %9s %8s %8s %8s"
+        % ("cell", "regret_neo", "ratio", "med_m_true", "ratio", "gap_pct", "t_d", "t_l")
+    )
+    for row in report["rows"]:
+        print(
+            "%-16s %12.6f %9.4f %12.6f %9.4f %8.3f %8.3f %8.5f"
+            % (
+                row["cell"],
+                row["regret_neo"],
+                row["regret_neo_ratio_vs_poisson_0p925"],
+                row["median_m_true_1"],
+                row["median_m_true_1_ratio_vs_poisson_0p925"],
+                100.0 * row["ratio_gap_fraction_of_m_true_ratio"],
+                row["t_delay_ms"],
+                row["t_loss"],
+            )
+        )
+    print()
+    print("checks:")
+    for key, value in report["checks"].items():
+        print("  %s=%s" % (key, value))
+    print("wrote_json=%s" % out_json)
+
+
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--audit", choices=("g23-17a", "g23-17b"), default="g23-17a")
+    parser.add_argument(
+        "--audit",
+        choices=("g23-17a", "g23-17b", "g23-17c"),
+        default="g23-17a",
+    )
     parser.add_argument("--rowset", choices=("test", "calib", "all"), default="test")
     parser.add_argument("--out-json", default=None)
     args = parser.parse_args(argv)
+
+    if args.audit == "g23-17c":
+        report = run_scale_sla_report(DEFAULT_CELLS, rowset=args.rowset)
+        out_json = args.out_json or DEFAULT_OUT_G23_17C_JSON
+        write_json_report(report, out_json)
+        _print_g23_17c_summary(report, out_json)
+        return 0
 
     if args.audit == "g23-17b":
         report = run_code_sanity_report(DEFAULT_CELLS, rowset=args.rowset)
