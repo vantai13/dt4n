@@ -659,6 +659,8 @@ def run_report(
     df: pd.DataFrame,
     config: str = "C3",
     policy: str = "static",
+    cell_label: str = "poisson@0.925",
+    input_path: str = "results/phase-22/calib_set_v3.parquet",
     targets: Sequence[float] = MATCHED_COVERAGE,
     n_boot: int = 1000,
 ) -> Dict[str, Any]:
@@ -712,7 +714,7 @@ def run_report(
         operating_eps=float(paired_078["eps_interpolated"]),
     )
     out: Dict[str, Any] = {
-        "cell": "poisson@0.925",
+        "cell": str(cell_label),
         "config": config,
         "policy": policy,
         "qbar_slot1_age_bins": qbar,
@@ -785,7 +787,7 @@ def run_report(
         "fit_public": {k: v for k, v in fit.items() if k != "_q"},
         "provenance": {
             "script": "cert/threshold_families.py",
-            "input": "results/phase-22/calib_set_v3.parquet",
+            "input": str(input_path),
             "git_hash": _git("git", "rev-parse", "HEAD"),
             "git_dirty_before_write": bool(_git("git", "status", "--short")),
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
@@ -797,6 +799,7 @@ def run_report(
 def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--input", default="results/phase-22/calib_set_v3.parquet")
+    ap.add_argument("--cell-label", default="poisson@0.925")
     ap.add_argument("--config", default="C3")
     ap.add_argument("--policy", default="static", choices=("static", "sticky", "wait"))
     ap.add_argument("--out-json", default="results/phase-23/threshold_families_poisson_0.925_C3_static.json")
@@ -805,7 +808,14 @@ def main(argv: Sequence[str] | None = None) -> int:
     args = ap.parse_args(argv)
 
     df = pd.read_parquet(args.input)
-    report = run_report(df, config=args.config, policy=args.policy, n_boot=int(args.n_boot))
+    report = run_report(
+        df,
+        config=args.config,
+        policy=args.policy,
+        cell_label=args.cell_label,
+        input_path=args.input,
+        n_boot=int(args.n_boot),
+    )
     os.makedirs(os.path.dirname(args.out_json), exist_ok=True)
     with open(args.out_json, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=1, sort_keys=True)

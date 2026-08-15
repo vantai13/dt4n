@@ -221,11 +221,12 @@ def run_code_sanity_report(
 
 
 def cell_scale_sla_row(cell: str, path: str, rowset: str = "test") -> Dict[str, Any]:
-    """G23-17c: compare regret scale and SLA thresholds across cells."""
+    """G23-17c: compare regret scale, error, and SLA thresholds across cells."""
     cols = [
         "is_calib",
         "block_id",
         "a_twin",
+        "a_star",
         "a1",
         "a_rank_1",
         "a_rank_2",
@@ -237,7 +238,11 @@ def cell_scale_sla_row(cell: str, path: str, rowset: str = "test") -> Dict[str, 
     df = pd.read_parquet(path, columns=cols)
     d = _select_rowset(df, rowset)
     a_twin = d["a_twin"].to_numpy(np.int64)
+    err_neo = float(FB.loss_of(d, a_twin, "err").mean())
     regret_neo = float(FB.loss_of(d, a_twin, "regret").mean())
+    median_m_true_1 = float(np.median(d["m_true_1"].to_numpy(np.float64)))
+    penalty_per_error = float(regret_neo / max(err_neo, 1e-12))
+    normpen_per_margin = float(penalty_per_error / max(median_m_true_1, 1e-12))
     meta = _load_meta(path)
     return {
         "cell": str(cell),
@@ -248,8 +253,11 @@ def cell_scale_sla_row(cell: str, path: str, rowset: str = "test") -> Dict[str, 
         "n_rows_total": int(len(df)),
         "n_rows": int(len(d)),
         "n_blocks": int(d["block_id"].nunique()),
+        "err_neo": err_neo,
         "regret_neo": regret_neo,
-        "median_m_true_1": float(np.median(d["m_true_1"].to_numpy(np.float64))),
+        "penalty_per_error": penalty_per_error,
+        "median_m_true_1": median_m_true_1,
+        "normpen_per_margin": normpen_per_margin,
         "t_delay_ms": float(meta["t_delay_ms"]),
         "t_loss": float(meta["t_loss"]),
         "eps_regret_ms": float(meta["eps_regret_ms"]),
@@ -270,8 +278,25 @@ def run_scale_sla_report(
         r["regret_neo_ratio_vs_poisson_0p925"] = float(
             r["regret_neo"] / max(float(ref["regret_neo"]), 1e-12)
         )
+        r["err_neo_ratio_vs_poisson_0p925"] = float(
+            r["err_neo"] / max(float(ref["err_neo"]), 1e-12)
+        )
         r["median_m_true_1_ratio_vs_poisson_0p925"] = float(
             r["median_m_true_1"] / max(float(ref["median_m_true_1"]), 1e-12)
+        )
+        r["normpen_ratio_vs_poisson_0p925"] = float(
+            r["normpen_per_margin"] / max(float(ref["normpen_per_margin"]), 1e-12)
+        )
+        r["three_factor_regret_ratio_product"] = float(
+            r["err_neo_ratio_vs_poisson_0p925"]
+            * r["normpen_ratio_vs_poisson_0p925"]
+            * r["median_m_true_1_ratio_vs_poisson_0p925"]
+        )
+        r["three_factor_abs_error_vs_regret_ratio"] = float(
+            abs(
+                r["three_factor_regret_ratio_product"]
+                - r["regret_neo_ratio_vs_poisson_0p925"]
+            )
         )
         ratio_gap = abs(
             float(r["regret_neo_ratio_vs_poisson_0p925"])
@@ -292,13 +317,23 @@ def run_scale_sla_report(
     t_loss_same = bool(np.allclose(t_loss_values, t_loss_values[0], rtol=0.0, atol=1e-12))
     poisson_0850 = by_cell["poisson@0.850"]["cell"]
     poisson_0850_row = next(row for row in enriched if row["cell"] == poisson_0850)
+    h2_row = next(row for row in enriched if row["cell"] == "h2@0.700")
+    max_decomp_error = max(
+        float(row["three_factor_abs_error_vs_regret_ratio"]) for row in enriched
+    )
     return {
         "gate": "G23-17c",
         "rowset": str(rowset),
         "ratio_tolerance": float(ratio_tol),
         "purpose": (
             "Check whether cross-cell regret differences track the true-margin "
-            "scale, and whether SLA thresholds are comparable across cells."
+            "scale, decompose regret ratios into true-effect and unit factors, "
+            "and whether SLA thresholds are comparable across cells."
+        ),
+        "decomposition_identity": (
+            "regret_ratio = err_ratio * normpen_ratio * scale_ratio, where "
+            "normpen = (regret / err) / median_m_true_1 and scale_ratio is "
+            "median_m_true_1_ratio_vs_poisson_0p925."
         ),
         "checks": {
             "poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol": bool(
@@ -307,15 +342,38 @@ def run_scale_sla_report(
             "all_regret_ratios_match_m_true_ratios_within_tol": bool(
                 all(row["regret_ratio_matches_m_true_ratio_within_tol"] for row in enriched)
             ),
+            "three_factor_identity_matches_regret_ratio": bool(max_decomp_error <= 1e-12),
+            "poisson_0p850_true_effect_ratios_near_one_within_tol": bool(
+                abs(float(poisson_0850_row["err_neo_ratio_vs_poisson_0p925"]) - 1.0)
+                <= float(ratio_tol)
+                and abs(float(poisson_0850_row["normpen_ratio_vs_poisson_0p925"]) - 1.0)
+                <= float(ratio_tol)
+            ),
+            "h2_true_effect_ratios_both_below_0p70": bool(
+                float(h2_row["err_neo_ratio_vs_poisson_0p925"]) < 0.70
+                and float(h2_row["normpen_ratio_vs_poisson_0p925"]) < 0.70
+            ),
             "sla_t_delay_same_across_cells": t_delay_same,
             "sla_t_loss_same_across_cells": t_loss_same,
             "sla_thresholds_same_across_cells": bool(t_delay_same and t_loss_same),
         },
+        "mechanism_8_summary": {
+            "poisson_0p850": (
+                "err and normalized penalty ratios are near 1, while scale is "
+                "near the regret ratio; the regret drop is a unit artifact for "
+                "the poisson control pair."
+            ),
+            "h2_0p700": (
+                "err and normalized penalty ratios are both about 0.55, while "
+                "scale is near 0.89; most of the regret drop is a real decision "
+                "effect, not a unit artifact."
+            ),
+        },
         "interpretation": {
             "regret_cross_cell": (
-                "Regret is not directly comparable across cells when the regret "
-                "ratio tracks the m_true scale ratio; use within-cell regret or "
-                "normalized regret for cross-cell tables."
+                "Raw regret is not a standalone cross-cell headline. Report "
+                "the three-factor decomposition before deciding whether a "
+                "difference is a unit artifact or a real decision effect."
             ),
             "sla_cross_cell": (
                 "SLA thresholds differ across cells; SLA is not a clean cross-cell "
@@ -428,6 +486,24 @@ def _print_g23_17c_summary(report: Dict[str, Any], out_json: str) -> None:
                 100.0 * row["ratio_gap_fraction_of_m_true_ratio"],
                 row["t_delay_ms"],
                 row["t_loss"],
+            )
+        )
+    print()
+    print("Mechanism #8 decomposition vs poisson@0.925")
+    print(
+        "%-16s %8s %10s %8s %10s %9s"
+        % ("cell", "err_r", "normpen_r", "scale_r", "product", "regret_r")
+    )
+    for row in report["rows"]:
+        print(
+            "%-16s %8.4f %10.4f %8.4f %10.5f %9.4f"
+            % (
+                row["cell"],
+                row["err_neo_ratio_vs_poisson_0p925"],
+                row["normpen_ratio_vs_poisson_0p925"],
+                row["median_m_true_1_ratio_vs_poisson_0p925"],
+                row["three_factor_regret_ratio_product"],
+                row["regret_neo_ratio_vs_poisson_0p925"],
             )
         )
     print()

@@ -1053,6 +1053,7 @@ def run_report(
     df: pd.DataFrame,
     config: str = "C3",
     policy: str = "static",
+    cell_label: str = "poisson@0.925",
     coverages: Sequence[float] = BASELINE_COVERAGES,
     target_coverage: float = 0.78,
 ) -> Dict[str, Any]:
@@ -1088,7 +1089,7 @@ def run_report(
     overlap_c3_b3 = accept_overlap(scores["C3_conformal"], scores["B3_aoi"], target_coverage)
 
     return {
-        "cell": "poisson@0.925",
+        "cell": str(cell_label),
         "config": config,
         "policy": policy,
         "coverage_grid": [float(x) for x in coverages],
@@ -1123,6 +1124,7 @@ def run_c3_b2_audit(
     df: pd.DataFrame,
     config: str = "C3",
     policy: str = "static",
+    cell_label: str = "poisson@0.925",
     coverages: Sequence[float] = (0.70, 0.78, 0.85),
     scales: Sequence[str] = FB.SCALES,
     n_boot: int = 2000,
@@ -1221,7 +1223,7 @@ def run_c3_b2_audit(
         anchor_err - b6sys_078["risk_b"], 1e-12
     )
     return {
-        "cell": "poisson@0.925",
+        "cell": str(cell_label),
         "config": config,
         "policy": policy,
         "n_test": int(len(test)),
@@ -1594,6 +1596,7 @@ def _print_c3_b2_audit_summary(report: Dict[str, Any], out_json: str) -> None:
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser()
     parser.add_argument("--artifact", default=DEFAULT_ARTIFACT)
+    parser.add_argument("--cell-label", default="poisson@0.925")
     parser.add_argument("--config", default="C3")
     parser.add_argument("--policy", default="static")
     parser.add_argument("--target-coverage", type=float, default=0.78)
@@ -1611,6 +1614,7 @@ def main(argv: Sequence[str] | None = None) -> int:
             df,
             config=args.config,
             policy=args.policy,
+            cell_label=args.cell_label,
             n_boot=int(args.n_boot),
             seed=int(args.seed),
         )
@@ -1629,6 +1633,7 @@ def main(argv: Sequence[str] | None = None) -> int:
         df,
         config=args.config,
         policy=args.policy,
+        cell_label=args.cell_label,
         target_coverage=float(args.target_coverage),
     )
     report["input_artifact"] = {

@@ -203,7 +203,14 @@ def test_tie_break_sensitivity_is_small_for_baseline_conclusions(df: pd.DataFram
 def test_c3_b2_audit_includes_overlap_and_argmin_info(df: pd.DataFrame) -> None:
     """The C3-vs-B2 audit records the mechanism checks needed to close 23.3."""
     raw = pd.read_parquet(ARTIFACT)
-    out = BL.run_c3_b2_audit(raw, coverages=[0.78], scales=["err"], n_boot=3)
+    out = BL.run_c3_b2_audit(
+        raw,
+        cell_label="unit@test",
+        coverages=[0.78],
+        scales=["err"],
+        n_boot=3,
+    )
+    assert out["cell"] == "unit@test"
     assert "argmin_information_at_078" in out
     assert "break_even_identity_at_078" in out
     assert out["break_even_identity_at_078"]["pass"] is True

@@ -204,3 +204,15 @@ def test_aurc_system_and_reject_risk_summaries_are_reported(
     assert all(np.isfinite(v) and v > 0.0 for v in aurc.values())
     assert reject["global_min"]["param"] in (6.0, 8.0)
     assert reject["operational_range_min"]["param"] == 0.5
+
+
+def test_run_report_preserves_cell_label_and_input_provenance(raw: pd.DataFrame) -> None:
+    """Cross-cell sweeps must not silently stamp every artifact as the main cell."""
+    out = TF.run_report(
+        raw,
+        cell_label="unit@test",
+        input_path="results/phase-22/unit.parquet",
+        n_boot=3,
+    )
+    assert out["cell"] == "unit@test"
+    assert out["provenance"]["input"] == "results/phase-22/unit.parquet"
