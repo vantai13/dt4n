@@ -20,9 +20,9 @@
     "poisson_0p850": "err and normalized penalty ratios are near 1, while scale is near the regret ratio; the regret drop is a unit artifact for the poisson control pair."
   },
   "provenance": {
-    "created_utc": "2026-08-15T08:02:06.676080+00:00",
+    "created_utc": "2026-08-15T08:22:38.041396+00:00",
     "git_dirty_before_write": false,
-    "git_hash": "d5e56edfd9bb49c34f41cfbd7ab02507d77b809b"
+    "git_hash": "ab2ffb2fde2c05abccc28275756c33b55b2a2e8f"
   },
   "purpose": "Check whether cross-cell regret differences track the true-margin scale, decompose regret ratios into true-effect and unit factors, and whether SLA thresholds are comparable across cells.",
   "ratio_tolerance": 0.15,
@@ -63,7 +63,7 @@
     {
       "abs_ratio_gap": 0.008254291995445973,
       "artifact": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
-      "artifact_sha256": "e520f85bb3abb01f6cb8100807b0f388d2b251cb3f6bca89706885c00f38e449",
+      "artifact_sha256": "1565767d87060304be9ee651a627c2fa0cb737e0fd11e578078b34579aa16f66",
       "cell": "poisson@0.850",
       "eps_regret_ms": 2.4243596038611255,
       "err_neo": 0.22072656795348494,
@@ -73,7 +73,7 @@
       "metadata": {
         "eps_regret_ms": 2.4243596038611255,
         "path": "results/phase-22/calib_set_v3_poisson_0.850.json",
-        "sha256": "98f7dd715ccc0c14ca6b2011b6d883bd3749cd92fa0ac18444d16abe6c38a0c2",
+        "sha256": "4ca50eba2f1640f2f7fc9d2ca928d745691f0c85cfac7fb29d659c21317e1fa8",
         "t_delay_ms": 24.243596038611255,
         "t_loss": 0.0072216594767288275
       },
@@ -96,7 +96,7 @@
     {
       "abs_ratio_gap": 0.6069389222538454,
       "artifact": "results/phase-22/calib_set_v3_h2_0.700.parquet",
-      "artifact_sha256": "c6bc3ffa06997f72368c2741455cc5bafa57d2995b29c566b0be75327c4c5de7",
+      "artifact_sha256": "cae93a3c1008e39e7ef76b4f7f20dea07186b96cef256920725cc2a8bf08ce05",
       "cell": "h2@0.700",
       "eps_regret_ms": 2.861395300891912,
       "err_neo": 0.12653635139919234,
@@ -106,7 +106,7 @@
       "metadata": {
         "eps_regret_ms": 2.861395300891912,
         "path": "results/phase-22/calib_set_v3_h2_0.700.json",
-        "sha256": "2698b45d9ecf0944f3de86b23978c6c9f603b3b0c4416613ddd8b4492cf06526",
+        "sha256": "53c3f1f177c1a2d78641c75f8d3aba17b8c618b846a6295b5aa4f1ca1ff9f1a9",
         "t_delay_ms": 28.613953008919122,
         "t_loss": 0.02645414317289722
       },
