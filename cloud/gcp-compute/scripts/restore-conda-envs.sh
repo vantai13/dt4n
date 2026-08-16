@@ -6,10 +6,12 @@ usage() {
 Usage:
   ./scripts/restore-conda-envs.sh [env ...]
 
-Chay tren EC2 sau khi sync project. Script tao lai Conda env tu cloud/aws-ec2/conda-envs.
+Chay tren GCE VM sau khi sync project. Script tao lai Conda env tu cloud/gcp-compute/conda-envs.
+Neu thu muc GCP chua co export, script fallback sang cloud/aws-ec2/conda-envs.
 
 Bien huu ich:
   UPDATE_EXISTING=1  cap nhat env da ton tai thay vi bo qua
+  PREFER_MINIMAL=0   thu full export truoc. Mac dinh GCP dung minimal de tranh keo CUDA/GPU packages vao VM CPU.
 EOF
 }
 
@@ -19,7 +21,17 @@ if [ "${1:-}" = "-h" ] || [ "${1:-}" = "--help" ]; then
 fi
 
 ROOT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")/../../.." && pwd)"
-EXPORT_DIR="${EXPORT_DIR:-$ROOT_DIR/cloud/aws-ec2/conda-envs}"
+PREFER_MINIMAL="${PREFER_MINIMAL:-1}"
+
+if [ -z "${EXPORT_DIR:-}" ]; then
+  for candidate in "$ROOT_DIR/cloud/gcp-compute/conda-envs" "$ROOT_DIR/cloud/aws-ec2/conda-envs"; do
+    if [ -d "$candidate" ] && find "$candidate" -maxdepth 1 -name '*-full.yml' -print -quit | grep -q .; then
+      EXPORT_DIR="$candidate"
+      break
+    fi
+  done
+  EXPORT_DIR="${EXPORT_DIR:-$ROOT_DIR/cloud/gcp-compute/conda-envs}"
+fi
 
 sanitize_pip_requirements() {
   local input_file="$1"
@@ -34,9 +46,9 @@ sanitize_pip_requirements() {
     /^ryu==/ { next }
     /^nvidia-/ { next }
     /^triton==/ { next }
-    /^torch==.*\+cu/ { next }
-    /^torchaudio==.*\+cu/ { next }
-    /^torchvision==.*\+cu/ { next }
+    /^torch==/ { next }
+    /^torchaudio==/ { next }
+    /^torchvision==/ { next }
     /^torch_scatter==.*\+/ { next }
     /^torch_sparse==.*\+/ { next }
     { print }
@@ -58,10 +70,33 @@ install_cpu_torch_if_needed() {
   local env_name="$1"
   local pip_file="$2"
 
-  if grep -Eq '^(torch|torchaudio|torchvision)==.*\+cu|^nvidia-|^triton==' "$pip_file"; then
+  if [[ "$env_name" == *rl* ]] && grep -Eq '^(torch|torchaudio|torchvision)==|^nvidia-|^triton==' "$pip_file"; then
     echo "== Install CPU PyTorch for $env_name =="
     conda run -n "$env_name" python -m pip install torch \
       --index-url https://download.pytorch.org/whl/cpu
+  fi
+}
+
+create_env() {
+  local env_name="$1"
+  local full_file="$2"
+  local minimal_file="$3"
+
+  if [ "$PREFER_MINIMAL" = "1" ] && [ -f "$minimal_file" ]; then
+    echo "== Restore $env_name tu minimal export =="
+    conda env create -f "$minimal_file"
+    return
+  fi
+
+  echo "== Restore $env_name tu full export =="
+  if ! conda env create -f "$full_file"; then
+    echo "WARN: full export loi; thu minimal + pip cho $env_name"
+    conda env remove -n "$env_name" -y || true
+    if [ ! -f "$minimal_file" ]; then
+      echo "ERROR: Thieu $minimal_file" >&2
+      exit 1
+    fi
+    conda env create -f "$minimal_file"
   fi
 }
 
@@ -72,7 +107,7 @@ elif [ -f "$HOME/miniconda3/etc/profile.d/conda.sh" ]; then
   # shellcheck disable=SC1091
   source "$HOME/miniconda3/etc/profile.d/conda.sh"
 else
-  echo "ERROR: Khong thay conda.sh. Kiem tra Miniforge/Miniconda tren EC2." >&2
+  echo "ERROR: Khong thay conda.sh. Kiem tra Miniforge/Miniconda tren VM." >&2
   exit 1
 fi
 
@@ -99,22 +134,17 @@ for env_name in "${ENVS[@]}"; do
   if conda env list | awk '{print $1}' | grep -qx "$env_name"; then
     if [ "${UPDATE_EXISTING:-0}" = "1" ]; then
       echo "== Update existing env $env_name =="
-      conda env update -n "$env_name" -f "$full_file" --prune
+      if [ "$PREFER_MINIMAL" = "1" ] && [ -f "$minimal_file" ]; then
+        conda env update -n "$env_name" -f "$minimal_file" --prune
+      else
+        conda env update -n "$env_name" -f "$full_file" --prune
+      fi
     else
       echo "== Skip $env_name: env da ton tai. Dung UPDATE_EXISTING=1 de update. =="
       continue
     fi
   else
-    echo "== Restore $env_name tu full export =="
-    if ! conda env create -f "$full_file"; then
-      echo "WARN: full export loi; thu minimal + pip cho $env_name"
-      conda env remove -n "$env_name" -y || true
-      if [ ! -f "$minimal_file" ]; then
-        echo "ERROR: Thieu $minimal_file" >&2
-        exit 1
-      fi
-      conda env create -f "$minimal_file"
-    fi
+    create_env "$env_name" "$full_file" "$minimal_file"
   fi
 
   if [ -s "$pip_file" ]; then
@@ -125,12 +155,13 @@ for env_name in "${ENVS[@]}"; do
       install_ryu_workaround "$env_name"
     fi
 
+    install_cpu_torch_if_needed "$env_name" "$pip_file"
+
     if [ -s "$clean_pip_file" ]; then
       echo "== Pip sync $env_name =="
       conda run -n "$env_name" python -m pip install -r "$clean_pip_file"
     fi
 
-    install_cpu_torch_if_needed "$env_name" "$pip_file"
     rm -f "$clean_pip_file"
   fi
 done

@@ -1,0 +1,37 @@
+# Copy file nay thanh terraform.tfvars roi chinh truoc khi apply:
+#   cp terraform.tfvars.example terraform.tfvars
+
+project_name = "dt4n"
+environment  = "research"
+
+gcp_project_id = "YOUR_GCP_PROJECT_ID"
+gcp_region     = "asia-southeast1"
+gcp_zone       = "asia-southeast1-b"
+
+# Gan voi AWS m7i.2xlarge: 8 vCPU, 32 GB RAM.
+machine_type   = "n2-standard-8"
+instance_count = 1
+
+boot_disk_size_gb     = 200
+boot_disk_type        = "pd-balanced"
+boot_disk_auto_delete = false
+reserve_static_ip     = true
+
+ssh_username         = "ubuntu"
+ssh_public_key_file  = "./dt4n-gcp.pem.pub"
+ssh_private_key_file = "./dt4n-gcp.pem"
+
+# Nen khoa ve IP public cua ban truoc khi apply that:
+#   curl https://checkip.amazonaws.com
+ssh_allowed_cidrs = ["YOUR_PUBLIC_IP/32"]
+app_allowed_cidrs = ["YOUR_PUBLIC_IP/32"]
+public_app_ports  = [80, 8080, 5173]
+
+git_repo_url = "https://github.com/vantai13/dt4n.git"
+git_branch   = "main"
+
+create_conda_envs              = false
+install_dashboard_dependencies = true
+install_ai_cli_tools           = true
+ryu_conda_env_name             = "sdn_net"
+rl_conda_env_name              = "sdn_rl"

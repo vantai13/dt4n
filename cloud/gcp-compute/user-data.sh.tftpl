@@ -1,0 +1,212 @@
+#!/usr/bin/env bash
+set -euxo pipefail
+
+LOG_FILE="/var/log/dt4n-bootstrap.log"
+exec > >(tee -a "$LOG_FILE") 2>&1
+
+export DEBIAN_FRONTEND=noninteractive
+PROJECT_NAME="${project_name}"
+LINUX_USER="${ssh_username}"
+USER_HOME="/home/$LINUX_USER"
+PROJECT_DIR="$USER_HOME/$PROJECT_NAME"
+GIT_REPO_URL="${git_repo_url}"
+GIT_BRANCH="${git_branch}"
+CREATE_CONDA_ENVS="${create_conda_envs}"
+INSTALL_DASHBOARD_DEPS="${install_dashboard_dependencies}"
+INSTALL_AI_CLI_TOOLS="${install_ai_cli_tools}"
+RYU_CONDA_ENV_NAME="${ryu_conda_env_name}"
+RL_CONDA_ENV_NAME="${rl_conda_env_name}"
+
+echo "== DT4N GCP bootstrap started: $(date -Is) =="
+
+if ! id -u "$LINUX_USER" >/dev/null 2>&1; then
+  useradd -m -s /bin/bash "$LINUX_USER"
+fi
+
+LINUX_GROUP="$(id -gn "$LINUX_USER")"
+usermod -aG sudo "$LINUX_USER" || true
+cat >/etc/sudoers.d/90-dt4n-user <<EOF
+$LINUX_USER ALL=(ALL) NOPASSWD:ALL
+EOF
+chmod 0440 /etc/sudoers.d/90-dt4n-user
+install -d -o "$LINUX_USER" -g "$LINUX_GROUP" "$USER_HOME"
+
+apt-get update
+apt-get install -y \
+  apt-transport-https \
+  bash-completion \
+  bridge-utils \
+  build-essential \
+  ca-certificates \
+  curl \
+  ethtool \
+  git \
+  git-lfs \
+  gnupg \
+  fd-find \
+  fzf \
+  gh \
+  htop \
+  iperf \
+  iperf3 \
+  iproute2 \
+  jq \
+  lsb-release \
+  make \
+  mininet \
+  nano \
+  net-tools \
+  nginx \
+  openvswitch-switch \
+  pkg-config \
+  python3 \
+  python3-dev \
+  python-is-python3 \
+  python3-pip \
+  python3-venv \
+  ripgrep \
+  rsync \
+  shellcheck \
+  software-properties-common \
+  tcpdump \
+  tmux \
+  traceroute \
+  tree \
+  unzip \
+  vim \
+  wget \
+  zip
+
+install -m 0755 -d /etc/apt/keyrings
+if [ ! -f /etc/apt/keyrings/docker.asc ]; then
+  curl -fsSL https://download.docker.com/linux/ubuntu/gpg -o /etc/apt/keyrings/docker.asc
+  chmod a+r /etc/apt/keyrings/docker.asc
+fi
+
+. /etc/os-release
+cat >/etc/apt/sources.list.d/docker.list <<EOF
+deb [arch=$(dpkg --print-architecture) signed-by=/etc/apt/keyrings/docker.asc] https://download.docker.com/linux/ubuntu $VERSION_CODENAME stable
+EOF
+
+if [ ! -f /etc/apt/sources.list.d/nodesource.list ]; then
+  curl -fsSL https://deb.nodesource.com/setup_20.x | bash -
+fi
+
+apt-get update
+apt-get install -y \
+  containerd.io \
+  docker-buildx-plugin \
+  docker-ce \
+  docker-ce-cli \
+  docker-compose-plugin \
+  nodejs
+
+systemctl enable --now docker
+systemctl enable --now openvswitch-switch
+usermod -aG docker "$LINUX_USER"
+
+cat >/etc/sysctl.d/99-dt4n.conf <<'EOF'
+net.ipv4.ip_forward=1
+fs.inotify.max_user_watches=524288
+fs.inotify.max_user_instances=1024
+EOF
+sysctl --system || true
+
+mn -c || true
+
+cat >/etc/profile.d/dt4n.sh <<'EOF'
+export PATH="$HOME/.local/bin:$HOME/bin:$HOME/miniforge3/bin:$PATH"
+export PYTHONPATH="$HOME/${project_name}:$PYTHONPATH"
+alias dt4n-rl='conda activate ${rl_conda_env_name}'
+alias dt4n-ryu='conda activate ${ryu_conda_env_name}'
+EOF
+
+if [ ! -x "$USER_HOME/miniforge3/bin/conda" ]; then
+  sudo -H -u "$LINUX_USER" bash -lc '
+    set -euxo pipefail
+    curl -fsSL https://github.com/conda-forge/miniforge/releases/latest/download/Miniforge3-Linux-x86_64.sh -o /tmp/miniforge.sh
+    bash /tmp/miniforge.sh -b -p "$HOME/miniforge3"
+    "$HOME/miniforge3/bin/conda" init bash
+  '
+fi
+
+if [ -x "$USER_HOME/miniforge3/bin/conda" ]; then
+  sudo -H -u "$LINUX_USER" bash -lc '"$HOME/miniforge3/bin/conda" config --set auto_activate_base false'
+fi
+
+if [ "$CREATE_CONDA_ENVS" = "true" ]; then
+  sudo -H -u "$LINUX_USER" bash -lc '
+    set -euxo pipefail
+    source "$HOME/miniforge3/etc/profile.d/conda.sh"
+
+    if ! conda env list | awk "{print \$1}" | grep -qx "${ryu_conda_env_name}"; then
+      conda create -y -n "${ryu_conda_env_name}" python=3.8 pip
+      conda run -n "${ryu_conda_env_name}" pip install --upgrade pip setuptools wheel
+      conda run -n "${ryu_conda_env_name}" pip install ryu==4.34 eventlet==0.30.2 dnspython==1.16.0 greenlet==1.1.3
+    fi
+
+    if ! conda env list | awk "{print \$1}" | grep -qx "${rl_conda_env_name}"; then
+      conda create -y -n "${rl_conda_env_name}" python=3.10 pip
+      conda run -n "${rl_conda_env_name}" pip install --upgrade pip setuptools wheel
+      conda run -n "${rl_conda_env_name}" pip install numpy pandas scipy matplotlib pyyaml requests tqdm pytest gymnasium psutil networkx scikit-learn
+      conda run -n "${rl_conda_env_name}" pip install torch --index-url https://download.pytorch.org/whl/cpu
+    fi
+  '
+fi
+
+if [ "$INSTALL_AI_CLI_TOOLS" = "true" ]; then
+  sudo -H -u "$LINUX_USER" bash -lc '
+    set -euxo pipefail
+    mkdir -p "$HOME/.local/bin" "$HOME/bin"
+    export PATH="$HOME/.local/bin:$HOME/bin:$PATH"
+
+    curl -fsSL https://chatgpt.com/codex/install.sh | sh
+    curl -fsSL https://claude.ai/install.sh | bash
+
+    command -v codex
+    command -v claude
+    codex --version || true
+    claude --version || true
+  ' || echo "WARN: AI CLI tool install failed; rerun from the VM terminal after checking network/auth."
+fi
+
+if [ -n "$GIT_REPO_URL" ] && [ ! -d "$PROJECT_DIR/.git" ]; then
+  if ! sudo -H -u "$LINUX_USER" git clone --branch "$GIT_BRANCH" "$GIT_REPO_URL" "$PROJECT_DIR"; then
+    echo "WARN: git clone failed. This is OK if the repo is private; use scripts/sync-project.sh from local."
+    install -d -o "$LINUX_USER" -g "$LINUX_GROUP" "$PROJECT_DIR"
+  fi
+fi
+
+if [ "$INSTALL_DASHBOARD_DEPS" = "true" ] && [ -f "$PROJECT_DIR/dashboard/package-lock.json" ]; then
+  sudo -H -u "$LINUX_USER" bash -lc "cd '$PROJECT_DIR/dashboard' && npm ci" || echo "WARN: npm ci failed; rerun manually after sync."
+fi
+
+cat >"$USER_HOME/DT4N_GCP_READY.txt" <<EOF
+DT4N GCP bootstrap completed at $(date -Is)
+
+Project directory: $PROJECT_DIR
+Bootstrap log:     $LOG_FILE
+
+Useful checks:
+  docker --version
+  docker compose version
+  systemctl status openvswitch-switch
+  conda env list
+  codex --version
+  claude --version
+
+Typical DT4N commands after Ditto Docker Compose is restored:
+  cd $PROJECT_DIR
+  source ~/miniforge3/etc/profile.d/conda.sh
+  conda activate $RYU_CONDA_ENV_NAME
+  PYTHONPATH=\$PWD ryu-manager mininet.controller_static --ofp-tcp-listen-port 6653
+
+In another shell:
+  cd $PROJECT_DIR
+  source ~/miniforge3/etc/profile.d/conda.sh
+  conda activate $RL_CONDA_ENV_NAME
+  sudo -E env PYTHONPATH=\$PWD PATH=\$PATH python -m mininet.run_sync
+EOF
+
+chown "$LINUX_USER:$LINUX_GROUP" "$USER_HOME/DT4N_GCP_READY.txt"
+echo "== DT4N GCP bootstrap finished: $(date -Is) =="

@@ -53,11 +53,7 @@ source ~/miniforge3/etc/profile.d/conda.sh
 conda env list
 echo
 echo == Python imports in \$RL_ENV ==
-conda run -n \"\$RL_ENV\" python - <<PY
-import numpy, requests, yaml, gymnasium, torch
-print(\"numpy\", numpy.__version__)
-print(\"torch\", torch.__version__)
-PY
+conda run -n \"\$RL_ENV\" python -c \"import numpy, requests, yaml, gymnasium, torch; print(\\\"numpy\\\", numpy.__version__); print(\\\"torch\\\", torch.__version__); print(\\\"gymnasium\\\", gymnasium.__version__)\"
 echo
 echo == Ryu ==
 conda run -n \"\$RYU_ENV\" ryu-manager --version || true

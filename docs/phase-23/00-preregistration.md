@@ -200,8 +200,8 @@ Nhan nguon:
 | B4p | 23.3 | err(C3)/err(B4) tai coverage 0.50 | [NGOAI SUY] | 0.6-0.9 | ___ | ___ |
 | B5p | 23.3 | err(C3)/err(B5) tai coverage 0.50 | [KINH NGHIEM] | 0.7-1.0 | ___ | ___ |
 | B6p | 23.3 | err(B6)/err(C3) tai coverage 0.50 | [CO CHE] | < 0.5 | ___ | ___ |
-| G3a | GO-3 | `q_hat_stud/q_hat_max` o slot 1 | [CO CHE] | 0.92-0.98 | ___ | ___ |
-| G3b | GO-3 | `q_hat_stud/q_hat_max` o slot 2 va 3 | [CO CHE] | 0.98-1.02 | ___ | ___ |
+| G3a | GO-3 | `q_hat_stud/q_hat_max` o slot 1 (v1; xem Amendment 23-20) | [CO CHE] | 0.92-0.98 | 0.9525 | PASS |
+| G3b | GO-3 | `q_hat_stud/q_hat_max` o slot 2 va 3 (v1; xem Amendment 23-20) | [CO CHE] | 0.98-1.02 | s2=0.9966; s3=1.0671 | PARTIAL/MISS v1; PASS v2 |
 
 Neu `PHASE_23.md` goc duoc them vao repo sau nay, cac dong E/A/R/X phai duoc
 bo sung bang amendment truoc khi chay lesson tuong ung. Trong repo hien tai
