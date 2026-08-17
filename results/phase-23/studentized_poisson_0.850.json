@@ -12,22 +12,448 @@
   "reference": "maxscore_on_fold2_rows"
  },
  "PC_S_1_full": {
+  "conformal_level_at_target": null,
   "control": "PC-S-1",
   "coverage_clean": 0.9112941454135973,
+  "coverage_clean_sd": 0.0,
   "coverage_drop": 0.00034602283750728713,
+  "coverage_drop_sd": 0.0,
   "coverage_leaked": 0.91094812257609,
+  "coverage_leaked_sd": 0.0,
   "detectable": false,
-  "note": "Voi p=3 va n lon, thien lech ro ri ~ O(p/n) nam duoi do phan giai do. Bao cao la KHONG PHAT HIEN DUOC, khong phai PASS.",
-  "subsample_blocks": null
+  "n_blocks_fold2_target": null,
+  "n_seeds": 1,
+  "note": "p=3 tham so sigma. Thien lech ro ri ~ O(p/n_eff) nam duoi do phan giai do. Ket qua la KHONG PHAT HIEN DUOC, KHONG phai PASS. Do nhay cua phep do duoc chung minh rieng bang PC-S-1d.",
+  "per_seed": [
+   {
+    "coverage_clean": 0.9112941454135973,
+    "coverage_drop": 0.00034602283750728713,
+    "coverage_leaked": 0.91094812257609,
+    "realized": {
+     "conformal_level_by_bin": {
+      "0": 0.904,
+      "1": 0.904,
+      "2": 0.904,
+      "3": 0.904
+     },
+     "max_level": 0.904,
+     "n_eff_blocks_fold2_by_bin": {
+      "0": 250,
+      "1": 250,
+      "2": 250,
+      "3": 250
+     },
+     "saturated": false
+    },
+    "seed_sub": 0
+   }
+  ],
+  "seeds_sub": [
+   0
+  ]
  },
  "PC_S_1_small_n": {
+  "conformal_level_at_target": 0.9333333333333333,
   "control": "PC-S-1",
-  "coverage_clean": 0.9995909090909091,
-  "coverage_drop": 0.001954545454545431,
-  "coverage_leaked": 0.9976363636363637,
+  "coverage_clean": 0.9322843745448941,
+  "coverage_clean_sd": 0.017809433067162428,
+  "coverage_drop": 0.002126451178278743,
+  "coverage_drop_sd": 0.001871978148984512,
+  "coverage_leaked": 0.9301579233666153,
+  "coverage_leaked_sd": 0.018852443816584373,
   "detectable": false,
-  "note": "Voi p=3 va n lon, thien lech ro ri ~ O(p/n) nam duoi do phan giai do. Bao cao la KHONG PHAT HIEN DUOC, khong phai PASS.",
-  "subsample_blocks": 20
+  "n_blocks_fold2_target": 30,
+  "n_seeds": 5,
+  "note": "p=3 tham so sigma. Thien lech ro ri ~ O(p/n_eff) nam duoi do phan giai do. Ket qua la KHONG PHAT HIEN DUOC, KHONG phai PASS. Do nhay cua phep do duoc chung minh rieng bang PC-S-1d.",
+  "per_seed": [
+   {
+    "coverage_clean": 0.9168571428571428,
+    "coverage_drop": 0.0034761904761904105,
+    "coverage_leaked": 0.9133809523809524,
+    "realized": {
+     "conformal_level_by_bin": {
+      "0": 0.9310344827586207,
+      "1": 0.9310344827586207,
+      "2": 0.9310344827586207,
+      "3": 0.9310344827586207
+     },
+     "max_level": 0.9310344827586207,
+     "n_eff_blocks_fold2_by_bin": {
+      "0": 29,
+      "1": 29,
+      "2": 29,
+      "3": 29
+     },
+     "saturated": false
+    },
+    "seed_sub": 23501
+   },
+   {
+    "coverage_clean": 0.9623137254901961,
+    "coverage_drop": 0.00045098039215685226,
+    "coverage_leaked": 0.9618627450980393,
+    "realized": {
+     "conformal_level_by_bin": {
+      "0": 0.9428571428571428,
+      "1": 0.9428571428571428,
+      "2": 0.9428571428571428,
+      "3": 0.9428571428571428
+     },
+     "max_level": 0.9428571428571428,
+     "n_eff_blocks_fold2_by_bin": {
+      "0": 35,
+      "1": 35,
+      "2": 35,
+      "3": 35
+     },
+     "saturated": false
+    },
+    "seed_sub": 23502
+   },
+   {
+    "coverage_clean": 0.9313426575682783,
+    "coverage_drop": 0.004371743373824399,
+    "coverage_leaked": 0.9269709141944539,
+    "realized": {
+     "conformal_level_by_bin": {
+      "0": 0.9310344827586207,
+      "1": 0.9310344827586207,
+      "2": 0.9310344827586207,
+      "3": 0.9310344827586207
+     },
+     "max_level": 0.9310344827586207,
+     "n_eff_blocks_fold2_by_bin": {
+      "0": 29,
+      "1": 29,
+      "2": 29,
+      "3": 29
+     },
+     "saturated": false
+    },
+    "seed_sub": 23503
+   },
+   {
+    "coverage_clean": 0.9212857142857143,
+    "coverage_drop": 0.0022857142857142243,
+    "coverage_leaked": 0.919,
+    "realized": {
+     "conformal_level_by_bin": {
+      "0": 0.9310344827586207,
+      "1": 0.9310344827586207,
+      "2": 0.9310344827586207,
+      "3": 0.9310344827586207
+     },
+     "max_level": 0.9310344827586207,
+     "n_eff_blocks_fold2_by_bin": {
+      "0": 29,
+      "1": 29,
+      "2": 29,
+      "3": 29
+     },
+     "saturated": false
+    },
+    "seed_sub": 23504
+   },
+   {
+    "coverage_clean": 0.9296226325231389,
+    "coverage_drop": 4.762736350782948e-05,
+    "coverage_leaked": 0.9295750051596311,
+    "realized": {
+     "conformal_level_by_bin": {
+      "0": 0.9310344827586207,
+      "1": 0.9310344827586207,
+      "2": 0.9310344827586207,
+      "3": 0.9310344827586207
+     },
+     "max_level": 0.9310344827586207,
+     "n_eff_blocks_fold2_by_bin": {
+      "0": 29,
+      "1": 29,
+      "2": 29,
+      "3": 29
+     },
+     "saturated": false
+    },
+    "seed_sub": 23505
+   }
+  ],
+  "seeds_sub": [
+   23501,
+   23502,
+   23503,
+   23504,
+   23505
+  ]
+ },
+ "PC_S_1d_high_dim": {
+  "arms": {
+   "clean": {
+    "coverage_by_mhat_cell_spread_max": 0.23123975435112365,
+    "coverage_by_zbin": {
+     "0": 0.9074444444444445,
+     "1": 0.9114,
+     "2": 0.91296,
+     "3": 0.9119689999097923
+    },
+    "coverage_by_zbin_min": 0.9074444444444445,
+    "coverage_marginal": 0.9116461686471307,
+    "per_bin": {
+     "0": {
+      "c": 2.29184525115899,
+      "coverage_by_mhat_cell_max": 0.9805068226120858,
+      "coverage_by_mhat_cell_min": 0.7714884696016772,
+      "coverage_by_mhat_cell_spread": 0.2090183530104086,
+      "coverage_simultaneous": 0.9074444444444445,
+      "level": 0.904,
+      "median_rows_per_cell": 225.0,
+      "n_cells_below_min_rows": 0,
+      "n_eff_blocks_fold2": 250,
+      "n_mhat_cells_scored": 100,
+      "n_rows_source": 22500,
+      "p_per_bin": 300
+     },
+     "1": {
+      "c": 2.277093723951263,
+      "coverage_by_mhat_cell_max": 0.9864583333333333,
+      "coverage_by_mhat_cell_min": 0.769811320754717,
+      "coverage_by_mhat_cell_spread": 0.2166470125786163,
+      "coverage_simultaneous": 0.9114,
+      "level": 0.904,
+      "median_rows_per_cell": 500.0,
+      "n_cells_below_min_rows": 0,
+      "n_eff_blocks_fold2": 250,
+      "n_mhat_cells_scored": 100,
+      "n_rows_source": 50000,
+      "p_per_bin": 300
+     },
+     "2": {
+      "c": 2.2884020883117846,
+      "coverage_by_mhat_cell_max": 0.9917910447761195,
+      "coverage_by_mhat_cell_min": 0.7637254901960784,
+      "coverage_by_mhat_cell_spread": 0.22806555458004107,
+      "coverage_simultaneous": 0.91296,
+      "level": 0.904,
+      "median_rows_per_cell": 500.0,
+      "n_cells_below_min_rows": 0,
+      "n_eff_blocks_fold2": 250,
+      "n_mhat_cells_scored": 100,
+      "n_rows_source": 50000,
+      "p_per_bin": 300
+     },
+     "3": {
+      "c": 2.255607340759958,
+      "coverage_by_mhat_cell_max": 0.9922702547953048,
+      "coverage_by_mhat_cell_min": 0.7610305004441812,
+      "coverage_by_mhat_cell_spread": 0.23123975435112365,
+      "coverage_simultaneous": 0.9119689999097923,
+      "level": 0.904,
+      "median_rows_per_cell": 1275.0,
+      "n_cells_below_min_rows": 0,
+      "n_eff_blocks_fold2": 250,
+      "n_mhat_cells_scored": 100,
+      "n_rows_source": 127489,
+      "p_per_bin": 300
+     }
+    },
+    "scope_note": "coverage_by_zbin la dai luong dinh ly BAO DAM (bien trong tung bin Mondrian). coverage_by_mhat_cell KHONG duoc bao dam: bao phu co dieu kien chinh xac la bat kha thi (Vovk 2012; Lei & Wasserman 2014). Ghi de trung thuc, khong phai de cham gate.",
+    "sigma_source": "fold1"
+   },
+   "leaked": {
+    "coverage_by_mhat_cell_spread_max": 0.38965930491354217,
+    "coverage_by_zbin": {
+     "0": 0.8744666666666666,
+     "1": 0.8846,
+     "2": 0.88178,
+     "3": 0.8877148807492734
+    },
+    "coverage_by_zbin_min": 0.8744666666666666,
+    "coverage_marginal": 0.8847123910178072,
+    "per_bin": {
+     "0": {
+      "c": 2.133498354261587,
+      "coverage_by_mhat_cell_max": 0.975517890772128,
+      "coverage_by_mhat_cell_min": 0.5858585858585859,
+      "coverage_by_mhat_cell_spread": 0.38965930491354217,
+      "coverage_simultaneous": 0.8744666666666666,
+      "level": 0.904,
+      "median_rows_per_cell": 216.0,
+      "n_cells_below_min_rows": 0,
+      "n_eff_blocks_fold2": 250,
+      "n_mhat_cells_scored": 100,
+      "n_rows_source": 22500,
+      "p_per_bin": 300
+     },
+     "1": {
+      "c": 2.1219878172462816,
+      "coverage_by_mhat_cell_max": 0.9725490196078431,
+      "coverage_by_mhat_cell_min": 0.6966101694915254,
+      "coverage_by_mhat_cell_spread": 0.2759388501163177,
+      "coverage_simultaneous": 0.8846,
+      "level": 0.904,
+      "median_rows_per_cell": 480.0,
+      "n_cells_below_min_rows": 0,
+      "n_eff_blocks_fold2": 250,
+      "n_mhat_cells_scored": 100,
+      "n_rows_source": 50000,
+      "p_per_bin": 300
+     },
+     "2": {
+      "c": 2.105608230409914,
+      "coverage_by_mhat_cell_max": 0.9688888888888889,
+      "coverage_by_mhat_cell_min": 0.6957627118644067,
+      "coverage_by_mhat_cell_spread": 0.27312617702448216,
+      "coverage_simultaneous": 0.88178,
+      "level": 0.904,
+      "median_rows_per_cell": 480.0,
+      "n_cells_below_min_rows": 0,
+      "n_eff_blocks_fold2": 250,
+      "n_mhat_cells_scored": 100,
+      "n_rows_source": 50000,
+      "p_per_bin": 300
+     },
+     "3": {
+      "c": 2.104650689023941,
+      "coverage_by_mhat_cell_max": 0.9708260105448154,
+      "coverage_by_mhat_cell_min": 0.7403189066059226,
+      "coverage_by_mhat_cell_spread": 0.23050710393889284,
+      "coverage_simultaneous": 0.8877148807492734,
+      "level": 0.904,
+      "median_rows_per_cell": 1255.0,
+      "n_cells_below_min_rows": 0,
+      "n_eff_blocks_fold2": 250,
+      "n_mhat_cells_scored": 100,
+      "n_rows_source": 127489,
+      "p_per_bin": 300
+     }
+    },
+    "scope_note": "coverage_by_zbin la dai luong dinh ly BAO DAM (bien trong tung bin Mondrian). coverage_by_mhat_cell KHONG duoc bao dam: bao phu co dieu kien chinh xac la bat kha thi (Vovk 2012; Lei & Wasserman 2014). Ghi de trung thuc, khong phai de cham gate.",
+    "sigma_source": "fold2_LEAKED"
+   }
+  },
+  "clean_holds": true,
+  "clean_holds_in_every_zbin": true,
+  "conformal_level_at_target": null,
+  "control": "PC-S-1d",
+  "coverage_clean": 0.9116461686471307,
+  "coverage_drop": 0.026933777629323474,
+  "coverage_leaked": 0.8847123910178072,
+  "detectable": true,
+  "diagnostics": {
+   "median_blocks_per_cell_by_bin": {
+    "0": 24.0,
+    "1": 24.0,
+    "2": 24.0,
+    "3": 26.0
+   }
+  },
+  "mhat_col": "m_hat_1",
+  "n_blocks_fold2_target": null,
+  "n_mhat_cells": 100,
+  "note": "CLEAN phai GIU coverage ~ 1-alpha du p lon: bao dam split-conformal khong phu thuoc sigma dung hay sai, chi phu thuoc sigma doc lap voi fold2/test. LEAKED phai VO. Neu ca hai deu giu, phep do coverage khong du do nhay o cau hinh nay.",
+  "p_per_bin": 300,
+  "p_total": 1200
+ },
+ "PC_S_1d_sweep": {
+  "clean_holds_at_every_p": true,
+  "clean_holds_in_every_zbin_at_every_p": true,
+  "clean_spread": 0.00431428474279294,
+  "control": "PC-S-1d-sweep",
+  "detectable_at_any_p": true,
+  "leaked_is_monotone_decreasing": true,
+  "leaked_spread": 0.22152862088897873,
+  "max_coverage_drop": 0.22076457046165054,
+  "mhat_col": "m_hat_1",
+  "note": "Do manh cua ro ri bam theo SO BLOCK moi o, khong phai so hang moi o: m_hat_1 co cau truc theo block, nen n hieu dung cua sigma la block.",
+  "p_per_bin_grid": [
+   30,
+   300,
+   3000
+  ],
+  "rungs": [
+   {
+    "clean_coverage_by_mhat_cell_spread_max": 0.05269792873549195,
+    "clean_coverage_by_zbin_min": 0.9079111111111111,
+    "clean_holds": true,
+    "clean_holds_in_every_zbin": true,
+    "coverage_clean": 0.9118761838281326,
+    "coverage_drop": 0.003550234315464751,
+    "coverage_leaked": 0.9083259495126679,
+    "detectable": false,
+    "median_blocks_per_cell": 158.0,
+    "median_rows_per_cell": 5000.0,
+    "n_mhat_cells": 10,
+    "p_per_bin": 30
+   },
+   {
+    "clean_coverage_by_mhat_cell_spread_max": 0.23123975435112365,
+    "clean_coverage_by_zbin_min": 0.9074444444444445,
+    "clean_holds": true,
+    "clean_holds_in_every_zbin": true,
+    "coverage_clean": 0.9116461686471307,
+    "coverage_drop": 0.026933777629323474,
+    "coverage_leaked": 0.8847123910178072,
+    "detectable": true,
+    "median_blocks_per_cell": 24.0,
+    "median_rows_per_cell": 500.0,
+    "n_mhat_cells": 100,
+    "p_per_bin": 300
+   },
+   {
+    "clean_coverage_by_mhat_cell_spread_max": 1.0,
+    "clean_coverage_by_zbin_min": 0.9037777777777778,
+    "clean_holds": true,
+    "clean_holds_in_every_zbin": true,
+    "coverage_clean": 0.9075618990853397,
+    "coverage_drop": 0.22076457046165054,
+    "coverage_leaked": 0.6867973286236891,
+    "detectable": true,
+    "median_blocks_per_cell": 2.0,
+    "median_rows_per_cell": 50.0,
+    "n_mhat_cells": 1000,
+    "p_per_bin": 3000
+   }
+  ]
+ },
+ "accept_set_contingency": {
+  "both": {
+   "n": 47597,
+   "n_wrong": 374,
+   "p_wrong": 0.00785763808643402
+  },
+  "kappa": 1.0,
+  "label_a": "maxscore",
+  "label_b": "studentized",
+  "mhat_ratio_min_over_accepted": 1.4988569345353864,
+  "n_accept_maxscore": 47597,
+  "n_accept_studentized": 67805,
+  "n_test": 499967,
+  "neither": {
+   "n": 432162,
+   "n_wrong": 109649,
+   "p_wrong": 0.2537219838856725
+  },
+  "nested_b_contains_a": true,
+  "nesting_holds": true,
+  "nesting_is_structural": false,
+  "nesting_note": "nesting_slack_min >= 1 <=> tap accept cua studentized chua tron tap cua maxscore (EXACT). sufficient_condition_margin chi la can DU: am KHONG co nghia nesting vo. Ca hai la tinh chat CUA DU LIEU (do trai chi phi giua cac duong), KHONG phai dinh ly; chung giam khi cac duong sat nhau ve cost.",
+  "nesting_slack_binding_slot": 2,
+  "nesting_slack_min": 1.0070670763918794,
+  "only_maxscore": {
+   "n": 0,
+   "n_wrong": 0,
+   "p_wrong": null
+  },
+  "only_studentized": {
+   "n": 20208,
+   "n_wrong": 333,
+   "p_wrong": 0.016478622327790973
+  },
+  "p_wrong_on_rows_added_by_studentized": 0.016478622327790973,
+  "p_wrong_on_rows_dropped_by_studentized": null,
+  "risk_budget_used_maxscore": 0.0007480493712585031,
+  "risk_budget_used_studentized": 0.0014140933301597905,
+  "sufficient_condition_margin": 0.3470123700562553,
+  "sufficient_condition_threshold": 1.151844564479131
  },
  "acceptance_maxscore": {
   "acceptance_rate": 0.09520028321869244,
@@ -56,6 +482,32 @@
    0.3927719229469145,
    0.0006740444869361377
   ]
+ },
+ "c_invariance_global_sigma": {
+  "c_by_bin": {
+   "0": 1.222722351386939,
+   "1": 1.625186476590517,
+   "2": 2.0148790544138597,
+   "3": 2.4878902748775773
+  },
+  "c_max": 2.4878902748775773,
+  "c_mean": 1.8376695393172233,
+  "c_min": 1.222722351386939,
+  "relative_spread": 0.688463239130962,
+  "sigma_scope": "global"
+ },
+ "c_invariance_per_bin_sigma": {
+  "c_by_bin": {
+   "0": 2.194630066740569,
+   "1": 2.1841672577385833,
+   "2": 2.1595848542785365,
+   "3": 2.141818297952867
+  },
+  "c_max": 2.194630066740569,
+  "c_mean": 2.170050119177639,
+  "c_min": 2.141818297952867,
+  "relative_spread": 0.02433665855040971,
+  "sigma_scope": "per_bin"
  },
  "cell": "poisson@0.850",
  "compare_to_maxscore": {
@@ -196,15 +648,61 @@
  "provenance": {
   "FRAC_FOLD1": 0.5,
   "MIN_BLOCKS_FOLD": 9,
+  "MIN_ROWS_PER_CELL": 8,
+  "PC_TARGET_BLOCKS_FOLD2": 30,
+  "SEEDS_SUB": [
+   23501,
+   23502,
+   23503,
+   23504,
+   23505
+  ],
   "SEED_FOLD": 7001,
   "SIGMA_ESTIMATOR": "rms",
   "SIGMA_FLOOR": 1e-09,
-  "amendment": "docs/phase-23/00u-amendment-20.md",
+  "amendment": [
+   "docs/phase-23/00u-amendment-20.md",
+   "docs/phase-23/00v-amendment-21.md"
+  ],
   "calib": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
+  "env": {
+   "note": "co the KHAC moi truong chay Phase 22; xem reproduction_check",
+   "numpy": "2.4.3",
+   "pandas": "3.0.2",
+   "pyarrow": "25.0.1",
+   "python": "3.12.13"
+  },
   "git_dirty": true,
-  "git_hash": "09b90464c348f718cc04afa676fb5b984a4930d1",
+  "git_hash": "ea2aa04e66f6ee1ec39e3351e84ecbaf19b01b4f",
+  "min_blocks_unsaturated_at_alpha": 19,
   "script": "cert/studentized_score.py",
-  "timestamp_utc": "2026-08-16T02:46:02.799366+00:00"
+  "timestamp_utc": "2026-08-17T03:35:12.068618+00:00"
+ },
+ "reproduction_check": {
+  "acceptance": {
+   "abs_diff": 0.0,
+   "now": 0.09520028321869244,
+   "phase22": 0.09520028321869244
+  },
+  "available": true,
+  "bit_exact": true,
+  "coverage": {
+   "abs_diff": 0.0,
+   "now": 0.9057417789574111,
+   "phase22": 0.9057417789574111
+  },
+  "note": "Chay lai duoi pandas/numpy/pyarrow KHAC Phase 22. bit_exact=true la bang chung duong ong tai lap qua mot bien moi truong.",
+  "path": "results/phase-22/conformal_sim_poisson_0.850.json",
+  "qhat_max_abs_diff": 0.0
+ },
+ "retracted": {
+  "PC_S_1_small_n@subsample_blocks=20": "HUY BO. Artifact 2026-08-16 giu 40 block -> fold2 con 9 block moi bin -> conformal_level = 1.0 -> qhat = max cua fold2 -> coverage ~ 0.9997 bat ke ro ri. coverage_drop 0.0010-0.0026 la TRAN CHAN, vo nghia, khong duoc trich dan. Xem Amendment 23-21."
+ },
+ "sigma3_over_sigma1_by_bin": {
+  "0": 1.2786629423710147,
+  "1": 1.2913662893629898,
+  "2": 1.305140651110163,
+  "3": 1.332517519966332
  },
  "status": "EXPLORATORY",
  "studentized_global_sigma": {

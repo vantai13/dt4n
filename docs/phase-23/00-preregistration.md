@@ -202,6 +202,14 @@ Nhan nguon:
 | B6p | 23.3 | err(B6)/err(C3) tai coverage 0.50 | [CO CHE] | < 0.5 | ___ | ___ |
 | G3a | GO-3 | `q_hat_stud/q_hat_max` o slot 1 (v1; xem Amendment 23-20) | [CO CHE] | 0.92-0.98 | 0.9525 | PASS |
 | G3b | GO-3 | `q_hat_stud/q_hat_max` o slot 2 va 3 (v1; xem Amendment 23-20) | [CO CHE] | 0.98-1.02 | s2=0.9966; s3=1.0671 | PARTIAL/MISS v1; PASS v2 |
+| S-5 | GO-3 | `sigma3/sigma1` (v2, `level=per_bin`; xem Amendment 23-21 muc 3) | [MO TA] | 1.05-1.50 | 1.1421 / 1.3325 / **1.6557** | **MISS** (h2@0.700 bin 0) |
+| S-8 | GO-3 | Lift acceptance cua studentization -- "hieu ung nho 1-2 pp" (ghi chep truoc khi chay; xem Amendment 23-21 muc 4) | [KINH NGHIEM] | +1 den +2 pp | +11.5% / +42.5% / +48.1% tuong doi | **MISS** (ngoai suy 1 cell -> 3 cell) |
+
+Hai dong `S-5` va `S-8` la MISS. Chung duoc dat o BANG CHINH nay chu khong chi
+trong Amendment 23-21, vi nguoi doc mo pre-registration truoc, khong mo
+amendment thu 21. Chi tiet nguyen nhan o `docs/phase-23/00v-amendment-21.md`
+muc 3 va muc 4; dai da tach (`S-5-pooled` / `S-5-perbin`) CHI ap dung cho cac
+phase SAU, khong cham lai Lesson 23.5[A].
 
 Neu `PHASE_23.md` goc duoc them vao repo sau nay, cac dong E/A/R/X phai duoc
 bo sung bang amendment truoc khi chay lesson tuong ung. Trong repo hien tai

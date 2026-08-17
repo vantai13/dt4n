@@ -177,3 +177,163 @@ def test_T15_PC_S_1_reports_and_does_not_silently_pass(real):
     full = ST.positive_control_sigma_leak(df, ic)
     assert abs(full["coverage_drop"]) < 0.02
     assert full["detectable"] is False
+
+
+def test_T16_pc_control_refuses_saturating_configuration():
+    """Doi chung duong bi TRAN CHAN thi VO NGHIA. Chan tu trong code."""
+    df = _toy_frame(np.random.default_rng(7))
+    ic = df["is_calib"].to_numpy(bool)
+    for target in (9, 10, 11, 15, 18):
+        assert conformal_level(target, ALPHA) == 1.0, target
+        with pytest.raises(ValueError, match="TRAN CHAN"):
+            ST.positive_control_sigma_leak(df, ic, n_blocks_fold2_target=target)
+        with pytest.raises(ValueError, match="TRAN CHAN"):
+            ST.positive_control_high_dim_sigma(df, ic, n_blocks_fold2_target=target)
+
+
+def test_T17_min_blocks_unsaturated_is_19_at_alpha_0p10():
+    n_min = ST.min_blocks_unsaturated(0.10)
+    assert n_min == 19
+    assert conformal_level(n_min - 1, 0.10) == 1.0
+    assert conformal_level(n_min, 0.10) < 1.0
+    assert ST.min_blocks_unsaturated(0.05) == 39
+
+
+def test_T18_pc_target_30_is_accepted_and_not_saturating():
+    assert conformal_level(ST.PC_TARGET_BLOCKS_FOLD2, ALPHA) == pytest.approx(28 / 30)
+    assert conformal_level(ST.PC_TARGET_BLOCKS_FOLD2, ALPHA) < 1.0
+
+
+def test_T19_accept_set_contingency_cells_partition_the_test_rows():
+    rng = np.random.default_rng(11)
+    df = _toy_frame(rng)
+    for j in (1, 2, 3):
+        df["m_hat_%d" % j] = np.abs(rng.normal(3.0, 1.0, size=len(df)))
+        df["m_true_%d" % j] = df["m_hat_%d" % j] + rng.normal(0.0, 0.5, size=len(df))
+    df["wrong"] = df["m_true_1"] < 0.0
+    ic = df["is_calib"].to_numpy(bool)
+    a = ST.fit_eval_studentized(df, ic, force_uniform_sigma=1.0)
+    b = ST.fit_eval_studentized(df, ic)
+    out = ST.accept_set_contingency(df, ic, a, b)
+    total = out["both"]["n"] + out["only_maxscore"]["n"] + out["only_studentized"]["n"] + out["neither"]["n"]
+    assert total == out["n_test"]
+    assert out["both"]["n"] + out["only_maxscore"]["n"] == out["n_accept_maxscore"]
+    assert out["both"]["n"] + out["only_studentized"]["n"] == out["n_accept_studentized"]
+
+
+def test_T20_high_dim_clean_arm_holds_coverage_and_leaked_arm_is_lower():
+    """Bao dam khong phu thuoc sigma DUNG, chi phu thuoc sigma DOC LAP."""
+    rng = np.random.default_rng(12)
+    df = _toy_frame(rng, n_blocks=400, per_block=30, n_bins=2)
+    df["m_hat_1"] = rng.normal(0.0, 1.0, size=len(df))
+    out = ST.positive_control_high_dim_sigma(df, df["is_calib"].to_numpy(bool), n_mhat_cells=40)
+    assert out["p_per_bin"] == 120
+    assert out["coverage_clean"] >= 1.0 - ALPHA - 0.03, out["coverage_clean"]
+    assert out["coverage_leaked"] <= out["coverage_clean"] + 1e-9
+
+
+@needs_data
+def test_T21_c_is_near_constant_across_bins_under_per_bin_sigma(real):
+    """F-23.5A-1 -- phat hien ngoai du kien, giu la [MO TA]."""
+    df, ic = real
+    per_bin = ST.c_invariance_by_bin(ST.fit_eval_studentized(df, ic))
+    glob = ST.c_invariance_by_bin(ST.fit_eval_studentized(df, ic, sigma_scope="global"))
+    assert per_bin["relative_spread"] < 0.06, per_bin
+    assert glob["relative_spread"] > 0.50, glob
+
+
+@needs_data
+def test_T22_maxscore_reproduces_phase22_artifact_exactly(real):
+    """Doi env (pandas/numpy/pyarrow) khong duoc lam doi mot chu so nao."""
+    from cert.conformal_simultaneous import acceptance_diagnostics, fit_eval_simultaneous
+
+    df, ic = real
+    maxscore = fit_eval_simultaneous(df, ic, "maxscore")
+    check = ST.phase22_reproduction_check(
+        "poisson@0.925",
+        maxscore,
+        acceptance_diagnostics(df, ic, maxscore),
+    )
+    assert check["available"], check
+    assert check["acceptance"]["abs_diff"] == 0.0, check["acceptance"]
+    assert check["coverage"]["abs_diff"] == 0.0, check["coverage"]
+    assert check["qhat_max_abs_diff"] == 0.0, check
+    assert check["bit_exact"]
+
+
+def test_T23_nesting_is_measured_and_can_be_negative():
+    """only_max = 0 la TINH CHAT DU LIEU, khong phai dinh ly.
+
+    Ep mhat3/mhat1 xuong sat 1 -- dung truc ma Lesson 23.11 se thay doi -- thi
+    nesting_margin phai am va only_max > 0.
+    """
+    rng = np.random.default_rng(13)
+    df = _toy_frame(rng, n_blocks=200, per_block=40, n_bins=2)
+    base = np.abs(rng.normal(6.0, 1.0, size=len(df))) + 1.0
+    # Cost spread ~ 0.1%: cac duong gan nhu bang gia nhau.
+    for j in (1, 2, 3):
+        df["m_hat_%d" % j] = base * (1.0 + 0.0005 * (j - 1))
+        df["m_true_%d" % j] = df["m_hat_%d" % j]
+    df["wrong"] = np.zeros(len(df), dtype=bool)
+    ic = df["is_calib"].to_numpy(bool)
+    a = ST.fit_eval_studentized(df, ic, force_uniform_sigma=1.0)
+    b = ST.fit_eval_studentized(df, ic)
+    out = ST.accept_set_contingency(df, ic, a, b)
+
+    assert out["nesting_is_structural"] is False
+    assert out["sufficient_condition_threshold"] > 1.0
+    assert out["only_maxscore"]["n"] > 0, out
+    assert out["nesting_holds"] is False
+    # slack_min la dai luong EXACT: < 1 <=> co hang bi mat.
+    assert out["nesting_slack_min"] < 1.0, out
+
+
+def test_T25_nesting_slack_min_is_exactly_equivalent_to_only_a_empty():
+    """slack_min >= 1  <=>  only_a = 0. Kiem tren ca hai che do."""
+    rng = np.random.default_rng(15)
+    for spread, expect_nested in ((0.0005, False), (0.60, True)):
+        df = _toy_frame(rng, n_blocks=200, per_block=40, n_bins=2)
+        base = np.abs(rng.normal(6.0, 1.0, size=len(df))) + 1.0
+        for j in (1, 2, 3):
+            df["m_hat_%d" % j] = base * (1.0 + spread * (j - 1))
+            df["m_true_%d" % j] = df["m_hat_%d" % j]
+        df["wrong"] = np.zeros(len(df), dtype=bool)
+        ic = df["is_calib"].to_numpy(bool)
+        a = ST.fit_eval_studentized(df, ic, force_uniform_sigma=1.0)
+        b = ST.fit_eval_studentized(df, ic)
+        out = ST.accept_set_contingency(df, ic, a, b)
+        assert (out["nesting_slack_min"] >= 1.0) == (out["only_maxscore"]["n"] == 0), out
+        assert out["nesting_holds"] is expect_nested, (spread, out["only_maxscore"]["n"])
+
+
+def test_T24_artifact_keys_with_ambiguous_units_carry_a_level_suffix():
+    """Quy tac ba nhan, thuc thi bang may.
+
+    Hai loi cua lesson nay (S-5 pooled-vs-per-bin, p 1200-vs-300) deu la so
+    mot dai luong GOP voi mot dai luong PHAN HOACH. Khoa tran nhu 'p' hay
+    'n_cells' khong duoc phep ton tai trong artifact.
+    """
+    rng = np.random.default_rng(14)
+    df = _toy_frame(rng, n_blocks=400, per_block=30, n_bins=2)
+    df["m_hat_1"] = rng.normal(0.0, 1.0, size=len(df))
+    out = ST.positive_control_high_dim_sigma(df, df["is_calib"].to_numpy(bool), n_mhat_cells=40)
+
+    banned = {"p", "n", "sigma_ratio", "coverage_by_mhat_cell"}
+    suffixes = (
+        "_per_bin", "_total", "_per_cell", "_pooled", "_by_bin", "_by_zbin",
+        "_min", "_max", "_spread", "_mean", "_sd",
+    )
+
+    def walk(node, path=""):
+        if isinstance(node, dict):
+            for key, value in node.items():
+                if isinstance(key, str):  # bin ids are ints, not names
+                    assert key not in banned, "khoa tran khong nhan level: %s/%s" % (path, key)
+                    if key.split("_")[0] == "p" and key != "path":
+                        assert key.endswith(suffixes), "khoa %s thieu hau to level" % key
+                walk(value, "%s/%s" % (path, key))
+        elif isinstance(node, list):
+            for item in node:
+                walk(item, path)
+
+    walk(out)

@@ -40,6 +40,18 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
       SLA khong lam headline, va E4-moi S1--S7
 23-19 rebuild parity artifact cho hai cell moi; khoa Co che #9 lift>swing va
       gate G23-23; ghi G23-15/G23-17 FAIL
+23-20 khoa 7 bac tu do D1--D7 cua studentized max-score; dieu chinh dai v1->v2
+23-21 huy bo PC-S-1 small-n bi tran chan (level=1.0); ghi MISS cho S-5 dai v2
+      (loi muc do tong hop); them PC-S-1d sigma nhieu chieu; khoa du doan
+      H-23.11-*, E-1/E-2/E-3 (23.9), R-23.6-1
+```
+
+## Trang thai Lesson 23.5
+
+```text
+23.5[A] studentized max-score / GO-3   DONG (2026-08-17), nhan EXPLORATORY
+23.5[B] AURC rieng phan [0.6, 1.0] / GO-1   CHUA CHAY
+23.5[C] paired bootstrap B=2000 / GO-2      CHUA CHAY
 ```
 
 Lesson 23.2 duoc phep chay theo Amendment 23-10. Lesson 23.3 chi duoc chay
