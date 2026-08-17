@@ -1,0 +1,71 @@
+{
+ "cell": "calib_set_v3_poisson_0.700.parquet",
+ "ci95": null,
+ "degenerate_threshold": 0.02,
+ "err_neo": 0.0,
+ "n_blocks": 1000,
+ "n_rows": 999945,
+ "provenance": {
+  "GO1_THRESHOLD": 1.02,
+  "KAPPA_PRIMARY": [
+   0.0,
+   0.25,
+   0.5,
+   0.75,
+   1.0,
+   1.25,
+   1.5,
+   2.0,
+   3.0,
+   4.0,
+   6.0,
+   8.0
+  ],
+  "KAPPA_REFINED": [
+   0.0,
+   0.05,
+   0.1,
+   0.15,
+   0.2,
+   0.25,
+   0.3,
+   0.35,
+   0.4,
+   0.45,
+   0.5,
+   0.55,
+   0.75,
+   1.0,
+   1.25,
+   1.5,
+   2.0,
+   3.0,
+   4.0,
+   6.0,
+   8.0
+  ],
+  "N_BOOT": 2000,
+  "SEED_BOOT": 23601,
+  "WINDOW": [
+   0.6,
+   1.0
+  ],
+  "WINDOW_N": 4001,
+  "amendments": [
+   "docs/phase-23/00w-amendment-22.md",
+   "docs/phase-23/00x-amendment-23.md"
+  ],
+  "calib": "results/phase-22/calib_set_v3_poisson_0.700.parquet",
+  "env": {
+   "numpy": "2.4.3",
+   "pandas": "3.0.2"
+  },
+  "git_dirty": true,
+  "git_hash": "61e360d69b9073274ff9210bbdb50047d3baa4f5",
+  "script": "cert/aurc_go1.py",
+  "timestamp_utc": "2026-08-17T08:39:01.891909+00:00"
+ },
+ "ratio": null,
+ "reason": "err_neo = 0.000000 < 0.02: nhiem vu quyet dinh khong co do kho, duong risk-coverage suy bien ve 0.",
+ "status": "DEGENERATE"
+}

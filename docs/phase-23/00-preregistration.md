@@ -205,14 +205,14 @@ Nhan nguon:
 | S-5 | GO-3 | `sigma3/sigma1` (v2, `level=per_bin`; xem Amendment 23-21 muc 3) | [MO TA] | 1.05-1.50 | 1.1421 / 1.3325 / **1.6557** | **MISS** (h2@0.700 bin 0) |
 | S-8 | GO-3 | Lift acceptance cua studentization -- "hieu ung nho 1-2 pp" (ghi chep truoc khi chay; xem Amendment 23-21 muc 4) | [KINH NGHIEM] | +1 den +2 pp | +11.5% / +42.5% / +48.1% tuong doi | **MISS** (ngoai suy 1 cell -> 3 cell) |
 
-| A-1' | GO-1 | ratio AURC[0.6,1] C3/C0, poisson@0.925 (xem Amendment 23-22) | [MO TA] | 1.000-1.006 | ___ | ___ |
-| A-2' | GO-1 | ratio AURC[0.6,1] C3/C0, poisson@0.850 (xem Amendment 23-22) | [MO TA] | 1.002-1.011 | ___ | ___ |
-| A-3' | GO-1 | ratio AURC[0.6,1] C3/C0, h2@0.700 (xem Amendment 23-22) | [MO TA] | 1.007-1.018 | ___ | ___ |
-| A-4' | GO-1 | So cell suy bien trong 5 (`err_neo < 0.02`) | [CO CHE] | dung 2 | ___ | ___ |
-| A-5' | GO-1 | **CI95_high lon nhat cua ratio tren 3 cell danh gia duoc** | [NGOAI SUY] | 1.01-1.06 | ___ | ___ |
-| A-6' | GO-1 | Duoc dua "frontier invariance" vao abstract? | [CO CHE] | `A-5' < 1.02` | ___ | ___ |
-| A-7' | GO-1 | `\|discretisation_bias\|` lon nhat (xem Amendment 23-23) | [MO TA] | 0.001-0.010 | ___ | ___ |
-| A-8' | GO-1 | Dau cua `discretisation_bias` (xem Amendment 23-23) | [MO TA] | AM | ___ | ___ |
+| A-1' | GO-1 | ratio AURC[0.6,1] C3/C0, poisson@0.925 (xem Amendment 23-22) | [MO TA] | 1.000-1.006 | 1.002492 | trong dai (tai lap) |
+| A-2' | GO-1 | ratio AURC[0.6,1] C3/C0, poisson@0.850 (xem Amendment 23-22) | [MO TA] | 1.002-1.011 | 1.006249 | trong dai (tai lap) |
+| A-3' | GO-1 | ratio AURC[0.6,1] C3/C0, h2@0.700 (xem Amendment 23-22) | [MO TA] | 1.007-1.018 | 1.012345 | trong dai (tai lap) |
+| A-4' | GO-1 | So cell suy bien trong 5 (`err_neo < 0.02`) | [MO TA] | dung 2 | 2 | trong dai |
+| A-5' | GO-1 | **CI95_high lon nhat cua ratio tren 3 cell danh gia duoc** | [NGOAI SUY] | 1.01-1.06 | **1.003173** | **MISS** (hep hon du bao) |
+| A-6' | GO-1 | Duoc dua "frontier invariance" vao abstract? | [CO CHE] | `A-5' < 1.02` | CO, 3/3 cell | dat |
+| A-7' | GO-1 | `\|discretisation_bias\|` lon nhat (xem Amendment 23-23) | [MO TA] | 0.001-0.010 | **0.012982** | **MISS** (cao hon dai) |
+| A-8' | GO-1 | Dau cua `discretisation_bias` (xem Amendment 23-23) | [MO TA] | AM | AM, 3/3 cell | trong dai |
 
 `A-1'..A-4'`, `A-7'`, `A-8'` mang nhan `[MO TA]` va KHONG tinh prediction-hit.
 `A-1'..A-4'`: uoc luong diem da tinh trong kiem toan bay cua Amendment 23-22
