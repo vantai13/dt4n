@@ -330,6 +330,31 @@ Tag duoc doi (git tag -f) sang commit dong 23.5[A] ngay 2026-08-17.
 
 Ly do ghi lai: mot tag tro toi artifact da bi huy bo thi khong con dung nghia
 "lesson complete". Doi tag ma khong ghi la viet lai lich su lang le.
-Commit 259c094 VAN con trong lich su va van truy cap duoc bang hash.
+```
+
+Phat hien khi doi tag -- PHAI ghi lai:
+
+```text
+259c094 KHONG phai to tien cua HEAD. Lich su phan nhanh:
+
+  * ea2aa04  "add gpc server"                  <- main
+  | * 259c094  phase 23.5a: studentized max-score
+  | * 09b9046  amendment 20: lock DoF
+  |/
+  * 23535d4  docs(phase-23): close cross-cell lesson
+
+Nhanh 09b9046/259c094 KHONG duoc merge. Noi dung cua no (amendment 20,
+cert/studentized_score.py, ba artifact) di vao main qua ea2aa04
+"add gpc server" -- mot commit co thong diep khong lien quan.
+
+He qua: tag  phase-23-lesson-5a-complete  la ref DUY NHAT giu 259c094 song.
+Doi tag bang -f se lam commit do chi con truy cap qua reflog va se bi
+garbage-collect. Da tao tag bao ton truoc khi doi:
+
+    phase-23-lesson-5a-retracted-artifact -> 259c094
+
+Viec can lam rieng (KHONG thuoc pham vi amendment nay): xem lai vi sao cong
+viec 23.5[A] vao main qua mot commit ten "add gpc server" thay vi merge nhanh
+lesson. Provenance cua artifact bi mo o cho do.
 ```
 
