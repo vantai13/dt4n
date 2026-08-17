@@ -44,13 +44,17 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 23-21 huy bo PC-S-1 small-n bi tran chan (level=1.0); ghi MISS cho S-5 dai v2
       (loi muc do tong hop); them PC-S-1d sigma nhieu chieu; khoa du doan
       H-23.11-*, E-1/E-2/E-3 (23.9), R-23.6-1
+23-22 khoa thu tuc AURC cho GO-1: truc y err_given_accept (khong phai
+      err_system), luoi chung 4001 diem tren [0.6,1.0], chuan hoa /0.40,
+      cam ngoai suy, suy bien = err_neo < 0.02, paired block bootstrap
+      B=2000, quyet dinh theo CI95_high; khoa du doan A-1'..A-6'; NT-v2-6
 ```
 
 ## Trang thai Lesson 23.5
 
 ```text
-23.5[A] studentized max-score / GO-3   DONG (2026-08-17), nhan EXPLORATORY
-23.5[B] AURC rieng phan [0.6, 1.0] / GO-1   CHUA CHAY
+23.5[A] studentized max-score / GO-3        DONG (2026-08-17), nhan EXPLORATORY
+23.5[B] AURC rieng phan [0.6, 1.0] / GO-1   CHUA CHAY -- da khoa Amendment 23-22
 23.5[C] paired bootstrap B=2000 / GO-2      CHUA CHAY
 ```
 

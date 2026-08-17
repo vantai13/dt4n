@@ -205,6 +205,19 @@ Nhan nguon:
 | S-5 | GO-3 | `sigma3/sigma1` (v2, `level=per_bin`; xem Amendment 23-21 muc 3) | [MO TA] | 1.05-1.50 | 1.1421 / 1.3325 / **1.6557** | **MISS** (h2@0.700 bin 0) |
 | S-8 | GO-3 | Lift acceptance cua studentization -- "hieu ung nho 1-2 pp" (ghi chep truoc khi chay; xem Amendment 23-21 muc 4) | [KINH NGHIEM] | +1 den +2 pp | +11.5% / +42.5% / +48.1% tuong doi | **MISS** (ngoai suy 1 cell -> 3 cell) |
 
+| A-1' | GO-1 | ratio AURC[0.6,1] C3/C0, poisson@0.925 (xem Amendment 23-22) | [MO TA] | 1.000-1.006 | ___ | ___ |
+| A-2' | GO-1 | ratio AURC[0.6,1] C3/C0, poisson@0.850 (xem Amendment 23-22) | [MO TA] | 1.002-1.011 | ___ | ___ |
+| A-3' | GO-1 | ratio AURC[0.6,1] C3/C0, h2@0.700 (xem Amendment 23-22) | [MO TA] | 1.007-1.018 | ___ | ___ |
+| A-4' | GO-1 | So cell suy bien trong 5 (`err_neo < 0.02`) | [CO CHE] | dung 2 | ___ | ___ |
+| A-5' | GO-1 | **CI95_high lon nhat cua ratio tren 3 cell danh gia duoc** | [NGOAI SUY] | 1.01-1.06 | ___ | ___ |
+| A-6' | GO-1 | Duoc dua "frontier invariance" vao abstract? | [CO CHE] | `A-5' < 1.02` | ___ | ___ |
+
+`A-1'..A-4'` mang nhan `[MO TA]` va KHONG tinh prediction-hit: uoc luong diem
+da duoc tinh trong qua trinh kiem toan bay cua Amendment 23-22 muc 1.3/1.6
+(`1.002492 / 1.006249 / 1.012345 / 2`). Chung o day de lam kiem tra tai lap.
+Dai luong confirmatory DUY NHAT cua Lesson 23.5[B] la `A-5'`, va `A-6'` suy ra
+tu no. Xu ly giong `S-5`: da nhin so thi khong duoc tinh diem.
+
 Hai dong `S-5` va `S-8` la MISS. Chung duoc dat o BANG CHINH nay chu khong chi
 trong Amendment 23-21, vi nguoi doc mo pre-registration truoc, khong mo
 amendment thu 21. Chi tiet nguyen nhan o `docs/phase-23/00v-amendment-21.md`
