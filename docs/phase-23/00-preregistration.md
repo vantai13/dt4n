@@ -211,12 +211,18 @@ Nhan nguon:
 | A-4' | GO-1 | So cell suy bien trong 5 (`err_neo < 0.02`) | [CO CHE] | dung 2 | ___ | ___ |
 | A-5' | GO-1 | **CI95_high lon nhat cua ratio tren 3 cell danh gia duoc** | [NGOAI SUY] | 1.01-1.06 | ___ | ___ |
 | A-6' | GO-1 | Duoc dua "frontier invariance" vao abstract? | [CO CHE] | `A-5' < 1.02` | ___ | ___ |
+| A-7' | GO-1 | `\|discretisation_bias\|` lon nhat (xem Amendment 23-23) | [MO TA] | 0.001-0.010 | ___ | ___ |
+| A-8' | GO-1 | Dau cua `discretisation_bias` (xem Amendment 23-23) | [MO TA] | AM | ___ | ___ |
 
-`A-1'..A-4'` mang nhan `[MO TA]` va KHONG tinh prediction-hit: uoc luong diem
-da duoc tinh trong qua trinh kiem toan bay cua Amendment 23-22 muc 1.3/1.6
-(`1.002492 / 1.006249 / 1.012345 / 2`). Chung o day de lam kiem tra tai lap.
+`A-1'..A-4'`, `A-7'`, `A-8'` mang nhan `[MO TA]` va KHONG tinh prediction-hit.
+`A-1'..A-4'`: uoc luong diem da tinh trong kiem toan bay cua Amendment 23-22
+muc 1.3/1.6 (`1.002492 / 1.006249 / 1.012345 / 2`). `A-7'/A-8'`: da tinh trong
+buoc kiem tra day du cua luoi mit, Amendment 23-23 muc 3 (`-0.002012`, dau AM)
+-- ban dau chung duoc dat la `[CO CHE]` va bi HA nhan sau khi do qua tay.
+
 Dai luong confirmatory DUY NHAT cua Lesson 23.5[B] la `A-5'`, va `A-6'` suy ra
-tu no. Xu ly giong `S-5`: da nhin so thi khong duoc tinh diem.
+tu no. Xu ly giong `S-5`: da nhin so thi khong duoc tinh diem, ke ca khi so do
+trung dai.
 
 Hai dong `S-5` va `S-8` la MISS. Chung duoc dat o BANG CHINH nay chu khong chi
 trong Amendment 23-21, vi nguoi doc mo pre-registration truoc, khong mo

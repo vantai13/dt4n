@@ -48,13 +48,16 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
       err_system), luoi chung 4001 diem tren [0.6,1.0], chuan hoa /0.40,
       cam ngoai suy, suy bien = err_neo < 0.02, paired block bootstrap
       B=2000, quyet dinh theo CI95_high; khoa du doan A-1'..A-6'; NT-v2-6
+23-23 Phat hien 8: cua so [0.6,1.0] chi tua tren 3 nut kappa; khoa luoi mit
+      KAPPA_REFINED (21 diem) va B-D12/13/14; ha A-7'/A-8' xuong [MO TA] vi
+      do qua tay trong buoc kiem tra thiet ke
 ```
 
 ## Trang thai Lesson 23.5
 
 ```text
 23.5[A] studentized max-score / GO-3        DONG (2026-08-17), nhan EXPLORATORY
-23.5[B] AURC rieng phan [0.6, 1.0] / GO-1   CHUA CHAY -- da khoa Amendment 23-22
+23.5[B] AURC rieng phan [0.6, 1.0] / GO-1   CHUA CHAY -- khoa Amendment 23-22, 23-23
 23.5[C] paired bootstrap B=2000 / GO-2      CHUA CHAY
 ```
 
