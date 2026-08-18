@@ -217,6 +217,41 @@ max CI95_high = 1.003173 < 1.02 = GO1_THRESHOLD
 Con so `0.32%` la thu dang dua vao abstract: mot **can tren co so** manh hon
 mot khang dinh khong CI.
 
+### 4.0. Multiplicity tren 3 cell -- GO1-M1 va GO1-M2 (Amendment 23-24 muc 3)
+
+`0.32%` lay tren cell XAU NHAT trong ba cell, moi cell mot CI 95% RIENG. Xac
+suat de ca ba cung dung KHONG phai 95%; duoi doc lap no la `0.95^3 = 0.857`.
+Day dung la van de multiplicity ma ca Phase 22 noi ve, xuat hien lai o tang
+meta -- y het `qhat` chung o tang slot.
+
+```text
+GO1-M1  Abstract phat bieu TUNG CELL ("can tren 95% tren MOI che do danh gia
+        duoc, cao nhat la 1.0032"). Chinh xac, khong ton them tinh toan.
+GO1-M2  Bao cao THEM can DONG THOI bang Bonferroni 3 cell (moi cell o muc
+        1 - 0.05/3 = 98.33%).
+```
+
+Da tinh, cung thu tuc, chi doi muc phan vi:
+
+```text
+cell            per-cell 95pct           Bonferroni 98.33pct
+poisson@0.925   [0.998950, 1.001992]     [0.998636, 1.002322]
+poisson@0.850   [0.999067, 1.002946]     [0.998738, 1.003401]
+h2@0.700        [0.995529, 1.003173]     [0.994641, 1.004125]
+
+max per-cell 95pct       CI_high = 1.003173   GO-1 PASS
+max Bonferroni 98.33pct  CI_high = 1.004125   GO-1 PASS (dong thoi >= 95pct)
+du dia toi nguong 1.02 duoi Bonferroni: 4.8x
+```
+
+**GO-1 dat theo ca hai cach doc**, nen ket luan muc 4 khong doi. Neu can mot
+cau DONG THOI cho abstract:
+
+```text
+"Chi phi duong bien cua certification duoi 0.41% dong thoi tren ca ba che do
+ danh gia duoc, o muc tin cay 95% (Bonferroni tren 3 cell)."
+```
+
 ### 4.1. Cau KHONG duoc viet
 
 ```text

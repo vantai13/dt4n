@@ -51,6 +51,9 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 23-23 Phat hien 8: cua so [0.6,1.0] chi tua tren 3 nut kappa; khoa luoi mit
       KAPPA_REFINED (21 diem) va B-D12/13/14; ha A-7'/A-8' xuong [MO TA] vi
       do qua tay trong buoc kiem tra thiet ke
+23-24 NT-v2-7 (muc ra soat du doan bat buoc trong moi amendment); siet GO-1
+      bang can Bonferroni 3 cell; khoa C-D1..C-D6 cho GO-2 (draw toan cuc,
+      max-t dong thoi, B=2000, NC-C-1 ba variant); du doan C-1..C-5
 ```
 
 ## Trang thai Lesson 23.5
@@ -58,7 +61,7 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 ```text
 23.5[A] studentized max-score / GO-3        DONG (2026-08-17), nhan EXPLORATORY
 23.5[B] AURC rieng phan [0.6, 1.0] / GO-1   DONG (2026-08-17), GO-1 DAT 3/3 cell
-23.5[C] paired bootstrap B=2000 / GO-2      CHUA CHAY
+23.5[C] paired bootstrap B=2000 / GO-2      CHUA CHAY -- khoa Amendment 23-24
 ```
 
 Lesson 23.2 duoc phep chay theo Amendment 23-10. Lesson 23.3 chi duoc chay

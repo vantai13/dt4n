@@ -213,6 +213,12 @@ Nhan nguon:
 | A-6' | GO-1 | Duoc dua "frontier invariance" vao abstract? | [CO CHE] | `A-5' < 1.02` | CO, 3/3 cell | dat |
 | A-7' | GO-1 | `\|discretisation_bias\|` lon nhat (xem Amendment 23-23) | [MO TA] | 0.001-0.010 | **0.012982** | **MISS** (cao hon dai) |
 | A-8' | GO-1 | Dau cua `discretisation_bias` (xem Amendment 23-23) | [MO TA] | AM | AM, 3/3 cell | trong dai |
+| A-6'b | GO-1 | Ket luan giu duoi can DONG THOI Bonferroni 3 cell? (Amd 23-24) | [MO TA] | CO | CO (1.004125) | dat |
+| C-1 | GO-2 | `c_maxt` = phan vi 0.95 cua `T = max_k \|d_k-dbar_k\|/sigma_k` | [CO CHE] | 2.2-2.7 | ___ | ___ |
+| C-2 | GO-2 | `c_bonferroni = z_{1-0.05/48}` | [TAT DINH] | 3.078088 | ___ | ___ |
+| C-3 | GO-2 | `c_maxt / c_bonferroni` | [CO CHE] | 0.71-0.88 | ___ | ___ |
+| C-4 | GO-2 | `n_contains_zero` voi dai DONG THOI | [CO CHE] | >= 5 va >= dai tung-o | ___ | ___ |
+| C-5 | GO-2 | "Thu tu phu thuoc slot" con dung sau hieu chinh dong thoi? | [CO CHE] | CO | ___ | ___ |
 
 `A-1'..A-4'`, `A-7'`, `A-8'` mang nhan `[MO TA]` va KHONG tinh prediction-hit.
 `A-1'..A-4'`: uoc luong diem da tinh trong kiem toan bay cua Amendment 23-22
@@ -221,7 +227,14 @@ buoc kiem tra day du cua luoi mit, Amendment 23-23 muc 3 (`-0.002012`, dau AM)
 -- ban dau chung duoc dat la `[CO CHE]` va bi HA nhan sau khi do qua tay.
 
 Dai luong confirmatory DUY NHAT cua Lesson 23.5[B] la `A-5'`, va `A-6'` suy ra
-tu no. Xu ly giong `S-5`: da nhin so thi khong duoc tinh diem, ke ca khi so do
+tu no.
+
+Ghi chu NT-v2-7 (Amendment 23-24 muc 1) cho `A-5'`: dong nay duoc viet o
+Amendment 23-22 khi luoi quyet dinh con la PRIMARY. Amendment 23-23 (B-D13) doi
+luoi quyet dinh sang REFINED nhung KHONG ra lai bang du doan. Tren luoi primary
+`A-5'` cho `1.020352`, NAM TRONG dai; tren luoi refined no cho `1.003173`, ngoai
+dai. Dong duoc cham la dong da khoa, va no MISS. Ghi nhan nay la mot SU KIEN ve
+quy trinh, KHONG phai loi bien ho. Xu ly giong `S-5`: da nhin so thi khong duoc tinh diem, ke ca khi so do
 trung dai.
 
 Hai dong `S-5` va `S-8` la MISS. Chung duoc dat o BANG CHINH nay chu khong chi
