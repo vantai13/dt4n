@@ -214,11 +214,11 @@ Nhan nguon:
 | A-7' | GO-1 | `\|discretisation_bias\|` lon nhat (xem Amendment 23-23) | [MO TA] | 0.001-0.010 | **0.012982** | **MISS** (cao hon dai) |
 | A-8' | GO-1 | Dau cua `discretisation_bias` (xem Amendment 23-23) | [MO TA] | AM | AM, 3/3 cell | trong dai |
 | A-6'b | GO-1 | Ket luan giu duoi can DONG THOI Bonferroni 3 cell? (Amd 23-24) | [MO TA] | CO | CO (1.004125) | dat |
-| C-1 | GO-2 | `c_maxt` = phan vi 0.95 cua `T = max_k \|d_k-dbar_k\|/sigma_k` | [CO CHE] | 2.2-2.7 | ___ | ___ |
-| C-2 | GO-2 | `c_bonferroni = z_{1-0.05/48}` | [TAT DINH] | 3.078088 | ___ | ___ |
-| C-3 | GO-2 | `c_maxt / c_bonferroni` | [CO CHE] | 0.71-0.88 | ___ | ___ |
-| C-4 | GO-2 | `n_contains_zero` voi dai DONG THOI | [CO CHE] | >= 5 va >= dai tung-o | ___ | ___ |
-| C-5 | GO-2 | "Thu tu phu thuoc slot" con dung sau hieu chinh dong thoi? | [CO CHE] | CO | ___ | ___ |
+| C-1 | GO-2 | `c_maxt` = phan vi 0.95 cua `T = max_k \|d_k-dbar_k\|/sigma_k` | [CO CHE] | 2.2-2.7 | **2.857-2.962** | **MISS** (cao hon dai) |
+| C-2 | GO-2 | `c_bonferroni = z_{1-0.05/48}` | [TAT DINH] | 3.078088 | 3.078088 | dat |
+| C-3 | GO-2 | `c_maxt / c_bonferroni` | [CO CHE] | 0.71-0.88 | **0.928-0.962** | **MISS** (cao hon dai) |
+| C-4 | GO-2 | `n_contains_zero` voi dai DONG THOI | [CO CHE] | >= 5 va >= dai tung-o | 12 / 6 / 8 | dat |
+| C-5 | GO-2 | "Thu tu phu thuoc slot" con dung sau hieu chinh dong thoi? | [CO CHE] | CO | CO, 3/3 cell | dat |
 
 `A-1'..A-4'`, `A-7'`, `A-8'` mang nhan `[MO TA]` va KHONG tinh prediction-hit.
 `A-1'..A-4'`: uoc luong diem da tinh trong kiem toan bay cua Amendment 23-22
@@ -313,3 +313,11 @@ Commit   : commit duoc tag `phase-23-start`
 
 Toi xac nhan muc 0 da cong khai cac so da nhin va khong co ket qua Phase 23
 23.1+ nao duoc dung de chon lai prediction sau khi ky.
+
+Ghi chu cho `C-1`/`C-3` (Lesson 23.5[C] muc 2.1): dai duoc dat tren gia dinh 24
+dai luong tuong quan MANH. Do duoc: chi cap `(bonferroni, sidak)` trong cung o
+la du thua (`corr = 0.989`); giua cac SLOT tuong quan AM (`-0.204`), va tuong
+quan am lam thong ke max LON HON. Hai hieu ung gan nhu triet tieu, nen `c_supt`
+chi thap hon Sidak `5.4%` thay vi `22%`. Cau chuyen "max-t re hon Bonferroni o
+tang meta giong nhu max-score re hon Bonferroni o tang score" dung ve CAU TRUC
+nhung SAI ve DO LON, va da duoc rut lai.

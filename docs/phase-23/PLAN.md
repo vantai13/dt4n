@@ -61,7 +61,7 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 ```text
 23.5[A] studentized max-score / GO-3        DONG (2026-08-17), nhan EXPLORATORY
 23.5[B] AURC rieng phan [0.6, 1.0] / GO-1   DONG (2026-08-17), GO-1 DAT 3/3 cell
-23.5[C] paired bootstrap B=2000 / GO-2      CHUA CHAY -- khoa Amendment 23-24
+23.5[C] dai dong thoi sup-t / GO-2          DONG (2026-08-18), GO-2 DAT 3/3 cell
 ```
 
 Lesson 23.2 duoc phep chay theo Amendment 23-10. Lesson 23.3 chi duoc chay
