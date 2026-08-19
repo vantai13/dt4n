@@ -230,10 +230,10 @@ Nhan nguon:
 | K-9 | 23.6 | So vi pham don dieu tren luoi 0.01, `gamma <= 0.98`, cell chinh (Amd 23-26 muc 5) | [MO TA] | 3 | 3 | DA NHIN SO -- KHONG tinh diem |
 | K-10 | 23.6 | Bootstrap block ghep cap cua so gia `Delta(gamma)` cho CI95 CHUA 0 tai MOI vi pham (Amd 23-26 muc 5) | [CO CHE] | CO, 7/7 vi pham | 7/7 CI chua 0, NHUNG max(\|drop\|/MDE) = 0.69 | **UNDETECTED** (Amd 23-27 muc 3) -- KHONG phai HIT |
 | K-11 | 23.6 | Moi vi pham nam o `gamma >= 0.85` (Amd 23-26 muc 5) | [MO TA] | CO | CO (min = 0.87) | DA NHIN SO -- KHONG tinh diem |
-| K-12 | 23.6 | PC23v2-2 kich hoat hai phia: `s=2.5` loai tru 0, `s=1.5` khong (Amd 23-27 muc 5.2) | [TAT DINH] | CO, 7/7 ca hai phia | ___ | KHONG tinh diem |
+| K-12 | 23.6 | PC23v2-2 kich hoat hai phia: `s=2.5` loai tru 0, `s=1.5` khong (Amd 23-27 muc 5.2) | [TAT DINH] | CO, 7/7 ca hai phia | CO, 7/7 ca hai phia | dat -- KHONG tinh diem |
 | K-13 | 23.6 | `max(\|drop\| / MDE)` tren hai cell co vi pham (Amd 23-27 muc 5.3) | [MO TA] | < 1.0 | 0.69 | DA NHIN SO -- KHONG tinh diem |
 | K-14 | 23.6 | Ket luan cua `K-10` duoc ghi `UNDETECTED`, khong phai PASS (Amd 23-27 muc 5.3) | [GATE thu tuc] | UNDETECTED | UNDETECTED | dat |
-| K-15 | 23.6 | `c_supt(luoi 0.01) / c_supt(luoi 0.02)`, cung seed, cung B (Amd 23-27 muc 6.2) | [CO CHE] | 0.98-1.04 | ___ | ___ |
+| K-15 | 23.6 | `c_supt(luoi 0.01) / c_supt(luoi 0.02)`, cung seed, cung B (Amd 23-27 muc 6.2) | [CO CHE] | 0.98-1.04 | 1.0273 / 1.0194 / 1.0303 | **HIT 3/3** (xem F-23.6-5) |
 
 `A-1'..A-4'`, `A-7'`, `A-8'` mang nhan `[MO TA]` va KHONG tinh prediction-hit.
 `A-1'..A-4'`: uoc luong diem da tinh trong kiem toan bay cua Amendment 23-22

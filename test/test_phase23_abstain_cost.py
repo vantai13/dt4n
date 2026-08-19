@@ -263,6 +263,105 @@ def test_A16_increment_ci_is_paired_not_merely_narrow():
     assert r["sd_boot"] == pytest.approx(0.01 * np.sqrt(2), rel=0.25)
 
 
+def test_A16b_increment_ci_reports_mde_and_ratio():
+    """K-13: MDE phai duoc bao cao CANH moi ket luan "chua 0" (NT-v2-14)."""
+    rng = np.random.default_rng(3)
+    draws = rng.normal(size=(800, 2)) * 0.01
+    r = AC.increment_ci(draws, [{"i_lo": 0, "i_hi": 1, "gamma_lo": 0.0,
+                                 "gamma_hi": 0.02, "drop": -0.004}])[0]
+    assert r["mde"] == pytest.approx(0.5 * (r["ci_hi"] - r["ci_lo"]))
+    assert r["observed_over_mde"] == pytest.approx(0.004 / r["mde"])
+    assert r["mde"] > 0
+
+
+def test_A22_pc_k10_fires_on_strong_signal_and_stays_silent_on_weak():
+    """PC23v2-2: doi chung DUONG phai kich hoat CA HAI phia.
+
+    Mot doi chung chi kiem "tin hieu lon thi thay" van co the la mot phep do
+    luon-luon-thay. Phia "tin hieu nho thi khong thay" moi loai duoc kha nang do.
+    """
+    rng = np.random.default_rng(9)
+    d = rng.normal(scale=0.01, size=4000)
+    r = AC.pc_k10_planted_drop(d)
+    arms = {a["s_units"]: a for a in r["arms"]}
+    assert arms[2.5]["excludes_zero"] is True
+    assert arms[1.5]["excludes_zero"] is False
+    assert r["pass"] is True
+    assert arms[2.5]["planted_drop"] == pytest.approx(-2.5 * r["sd_boot"])
+
+
+def test_A23_pc_k10_plants_in_sigma_units_not_absolute_constants():
+    """Bom theo don vi sigma: nhan doi thang do du lieu phai nhan doi sut giam
+    bom vao, va ket luan hai phia KHONG doi. Mot hang so tuyet doi se pha vo
+    tinh chat nay -- va khi do doi chung tu tao ra that bai cua chinh no."""
+    rng = np.random.default_rng(9)
+    d = rng.normal(scale=0.01, size=4000)
+    r1, r2 = AC.pc_k10_planted_drop(d), AC.pc_k10_planted_drop(1000.0 * d)
+    assert r2["sd_boot"] == pytest.approx(1000.0 * r1["sd_boot"], rel=1e-9)
+    for a1, a2 in zip(r1["arms"], r2["arms"]):
+        assert a2["planted_drop"] == pytest.approx(1000.0 * a1["planted_drop"],
+                                                   rel=1e-9)
+        assert a1["excludes_zero"] == a2["excludes_zero"]
+    assert r1["pass"] and r2["pass"]
+
+
+def test_A24_pc_k10_fails_when_measurement_is_blind():
+    """Doi chung phai DO duoc: mot phan phoi qua tan mat khong thay ca 2.5 sd.
+
+    Dung phan phoi duoi nang (heavy-tailed) de q_975/sd > 2.5, tuc phep do
+    khong phan giai duoc mot sut giam 2.5 sigma.
+    """
+    rng = np.random.default_rng(4)
+    d = rng.standard_t(df=2, size=20000)          # duoi nang, q_975/sd nho hon
+    r = AC.pc_k10_planted_drop(d, s_units=(0.5, 0.2))
+    assert r["pass"] is False
+
+
+def test_A24b_pc_k10_fails_when_the_weak_arm_ALSO_fires():
+    """Phia YEU phai duoc kiem, khong chi phia manh.
+
+    Kiem thu dot bien: bo dieu kien phia yeu khoi `pass` KHONG lam do test nao
+    -- `test_A24` di qua vi danh sach `strong` cua no rong. Test nay dong lo
+    hong do.
+
+    Phan phoi hai diem `+/-1` co q_975/sd = 1.0, nen ngay ca mot sut giam 1.5
+    sigma cung "loai tru 0". Do la mot phep do LUON-LUON-THAY: no khong phan
+    biet duoc tin hieu that voi bat cu thu gi, nen doi chung phai BAO DO.
+    """
+    rng = np.random.default_rng(6)
+    d = rng.choice([-1.0, 1.0], size=20000)
+    r = AC.pc_k10_planted_drop(d)
+    arms = {a["s_units"]: a for a in r["arms"]}
+    assert arms[2.5]["excludes_zero"] is True     # phia manh: thay
+    assert arms[1.5]["excludes_zero"] is True     # phia yeu: CUNG thay -> mu
+    assert r["pass"] is False, "phep do luon-luon-thay phai lam PC23v2-2 DO"
+
+
+def test_A27_locked_grid_is_a_subset_of_the_fine_grid():
+    """F-23.6-5 diem (1): can duoi cua K-15 la TAT DINH, khong phai mot kiem dinh.
+
+    50 diem luoi khoa la tap con dung cua 100 diem luoi min. Vi `sd_k` dung
+    chung ma tran draw, T_fine^(b) = max tren tap lon hon >= T_locked^(b) voi
+    moi draw, nen ti so >= 1.0 luon dung. K-15 la phep kiem MOT PHIA.
+    """
+    gl = set(np.round(AC.gamma_grid(AC.GRID_STEP_LOCKED), 10).tolist())
+    gf = set(np.round(AC.gamma_grid(AC.GRID_STEP_FINE), 10).tolist())
+    assert gl < gf and len(gl) == 50 and len(gf) == 100
+
+
+def test_A25_effective_n_tests_inverts_bonferroni_exactly():
+    """F-23.6-3: kiem NGUOC bat buoc. Neu cong thuc sai thi K_eff vo nghia."""
+    for k in (8, 24, 50, 100):
+        c = AC.critical_values(k, AC.FWER)["c_bonferroni"]
+        assert AC.effective_n_tests(c, AC.FWER) == pytest.approx(k, rel=1e-6)
+
+
+def test_A26_effective_n_tests_is_monotone_in_c():
+    """c_supt lon hon <=> nhieu chieu hieu dung hon. Dau phai dung."""
+    ks = [AC.effective_n_tests(c) for c in (2.5, 2.7, 2.9, 3.1)]
+    assert ks == sorted(ks)
+
+
 def test_A17_band_crosscheck_records_out_of_grid_endpoint():
     cross = [{"gamma_cross": 0.61, "gamma_lo": 0.60, "gamma_hi": 0.61,
               "direction": "F2_becomes_profitable"}]
@@ -412,6 +511,33 @@ def test_R6_curve_reproduces_lesson_23_3_sweep_bit_for_bit(real):
             assert v1["err_reject"] == pt["c_f2_err"][i]
             assert v1["regret_reject"] == pytest.approx(
                 pt["c_f2_regret"][i], abs=1e-14)
+
+
+@needs_data
+def test_R7_K15_ratio_is_at_least_one_and_inside_the_locked_band(real):
+    """K-15 (dai [0.98, 1.04], khoa o Amd 23-27 muc 6.2) + F-23.6-5 diem (1)."""
+    band = json.load(open(BAND_JSON))["beneficial_band_err"]["C3_conformal"]
+    r = AC.run_cell(real, "poisson@0.925", band, n_boot=500)
+    g = r["grid_refinement_K15"]
+    assert g["n_points_locked"] == 50 and g["n_points_fine"] == 100
+    assert g["ratio_fine_over_locked"] >= 1.0        # tat dinh, xem test_A27
+    assert 0.98 <= g["ratio_fine_over_locked"] <= 1.04
+    assert g["k_eff_fine"] > g["k_eff_locked"]       # co them chieu...
+    assert g["k_eff_fine"] < 2.0 * g["k_eff_locked"]  # ...nhung khong gap doi
+
+
+@needs_data
+def test_R8_pc23v2_2_fires_two_sided_on_every_violation(real):
+    """PC23v2-2: khong co no thi "7/7 CI chua 0" khong doc duoc (NT-v2-14)."""
+    band = json.load(open(BAND_JSON))["beneficial_band_err"]["C3_conformal"]
+    r = AC.run_cell(real, "poisson@0.925", band, n_boot=2000)
+    inc = r["increment_ci_K10"]
+    assert len(inc) == 4
+    for c in inc:
+        assert c["pc23v2_2"]["pass"], c
+        assert c["contains_zero"]
+        assert c["observed_over_mde"] < 1.0, (
+            "|drop| >= MDE -> khong con la UNDETECTED, phai dieu tra lai")
 
 
 @needs_data

@@ -405,7 +405,90 @@ KHONG sua: GATES.md, cert/config_matrix.py, cert/conformal_simultaneous.py,
 
 ---
 
-## 9. Chu ky
+## 9. Ket qua do duoc SAU khi ky (muc nay them vao sau commit `ef645fb`)
+
+Cac so duoi day duoc do SAU khi muc 1-8 duoc ky va commit. Chung khong sua mot
+dai nao. Ghi o day de mot nguoi doc thay ca dai va ket qua trong cung tai lieu.
+
+### 9.1. K-12, K-13 -- PC23v2-2 va MDE tren du lieu that
+
+```text
+cell           gamma       drop        MDE       |drop|/MDE  s=2.5    s=1.5
+──────────────────────────────────────────────────────────────────────────────
+poisson@0.925  0.88->0.89  -0.000032  0.006323    0.005      loai 0   khong
+poisson@0.925  0.93->0.94  -0.004843  0.011581    0.418      loai 0   khong
+poisson@0.925  0.97->0.98  -0.008983  0.032507    0.276      loai 0   khong
+poisson@0.925  0.98->0.99  -0.041453  0.060360    0.687      loai 0   khong
+poisson@0.850  0.87->0.88  -0.001640  0.005193    0.316      loai 0   khong
+poisson@0.850  0.97->0.98  -0.004081  0.031961    0.128      loai 0   khong
+poisson@0.850  0.98->0.99  -0.004557  0.062888    0.072      loai 0   khong
+
+K-12: 7/7 dat CA HAI phia.  K-13: max(|drop|/MDE) = 0.687 < 1.0.
+```
+
+Ket luan cua `K-10` do do la: **UNDETECTED**. Phep do KHONG mu (PC23v2-2 kich
+hoat o 2.5 sigma va im o 1.5 sigma), nhung MDE lon hon `|drop|` o ca bay vi
+pham. Cac vi pham KHONG PHAN BIET DUOC voi nhieu lay mau o do phan giai hien co.
+
+### 9.2. K-15 -- HIT 3/3
+
+```text
+cell            c_supt(50)  c_supt(100)  ti so    K_eff(50)  K_eff(100)
+────────────────────────────────────────────────────────────────────────
+poisson@0.925     2.7389      2.8137     1.0273     8.11       10.21
+poisson@0.850     2.7010      2.7535     1.0194     7.23        8.48
+h2@0.700          2.6714      2.7523     1.0303     6.62        8.45
+
+dai khoa [0.98, 1.04] -> HIT 3/3.  Kich ban [ii] (1.081) BI LOAI TRU.
+```
+
+### 9.3. F-23.6-5 -- `K_eff` tang DUOI TUYEN TINH, va can duoi cua K-15 la vo dung
+
+Trang thai: **[MO TA]**, khong tinh diem.
+
+Hai dieu phai noi ro, neu khong `K-15` bi doc chac hon thuc te:
+
+```text
+(1) CAN DUOI 0.98 KHONG BAO GIO CO THE VI PHAM -- no la TAT DINH.
+    50 diem cua luoi khoa la TAP CON dung cua 100 diem luoi min (da kiem bang
+    may). Vi `sd_k` cua moi cot duoc tinh tu CUNG mot ma tran draw W, thong ke
+    T^(b) cua luoi min lay max tren mot TAP LON HON, nen
+        T_fine^(b) >= T_locked^(b)  voi MOI draw b
+        => quantile_0.95(T_fine) >= quantile_0.95(T_locked)
+        => ti so >= 1.0 TAT DINH.
+    Muc 6.3 da canh bao dieu nay truoc khi ky. Toan bo noi dung kiem dinh cua
+    K-15 nam o CAN TREN 1.04, va no da loai tru kich ban [ii] o 1.081.
+    K-15 la mot phep kiem MOT PHIA. Phai viet dung nhu vay.
+
+(2) "K_eff bat bien theo do min luoi" la QUA MANH.
+    Ti so do duoc 1.019-1.030, tuc ~2 sd MC TREN kich ban [i] (1.000), va
+    ~4.3 sd DUOI kich ban [ii] (1.081).
+        gap doi so DIEM (2.00x)  ->  K_eff tang 1.26 / 1.17 / 1.28 lan
+    Nghia la: gap doi so diem co THEM chieu, nhung chi ~1/4 chu khong phai
+    gap doi. K_eff / so_diem giam tu ~0.14 xuong ~0.09.
+    Co che duoc UNG HO ve huong nhung KHONG dung o dang manh nhat cua no.
+```
+
+Hai cau phai tranh trong paper:
+
+```text
+KHONG: "Lam min luoi khong lam rong dai."          (sai: no rong them 2-3%)
+KHONG: "K_eff la mot bat bien cua he."             (sai: no tang duoi tuyen tinh)
+DUOC:  "Lam min luoi gap doi lam c_supt tang 2-3%, ung voi K_eff tang ~1.25 lan
+        chu khong phai gap doi. Chi phi cua tinh dong thoi tang DUOI TUYEN TINH
+        theo mat do luoi, dung nhu can khi cac diem ke nhau chia se gan het
+        tap reject."
+```
+
+Cau hoi con MO, khong tra loi trong lesson nay: `K_eff` co hoi tu khi buoc luoi
+tien ve 0 khong? Sup cua mot qua trinh tron tren mot khoang compact la huu han,
+nen ve ly thuyet PHAI hoi tu; nhung o do phan giai hien tai (1.26 lan moi lan
+gap doi) chua thay dau hieu bao hoa. Day la mot muc CON NO, khong duoc phat
+bieu nhu da giai quyet.
+
+---
+
+## 10. Chu ky
 
 ```text
 Nguoi ky : vantai (Claude-assisted)

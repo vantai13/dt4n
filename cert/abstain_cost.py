@@ -67,6 +67,7 @@ pham vi luot sau, xem Amendment 23-25 muc 8.
 
 from __future__ import annotations
 
+import math
 import subprocess
 from typing import Any, Dict, Mapping, Sequence
 
@@ -118,6 +119,25 @@ def _git(*cmd: str) -> str:
         return subprocess.check_output(["git", *cmd], text=True).strip()
     except Exception:
         return "unknown"
+
+
+def effective_n_tests(c: float, fwer: float = FWER) -> float:
+    """F-23.6-3: so kiem dinh HIEU DUNG, bang cach dao nguoc Bonferroni.
+
+        c = z(1 - fwer / (2 K_eff))   =>   K_eff = fwer / (2 (1 - Phi(c)))
+
+    "50 diem tren duong nay hanh xu nhu bao nhieu diem doc lap." Kiem nguoc:
+    `effective_n_tests(critical_values(50)["c_bonferroni"])` phai tra ve 50.
+
+    CANH BAO -- phai chep vao moi cho trich dan so nay:
+    K_eff duoc suy bang cach dao nguoc mot cong thuc CHUAN TAC (Gaussian),
+    trong khi phan phoi bootstrap KHONG chuan tac. Vi vay K_eff la MOT CACH
+    PHAT BIEU LAI c_supt cho de hieu, KHONG phai mot dai luong co y nghia xac
+    suat rieng. Quen dieu nay la tai sinh dung loi cua C-1 (Amendment 23-25
+    muc 3): dan mot hang so toi han tu mot tom tat vo huong.
+    """
+    tail = 0.5 * math.erfc(float(c) / math.sqrt(2.0))
+    return float(fwer / (2.0 * tail)) if tail > 0.0 else float("inf")
 
 
 def require(d: Mapping[str, Any], key: str) -> Any:
@@ -555,6 +575,7 @@ def increment_ci(draws: np.ndarray, viol: Sequence[Mapping[str, Any]],
         d = d[np.isfinite(d)]
         lo, hi = ((float(np.quantile(d, lo_q)), float(np.quantile(d, hi_q)))
                   if d.size else (float("nan"), float("nan")))
+        mde = 0.5 * (hi - lo)          # K-13: sut giam nho nhat phan biet duoc
         out.append({
             "gamma_lo": float(v["gamma_lo"]), "gamma_hi": float(v["gamma_hi"]),
             "drop": float(v["drop"]),
@@ -562,8 +583,69 @@ def increment_ci(draws: np.ndarray, viol: Sequence[Mapping[str, Any]],
             "contains_zero": bool(lo <= 0.0 <= hi),
             "n_draws_finite": int(d.size),
             "sd_boot": float(d.std(ddof=1)) if d.size > 1 else float("nan"),
+            # K-13 (Amendment 23-27 muc 5.3). BAT BUOC bao cao canh moi ket
+            # luan "chua 0": neu |drop| < MDE thi "chua 0" chi noi rang phep do
+            # KHONG DU SUC, khong noi rang hieu ung bang 0 (NT-v2-14).
+            "mde": float(mde),
+            "observed_over_mde": (float(abs(v["drop"]) / mde)
+                                  if mde > 0 else float("nan")),
+            "pc23v2_2": pc_k10_planted_drop(d, level=level),
         })
     return out
+
+
+def pc_k10_planted_drop(d: np.ndarray,
+                        s_units: Sequence[float] = (2.5, 1.5),
+                        level: float = 0.95) -> Dict[str, Any]:
+    """PC23v2-2 -- doi chung DUONG cho K-10 (Amendment 23-27 muc 5).
+
+    Vi sao can: "7/7 CI chua 0" KHONG co nghia neu phep do khong du suc phat
+    hien mot sut giam that. Day la bai hoc G23-27 -- mot doi chung duong khong
+    kich hoat thi khong chung minh duoc gi, va ket luan dung khi do la
+    UNDETECTED chu khong phai PASS.
+
+    Thiet ke sao chep PC-C-1 (10-go2-simultaneous.md muc 1.2): bom tin hieu
+    theo don vi sigma_hat CUA CHINH phan phoi bootstrap, KHONG theo mot hang so
+    tuyet doi. Mot hang so se day o nay ra xa 0 va o kia van gan 0, va khi do
+    doi chung tu tao ra that bai cua chinh no.
+
+    Kiem CA HAI phia. Mot doi chung chi kiem "tin hieu lon thi thay" van co the
+    la mot phep do luon-luon-thay; phia "tin hieu nho thi khong thay" moi loai
+    duoc kha nang do.
+
+    Nhan [TAT DINH], KHONG tinh diem (K-12): voi phan phoi da dat lai tam,
+    CI loai tru 0 khi va chi khi `q_{1-a/2} / sd < s`, ma ti so do tinh duoc
+    dong tu cac so da bao cao. Gia tri cua doi chung khong nam o cho "du doan
+    dung" ma o cho CHUNG MINH PHEP DO KHONG MU -- dung vai tro PC-S-1d.
+    """
+    d = np.asarray(d, np.float64)
+    d = d[np.isfinite(d)]
+    lo_q, hi_q = (1.0 - level) / 2.0, 1.0 - (1.0 - level) / 2.0
+    if d.size < 2:
+        return {"n_draws": int(d.size), "sd_boot": float("nan"), "arms": [],
+                "pass": False}
+    sd = float(d.std(ddof=1))
+    centred = d - d.mean()
+    arms = []
+    for s in s_units:
+        shifted = centred - float(s) * sd            # bom mot sut giam AM
+        lo, hi = float(np.quantile(shifted, lo_q)), float(np.quantile(shifted, hi_q))
+        arms.append({
+            "s_units": float(s), "planted_drop": float(-float(s) * sd),
+            "ci_lo": lo, "ci_hi": hi, "excludes_zero": bool(hi < 0.0),
+        })
+    strong = [a for a in arms if a["s_units"] >= 2.0]
+    weak = [a for a in arms if a["s_units"] < 2.0]
+    return {
+        "n_draws": int(d.size),
+        "sd_boot": sd,
+        "q_hi_over_sd": float(np.quantile(centred, hi_q) / sd) if sd > 0 else float("nan"),
+        "arms": arms,
+        # dat khi CA HAI phia hanh xu dung: manh -> thay, yeu -> khong thay
+        "pass": bool(strong and weak
+                     and all(a["excludes_zero"] for a in strong)
+                     and all(not a["excludes_zero"] for a in weak)),
+    }
 
 
 # ---------------------------------------------------------------------------
@@ -722,7 +804,30 @@ def run_cell(df: pd.DataFrame, cell: str,
             "c_bonferroni": float(cv["c_bonferroni"]),
             "c_sidak": float(cv["c_sidak"]),
             "c_supt_over_bonferroni": float(sb["c_supt"] / cv["c_bonferroni"]),
+            "k_eff": effective_n_tests(float(sb["c_supt"]), FWER),
         }
+
+    # K-15 (Amendment 23-27 muc 6.2): c_supt tren luoi MIN GAP DOI, CUNG seed,
+    # CUNG B. Neu K_eff on dinh theo do min luoi thi ti so ~ 1.00; neu gap doi
+    # so DIEM cung gap doi so CHIEU thi ti so ~ 1.08. Hai kich ban cach nhau
+    # ~6 sd cua nhieu MC, nen phep so sanh phan biet duoc.
+    d_f = bt_f["c_star_err"]
+    cols_f = np.flatnonzero(np.isfinite(d_f).all(axis=0)
+                            & np.isfinite(pt_f["c_star_err"]))
+    sb_f = supt_band(d_f[:, cols_f], np.asarray(pt_f["c_star_err"])[cols_f],
+                     level=LEVEL)
+    c_locked = float(bands["c_star_err"]["c_supt"])
+    grid_refinement_K15 = {
+        "c_supt_locked": c_locked,
+        "c_supt_fine": float(sb_f["c_supt"]),
+        "n_points_locked": int(bands["c_star_err"]["n_points_in_band"]),
+        "n_points_fine": int(len(cols_f)),
+        "ratio_fine_over_locked": float(sb_f["c_supt"] / c_locked),
+        "band_locked_K15": [0.98, 1.04],
+        "k_eff_locked": bands["c_star_err"]["k_eff"],
+        "k_eff_fine": effective_n_tests(float(sb_f["c_supt"]), FWER),
+        "in_band": bool(0.98 <= sb_f["c_supt"] / c_locked <= 1.04),
+    }
 
     mono_l = monotonicity(grid_l, pt_l["c_star_err"])
     mono_f = monotonicity(grid_f, pt_f["c_star_err"])
@@ -747,6 +852,7 @@ def run_cell(df: pd.DataFrame, cell: str,
                                for s in eval_scales},
         "self_controls": self_controls(pt_l),
         "supt_bands": bands,
+        "grid_refinement_K15": grid_refinement_K15,
         "monotonicity_locked_K6": mono_l,
         "monotonicity_fine_K9": mono_f,
         "increment_ci_K10": increment_ci(bt_f["c_star_err"],
