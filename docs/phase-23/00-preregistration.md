@@ -219,14 +219,17 @@ Nhan nguon:
 | C-3 | GO-2 | `c_maxt / c_bonferroni` | [CO CHE] | 0.71-0.88 | **0.928-0.962** | **MISS** (cao hon dai) |
 | C-4 | GO-2 | `n_contains_zero` voi dai DONG THOI | [CO CHE] | >= 5 va >= dai tung-o | 12 / 6 / 8 | dat |
 | C-5 | GO-2 | "Thu tu phu thuoc slot" con dung sau hieu chinh dong thoi? | [CO CHE] | CO | CO, 3/3 cell | dat |
-| K-1 | 23.6 | `c*_err(0.78)` tren cell chinh | [NGOAI SUY] | 0.42-0.47 | ___ | ___ |
-| K-2 | 23.6 | `c*_err(0)` = `R_neo` | [TAT DINH] | 0.222399 | ___ | ___ |
-| K-3 | 23.6 | `c*_err(0.50)` tren cell chinh | [NGOAI SUY] | 0.30-0.40 | ___ | ___ |
-| K-4 | 23.6 | `F2 STATIC` co vuot `c*` o `gamma = 0.78`? | [CO CHE] | xem so do | ___ | ___ |
-| K-5 | 23.6 | So cell (trong 3) co `c*(0.78) > err_neo` | [CO CHE] | 3 | ___ | ___ |
-| K-6 | 23.6 | `c*(gamma)` don dieu khong giam | [GATE bo chon] | CO | ___ | ___ |
+| K-1 | 23.6 | `c*_err(0.78)` tren cell chinh (HA NHAN, Amd 23-26 muc 1.3) | **[TAT DINH]** | 0.42-0.47 | 0.453347 | trong dai -- KHONG tinh diem |
+| K-2 | 23.6 | `c*_err(0)` = `R_neo` (xem K-D8, Amd 23-26 muc 1.5) | [TAT DINH] | 0.222399 | 0.222399 | dat -- KHONG tinh diem |
+| K-3 | 23.6 | `c*_err(0.50)` tren cell chinh (HA NHAN, Amd 23-26 muc 1.3) | **[TAT DINH]** | 0.30-0.40 | 0.361249 | trong dai -- KHONG tinh diem |
+| K-4 | 23.6 | `F2 STATIC` co vuot `c*` o `gamma = 0.78`? (HA NHAN, Amd 23-26 muc 1.3) | **[TAT DINH]** | xem so do | KHONG vuot o cell chinh (0.394852 < 0.453347); VUOT o `poisson@0.850` | KHONG tinh diem |
+| K-5 | 23.6 | So cell (trong 3) co `c*(0.78) > err_neo` (HA NHAN, Amd 23-26 muc 1.3) | **[TAT DINH]** | 3 | 3 | dat -- KHONG tinh diem |
+| K-6 | 23.6 | `c*(gamma)` don dieu khong giam tren luoi DA KHOA `K-D4` | [GATE bo chon] | CO | CO -- 0 vi pham, 3/3 cell | **PASS** (xem F-23.6-2) |
 | K-7 | 23.6 | `c_supt` tren 50 diem `gamma` (mo phong truoc, Amd 23-25 muc 7.1) | [CO CHE] | 2.2-3.0 | ___ | ___ |
 | K-8 | 23.6 | `c_supt / c_bonferroni(50)` | [CO CHE] | 0.67-0.92 | ___ | ___ |
+| K-9 | 23.6 | So vi pham don dieu tren luoi 0.01, `gamma <= 0.98`, cell chinh (Amd 23-26 muc 5) | [MO TA] | 3 | 3 | DA NHIN SO -- KHONG tinh diem |
+| K-10 | 23.6 | Bootstrap block ghep cap cua so gia `Delta(gamma)` cho CI95 CHUA 0 tai MOI vi pham (Amd 23-26 muc 5) | [CO CHE] | CO, 7/7 vi pham | ___ | ___ |
+| K-11 | 23.6 | Moi vi pham nam o `gamma >= 0.85` (Amd 23-26 muc 5) | [MO TA] | CO | CO (min = 0.87) | DA NHIN SO -- KHONG tinh diem |
 
 `A-1'..A-4'`, `A-7'`, `A-8'` mang nhan `[MO TA]` va KHONG tinh prediction-hit.
 `A-1'..A-4'`: uoc luong diem da tinh trong kiem toan bay cua Amendment 23-22
@@ -329,6 +332,23 @@ quan am lam thong ke max LON HON. Hai hieu ung gan nhu triet tieu, nen `c_supt`
 chi thap hon Sidak `5.4%` thay vi `22%`. Cau chuyen "max-t re hon Bonferroni o
 tang meta giong nhu max-score re hon Bonferroni o tang score" dung ve CAU TRUC
 nhung SAI ve DO LON, va da duoc rut lai.
+
+Ghi chu NT-v2-9 (Amendment 23-26 muc 1) cho `K-1`, `K-3`, `K-4`, `K-5`: bon dong
+nay duoc ky voi nhan `[NGOAI SUY]`/`[CO CHE]`, nhung ca bon deu tinh duoc bang
+DAI SO DONG tu `results/phase-23/baseline_rankings_<cell>_C3_static.json`, mot
+file DA NAM TRONG REPO tu Lesson 23.3. Chung bi HA NHAN xuong `[TAT DINH]` va
+KHONG tinh prediction-hit. Dai KHONG doi va ket qua KHONG doi -- day la sua NHAN
+NGUON, giong tien le cua `A-7'`/`A-8'` va cua `C-1` (Amendment 23-25 muc 3).
+
+Hai dong du doan THAT cua Lesson 23.6 la `K-7` va `K-8` (bootstrap, co mo phong
+chay truoc khi ky), cong them `K-10` (bootstrap so gia, chua ai tinh).
+
+`K-6` duoc cham DUNG NHU DA KY: tren luoi da khoa `K-D4` (buoc 0.02) no cho 0
+vi pham tren 3/3 cell, PASS. Tren luoi min gap doi (buoc 0.01) no co 3 / 2 / 0
+vi pham trong pham vi `gamma <= 0.98`. Phat hien do duoc ghi RIENG thanh
+`F-23.6-2`, nhan `[MO TA]`, KHONG tinh diem va KHONG thay the `K-6`. Noi dai
+`K-6` sau khi thay no truot tren mot luoi khac se la p-hacking; xem Amendment
+23-26 muc 4.4.
 
 Lesson 23.6 dung tien to `K` ("cost of abstain"), KHONG dung `C` -- tien to `C`
 da thuoc GO-2 (Lesson 23.5[C]). Xem Amendment 23-25 muc 1. Danh sach day du cac
