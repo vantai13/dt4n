@@ -54,6 +54,15 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 23-24 NT-v2-7 (muc ra soat du doan bat buoc trong moi amendment); siet GO-1
       bang can Bonferroni 3 cell; khoa C-D1..C-D6 cho GO-2 (draw toan cuc,
       max-t dong thoi, B=2000, NC-C-1 ba variant); du doan C-1..C-5
+23-25 doi dinh danh Lesson 23.6 C-* -> K-* (va cham voi GO-2); ghi F-23.5-2
+      (sigma3/sigma1 sap hang ca [A] lan [C]); NT-v2-8 (c_supt phai duoc MO
+      PHONG, khong suy tu tom tat vo huong); khoa K-D0..K-D7 va K-1..K-8
+```
+
+## Trang thai Lesson 23.6
+
+```text
+23.6 duong bien risk-coverage va chi phi abstain c*   CHUA CHAY -- khoa Amd 23-25
 ```
 
 ## Trang thai Lesson 23.5
