@@ -1,0 +1,199 @@
+{
+ "M16_computed_here": false,
+ "M16_reason": "Dai cua M-16 dan duoc tu co che (< 0.90, duoi muc danh nghia), nen no ky duoc ma khong can hieu chuan. Tinh bay gio chi ha no xuong [MO TA] tren cell chinh.",
+ "M_15_band": {
+  "band_held_out": [
+   0.1,
+   0.4
+  ],
+  "is_lower_bound": true,
+  "lower_bound_reason": "clip loss tai 0 chiem 40.1% so lan danh gia",
+  "main_cell_role": "[MO TA] -- da nhin so, khong tinh diem",
+  "observed_main_cell": 0.22614444,
+  "rationale": "Dai rong [0.10, 0.40] quanh 0.2261 vi hai cell kia co ranking va khe chi phi khac han; h2 co safety > 10 nen co the lat it hon NHIEU. Dai van bac bo duoc 'khong dang ke' (< 0.10).",
+  "scored_on": [
+   "poisson@0.850",
+   "h2@0.700"
+  ]
+ },
+ "M_D11_decomposition": {
+  "M_6_band_from_S2": [
+   0.08,
+   0.18
+  ],
+  "M_6b_band_from_S2": [
+   0.8,
+   0.85
+  ],
+  "S0_acceptance": 0.49112641434334664,
+  "alpha_each_nominal": 0.03333333333333333,
+  "definition": "M-D11: Delta acceptance tai kappa=0.50, phan ra ba nhanh",
+  "levels": [
+   {
+    "M_6_delta_total": 0.0345042772823006,
+    "M_6b_budget_share": 0.9930438815141156,
+    "additive": true,
+    "alpha_each_effective": 0.05,
+    "branch_i_constraint_only": {
+     "acceptance_test": 0.4914684369168365,
+     "alpha_each": 0.03333333333333333,
+     "delta_vs_S0": 0.0003420225734898641,
+     "n_slots": 2,
+     "pruned": [
+      "P2"
+     ]
+    },
+    "branch_ii_budget_only": {
+     "acceptance_test": 0.5253906757846017,
+     "alpha_each": 0.05,
+     "delta_vs_S0": 0.034264261441255106,
+     "n_slots": 3,
+     "pruned": []
+    },
+    "branch_iii_both": {
+     "acceptance_test": 0.5256306916256472,
+     "alpha_each": 0.05,
+     "delta_vs_S0": 0.0345042772823006,
+     "n_slots": 2,
+     "pruned": [
+      "P2"
+     ]
+    },
+    "constraint_share": 0.009912468842386358,
+    "interaction_abs": 0.00010200673244437075,
+    "interaction_rel_to_total": 0.0029563503565019278,
+    "level": "S1",
+    "m_effective": 2,
+    "pruned": [
+     "P2"
+    ]
+   },
+   {
+    "M_6_delta_total": 0.13168269105760982,
+    "M_6b_budget_share": 0.8495526831416989,
+    "additive": true,
+    "alpha_each_effective": 0.1,
+    "branch_i_constraint_only": {
+     "acceptance_test": 0.5079515248006369,
+     "alpha_each": 0.03333333333333333,
+     "delta_vs_S0": 0.016825110457290238,
+     "n_slots": 1,
+     "pruned": [
+      "P2",
+      "P4"
+     ]
+    },
+    "branch_ii_budget_only": {
+     "acceptance_test": 0.6029977978546585,
+     "alpha_each": 0.1,
+     "delta_vs_S0": 0.11187138351131182,
+     "n_slots": 3,
+     "pruned": []
+    },
+    "branch_iii_both": {
+     "acceptance_test": 0.6228091054009565,
+     "alpha_each": 0.1,
+     "delta_vs_S0": 0.13168269105760982,
+     "n_slots": 1,
+     "pruned": [
+      "P2",
+      "P4"
+     ]
+    },
+    "constraint_share": 0.1277700988805691,
+    "interaction_abs": 0.0029861970890077694,
+    "interaction_rel_to_total": 0.022677217977732082,
+    "level": "S2",
+    "m_effective": 1,
+    "pruned": [
+     "P2",
+     "P4"
+    ]
+   }
+  ],
+  "note": "Dai mo +-35% quanh gia tri cell chinh de bao bien thien giua cell. Cell chinh la HIEU CHUAN; M-6/M-6b cham tren hai cell giu kin."
+ },
+ "M_D13_r_crit": {
+  "M_13_threshold_r_cond_crit": 1.3143869596031184,
+  "consistency_check": {
+   "agree": true,
+   "claim": "a/b > 1/P_fix phai TUONG DUONG voi ke toan chinh xac",
+   "profitable_exact": true,
+   "r_cond_exceeds_crit": true,
+   "tautology_warning": "Tren CUNG mot cell, `a/b > 1/P_fix` DONG NHAT voi `fixed > b` vi P_fix := fixed/a. Suc du doan cua M-13 den tu gia thiet P_fix CHUYEN DUOC sang cell khac, khong tu bat dang thuc nay."
+  },
+  "definition": "M-D13: nguong nam tren TI SO CO DIEU KIEN a/b, voi a/b_crit = 1 / P(sua duoc), do tren cell chinh",
+  "paths": [
+   {
+    "P_a_star_eq_p": 0.0068833785858222205,
+    "P_a_twin_eq_p": 0.011500632534789413,
+    "P_sua_duoc": 0.7608109565404939,
+    "conditional_ratio_a_over_b": 4.163897620116749,
+    "gain_fraction": 0.007055388046342549,
+    "loss_fraction": 0.0022271224917370454,
+    "marginal_ratio_r": 1.6707830887694317,
+    "n_broken_b": 2227,
+    "n_fixable_a": 9273,
+    "n_fixed": 7055,
+    "net_err_change": -0.004828265554605503,
+    "neutral": false,
+    "partition_check_a_plus_b": true,
+    "path": "P4",
+    "profitable_exact": true,
+    "r_cond_crit_derived": 1.3143869596031184,
+    "r_cond_exceeds_crit": true,
+    "sketch_r_crit_WRONG": 2.3143869596031186,
+    "sketch_verdict_WRONG": false
+   },
+   {
+    "P_a_star_eq_p": 7.000385021176165e-06,
+    "P_a_twin_eq_p": 0.0,
+    "P_sua_duoc": null,
+    "conditional_ratio_a_over_b": null,
+    "gain_fraction": 0.0,
+    "loss_fraction": 0.0,
+    "marginal_ratio_r": 0.0,
+    "n_broken_b": 0,
+    "n_fixable_a": 0,
+    "n_fixed": 0,
+    "net_err_change": 0.0,
+    "neutral": true,
+    "partition_check_a_plus_b": true,
+    "path": "P2",
+    "profitable_exact": false,
+    "r_cond_crit_derived": null,
+    "r_cond_exceeds_crit": null,
+    "sketch_r_crit_WRONG": null,
+    "sketch_verdict_WRONG": null
+   }
+  ],
+  "sketch_correction": {
+   "exact_says_profitable": true,
+   "sketch_agrees_with_exact": false,
+   "sketch_says_profitable": false,
+   "sketch_threshold": "r_marginal > 1 + 1/P_fix  (SAI)",
+   "why_wrong": "Phac thao lay chi phi = P(a*=p)*n = 6883, nhung chi phi THAT la b = 2227 (hang twin DANG dung). Hang co a*=p ma twin khong chon p thi da sai san. Phac thao thoi chi phi len 3.09 lan va do do dat nguong qua cao."
+  }
+ },
+ "cell": "poisson@0.925",
+ "cell_role": "PHONG HIEU CHUAN -- da nhin so, khong cham diem",
+ "held_out_cells": [
+  "poisson@0.850",
+  "h2@0.700"
+ ],
+ "lesson": "23.7",
+ "provenance": {
+  "git_dirty": false,
+  "git_hash": "75dc6e9114dcc13baa90e757c04a8cb206d2cbd8",
+  "out": "results/phase-23/lesson23_7_calibration_2b.json",
+  "pins_previous_step": {
+   "path": "results/phase-23/lesson23_7_feasibility.json",
+   "sha256": "652a8d8e8dd711d7935aadffaac8148121e09b9ea28b61f4fa690fb8b51d5ea1"
+  },
+  "script": "cert/lesson23_7_calibration_2b.py",
+  "timestamp_utc": "2026-08-20T08:50:24.067142+00:00",
+  "truth_table": "results/phase-20R/truth_table.parquet"
+ },
+ "signs_nothing": true,
+ "step": "[2b] hieu chuan M-D11 / M-D13 / dai M-15"
+}

@@ -1,0 +1,351 @@
+{
+ "A1_input_chain": {
+  "all_match": true,
+  "question": "A1: ba input cua scan 20R co con nguyen ven khong?",
+  "rows": [
+   {
+    "exists": true,
+    "input": "truth_table",
+    "match": true,
+    "path": "results/phase-20R/truth_table.parquet",
+    "sha256_actual": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e",
+    "sha256_recorded": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e"
+   },
+   {
+    "exists": true,
+    "input": "calibration",
+    "match": true,
+    "path": "results/phase-20R/sla_calibration.json",
+    "sha256_actual": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
+    "sha256_recorded": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
+   },
+   {
+    "exists": true,
+    "input": "residual",
+    "match": true,
+    "path": "results/phase-20R/residual_cascade.json",
+    "sha256_actual": "810969d78a3d11eaa17dbe5aa88001c71a3eee1441ae64d0650c4b95ac75d522",
+    "sha256_recorded": "810969d78a3d11eaa17dbe5aa88001c71a3eee1441ae64d0650c4b95ac75d522"
+   }
+  ],
+  "scan_git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+  "scan_git_dirty": true
+ },
+ "A2_k4_reproduction": {
+  "baseline_rankings": {
+   "h2@0.925": [
+    "P1",
+    "P3",
+    "P4",
+    "P2"
+   ],
+   "poisson@0.925": [
+    "P1",
+    "P3",
+    "P4",
+    "P2"
+   ]
+  },
+  "bracket_consistent": true,
+  "endpoints": [
+   {
+    "endpoint": 0.008804852308259848,
+    "label": "r_star_lo (K4 con giu)",
+    "signs": {
+     "+1": {
+      "K4_preserved": true,
+      "ranking_main_cell": [
+       "P1",
+       "P3",
+       "P4",
+       "P2"
+      ]
+     },
+     "-1": {
+      "K4_preserved": true,
+      "ranking_main_cell": [
+       "P1",
+       "P3",
+       "P4",
+       "P2"
+      ]
+     }
+    },
+    "variant_k4_holds": true
+   },
+   {
+    "endpoint": 0.008868196569470351,
+    "label": "r_star (K4 vo)",
+    "signs": {
+     "+1": {
+      "K4_preserved": true,
+      "ranking_main_cell": [
+       "P1",
+       "P3",
+       "P4",
+       "P2"
+      ]
+     },
+     "-1": {
+      "K4_preserved": false,
+      "ranking_main_cell": [
+       "P3",
+       "P1",
+       "P4",
+       "P2"
+      ]
+     }
+    },
+    "variant_k4_holds": false
+   },
+   {
+    "endpoint": 0.0101350817936804,
+    "label": "|CI90| bien xau",
+    "signs": {
+     "+1": {
+      "K4_preserved": true,
+      "ranking_main_cell": [
+       "P1",
+       "P3",
+       "P4",
+       "P2"
+      ]
+     },
+     "-1": {
+      "K4_preserved": false,
+      "ranking_main_cell": [
+       "P3",
+       "P1",
+       "P4",
+       "P2"
+      ]
+     }
+    },
+    "variant_k4_holds": false
+   }
+  ],
+  "flip_sign": -1,
+  "note": "Dau AM la dau cua residual DO DUOC (point = -0.00952). Bom dau duong KHONG lat -- cu lat la mot chieu.",
+  "published_base": [
+   "P1",
+   "P3",
+   "P4",
+   "P2"
+  ],
+  "published_pert": [
+   "P3",
+   "P1",
+   "P4",
+   "P2"
+  ],
+  "question": "A2: band_v2 co sinh lai bang tra bi bom va tai lap cu lat K4?",
+  "reproduces_published_base": true,
+  "reproduces_published_flip": true,
+  "residual_record": {
+   "channel": "loss",
+   "ci90": [
+    -0.0101350817936804,
+    -0.008908490679519442
+   ],
+   "level": "per_path",
+   "mode": "poisson",
+   "point": -0.009521786236599921,
+   "se": 0.0003728571393451816
+  }
+ },
+ "A3_astar_reproduction": {
+  "a_star_agreement": 1.0,
+  "a_star_exact_match": true,
+  "a_twin_agreement": 1.0,
+  "a_twin_exact_match": true,
+  "block_id_exact_match": true,
+  "n_parquet": 999945,
+  "n_rebuilt": 999945,
+  "question": "A3: a_star trong parquet (cot THUA KE tu Phase 21R) co tai lap duoc?",
+  "same_length": true,
+  "verdict": "TAI LAP DUOC",
+  "z_s_max_abs_dev": 2.8610229518832853e-08
+ },
+ "B_M15_sensitivity": {
+  "at_ci90_worst": {
+   "M_15_flip_fraction": 0.22614443794408692,
+   "a_star_dist_baseline": [
+    0.6561410877598268,
+    7.000385021176165e-06,
+    0.3369685332693298,
+    0.0068833785858222205
+   ],
+   "a_star_dist_perturbed": [
+    0.44166329148103145,
+    2.200121006655366e-05,
+    0.503753706453855,
+    0.054561000855047025
+   ],
+   "clip": {
+    "clip_events": 4815558,
+    "clip_ratio": 0.4012965,
+    "eval_count": 12000000,
+    "is_lower_bound": true
+   },
+   "delta_err_neo": 0.07006385351194319,
+   "endpoint": 0.0101350817936804,
+   "err_neo_baseline": 0.2208351459330263,
+   "err_neo_perturbed": 0.2908989994449695,
+   "flip_pairs": {
+    "P1->P2": 17,
+    "P1->P3": 178440,
+    "P1->P4": 36009,
+    "P2->P4": 2,
+    "P3->P4": 11664
+   },
+   "n_flip": 226132,
+   "n_rows": 999945,
+   "sign": -1.0,
+   "y_hat_unchanged_invariant": true
+  },
+  "at_r_star": {
+   "M_15_flip_fraction": 0.1941416777922786,
+   "a_star_dist_baseline": [
+    0.6561410877598268,
+    7.000385021176165e-06,
+    0.3369685332693298,
+    0.0068833785858222205
+   ],
+   "a_star_dist_perturbed": [
+    0.47120791643540394,
+    2.0001100060503327e-05,
+    0.48583872112966214,
+    0.04293336133487342
+   ],
+   "clip": {
+    "clip_events": 4322372,
+    "clip_ratio": 0.3601976666666667,
+    "eval_count": 12000000,
+    "is_lower_bound": true
+   },
+   "delta_err_neo": 0.052354879518373504,
+   "endpoint": 0.008868196569470351,
+   "err_neo_baseline": 0.2208351459330263,
+   "err_neo_perturbed": 0.2731900254513998,
+   "flip_pairs": {
+    "P1->P2": 15,
+    "P1->P3": 158068,
+    "P1->P4": 26840,
+    "P2->P4": 2,
+    "P3->P4": 9206
+   },
+   "n_flip": 194131,
+   "n_rows": 999945,
+   "sign": -1.0,
+   "y_hat_unchanged_invariant": true
+  }
+ },
+ "C_action_ladder": {
+  "M_13_cutting_P4_profitable": {
+   "added_error_floor": 0.00688337858582222,
+   "delta_acceptance_S2_minus_S1": 0.09717841377530922,
+   "delta_err_accept_S2_minus_S1": -0.0023644125673701333,
+   "profitable": true,
+   "question": "Cat them P4 (S1 -> S2) co CO LAI tai gamma = 0.78?"
+  },
+  "S0_approval_vs_committed_C3": {
+   "abs_gap": 0.0,
+   "committed_accept_rate": 0.49112641434334664,
+   "ladder_S0_accept_rate": 0.49112641434334664,
+   "matches": true,
+   "note": "S0 PHAI trung C3 da commit. Neu lech, thang cat khong so sanh duoc voi ket qua Phase 23 va M-6/M-13 phai rut.",
+   "reference_artifact": "results/phase-23/fallback_poisson_0.925_k0.5.json",
+   "tolerance": 1e-06
+  },
+  "definition": "M-D9 thang cat long nhau; a* van tinh tren CA 4 duong",
+  "gamma": 0.78,
+  "kappa_anchor": 0.5,
+  "levels": [
+   {
+    "K_eff": 4,
+    "M_6_delta_acceptance_vs_S0": 0.0,
+    "acceptance_at_kappa_0.50": 0.49112641434334664,
+    "alpha_each": 0.03333333333333333,
+    "coverage_achieved": 0.7800294819458085,
+    "delta_err_accept_vs_S0": 0.0,
+    "err_accept_at_078": 0.15725315329406728,
+    "err_reject_at_078": 0.4534088635909,
+    "err_system_all_rows": 0.2208351459330263,
+    "error_floor_from_pruning": 0.0,
+    "kappa_for_coverage_078": 0.21052879231717725,
+    "level": "S0",
+    "m_slots": 3,
+    "pruned_paths": []
+   },
+   {
+    "K_eff": 3,
+    "M_6_delta_acceptance_vs_S0": 0.0345042772823006,
+    "acceptance_at_kappa_0.50": 0.5256306916256472,
+    "alpha_each": 0.05,
+    "coverage_achieved": 0.7800214814177736,
+    "delta_err_accept_vs_S0": 0.000173414394433552,
+    "err_accept_at_078": 0.15742656768850083,
+    "err_reject_at_078": 0.4527831827026241,
+    "err_system_all_rows": 0.2208351459330263,
+    "error_floor_from_pruning": 7.000385021176165e-06,
+    "kappa_for_coverage_078": 0.22990722155498133,
+    "level": "S1",
+    "m_slots": 2,
+    "pruned_paths": [
+     "P2"
+    ]
+   },
+   {
+    "K_eff": 2,
+    "M_6_delta_acceptance_vs_S0": 0.13168269105760982,
+    "acceptance_at_kappa_0.50": 0.6228091054009565,
+    "alpha_each": 0.1,
+    "coverage_achieved": 0.7800354823418345,
+    "delta_err_accept_vs_S0": -0.0021909981729365813,
+    "err_accept_at_078": 0.1550621551211307,
+    "err_reject_at_078": 0.4403364401000227,
+    "err_system_all_rows": 0.2160068803784208,
+    "error_floor_from_pruning": 0.006890378970843396,
+    "kappa_for_coverage_078": 0.2962384348037972,
+    "level": "S2",
+    "m_slots": 1,
+    "pruned_paths": [
+     "P2",
+     "P4"
+    ]
+   }
+  ]
+ },
+ "D_M11_band": {
+  "M_14_ratio_accept_over_all": 0.8335000787703156,
+  "band_excludes_1": true,
+  "headline_level": "all test rows (M-D10)",
+  "one_sided_ratio_accept_only": 1.335409867313746,
+  "one_sided_ratio_all_test": 1.6021712550812364,
+  "rationale": "Dai dat quanh gia tri do duoc tren CELL CHINH +-0.15, du rong de bao bien thien giua cac cell nhung van bac bo duoc gia tri < 1 (nguong dien giai tu nhien) va gia tri > 2.",
+  "suggested_band_M11": [
+   1.45,
+   1.76
+  ]
+ },
+ "M12_M15_feasible": true,
+ "cell": "poisson@0.925",
+ "feasibility_verdict": "KY DUOC: ca ba mat xich tai lap duoc.",
+ "lesson": "23.7",
+ "provenance": {
+  "calib_parquet": "results/phase-22/calib_set_v3.parquet",
+  "git_dirty": false,
+  "git_hash": "75dc6e9114dcc13baa90e757c04a8cb206d2cbd8",
+  "out": "results/phase-23/lesson23_7_feasibility.json",
+  "pins_previous_step": {
+   "path": "results/phase-23/lesson23_7_range_calibration.json",
+   "sha256": "ccc36e310951dd0635441014ee388ab11f6db760868fd3c150b4ea0f2ed01be7"
+  },
+  "residual": "results/phase-20R/residual_cascade.json",
+  "script": "cert/lesson23_7_feasibility.py",
+  "timestamp_utc": "2026-08-20T08:50:13.647029+00:00",
+  "truth_table": "results/phase-20R/truth_table.parquet"
+ },
+ "signs_nothing": true,
+ "step": "[2a] kiem kha thi + hieu chuan M-6 / M-11 / M-15"
+}
