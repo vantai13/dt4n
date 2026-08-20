@@ -123,8 +123,15 @@ NT-v2-18  Moi BANG duoc doc bang may phai co mot test khang dinh SO O CUA MOI
           (NT-v2-12 noi ve ID khong ton tai; day noi ve DONG khong duoc doc.)
 ```
 
-Thuc thi: `test/test_phase23_prereg.py::test_every_prereg_row_has_exactly_seven_cells`
-va `::test_unfilled_prediction_set_is_pinned`.
+Thuc thi trong `test/test_phase23_prereg.py`:
+
+```text
+test_every_markdown_table_row_has_a_consistent_cell_count
+test_prediction_table_rows_all_have_seven_cells
+test_unfilled_prediction_set_is_pinned
+test_naive_split_would_miss_B1p_and_the_escaped_parser_does_not
+test_reading_dependent_rows_are_flagged_as_such
+```
 
 ---
 
@@ -149,7 +156,7 @@ Cung ho voi `NT-v2-8` (`c_supt` khong suy duoc tu tom tat vo huong) va
 
 ---
 
-## 4. Mười lăm giá trị -- tinh lai doc lap tu artifact
+## 4. Muoi lam gia tri -- tinh lai doc lap tu artifact
 
 Nguon: `fallback_poisson_0.925_k0.5.json` (23.1),
 `threshold_families_poisson_0.925_C3_static.json` (23.2),

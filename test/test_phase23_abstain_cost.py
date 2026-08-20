@@ -627,6 +627,60 @@ def test_R10_artifact_schema_matches_K_D11(real):
 
 
 @needs_data
+def test_R11_NC23v2_7_sticky_collapses_to_static_at_gamma_zero(real):
+    """Doi chung AM cho khong: tai gamma = 0 khong hang nao duoc chap nhan, nen
+    sticky khong co gi de "dinh" vao va roi ve P1 -- tuc DUNG BANG static.
+
+    `c_F1(0) == c_F2(0)` CHINH XAC. Neu lech, `fallback_sticky` dang ro ri mot
+    hanh dong tu dau do -- co the tu block truoc (vi pham P17) hoac tu mot hang
+    da bi tu choi.
+    """
+    import json
+    from pathlib import Path
+    p = Path("results/phase-23/abstain_cost_poisson_0.925.json")
+    if not p.exists():
+        pytest.skip("chua sinh artifact")
+    row0 = json.loads(p.read_text())["sweep_locked"][0]
+    assert row0["coverage_target"] == 0.0 and row0["n_accept"] == 0
+    assert row0["c_f1_err"] == row0["c_f2_err"]
+    assert row0["c_f1_regret"] == row0["c_f2_regret"]
+
+
+@needs_data
+def test_R12_figure4_crossings_land_on_band_low(real):
+    """Kiem [2] cua muc 4.4: diem cat phai trung tam giac `band_low`.
+
+    Day la C23v2-1 nhin bang mat, duoc chuyen thanh mot khang dinh bang may de
+    khong ai phai nheo mat vao file PNG.
+    """
+    pytest.importorskip("matplotlib")
+    from cert import plot_abstain_cost as PL
+    for cell in PL.CELLS:
+        art_p = PL.RESULTS / ("abstain_cost_%s.json" % PL._tag(cell))
+        if not art_p.exists():
+            pytest.skip("chua sinh artifact")
+        art, v1 = PL.load(cell), PL.load_band_v1(cell)
+        cross = [c["gamma_cross"] for c in art["crossings_locked"]
+                 if c["gamma_cross"] <= PL.GAMMA_MAX]
+        assert cross, "%s: khong tim thay diem cat trong luoi" % cell
+        assert min(abs(x - v1["band_low"]) for x in cross) <= AC.BAND_TOL
+
+
+@needs_data
+def test_R13_figure4_panels_are_not_all_the_same(real):
+    """Kiem [3] cua muc 4.4: neu ba panel trong giong nhau thi vong lap dang
+    ve cung mot cell ba lan len ba truc khac nhau -- mot loi rat pho bien va
+    hoan toan im lang."""
+    pytest.importorskip("matplotlib")
+    from cert import plot_abstain_cost as PL
+    if not (PL.RESULTS / "abstain_cost_h2_0.700.json").exists():
+        pytest.skip("chua sinh artifact")
+    xs = [PL.load(c)["crossings_locked"][0]["gamma_cross"] for c in PL.CELLS]
+    assert len(set(round(x, 3) for x in xs)) == 3, (
+        "ba panel co cung diem cat %s -- co the dang ve cung mot cell" % xs)
+
+
+@needs_data
 def test_R5_G23_32_identity_holds_on_real_data(real):
     test, score, _ = AC.fit_score(real)
     losses = AC.row_losses(test, SCALES1)
