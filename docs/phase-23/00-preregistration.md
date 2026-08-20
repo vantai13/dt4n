@@ -23,7 +23,7 @@ Chung phai duoc cong khai truoc khi ky.
 | `regret` neo, toan hang / test | 1.747214 / 1.767461 ms | Doi chieu thang risk |
 | `d_sla` neo, toan hang / test | 0.060125 / 0.060752 | Doi chieu anchor va SLA |
 | `P(a* = P1)`, toan hang / test | 0.656141 / 0.659724 | Mo ta F2 STATIC |
-| `err|accept` cua B3 tai h=0.30 | 0.1767 | Kiem thiet bi do B3 (tu Lesson 23.0) |
+| `err\|accept` cua B3 tai h=0.30 | 0.1767 | Kiem thiet bi do B3 (tu Lesson 23.0) |
 
 Dong nao trong bang du doan duoc anh huong truc tiep boi disclosure nay duoc
 danh dau `[THI DIEM]` hoac `[MO TA]` va khong tinh vao ti le prediction hit
@@ -185,21 +185,21 @@ Nhan nguon:
 | ID | Lesson | Du doan | Nguon | Dai khoa | Do duoc | KQ |
 |---|---|---|---|---:|---:|---|
 | F0 | 23.1 | `P(a* = P1)` tren o chinh | [MO TA] | 0.64-0.68 | 0.656141 | N/A |
-| F1 | 23.1 | `err_system(F2)` tai kappa=0.5 | [CO CHE] | 0.21-0.27 | ___ | ___ |
-| F2 | 23.1 | `err_system(F1)` tai kappa=0.5 | [CO CHE] | 0.17-0.24 | ___ | ___ |
-| F3 | 23.1 | `err_system(F3)` tai kappa=0.5 | [CO CHE] | 0.10-0.18 | ___ | ___ |
-| F4 | 23.1 | Thu tu risk: F2 > F1 > F3 | [CO CHE] | cau truc | ___ | ___ |
-| F5 | 23.1 | Do tre quyet dinh trung binh F3 | [CO CHE] | 100-250 ms | ___ | ___ |
-| F6 | 23.1 | `err_system(C3 + fallback tot nhat) < 0.2224` | [CO CHE] | cau truc | ___ | ___ |
-| T2 | 23.2 | Ho CONG thoai hoa ve coverage 1.0 khi epsilon lon | [CO CHE] | cau truc | ___ | ___ |
-| T3 | 23.2 | Spearman(err, regret) tren luoi coverage | [CO CHE] | > 0.90 | ___ | ___ |
-| T4 | 23.2 | Spearman(err, sla_rate) tren luoi coverage | [NGOAI SUY] | > 0.80 | ___ | ___ |
-| B1p | 23.3 | err\|accept cua B1 tai coverage 0.5 | [CO CHE] | 0.212-0.232 | ___ | ___ |
-| B3p | 23.3 | err(C3)/err(B3) tai coverage 0.50 | [THI DIEM] | < 0.70 | ___ | ___ |
-| B2p | 23.3 | err(C3)/err(B2) tai coverage 0.50 | [CO CHE] | 0.85-0.98 | ___ | ___ |
-| B4p | 23.3 | err(C3)/err(B4) tai coverage 0.50 | [NGOAI SUY] | 0.6-0.9 | ___ | ___ |
-| B5p | 23.3 | err(C3)/err(B5) tai coverage 0.50 | [KINH NGHIEM] | 0.7-1.0 | ___ | ___ |
-| B6p | 23.3 | err(B6)/err(C3) tai coverage 0.50 | [CO CHE] | < 0.5 | ___ | ___ |
+| F1 | 23.1 | `err_system(F2)` tai kappa=0.5 | [CO CHE] | 0.21-0.27 | 0.238686 | **HIT** |
+| F2 | 23.1 | `err_system(F1)` tai kappa=0.5 | [CO CHE] | 0.17-0.24 | 0.236890 | **HIT** |
+| F3 | 23.1 | `err_system(F3)` tai kappa=0.5 | [CO CHE] | 0.10-0.18 | 0.236890 | **MISS** (cao hon dai; xem Amd 23-29 muc 6.1) |
+| F4 | 23.1 | Thu tu risk: F2 > F1 > F3 | [CO CHE] | cau truc | F2 > F1 = F3 | **MISS** -- BAT KHA THI cau truc, F1 == F3 (Amd 23-29 muc 6) |
+| F5 | 23.1 | Do tre quyet dinh trung binh F3 (dong THIEU nhan rowset) | [CO CHE] | 100-250 ms | 103.95 ms moi hang / 204.27 ms tren reject | **HIT** ca hai cach doc |
+| F6 | 23.1 | `err_system(C3 + fallback tot nhat) < 0.2224` | [CO CHE] | cau truc | 0.236890 > 0.222399 | **MISS** (kappa=0.5 ngoai beneficial band) |
+| T2 | 23.2 | Ho CONG thoai hoa ve coverage 1.0 khi epsilon lon | [CO CHE] | cau truc | max coverage = 1.0 | **HIT** |
+| T3 | 23.2 | Spearman(err, regret) tren luoi coverage (dong THIEU nhan ho) | [CO CHE] | > 0.90 | 0.9991 add / 1.0000 mul / 0.9991 comb | **HIT** 3/3 ho |
+| T4 | 23.2 | Spearman(err, sla_rate) tren luoi coverage (dong THIEU nhan ho) | [NGOAI SUY] | > 0.80 | 0.9930 add / 0.9789 mul / 0.9918 comb | **HIT** 3/3 ho |
+| B1p | 23.3 | err\|accept cua B1 tai coverage 0.5 | [CO CHE] | 0.212-0.232 | 0.222762 | **HIT** |
+| B3p | 23.3 | err(C3)/err(B3) tai coverage 0.50 (dong THIEU nhan MUC) | [THI DIEM] | < 0.70 | 0.467929 acc / 0.914565 sys | **HIT** theo `accept`, **MISS** theo `system` -- READING-DEPENDENT (K-D14) |
+| B2p | 23.3 | err(C3)/err(B2) tai coverage 0.50 (dong THIEU nhan MUC) | [CO CHE] | 0.85-0.98 | 0.916133 acc / 0.972820 sys | **HIT** ca hai cach doc |
+| B4p | 23.3 | err(C3)/err(B4) tai coverage 0.50 -- CUNG dai luong voi B3p (G23-10b) | [NGOAI SUY] | 0.6-0.9 | 0.467929 acc / 0.914565 sys | **MISS** ca hai cach doc; gop voi B3p khi tinh ti le (K-D13) |
+| B5p | 23.3 | err(C3)/err(B5) tai coverage 0.50 (dong THIEU nhan MUC) | [KINH NGHIEM] | 0.7-1.0 | 0.919967 acc / 0.970549 sys | **HIT** ca hai cach doc |
+| B6p | 23.3 | err(B6)/err(C3) tai coverage 0.50 (dong THIEU nhan MUC) | [CO CHE] | < 0.5 | 0.097099 acc / 0.911362 sys | **HIT** theo `accept`, **MISS** theo `system` -- READING-DEPENDENT (K-D14) |
 | G3a | GO-3 | `q_hat_stud/q_hat_max` o slot 1 (v1; xem Amendment 23-20) | [CO CHE] | 0.92-0.98 | 0.9525 | PASS |
 | G3b | GO-3 | `q_hat_stud/q_hat_max` o slot 2 va 3 (v1; xem Amendment 23-20) | [CO CHE] | 0.98-1.02 | s2=0.9966; s3=1.0671 | PARTIAL/MISS v1; PASS v2 |
 | S-5 | GO-3 | `sigma3/sigma1` (v2, `level=per_bin`; xem Amendment 23-21 muc 3) | [MO TA] | 1.05-1.50 | 1.1421 / 1.3325 / **1.6557** | **MISS** (h2@0.700 bin 0) |
