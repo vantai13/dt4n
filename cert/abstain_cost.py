@@ -107,6 +107,7 @@ IDENTITY_TOL = 1e-12             # G23-32
 CROSSCHECK_GAMMA_MAX = 0.90      # D1: duong dao chi dung o vung 1/(1-g) <= 10
 INVERSE_TOL = 1e-9               # duong dao mat chinh xac; nguong long hon
 BAND_TOL = 0.02                  # C23v2-1: mot buoc luoi da khoa
+OPERATING_GAMMA = 0.78           # diem van hanh, khoa tu Lesson 23.3
 
 
 def gamma_grid(step: float = GRID_STEP_LOCKED) -> np.ndarray:
@@ -311,6 +312,57 @@ def block_curve_stats(
     return out
 
 
+def sticky_curve_stats(
+    test: pd.DataFrame,
+    score: np.ndarray,
+    grid: np.ndarray,
+    scales: Sequence[str] = SCALES,
+) -> Dict[str, Any]:
+    """Thong ke du theo block cho F1 STICKY -- va do do cho ca F3 WAIT.
+
+    Vi sao rut gon duoc (F-23.6-7, Amendment 23-28 muc 2)
+    ------------------------------------------------------
+    `fallback_sticky` cai dat trang thai bang `groupby(block_id).ffill()`, ma
+    ffill KHONG BAO GIO dien qua ranh gioi block; `fillna(p_static)` xu ly cac
+    hang dau moi block. Trang thai reset TUYET DOI o dau moi block -- dung nhu
+    P17 yeu cau. Do do ton that cua mot hang chi phu thuoc cac hang CUNG BLOCK,
+    tong ton that theo block la THONG KE DU, va bootstrap theo block chay y het
+    voi c* va c_F2.
+
+    Khac biet duy nhat so voi F2: ton that moi hang cua F2 khong phu thuoc
+    gamma (luon la P1) nen mot vector duy nhat du cho ca luoi; F1 phai tinh lai
+    `a_chosen` o MOI diem luoi. Do la mot he so K tren mot phep tinh RE
+    (14 ms/diem), khong phai mot rao can cau truc: ~1.2 s cho ca luoi.
+
+    KHONG dung tong tien to duoc o day: tap accept long nhau nhung hanh dong
+    sticky KHONG long nhau -- them mot hang vao tap accept co the doi hanh dong
+    cua nhieu hang phia sau trong cung block. Do la ly do ham nay O(n*K) trong
+    khi `block_curve_stats` la O(n).
+    """
+    codes, uniq = pd.factorize(test["block_id"].to_numpy(), sort=True)
+    codes = codes.astype(np.int64)
+    nb, n, K = int(len(uniq)), int(len(codes)), int(len(grid))
+    order = np.argsort(-np.asarray(score, np.float64), kind="mergesort")
+    ks = accept_counts(grid, n)
+
+    out: Dict[str, Any] = {"n_block": nb, "n_row": n,
+                           "grid": np.asarray(grid, np.float64)}
+    for scale in scales:
+        out["rej_f1_" + scale] = np.zeros((K, nb), np.float64)
+
+    for i in range(K):
+        acc = np.zeros(n, dtype=bool)
+        acc[order[:int(ks[i])]] = True
+        a_sticky = FB.fallback_sticky(test, acc)
+        rej = ~acc
+        cr = codes[rej]
+        for scale in scales:
+            w = FB.loss_of(test, a_sticky, scale).astype(np.float64)
+            out["rej_f1_" + scale][i] = np.bincount(cr, weights=w[rej],
+                                                    minlength=nb)
+    return out
+
+
 def _ratio(num: np.ndarray, den: np.ndarray) -> np.ndarray:
     """num/den voi broadcasting, tra nan o cho den == 0.
 
@@ -329,6 +381,24 @@ def _ratio(num: np.ndarray, den: np.ndarray) -> np.ndarray:
     out = np.full(den.shape, np.nan, dtype=np.float64)
     np.divide(num, den, out=out, where=den > 0.0)
     return out
+
+
+def curve_f1(stats: Mapping[str, Any], sticky: Mapping[str, Any],
+             w: np.ndarray | None = None,
+             scales: Sequence[str] = SCALES) -> Dict[str, np.ndarray]:
+    """c_F1(gamma) -- va c_F3(gamma), vi chung trung nhau (F-23.6-6).
+
+    Dung CHUNG mau so `n_rej` voi `curve()` de hai duong ghep cap hoan hao khi
+    so sanh: `c_F1 - c*` tren mot draw dung cung tap block duoc rut.
+    """
+    if w is None:
+        red = lambda m: np.asarray(m, np.float64).sum(axis=-1)
+    else:
+        wv = np.asarray(w, np.float64)
+        red = lambda m: np.asarray(m, np.float64) @ wv
+    n_rej = red(stats["n_rej"])
+    return {"c_f1_" + s: _ratio(red(sticky["rej_f1_" + s]), n_rej)
+            for s in scales}
 
 
 def curve(stats: Mapping[str, Any], w: np.ndarray | None = None,
@@ -726,6 +796,95 @@ def band_crosscheck(cross: Sequence[Mapping[str, Any]],
 
 
 # ---------------------------------------------------------------------------
+# 8b. G23-35 va G23-36 -- san pham dung duoc cua lesson
+# ---------------------------------------------------------------------------
+
+def fallback_locations(pt: Mapping[str, np.ndarray],
+                       pt_f1: Mapping[str, np.ndarray],
+                       i_op: int,
+                       wait: Mapping[str, Any],
+                       scales: Sequence[str] = SCALES) -> Dict[str, Any]:
+    """G23-35 -- dinh vi cac fallback tren truc c tai diem van hanh.
+
+    HAI diem, khong phai ba (F-23.6-6, Amendment 23-28 muc 1). `c_f3_*` duoc
+    ghi thanh khoa RIENG du no bang `c_f1_*`: gop lai se giau mat mot su that
+    ve thiet ke, con tach ma khong ghi ly do se lam nguoi doc tuong do la trung
+    hop so hoc. `f1_f3_reason` mang ly do di theo du lieu.
+
+    F3 duoc phan biet voi F1 KHONG phai tren truc c ma bang thong ke do tre
+    `wait_s` -- do la cot thu hai cua bang nay.
+    """
+    rows = []
+    for scale in scales:
+        c_star = float(np.ravel(pt["c_star_" + scale])[i_op])
+        for name, val in (("F1_STICKY", float(np.ravel(pt_f1["c_f1_" + scale])[i_op])),
+                          ("F2_STATIC", float(np.ravel(pt["c_f2_" + scale])[i_op])),
+                          ("F3_WAIT", float(np.ravel(pt_f1["c_f1_" + scale])[i_op]))):
+            rows.append({
+                "fallback": name, "scale": scale, "c": val, "c_star": c_star,
+                "beneficial": bool(val < c_star),
+                "margin": float(c_star - val),
+            })
+    return {
+        "coverage_measured": float(np.ravel(pt["coverage"])[i_op]),
+        "rows": rows,
+        "f1_f3_identical": True,
+        "f1_f3_reason": (
+            "fallback_wait(secondary='sticky') tra ve chinh fallback_sticky(); "
+            "duong da cai dat ma F3 cho tren CHINH la duong F1 giu. Khac biet "
+            "cua F3 nam o do tre quyet dinh wait_s, khong o rui ro tren tap "
+            "reject. Xem Amendment 23-28 muc 1 (F-23.6-6)."
+        ),
+        "f3_wait_diagnostics": {
+            k: (float(v) if isinstance(v, (int, float, np.floating)) else v)
+            for k, v in wait.items() if k not in ("a_chosen", "wait_s")
+        },
+        "f3_wait_s_mean_ms": float(np.mean(wait["wait_s"]) * 1e3),
+        "f3_wait_s_mean_ms_on_reject": float(
+            np.mean(np.asarray(wait["wait_s"])[np.asarray(wait["wait_s"]) > 0]) * 1e3
+        ) if np.any(np.asarray(wait["wait_s"]) > 0) else float("nan"),
+    }
+
+
+def certification_table(pt: Mapping[str, np.ndarray], i_op: int,
+                        scales: Sequence[str] = SCALES) -> Dict[str, Any]:
+    """G23-36 -- bang "khi nao bat certification", san pham cuoi cua 23.6.
+
+    Ba dieu phai di KEM bang nay, neu khong no bi doc sai:
+
+      (1) c* la NGUONG, khong phai khuyen nghi. No khong noi "hay bat"; no noi
+          "bat khi va chi khi controller du phong CUA BAN tot hon con so nay".
+          Nguoi van hanh mang so cua HO den, khong mang F2 cua chung ta.
+      (2) F2 thua o mot so cell KHONG phai that bai cua certificate. Do la
+          phat bieu ve P1, khong ve C3: P(a* = P1) = 0.656 do thiet ke
+          topology, nen P1 la mot baseline manh bat thuong.
+      (3) Hai thang cho ket luan cung DAU nhung khac BIEN DO. Chung khong phai
+          bien doi don dieu cua nhau, va nguoi van hanh quan tam do tre --
+          do la ly do K-D2 bat bao cao song song.
+
+    Ba cau nay duoc nhung vao artifact (`reading_notes`) chu khong chi nam
+    trong doc, de chung di theo du lieu khi ai do trich bang ra cho khac.
+    """
+    return {
+        "coverage_target": 0.78,
+        "coverage_measured": float(np.ravel(pt["coverage"])[i_op]),
+        "thresholds": {
+            "c_star_" + s: float(np.ravel(pt["c_star_" + s])[i_op])
+            for s in scales
+        },
+        "reading_notes": [
+            "c* la NGUONG hoa von, khong phai khuyen nghi: bat certification "
+            "khi va chi khi controller du phong cua ban co rui ro tren tap "
+            "reject THAP HON c*.",
+            "Mot fallback thua o mot cell la phat bieu ve FALLBACK do, khong "
+            "ve certificate. c* khong phu thuoc fallback nao duoc chon.",
+            "Hai thang (err, regret) cho cung DAU nhung khac BIEN DO; chung "
+            "khong phai bien doi don dieu cua nhau (K-D2).",
+        ],
+    }
+
+
+# ---------------------------------------------------------------------------
 # 9. Ket xuat -- mot ban ghi moi diem luoi
 # ---------------------------------------------------------------------------
 
@@ -780,20 +939,29 @@ def run_cell(df: pd.DataFrame, cell: str,
     pt_l = curve(st_l, None, eval_scales)
     pt_f = curve(st_f, None, eval_scales)
 
+    # F1 STICKY (= F3 WAIT, xem F-23.6-6) tren CA luoi da khoa -- K-D10.
+    sticky_l = sticky_curve_stats(test, score, grid_l, eval_scales)
+    pt_f1 = curve_f1(st_l, sticky_l, None, eval_scales)
+
     W = bootstrap_weights(st_l["n_block"], n_boot, seed)     # D5, dung chung
     bt_l = bootstrap_curves(st_l, W, eval_scales)
     bt_f = bootstrap_curves(st_f, W, eval_scales)
+    bt_f1 = {k: np.asarray(v).T
+             for k, v in curve_f1(st_l, sticky_l, W, eval_scales).items()}
 
     # K-D5: dai DONG THOI tren luoi da khoa. Dai tung-diem bao cao KEM, khong
     # thay the: 50 khoang tung-diem 95% cho ky vong 2.5 diem sai ngau nhien.
     bands: Dict[str, Any] = {}
-    for scale in eval_scales:
-        key = "c_star_" + scale
-        d = bt_l[key]
-        cols = np.flatnonzero(np.isfinite(d).all(axis=0)
-                              & np.isfinite(pt_l[key]))
+    band_sources = {**{("c_star_" + s): (bt_l["c_star_" + s], pt_l["c_star_" + s])
+                       for s in eval_scales},
+                    **{("c_f2_" + s): (bt_l["c_f2_" + s], pt_l["c_f2_" + s])
+                       for s in eval_scales},
+                    **{("c_f1_" + s): (bt_f1["c_f1_" + s], pt_f1["c_f1_" + s])
+                       for s in eval_scales}}
+    for key, (d, point) in band_sources.items():
+        cols = np.flatnonzero(np.isfinite(d).all(axis=0) & np.isfinite(point))
         sub = d[:, cols]
-        sb = supt_band(sub, np.asarray(pt_l[key])[cols], level=LEVEL)
+        sb = supt_band(sub, np.asarray(point)[cols], level=LEVEL)
         cv = critical_values(int(len(cols)), FWER)
         bands[key] = {
             **sb,
@@ -832,7 +1000,61 @@ def run_cell(df: pd.DataFrame, cell: str,
     mono_l = monotonicity(grid_l, pt_l["c_star_err"])
     mono_f = monotonicity(grid_f, pt_f["c_star_err"])
 
+    # Diem van hanh. `wait` duoc danh gia DUNG MOT LAN o day, khong tren ca
+    # luoi: `a_chosen` cua no da biet la trung `fallback_sticky`, nen 0.131 s
+    # x K x 3 cell chi de lay lai mot ket qua da co la lang phi. Cai duy nhat
+    # rieng cua F3 -- thong ke do tre `wait_s` -- chi can o diem van hanh.
+    i_op = int(np.flatnonzero(np.isclose(grid_l, OPERATING_GAMMA))[0])
+    acc_op = np.zeros(len(test), dtype=bool)
+    acc_op[np.argsort(-score, kind="mergesort")[
+        : int(accept_counts(np.array([OPERATING_GAMMA]), len(test))[0])]] = True
+    wait_op = FB.apply_fallback(test, acc_op, "wait")
+
+    locations = fallback_locations(pt_l, pt_f1, i_op, wait_op, eval_scales)
+    cert_table = certification_table(pt_l, i_op, eval_scales)
+
+    gates = {
+        "G23-32": {
+            "statement": "R_system(gamma, c*) == R_neo tren moi diem luoi, <= 1e-12",
+            "status": "PASS" if all(partition_identity(pt_l, s)["pass"]
+                                    for s in eval_scales) else "FAIL",
+            "evidence": {s: partition_identity(pt_l, s)["max_abs_residual"]
+                         for s in eval_scales},
+        },
+        "G23-33": {
+            "statement": "c*(gamma) tren luoi buoc <= 0.02",
+            "status": ("PASS" if (GRID_STEP_LOCKED <= 0.02
+                                  and np.isfinite(pt_l["c_star_err"]).all())
+                       else "FAIL"),
+            "evidence": {"grid_step": GRID_STEP_LOCKED,
+                         "n_points": int(len(grid_l)),
+                         "n_finite": int(np.isfinite(pt_l["c_star_err"]).sum())},
+        },
+        "G23-34": {
+            "statement": "DINH NGHIA KHONG BIET -- PLAN_v2.md chua co trong repo",
+            "status": "NOT_RUN",
+            "evidence": "NT-v2-15 (Amendment 23-28 muc 3.1): khong duoc bia "
+                        "mot dinh nghia hop ly de cho du bang.",
+        },
+        "G23-35": {
+            "statement": "Dinh vi F1/F2/F3 tren truc c (HAI diem, xem F-23.6-6)",
+            "status": "PASS" if locations["rows"] else "FAIL",
+            "evidence": {"n_rows": len(locations["rows"]),
+                         "f1_f3_identical": locations["f1_f3_identical"]},
+        },
+        "G23-36": {
+            "statement": "Bang 'khi nao bat certification' tai gamma = 0.78",
+            "status": "PASS" if cert_table["thresholds"] else "FAIL",
+            "evidence": cert_table["thresholds"],
+        },
+    }
+
     return {
+        "fallback_locations_G23_35": locations,
+        "certification_table_G23_36": cert_table,
+        "gates": gates,
+        "operating_gamma": float(OPERATING_GAMMA),
+        "f3_wait_evaluated_at": float(OPERATING_GAMMA),
         "cell": str(cell),
         "status": STATUS,
         "scale": "err (headline, K-D1); regret reported in parallel (K-D2)",
@@ -846,7 +1068,8 @@ def run_cell(df: pd.DataFrame, cell: str,
         "grid_locked_step": GRID_STEP_LOCKED,
         "grid_fine_step": GRID_STEP_FINE,
         "n_boot": int(n_boot), "seed_boot": int(seed),
-        "sweep_locked": sweep_records(grid_l, pt_l),
+        "sweep_locked": sweep_records(grid_l, {**pt_l, **pt_f1,
+            **{"c_f3_" + s: pt_f1["c_f1_" + s] for s in eval_scales}}),
         "identity_G23_32": {s: partition_identity(pt_l, s) for s in eval_scales},
         "inverse_crosscheck": {s: inverse_formula_crosscheck(pt_l, s)
                                for s in eval_scales},
@@ -879,3 +1102,88 @@ def run_cell(df: pd.DataFrame, cell: str,
             "git_dirty": bool(_git("status", "--porcelain")),
         },
     }
+
+
+# ---------------------------------------------------------------------------
+# 11. CLI
+# ---------------------------------------------------------------------------
+
+# Cell -> (parquet dau vao, artifact Lesson 23.3 de lay beneficial_band).
+# Duong dan duoc ghi tuong minh chu khong suy ra tu ten cell: cell chinh dung
+# `calib_set_v3.parquet` (KHONG co hau to), va mot quy tac suy dien se lang le
+# doc nham file `calib_set_v3_poisson_0.925.parquet` -- mot file KHAC.
+CELL_INPUTS: Dict[str, tuple[str, str]] = {
+    "poisson@0.925": (
+        "results/phase-22/calib_set_v3.parquet",
+        "results/phase-23/baseline_rankings_poisson_0.925_C3_static.json"),
+    "poisson@0.850": (
+        "results/phase-22/calib_set_v3_poisson_0.850.parquet",
+        "results/phase-23/baseline_rankings_poisson_0.850_C3_static.json"),
+    "h2@0.700": (
+        "results/phase-22/calib_set_v3_h2_0.700.parquet",
+        "results/phase-23/baseline_rankings_h2_0.700_C3_static.json"),
+}
+
+
+def _slug(cell: str) -> str:
+    return cell.replace("@", "_")
+
+
+def _json_clean(v: Any) -> Any:
+    """numpy -> python, va nan/inf -> None.
+
+    `json.dumps(float('nan'))` sinh `NaN`, khong hop le theo RFC 8259; nhieu
+    bo doc se tu choi hoac doc sai. Chuyen sang `null` de file luon doc duoc.
+    """
+    if isinstance(v, Mapping):
+        return {str(k): _json_clean(x) for k, x in v.items()}
+    if isinstance(v, (list, tuple)):
+        return [_json_clean(x) for x in v]
+    if isinstance(v, (np.bool_, bool)):
+        return bool(v)
+    if isinstance(v, (np.integer,)):
+        return int(v)
+    if isinstance(v, (np.floating, float)):
+        return None if not np.isfinite(float(v)) else float(v)
+    if isinstance(v, np.ndarray):
+        return _json_clean(v.tolist())
+    return v
+
+
+def run_and_write(cell: str, out_dir: str = "results/phase-23",
+                  n_boot: int = N_BOOT, seed: int = SEED_BOOT) -> str:
+    import json
+    from pathlib import Path
+
+    parquet, band_json = CELL_INPUTS[cell]
+    df = pd.read_parquet(parquet)
+    band = require(
+        require(json.loads(Path(band_json).read_text()), "beneficial_band_err"),
+        "C3_conformal")
+    report = run_cell(df, cell, band, n_boot=n_boot, seed=seed)
+    report["input_artifact"] = {"parquet": parquet, "band_json": band_json}
+    out = str(Path(out_dir) / ("abstain_cost_%s.json" % _slug(cell)))
+    Path(out).write_text(json.dumps(_json_clean(report), indent=1,
+                                    sort_keys=True) + "\n", encoding="utf-8")
+    return out
+
+
+def main(argv: Sequence[str] | None = None) -> int:
+    import argparse
+
+    p = argparse.ArgumentParser(description="Lesson 23.6 -- chi phi abstain c*")
+    p.add_argument("--cell", action="append", choices=sorted(CELL_INPUTS),
+                   help="lap lai de chay nhieu cell; mac dinh: ca ba")
+    p.add_argument("--out-dir", default="results/phase-23")
+    p.add_argument("--n-boot", type=int, default=N_BOOT)
+    p.add_argument("--seed", type=int, default=SEED_BOOT)
+    a = p.parse_args(list(argv) if argv is not None else None)
+
+    for cell in (a.cell or sorted(CELL_INPUTS)):
+        out = run_and_write(cell, a.out_dir, a.n_boot, a.seed)
+        print("wrote %s" % out)
+    return 0
+
+
+if __name__ == "__main__":
+    raise SystemExit(main())

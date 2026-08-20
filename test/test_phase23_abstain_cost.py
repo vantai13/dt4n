@@ -540,6 +540,92 @@ def test_R8_pc23v2_2_fires_two_sided_on_every_violation(real):
             "|drop| >= MDE -> khong con la UNDETECTED, phai dieu tra lai")
 
 
+def test_A28_sticky_stats_match_a_direct_recomputation():
+    """F-23.6-7: F1 rut gon duoc theo block. Kiem bang cach so voi cach tinh
+    truc tiep tung diem luoi -- neu lech thi gia dinh "trang thai khong vuot
+    block" sai va toan bo K-D10 do."""
+    from cert import baselines as BL
+    from cert import fallback as FB
+    rng = np.random.default_rng(21)
+    nb, per = 12, 25
+    n = nb * per
+    test = pd.DataFrame({
+        "block_id": np.repeat(np.arange(nb), per),
+        "t_idx": np.tile(np.arange(per), nb),
+        "a_twin": rng.integers(0, 4, n),
+        "a_star": rng.integers(0, 4, n),
+    })
+    score = rng.normal(size=n)
+    grid = AC.gamma_grid(0.25)
+    st = AC.sticky_curve_stats(test, score, grid, ("err",))
+    codes, _ = pd.factorize(test["block_id"].to_numpy(), sort=True)
+    for i, gv in enumerate(grid):
+        acc = BL._accept_at_coverage(score, float(gv))
+        a = FB.fallback_sticky(test, acc)
+        w = FB.loss_of(test, a, "err")
+        assert np.allclose(st["rej_f1_err"][i],
+                           np.bincount(codes[~acc], weights=w[~acc], minlength=nb))
+
+
+def test_A29_curve_f1_shares_the_denominator_with_curve():
+    """Ghep cap giua c_F1 va c* chi dung neu HAI duong dung CHUNG n_rej tren
+    cung mot draw. Neu moi ben tu tinh mau so, hieu se mang them nhieu."""
+    st, g, losses = _stats(grid=AC.gamma_grid(0.25))
+    sticky = {"rej_f1_err": st["rej_twin_err"].copy()}   # gia lap: F1 == twin
+    w = np.ones(st["n_block"])
+    assert np.allclose(AC.curve_f1(st, sticky, w, ("err",))["c_f1_err"],
+                       AC.curve(st, w, ("err",))["c_star_err"], atol=1e-15)
+
+
+def test_A30_certification_table_carries_its_reading_notes():
+    """G23-36 bi doc sai neu ba luu y khong DI THEO du lieu. Nhung chung vao
+    artifact, khong chi de trong doc -- bang se bi trich ra cho khac."""
+    pt = {"coverage": np.array([0.78]), "c_star_err": np.array([0.45]),
+          "c_star_regret": np.array([4.1])}
+    t = AC.certification_table(pt, 0, ("err", "regret"))
+    assert set(t["thresholds"]) == {"c_star_err", "c_star_regret"}
+    assert len(t["reading_notes"]) == 3
+    assert any("NGUONG" in s for s in t["reading_notes"])
+
+
+@needs_data
+def test_R9_f1_and_f3_are_identical_on_every_grid_point(real):
+    """F-23.6-6: F3 WAIT tra ve chinh a_chosen cua F1 STICKY (P17, secondary
+    sticky). Kiem tren CA luoi, khong chi diem van hanh."""
+    from cert import baselines as BL
+    from cert import fallback as FB
+    test, score, _ = AC.fit_score(real)
+    for gv in (0.30, 0.50, AC.OPERATING_GAMMA, 0.90):
+        acc = BL._accept_at_coverage(score, gv)
+        assert np.array_equal(FB.apply_fallback(test, acc, "sticky")["a_chosen"],
+                              FB.apply_fallback(test, acc, "wait")["a_chosen"])
+
+
+@needs_data
+def test_R10_artifact_schema_matches_K_D11(real):
+    """K-D11 (Amendment 23-28 muc 4) + K-D3: moi khoa mang thang phai co hau to."""
+    import json
+    from pathlib import Path
+    p = Path("results/phase-23/abstain_cost_poisson_0.925.json")
+    if not p.exists():
+        pytest.skip("chua sinh artifact; chay `python -m cert.abstain_cost`")
+    d = json.loads(p.read_text())
+    for k in ("cell", "status", "scale", "level_tag", "rowset", "gates",
+              "fallback_locations_G23_35", "certification_table_G23_36",
+              "grid_refinement_K15", "supt_bands", "operating_gamma",
+              "f3_wait_evaluated_at", "input_artifact", "provenance"):
+        assert k in d, "thieu khoa bat buoc %r" % k
+    row = d["sweep_locked"][39]
+    assert row["coverage_target"] == 0.78 and "coverage_measured" in row
+    for stem in ("c_star", "c_f1", "c_f2", "c_f3", "r_neo", "r_accept"):
+        assert stem + "_err" in row and stem + "_regret" in row
+        assert stem not in row, "%r khong mang hau to thang (K-D3)" % stem
+    loc = d["fallback_locations_G23_35"]
+    assert loc["f1_f3_identical"] is True and "F-23.6-6" in loc["f1_f3_reason"]
+    assert d["gates"]["G23-34"]["status"] == "NOT_RUN"   # NT-v2-15
+    assert "NaN" not in p.read_text()                    # RFC 8259
+
+
 @needs_data
 def test_R5_G23_32_identity_holds_on_real_data(real):
     test, score, _ = AC.fit_score(real)

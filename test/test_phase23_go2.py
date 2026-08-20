@@ -170,6 +170,7 @@ def test_C15_excludes_zero_counts_both_sides(struct):
 
 
 @needs_data
+@pytest.mark.slow          # 24.2 s -- doi chung hoi tu MC, khong phai tinh dung
 def test_C11_B200_is_unstable(struct):
     """C-D5. Bang chung TRUC TIEP vi sao GO-2 can B = 2000."""
     ins = G2.instability_at_small_B(struct, seeds=G2.SEEDS_INSTABILITY[:6])

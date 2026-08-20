@@ -76,11 +76,11 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-29 | 23.5B | PASS | results/phase-23/aurc_go1_*.json -- 5/5 cell |
 | G23-30 | 23.5B | PASS | docs/phase-23/09-aurc-and-go1.md:22-24 |
 | G23-31 | 23.5C | PASS | docs/phase-23/10-go2-simultaneous.md:117-118 |
-| G23-32 | 23.6 | NOT_RUN | - |
-| G23-33 | 23.6 | NOT_RUN | - |
+| G23-32 | 23.6 | PASS | results/phase-23/abstain_cost_*.json gates.G23-32 -- resid <= 5.6e-17, 3/3 cell |
+| G23-33 | 23.6 | PASS | results/phase-23/abstain_cost_*.json gates.G23-33 -- buoc 0.02, 50 diem, 3/3 cell |
 | G23-34 | 23.6 | NOT_RUN | - |
-| G23-35 | 23.6 | NOT_RUN | - |
-| G23-36 | 23.6 | NOT_RUN | - |
+| G23-35 | 23.6 | PASS | results/phase-23/abstain_cost_*.json fallback_locations_G23_35 -- HAI diem, xem Amd 23-28 muc 1 |
+| G23-36 | 23.6 | PASS | results/phase-23/abstain_cost_*.json certification_table_G23_36 |
 | G23-37 | 23.7 | NOT_RUN | - |
 | G23-38 | 23.7 | NOT_RUN | - |
 | G23-39 | 23.7 | NOT_RUN | - |
@@ -128,6 +128,16 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 Gate thuoc mot lesson trong danh sach nay KHONG duoc mang trang thai `NOT_RUN`.
 Neu no chua duoc cham thi trang thai dung la `DEBT`, va mon no do bi GHIM trong
 test de khong the xuat hien them mot cach im lang.
+
+## G23-34 -- dinh nghia khong biet
+
+```text
+G23-34 nam trong tam G23-32..G23-36 cua Lesson 23.6 nhung DINH NGHIA cua no
+khong co o bat ky dau trong repo, va PLAN_v2.md van chua duoc dua vao.
+No GIU NOT_RUN. Bia mot dinh nghia hop ly de "cho du bang" se tao ra mot ID
+gia -- te hon la de trong, vi no doc duoc bang may va trong nhu that.
+Xem NT-v2-15, Amendment 23-28 muc 3.1.
+```
 
 ## Mon no DEBT hien tai
 
