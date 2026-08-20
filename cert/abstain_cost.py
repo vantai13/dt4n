@@ -1099,7 +1099,16 @@ def run_cell(df: pd.DataFrame, cell: str,
         "provenance": {
             "script": "cert/abstain_cost.py",
             "git_hash": _git("rev-parse", "HEAD"),
-            "git_dirty": bool(_git("status", "--porcelain")),
+            # `--untracked-files=no`: cau hoi co nghia la "MA NGUON co sach
+            # khong", khong phai "thu muc co sach khong". Chinh artifact nay la
+            # mot file chua duoc theo doi tai luc ghi, nen mot `git status
+            # --porcelain` tran se LUON tra ve dirty -- mot co tu tham chieu
+            # khong bao gio false duoc, tuc mot khoa vo dung.
+            # (cert/aurc_go1.py va cert/go2_simultaneous.py co cung co nay;
+            #  khong sua chung o day vi nam ngoai pham vi Amendment 23-28.)
+            "git_dirty_tracked": bool(_git("status", "--porcelain",
+                                           "--untracked-files=no")),
+            "git_dirty_including_untracked": bool(_git("status", "--porcelain")),
         },
     }
 
