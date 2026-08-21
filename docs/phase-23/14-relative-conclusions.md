@@ -96,3 +96,67 @@ Ket qua nay lap lo trong "rut ma khong thay the" cho cell chinh: duoi mo
 hinh relative dung scope, `Delta` van am. No khong dong L10 vi residual vi
 sai `r_P1-r_P3` van chua duoc do xong. Campaign Amendment 36 tiep tuc bi tam
 dung tai checkpoint 5 row cho den khi quyet dinh tiep tuc Mininet.
+
+## 7. S9 -- bat bien chi co gia tri tren truc da do
+
+`tools/lift_decomposition_by_cell.py` chi tai phan ra artifact G23-23 da
+commit tu 15/08; no khong do du lieu moi. C3 tai coverage `0.78` cho:
+
+| Cell | twin_deg | prior_deg | lift | swing | Delta |
+|---|---:|---:|---:|---:|---:|
+| poisson@0.925 | 0.230948 | 0.054576 | 0.176372 | 0.117878 | -0.012869 |
+| poisson@0.850 | 0.235830 | 0.125570 | 0.110259 | 0.124442 | +0.003120 |
+| h2@0.700 | 0.237723 | 0.224379 | 0.013344 | 0.030918 | +0.003866 |
+
+```text
+twin_deg  max/min = 1.029x
+prior_deg max/min = 4.111x
+swing     max/min = 4.025x
+```
+
+C3 loc ra tap ma twin suy giam them gan 23 diem phan tram rat on dinh tren
+ca ba cell. Thanh phan mat on dinh la fallback P1: tren tap reject, no cung
+xau di va muc suy giam thay doi hon bon lan qua cell. Vi vay nut co chai
+cross-cell la fallback, khong phai kha nang phat hien hang kho cua certificate.
+
+Lesson 23.1 noi `prior_deg` gan nhu hang so khi quet `kappa` trong
+`poisson@0.925`. Amendment 19 va muc gioi han trong `02-fallback.md` da thu
+hep phat bieu nay dung truc. S9 lam nguyen tac do noi bat trong bao cao hien
+tai: **mot bat bien chi co gia tri tren truc no duoc do; khong duoc chuyen tu
+truc kappa sang truc cell ma khong do lai.**
+
+## 8. Ket qua transfer C3 so voi B2
+
+Tu cung artifact G23-23:
+
+| Cell | B2 Delta | C3 Delta | C3 - B2 |
+|---|---:|---:|---:|
+| poisson@0.925 | -0.012984857 | -0.012868849 | +0.000116008 |
+| poisson@0.850 | +0.004664308 | +0.003120206 | -0.001544102 |
+| h2@0.700 | +0.007504495 | +0.003866255 | -0.003638240 |
+
+B2 thang C3 `0.000116` tai cell hieu chuan, nhung C3 thang `0.001544` va
+`0.003638` khi chuyen cell. Day la ket qua transfer/descriptive da ton tai:
+C3 thoai hoa duyen dang hon nguong hang so duoc chinh tai cell goc. Bang nay
+khong duoc dien giai thanh C3 co Delta am tuyet doi tren moi cell.
+
+## 9. Residual tuong doi la objective misspecification
+
+Voi `r_rel` ap dung chung tai tang path:
+
+```text
+cost'_p = delay_p + w_loss * loss_p * (1 + r_rel)
+        = delay_p + w_eff * loss_p
+w_eff   = w_loss * (1 + r_rel)
+```
+
+Tai cell chinh, `w_loss=1451.376578` va mean-of-ratios
+`r_rel=-0.164744220`, nen `w_eff=1212.270676`, hay ti so `0.835255780`.
+Do do Lesson 23.7-quater cung chinh xac la mot phep thu **objective
+misspecification**: twin/gate van duoc tao theo `w_loss`, con ground truth
+duoc cham theo `w_eff`.
+
+Huong sai lech do duoc ha trong so loss, lam delay chiem ti trong lon hon va
+co the co loi cho fallback P1. Day la confound phai cong khai khi dien giai
+M-36; no khong phai bang chung rieng rang residual lam certificate tot hon.
+Phep quet `w_eff/w_loss` hai phia quanh 1 se tach diem do nay khoi do ben dau.
