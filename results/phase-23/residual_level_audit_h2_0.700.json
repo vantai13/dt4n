@@ -1,0 +1,495 @@
+{
+  "cell": "h2@0.700",
+  "controls": {
+    "all_paths_have_three_links": true,
+    "cell_residual_mode_match": true
+  },
+  "endpoints": {
+    "ci90_worst": {
+      "all_rows": {
+        "decomposition": {
+          "clip_share_of_total": 0.998591073443891,
+          "flip_set_relation": {
+            "H_link0_only": 0,
+            "H_link0_subset_H_link1": true,
+            "H_link1_only": 277834,
+            "H_link1_total": 278226,
+            "intersection": 392,
+            "symmetric_difference": 277834
+          },
+          "from_clipping_fraction_difference": 0.2778492817104941,
+          "from_nonlinearity_fraction_difference": 0.00039202156118586524
+        },
+        "flip_fraction": {
+          "H_link_no_clip": 0.00039202156118586524,
+          "H_link_with_clip": 0.27824130327167995,
+          "H_path_correct_level": 0.0,
+          "H_path_with_clip_descriptive": 0.0
+        },
+        "flip_pairs": {
+          "H_link_no_clip": {
+            "P1->P3": 389,
+            "P1->P4": 3
+          },
+          "H_link_with_clip": {
+            "P1->P3": 256821,
+            "P1->P4": 19324,
+            "P3->P4": 2081
+          },
+          "H_path_correct_level": {},
+          "H_path_with_clip_descriptive": {}
+        },
+        "n_flip": {
+          "H_link_no_clip": 392,
+          "H_link_with_clip": 278226,
+          "H_path_correct_level": 0,
+          "H_path_with_clip_descriptive": 0
+        },
+        "n_rows": 999945
+      },
+      "diagnostics": {
+        "H_link_no_clip": {
+          "clipping_applied": false,
+          "eval_count": 12000000,
+          "negative_events": 4213394
+        },
+        "H_link_with_clip": {
+          "clip_events": 4213394,
+          "clip_ratio": 0.3511161666666667,
+          "clipping_applied": true,
+          "eval_count": 12000000
+        },
+        "H_path_correct_level": {
+          "clipping_applied": false,
+          "eval_count": 4000000,
+          "negative_events": 0
+        },
+        "H_path_with_clip_descriptive": {
+          "clip_events": 0,
+          "clip_ratio": 0.0,
+          "clipping_applied": true,
+          "eval_count": 4000000
+        }
+      },
+      "level_tag": "per_path",
+      "r_path": -0.010061922706130285,
+      "scale": "loss_fraction",
+      "test_rows": {
+        "decomposition": {
+          "clip_share_of_total": 0.9987007362494587,
+          "flip_set_relation": {
+            "H_link0_only": 0,
+            "H_link0_subset_H_link1": true,
+            "H_link1_only": 140666,
+            "H_link1_total": 140849,
+            "intersection": 183,
+            "symmetric_difference": 140666
+          },
+          "from_clipping_fraction_difference": 0.28135056913756307,
+          "from_nonlinearity_fraction_difference": 0.00036602415759440124
+        },
+        "flip_fraction": {
+          "H_link_no_clip": 0.00036602415759440124,
+          "H_link_with_clip": 0.28171659329515747,
+          "H_path_correct_level": 0.0,
+          "H_path_with_clip_descriptive": 0.0
+        },
+        "flip_pairs": {
+          "H_link_no_clip": {
+            "P1->P3": 182,
+            "P1->P4": 1
+          },
+          "H_link_with_clip": {
+            "P1->P3": 129838,
+            "P1->P4": 9965,
+            "P3->P4": 1046
+          },
+          "H_path_correct_level": {},
+          "H_path_with_clip_descriptive": {}
+        },
+        "n_flip": {
+          "H_link_no_clip": 183,
+          "H_link_with_clip": 140849,
+          "H_path_correct_level": 0,
+          "H_path_with_clip_descriptive": 0
+        },
+        "n_rows": 499967
+      }
+    },
+    "point": {
+      "all_rows": {
+        "decomposition": {
+          "clip_share_of_total": 0.9985848810778957,
+          "flip_set_relation": {
+            "H_link0_only": 0,
+            "H_link0_subset_H_link1": true,
+            "H_link1_only": 249096,
+            "H_link1_total": 249449,
+            "intersection": 353,
+            "symmetric_difference": 249096
+          },
+          "from_clipping_fraction_difference": 0.24910970103355684,
+          "from_nonlinearity_fraction_difference": 0.00035301941606788375
+        },
+        "flip_fraction": {
+          "H_link_no_clip": 0.00035301941606788375,
+          "H_link_with_clip": 0.24946272044962473,
+          "H_path_correct_level": 0.0,
+          "H_path_with_clip_descriptive": 0.0
+        },
+        "flip_pairs": {
+          "H_link_no_clip": {
+            "P1->P3": 350,
+            "P1->P4": 3
+          },
+          "H_link_with_clip": {
+            "P1->P3": 233505,
+            "P1->P4": 14342,
+            "P3->P4": 1602
+          },
+          "H_path_correct_level": {},
+          "H_path_with_clip_descriptive": {}
+        },
+        "n_flip": {
+          "H_link_no_clip": 353,
+          "H_link_with_clip": 249449,
+          "H_path_correct_level": 0,
+          "H_path_with_clip_descriptive": 0
+        },
+        "n_rows": 999945
+      },
+      "diagnostics": {
+        "H_link_no_clip": {
+          "clipping_applied": false,
+          "eval_count": 12000000,
+          "negative_events": 4088192
+        },
+        "H_link_with_clip": {
+          "clip_events": 4088192,
+          "clip_ratio": 0.3406826666666667,
+          "clipping_applied": true,
+          "eval_count": 12000000
+        },
+        "H_path_correct_level": {
+          "clipping_applied": false,
+          "eval_count": 4000000,
+          "negative_events": 0
+        },
+        "H_path_with_clip_descriptive": {
+          "clip_events": 0,
+          "clip_ratio": 0.0,
+          "clipping_applied": true,
+          "eval_count": 4000000
+        }
+      },
+      "level_tag": "per_path",
+      "r_path": -0.009351404492577604,
+      "scale": "loss_fraction",
+      "test_rows": {
+        "decomposition": {
+          "clip_share_of_total": 0.9987344075049635,
+          "flip_set_relation": {
+            "H_link0_only": 0,
+            "H_link0_subset_H_link1": true,
+            "H_link1_only": 126263,
+            "H_link1_total": 126423,
+            "intersection": 160,
+            "symmetric_difference": 126263
+          },
+          "from_clipping_fraction_difference": 0.25254266781607587,
+          "from_nonlinearity_fraction_difference": 0.000320021121394012
+        },
+        "flip_fraction": {
+          "H_link_no_clip": 0.000320021121394012,
+          "H_link_with_clip": 0.2528626889374699,
+          "H_path_correct_level": 0.0,
+          "H_path_with_clip_descriptive": 0.0
+        },
+        "flip_pairs": {
+          "H_link_no_clip": {
+            "P1->P3": 159,
+            "P1->P4": 1
+          },
+          "H_link_with_clip": {
+            "P1->P3": 118168,
+            "P1->P4": 7444,
+            "P3->P4": 811
+          },
+          "H_path_correct_level": {},
+          "H_path_with_clip_descriptive": {}
+        },
+        "n_flip": {
+          "H_link_no_clip": 160,
+          "H_link_with_clip": 126423,
+          "H_path_correct_level": 0,
+          "H_path_with_clip_descriptive": 0
+        },
+        "n_rows": 499967
+      }
+    },
+    "r_star": {
+      "all_rows": {
+        "decomposition": {
+          "clip_share_of_total": 0.9985275210230037,
+          "flip_set_relation": {
+            "H_link0_only": 0,
+            "H_link0_subset_H_link1": true,
+            "H_link1_only": 229885,
+            "H_link1_total": 230224,
+            "intersection": 339,
+            "symmetric_difference": 229885
+          },
+          "from_clipping_fraction_difference": 0.22989764437044036,
+          "from_nonlinearity_fraction_difference": 0.0003390186460255314
+        },
+        "flip_fraction": {
+          "H_link_no_clip": 0.0003390186460255314,
+          "H_link_with_clip": 0.2302366630164659,
+          "H_path_correct_level": 0.0,
+          "H_path_with_clip_descriptive": 0.0
+        },
+        "flip_pairs": {
+          "H_link_no_clip": {
+            "P1->P3": 336,
+            "P1->P4": 3
+          },
+          "H_link_with_clip": {
+            "P1->P3": 217324,
+            "P1->P4": 11595,
+            "P3->P4": 1305
+          },
+          "H_path_correct_level": {},
+          "H_path_with_clip_descriptive": {}
+        },
+        "n_flip": {
+          "H_link_no_clip": 339,
+          "H_link_with_clip": 230224,
+          "H_path_correct_level": 0,
+          "H_path_with_clip_descriptive": 0
+        },
+        "n_rows": 999945
+      },
+      "diagnostics": {
+        "H_link_no_clip": {
+          "clipping_applied": false,
+          "eval_count": 12000000,
+          "negative_events": 4043304
+        },
+        "H_link_with_clip": {
+          "clip_events": 4043304,
+          "clip_ratio": 0.336942,
+          "clipping_applied": true,
+          "eval_count": 12000000
+        },
+        "H_path_correct_level": {
+          "clipping_applied": false,
+          "eval_count": 4000000,
+          "negative_events": 0
+        },
+        "H_path_with_clip_descriptive": {
+          "clip_events": 0,
+          "clip_ratio": 0.0,
+          "clipping_applied": true,
+          "eval_count": 4000000
+        }
+      },
+      "level_tag": "per_path",
+      "r_path": -0.008868196569470351,
+      "scale": "loss_fraction",
+      "test_rows": {
+        "decomposition": {
+          "clip_share_of_total": 0.9986637085514086,
+          "flip_set_relation": {
+            "H_link0_only": 0,
+            "H_link0_subset_H_link1": true,
+            "H_link1_only": 116585,
+            "H_link1_total": 116741,
+            "intersection": 156,
+            "symmetric_difference": 116585
+          },
+          "from_clipping_fraction_difference": 0.23318539023575555,
+          "from_nonlinearity_fraction_difference": 0.0003120205933591617
+        },
+        "flip_fraction": {
+          "H_link_no_clip": 0.0003120205933591617,
+          "H_link_with_clip": 0.2334974108291147,
+          "H_path_correct_level": 0.0,
+          "H_path_with_clip_descriptive": 0.0
+        },
+        "flip_pairs": {
+          "H_link_no_clip": {
+            "P1->P3": 155,
+            "P1->P4": 1
+          },
+          "H_link_with_clip": {
+            "P1->P3": 110045,
+            "P1->P4": 6040,
+            "P3->P4": 656
+          },
+          "H_path_correct_level": {},
+          "H_path_with_clip_descriptive": {}
+        },
+        "n_flip": {
+          "H_link_no_clip": 156,
+          "H_link_with_clip": 116741,
+          "H_path_correct_level": 0,
+          "H_path_with_clip_descriptive": 0
+        },
+        "n_rows": 499967
+      }
+    }
+  },
+  "lesson": "23.7-bis",
+  "negative_control": {
+    "NC23v2_10_pass": true,
+    "all_rows": {
+      "decomposition": {
+        "clip_share_of_total": null,
+        "flip_set_relation": {
+          "H_link0_only": 0,
+          "H_link0_subset_H_link1": true,
+          "H_link1_only": 0,
+          "H_link1_total": 0,
+          "intersection": 0,
+          "symmetric_difference": 0
+        },
+        "from_clipping_fraction_difference": 0.0,
+        "from_nonlinearity_fraction_difference": 0.0
+      },
+      "flip_fraction": {
+        "H_link_no_clip": 0.0,
+        "H_link_with_clip": 0.0,
+        "H_path_correct_level": 0.0,
+        "H_path_with_clip_descriptive": 0.0
+      },
+      "flip_pairs": {
+        "H_link_no_clip": {},
+        "H_link_with_clip": {},
+        "H_path_correct_level": {},
+        "H_path_with_clip_descriptive": {}
+      },
+      "n_flip": {
+        "H_link_no_clip": 0,
+        "H_link_with_clip": 0,
+        "H_path_correct_level": 0,
+        "H_path_with_clip_descriptive": 0
+      },
+      "n_rows": 999945
+    },
+    "diagnostics": {
+      "H_link_no_clip": {
+        "clipping_applied": false,
+        "eval_count": 12000000,
+        "negative_events": 0
+      },
+      "H_link_with_clip": {
+        "clip_events": 0,
+        "clip_ratio": 0.0,
+        "clipping_applied": true,
+        "eval_count": 12000000
+      },
+      "H_path_correct_level": {
+        "clipping_applied": false,
+        "eval_count": 4000000,
+        "negative_events": 0
+      },
+      "H_path_with_clip_descriptive": {
+        "clip_events": 0,
+        "clip_ratio": 0.0,
+        "clipping_applied": true,
+        "eval_count": 4000000
+      }
+    },
+    "level_tag": "per_path",
+    "r_path": 0.0,
+    "scale": "loss_fraction",
+    "test_rows": {
+      "decomposition": {
+        "clip_share_of_total": null,
+        "flip_set_relation": {
+          "H_link0_only": 0,
+          "H_link0_subset_H_link1": true,
+          "H_link1_only": 0,
+          "H_link1_total": 0,
+          "intersection": 0,
+          "symmetric_difference": 0
+        },
+        "from_clipping_fraction_difference": 0.0,
+        "from_nonlinearity_fraction_difference": 0.0
+      },
+      "flip_fraction": {
+        "H_link_no_clip": 0.0,
+        "H_link_with_clip": 0.0,
+        "H_path_correct_level": 0.0,
+        "H_path_with_clip_descriptive": 0.0
+      },
+      "flip_pairs": {
+        "H_link_no_clip": {},
+        "H_link_with_clip": {},
+        "H_path_correct_level": {},
+        "H_path_with_clip_descriptive": {}
+      },
+      "n_flip": {
+        "H_link_no_clip": 0,
+        "H_link_with_clip": 0,
+        "H_path_correct_level": 0,
+        "H_path_with_clip_descriptive": 0
+      },
+      "n_rows": 499967
+    }
+  },
+  "provenance": {
+    "amendment_32": {
+      "path": "docs/phase-23/00zh-amendment-32.md",
+      "sha256": "7d7eda769be3bfca7f09aae5ecfb83ea0f79ce4577e3f2c88ff7f81f9c4126ca"
+    },
+    "amendment_33": {
+      "path": "docs/phase-23/00zi-amendment-33.md",
+      "sha256": "92f8c73130816f28ea87b41d312cd0cbd72644900422b046ab1ba84f4138459f"
+    },
+    "generated_utc": "2026-08-21T05:07:32.436579+00:00",
+    "git_commit": "fd9b8047f702734e8e8577648a7d4bce0c986cfb",
+    "git_dirty": false,
+    "residual": {
+      "path": "results/phase-20R/residual_cascade.json",
+      "sha256": "810969d78a3d11eaa17dbe5aa88001c71a3eee1441ae64d0650c4b95ac75d522"
+    },
+    "truth_table": {
+      "path": "results/phase-20R/truth_table.parquet",
+      "sha256": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e"
+    }
+  },
+  "residual_record": {
+    "channel": "loss",
+    "ci90": [
+      -0.010061922706130285,
+      -0.008640886279024923
+    ],
+    "estimand": "Chenh lech chi phi trung binh do end-to-end tren duong 3-link (nhanh C) tru tong chi phi tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: loss.",
+    "level": "per_path",
+    "mode": "h2",
+    "point": -0.009351404492577604
+  },
+  "schema": "residual_level_audit/v1",
+  "status": "APPLICABLE",
+  "verdict": {
+    "M_23_H_path_exact_zero": true,
+    "M_24_H_link0_point_in_0_0_02": null,
+    "M_25_clip_share_gt_0_90": null,
+    "M_26_H_link1_reproduces_0_2130": null,
+    "clip_share_of_total_test": 0.9987344075049635,
+    "point_all_rows": {
+      "H_link_no_clip": 0.00035301941606788375,
+      "H_link_with_clip": 0.24946272044962473,
+      "H_path_correct_level": 0.0,
+      "H_path_with_clip_descriptive": 0.0
+    },
+    "point_test_rows": {
+      "H_link_no_clip": 0.000320021121394012,
+      "H_link_with_clip": 0.2528626889374699,
+      "H_path_correct_level": 0.0,
+      "H_path_with_clip_descriptive": 0.0
+    },
+    "scenario": "A"
+  }
+}
