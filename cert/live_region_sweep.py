@@ -42,7 +42,7 @@ def cell_name(mode: str, rho_bar: float) -> str:
 
 
 def truth_domain_check(cell: Mapping[str, Any]) -> Dict[str, Any]:
-    """Check measured-table clipping under both SLA and builder amplitudes."""
+    """Gate on the builder distribution; retain SLA-regime as stress diagnostic."""
     mode = str(cell["mode"])
     rho_bar = float(cell["rho_bar"])
     rows = []
@@ -75,7 +75,10 @@ def truth_domain_check(cell: Mapping[str, Any]) -> Dict[str, Any]:
                     "clip_by_link": dict(tt.clip_log),
                 }
             )
-    worst_row = max(rows, key=lambda row: row["worst_fraction"])
+    builder_rows = [row for row in rows if row["sigma_source"] == "calib_builder"]
+    stress_rows = [row for row in rows if row["sigma_source"] == "sla_regime"]
+    worst_row = max(builder_rows, key=lambda row: row["worst_fraction"])
+    stress_worst = max(stress_rows, key=lambda row: row["worst_fraction"])
     return {
         "threshold_strict_lt": DOMAIN_LIMIT,
         "rows": rows,
@@ -83,7 +86,11 @@ def truth_domain_check(cell: Mapping[str, Any]) -> Dict[str, Any]:
         "worst_link": str(worst_row["worst_link"]),
         "worst_seed": int(worst_row["seed"]),
         "worst_sigma_source": str(worst_row["sigma_source"]),
-        "pass": bool(all(row["pass"] for row in rows)),
+        "pass": bool(all(row["pass"] for row in builder_rows)),
+        "eligibility_distribution": "calib_builder",
+        "stress_sla_regime_pass": bool(all(row["pass"] for row in stress_rows)),
+        "stress_sla_regime_max_fraction": float(stress_worst["worst_fraction"]),
+        "stress_sla_regime_worst_link": str(stress_worst["worst_link"]),
     }
 
 
@@ -137,7 +144,12 @@ def prepare_sla() -> Dict[str, Any]:
                 "git_hash": git("git", "rev-parse", "HEAD"),
                 "git_dirty": bool(git("git", "status", "--porcelain", "--untracked-files=no")),
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-                "inputs": [pin(AMENDMENT), pin(BASE_SLA), pin(TRUTH_TABLE)],
+                "inputs": [
+                    pin(AMENDMENT),
+                    pin("docs/phase-23/00zr-amendment-41.md"),
+                    pin(BASE_SLA),
+                    pin(TRUTH_TABLE),
+                ],
             },
         }
     )

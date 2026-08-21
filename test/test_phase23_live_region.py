@@ -33,7 +33,11 @@ def test_NC_H_domain_control_du_hai_sigma_va_nam_seed():
         assert len(checks) == 2 * len(L.SEEDS)
         assert {item["sigma_source"] for item in checks} == {"sla_regime", "calib_builder"}
         assert {item["seed"] for item in checks} == set(L.SEEDS)
-        assert row["domain_control"]["pass"] == all(item["worst_fraction"] < L.DOMAIN_LIMIT for item in checks)
+        builder = [item for item in checks if item["sigma_source"] == "calib_builder"]
+        stress = [item for item in checks if item["sigma_source"] == "sla_regime"]
+        assert row["domain_control"]["pass"] == all(item["worst_fraction"] < L.DOMAIN_LIMIT for item in builder)
+        assert row["domain_control"]["stress_sla_regime_pass"] == all(item["worst_fraction"] < L.DOMAIN_LIMIT for item in stress)
+        assert row["domain_control"]["eligibility_distribution"] == "calib_builder"
 
 
 def test_NC_K_fallback_chi_do_domain_quyet_dinh():
