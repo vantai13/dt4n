@@ -106,6 +106,10 @@ AMENDMENT = "docs/phase-23/00zf-amendment-30.md"
 SUMMARY_PATH = "results/phase-23/conditioning_audit_summary.json"
 FIGURE_PATH = "results/phase-23/fig6_conditioning_audit.png"
 DOC_PATH = "docs/phase-23/12-mechanisms.md"
+PREDICTION_ORDER = (
+    "M-4", "M-5", "M-6", "M-6b", "M-6c", "M-9", "M-10", "M-11",
+    "M-12a", "M-12b", "M-13", "M-13b", "M-13c", "M-14", "M-15", "M-16",
+)
 
 
 def artifact_path(cell: str) -> str:
@@ -366,6 +370,7 @@ def pruning_profitability(
     p_star = float(star_is_p.mean())
     ratio_marginal = float(picked.mean() / p_star) if p_star else None
     threshold = _main_pfix_threshold()
+    neutral = bool(a == 0 and b == 0)
     predicts_profit = bool(ratio_is_infinite or (ratio_cond is not None and ratio_cond > threshold))
     actual_profit = bool(int(fixed.sum()) > b)
     return {
@@ -380,7 +385,10 @@ def pruning_profitability(
         "threshold_1_over_Pfix_from_main_cell": threshold,
         "M_13_predicts_profitable": predicts_profit,
         "profitable_exact": actual_profit,
-        "M_13_prediction_correct": bool(predicts_profit == actual_profit),
+        "M_13_evaluable": bool(not neutral),
+        "M_13_prediction_correct": (
+            bool(predicts_profit == actual_profit) if not neutral else None
+        ),
         "M_13b_marginal_overselection_ratio": ratio_marginal,
         "M_13b_in_band_1_0_2_5": bool(
             ratio_marginal is not None and 1.0 <= ratio_marginal <= 2.5
@@ -771,15 +779,15 @@ def _prediction_rows(reports: Mapping[str, Mapping[str, Any]]) -> List[Dict[str,
         rows.extend(
             [
                 {"cell": cell, "id": "M-4", "value": a["jaccard_vs_constant_qhat"]["M_4_scored_post_none_keeps_z"]["jaccard"], "hit": a["jaccard_vs_constant_qhat"]["M_4_scored_post_none_keeps_z"]["in_band"]},
-                {"cell": cell, "id": "M-5", "value": a["qhat_budget_ratio_M5"]["mean"], "hit": a["qhat_budget_ratio_M5"]["all_cells_in_band"]},
+                {"cell": cell, "id": "M-5", "value": "[%.6f, %.6f]" % (a["qhat_budget_ratio_M5"]["min"], a["qhat_budget_ratio_M5"]["max"]), "hit": a["qhat_budget_ratio_M5"]["all_cells_in_band"]},
                 {"cell": cell, "id": "M-9", "value": a["spread_and_separability"]["M_9_separability_gap_rel"], "hit": a["spread_and_separability"]["M_9_in_band_le_0_05"]},
                 {"cell": cell, "id": "M-10", "value": a["spearman_z_mhat_M10"]["M_10_spearman"], "hit": a["spearman_z_mhat_M10"]["in_band"]},
                 {"cell": cell, "id": "M-11", "value": c["residual_vs_margin"]["M_11_all_test"]["ratio"], "hit": c["residual_vs_margin"]["M_11_all_test"]["in_band"]},
                 {"cell": cell, "id": "M-12a", "value": c["conclusion_flip"]["points"][-1]["d_gap_c_f2_minus_c_star"], "hit": c["conclusion_flip"]["M_12a_positive_all_three"]},
                 {"cell": cell, "id": "M-12b", "value": c["conclusion_flip"]["M_12b_flipped_all_three"], "hit": c["conclusion_flip"]["M_12b_flipped_all_three"]},
-                {"cell": cell, "id": "M-13", "value": ("inf" if b["pruning_profitability"]["conditional_ratio_is_infinite"] else b["pruning_profitability"]["conditional_ratio_a_over_b"]), "hit": b["pruning_profitability"]["M_13_prediction_correct"]},
+                {"cell": cell, "id": "M-13", "value": ("inf" if b["pruning_profitability"]["conditional_ratio_is_infinite"] else b["pruning_profitability"]["conditional_ratio_a_over_b"]), "hit": b["pruning_profitability"]["M_13_prediction_correct"], "evaluable": b["pruning_profitability"].get("M_13_evaluable", True)},
                 {"cell": cell, "id": "M-13b", "value": b["pruning_profitability"]["M_13b_marginal_overselection_ratio"], "hit": b["pruning_profitability"]["M_13b_in_band_1_0_2_5"]},
-                {"cell": cell, "id": "M-13c", "value": b["pruning_profitability"]["P_fix"], "hit": b["pruning_profitability"]["M_13c_in_band_0_60_0_90"]},
+                {"cell": cell, "id": "M-13c", "value": b["pruning_profitability"]["P_fix"], "hit": b["pruning_profitability"]["M_13c_in_band_0_60_0_90"], "evaluable": b["pruning_profitability"]["P_fix"] is not None},
                 {"cell": cell, "id": "M-14", "value": c["residual_vs_margin"]["M_14_ratio_accept_over_all"], "hit": c["residual_vs_margin"]["M_14_lt_1"]},
                 {"cell": cell, "id": "M-15", "value": c["astar_sensitivity"]["headline"]["M_15_flip_fraction_test"], "hit": c["astar_sensitivity"]["headline"]["M_15_in_band_0_10_0_40"]},
                 {"cell": cell, "id": "M-16", "value": c["coverage_under_misspec"]["PC23v2_3_orig_pert"], "hit": c["coverage_under_misspec"]["control_pair_discriminates"]},
@@ -822,11 +830,18 @@ def summarize(reports: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any]:
     score: Dict[str, Any] = {}
     for prediction, cells in scored_cells.items():
         selected = [r for r in rows if r["id"] == prediction and r["cell"] in cells]
+        evaluated = [r for r in selected if r.get("evaluable", True)]
+        neutral = [r for r in selected if not r.get("evaluable", True)]
         score[prediction] = {
             "cells": list(cells),
-            "hits": int(sum(bool(r["hit"]) for r in selected)),
-            "n": int(len(selected)),
-            "all_hit": bool(selected and all(bool(r["hit"]) for r in selected)),
+            "hits": int(sum(bool(r["hit"]) for r in evaluated)),
+            "n": int(len(evaluated)),
+            "neutral_not_evaluable": int(len(neutral)),
+            "all_hit": bool(
+                selected
+                and len(evaluated) == len(selected)
+                and all(bool(r["hit"]) for r in evaluated)
+            ),
             "values": {r["cell"]: r["value"] for r in selected},
         }
     return json_clean(
@@ -885,18 +900,27 @@ def markdown_report(summary: Mapping[str, Any]) -> str:
         "| ID | Cell cham | Gia tri | KQ |",
         "|---|---|---|:--:|",
     ]
-    for prediction in pred:
+    for prediction in PREDICTION_ORDER:
         item = pred[prediction]
-        values = "; ".join("%s=%s" % (c, _format_value(v)) for c, v in item["values"].items())
+        values = "; ".join(
+            "%s=%s" % (cell, _format_value(item["values"][cell]))
+            for cell in item["cells"]
+        )
+        if item.get("neutral_not_evaluable", 0):
+            result_text = "HIT %d/%d danh gia; NEUTRAL %d" % (
+                item["hits"], item["n"], item["neutral_not_evaluable"]
+            )
+        else:
+            result_text = "%s %d/%d" % (
+                "HIT" if item["all_hit"] else "MISS", item["hits"], item["n"]
+            )
         lines.append(
-            "| %s | %s | %s | %s %d/%d |"
+            "| %s | %s | %s | %s |"
             % (
                 prediction,
                 ", ".join(item["cells"]),
                 values,
-                "HIT" if item["all_hit"] else "MISS",
-                item["hits"],
-                item["n"],
+                result_text,
             )
         )
     lines.extend(

@@ -69,7 +69,8 @@ def test_M13_a_b_cung_bang_0_la_trung_tinh():
     assert out["conditional_ratio_is_infinite"] is False
     assert out["M_13_predicts_profitable"] is False
     assert out["profitable_exact"] is False
-    assert out["M_13_prediction_correct"] is True
+    assert out["M_13_evaluable"] is False
+    assert out["M_13_prediction_correct"] is None
 
 
 @pytest.mark.skipif(not os.path.exists(MAIN_ARTIFACT), reason="chua chay cell chinh")
