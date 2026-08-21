@@ -163,6 +163,7 @@ def _objective_curve(
         TruthTable(TRUTH_TABLE),
         mode=str(spec["mode"]),
         rho_bar=float(spec["rho_bar"]),
+        calibration_path=sla_artifact,
     )
     if len(base["y_true"]) != len(df):
         raise AssertionError("truth/parquet length mismatch for %s" % cell)

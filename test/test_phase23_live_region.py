@@ -9,6 +9,8 @@ import pytest
 
 from cert import live_region_sweep as L
 from cert.build_calib_set_v2 import compare_20R_constant_sigma
+from cert.cell_matrices import cell_matrices
+from measurements.decision_error_v2 import TruthTable
 
 
 def _load(path):
@@ -28,6 +30,20 @@ def test_preregistered_cells_va_thresholds_khoa():
 def test_cell_moi_khong_co_V5_reference_phase20r():
     with pytest.raises(ValueError, match="got 0"):
         compare_20R_constant_sigma({"z=0.05": 0.0}, "poisson", 0.875)
+
+
+def test_cell_matrices_doc_duoc_SLA_manifest_mo_rong():
+    if not os.path.exists(L.SLA_OUTPUT):
+        pytest.skip("SLA mo rong chua sinh")
+    out = cell_matrices(
+        TruthTable(L.TRUTH_TABLE),
+        mode="poisson",
+        rho_bar=0.875,
+        seeds=(101,),
+        n=1200,
+        calibration_path=L.SLA_OUTPUT,
+    )
+    assert len(out["y_true"]) > 0
 
 
 def test_NC_H_domain_control_du_hai_sigma_va_nam_seed():

@@ -147,6 +147,7 @@ def cell_matrices(
     seeds: Sequence[int] = SEEDS,
     n: int = N,
     w_loss_override: float | None = None,
+    calibration_path: str = SLA_CALIB,
 ) -> Dict[str, np.ndarray]:
     """Ma tran chi phi that / du doan twin, theo dung duong ong `build_one_v3`.
 
@@ -157,7 +158,9 @@ def cell_matrices(
     nhay lam duoc ma khong phai sua kien truc.
     """
     cv = C.CostV2(strict_reliable=False)
-    cell = _load_cell(str(mode), float(rho_bar))
+    cell = _load_cell(
+        str(mode), float(rho_bar), calibration_path=str(calibration_path)
+    )
     lb = block_len(DT)
     yt, yh, lt, zs, bid, sd = [], [], [], [], [], []
     for seed in seeds:
