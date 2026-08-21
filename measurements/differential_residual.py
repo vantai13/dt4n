@@ -108,11 +108,16 @@ def path_residuals(
     specs = tandem_links_for_path(path)
     idx_b: Dict[Tuple[str, float, int, str], Mapping[str, Any]] = {}
     for row in rows_b:
-        idx_b[(str(row["mode"]), float(row["rho_bar"]), int(row["seed"]), str(row["link"]))] = row
-    idx_c = {
-        (str(row["mode"]), float(row["rho_bar"]), int(row["seed"])): row
-        for row in rows_c
-    }
+        key = (str(row["mode"]), float(row["rho_bar"]), int(row["seed"]), str(row["link"]))
+        if key in idx_b:
+            raise ValueError("duplicate B row %r" % (key,))
+        idx_b[key] = row
+    idx_c: Dict[Tuple[str, float, int], Mapping[str, Any]] = {}
+    for row in rows_c:
+        key = (str(row["mode"]), float(row["rho_bar"]), int(row["seed"]))
+        if key in idx_c:
+            raise ValueError("duplicate C row %r" % (key,))
+        idx_c[key] = row
     out: List[Dict[str, Any]] = []
     for key in sorted(idx_c):
         mode, rho_bar, seed = key
@@ -129,6 +134,8 @@ def path_residuals(
 
         b_keep = float(np.prod([1.0 - _probe_loss(row) for row in b_rows]))
         b_loss = 1.0 - b_keep
+        if b_loss <= 0.0:
+            raise ValueError("B composed loss <= 0; r_rel undefined for %s %s@%.3f seed=%d" % (path, mode, rho_bar, seed))
         c_loss = _probe_loss(c_row)
         b_delay = float(sum(float(row["q_mean_ms"]) for row in b_rows))
         c_delay = float(c_row["q_mean_ms"])
@@ -150,6 +157,7 @@ def path_residuals(
                 "B_delay_ms": b_delay,
                 "C_delay_ms": c_delay,
                 "r_loss": r_loss,
+                "r_relative_loss": r_loss / b_loss,
                 "r_delay_ms": r_delay,
                 "r_cost_ms": r_delay + w_loss * r_loss,
                 "schedule_digests": {row[0]: _digest(c_row, row[0]) for row in specs},
