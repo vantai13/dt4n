@@ -64,6 +64,40 @@ class BiasedTruthTable(D.TruthTable):
         return delay + self._resid_delay, np.clip(biased, 0.0, 1.0)
 
 
+class RelativePathShiftTruthTable(D.TruthTable):
+    """Multiplicative path-loss residual scoped to one traffic mode.
+
+    The transform is applied after path composition as ``loss * (1 + rel)``.
+    It never clips: ``clip_events`` is a domain-validity detector, not a
+    corrective transform.
+    """
+
+    def __init__(
+        self,
+        rel: float,
+        mode: str,
+        parquet_path: str = D.TRUTH_TABLE,
+    ) -> None:
+        super().__init__(parquet_path)
+        if not (-1.0 < float(rel) < 1.0):
+            raise ValueError("rel phai thuoc (-1, 1)")
+        self._rel = float(rel)
+        self._mode = str(mode)
+        self.clip_events = 0
+        self.eval_count = 0
+
+    def path_tables(
+        self, mode: str, rho_mat: np.ndarray, w_loss: float
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        delay, loss, _cost = super().path_tables(mode, rho_mat, w_loss)
+        if str(mode) != self._mode:
+            return delay, loss, delay + float(w_loss) * loss
+        self.eval_count += int(loss.size)
+        biased = loss * (1.0 + self._rel)
+        self.clip_events += int(np.sum((biased < 0.0) | (biased > 1.0)))
+        return delay, biased, delay + float(w_loss) * biased
+
+
 class LinkShiftTruthTable(D.TruthTable):
     """Truth table plus per-link additive residuals on selected topology links."""
 

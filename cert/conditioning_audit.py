@@ -103,6 +103,7 @@ MAIN_BASELINE_EXPECTED = {
 MAIN_BASELINE_TOL = 2e-8
 MAIN_PFIX_PATH = "results/phase-23/lesson23_7_calibration_2b.json"
 AMENDMENT = "docs/phase-23/00zf-amendment-30.md"
+AMENDMENT_37 = "docs/phase-23/00zn-amendment-37.md"
 SUMMARY_PATH = "results/phase-23/conditioning_audit_summary.json"
 FIGURE_PATH = "results/phase-23/fig6_conditioning_audit.png"
 DOC_PATH = "docs/phase-23/12-mechanisms.md"
@@ -114,6 +115,10 @@ PREDICTION_ORDER = (
 
 def artifact_path(cell: str) -> str:
     return "results/phase-23/conditioning_audit_%s.json" % CELL_SPECS[cell]["slug"]
+
+
+def relative_artifact_path(cell: str) -> str:
+    return "results/phase-23/relative_conclusions_%s.json" % CELL_SPECS[cell]["slug"]
 
 
 def _fit_original(df: pd.DataFrame) -> Dict[str, Any]:
@@ -506,7 +511,7 @@ def _pipeline(
     }
 
 
-def conclusion_flip(
+def conclusion_flip_absolute_superseded(
     base: Mapping[str, np.ndarray],
     prep: Mapping[str, Any],
     qhat_rows: np.ndarray,
@@ -554,6 +559,8 @@ def conclusion_flip(
             "matches_lesson_23_6": bool(max(gaps.values()) <= MAIN_BASELINE_TOL),
         }
     return {
+        "model": "absolute_additive_per_link_clipped",
+        "status": "SUPERSEDED_BY_AMENDMENT_35",
         "baseline": baseline_clean,
         "baseline_approval_23_6": approval,
         "points": rows,
@@ -561,6 +568,89 @@ def conclusion_flip(
         "control_accept_set_unchanged_all_three": bool(accept_ok),
         "M_12a_positive_all_three": bool(all(r["M_12a_sign_positive"] for r in rows)),
         "M_12b_flipped_all_three": bool(all(r["M_12b_flipped"] for r in rows)),
+    }
+
+
+def _flip_by_gate(
+    a0: np.ndarray, a1: np.ndarray, accept: np.ndarray
+) -> Dict[str, Any]:
+    """M-34/M-35: split truth-action flips by the fixed gate decision."""
+    a0 = np.asarray(a0)
+    a1 = np.asarray(a1)
+    accept = np.asarray(accept, dtype=bool)
+    if a0.shape != a1.shape or a0.shape != accept.shape:
+        raise ValueError(
+            "a0/a1/accept shape mismatch: %s %s %s"
+            % (a0.shape, a1.shape, accept.shape)
+        )
+    flip = a1 != a0
+    n_acc = int(accept.sum())
+    n_rej = int((~accept).sum())
+    flip_all = float(flip.mean()) if len(flip) else None
+    flip_acc = float(flip[accept].mean()) if n_acc else None
+    flip_rej = float(flip[~accept].mean()) if n_rej else None
+    identity = None
+    if n_acc and n_rej and flip_all is not None:
+        pooled = (n_acc * float(flip_acc) + n_rej * float(flip_rej)) / (n_acc + n_rej)
+        identity = float(abs(flip_all - pooled))
+    concentration = None
+    if n_rej and flip_all is not None and flip_all > 0.0:
+        concentration = float(float(flip_rej) / flip_all)
+    return {
+        "flip_all_rows": flip_all,
+        "flip_given_accept": flip_acc,
+        "flip_given_reject": flip_rej,
+        "n_accept": n_acc,
+        "n_reject": n_rej,
+        "identity_residual": identity,
+        "concentration_ratio": concentration,
+    }
+
+
+def conclusion_flip_relative(
+    base: Mapping[str, np.ndarray],
+    prep: Mapping[str, Any],
+    qhat_rows: np.ndarray,
+    pert: Mapping[str, np.ndarray],
+    r_rel: float,
+) -> Dict[str, Any]:
+    """M-34..M-37 under the preregistered multiplicative path model."""
+    baseline = _pipeline(base["y_true"], base["y_hat"], prep, qhat_rows)
+    measured = _pipeline(pert["y_true"], pert["y_hat"], prep, qhat_rows)
+    same_yhat = bool(np.array_equal(base["y_hat"], pert["y_hat"]))
+    same_accept = bool(np.array_equal(baseline["_accept"], measured["_accept"]))
+    if not same_accept:
+        raise AssertionError("accept_set doi -> su that ro ri vao cong -> LOI, dung lai")
+    if not same_yhat:
+        raise AssertionError("y_hat doi -> twin nhin thay su that -> LOI, dung lai")
+
+    test = ~np.asarray(prep["is_calib"], dtype=bool)
+    a0 = np.asarray(base["y_true"]).argmin(axis=1)[test]
+    a1 = np.asarray(pert["y_true"]).argmin(axis=1)[test]
+    gate = _flip_by_gate(a0, a1, baseline["_accept"][test])
+    baseline_clean = {k: v for k, v in baseline.items() if not k.startswith("_")}
+    measured_clean = {k: v for k, v in measured.items() if not k.startswith("_")}
+    delta = float(measured["delta"])
+    return {
+        "model": "relative_multiplicative",
+        "r_rel": float(r_rel),
+        "baseline": baseline_clean,
+        "perturbed": measured_clean,
+        "gate_split": gate,
+        "M_34_flip_given_reject": gate["flip_given_reject"],
+        "M_35_flip_given_accept": gate["flip_given_accept"],
+        "M_36_delta_relative": delta,
+        "M_37_delta_still_negative": bool(delta < 0.0),
+        "buffer_retention": (
+            float(delta / baseline["delta"]) if baseline["delta"] != 0.0 else None
+        ),
+        "controls": {
+            "accept_set_unchanged": same_accept,
+            "y_hat_unchanged": same_yhat,
+        },
+        "scale": "error_fraction",
+        "level_tag": "system_risk",
+        "rowset": "test_rows",
     }
 
 
@@ -642,6 +732,29 @@ def coverage_under_misspec(
     }
 
 
+def coverage_under_relative(
+    base: Mapping[str, np.ndarray],
+    prep: Mapping[str, Any],
+    pert: Mapping[str, np.ndarray],
+) -> Dict[str, Any]:
+    """M-38/M-39 control pair under the relative path perturbation."""
+    old = coverage_under_misspec(base, prep, pert)
+    pc = float(old["PC23v2_3_orig_pert"])
+    nc = float(old["NC23v2_8_pert_pert"])
+    return {
+        "baseline_orig_orig": float(old["baseline_orig_orig"]),
+        "PC_test_only": pc,
+        "NC_calibration_and_test": nc,
+        "M_38_PC_in_0_85_0_90": bool(0.85 <= pc <= 0.90),
+        "M_39_NC_ge_0_89": bool(nc >= 0.89),
+        "nominal_coverage": float(old["nominal_coverage"]),
+        "alpha": float(old["alpha"]),
+        "PC_definition": "qhat_from_baseline_calibration_scores_on_perturbed_test",
+        "NC_definition": "qhat_from_perturbed_calibration_scores_on_perturbed_test",
+        "rowset": "test_rows",
+    }
+
+
 def _alignment_control(
     df: pd.DataFrame, base: Mapping[str, np.ndarray], prep: Mapping[str, Any]
 ) -> Dict[str, Any]:
@@ -688,6 +801,74 @@ def _perturbed_matrices(
     return base, perturbed, clip
 
 
+def _loss_record_for_mode(mode: str) -> RS.ResidualRecord:
+    records = [
+        rec
+        for rec in RS.load(RESIDUAL)
+        if str(rec.mode) == str(mode) and str(rec.channel) == "loss"
+    ]
+    if len(records) != 1:
+        raise ValueError("can dung dung mot residual loss cho %s, thay %d" % (mode, len(records)))
+    return records[0]
+
+
+def _relative_estimand_from_record(
+    rec: RS.ResidualRecord, seeds: Sequence[int] = tuple(range(104, 109))
+) -> Dict[str, Any]:
+    """Amendment 37 accounting: mean-of-ratios is primary for M-28."""
+    baselines = rec.provenance.get("baseline_per_seed", {})
+    residuals: List[float] = []
+    baseline_values: List[float] = []
+    relative_values: List[float] = []
+    per_seed: Dict[str, Any] = {}
+    for seed in seeds:
+        key = "seed_%d" % int(seed)
+        if key not in rec.per_unit or key not in baselines:
+            raise ValueError("thieu residual/baseline ghep cap cho %s" % key)
+        residual = float(rec.per_unit[key])
+        baseline = float(baselines[key])
+        if not np.isfinite(baseline) or baseline <= 0.0:
+            raise ValueError("baseline khong hop le cho %s: %r" % (key, baseline))
+        relative = residual / baseline
+        residuals.append(residual)
+        baseline_values.append(baseline)
+        relative_values.append(relative)
+        per_seed[key] = {
+            "absolute_residual": residual,
+            "baseline_magnitude": baseline,
+            "relative": relative,
+        }
+    mean_of_ratios = float(np.mean(relative_values))
+    ratio_of_means = float(np.mean(residuals) / np.mean(baseline_values))
+    return {
+        "relative_point": mean_of_ratios,
+        "relative_point_mean_of_ratios": mean_of_ratios,
+        "relative_point_ratio_of_means": ratio_of_means,
+        "M_28_estimand": "mean_of_seed_ratios",
+        "seeds": [int(seed) for seed in seeds],
+        "n_seed": len(seeds),
+        "per_seed": per_seed,
+        "scale": "loss_fraction_ratio",
+        "level_tag": "per_path",
+        "rowset": "paired_raw_BC_seeds_104_108",
+    }
+
+
+def _relative_matrices(
+    cell: str,
+) -> Tuple[Dict[str, np.ndarray], Dict[str, np.ndarray], B.RelativePathShiftTruthTable, Dict[str, Any]]:
+    spec = CELL_SPECS[cell]
+    mode = str(spec["mode"])
+    rec = _loss_record_for_mode(mode)
+    estimate = _relative_estimand_from_record(rec)
+    base = cell_matrices(
+        TruthTable(TRUTH_TABLE), mode=mode, rho_bar=float(spec["rho_bar"])
+    )
+    table = B.RelativePathShiftTruthTable(float(estimate["relative_point"]), mode)
+    pert = cell_matrices(table, mode=mode, rho_bar=float(spec["rho_bar"]))
+    return base, pert, table, estimate
+
+
 def run_cell(cell: str) -> Dict[str, Any]:
     """Chay [A] -> [B] -> [C] cho mot cell va tra artifact JSON-able."""
     if cell not in CELL_SPECS:
@@ -718,7 +899,7 @@ def run_cell(cell: str) -> Dict[str, Any]:
     }
 
     qrows_all = CM._q_rows(df, fit["keys"], fit["_q"], 3)
-    conclusion = conclusion_flip(
+    conclusion = conclusion_flip_absolute_superseded(
         base,
         prep,
         qrows_all,
@@ -764,6 +945,105 @@ def run_cell(cell: str) -> Dict[str, Any]:
                 pin(RESIDUAL),
                 pin(AMENDMENT),
                 pin(MAIN_PFIX_PATH),
+            ],
+        },
+    }
+    return json_clean(report)
+
+
+def _absolute_superseded_reference(cell: str) -> Dict[str, Any]:
+    path = artifact_path(cell)
+    with open(path, "r", encoding="utf-8") as handle:
+        old = json.load(handle)
+    section = old["C_astar_sensitivity"]
+    conclusion = section.get(
+        "conclusion_flip_absolute_superseded", section.get("conclusion_flip")
+    )
+    if not isinstance(conclusion, Mapping):
+        raise ValueError("artifact cu thieu conclusion flip: %s" % path)
+    point = next(
+        row for row in conclusion["points"] if row["endpoint_label"] == "point"
+    )
+    return {
+        "model": "absolute_additive_per_link_clipped",
+        "status": "SUPERSEDED_BY_AMENDMENT_35",
+        "artifact": path,
+        "baseline": conclusion["baseline"],
+        "point": point,
+    }
+
+
+def run_relative_cell(cell: str) -> Dict[str, Any]:
+    """Lesson 23.7-quater replacement audit for M-34..M-39."""
+    if cell not in CELL_SPECS:
+        raise ValueError("cell phai thuoc %s" % sorted(CELL_SPECS))
+    spec = CELL_SPECS[cell]
+    df = pd.read_parquet(spec["parquet"])
+    fit = _fit_original(df)
+    qrows_all = CM._q_rows(df, fit["keys"], fit["_q"], 3)
+    base, pert, table, estimate = _relative_matrices(cell)
+    prep = prepare(base)
+    alignment = _alignment_control(df, base, prep)
+    if not all(alignment.values()):
+        raise AssertionError("parquet va cell_matrices khong thang hang: %s" % alignment)
+
+    conclusion = conclusion_flip_relative(
+        base, prep, qrows_all, pert, float(estimate["relative_point"])
+    )
+    coverage = coverage_under_relative(base, prep, pert)
+    gate = conclusion["gate_split"]
+    if gate["identity_residual"] is None or gate["identity_residual"] >= 1e-12:
+        raise AssertionError("weighted flip identity failed: %s" % gate)
+    clip_ratio = float(table.clip_events / max(table.eval_count, 1))
+    if clip_ratio != 0.0:
+        raise AssertionError("relative path model left physical domain: %s" % clip_ratio)
+
+    m34 = float(conclusion["M_34_flip_given_reject"])
+    m35 = float(conclusion["M_35_flip_given_accept"])
+    m36 = float(conclusion["M_36_delta_relative"])
+    report = {
+        "schema": "relative_conclusions/v1",
+        "lesson": "23.7-quater",
+        "cell": cell,
+        "cell_role": "MAIN" if cell == MAIN_CELL else "HELD_OUT",
+        "status": "APPLICABLE",
+        "relative_estimand": estimate,
+        "relative_multiplicative": conclusion,
+        "absolute_superseded_reference": _absolute_superseded_reference(cell),
+        "coverage_controls": coverage,
+        "domain_control": {
+            "clip_events": int(table.clip_events),
+            "eval_count": int(table.eval_count),
+            "clip_ratio": clip_ratio,
+            "clipping_applied": False,
+        },
+        "verdict": {
+            "M_34_in_0_02_0_10": bool(0.02 <= m34 <= 0.10),
+            "M_35_in_0_000_0_008": bool(0.0 <= m35 <= 0.008),
+            "M_36_in_minus_0_010_0_000": bool(-0.010 <= m36 <= 0.0),
+            "M_37_delta_still_negative": bool(m36 < 0.0),
+            "M_38_PC_in_0_85_0_90": bool(coverage["M_38_PC_in_0_85_0_90"]),
+            "M_39_NC_ge_0_89": bool(coverage["M_39_NC_ge_0_89"]),
+        },
+        "controls": {
+            "parquet_matrix_alignment": alignment,
+            "accept_set_unchanged": conclusion["controls"]["accept_set_unchanged"],
+            "y_hat_unchanged": conclusion["controls"]["y_hat_unchanged"],
+            "weighted_flip_identity_lt_1e_12": bool(gate["identity_residual"] < 1e-12),
+            "path_clip_ratio_exact_zero": bool(clip_ratio == 0.0),
+        },
+        "provenance": {
+            "script": "cert/conditioning_audit.py --relative",
+            "git_hash": git("git", "rev-parse", "HEAD"),
+            "git_dirty": bool(git("git", "status", "--porcelain", "--untracked-files=no")),
+            "timestamp_utc": datetime.now(timezone.utc).isoformat(),
+            "inputs": [
+                pin(spec["parquet"]),
+                pin(spec["fallback"]),
+                pin(RESIDUAL),
+                pin(TRUTH_TABLE),
+                pin(AMENDMENT_37),
+                pin(artifact_path(cell)),
             ],
         },
     }
@@ -1049,10 +1329,40 @@ def _print_cell(report: Mapping[str, Any]) -> None:
     ))
 
 
+def _print_relative_cell(report: Mapping[str, Any]) -> None:
+    rel = report["relative_multiplicative"]
+    gate = rel["gate_split"]
+    cov = report["coverage_controls"]
+    old = report["absolute_superseded_reference"]["point"]["perturbed"]["delta"]
+    print("=" * 78)
+    print("LESSON 23.7-QUATER -- %s" % report["cell"])
+    print("=" * 78)
+    print("r_rel=%+.9f (mean-of-ratios)" % rel["r_rel"])
+    print(
+        "M-34 reject=%.6f  M-35 accept=%.6f  concentration=%.6f"
+        % (
+            gate["flip_given_reject"],
+            gate["flip_given_accept"],
+            gate["concentration_ratio"],
+        )
+    )
+    print(
+        "M-36 Delta=%+.9f  M-37 negative=%s  buffer-retention=%.6f"
+        % (rel["M_36_delta_relative"], rel["M_37_delta_still_negative"], rel["buffer_retention"])
+    )
+    print(
+        "M-38 PC=%.6f  M-39 NC=%.6f  baseline=%.6f"
+        % (cov["PC_test_only"], cov["NC_calibration_and_test"], cov["baseline_orig_orig"])
+    )
+    print("absolute superseded point Delta=%+.9f" % old)
+    print("verdict=%s" % json.dumps(report["verdict"], sort_keys=True))
+
+
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cell", choices=list(CELL_SPECS))
     parser.add_argument("--out")
+    parser.add_argument("--relative", action="store_true")
     parser.add_argument("--summarize", action="store_true")
     args = parser.parse_args()
     if args.summarize:
@@ -1074,9 +1384,11 @@ def main() -> None:
         return
     if not args.cell:
         parser.error("can --cell hoac --summarize")
-    output = args.out or artifact_path(args.cell)
-    report = run_cell(args.cell)
-    _print_cell(report)
+    output = args.out or (
+        relative_artifact_path(args.cell) if args.relative else artifact_path(args.cell)
+    )
+    report = run_relative_cell(args.cell) if args.relative else run_cell(args.cell)
+    (_print_relative_cell if args.relative else _print_cell)(report)
     os.makedirs(os.path.dirname(os.path.abspath(output)), exist_ok=True)
     with open(output, "w", encoding="utf-8") as handle:
         json.dump(report, handle, indent=1, sort_keys=True)

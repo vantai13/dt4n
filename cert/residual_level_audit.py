@@ -115,33 +115,7 @@ class PathShiftClipTruthTable(PathShiftTruthTable):
         return delay, shifted, delay + float(w_loss) * shifted
 
 
-class RelativePathShiftTruthTable(D.TruthTable):
-    """Multiplicative path-loss residual, scoped to one traffic mode.
-
-    ``loss * (1 + rel)`` with ``rel in (-1, 1)`` preserves the physical
-    domain for the measured negative residual.  Counters remain validity
-    detectors; no clipping is performed.
-    """
-
-    def __init__(self, rel: float, mode: str, parquet_path: str = TRUTH_TABLE) -> None:
-        super().__init__(parquet_path)
-        if not (-1.0 < float(rel) < 1.0):
-            raise ValueError("rel phai thuoc (-1, 1)")
-        self._rel = float(rel)
-        self._mode = str(mode)
-        self.clip_events = 0
-        self.eval_count = 0
-
-    def path_tables(
-        self, mode: str, rho_mat: np.ndarray, w_loss: float
-    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
-        delay, loss, _cost = super().path_tables(mode, rho_mat, w_loss)
-        if str(mode) != self._mode:
-            return delay, loss, delay + float(w_loss) * loss
-        self.eval_count += int(loss.size)
-        biased = loss * (1.0 + self._rel)
-        self.clip_events += int(np.sum((biased < 0.0) | (biased > 1.0)))
-        return delay, biased, delay + float(w_loss) * biased
+RelativePathShiftTruthTable = B.RelativePathShiftTruthTable
 
 
 class LinkShiftNoClipTruthTable(D.TruthTable):
@@ -228,7 +202,8 @@ def relative_point_from_raw(
         }
     absolute_point = float(np.mean(absolute))
     baseline_magnitude = float(np.mean(baseline))
-    relative_point = absolute_point / baseline_magnitude
+    relative_point_ratio_of_means = absolute_point / baseline_magnitude
+    relative_point_mean_of_ratios = float(np.mean(relative))
     published = _loss_record(mode)
     return {
         "mode": str(mode),
@@ -236,8 +211,13 @@ def relative_point_from_raw(
         "n_seed": len(absolute),
         "baseline_magnitude": baseline_magnitude,
         "absolute_point": absolute_point,
-        "relative_point": relative_point,
-        "mean_seed_relative": float(np.mean(relative)),
+        # Amendment 37: M-28 extrapolates a ratio, so the primary estimand is
+        # the mean of paired seed ratios.  Keep the other estimator diagnostic.
+        "relative_point": relative_point_mean_of_ratios,
+        "relative_point_mean_of_ratios": relative_point_mean_of_ratios,
+        "relative_point_ratio_of_means": relative_point_ratio_of_means,
+        "mean_seed_relative": relative_point_mean_of_ratios,
+        "M_28_estimand": "mean_of_seed_ratios",
         "relative_sd": float(np.std(relative, ddof=1)),
         "matches_residual_cascade": bool(abs(absolute_point - float(published.point)) < 5e-4),
         "published_absolute_point": float(published.point),

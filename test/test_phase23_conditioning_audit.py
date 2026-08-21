@@ -15,6 +15,7 @@ from cert import conditioning_audit as A
 
 MAIN_ARTIFACT = A.artifact_path(A.MAIN_CELL)
 ALL_ARTIFACTS = tuple(A.artifact_path(cell) for cell in A.CELL_SPECS)
+RELATIVE_ARTIFACTS = tuple(A.relative_artifact_path(cell) for cell in A.CELL_SPECS)
 
 
 def _load(path: str):
@@ -73,6 +74,26 @@ def test_M13_a_b_cung_bang_0_la_trung_tinh():
     assert out["M_13_prediction_correct"] is None
 
 
+def test_flip_by_gate_giu_dong_nhat_thuc_co_trong_so():
+    a0 = np.asarray([0, 0, 0, 0, 0, 0])
+    a1 = np.asarray([1, 0, 1, 0, 0, 1])
+    accept = np.asarray([True, True, False, False, False, False])
+    out = A._flip_by_gate(a0, a1, accept)
+    assert out["flip_all_rows"] == pytest.approx(0.5)
+    assert out["flip_given_accept"] == pytest.approx(0.5)
+    assert out["flip_given_reject"] == pytest.approx(0.5)
+    assert out["identity_residual"] < 1e-12
+    assert out["concentration_ratio"] == pytest.approx(1.0)
+
+
+def test_nhanh_tuyet_doi_cu_van_co_diem_neo_da_ky():
+    """Regression control; the superseded branch remains a reference point."""
+    assert callable(A.conclusion_flip_absolute_superseded)
+    old = A._absolute_superseded_reference(A.MAIN_CELL)
+    assert old["status"] == "SUPERSEDED_BY_AMENDMENT_35"
+    assert abs(old["point"]["perturbed"]["delta"] - 0.04487496174747532) < 1e-9
+
+
 @pytest.mark.skipif(not os.path.exists(MAIN_ARTIFACT), reason="chua chay cell chinh")
 def test_doi_chung_3_tai_lap_lesson_23_6():
     report = _load(MAIN_ARTIFACT)
@@ -121,3 +142,37 @@ def test_12_mechanisms_duoc_sinh_tu_summary():
     summary = _load(A.SUMMARY_PATH)
     with open(A.DOC_PATH, "r", encoding="utf-8") as handle:
         assert handle.read() == A.markdown_report(summary)
+
+
+@pytest.mark.skipif(
+    not all(os.path.exists(path) for path in RELATIVE_ARTIFACTS),
+    reason="chua chay du ba cell 23.7-quater",
+)
+def test_M35_flip_tren_tap_chap_nhan_duoc_tach_khoi_tap_tu_choi():
+    """Record the mechanism hypothesis without forcing its observed direction."""
+    for cell in A.CELL_SPECS:
+        out = _load(A.relative_artifact_path(cell))
+        gate = out["relative_multiplicative"]["gate_split"]
+        assert gate["concentration_ratio"] is not None
+        assert gate["identity_residual"] < 1e-12
+        # Do not assert reject > accept: a reversal is a reportable result.
+
+
+@pytest.mark.skipif(
+    not all(os.path.exists(path) for path in RELATIVE_ARTIFACTS),
+    reason="chua chay du ba cell 23.7-quater",
+)
+def test_relative_branch_controls_and_accounting_are_explicit():
+    for cell in A.CELL_SPECS:
+        out = _load(A.relative_artifact_path(cell))
+        rel = out["relative_estimand"]
+        conclusion = out["relative_multiplicative"]
+        assert rel["relative_point"] == rel["relative_point_mean_of_ratios"]
+        assert "relative_point_ratio_of_means" in rel
+        assert rel["M_28_estimand"] == "mean_of_seed_ratios"
+        assert conclusion["controls"]["accept_set_unchanged"] is True
+        assert conclusion["controls"]["y_hat_unchanged"] is True
+        assert out["domain_control"]["clip_ratio"] == 0.0
+        assert out["verdict"]["M_37_delta_still_negative"] is (
+            conclusion["M_36_delta_relative"] < 0.0
+        )

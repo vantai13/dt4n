@@ -75,6 +75,11 @@ def test_relative_point_khop_residual_cascade_va_ghi_diem_do():
     assert out["matches_residual_cascade"]
     assert out["rho_bar_measured"] == 0.925
     assert -0.20 <= out["relative_point"] <= -0.12
+    assert out["relative_point"] == out["relative_point_mean_of_ratios"]
+    assert out["M_28_estimand"] == "mean_of_seed_ratios"
+    assert out["relative_point_ratio_of_means"] != pytest.approx(
+        out["relative_point_mean_of_ratios"]
+    )
     assert out["scale"] == "loss_fraction"
 
 
