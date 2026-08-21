@@ -150,8 +150,15 @@ cost'_p = delay_p + w_loss * loss_p * (1 + r_rel)
 w_eff   = w_loss * (1 + r_rel)
 ```
 
-Tai cell chinh, `w_loss=1451.376578` va mean-of-ratios
-`r_rel=-0.164744220`, nen `w_eff=1212.270676`, hay ti so `0.835255780`.
+Trong pipeline v3, `w_loss` la cell-specific, khong phai hang so cu
+`1451.376578` cua builder doi truoc:
+
+| Cell | w_loss pipeline v3 | measured ratio | w_eff |
+|---|---:|---:|---:|
+| poisson@0.925 | 3222.244682 | 0.835255780 | 2691.398494 |
+| poisson@0.850 | 2424.359604 | 0.835255780 | 2024.960371 |
+| h2@0.700 | 2861.395301 | 0.933615578 | 2671.443227 |
+
 Do do Lesson 23.7-quater cung chinh xac la mot phep thu **objective
 misspecification**: twin/gate van duoc tao theo `w_loss`, con ground truth
 duoc cham theo `w_eff`.
