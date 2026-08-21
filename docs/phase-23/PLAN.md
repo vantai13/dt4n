@@ -61,6 +61,8 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
       chua dung, mo rong lift/swing va selection-vs-default len du 8 cell
 23-40 khoa Lesson 23.16: phan tang tien nghiem theo err_neo, lam day truc
       Poisson va severe-test H2 voi truth-domain control truoc builder
+23-41 sua domain gate truoc outcome: eligibility phai dung distribution
+      calib-builder sigma=0.0096; SLA-regime chi la stress diagnostic
 ```
 
 Lesson 23.11 cu (sua `LINKS` de tao truc swing) bi huy bo, khong xoa khoi
