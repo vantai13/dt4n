@@ -46,7 +46,7 @@ from mininet.load_spec import (
     capacity_bytes_per_s,
     merge_schedules,
 )
-from mininet.topology_tandem import TANDEM_BY_IDX, TANDEM_LINKS
+from mininet.topology_tandem import TANDEM_BY_IDX, TANDEM_LINKS, tandem_links_for_path
 from twin import cost_v2 as C
 
 
@@ -198,9 +198,33 @@ def _default_rhos(branch: str) -> Tuple[float, ...]:
     return C_RHO_BARS if branch == "C" else B_RHO_BARS
 
 
-def _pid(branch: str, idx: int, mode: str, rho_bar: float, seed: int, link_idx: Optional[int]) -> str:
+def activate_t7_path(path: str) -> None:
+    """Select a topology_v7 path for this runner process.
+
+    The default remains byte-for-byte compatible with the historical 20R.6
+    campaign.  A live process owns one topology, so process-local globals keep
+    the existing measurement helpers small and auditable.
+    """
+    global TANDEM_LINKS, TANDEM_BY_IDX
+    if not path:
+        return
+    TANDEM_LINKS = tandem_links_for_path(str(path))
+    TANDEM_BY_IDX = {idx: row for idx, row in enumerate(TANDEM_LINKS, start=1)}
+
+
+def _pid(
+    branch: str,
+    idx: int,
+    mode: str,
+    rho_bar: float,
+    seed: int,
+    link_idx: Optional[int],
+    t7_path: str = "",
+) -> str:
     tag = "path" if link_idx is None else "L%d" % int(link_idx)
-    return "20r6_%s_%04d_%s_r%04d_s%d_%s" % (
+    prefix = "23d_%s" % str(t7_path).lower() if t7_path else "20r6"
+    return "%s_%s_%04d_%s_r%04d_s%d_%s" % (
+        prefix,
         str(branch).lower(),
         int(idx),
         str(mode),
@@ -215,6 +239,7 @@ def build_plan(
     modes: Sequence[str] = MODES,
     rho_bars: Sequence[float] = (),
     seeds: Sequence[int] = SEEDS,
+    t7_path: str = "",
 ) -> List[Dict[str, Any]]:
     if branch not in BRANCHES:
         raise ValueError("branch phai la mot trong %s" % (BRANCHES,))
@@ -230,7 +255,7 @@ def build_plan(
                             "mode": str(mode),
                             "rho_bar": float(rho_bar),
                             "seed": int(seed),
-                            "path": PATH_NAME,
+                            "path": str(t7_path) if t7_path else PATH_NAME,
                             "link_idx": None,
                         }
                     )
@@ -247,8 +272,13 @@ def build_plan(
                             }
                         )
     for idx, row in enumerate(rows, start=1):
+        if t7_path:
+            row["t7_path"] = str(t7_path)
         row["idx"] = idx
-        row["pid"] = _pid(branch, idx, row["mode"], row["rho_bar"], row["seed"], row.get("link_idx"))
+        row["pid"] = _pid(
+            branch, idx, row["mode"], row["rho_bar"], row["seed"],
+            row.get("link_idx"), str(t7_path),
+        )
     return rows
 
 
@@ -918,7 +948,7 @@ def _row_from_measurement(
         "phase": "20R.6",
         "runner": "measurements.additivity_live",
         "raw_dir": args.raw_dir,
-        "plan_branch_digest": stable_digest(build_plan(point["branch"], parse_list(args.modes), parse_float_list(args.rho_bar) if args.rho_bar else _default_rhos(point["branch"]), parse_int_list(args.seeds))),
+        "plan_branch_digest": stable_digest(build_plan(point["branch"], parse_list(args.modes), parse_float_list(args.rho_bar) if args.rho_bar else _default_rhos(point["branch"]), parse_int_list(args.seeds), getattr(args, "t7_path", ""))),
         "w_loss": float(w_loss),
         "queue_mean_ms": float(owd_ms["mean"]),
         "queue_sd_ms": float(owd_ms["sd"]),
@@ -1116,12 +1146,13 @@ def run_smoke_topo(args: argparse.Namespace) -> None:
     from mininet.node import OVSBridge
     from mininet.topology_tandem import TandemTopo, configure_qdiscs
 
+    activate_t7_path(getattr(args, "t7_path", ""))
     saved_sysctl = disable_ipv6_on_new_links()
     net = None
     try:
-        net = Mininet(topo=TandemTopo(), link=Link, switch=OVSBridge, controller=None)
+        net = Mininet(topo=TandemTopo(link_specs=TANDEM_LINKS), link=Link, switch=OVSBridge, controller=None)
         net.start()
-        proof = configure_qdiscs(net)
+        proof = configure_qdiscs(net, link_specs=TANDEM_LINKS)
         qdisc_ifaces = measured_qdisc_ifaces_from_proof(proof)
         direct_before = direct_packet_snapshot(qdisc_ifaces)
         checks = {
@@ -1175,10 +1206,11 @@ def run_smoke_topo(args: argparse.Namespace) -> None:
 
 
 def run_live(args: argparse.Namespace) -> None:
+    activate_t7_path(getattr(args, "t7_path", ""))
     rhos = parse_float_list(args.rho_bar) if args.rho_bar else _default_rhos(args.branch)
     modes = parse_list(args.modes)
     seeds = parse_int_list(args.seeds)
-    plan = build_plan(args.branch, modes=modes, rho_bars=rhos, seeds=seeds)
+    plan = build_plan(args.branch, modes=modes, rho_bars=rhos, seeds=seeds, t7_path=getattr(args, "t7_path", ""))
     state = load_state(args.state, args.branch, plan, args)
     todo = select_todo(plan, state, args.max_points)
 
@@ -1204,9 +1236,9 @@ def run_live(args: argparse.Namespace) -> None:
     saved_sysctl = disable_ipv6_on_new_links()
     net = None
     try:
-        net = Mininet(topo=TandemTopo(), link=Link, switch=OVSBridge, controller=None)
+        net = Mininet(topo=TandemTopo(link_specs=TANDEM_LINKS), link=Link, switch=OVSBridge, controller=None)
         net.start()
-        proof = configure_qdiscs(net)
+        proof = configure_qdiscs(net, link_specs=TANDEM_LINKS)
         proof["sysctl_saved"] = saved_sysctl
         state["qdisc_proof"] = proof
         qdisc_ifaces = measured_qdisc_ifaces_from_proof(proof)
@@ -1308,6 +1340,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--rho-bar", default="", help="comma-separated rho_bar values; default depends on branch")
     ap.add_argument("--seeds", default=",".join(str(seed) for seed in SEEDS))
     ap.add_argument("--state", default="", help="checkpoint path; default depends on branch")
+    ap.add_argument("--t7-path", choices=("", "P1", "P3"), default="", help="measure an exact topology_v7 path; empty preserves 20R.6")
     ap.add_argument("--raw-dir", default=RAW)
     ap.add_argument("--calibration", default=D.CALIBRATION)
     ap.add_argument("--duration", type=float, default=DUR)
@@ -1335,7 +1368,10 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     args = ap.parse_args(argv)
 
     if not args.state:
-        args.state = DEFAULT_STATE[args.branch]
+        if args.t7_path:
+            args.state = "results/phase-23/differential_live/%s_%s.json" % (args.t7_path.lower(), args.branch.lower())
+        else:
+            args.state = DEFAULT_STATE[args.branch]
     if args.probe_rate is not None and args.probe_rate <= 0.0:
         ap.error("--probe-rate phai > 0")
     if args.carve_out_fraction < 0.0:

@@ -8,7 +8,7 @@ qdisc stack with ``setup_measure_qdisc`` and ``setup_return_qdisc``.
 
 from __future__ import annotations
 
-from typing import Any, Dict, List, Tuple
+from typing import Any, Dict, List, Sequence, Tuple
 
 from mininet.topo import Topo
 
@@ -21,12 +21,37 @@ TANDEM_LINKS: Tuple[Tuple[str, str, float, int, float], ...] = (
 TANDEM_BY_IDX = {idx: row for idx, row in enumerate(TANDEM_LINKS, start=1)}
 TANDEM_BY_NAME = {row[0]: row for row in TANDEM_LINKS}
 
+# Reverse-direction delay values already used by the validated 20R.6 runner,
+# keyed by the measured (bandwidth Mbps, queue packets) class.  topology_v7
+# uses exactly these three classes.
+CLASS_BASE_MS = {
+    (8.0, 18): 1.107,
+    (6.0, 13): 1.712,
+    (4.0, 10): 2.436,
+}
+
+
+def tandem_links_for_path(path: str) -> Tuple[Tuple[str, str, float, int, float], ...]:
+    """Return the validated tandem-qdisc specification for a topology_v7 path."""
+    from twin import topology_v7 as T7
+
+    if str(path) not in T7.PATHS:
+        raise ValueError("unknown topology_v7 path %r" % path)
+    rows = []
+    for idx, link in enumerate(T7.PATHS[str(path)], start=1):
+        bw, _delay, q = T7.LINKS[str(link)]
+        key = (float(bw), int(q))
+        if key not in CLASS_BASE_MS:
+            raise ValueError("no validated tandem class for %s: %s" % (link, key))
+        rows.append(("L%d" % idx, str(link), float(bw), int(q), float(CLASS_BASE_MS[key])))
+    return tuple(rows)
+
 
 class TandemTopo(Topo):
     """Linear path with independent load and per-link probe hosts."""
 
-    def build(self) -> None:
-        n = len(TANDEM_LINKS)
+    def build(self, link_specs: Sequence[Tuple[str, str, float, int, float]] = TANDEM_LINKS) -> None:
+        n = len(tuple(link_specs))
         for i in range(n + 1):
             self.addSwitch("s%d" % i, failMode="standalone")
 
@@ -60,7 +85,11 @@ def _assert_host_no_hidden_queue(node: Any, ifname: str) -> Dict[str, Any]:
     return _raise_if_hidden({"ifname": ifname, "raw": raw, "ok": ok})
 
 
-def configure_qdiscs(net: Any, check_access: bool = True) -> Dict[str, Any]:
+def configure_qdiscs(
+    net: Any,
+    check_access: bool = True,
+    link_specs: Sequence[Tuple[str, str, float, int, float]] = TANDEM_LINKS,
+) -> Dict[str, Any]:
     """Install Phase L qdiscs and assert the measured stack on all links."""
     from mininet.topology_split_qdisc import (
         intf_toward,
@@ -71,7 +100,8 @@ def configure_qdiscs(net: Any, check_access: bool = True) -> Dict[str, Any]:
     measured: List[Dict[str, Any]] = []
     access: List[Dict[str, Any]] = []
     reinstall_log: List[Dict[str, Any]] = []
-    for i, (name, t7_link, bw, q, base_ms) in enumerate(TANDEM_LINKS, start=1):
+    specs = tuple(link_specs)
+    for i, (name, t7_link, bw, q, base_ms) in enumerate(specs, start=1):
         a = net.get("s%d" % (i - 1))
         b = net.get("s%d" % i)
         fwd = intf_toward(a, b.name)
@@ -93,7 +123,7 @@ def configure_qdiscs(net: Any, check_access: bool = True) -> Dict[str, Any]:
         )
 
     if check_access:
-        for host in ("hsrc", "hdst") + tuple("hload%d" % i for i in range(1, 4)) + tuple("hsink%d" % i for i in range(1, 4)) + tuple("hpa%d" % i for i in range(1, 4)) + tuple("hpb%d" % i for i in range(1, 4)):
+        for host in ("hsrc", "hdst") + tuple("hload%d" % i for i in range(1, len(specs) + 1)) + tuple("hsink%d" % i for i in range(1, len(specs) + 1)) + tuple("hpa%d" % i for i in range(1, len(specs) + 1)) + tuple("hpb%d" % i for i in range(1, len(specs) + 1)):
             node = net.get(host)
             for intf in node.intfList():
                 if intf.name == "lo":
