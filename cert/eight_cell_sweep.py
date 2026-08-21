@@ -49,9 +49,13 @@ LEGACY_DELTA = {
 }
 
 
-def sla_objective_for_cell(cell: str, artifact: str = SLA_ARTIFACT) -> Dict[str, float]:
+def sla_objective_for_cell(
+    cell: str,
+    artifact: str = SLA_ARTIFACT,
+    spec: Mapping[str, Any] | None = None,
+) -> Dict[str, float]:
     """Read both objective parameters from the frozen SLA artifact."""
-    spec = CELL_SPECS[cell]
+    spec = CELL_SPECS[cell] if spec is None else spec
     with open(artifact, "r", encoding="utf-8") as handle:
         rows = json.load(handle)["cells"]
     matches = [
@@ -69,9 +73,13 @@ def sla_objective_for_cell(cell: str, artifact: str = SLA_ARTIFACT) -> Dict[str,
     }
 
 
-def w_loss_for_cell(cell: str, artifact: str = SLA_ARTIFACT) -> float:
+def w_loss_for_cell(
+    cell: str,
+    artifact: str = SLA_ARTIFACT,
+    spec: Mapping[str, Any] | None = None,
+) -> float:
     """Read the cell-specific objective weight from the frozen SLA artifact."""
-    return float(sla_objective_for_cell(cell, artifact)["w_loss"])
+    return float(sla_objective_for_cell(cell, artifact, spec=spec)["w_loss"])
 
 
 def _decomposition_f2(
@@ -144,9 +152,11 @@ def _objective_curve(
     accept: np.ndarray,
     crossfit: Mapping[str, Any],
     selected_at_one: Mapping[str, float],
+    spec: Mapping[str, Any] | None = None,
+    sla_artifact: str = SLA_ARTIFACT,
 ) -> Dict[str, Any]:
-    spec = CELL_SPECS[cell]
-    objective = sla_objective_for_cell(cell)
+    spec = CELL_SPECS[cell] if spec is None else spec
+    objective = sla_objective_for_cell(cell, sla_artifact, spec=spec)
     w_loss = float(objective["w_loss"])
     loss_exchange = float(objective["loss_exchange"])
     base = cell_matrices(
@@ -179,15 +189,20 @@ def _objective_curve(
     return {
         "w_loss": w_loss,
         "loss_exchange_at_ratio_one": loss_exchange,
-        "w_loss_source": SLA_ARTIFACT,
+        "w_loss_source": sla_artifact,
         "curve": curve,
         "confirm_ratio": {"ratio": CONFIRM_RATIO, "result": confirm},
         "ratio_one_selected_delta_gap": parity,
     }
 
 
-def analyze_cell(cell: str) -> Dict[str, Any]:
-    df = pd.read_parquet(CELL_SPECS[cell]["parquet"])
+def analyze_cell(
+    cell: str,
+    spec: Mapping[str, Any] | None = None,
+    sla_artifact: str = SLA_ARTIFACT,
+) -> Dict[str, Any]:
+    spec = CELL_SPECS[cell] if spec is None else spec
+    df = pd.read_parquet(spec["parquet"])
     score, accept = F.c3_accept_set(df)
     crossfit = F.build_crossfit_predictions(df, score, accept)
     test_idx = crossfit["test_idx"]
@@ -199,7 +214,15 @@ def analyze_cell(cell: str) -> Dict[str, Any]:
     decomposition = _decomposition_f2(df, accept, test_idx, f2)
     if decomposition["identity_residual"] > 1e-12:
         raise AssertionError("lift/swing identity fail for %s" % cell)
-    objective = _objective_curve(cell, df, accept, crossfit, selected)
+    objective = _objective_curve(
+        cell,
+        df,
+        accept,
+        crossfit,
+        selected,
+        spec=spec,
+        sla_artifact=sla_artifact,
+    )
     return json_clean(
         {
             "cell": cell,

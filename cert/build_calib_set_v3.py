@@ -119,8 +119,15 @@ def _git(*cmd: str) -> str:
         return "unknown"
 
 
-def _load_cell(mode: str, rho_bar: float) -> Mapping[str, Any]:
-    cells = {(str(c["mode"]), float(c["rho_bar"])): c for c in feasible_cells(CALIBRATION, include_pc1=True)}
+def _load_cell(
+    mode: str,
+    rho_bar: float,
+    calibration_path: str = CALIBRATION,
+) -> Mapping[str, Any]:
+    cells = {
+        (str(c["mode"]), float(c["rho_bar"])): c
+        for c in feasible_cells(calibration_path, include_pc1=True)
+    }
     key = (str(mode), float(rho_bar))
     if key not in cells:
         raise SystemExit("o %s khong kha thi trong sla_calibration.json" % (key,))
@@ -481,10 +488,11 @@ def build_cell(
     aoi_profile: str = "U0",
     n: int = N,
     v3_split: bool = False,
+    calibration_path: str = CALIBRATION,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     tt = TruthTable(TRUTH_TABLE)
     cv = C.CostV2(strict_reliable=False)
-    cell = _load_cell(mode, rho_bar)
+    cell = _load_cell(mode, rho_bar, calibration_path=calibration_path)
     parts, metas = [], []
     for seed in seeds:
         frame, meta = build_one_v3(cell, int(seed), tt, cv, aoi_profile=aoi_profile, n=int(n))
@@ -503,13 +511,20 @@ def build_cell(
     meta["seeds"] = [int(s) for s in seeds]
     meta["n"] = int(n)
     meta["inherited_v2_shared_columns"] = bool(inherited_v2)
+    meta["calibration_path"] = str(calibration_path)
     return df, meta
 
 
-def staleness_path_diagnostic(mode: str, rho_bar: float, seed: int = 101, n: int = 20_000) -> Dict[str, Any]:
+def staleness_path_diagnostic(
+    mode: str,
+    rho_bar: float,
+    seed: int = 101,
+    n: int = 20_000,
+    calibration_path: str = CALIBRATION,
+) -> Dict[str, Any]:
     tt = TruthTable(TRUTH_TABLE)
     cv = C.CostV2(strict_reliable=False)
-    cell = _load_cell(mode, rho_bar)
+    cell = _load_cell(mode, rho_bar, calibration_path=calibration_path)
     arr = _cell_arrays(tt, cv, cell, seed=seed, n=n, dt=DT, sigma_override=SIGMA)
     cur, old, _n_z0 = _valid_rows(n, DT)
     keep = old >= int(offset_steps("PC4").max())
@@ -537,6 +552,7 @@ def main() -> None:
     parser.add_argument("--n", type=int, default=N)
     parser.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
     parser.add_argument("--aoi-profile", default="U0", choices=sorted(AOI_PROFILES))
+    parser.add_argument("--calibration", default=CALIBRATION)
     parser.add_argument("--v3-split", action="store_true", help="positive control: split by sample")
     parser.add_argument("--v3", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
@@ -564,13 +580,16 @@ def main() -> None:
         aoi_profile=str(args.aoi_profile),
         n=int(args.n),
         v3_split=v3_split,
+        calibration_path=str(args.calibration),
     )
     v2_path = V2_TEMPLATE % (str(args.mode), float(args.rho_bar)) if args.aoi_profile == "U0" and not v3_split else None
     report = validate_v3(df, v2_path)
 
     tt = TruthTable(TRUTH_TABLE)
     cv = C.CostV2(strict_reliable=False)
-    cell = _load_cell(str(args.mode), float(args.rho_bar))
+    cell = _load_cell(
+        str(args.mode), float(args.rho_bar), calibration_path=str(args.calibration)
+    )
     if args.aoi_profile == "U0":
         reproduced = reproduce_20R_fixed_z(cell, tt, cv, seeds=args.seeds, n=int(args.n))
         v5_compare = compare_20R_constant_sigma(reproduced, str(args.mode), float(args.rho_bar))
@@ -600,7 +619,11 @@ def main() -> None:
             "V5_reproduce_20R": reproduced,
             "V5_compare_20R": v5_compare,
             "NC1_z0": nc1,
-            "staleness_path_diagnostic": staleness_path_diagnostic(str(args.mode), float(args.rho_bar)) if args.aoi_profile == "U0" else {},
+            "staleness_path_diagnostic": staleness_path_diagnostic(
+                str(args.mode),
+                float(args.rho_bar),
+                calibration_path=str(args.calibration),
+            ) if args.aoi_profile == "U0" else {},
             "gap_true_pct": {("p%d" % q): float(np.percentile(df["gap_true"], q)) for q in (5, 10, 25, 50, 75, 90)},
             "provenance": {
                 "script": "cert/build_calib_set_v3.py",
@@ -620,7 +643,7 @@ def main() -> None:
                     f: _sha256(f)
                     for f in (
                         TRUTH_TABLE,
-                        CALIBRATION,
+                        str(args.calibration),
                         "results/phase-20R/decision_error_constant_sigma.parquet",
                         "twin/cost_v2.py",
                         "twin/link_model_v2.py",
