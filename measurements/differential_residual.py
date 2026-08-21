@@ -317,25 +317,30 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--out", default=OUT)
     args = ap.parse_args(argv)
 
-    states: Dict[str, Dict[str, Any]] = {}
+    states: Dict[str, Dict[str, List[Dict[str, Any]]]] = {}
     residuals: Dict[str, List[Dict[str, Any]]] = {}
     proofs = {}
     input_files = {}
     for path in PATHS:
-        b_file = str(getattr(args, "%s_b" % path.lower()))
-        c_file = str(getattr(args, "%s_c" % path.lower()))
-        state_b, rows_b = read_state(b_file, "B", path)
-        state_c, rows_c = read_state(c_file, "C", path)
-        proofs[path] = {
-            "B": validate_path_proof(state_b, path),
-            "C": validate_path_proof(state_c, path),
+        files_by_branch = {
+            "B": [part.strip() for part in str(getattr(args, "%s_b" % path.lower())).split(",") if part.strip()],
+            "C": [part.strip() for part in str(getattr(args, "%s_c" % path.lower())).split(",") if part.strip()],
         }
+        states[path] = {"B": [], "C": []}
+        rows_by_branch: Dict[str, List[Dict[str, Any]]] = {"B": [], "C": []}
+        proofs[path] = {"B": [], "C": []}
+        input_files[path] = {"B": [], "C": []}
+        for branch, files in files_by_branch.items():
+            if not files:
+                raise ValueError("no %s state files supplied for %s" % (branch, path))
+            for state_file in files:
+                state, rows = read_state(state_file, branch, path)
+                states[path][branch].append(state)
+                rows_by_branch[branch].extend(rows)
+                proofs[path][branch].append(validate_path_proof(state, path))
+                input_files[path][branch].append({"path": state_file, "sha256": sha256_file(state_file)})
+        rows_b, rows_c = rows_by_branch["B"], rows_by_branch["C"]
         residuals[path] = path_residuals(rows_b, rows_c, path)
-        states[path] = {"B": state_b, "C": state_c}
-        input_files[path] = {
-            "B": {"path": b_file, "sha256": sha256_file(b_file)},
-            "C": {"path": c_file, "sha256": sha256_file(c_file)},
-        }
 
     report = analyze(residuals, args.truth_table, args.calibration, args.n_boot)
     report["validity"] = {
@@ -353,7 +358,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
         "n_boot": int(args.n_boot),
         "bootstrap_seed": BOOT_SEED,
         "state_plan_digests": {
-            path: {branch: state.get("plan_digest") for branch, state in pair.items()}
+            path: {branch: [state.get("plan_digest") for state in state_list] for branch, state_list in pair.items()}
             for path, pair in states.items()
         },
     }
