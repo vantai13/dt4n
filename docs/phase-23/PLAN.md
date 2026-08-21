@@ -75,6 +75,11 @@ Trang thai Lesson 23.15 (2026-08-21): **DONG** theo Amendment 39. Nam cell
 confirmation da chay offline; M-46/M-47/M-48 MISS, M-49..M-52 HIT. Khong
 retune va khong khoi dong lai Lesson 23.11 topology.
 
+Trang thai Lesson 23.16 (2026-08-21): **DONG** theo Amendments 40--41.
+Bien Poisson thu hep thanh `(0.900,0.925)`; M-53/M-54/M-55/M-56 HIT,
+M-57 va M-47b MISS, M-48b HIT [TAI TINH]. H2 severe test bac bo tong quat
+hoa dau qua ho traffic. Khong lam day luoi them theo stop rule.
+
 ## Trang thai Lesson 23.6
 
 ```text
