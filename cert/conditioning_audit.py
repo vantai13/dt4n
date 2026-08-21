@@ -999,7 +999,12 @@ def _print_cell(report: Mapping[str, Any]) -> None:
         b["ladder_decomposed"]["M_6c_margin"],
     ))
     pr = b["pruning_profitability"]
-    ratio_text = "inf" if pr["conditional_ratio_is_infinite"] else "%.6f" % pr["conditional_ratio_a_over_b"]
+    if pr["conditional_ratio_is_infinite"]:
+        ratio_text = "inf"
+    elif pr["conditional_ratio_a_over_b"] is None:
+        ratio_text = "n/a (neutral)"
+    else:
+        ratio_text = "%.6f" % pr["conditional_ratio_a_over_b"]
     p("[B] M-13 a/b = %s vs main crit %.6f; profitable = %s" % (
         ratio_text, pr["threshold_1_over_Pfix_from_main_cell"],
         pr["profitable_exact"],

@@ -60,6 +60,18 @@ def test_M13_b_bang_0_duoc_hieu_la_ti_so_vo_han():
     assert out["M_13_prediction_correct"] is True
 
 
+def test_M13_a_b_cung_bang_0_la_trung_tinh():
+    y_hat = np.asarray([[0.0, 1.0, 2.0, 3.0], [0.0, 2.0, 3.0, 4.0]])
+    out = A.pruning_profitability({"y_hat": y_hat}, {"a_star_full": np.asarray([0, 0])})
+    assert out["n_fixable_a"] == 0
+    assert out["n_broken_b"] == 0
+    assert out["conditional_ratio_a_over_b"] is None
+    assert out["conditional_ratio_is_infinite"] is False
+    assert out["M_13_predicts_profitable"] is False
+    assert out["profitable_exact"] is False
+    assert out["M_13_prediction_correct"] is True
+
+
 @pytest.mark.skipif(not os.path.exists(MAIN_ARTIFACT), reason="chua chay cell chinh")
 def test_doi_chung_3_tai_lap_lesson_23_6():
     report = _load(MAIN_ARTIFACT)
