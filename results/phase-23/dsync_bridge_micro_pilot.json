@@ -1,0 +1,44 @@
+{
+  "all_cycle_tokens_verified": true,
+  "all_http_operations_succeeded": true,
+  "certificate_outcomes_read": false,
+  "cycle_ms": {
+    "max": 331.23520700246445,
+    "mean": 207.7279093299694,
+    "min": 168.09250300138956,
+    "p05": 173.44880350046878,
+    "p50": 201.7932969993126,
+    "p95": 260.5903199491877
+  },
+  "environment": {
+    "ditto_base_url": "http://localhost:8080/api/2",
+    "git_dirty_during_pilot": true,
+    "git_hash_before_prereg": "52602b2bfc2d1b23bda78291a7009f09cd25a7f7",
+    "host": "dt4n-research-01",
+    "python": "3.12.13",
+    "timestamp_utc": "2026-08-21T13:48:03.515247+00:00"
+  },
+  "n_cycle": 200,
+  "n_things": 20,
+  "path": "synthetic collector snapshot -> sequential pusher PATCH -> Ditto acknowledgement -> sequential direct GET read-back",
+  "push_ms": {
+    "max": 218.34976699756226,
+    "mean": 122.14238133488834,
+    "min": 95.32771000158391,
+    "p05": 99.9258807494698,
+    "p50": 117.33467900012329,
+    "p95": 159.81488795005134
+  },
+  "read_ms": {
+    "max": 125.07675799861318,
+    "mean": 85.56575128995974,
+    "min": 70.61014599821647,
+    "p05": 71.88212479832146,
+    "p50": 83.28656399862666,
+    "p95": 110.41617680111813
+  },
+  "run_id": "a3cae3057a2e",
+  "schema": "dt4n.dsync_bridge_micro_pilot.v1",
+  "status": "RANGE_SETTING_ONLY",
+  "warmup_cycles": 20
+}
