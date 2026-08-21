@@ -20,7 +20,10 @@ import numpy as np
 import pandas as pd
 
 from cert import margin_score as MS
-from measurements.decision_error import sawtooth_age_steps
+from measurements.decision_error import (
+    DEFAULT_SYNC_PERIOD_S,
+    sawtooth_age_steps,
+)
 from measurements.decision_error_v2 import (
     CALIBRATION,
     DT,
@@ -45,10 +48,35 @@ N_BOOT = 2000
 
 Z_EDGES_PRIMARY = (0.055, 0.10, 0.20, 0.30, 0.5501)
 Z_EDGES_SECONDARY = (0.055, 0.155, 0.255, 0.355, 0.455, 0.5501)
+Z_STEP_OFFSETS_PRIMARY = (0, 9, 29, 49)
+Z_STEP_OFFSETS_SECONDARY = (0, 20, 40, 60, 80)
 
 OUT_PARQUET = "results/phase-21R/calib_set.parquet"
 OUT_REPORT = "results/phase-21R/calib_set_report.json"
 CONST_SIGMA_PARQUET = "results/phase-20R/decision_error_constant_sigma.parquet"
+
+
+def z_edges_for(
+    d_sync_s: float,
+    n: int,
+    dt: float = DT,
+    sync_period_s: float = DEFAULT_SYNC_PERIOD_S,
+    offsets: Sequence[int] = Z_STEP_OFFSETS_PRIMARY,
+) -> Tuple[float, ...]:
+    """Derive age-bin edges while preserving their quantised step structure.
+
+    With the inherited 51 ms delay this exactly reproduces the committed bin
+    constants.  ``n`` is intentionally required because the realised maximum
+    sawtooth step can depend on the build length.
+    """
+    steps = sawtooth_age_steps(
+        int(n), float(dt), float(sync_period_s), float(d_sync_s)
+    )
+    k_min, k_max = int(steps.min()), int(steps.max())
+    return tuple(
+        [(k_min + int(offset)) * float(dt) for offset in offsets]
+        + [k_max * float(dt) + 1e-4]
+    )
 
 
 def block_len(dt: float = DT, block_s: float = BLOCK_S) -> int:

@@ -43,6 +43,8 @@ from cert.build_calib_set_v2 import (
     SIGMA,
     Z_EDGES_PRIMARY,
     Z_EDGES_SECONDARY,
+    Z_STEP_OFFSETS_PRIMARY,
+    Z_STEP_OFFSETS_SECONDARY,
     assign_bin,
     block_bootstrap_anchor,
     block_len,
@@ -51,8 +53,13 @@ from cert.build_calib_set_v2 import (
     reproduce_20R_fixed_z,
     split_by_block,
     split_by_sample_V3,
+    z_edges_for,
 )
-from measurements.decision_error import sawtooth_age_steps
+from measurements.decision_error import (
+    DEFAULT_D_SYNC_S,
+    DEFAULT_SYNC_PERIOD_S,
+    sawtooth_age_steps,
+)
 from measurements.decision_error_v2 import (
     CALIBRATION,
     DT,
@@ -70,6 +77,8 @@ from twin import topology_v7 as T7
 
 N_MHAT_BINS = 4
 MIN_BLOCKS_PER_CELL = int(np.ceil(1.0 / ALPHA)) - 1
+D_SYNC = DEFAULT_D_SYNC_S
+SYNC_PERIOD = DEFAULT_SYNC_PERIOD_S
 
 # P11 -- locked nominal AoI profiles, milliseconds, ordered by T7.LINK_NAMES.
 AOI_PROFILES: Dict[str, Tuple[float, ...]] = {
@@ -201,9 +210,11 @@ def y_hat_rho_shift(
     return cost
 
 
-def _valid_rows(n: int, dt: float) -> Tuple[np.ndarray, np.ndarray, int]:
+def _valid_rows(
+    n: int, dt: float, d_sync: float = D_SYNC
+) -> Tuple[np.ndarray, np.ndarray, int]:
     """Reproduce the 21R row selection exactly: drop z=0, keep t >= age."""
-    age = sawtooth_age_steps(n, dt)
+    age = sawtooth_age_steps(n, dt, SYNC_PERIOD, d_sync)
     rows = np.arange(int(n))
     valid = rows >= age
     cur = rows[valid]
@@ -224,11 +235,18 @@ def build_one_v3(
     n: int = N,
     dt: float = DT,
     sigma: float = SIGMA,
+    d_sync: float = D_SYNC,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """Build one operating cell, one seed, one AoI profile."""
     arr = _cell_arrays(tt, cv, cell, seed=seed, n=n, dt=dt, sigma_override=sigma)
-    cur, old, n_z0 = _valid_rows(n, dt)
+    cur, old, n_z0 = _valid_rows(n, dt, d_sync)
     off = offset_steps(aoi_profile, dt)
+    z_edges_p = z_edges_for(
+        d_sync, n, dt, SYNC_PERIOD, offsets=Z_STEP_OFFSETS_PRIMARY
+    )
+    z_edges_s = z_edges_for(
+        d_sync, n, dt, SYNC_PERIOD, offsets=Z_STEP_OFFSETS_SECONDARY
+    )
 
     y_true = arr["c_true"][cur]
     if aoi_profile == "U0":
@@ -272,8 +290,8 @@ def build_one_v3(
         "block_id": (int(seed) * 100_000 + cur // lb).astype(np.int32),
         "t_idx": cur.astype(np.int32),
         "z_s": z_s.astype(np.float32),
-        "z_bin": assign_bin(z_s, Z_EDGES_PRIMARY),
-        "z_bin2": assign_bin(z_s, Z_EDGES_SECONDARY),
+        "z_bin": assign_bin(z_s, z_edges_p),
+        "z_bin2": assign_bin(z_s, z_edges_s),
         "a1": a1.astype(np.int8),
         "a2": a2.astype(np.int8),
         "a_twin": a_twin.astype(np.int8),
@@ -306,6 +324,8 @@ def build_one_v3(
         data["m_true_%d" % (j + 1)] = mt[:, j].astype(np.float32)
         data["a_rank_%d" % (j + 1)] = order[:, j + 1].astype(np.int8)
 
+    z_bin = np.asarray(data["z_bin"], dtype=np.int8)
+    age_steps = sawtooth_age_steps(n, dt, SYNC_PERIOD, d_sync)
     meta = {
         "clip_fraction_max": float(max(arr["clip_fraction"].values())) if arr["clip_fraction"] else 0.0,
         "w_loss": float(arr["w_loss"]),
@@ -313,7 +333,25 @@ def build_one_v3(
         "t_loss": float(cell["t_loss"]),
         "sigma_rho": float(arr["sigma_rho"]),
         "n_rows": int(len(cur)),
+        "n_valid_rows": int(len(cur)),
         "n_z0_dropped": int(n_z0),
+        "d_sync_s": float(d_sync),
+        "d_sync_source": (
+            "inherited_negative_control"
+            if float(d_sync) == float(D_SYNC)
+            else "sensitivity_sweep"
+        ),
+        "sync_period_s": float(SYNC_PERIOD),
+        "z_edges_primary": [float(x) for x in z_edges_p],
+        "z_edges_secondary": [float(x) for x in z_edges_s],
+        "z_step_k_min": int(age_steps.min()),
+        "z_step_k_max": int(age_steps.max()),
+        "z_min_realised_s": float(z_s.min()),
+        "z_max_realised_s": float(z_s.max()),
+        "bin_shares": [float((z_bin == i).mean()) for i in range(4)],
+        "status": (
+            "PRIMARY" if float(d_sync) == float(D_SYNC) else "SENSITIVITY_ONLY"
+        ),
         **offset_metadata(aoi_profile, dt),
     }
     return pd.DataFrame(data), meta
@@ -489,18 +527,33 @@ def build_cell(
     n: int = N,
     v3_split: bool = False,
     calibration_path: str = CALIBRATION,
+    d_sync: float = D_SYNC,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     tt = TruthTable(TRUTH_TABLE)
     cv = C.CostV2(strict_reliable=False)
     cell = _load_cell(mode, rho_bar, calibration_path=calibration_path)
     parts, metas = [], []
     for seed in seeds:
-        frame, meta = build_one_v3(cell, int(seed), tt, cv, aoi_profile=aoi_profile, n=int(n))
+        frame, meta = build_one_v3(
+            cell,
+            int(seed),
+            tt,
+            cv,
+            aoi_profile=aoi_profile,
+            n=int(n),
+            d_sync=float(d_sync),
+        )
         parts.append(frame)
         metas.append(meta)
     df = pd.concat(parts, ignore_index=True)
     df = (split_by_sample_V3 if v3_split else split_by_block)(df)
-    v2_path = V2_TEMPLATE % (str(mode), float(rho_bar)) if aoi_profile == "U0" and not v3_split else None
+    v2_path = (
+        V2_TEMPLATE % (str(mode), float(rho_bar))
+        if aoi_profile == "U0"
+        and not v3_split
+        and float(d_sync) == float(D_SYNC)
+        else None
+    )
     df, inherited_v2 = inherit_v2_shared_columns(df, v2_path)
     edges = mhat_bin_edges(df)
     df["m_hat_bin"] = assign_mhat_bin(df["m_hat"].to_numpy(np.float64), edges)
@@ -512,6 +565,7 @@ def build_cell(
     meta["n"] = int(n)
     meta["inherited_v2_shared_columns"] = bool(inherited_v2)
     meta["calibration_path"] = str(calibration_path)
+    meta["d_sync_s"] = float(d_sync)
     return df, meta
 
 
@@ -553,6 +607,7 @@ def main() -> None:
     parser.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
     parser.add_argument("--aoi-profile", default="U0", choices=sorted(AOI_PROFILES))
     parser.add_argument("--calibration", default=CALIBRATION)
+    parser.add_argument("--d-sync", type=float, default=D_SYNC)
     parser.add_argument("--v3-split", action="store_true", help="positive control: split by sample")
     parser.add_argument("--v3", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args()
@@ -581,8 +636,15 @@ def main() -> None:
         n=int(args.n),
         v3_split=v3_split,
         calibration_path=str(args.calibration),
+        d_sync=float(args.d_sync),
     )
-    v2_path = V2_TEMPLATE % (str(args.mode), float(args.rho_bar)) if args.aoi_profile == "U0" and not v3_split else None
+    v2_path = (
+        V2_TEMPLATE % (str(args.mode), float(args.rho_bar))
+        if args.aoi_profile == "U0"
+        and not v3_split
+        and float(args.d_sync) == float(D_SYNC)
+        else None
+    )
     report = validate_v3(df, v2_path)
 
     tt = TruthTable(TRUTH_TABLE)
@@ -625,6 +687,16 @@ def main() -> None:
             "sigma_rho": float(meta["sigma_rho"]),
             "clip_fraction_max": float(meta["clip_fraction_max"]),
             "n_z0_dropped": int(meta["n_z0_dropped"]),
+            "n_valid_rows": int(meta["n_valid_rows"]),
+            "d_sync_s": float(meta["d_sync_s"]),
+            "d_sync_source": str(meta["d_sync_source"]),
+            "sync_period_s": float(meta["sync_period_s"]),
+            "z_step_k_min": int(meta["z_step_k_min"]),
+            "z_step_k_max": int(meta["z_step_k_max"]),
+            "z_min_realised_s": float(meta["z_min_realised_s"]),
+            "z_max_realised_s": float(meta["z_max_realised_s"]),
+            "bin_shares": list(meta["bin_shares"]),
+            "status": str(meta["status"]),
             "mhat_bin_edges": meta["mhat_bin_edges"],
             "aoi_metadata": {k: meta[k] for k in meta if k.startswith("offset_") or k in ("aoi_profile", "link_order")},
             "anchor_ci95": block_bootstrap_anchor(df, n_boot=N_BOOT, seed=SEED_BOOT),
@@ -649,8 +721,10 @@ def main() -> None:
                 "sigma_rho": float(SIGMA),
                 "block_s": float(BLOCK_S),
                 "seed_split": int(SEED_SPLIT),
-                "z_edges_primary": [float(x) for x in Z_EDGES_PRIMARY],
-                "z_edges_secondary": [float(x) for x in Z_EDGES_SECONDARY],
+                "d_sync_s": float(meta["d_sync_s"]),
+                "sync_period_s": float(meta["sync_period_s"]),
+                "z_edges_primary": list(meta["z_edges_primary"]),
+                "z_edges_secondary": list(meta["z_edges_secondary"]),
                 "sha256": {
                     f: _sha256(f)
                     for f in (
