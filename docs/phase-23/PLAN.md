@@ -67,6 +67,10 @@ lich su. Lesson 23.15 thay the no bang nam gate cell hop le da co trong
 Campaign Mininet Amendment 36 van tam dung tai checkpoint 5 row. Lesson 23.8
 AoI van bi chan cho den khi co amendment rieng va chua duoc doc artifact AoI.
 
+Trang thai Lesson 23.15 (2026-08-21): **DONG** theo Amendment 39. Nam cell
+confirmation da chay offline; M-46/M-47/M-48 MISS, M-49..M-52 HIT. Khong
+retune va khong khoi dong lai Lesson 23.11 topology.
+
 ## Trang thai Lesson 23.6
 
 ```text
