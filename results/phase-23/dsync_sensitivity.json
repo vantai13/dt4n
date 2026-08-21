@@ -1,0 +1,2098 @@
+{
+  "cells": {
+    "h2@0.700": {
+      "M_58_gaps": {
+        "delta": 0.0,
+        "err_neo": 0.0,
+        "lift": 0.0,
+        "swing": 0.0
+      },
+      "M_58_max_abs_gap": 0.0,
+      "M_59_max_bin_share_gap": 8.547774926870311e-05,
+      "M_60_w_loss_bitwise_identical": true,
+      "M_61_err_neo_amplitude": 0.03284737632385726,
+      "M_61_err_neo_nondecreasing": true,
+      "M_62_LS_sign_invariant": false,
+      "M_63_delta_sign_invariant": false,
+      "M_64_A": 0.015567906087926936,
+      "M_65_qhat_slot1_nondecreasing": true,
+      "baseline": {
+        "delta": 0.0038662551728414207,
+        "err_neo": 0.12653635139919234,
+        "lift": 0.013344194982322088,
+        "source": "results/phase-23/eight_cell_sweep.json",
+        "swing": 0.030918040590678986
+      },
+      "d_sync_s": [
+        0.051,
+        0.175,
+        0.205,
+        0.23,
+        0.26
+      ],
+      "delta": [
+        0.0038662551728414207,
+        -0.006259314456035753,
+        -0.008119997519389771,
+        -0.009748690638616248,
+        -0.011701650915085515
+      ],
+      "err_neo": [
+        0.12653635139919234,
+        0.14763700377079186,
+        0.15202339775584794,
+        0.15538488622859908,
+        0.1593837277230496
+      ],
+      "lift_minus_swing": [
+        -0.017573845608356897,
+        0.028451403475272086,
+        0.03690905949642187,
+        0.04431208511412199,
+        0.05318916756088249
+      ],
+      "qhat_z0_mhat0_slot1": [
+        7.839786052703857,
+        11.399831771850586,
+        11.901046752929688,
+        12.384246826171875,
+        12.974662780761719
+      ]
+    },
+    "poisson@0.850": {
+      "M_58_gaps": {
+        "delta": 0.0,
+        "err_neo": 0.0,
+        "lift": 0.0,
+        "swing": 0.0
+      },
+      "M_58_max_abs_gap": 0.0,
+      "M_59_max_bin_share_gap": 8.547774926870311e-05,
+      "M_60_w_loss_bitwise_identical": true,
+      "M_61_err_neo_amplitude": 0.05390111588387231,
+      "M_61_err_neo_nondecreasing": true,
+      "M_62_LS_sign_invariant": false,
+      "M_63_delta_sign_invariant": false,
+      "M_64_A": 0.006947400018146005,
+      "M_65_qhat_slot1_nondecreasing": true,
+      "baseline": {
+        "delta": 0.0031202059335916077,
+        "err_neo": 0.22072656795348494,
+        "lift": 0.11025949246747907,
+        "source": "results/phase-23/eight_cell_sweep.json",
+        "swing": 0.1244422131860703
+      },
+      "d_sync_s": [
+        0.051,
+        0.175,
+        0.205,
+        0.23,
+        0.26
+      ],
+      "delta": [
+        0.0031202059335916077,
+        -0.0008181718160813478,
+        -0.00209051426650958,
+        -0.0027887697004373435,
+        -0.0038271940845543972
+      ],
+      "err_neo": [
+        0.22072656795348494,
+        0.2552756078776543,
+        0.26232053085058926,
+        0.2679599569481177,
+        0.27462768383735725
+      ],
+      "lift_minus_swing": [
+        -0.014182720718591224,
+        0.003718959418787582,
+        0.009502332390677715,
+        0.01267618441393109,
+        0.017396286124802207
+      ],
+      "qhat_z0_mhat0_slot1": [
+        4.261250019073486,
+        6.385469913482666,
+        6.871220111846924,
+        7.163902282714844,
+        7.372008323669434
+      ]
+    },
+    "poisson@0.900": {
+      "M_58_gaps": {
+        "delta": 0.0,
+        "err_neo": 0.0,
+        "lift": 0.0,
+        "swing": 0.0
+      },
+      "M_58_max_abs_gap": 0.0,
+      "M_59_max_bin_share_gap": 8.547774926870311e-05,
+      "M_60_w_loss_bitwise_identical": true,
+      "M_61_err_neo_amplitude": 0.062185810051669344,
+      "M_61_err_neo_nondecreasing": true,
+      "M_62_LS_sign_invariant": false,
+      "M_63_delta_sign_invariant": false,
+      "M_64_A": 0.01036591108893678,
+      "M_65_qhat_slot1_nondecreasing": true,
+      "baseline": {
+        "delta": 0.0053783549714281065,
+        "err_neo": 0.22930113387483575,
+        "lift": 0.1492464535043192,
+        "source": "results/phase-23/live_region_sweep.json",
+        "swing": 0.17369346376860872
+      },
+      "d_sync_s": [
+        0.051,
+        0.175,
+        0.205,
+        0.23,
+        0.26
+      ],
+      "delta": [
+        0.0053783549714281065,
+        -0.0006181298072595043,
+        -0.0024145939901215607,
+        -0.0035849894570901264,
+        -0.0049875561175086736
+      ],
+      "err_neo": [
+        0.22930113387483575,
+        0.2694425829424179,
+        0.27758828671853275,
+        0.2840263912839944,
+        0.2914869439265051
+      ],
+      "lift_minus_swing": [
+        -0.024447010264289526,
+        0.002809678387299175,
+        0.010975421239758865,
+        0.01629535327816678,
+        0.022670643653492917
+      ],
+      "qhat_z0_mhat0_slot1": [
+        10.514945030212402,
+        16.167179107666016,
+        17.389678955078125,
+        18.105310440063477,
+        18.515323638916016
+      ]
+    },
+    "poisson@0.925": {
+      "M_58_gaps": {
+        "delta": 0.0,
+        "err_neo": 0.0,
+        "lift": 0.0,
+        "swing": 0.0
+      },
+      "M_58_max_abs_gap": 0.0,
+      "M_59_max_bin_share_gap": 8.547774926870311e-05,
+      "M_60_w_loss_bitwise_identical": true,
+      "M_61_err_neo_amplitude": 0.05890708908666001,
+      "M_61_err_neo_nondecreasing": true,
+      "M_62_LS_sign_invariant": true,
+      "M_63_delta_sign_invariant": true,
+      "M_64_A": 0.007895629173240715,
+      "M_65_qhat_slot1_nondecreasing": true,
+      "baseline": {
+        "delta": -0.012868849344056688,
+        "err_neo": 0.22239867831276863,
+        "lift": 0.1763724114100241,
+        "source": "results/phase-23/eight_cell_sweep.json",
+        "swing": 0.11787777993347562
+      },
+      "d_sync_s": [
+        0.051,
+        0.175,
+        0.205,
+        0.23,
+        0.26
+      ],
+      "delta": [
+        -0.012868849344056688,
+        -0.01738565098670719,
+        -0.018550563438605894,
+        -0.019631418271442935,
+        -0.020764478517297402
+      ],
+      "err_neo": [
+        0.22239867831276863,
+        0.2600806169295552,
+        0.2680219333956153,
+        0.2741496653076249,
+        0.28130576739942864
+      ],
+      "lift_minus_swing": [
+        0.058494631476548486,
+        0.07902561444665701,
+        0.0843206968983296,
+        0.0892334272983541,
+        0.09438371860393213
+      ],
+      "qhat_z0_mhat0_slot1": [
+        14.448726654052734,
+        21.789417266845703,
+        23.089384078979492,
+        24.390066146850586,
+        24.821334838867188
+      ]
+    },
+    "poisson@0.960": {
+      "M_58_gaps": {
+        "delta": 0.0,
+        "err_neo": 0.0,
+        "lift": 0.0,
+        "swing": 0.0
+      },
+      "M_58_max_abs_gap": 0.0,
+      "M_59_max_bin_share_gap": 8.547774926870311e-05,
+      "M_60_w_loss_bitwise_identical": true,
+      "M_61_err_neo_amplitude": 0.052561474499014715,
+      "M_61_err_neo_nondecreasing": true,
+      "M_62_LS_sign_invariant": true,
+      "M_63_delta_sign_invariant": true,
+      "M_64_A": 0.007271506663784011,
+      "M_65_qhat_slot1_nondecreasing": true,
+      "baseline": {
+        "delta": -0.005032332133920847,
+        "err_neo": 0.19949316654899224,
+        "lift": 0.12290878518629905,
+        "source": "results/phase-23/eight_cell_sweep.json",
+        "swing": 0.10003460228375072
+      },
+      "d_sync_s": [
+        0.051,
+        0.175,
+        0.205,
+        0.23,
+        0.26
+      ],
+      "delta": [
+        -0.005032332133920847,
+        -0.008639814361015796,
+        -0.010386555092552763,
+        -0.01125510640936897,
+        -0.012303838797704858
+      ],
+      "err_neo": [
+        0.19949316654899224,
+        0.23297492473419418,
+        0.24011106732256135,
+        0.24572582032641008,
+        0.25205464104800696
+      ],
+      "lift_minus_swing": [
+        0.022874182902548335,
+        0.039271847749984046,
+        0.04721158829894612,
+        0.051159407111030286,
+        0.05592637724387539
+      ],
+      "qhat_z0_mhat0_slot1": [
+        23.161563873291016,
+        35.36366653442383,
+        38.03887176513672,
+        39.591060638427734,
+        41.31565475463867
+      ]
+    }
+  },
+  "closes_P23A": false,
+  "controls": {
+    "NC_L_w_loss_bitwise": true,
+    "NC_M_baseline_reproduction": true,
+    "NC_N_bin_shares": true,
+    "NC_O_identity": true,
+    "NC_P_row_disjoint": true,
+    "NC_P_seed_disjoint": true,
+    "NC_Q_n_valid_rows_reported": true
+  },
+  "d_sync_s": [
+    0.051,
+    0.175,
+    0.205,
+    0.23,
+    0.26
+  ],
+  "headline": "BRACKET_SIGN_NOT_INVARIANT",
+  "lesson": "23.8A",
+  "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+  "metrics": {
+    "M_58": true,
+    "M_59": true,
+    "M_60": true,
+    "M_61": false,
+    "M_62": false,
+    "M_63": false,
+    "M_64": true,
+    "M_65": true
+  },
+  "n": 200000,
+  "provenance": {
+    "git_dirty": false,
+    "git_hash": "d899a4f7d63a829f69dce0125e5d2520bcffcbf4",
+    "inputs": [
+      {
+        "path": "docs/phase-23/00zs-amendment-42.md",
+        "sha256": "792ea3aa9aab389c6aef4335f95efbba0bdfa886e405da69ff5fc81ea5e833e8"
+      },
+      {
+        "path": "results/phase-23/dsync_bridge_micro_pilot.json",
+        "sha256": "0a34896af7af3c214142839c3605398192d5dba35a31d0424b16d5ac531d492d"
+      },
+      {
+        "path": "results/phase-23/sla_calibration_lesson23_16.json",
+        "sha256": "33c4b7cde1b69ded3fb61b9ce6ea05336b8ba20373a0d5437e5d9f473dd44059"
+      },
+      {
+        "path": "results/phase-23/live_region_sweep.json",
+        "sha256": "4003e75580b12901ece073978f29457928e12ec18ad0b15fe53b5945966aedf7"
+      },
+      {
+        "path": "results/phase-23/eight_cell_sweep.json",
+        "sha256": "b38a4e11ea6bad739c14fece5fd9a8982a067712dd58d2bc01ac8e43f5617a57"
+      }
+    ],
+    "script": "cert/dsync_sensitivity.py",
+    "timestamp_utc": "2026-08-21T13:57:28.232701+00:00"
+  },
+  "rows": [
+    {
+      "analysis_seconds": 3.727388721999887,
+      "bin_shares": [
+        0.09000495027226497,
+        0.20001100060503327,
+        0.20001100060503327,
+        0.5099730485176684
+      ],
+      "build_seconds": 5.016359077999368,
+      "cell": "poisson@0.900",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F6",
+          "102": "F6",
+          "103": "F2",
+          "104": "F6",
+          "105": "F6"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.051,
+      "d_sync_source": "inherited_negative_control",
+      "delta": 0.0053783549714281065,
+      "err_neo": 0.22930113387483575,
+      "identity_residual": 3.469446951953614e-18,
+      "k_max": 110,
+      "k_min": 11,
+      "lift": 0.1492464535043192,
+      "lift_minus_swing": -0.024447010264289526,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999945,
+      "n_test": 499967,
+      "n_valid_rows_per_seed": 199989,
+      "qhat_z0_mhat0": [
+        10.514945030212402,
+        11.108353614807129,
+        12.854043006896973
+      ],
+      "qhat_z0_mhat0_slot1": 10.514945030212402,
+      "reject_share": 0.22000052003432227,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.17369346376860872,
+      "sync_period_s": 0.5,
+      "w_loss": 2915.10277168061,
+      "z_edges_nominal": {
+        "primary": [
+          0.055,
+          0.1,
+          0.2,
+          0.3,
+          0.5501
+        ],
+        "secondary": [
+          0.055,
+          0.155,
+          0.255,
+          0.355,
+          0.455,
+          0.5501
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.55,
+        "min_s": 0.055
+      }
+    },
+    {
+      "analysis_seconds": 3.642550233002112,
+      "bin_shares": [
+        0.09000575100642612,
+        0.20003500612607206,
+        0.20003500612607206,
+        0.5099242367414297
+      ],
+      "build_seconds": 4.992140152997308,
+      "cell": "poisson@0.900",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F6",
+          "102": "F6",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.175,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.0006181298072595043,
+      "err_neo": 0.2694425829424179,
+      "identity_residual": 2.2876665839444144e-17,
+      "k_max": 135,
+      "k_min": 35,
+      "lift": 0.13632371633526824,
+      "lift_minus_swing": 0.002809678387299175,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999825,
+      "n_test": 499895,
+      "n_valid_rows_per_seed": 199965,
+      "qhat_z0_mhat0": [
+        16.167179107666016,
+        16.98868179321289,
+        18.223106384277344
+      ],
+      "qhat_z0_mhat0_slot1": 16.167179107666016,
+      "reject_share": 0.22000020004200882,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.13351403794796907,
+      "sync_period_s": 0.5,
+      "w_loss": 2915.10277168061,
+      "z_edges_nominal": {
+        "primary": [
+          0.17500000000000002,
+          0.22,
+          0.32,
+          0.42,
+          0.6751
+        ],
+        "secondary": [
+          0.17500000000000002,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.5750000000000001,
+          0.6751
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.675,
+        "min_s": 0.17500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.657469262001541,
+      "bin_shares": [
+        0.09001345275781535,
+        0.20004100840672337,
+        0.20004100840672337,
+        0.5099045304287378
+      ],
+      "build_seconds": 4.981371466001292,
+      "cell": "poisson@0.900",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F6",
+          "102": "F2",
+          "103": "F2",
+          "104": "F6",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.205,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.0024145939901215607,
+      "err_neo": 0.27758828671853275,
+      "identity_residual": 1.2576745200831851e-17,
+      "k_max": 141,
+      "k_min": 41,
+      "lift": 0.13633425951397432,
+      "lift_minus_swing": 0.010975421239758865,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999795,
+      "n_test": 499877,
+      "n_valid_rows_per_seed": 199959,
+      "qhat_z0_mhat0": [
+        17.389678955078125,
+        18.00831413269043,
+        19.091211318969727
+      ],
+      "qhat_z0_mhat0_slot1": 17.389678955078125,
+      "reject_share": 0.22000012002952726,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.12535883827421546,
+      "sync_period_s": 0.5,
+      "w_loss": 2915.10277168061,
+      "z_edges_nominal": {
+        "primary": [
+          0.20500000000000002,
+          0.25,
+          0.35000000000000003,
+          0.45,
+          0.7051
+        ],
+        "secondary": [
+          0.20500000000000002,
+          0.305,
+          0.405,
+          0.505,
+          0.605,
+          0.7051
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.705,
+        "min_s": 0.20500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.684526392000407,
+      "bin_shares": [
+        0.09001570361183073,
+        0.20004601058243396,
+        0.20004601058243396,
+        0.5098922752233014
+      ],
+      "build_seconds": 4.951246691998676,
+      "cell": "poisson@0.900",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.23,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.0035849894570901264,
+      "err_neo": 0.2840263912839944,
+      "identity_residual": 3.209238430557093e-17,
+      "k_max": 146,
+      "k_min": 46,
+      "lift": 0.13520817321646977,
+      "lift_minus_swing": 0.01629535327816678,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999770,
+      "n_test": 499862,
+      "n_valid_rows_per_seed": 199954,
+      "qhat_z0_mhat0": [
+        18.105310440063477,
+        18.665164947509766,
+        20.196125030517578
+      ],
+      "qhat_z0_mhat0_slot1": 18.105310440063477,
+      "reject_share": 0.22000072019877487,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.118912819938303,
+      "sync_period_s": 0.5,
+      "w_loss": 2915.10277168061,
+      "z_edges_nominal": {
+        "primary": [
+          0.23,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.7301
+        ],
+        "secondary": [
+          0.23,
+          0.33,
+          0.43,
+          0.53,
+          0.63,
+          0.7301
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.73,
+        "min_s": 0.23
+      }
+    },
+    {
+      "analysis_seconds": 3.6687653190019773,
+      "bin_shares": [
+        0.09001340348490608,
+        0.20005201352351612,
+        0.20004701222317803,
+        0.5098875707683997
+      ],
+      "build_seconds": 4.938104813998507,
+      "cell": "poisson@0.900",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.26,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.0049875561175086736,
+      "err_neo": 0.2914869439265051,
+      "identity_residual": 6.071532165918825e-18,
+      "k_max": 152,
+      "k_min": 52,
+      "lift": 0.13411341379777791,
+      "lift_minus_swing": 0.022670643653492917,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999740,
+      "n_test": 499844,
+      "n_valid_rows_per_seed": 199948,
+      "qhat_z0_mhat0": [
+        18.515323638916016,
+        19.907390594482422,
+        21.12517547607422
+      ],
+      "qhat_z0_mhat0_slot1": 18.515323638916016,
+      "reject_share": 0.22000064019974233,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.111442770144285,
+      "sync_period_s": 0.5,
+      "w_loss": 2915.10277168061,
+      "z_edges_nominal": {
+        "primary": [
+          0.26,
+          0.305,
+          0.405,
+          0.505,
+          0.7601
+        ],
+        "secondary": [
+          0.26,
+          0.36,
+          0.46,
+          0.56,
+          0.66,
+          0.7601
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.76,
+        "min_s": 0.26
+      }
+    },
+    {
+      "analysis_seconds": 4.330748347001645,
+      "bin_shares": [
+        0.09000495027226497,
+        0.20001100060503327,
+        0.20001100060503327,
+        0.5099730485176684
+      ],
+      "build_seconds": 5.006749536998541,
+      "cell": "poisson@0.925",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.051,
+      "d_sync_source": "inherited_negative_control",
+      "delta": -0.012868849344056688,
+      "err_neo": 0.22239867831276863,
+      "identity_residual": 1.5612511283791264e-17,
+      "k_max": 110,
+      "k_min": 11,
+      "lift": 0.1763724114100241,
+      "lift_minus_swing": 0.058494631476548486,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999945,
+      "n_test": 499967,
+      "n_valid_rows_per_seed": 199989,
+      "qhat_z0_mhat0": [
+        14.448726654052734,
+        15.55774974822998,
+        16.793746948242188
+      ],
+      "qhat_z0_mhat0_slot1": 14.448726654052734,
+      "reject_share": 0.22000052003432227,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.11787777993347562,
+      "sync_period_s": 0.5,
+      "w_loss": 3222.244681647411,
+      "z_edges_nominal": {
+        "primary": [
+          0.055,
+          0.1,
+          0.2,
+          0.3,
+          0.5501
+        ],
+        "secondary": [
+          0.055,
+          0.155,
+          0.255,
+          0.355,
+          0.455,
+          0.5501
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.55,
+        "min_s": 0.055
+      }
+    },
+    {
+      "analysis_seconds": 3.6726263979981013,
+      "bin_shares": [
+        0.09000575100642612,
+        0.20003500612607206,
+        0.20003500612607206,
+        0.5099242367414297
+      ],
+      "build_seconds": 4.911383800001204,
+      "cell": "poisson@0.925",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F6",
+          "104": "F2",
+          "105": "F6"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.175,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.01738565098670719,
+      "err_neo": 0.2600806169295552,
+      "identity_residual": 1.3877787807814457e-17,
+      "k_max": 135,
+      "k_min": 35,
+      "lift": 0.15920445200254374,
+      "lift_minus_swing": 0.07902561444665701,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999825,
+      "n_test": 499895,
+      "n_valid_rows_per_seed": 199965,
+      "qhat_z0_mhat0": [
+        21.789417266845703,
+        22.92087173461914,
+        24.099573135375977
+      ],
+      "qhat_z0_mhat0_slot1": 21.789417266845703,
+      "reject_share": 0.22000020004200882,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.08017883755588673,
+      "sync_period_s": 0.5,
+      "w_loss": 3222.244681647411,
+      "z_edges_nominal": {
+        "primary": [
+          0.17500000000000002,
+          0.22,
+          0.32,
+          0.42,
+          0.6751
+        ],
+        "secondary": [
+          0.17500000000000002,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.5750000000000001,
+          0.6751
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.675,
+        "min_s": 0.17500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.631183412999235,
+      "bin_shares": [
+        0.09001345275781535,
+        0.20004100840672337,
+        0.20004100840672337,
+        0.5099045304287378
+      ],
+      "build_seconds": 4.910178005000489,
+      "cell": "poisson@0.925",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F6",
+          "104": "F6",
+          "105": "F6"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.205,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.018550563438605894,
+      "err_neo": 0.2680219333956153,
+      "identity_residual": 6.938893903907228e-18,
+      "k_max": 141,
+      "k_min": 41,
+      "lift": 0.15654846492926522,
+      "lift_minus_swing": 0.0843206968983296,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999795,
+      "n_test": 499877,
+      "n_valid_rows_per_seed": 199959,
+      "qhat_z0_mhat0": [
+        23.089384078979492,
+        24.54906463623047,
+        25.557140350341797
+      ],
+      "qhat_z0_mhat0_slot1": 23.089384078979492,
+      "reject_share": 0.22000012002952726,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.07222776803093561,
+      "sync_period_s": 0.5,
+      "w_loss": 3222.244681647411,
+      "z_edges_nominal": {
+        "primary": [
+          0.20500000000000002,
+          0.25,
+          0.35000000000000003,
+          0.45,
+          0.7051
+        ],
+        "secondary": [
+          0.20500000000000002,
+          0.305,
+          0.405,
+          0.505,
+          0.605,
+          0.7051
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.705,
+        "min_s": 0.20500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.6697929959991598,
+      "bin_shares": [
+        0.09001570361183073,
+        0.20004601058243396,
+        0.20004601058243396,
+        0.5098922752233014
+      ],
+      "build_seconds": 4.933784136999748,
+      "cell": "poisson@0.925",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F6",
+          "102": "F2",
+          "103": "F6",
+          "104": "F6",
+          "105": "F6"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.23,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.019631418271442935,
+      "err_neo": 0.2741496653076249,
+      "identity_residual": 1.734723475976807e-17,
+      "k_max": 146,
+      "k_min": 46,
+      "lift": 0.15532366820484428,
+      "lift_minus_swing": 0.0892334272983541,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999770,
+      "n_test": 499862,
+      "n_valid_rows_per_seed": 199954,
+      "qhat_z0_mhat0": [
+        24.390066146850586,
+        25.858957290649414,
+        26.826744079589844
+      ],
+      "qhat_z0_mhat0_slot1": 24.390066146850586,
+      "reject_share": 0.22000072019877487,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.06609024090649018,
+      "sync_period_s": 0.5,
+      "w_loss": 3222.244681647411,
+      "z_edges_nominal": {
+        "primary": [
+          0.23,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.7301
+        ],
+        "secondary": [
+          0.23,
+          0.33,
+          0.43,
+          0.53,
+          0.63,
+          0.7301
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.73,
+        "min_s": 0.23
+      }
+    },
+    {
+      "analysis_seconds": 3.680081338996388,
+      "bin_shares": [
+        0.09001340348490608,
+        0.20005201352351612,
+        0.20004701222317803,
+        0.5098875707683997
+      ],
+      "build_seconds": 4.933750037002028,
+      "cell": "poisson@0.925",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F6",
+          "102": "F2",
+          "103": "F6",
+          "104": "F6",
+          "105": "F6"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.26,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.020764478517297402,
+      "err_neo": 0.28130576739942864,
+      "identity_residual": 3.469446951953614e-18,
+      "k_max": 152,
+      "k_min": 52,
+      "lift": 0.15330610238767262,
+      "lift_minus_swing": 0.09438371860393213,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999740,
+      "n_test": 499844,
+      "n_valid_rows_per_seed": 199948,
+      "qhat_z0_mhat0": [
+        24.821334838867188,
+        27.242122650146484,
+        28.304706573486328
+      ],
+      "qhat_z0_mhat0_slot1": 24.821334838867188,
+      "reject_share": 0.22000064019974233,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.058922383783740484,
+      "sync_period_s": 0.5,
+      "w_loss": 3222.244681647411,
+      "z_edges_nominal": {
+        "primary": [
+          0.26,
+          0.305,
+          0.405,
+          0.505,
+          0.7601
+        ],
+        "secondary": [
+          0.26,
+          0.36,
+          0.46,
+          0.56,
+          0.66,
+          0.7601
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.76,
+        "min_s": 0.26
+      }
+    },
+    {
+      "analysis_seconds": 4.3442041909984255,
+      "bin_shares": [
+        0.09000495027226497,
+        0.20001100060503327,
+        0.20001100060503327,
+        0.5099730485176684
+      ],
+      "build_seconds": 5.1289603959994565,
+      "cell": "poisson@0.850",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F6",
+          "102": "F6",
+          "103": "F6",
+          "104": "F6",
+          "105": "F6"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.051,
+      "d_sync_source": "inherited_negative_control",
+      "delta": 0.0031202059335916077,
+      "err_neo": 0.22072656795348494,
+      "identity_residual": 1.8648277366750676e-17,
+      "k_max": 110,
+      "k_min": 11,
+      "lift": 0.11025949246747907,
+      "lift_minus_swing": -0.014182720718591224,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999945,
+      "n_test": 499967,
+      "n_valid_rows_per_seed": 199989,
+      "qhat_z0_mhat0": [
+        4.261250019073486,
+        4.933362007141113,
+        5.6687798500061035
+      ],
+      "qhat_z0_mhat0_slot1": 4.261250019073486,
+      "reject_share": 0.22000052003432227,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.1244422131860703,
+      "sync_period_s": 0.5,
+      "w_loss": 2424.3596038611254,
+      "z_edges_nominal": {
+        "primary": [
+          0.055,
+          0.1,
+          0.2,
+          0.3,
+          0.5501
+        ],
+        "secondary": [
+          0.055,
+          0.155,
+          0.255,
+          0.355,
+          0.455,
+          0.5501
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.55,
+        "min_s": 0.055
+      }
+    },
+    {
+      "analysis_seconds": 3.7067929420009023,
+      "bin_shares": [
+        0.09000575100642612,
+        0.20003500612607206,
+        0.20003500612607206,
+        0.5099242367414297
+      ],
+      "build_seconds": 4.936782736000168,
+      "cell": "poisson@0.850",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.175,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.0008181718160813478,
+      "err_neo": 0.2552756078776543,
+      "identity_residual": 3.3068166260807885e-17,
+      "k_max": 135,
+      "k_min": 35,
+      "lift": 0.09360583566279884,
+      "lift_minus_swing": 0.003718959418787582,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999825,
+      "n_test": 499895,
+      "n_valid_rows_per_seed": 199965,
+      "qhat_z0_mhat0": [
+        6.385469913482666,
+        7.297545433044434,
+        8.040552139282227
+      ],
+      "qhat_z0_mhat0_slot1": 6.385469913482666,
+      "reject_share": 0.22000020004200882,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.08988687624401126,
+      "sync_period_s": 0.5,
+      "w_loss": 2424.3596038611254,
+      "z_edges_nominal": {
+        "primary": [
+          0.17500000000000002,
+          0.22,
+          0.32,
+          0.42,
+          0.6751
+        ],
+        "secondary": [
+          0.17500000000000002,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.5750000000000001,
+          0.6751
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.675,
+        "min_s": 0.17500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.655528924999089,
+      "bin_shares": [
+        0.09001345275781535,
+        0.20004100840672337,
+        0.20004100840672337,
+        0.5099045304287378
+      ],
+      "build_seconds": 4.996998531001736,
+      "cell": "poisson@0.850",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.205,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.00209051426650958,
+      "err_neo": 0.26232053085058926,
+      "identity_residual": 1.7780915628762273e-17,
+      "k_max": 141,
+      "k_min": 41,
+      "lift": 0.0923347091553618,
+      "lift_minus_swing": 0.009502332390677715,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999795,
+      "n_test": 499877,
+      "n_valid_rows_per_seed": 199959,
+      "qhat_z0_mhat0": [
+        6.871220111846924,
+        7.692149639129639,
+        8.543217658996582
+      ],
+      "qhat_z0_mhat0_slot1": 6.871220111846924,
+      "reject_share": 0.22000012002952726,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.08283237676468408,
+      "sync_period_s": 0.5,
+      "w_loss": 2424.3596038611254,
+      "z_edges_nominal": {
+        "primary": [
+          0.20500000000000002,
+          0.25,
+          0.35000000000000003,
+          0.45,
+          0.7051
+        ],
+        "secondary": [
+          0.20500000000000002,
+          0.305,
+          0.405,
+          0.505,
+          0.605,
+          0.7051
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.705,
+        "min_s": 0.20500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.6685591589994146,
+      "bin_shares": [
+        0.09001570361183073,
+        0.20004601058243396,
+        0.20004601058243396,
+        0.5098922752233014
+      ],
+      "build_seconds": 4.972342103999836,
+      "cell": "poisson@0.850",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.23,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.0027887697004373435,
+      "err_neo": 0.2679599569481177,
+      "identity_residual": 1.8648277366750676e-17,
+      "k_max": 146,
+      "k_min": 46,
+      "lift": 0.08985948700544633,
+      "lift_minus_swing": 0.01267618441393109,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999770,
+      "n_test": 499862,
+      "n_valid_rows_per_seed": 199954,
+      "qhat_z0_mhat0": [
+        7.163902282714844,
+        7.987497806549072,
+        8.828391075134277
+      ],
+      "qhat_z0_mhat0_slot1": 7.163902282714844,
+      "reject_share": 0.22000072019877487,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.07718330259151523,
+      "sync_period_s": 0.5,
+      "w_loss": 2424.3596038611254,
+      "z_edges_nominal": {
+        "primary": [
+          0.23,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.7301
+        ],
+        "secondary": [
+          0.23,
+          0.33,
+          0.43,
+          0.53,
+          0.63,
+          0.7301
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.73,
+        "min_s": 0.23
+      }
+    },
+    {
+      "analysis_seconds": 3.656233259000146,
+      "bin_shares": [
+        0.09001340348490608,
+        0.20005201352351612,
+        0.20004701222317803,
+        0.5098875707683997
+      ],
+      "build_seconds": 4.943212338999729,
+      "cell": "poisson@0.850",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.26,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.0038271940845543972,
+      "err_neo": 0.27462768383735725,
+      "identity_residual": 1.691355389077387e-17,
+      "k_max": 152,
+      "k_min": 52,
+      "lift": 0.08790028337194333,
+      "lift_minus_swing": 0.017396286124802207,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999740,
+      "n_test": 499844,
+      "n_valid_rows_per_seed": 199948,
+      "qhat_z0_mhat0": [
+        7.372008323669434,
+        8.480812072753906,
+        9.216604232788086
+      ],
+      "qhat_z0_mhat0_slot1": 7.372008323669434,
+      "reject_share": 0.22000064019974233,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.07050399724714113,
+      "sync_period_s": 0.5,
+      "w_loss": 2424.3596038611254,
+      "z_edges_nominal": {
+        "primary": [
+          0.26,
+          0.305,
+          0.405,
+          0.505,
+          0.7601
+        ],
+        "secondary": [
+          0.26,
+          0.36,
+          0.46,
+          0.56,
+          0.66,
+          0.7601
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.76,
+        "min_s": 0.26
+      }
+    },
+    {
+      "analysis_seconds": 3.696611765997659,
+      "bin_shares": [
+        0.09000495027226497,
+        0.20001100060503327,
+        0.20001100060503327,
+        0.5099730485176684
+      ],
+      "build_seconds": 4.954626327002188,
+      "cell": "poisson@0.960",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.051,
+      "d_sync_source": "inherited_negative_control",
+      "delta": -0.005032332133920847,
+      "err_neo": 0.19949316654899224,
+      "identity_residual": 1.0408340855860843e-17,
+      "k_max": 110,
+      "k_min": 11,
+      "lift": 0.12290878518629905,
+      "lift_minus_swing": 0.022874182902548335,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999945,
+      "n_test": 499967,
+      "n_valid_rows_per_seed": 199989,
+      "qhat_z0_mhat0": [
+        23.161563873291016,
+        24.706148147583008,
+        24.909839630126953
+      ],
+      "qhat_z0_mhat0_slot1": 23.161563873291016,
+      "reject_share": 0.22000052003432227,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.10003460228375072,
+      "sync_period_s": 0.5,
+      "w_loss": 3655.8944289989972,
+      "z_edges_nominal": {
+        "primary": [
+          0.055,
+          0.1,
+          0.2,
+          0.3,
+          0.5501
+        ],
+        "secondary": [
+          0.055,
+          0.155,
+          0.255,
+          0.355,
+          0.455,
+          0.5501
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.55,
+        "min_s": 0.055
+      }
+    },
+    {
+      "analysis_seconds": 3.688621810000768,
+      "bin_shares": [
+        0.09000575100642612,
+        0.20003500612607206,
+        0.20003500612607206,
+        0.5099242367414297
+      ],
+      "build_seconds": 4.999626493998221,
+      "cell": "poisson@0.960",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.175,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.008639814361015796,
+      "err_neo": 0.23297492473419418,
+      "identity_residual": 6.938893903907228e-18,
+      "k_max": 135,
+      "k_min": 35,
+      "lift": 0.10581182114439686,
+      "lift_minus_swing": 0.039271847749984046,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999825,
+      "n_test": 499895,
+      "n_valid_rows_per_seed": 199965,
+      "qhat_z0_mhat0": [
+        35.36366653442383,
+        36.241172790527344,
+        36.67812728881836
+      ],
+      "qhat_z0_mhat0_slot1": 35.36366653442383,
+      "reject_share": 0.22000020004200882,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.06653997339441281,
+      "sync_period_s": 0.5,
+      "w_loss": 3655.8944289989972,
+      "z_edges_nominal": {
+        "primary": [
+          0.17500000000000002,
+          0.22,
+          0.32,
+          0.42,
+          0.6751
+        ],
+        "secondary": [
+          0.17500000000000002,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.5750000000000001,
+          0.6751
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.675,
+        "min_s": 0.17500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.6764380159984285,
+      "bin_shares": [
+        0.09001345275781535,
+        0.20004100840672337,
+        0.20004100840672337,
+        0.5099045304287378
+      ],
+      "build_seconds": 4.9863486380018,
+      "cell": "poisson@0.960",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.205,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.010386555092552763,
+      "err_neo": 0.24011106732256135,
+      "identity_residual": 6.938893903907228e-18,
+      "k_max": 141,
+      "k_min": 41,
+      "lift": 0.10660419888114933,
+      "lift_minus_swing": 0.04721158829894612,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999795,
+      "n_test": 499877,
+      "n_valid_rows_per_seed": 199959,
+      "qhat_z0_mhat0": [
+        38.03887176513672,
+        38.17109680175781,
+        38.277347564697266
+      ],
+      "qhat_z0_mhat0_slot1": 38.03887176513672,
+      "reject_share": 0.22000012002952726,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.059392610582203215,
+      "sync_period_s": 0.5,
+      "w_loss": 3655.8944289989972,
+      "z_edges_nominal": {
+        "primary": [
+          0.20500000000000002,
+          0.25,
+          0.35000000000000003,
+          0.45,
+          0.7051
+        ],
+        "secondary": [
+          0.20500000000000002,
+          0.305,
+          0.405,
+          0.505,
+          0.605,
+          0.7051
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.705,
+        "min_s": 0.20500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.6614643540015095,
+      "bin_shares": [
+        0.09001570361183073,
+        0.20004601058243396,
+        0.20004601058243396,
+        0.5098922752233014
+      ],
+      "build_seconds": 4.959362318000785,
+      "cell": "poisson@0.960",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.23,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.01125510640936897,
+      "err_neo": 0.24572582032641008,
+      "identity_residual": 1.734723475976807e-17,
+      "k_max": 146,
+      "k_min": 46,
+      "lift": 0.10492624675877307,
+      "lift_minus_swing": 0.051159407111030286,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999770,
+      "n_test": 499862,
+      "n_valid_rows_per_seed": 199954,
+      "qhat_z0_mhat0": [
+        39.591060638427734,
+        40.51041793823242,
+        39.997528076171875
+      ],
+      "qhat_z0_mhat0_slot1": 39.591060638427734,
+      "reject_share": 0.22000072019877487,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.05376683964774279,
+      "sync_period_s": 0.5,
+      "w_loss": 3655.8944289989972,
+      "z_edges_nominal": {
+        "primary": [
+          0.23,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.7301
+        ],
+        "secondary": [
+          0.23,
+          0.33,
+          0.43,
+          0.53,
+          0.63,
+          0.7301
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.73,
+        "min_s": 0.23
+      }
+    },
+    {
+      "analysis_seconds": 3.6872258789990155,
+      "bin_shares": [
+        0.09001340348490608,
+        0.20005201352351612,
+        0.20004701222317803,
+        0.5098875707683997
+      ],
+      "build_seconds": 4.962914474999707,
+      "cell": "poisson@0.960",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.26,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.012303838797704858,
+      "err_neo": 0.25205464104800696,
+      "identity_residual": 2.949029909160572e-17,
+      "k_max": 152,
+      "k_min": 52,
+      "lift": 0.10335117378039482,
+      "lift_minus_swing": 0.05592637724387539,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999740,
+      "n_test": 499844,
+      "n_valid_rows_per_seed": 199948,
+      "qhat_z0_mhat0": [
+        41.31565475463867,
+        42.681427001953125,
+        42.27511978149414
+      ],
+      "qhat_z0_mhat0_slot1": 41.31565475463867,
+      "reject_share": 0.22000064019974233,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.04742479653651943,
+      "sync_period_s": 0.5,
+      "w_loss": 3655.8944289989972,
+      "z_edges_nominal": {
+        "primary": [
+          0.26,
+          0.305,
+          0.405,
+          0.505,
+          0.7601
+        ],
+        "secondary": [
+          0.26,
+          0.36,
+          0.46,
+          0.56,
+          0.66,
+          0.7601
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.76,
+        "min_s": 0.26
+      }
+    },
+    {
+      "analysis_seconds": 4.31538848800119,
+      "bin_shares": [
+        0.09000495027226497,
+        0.20001100060503327,
+        0.20001100060503327,
+        0.5099730485176684
+      ],
+      "build_seconds": 5.181050347000564,
+      "cell": "h2@0.700",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F6",
+          "102": "F6",
+          "103": "F6",
+          "104": "F6",
+          "105": "F6"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.051,
+      "d_sync_source": "inherited_negative_control",
+      "delta": 0.0038662551728414207,
+      "err_neo": 0.12653635139919234,
+      "identity_residual": 1.2576745200831851e-17,
+      "k_max": 110,
+      "k_min": 11,
+      "lift": 0.013344194982322088,
+      "lift_minus_swing": -0.017573845608356897,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999945,
+      "n_test": 499967,
+      "n_valid_rows_per_seed": 199989,
+      "qhat_z0_mhat0": [
+        7.839786052703857,
+        10.812265396118164,
+        13.06353759765625
+      ],
+      "qhat_z0_mhat0_slot1": 7.839786052703857,
+      "reject_share": 0.22000052003432227,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.030918040590678986,
+      "sync_period_s": 0.5,
+      "w_loss": 2861.395300891912,
+      "z_edges_nominal": {
+        "primary": [
+          0.055,
+          0.1,
+          0.2,
+          0.3,
+          0.5501
+        ],
+        "secondary": [
+          0.055,
+          0.155,
+          0.255,
+          0.355,
+          0.455,
+          0.5501
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.55,
+        "min_s": 0.055
+      }
+    },
+    {
+      "analysis_seconds": 3.6338729679991957,
+      "bin_shares": [
+        0.09000575100642612,
+        0.20003500612607206,
+        0.20003500612607206,
+        0.5099242367414297
+      ],
+      "build_seconds": 4.966674120998505,
+      "cell": "h2@0.700",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.175,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.006259314456035753,
+      "err_neo": 0.14763700377079186,
+      "identity_residual": 1.1275702593849246e-17,
+      "k_max": 135,
+      "k_min": 35,
+      "lift": 0.038277466948601485,
+      "lift_minus_swing": 0.028451403475272086,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999825,
+      "n_test": 499895,
+      "n_valid_rows_per_seed": 199965,
+      "qhat_z0_mhat0": [
+        11.399831771850586,
+        14.945713996887207,
+        17.589580535888672
+      ],
+      "qhat_z0_mhat0_slot1": 11.399831771850586,
+      "reject_share": 0.22000020004200882,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.0098260634733294,
+      "sync_period_s": 0.5,
+      "w_loss": 2861.395300891912,
+      "z_edges_nominal": {
+        "primary": [
+          0.17500000000000002,
+          0.22,
+          0.32,
+          0.42,
+          0.6751
+        ],
+        "secondary": [
+          0.17500000000000002,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.5750000000000001,
+          0.6751
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.675,
+        "min_s": 0.17500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.6241676210011065,
+      "bin_shares": [
+        0.09001345275781535,
+        0.20004100840672337,
+        0.20004100840672337,
+        0.5099045304287378
+      ],
+      "build_seconds": 4.924806768998678,
+      "cell": "h2@0.700",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.205,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.008119997519389771,
+      "err_neo": 0.15202339775584794,
+      "identity_residual": 3.469446951953614e-18,
+      "k_max": 141,
+      "k_min": 41,
+      "lift": 0.04234239609722565,
+      "lift_minus_swing": 0.03690905949642187,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999795,
+      "n_test": 499877,
+      "n_valid_rows_per_seed": 199959,
+      "qhat_z0_mhat0": [
+        11.901046752929688,
+        15.485944747924805,
+        18.34446144104004
+      ],
+      "qhat_z0_mhat0_slot1": 11.901046752929688,
+      "reject_share": 0.22000012002952726,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.005433336600803779,
+      "sync_period_s": 0.5,
+      "w_loss": 2861.395300891912,
+      "z_edges_nominal": {
+        "primary": [
+          0.20500000000000002,
+          0.25,
+          0.35000000000000003,
+          0.45,
+          0.7051
+        ],
+        "secondary": [
+          0.20500000000000002,
+          0.305,
+          0.405,
+          0.505,
+          0.605,
+          0.7051
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.705,
+        "min_s": 0.20500000000000002
+      }
+    },
+    {
+      "analysis_seconds": 3.584542895001505,
+      "bin_shares": [
+        0.09001570361183073,
+        0.20004601058243396,
+        0.20004601058243396,
+        0.5098922752233014
+      ],
+      "build_seconds": 4.975584425999841,
+      "cell": "h2@0.700",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.23,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.009748690638616248,
+      "err_neo": 0.15538488622859908,
+      "identity_residual": 1.734723475976807e-18,
+      "k_max": 146,
+      "k_min": 46,
+      "lift": 0.0463706532789355,
+      "lift_minus_swing": 0.04431208511412199,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999770,
+      "n_test": 499862,
+      "n_valid_rows_per_seed": 199954,
+      "qhat_z0_mhat0": [
+        12.384246826171875,
+        16.048240661621094,
+        18.555822372436523
+      ],
+      "qhat_z0_mhat0_slot1": 12.384246826171875,
+      "reject_share": 0.22000072019877487,
+      "status": "SENSITIVITY_ONLY",
+      "swing": 0.002058568164813507,
+      "sync_period_s": 0.5,
+      "w_loss": 2861.395300891912,
+      "z_edges_nominal": {
+        "primary": [
+          0.23,
+          0.275,
+          0.375,
+          0.47500000000000003,
+          0.7301
+        ],
+        "secondary": [
+          0.23,
+          0.33,
+          0.43,
+          0.53,
+          0.63,
+          0.7301
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.73,
+        "min_s": 0.23
+      }
+    },
+    {
+      "analysis_seconds": 3.602618912998878,
+      "bin_shares": [
+        0.09001340348490608,
+        0.20005201352351612,
+        0.20004701222317803,
+        0.5098875707683997
+      ],
+      "build_seconds": 4.935015007002221,
+      "cell": "h2@0.700",
+      "closes_P23A": false,
+      "controls": {
+        "families_by_fold": {
+          "101": "F2",
+          "102": "F2",
+          "103": "F2",
+          "104": "F2",
+          "105": "F2"
+        },
+        "identity_residual_le_1e_12": true,
+        "row_disjoint": true,
+        "seed_disjoint": true
+      },
+      "d_sync_s": 0.26,
+      "d_sync_source": "sensitivity_sweep",
+      "delta": -0.011701650915085515,
+      "err_neo": 0.1593837277230496,
+      "identity_residual": 0.0,
+      "k_max": 152,
+      "k_min": 52,
+      "lift": 0.051238558971002435,
+      "lift_minus_swing": 0.05318916756088249,
+      "limitation": "This sensitivity analysis does not measure AoI on topology_v7.",
+      "n_rows": 999740,
+      "n_test": 499844,
+      "n_valid_rows_per_seed": 199948,
+      "qhat_z0_mhat0": [
+        12.974662780761719,
+        16.839712142944336,
+        18.628572463989258
+      ],
+      "qhat_z0_mhat0_slot1": 12.974662780761719,
+      "reject_share": 0.22000064019974233,
+      "status": "SENSITIVITY_ONLY",
+      "swing": -0.001950608589880054,
+      "sync_period_s": 0.5,
+      "w_loss": 2861.395300891912,
+      "z_edges_nominal": {
+        "primary": [
+          0.26,
+          0.305,
+          0.405,
+          0.505,
+          0.7601
+        ],
+        "secondary": [
+          0.26,
+          0.36,
+          0.46,
+          0.56,
+          0.66,
+          0.7601
+        ]
+      },
+      "z_edges_realised": {
+        "max_s": 0.76,
+        "min_s": 0.26
+      }
+    }
+  ],
+  "schema": "dt4n.phase23.dsync_sensitivity.v1",
+  "status": "SENSITIVITY_ONLY",
+  "stop_rule": "TIER_1_MISS_RUN_TIER_2_THEN_STOP",
+  "tier_1_cells": [
+    "poisson@0.900",
+    "poisson@0.925"
+  ],
+  "tier_2_cells": [
+    "poisson@0.850",
+    "poisson@0.960",
+    "h2@0.700"
+  ],
+  "tier_2_triggered": true
+}
