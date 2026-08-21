@@ -447,12 +447,12 @@
       "path": "docs/phase-23/00zi-amendment-33.md",
       "sha256": "92f8c73130816f28ea87b41d312cd0cbd72644900422b046ab1ba84f4138459f"
     },
-    "generated_utc": "2026-08-21T05:07:32.436579+00:00",
-    "git_commit": "fd9b8047f702734e8e8577648a7d4bce0c986cfb",
-    "git_dirty": false,
+    "generated_utc": "2026-08-21T08:41:35.388960+00:00",
+    "git_commit": "8aeb42d48d6069c54462b0b8f13ab2a252abd167",
+    "git_dirty": true,
     "residual": {
       "path": "results/phase-20R/residual_cascade.json",
-      "sha256": "810969d78a3d11eaa17dbe5aa88001c71a3eee1441ae64d0650c4b95ac75d522"
+      "sha256": "31fd2e5596c9fb61a83ab2322654f22cb2a2e0d9e7d3eab8790eae7d7ad53a0b"
     },
     "truth_table": {
       "path": "results/phase-20R/truth_table.parquet",
@@ -460,23 +460,28 @@
     }
   },
   "residual_record": {
+    "baseline_magnitude": 0.14224222657173868,
     "channel": "loss",
     "ci90": [
       -0.010061922706130285,
       -0.008640886279024923
     ],
-    "estimand": "Chenh lech chi phi trung binh do end-to-end tren duong 3-link (nhanh C) tru tong chi phi tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: loss.",
+    "estimand": "Chenh lech ton that trung binh do end-to-end tren duong 3-link (nhanh C) tru dai luong ghep tu tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: loss.",
     "level": "per_path",
     "mode": "h2",
-    "point": -0.009351404492577604
+    "point": -0.009351404492577604,
+    "relative_point": -0.06574281574439009,
+    "rho_bar_measured": 0.925,
+    "valid_range": null
   },
   "schema": "residual_level_audit/v1",
   "status": "APPLICABLE",
   "verdict": {
     "M_23_H_path_exact_zero": true,
-    "M_24_H_link0_point_in_0_0_02": null,
-    "M_25_clip_share_gt_0_90": null,
+    "M_24_H_link0_point_in_0_0_02": true,
+    "M_25_clip_share_gt_0_90": true,
     "M_26_H_link1_reproduces_0_2130": null,
+    "M_26_reason": "main_cell_only_by_definition",
     "clip_share_of_total_test": 0.9987344075049635,
     "point_all_rows": {
       "H_link_no_clip": 0.00035301941606788375,

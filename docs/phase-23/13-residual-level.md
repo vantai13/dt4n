@@ -49,19 +49,20 @@ Day la doi chung quan trong: ket qua moi khong den tu viec viet lai mot
 pipeline gan giong; no tai su dung `measurements.band_v2.truth_table_for` va
 `cert.cell_matrices.cell_matrices` cua phep do cu.
 
-## 3. Cham prereg M-23..M-26
+## 3. Cham prereg M-23..M-26 -- ke ca held-out
 
-| ID | Gia tri do duoc | Dai khoa | KQ |
-|---|---:|---:|:--:|
-| M-23 | H_path = 0.000000 tai 9/9 diem cell-endpoint | = 0 chinh xac | PASS [TAT DINH] |
-| M-24 | H_link0@point = 0.000290 | 0.000--0.020 | HIT |
-| M-25 | clip_share@point = 0.998638 | > 0.90 | HIT |
-| M-26 | H_link1@point = 0.212960 | abs(value - 0.2130) < 0.005 | PASS |
+| ID | poisson@0.925 | poisson@0.850 | h2@0.700 | Dai khoa | KQ |
+|---|---:|---:|---:|---:|:--:|
+| M-23 H_path | 0.000000 | 0.000000 | 0.000000 | = 0 tai 9/9 endpoint-cell | PASS [TAT DINH] |
+| M-24 H_link0@point | 0.000290 | 0.000906 | 0.000320 | 0.000--0.020 | HIT 3/3 |
+| M-25 clip share | 0.998638 | 0.993257 | 0.998734 | > 0.90 | HIT 3/3 |
+| M-26 tai lap 0.2130 | 0.212960 | n/a | n/a | cell chinh, sai so < 0.005 | PASS |
 
-Kich ban khoa truoc: **A**. M-23 va M-26 la kiem tra bat bien/doi chung,
-khong duoc tinh nhu prediction-hit khoa hoc.
+Hai gia tri M-26 held-out ghi `null` kem reason
+`main_cell_only_by_definition`, khong con `null` tran. Kich ban khoa truoc:
+**A**. M-23 va M-26 la kiem tra bat bien/doi chung, khong tinh prediction-hit.
 
-## 4. Dinh ly dung va gioi han cua no
+## 4. Dinh ly argmin va dieu kien tien quyet
 
 Voi cung `r` cho moi duong:
 
@@ -83,19 +84,54 @@ poisson@0.850: path clip ratio = 0.683163 -> flip = 0.333466
 h2@0.700     : path clip ratio = 0.000000 -> flip = 0.000000
 ```
 
-Vi vay cau tong quat dung la:
+Bat bien chi co quyen ap dung vat ly neu `loss_p + r >= 0` tren moi row/path.
+Dieu kien nay do truc tiep bang `path_clip_ratio == 0`, khong duoc gia dinh.
 
-> Common shift triet tieu trong argmin chi khi no van la common shift sau moi
-> phep bien doi. Clipping o bat ky tang nao co the lam shift phu thuoc
-> row/action va che tao thanh phan vi sai.
+Con so `33.35%` **khong phai ket qua ve mang**. No la scope flag: tai
+`poisson@0.850`, residual tuyet doi do o `rho=0.925` lon hon loss nen tren
+68.3% evaluation va mo hinh residual da mat hieu luc truoc khi doc flip.
 
-Con so `33.35%` khong duoc dien giai la tac dong vat ly that. Residual hien
-tai la mot **trung binh per-path**; no khong do residual theo tung row va tung
-duong, nen khong cap quyen ap cung mot so am vao moi row roi clip. Nhanh nay
-chi chung minh rang rang buoc mien la mot nguon vi sai tiem tang phai duoc do,
-khong duoc tu che.
+## 5. S8 -- residual tuyet doi bi ap ngoai diem do
 
-## 5. Erratum cho Lesson 23.7 [C]
+Tai sinh tu raw B/C seeds 104..108 cho:
+
+| mode | rho do | loss B ghep | residual tuyet doi | residual tuong doi |
+|---|---:|---:|---:|---:|
+| poisson | 0.925 | 0.0603007 | -0.0099371 | -0.164793 |
+| h2 | 0.925 | 0.1426483 | -0.0094782 | -0.066445 |
+
+Con so poisson tuyet doi khop artifact 8-seed `-0.009521786` trong sai so da
+khoa. Nhan cua record da sua thanh **chenh lech ton that**; `w_loss` khong
+tham gia tinh no. Schema residual v2 bat buoc ghi `rho_bar_measured`,
+`baseline_magnitude`, `relative_point` va `valid_range`.
+
+S8 la nguyen nhan: mot residual tuyet doi do tai mot diem khong the ngoai suy
+qua dai co loss nen thay doi nhieu bac do lon. S7/clipping la trieu chung va
+`clip_ratio` la detector validity.
+
+## 6. Audit tuong doi M-27..M-30
+
+Mo hinh hop le ve mien duoc khoa trong Amendment 35:
+
+```text
+loss'_p = loss_p * (1 + r_rel)
+```
+
+No khong cho bat bien argmin mien phi, vi delay khong bi nhan. Do do flip van
+duoc do. Ket qua tai point:
+
+| cell | abs(r_abs)/q01(min loss) | r_rel ap dung | flip test | clip ratio | M-27 | M-29 | M-30 |
+|---|---:|---:|---:|---:|:--:|:--:|:--:|
+| poisson@0.925 | 0.508794 | -0.164793 | 0.010109 | 0.000000 | HIT | HIT | PASS |
+| poisson@0.850 | 2.518008 | -0.164793 | 0.026438 | 0.000000 | HIT | HIT | PASS |
+| h2@0.700 | 0.615396 | -0.066445 | 0.004172 | 0.000000 | mo ta | HIT | PASS |
+
+M-28 la [TAT DINH]: poisson `r_rel=-0.164793` nam trong `[-0.20,-0.12]`.
+M-30 bang 0 chinh xac ca ba cell. M-29 HIT 3/3 va cho thay phep nhan vat ly
+van co the doi argmin 0.42--2.64%; day la hieu ung hop le de do, khac artifact
+clipping 13--25% cua phep cong sai scope.
+
+## 7. Erratum cho Lesson 23.7 [C]
 
 Rut phat bieu cu rang pooled common residual cho thay "khong co kich ban an
 toan" hoac tu no dao dau ket luan 23.6. Phep bom cu da:
@@ -105,6 +141,7 @@ toan" hoac tu no dao dau ket luan 23.6. Phep bom cu da:
 (2) ap mot trung binh len tung row/action;
 (3) clip loss tai 0;
 (4) tao ra differential shift ma artifact goc khong do.
+(5) ngoai suy residual tuyet doi tu rho=0.925 sang cell khac (S8).
 ```
 
 Ket luan co du bang chung sau audit:
@@ -115,7 +152,7 @@ Phi tuyen ghep loss per-link: tac dong rat nho (0.0290% tren cell chinh).
 Clipping sau tai phan bo: co che chi phoi cua 21.2960% flip cu (99.86%).
 ```
 
-## 6. L10 van mo
+## 8. L10 van mo va pilot bi ha cap
 
 Audit nay sua S7 bang code, nhung khong dong L10. Artifact cascade hien tai
 chi cho mot pooled residual theo mode, khong cho `r_P1 - r_P3` tren cung
@@ -126,22 +163,16 @@ r_p = end-to-end_p - composed-links_p, p in {P1, P3}
 estimand quyet dinh = r_P1 - r_P3
 ```
 
-Cho den khi phep do do chay, khong duoc noi xep hang an toan truoc residual
-**vi sai**. Cung khong duoc dung nhanh H_path co clip o muc 4 thay cho phep do
-vi sai truc tiep.
+Campaign 23-34 da dung sau 43 row gate-clean va duoc ghi la **PILOT PRE-S8**;
+khong row nao duoc dung de dong L10. Thiet ke tiep theo phai do
+`P1/P3 x rho={0.850,0.925} x seed=101..108`, uoc luong `r_rel` theo path/load,
+va co doi chung tai lap residual cu tai rho=0.925.
 
-## 7. Kiem thu va provenance
+Cho den khi campaign do hoan tat, khong duoc noi xep hang an toan truoc
+residual **vi sai**.
 
-Artifacts duoc tai sinh tu source commit `fd9b804`, voi `git_dirty=false`.
+## 9. Kiem thu va provenance
 
-```text
-test/test_phase23_residual_level.py                         8 passed
-phase20r6_band + phase20r7_mechanism + phase23 structure  70 passed
-phase23 gate ledger + prereg                              28 passed, 1 skipped
-toan bo suite nhanh, loai slow/live                       995 passed, 2 skipped,
-                                                          8 deselected (14m21s)
-```
-
-Mot virtualenv cuc bo `.venv/` duoc tao de chay vi interpreter Homebrew mac
-dinh khong co pytest/numpy/pandas/pyarrow; thu muc nay da nam trong `.gitignore`
-va khong tham gia artifact/provenance.
+Artifact S7 va S8 duoc tai sinh sau Amendment 35. Bo test truc tiep gom schema,
+raw replay, invariant, held-out scoring va domain control; ket qua chay duoc
+ghi cung commit ket qua, khong ke thua con so test cu cua 23.7-bis.

@@ -1,0 +1,116 @@
+{
+  "absolute_residual_record": {
+    "baseline_magnitude": 0.14224222657173868,
+    "channel": "loss",
+    "ci90": [
+      -0.010061922706130285,
+      -0.008640886279024923
+    ],
+    "estimand": "Chenh lech ton that trung binh do end-to-end tren duong 3-link (nhanh C) tru dai luong ghep tu tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: loss.",
+    "level": "per_path",
+    "mode": "h2",
+    "point": -0.009351404492577604,
+    "relative_point": -0.06574281574439009,
+    "rho_bar_measured": 0.925,
+    "valid_range": null
+  },
+  "cell": "h2@0.700",
+  "diagnostics": {
+    "H_path_relative": {
+      "clip_events": 0,
+      "clip_ratio": 0.0,
+      "clipping_applied": false,
+      "eval_count": 4000000
+    }
+  },
+  "lesson": "23.7-ter",
+  "metrics": {
+    "M_27_abs_r_over_q01_min_path_loss": 0.6153960055820227,
+    "M_29_flip_fraction_test": 0.0041722753701744315,
+    "M_30_path_clip_ratio": 0.0,
+    "n_flip_test": 2086,
+    "n_test": 499967,
+    "q01_min_path_loss_test": 0.015195751041206927
+  },
+  "provenance": {
+    "amendment_35": {
+      "path": "docs/phase-23/00zk-amendment-35.md",
+      "sha256": "69ddc6b6d2735be39cf9ae1f8ff4f7ecab4f9f144e58b8eb6bfc452b2078942a"
+    },
+    "generated_utc": "2026-08-21T08:43:05.076686+00:00",
+    "git_commit": "8aeb42d48d6069c54462b0b8f13ab2a252abd167",
+    "git_dirty": true,
+    "raw_branch_b": {
+      "path": "results/phase-20R/branch_b_fixed_s104_108.json",
+      "sha256": "843ec6554cf5cc43291d651bc0d2c5b4dba3832a982fde5ef940d96b5ec1c176"
+    },
+    "raw_branch_c": {
+      "path": "results/phase-20R/branch_c_fixed_s104_108.json",
+      "sha256": "233c17a2214f2d5482967ce36cdd2dc358430c423075b1353987439b97704a29"
+    },
+    "residual": {
+      "path": "results/phase-20R/residual_cascade.json",
+      "sha256": "31fd2e5596c9fb61a83ab2322654f22cb2a2e0d9e7d3eab8790eae7d7ad53a0b"
+    },
+    "truth_table": {
+      "path": "results/phase-20R/truth_table.parquet",
+      "sha256": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e"
+    }
+  },
+  "relative_residual": {
+    "absolute_point": -0.009478198488757045,
+    "baseline_magnitude": 0.14264828760153825,
+    "level_tag": "per_path",
+    "matches_residual_cascade": true,
+    "mean_seed_relative": -0.06638442218140125,
+    "mode": "h2",
+    "n_seed": 5,
+    "per_seed": {
+      "104": {
+        "B_composed_loss": 0.14276181046912206,
+        "C_path_loss": 0.13192323643630058,
+        "absolute": -0.010838574032821485,
+        "relative": -0.07592068212924323
+      },
+      "105": {
+        "B_composed_loss": 0.14278423960401776,
+        "C_path_loss": 0.13248539664593934,
+        "absolute": -0.010298842958078425,
+        "relative": -0.07212870962957896
+      },
+      "106": {
+        "B_composed_loss": 0.14302830358606267,
+        "C_path_loss": 0.1335069641037255,
+        "absolute": -0.00952133948233716,
+        "relative": -0.06656961764639822
+      },
+      "107": {
+        "B_composed_loss": 0.14065255115544573,
+        "C_path_loss": 0.13391209370645174,
+        "absolute": -0.006740457448993986,
+        "relative": -0.04792275286599387
+      },
+      "108": {
+        "B_composed_loss": 0.14401453319304303,
+        "C_path_loss": 0.13402275467148886,
+        "absolute": -0.009991778521554168,
+        "relative": -0.06938034863579202
+      }
+    },
+    "published_absolute_point": -0.009351404492577604,
+    "relative_point": -0.06644453044702961,
+    "relative_sd": 0.010883246283530656,
+    "rho_bar_measured": 0.925,
+    "rowset": "branch_bc_seeds_104_108",
+    "scale": "loss_fraction"
+  },
+  "schema": "residual_relative_audit/v1",
+  "status": "APPLICABLE",
+  "verdict": {
+    "M_27": null,
+    "M_28": null,
+    "M_28_label": "poisson_only",
+    "M_29": true,
+    "M_30": true
+  }
+}
