@@ -146,6 +146,7 @@ def cell_matrices(
     rho_bar: float = RHO_BAR,
     seeds: Sequence[int] = SEEDS,
     n: int = N,
+    w_loss_override: float | None = None,
 ) -> Dict[str, np.ndarray]:
     """Ma tran chi phi that / du doan twin, theo dung duong ong `build_one_v3`.
 
@@ -160,7 +161,16 @@ def cell_matrices(
     lb = block_len(DT)
     yt, yh, lt, zs, bid, sd = [], [], [], [], [], []
     for seed in seeds:
-        arr = _cell_arrays(tt, cv, cell, seed=int(seed), n=int(n), dt=DT, sigma_override=SIGMA)
+        arr = _cell_arrays(
+            tt,
+            cv,
+            cell,
+            seed=int(seed),
+            n=int(n),
+            dt=DT,
+            sigma_override=SIGMA,
+            w_loss_override=w_loss_override,
+        )
         cur, old, _ = _valid_rows(int(n), DT)
         yt.append(arr["c_true"][cur])
         yh.append(y_hat_row_shift(arr["c_fresh"], old))
