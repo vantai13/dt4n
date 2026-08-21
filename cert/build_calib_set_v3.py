@@ -592,7 +592,19 @@ def main() -> None:
     )
     if args.aoi_profile == "U0":
         reproduced = reproduce_20R_fixed_z(cell, tt, cv, seeds=args.seeds, n=int(args.n))
-        v5_compare = compare_20R_constant_sigma(reproduced, str(args.mode), float(args.rho_bar))
+        try:
+            v5_compare = compare_20R_constant_sigma(
+                reproduced, str(args.mode), float(args.rho_bar)
+            )
+        except ValueError as exc:
+            if "got 0" not in str(exc):
+                raise
+            v5_compare = {
+                "status": "NOT_APPLICABLE_NO_PHASE20R_REFERENCE",
+                "reason": str(exc),
+                "max_abs_diff": None,
+                "by_z": {},
+            }
         nc1 = negative_control_z0(cell, tt, cv)
     else:
         reproduced = {}

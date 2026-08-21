@@ -8,6 +8,7 @@ import os
 import pytest
 
 from cert import live_region_sweep as L
+from cert.build_calib_set_v2 import compare_20R_constant_sigma
 
 
 def _load(path):
@@ -22,6 +23,11 @@ def test_preregistered_cells_va_thresholds_khoa():
     assert L.H2_FALLBACK == ("h2", 0.675)
     assert L.DOMAIN_LIMIT == 1e-4
     assert L.LIVE_THRESHOLD == 0.05
+
+
+def test_cell_moi_khong_co_V5_reference_phase20r():
+    with pytest.raises(ValueError, match="got 0"):
+        compare_20R_constant_sigma({"z=0.05": 0.0}, "poisson", 0.875)
 
 
 def test_NC_H_domain_control_du_hai_sigma_va_nam_seed():
