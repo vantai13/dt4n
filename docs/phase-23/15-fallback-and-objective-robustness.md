@@ -32,6 +32,50 @@ F6 giam error fallback H2 tu `0.381833` xuong `0.376151`, nhung van thua
 `0.472257` con cao hon F2 `0.470739`. Day la transfer failure cua policy
 selection, khong duoc thay bang oracle min tren test.
 
+### 1.1. Nang luc thuc cua F6
+
+F6 co luoi danh nghia `4 x 4 = 16` o `(z_bin,m_hat_bin)`, nhung tap
+selection-reject chi phu 5 o trong moi fold. Action map cung khong thay doi
+giua nam fold:
+
+| Cell | O reject co du lieu | O chon P1 | O khac P1 | Quan he voi F2 |
+|---|---:|---:|---:|---|
+| poisson@0.925 | 5/16 | 5/5 | 0/5 | F6 trung F2 |
+| poisson@0.850 | 5/16 | 4/5 | 1/5 chon P3 | gan F2 |
+| h2@0.700 | 5/16 | 4/5 | 1/5 chon P3 | gan F2 |
+
+Vi vay F6 khong cung cap 16 bac tu do thuc tren tap reject. Ket luan dung la:
+trong bon policy tinh phan biet da preregister (`P1`, `P3`, twin runner-up,
+va Mondrian gan-P1), khong policy nao thang `c*` tren ca hai cell held-out.
+Ket qua nay khong chung minh rang moi fallback co the deu that bai. Day la
+bang chung doc lap thu hai cho S4: khi `m_hat` co spread hep, phan hoach
+Mondrian tren tap reject bi thoai hoa.
+
+### 1.2. Doi chung selection-vs-default va S10
+
+| Cell | Delta duoc chon | Delta F2 mac dinh | Chon tru F2 | KQ |
+|---|---:|---:|---:|:--:|
+| poisson@0.925 | -0.012869 | -0.012869 | +0.000000 | hoa |
+| poisson@0.850 | +0.003454 | +0.003120 | +0.000334 | thua |
+| h2@0.700 | +0.002616 | +0.003866 | -0.001250 | thang |
+
+Tong cong la mot thang, mot thua, mot hoa. NC-A ngan row/seed leakage, nhung
+khong ngan winner's curse hoac selection noise: calibration co the chon F6
+roi F6 van kem F2 tren test. Day la S10, that bai lua chon fallback ngoai mau.
+
+### 1.3. F4 phan thong tin va F5 la trung diem
+
+| Cell | c* | err F4 | err F5 | `(c*+F4)/2` |
+|---|---:|---:|---:|---:|
+| poisson@0.925 | 0.453347 | 0.566345 | 0.509846 | 0.509846 |
+| poisson@0.850 | 0.456556 | 0.573018 | 0.514787 | 0.514787 |
+| h2@0.700 | 0.364260 | 0.636513 | 0.500386 | 0.500386 |
+
+F4 cao hon `0.5` o ca ba cell: runner-up cua twin la phan thong tin tren
+tap reject. F5 dung hon hop 50/50 nen bang chinh xac `(c*+F4)/2` (sai so toi
+da `1.11e-16`), khong phai mot policy hoc duoc moi. Kiem tra nay dong thoi la
+mot control co che cho implementation F5.
+
 ## 2. Cham M-40..M-45
 
 | ID | Gia tri | Dai khoa | KQ |
@@ -91,6 +135,33 @@ Tai residual ratio do duoc:
 Residual do duoc dua poisson held-out sang phia co loi, nhung H2 van co hai.
 Day xac nhan canh bao confound: huong objective shift hien tai co the co loi
 cho fallback; khong duoc dien giai no nhu mot cai thien cua certificate.
+
+### 4.1. `w_loss` la ty gia van hanh tu do
+
+Pipeline SLA dat `LOSS_EXCHANGE = 0.01` va giai fixed point
+`w_loss = T_delay / LOSS_EXCHANGE`. Do do ratio `r=w_eff/w_loss` trong Figure
+2 tuong duong voi:
+
+```text
+LOSS_EXCHANGE_eff = 0.01 / r
+```
+
+Truc ratio vi vay la truc ty gia quy doi loss-delay van hanh, khong chi la
+mot nhieu so ky thuat. Ba cell co ba `T_delay` va `w_loss` rieng, nen cung
+mot ratio van la ba ham muc tieu da duoc cell-calibrate.
+
+### 4.2. Readout hau nghiem cua ba duong da cong bo
+
+| ratio r | poisson@0.925 | poisson@0.850 | h2@0.700 |
+|---:|---:|---:|---:|
+| 0.80 | -0.017333 | -0.005858 | -0.001586 |
+| 0.90 | -0.014771 | -0.000664 | +0.000772 |
+| 1.00 | -0.012869 | +0.003454 | +0.002616 |
+
+Noi suy ba duong cho thay bien chung nam gan `r=0.8673`, tuong duong
+`LOSS_EXCHANGE` khoang `0.0115`. Day la phat hien **hau nghiem** sau khi nhin
+ba cell, chi duoc ghi o Discussion. No khong duoc tinh la ket qua xac nhan
+hoac dua vao Results tru khi du doan nay dat tren nam cell gate chua dung.
 
 ## 5. Ket luan paper sau M-45
 

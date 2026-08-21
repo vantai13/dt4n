@@ -57,7 +57,15 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
 23-25 doi dinh danh Lesson 23.6 C-* -> K-* (va cham voi GO-2); ghi F-23.5-2
       (sigma3/sigma1 sap hang ca [A] lan [C]); NT-v2-8 (c_supt phai duoc MO
       PHONG, khong suy tu tom tat vo huong); khoa K-D0..K-D7 va K-1..K-8
+23-39 khoa Lesson 23.15: xac nhan bien objective hau nghiem tren 5 gate cell
+      chua dung, mo rong lift/swing va selection-vs-default len du 8 cell
 ```
+
+Lesson 23.11 cu (sua `LINKS` de tao truc swing) bi huy bo, khong xoa khoi
+lich su. Lesson 23.15 thay the no bang nam gate cell hop le da co trong
+`sla_calibration.json`, khong sua topology va khong tao them truc hau kiem.
+Campaign Mininet Amendment 36 van tam dung tai checkpoint 5 row. Lesson 23.8
+AoI van bi chan cho den khi co amendment rieng va chua duoc doc artifact AoI.
 
 ## Trang thai Lesson 23.6
 
