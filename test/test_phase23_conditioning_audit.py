@@ -46,6 +46,20 @@ def test_spread_tach_duoc_co_gap_bang_khong():
     assert out["M_9_separability_gap_rel"] == pytest.approx(0.0)
 
 
+def test_M13_b_bang_0_duoc_hieu_la_ti_so_vo_han():
+    y_hat = np.asarray([[1.0, 5.0, 4.0, 0.0], [2.0, 6.0, 5.0, 0.0]])
+    base = {"y_hat": y_hat}
+    prep = {"a_star_full": np.asarray([0, 0])}
+    out = A.pruning_profitability(base, prep)
+    assert out["n_fixable_a"] == 2
+    assert out["n_broken_b"] == 0
+    assert out["conditional_ratio_a_over_b"] is None
+    assert out["conditional_ratio_is_infinite"] is True
+    assert out["M_13_predicts_profitable"] is True
+    assert out["profitable_exact"] is True
+    assert out["M_13_prediction_correct"] is True
+
+
 @pytest.mark.skipif(not os.path.exists(MAIN_ARTIFACT), reason="chua chay cell chinh")
 def test_doi_chung_3_tai_lap_lesson_23_6():
     report = _load(MAIN_ARTIFACT)
@@ -94,4 +108,3 @@ def test_12_mechanisms_duoc_sinh_tu_summary():
     summary = _load(A.SUMMARY_PATH)
     with open(A.DOC_PATH, "r", encoding="utf-8") as handle:
         assert handle.read() == A.markdown_report(summary)
-

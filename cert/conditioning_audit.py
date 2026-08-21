@@ -362,10 +362,11 @@ def pruning_profitability(
     b = int(broken.sum())
     p_fix = float(fixed.sum() / a) if a else None
     ratio_cond = float(a / b) if b else None
+    ratio_is_infinite = bool(a > 0 and b == 0)
     p_star = float(star_is_p.mean())
     ratio_marginal = float(picked.mean() / p_star) if p_star else None
     threshold = _main_pfix_threshold()
-    predicts_profit = bool(ratio_cond is not None and ratio_cond > threshold)
+    predicts_profit = bool(ratio_is_infinite or (ratio_cond is not None and ratio_cond > threshold))
     actual_profit = bool(int(fixed.sum()) > b)
     return {
         "path": "P4",
@@ -375,6 +376,7 @@ def pruning_profitability(
         "P_fix": p_fix,
         "M_13c_in_band_0_60_0_90": bool(p_fix is not None and 0.60 <= p_fix <= 0.90),
         "conditional_ratio_a_over_b": ratio_cond,
+        "conditional_ratio_is_infinite": ratio_is_infinite,
         "threshold_1_over_Pfix_from_main_cell": threshold,
         "M_13_predicts_profitable": predicts_profit,
         "profitable_exact": actual_profit,
@@ -775,7 +777,7 @@ def _prediction_rows(reports: Mapping[str, Mapping[str, Any]]) -> List[Dict[str,
                 {"cell": cell, "id": "M-11", "value": c["residual_vs_margin"]["M_11_all_test"]["ratio"], "hit": c["residual_vs_margin"]["M_11_all_test"]["in_band"]},
                 {"cell": cell, "id": "M-12a", "value": c["conclusion_flip"]["points"][-1]["d_gap_c_f2_minus_c_star"], "hit": c["conclusion_flip"]["M_12a_positive_all_three"]},
                 {"cell": cell, "id": "M-12b", "value": c["conclusion_flip"]["M_12b_flipped_all_three"], "hit": c["conclusion_flip"]["M_12b_flipped_all_three"]},
-                {"cell": cell, "id": "M-13", "value": b["pruning_profitability"]["conditional_ratio_a_over_b"], "hit": b["pruning_profitability"]["M_13_prediction_correct"]},
+                {"cell": cell, "id": "M-13", "value": ("inf" if b["pruning_profitability"]["conditional_ratio_is_infinite"] else b["pruning_profitability"]["conditional_ratio_a_over_b"]), "hit": b["pruning_profitability"]["M_13_prediction_correct"]},
                 {"cell": cell, "id": "M-13b", "value": b["pruning_profitability"]["M_13b_marginal_overselection_ratio"], "hit": b["pruning_profitability"]["M_13b_in_band_1_0_2_5"]},
                 {"cell": cell, "id": "M-13c", "value": b["pruning_profitability"]["P_fix"], "hit": b["pruning_profitability"]["M_13c_in_band_0_60_0_90"]},
                 {"cell": cell, "id": "M-14", "value": c["residual_vs_margin"]["M_14_ratio_accept_over_all"], "hit": c["residual_vs_margin"]["M_14_lt_1"]},
@@ -925,6 +927,8 @@ def _format_value(value: Any) -> str:
         return "CO" if value else "KHONG"
     if value is None:
         return "n/a"
+    if isinstance(value, str):
+        return value
     return "%.6f" % float(value)
 
 
@@ -995,8 +999,9 @@ def _print_cell(report: Mapping[str, Any]) -> None:
         b["ladder_decomposed"]["M_6c_margin"],
     ))
     pr = b["pruning_profitability"]
-    p("[B] M-13 a/b = %.6f vs main crit %.6f; profitable = %s" % (
-        pr["conditional_ratio_a_over_b"], pr["threshold_1_over_Pfix_from_main_cell"],
+    ratio_text = "inf" if pr["conditional_ratio_is_infinite"] else "%.6f" % pr["conditional_ratio_a_over_b"]
+    p("[B] M-13 a/b = %s vs main crit %.6f; profitable = %s" % (
+        ratio_text, pr["threshold_1_over_Pfix_from_main_cell"],
         pr["profitable_exact"],
     ))
     cf = c["conclusion_flip"]
