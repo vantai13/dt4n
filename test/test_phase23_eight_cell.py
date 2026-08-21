@@ -20,7 +20,7 @@ def _artifact():
 
 def test_NC_F_w_loss_lay_tu_artifact_khong_hardcode():
     src = Path("cert/eight_cell_sweep.py").read_text(encoding="utf-8")
-    function = src.split("def w_loss_for_cell", 1)[1].split("def _decomposition_f2", 1)[0]
+    function = src.split("def sla_objective_for_cell", 1)[1].split("def _decomposition_f2", 1)[0]
     assert "sla_calibration.json" in src
     assert "w_loss" in function
     for bad in ("1451.377", "3222.244", "2424.359", "2861.395"):

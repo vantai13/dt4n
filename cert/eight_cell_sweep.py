@@ -49,8 +49,8 @@ LEGACY_DELTA = {
 }
 
 
-def w_loss_for_cell(cell: str, artifact: str = SLA_ARTIFACT) -> float:
-    """Read the cell-specific objective weight from the frozen SLA artifact."""
+def sla_objective_for_cell(cell: str, artifact: str = SLA_ARTIFACT) -> Dict[str, float]:
+    """Read both objective parameters from the frozen SLA artifact."""
     spec = CELL_SPECS[cell]
     with open(artifact, "r", encoding="utf-8") as handle:
         rows = json.load(handle)["cells"]
@@ -63,7 +63,15 @@ def w_loss_for_cell(cell: str, artifact: str = SLA_ARTIFACT) -> float:
     ]
     if len(matches) != 1:
         raise ValueError("can dung mot SLA gate cell cho %s, thay %d" % (cell, len(matches)))
-    return float(matches[0]["w_loss"])
+    return {
+        "w_loss": float(matches[0]["w_loss"]),
+        "loss_exchange": float(matches[0]["loss_exchange"]),
+    }
+
+
+def w_loss_for_cell(cell: str, artifact: str = SLA_ARTIFACT) -> float:
+    """Read the cell-specific objective weight from the frozen SLA artifact."""
+    return float(sla_objective_for_cell(cell, artifact)["w_loss"])
 
 
 def _decomposition_f2(
@@ -138,7 +146,9 @@ def _objective_curve(
     selected_at_one: Mapping[str, float],
 ) -> Dict[str, Any]:
     spec = CELL_SPECS[cell]
-    w_loss = w_loss_for_cell(cell)
+    objective = sla_objective_for_cell(cell)
+    w_loss = float(objective["w_loss"])
+    loss_exchange = float(objective["loss_exchange"])
     base = cell_matrices(
         TruthTable(TRUTH_TABLE),
         mode=str(spec["mode"]),
@@ -157,7 +167,7 @@ def _objective_curve(
         a_star = y_eff.argmin(axis=1)
         row = _risk_at_truth(a_star, a_twin, accept, test_idx, selected_probs)
         row["w_eff_over_w_loss"] = float(ratio)
-        row["loss_exchange"] = float(0.01 / float(ratio))
+        row["loss_exchange"] = float(loss_exchange / float(ratio))
         return row
 
     curve = [evaluate(ratio) for ratio in RATIOS]
@@ -168,6 +178,7 @@ def _objective_curve(
         raise AssertionError("objective ratio=1 parity fail for %s: %.3e" % (cell, parity))
     return {
         "w_loss": w_loss,
+        "loss_exchange_at_ratio_one": loss_exchange,
         "w_loss_source": SLA_ARTIFACT,
         "curve": curve,
         "confirm_ratio": {"ratio": CONFIRM_RATIO, "result": confirm},
