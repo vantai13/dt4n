@@ -26,9 +26,9 @@
   "lesson": "23.7-ter",
   "metrics": {
     "M_27_abs_r_over_q01_min_path_loss": 0.6153960055820227,
-    "M_29_flip_fraction_test": 0.0041722753701744315,
+    "M_29_flip_fraction_test": 0.0041662749741482935,
     "M_30_path_clip_ratio": 0.0,
-    "n_flip_test": 2086,
+    "n_flip_test": 2083,
     "n_test": 499967,
     "q01_min_path_loss_test": 0.015195751041206927
   },
@@ -37,8 +37,8 @@
       "path": "docs/phase-23/00zk-amendment-35.md",
       "sha256": "69ddc6b6d2735be39cf9ae1f8ff4f7ecab4f9f144e58b8eb6bfc452b2078942a"
     },
-    "generated_utc": "2026-08-21T09:04:23.938878+00:00",
-    "git_commit": "6b507f776a10802eddf5d4bf76378ce96bddcbf5",
+    "generated_utc": "2026-08-21T09:12:31.195431+00:00",
+    "git_commit": "860915a60e9cbe5cf4e870b86ed9eb9aa9b3e4d8",
     "git_dirty": false,
     "raw_branch_b": {
       "path": "results/phase-20R/branch_b_fixed_s104_108.json",
@@ -58,6 +58,7 @@
     }
   },
   "relative_residual": {
+    "M_28_estimand": "mean_of_seed_ratios",
     "absolute_point": -0.009478198488757045,
     "baseline_magnitude": 0.14264828760153825,
     "level_tag": "per_path",
@@ -98,7 +99,9 @@
       }
     },
     "published_absolute_point": -0.009351404492577604,
-    "relative_point": -0.06644453044702961,
+    "relative_point": -0.06638442218140125,
+    "relative_point_mean_of_ratios": -0.06638442218140125,
+    "relative_point_ratio_of_means": -0.06644453044702961,
     "relative_sd": 0.010883246283530656,
     "rho_bar_measured": 0.925,
     "rowset": "branch_bc_seeds_104_108",

@@ -1,0 +1,200 @@
+{
+ "absolute_superseded_reference": {
+  "artifact": "results/phase-23/conditioning_audit_poisson_0.850.json",
+  "baseline": {
+   "c_f2_err": 0.4707390470302656,
+   "c_star_err": 0.45655632631167437,
+   "coverage": 0.7799994799656778,
+   "delta": 0.003120205933591626,
+   "r_accept": 0.15421028068537904,
+   "r_neo": 0.22072656795348494
+  },
+  "model": "absolute_additive_per_link_clipped",
+  "point": {
+   "M_12a_sign_positive": true,
+   "M_12b_flipped": false,
+   "accept_set_unchanged": true,
+   "baseline": {
+    "c_f2_err": 0.4707390470302656,
+    "c_star_err": 0.45655632631167437,
+    "coverage": 0.7799994799656778,
+    "delta": 0.003120205933591626,
+    "r_accept": 0.15421028068537904,
+    "r_neo": 0.22072656795348494
+   },
+   "d_gap_c_f2_minus_c_star": 0.1625557990053912,
+   "endpoint": 0.009521786236599921,
+   "endpoint_label": "point",
+   "perturbed": {
+    "c_f2_err": 0.6492685898193521,
+    "c_star_err": 0.4725300700953697,
+    "coverage": 0.7799994799656778,
+    "delta": 0.03888256624937245,
+    "r_accept": 0.21225774025960706,
+    "r_neo": 0.2695177881740195
+   },
+   "y_hat_unchanged": true
+  },
+  "status": "SUPERSEDED_BY_AMENDMENT_35"
+ },
+ "cell": "poisson@0.850",
+ "cell_role": "HELD_OUT",
+ "controls": {
+  "accept_set_unchanged": true,
+  "parquet_matrix_alignment": {
+   "a_star_exact": true,
+   "a_twin_exact": true,
+   "same_length": true,
+   "split_exact": true
+  },
+  "path_clip_ratio_exact_zero": true,
+  "weighted_flip_identity_lt_1e_12": true,
+  "y_hat_unchanged": true
+ },
+ "coverage_controls": {
+  "M_38_PC_in_0_85_0_90": true,
+  "M_39_NC_ge_0_89": true,
+  "NC_calibration_and_test": 0.9232689357497594,
+  "NC_definition": "qhat_from_perturbed_calibration_scores_on_perturbed_test",
+  "PC_definition": "qhat_from_baseline_calibration_scores_on_perturbed_test",
+  "PC_test_only": 0.8722175663593797,
+  "alpha": 0.1,
+  "baseline_orig_orig": 0.922318873045621,
+  "nominal_coverage": 0.9,
+  "rowset": "test_rows"
+ },
+ "domain_control": {
+  "clip_events": 0,
+  "clip_ratio": 0.0,
+  "clipping_applied": false,
+  "eval_count": 4000000
+ },
+ "lesson": "23.7-quater",
+ "provenance": {
+  "git_dirty": false,
+  "git_hash": "860915a60e9cbe5cf4e870b86ed9eb9aa9b3e4d8",
+  "inputs": [
+   {
+    "path": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
+    "sha256": "1565767d87060304be9ee651a627c2fa0cb737e0fd11e578078b34579aa16f66"
+   },
+   {
+    "path": "results/phase-23/fallback_poisson_0.850_C3_k0.50.json",
+    "sha256": "2ecbea81ed23d32692628b209babb262d2e185994bd2fe661064c333cd0c5820"
+   },
+   {
+    "path": "results/phase-20R/residual_cascade.json",
+    "sha256": "31fd2e5596c9fb61a83ab2322654f22cb2a2e0d9e7d3eab8790eae7d7ad53a0b"
+   },
+   {
+    "path": "results/phase-20R/truth_table.parquet",
+    "sha256": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e"
+   },
+   {
+    "path": "docs/phase-23/00zn-amendment-37.md",
+    "sha256": "dd3de070259bfa9dff2c72670bf481e01689d575116cf16689981da39a1c73b6"
+   },
+   {
+    "path": "results/phase-23/conditioning_audit_poisson_0.850.json",
+    "sha256": "c3ba4e0822421f0962b668499d86a6f5c77b5bbfd2070e4a633898ca3480acb1"
+   }
+  ],
+  "script": "cert/conditioning_audit.py --relative",
+  "timestamp_utc": "2026-08-21T09:13:25.028064+00:00"
+ },
+ "relative_estimand": {
+  "M_28_estimand": "mean_of_seed_ratios",
+  "level_tag": "per_path",
+  "n_seed": 5,
+  "per_seed": {
+   "seed_104": {
+    "absolute_residual": -0.010273243262052631,
+    "baseline_magnitude": 0.06068232217469449,
+    "relative": -0.1692954866242205
+   },
+   "seed_105": {
+    "absolute_residual": -0.009708096261225332,
+    "baseline_magnitude": 0.05890726716757544,
+    "relative": -0.16480303242736405
+   },
+   "seed_106": {
+    "absolute_residual": -0.01042049934699938,
+    "baseline_magnitude": 0.061584957883216496,
+    "relative": -0.16920526870798167
+   },
+   "seed_107": {
+    "absolute_residual": -0.008610742459382634,
+    "baseline_magnitude": 0.05998357210798344,
+    "relative": -0.1435516785142677
+   },
+   "seed_108": {
+    "absolute_residual": -0.010672999526326186,
+    "baseline_magnitude": 0.06034524184097356,
+    "relative": -0.17686563514738243
+   }
+  },
+  "relative_point": -0.16474422028424326,
+  "relative_point_mean_of_ratios": -0.16474422028424326,
+  "relative_point_ratio_of_means": -0.16479279256604754,
+  "rowset": "paired_raw_BC_seeds_104_108",
+  "scale": "loss_fraction_ratio",
+  "seeds": [
+   104,
+   105,
+   106,
+   107,
+   108
+  ]
+ },
+ "relative_multiplicative": {
+  "M_34_flip_given_reject": 0.042102679261407545,
+  "M_35_flip_given_accept": 0.022004031037966634,
+  "M_36_delta_relative": -0.0056183708124736215,
+  "M_37_delta_still_negative": true,
+  "baseline": {
+   "c_f2_err": 0.4707390470302656,
+   "c_star_err": 0.45655632631167437,
+   "coverage": 0.7799994799656778,
+   "delta": 0.003120205933591626,
+   "r_accept": 0.15421028068537904,
+   "r_neo": 0.22072656795348494
+  },
+  "buffer_retention": -1.80064102564102,
+  "controls": {
+   "accept_set_unchanged": true,
+   "y_hat_unchanged": true
+  },
+  "gate_split": {
+   "concentration_ratio": 1.593244795813514,
+   "flip_all_rows": 0.02642574409911054,
+   "flip_given_accept": 0.022004031037966634,
+   "flip_given_reject": 0.042102679261407545,
+   "identity_residual": 0.0,
+   "n_accept": 389974,
+   "n_reject": 109993
+  },
+  "level_tag": "system_risk",
+  "model": "relative_multiplicative",
+  "perturbed": {
+   "c_f2_err": 0.42952733355759004,
+   "c_star_err": 0.4550653223386943,
+   "coverage": 0.7799994799656778,
+   "delta": -0.0056183708124736215,
+   "r_accept": 0.14965356664803295,
+   "r_neo": 0.21684431172457383
+  },
+  "r_rel": -0.16474422028424326,
+  "rowset": "test_rows",
+  "scale": "error_fraction"
+ },
+ "schema": "relative_conclusions/v1",
+ "status": "APPLICABLE",
+ "verdict": {
+  "M_34_in_0_02_0_10": true,
+  "M_35_in_0_000_0_008": false,
+  "M_36_in_minus_0_010_0_000": true,
+  "M_37_delta_still_negative": true,
+  "M_38_PC_in_0_85_0_90": true,
+  "M_39_NC_ge_0_89": true
+ }
+}

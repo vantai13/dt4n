@@ -97,8 +97,8 @@ Tai sinh tu raw B/C seeds 104..108 cho:
 
 | mode | rho do | loss B ghep | residual tuyet doi | residual tuong doi |
 |---|---:|---:|---:|---:|
-| poisson | 0.925 | 0.0603007 | -0.0099371 | -0.164793 |
-| h2 | 0.925 | 0.1426483 | -0.0094782 | -0.066445 |
+| poisson | 0.925 | 0.0603007 | -0.0099371 | -0.164744 |
+| h2 | 0.925 | 0.1426483 | -0.0094782 | -0.066384 |
 
 Con so poisson tuyet doi khop artifact 8-seed `-0.009521786` trong sai so da
 khoa. Nhan cua record da sua thanh **chenh lech ton that**; `w_loss` khong
@@ -122,11 +122,15 @@ duoc do. Ket qua tai point:
 
 | cell | abs(r_abs)/q01(min loss) | r_rel ap dung | flip test | clip ratio | M-27 | M-29 | M-30 |
 |---|---:|---:|---:|---:|:--:|:--:|:--:|
-| poisson@0.925 | 0.508794 | -0.164793 | 0.010109 | 0.000000 | HIT | HIT | PASS |
-| poisson@0.850 | 2.518008 | -0.164793 | 0.026438 | 0.000000 | HIT | HIT | PASS |
-| h2@0.700 | 0.615396 | -0.066445 | 0.004172 | 0.000000 | mo ta | HIT | PASS |
+| poisson@0.925 | 0.508794 | -0.164744 | 0.010105 | 0.000000 | HIT | HIT | PASS |
+| poisson@0.850 | 2.518008 | -0.164744 | 0.026426 | 0.000000 | HIT | HIT | PASS |
+| h2@0.700 | 0.615396 | -0.066384 | 0.004166 | 0.000000 | mo ta | HIT | PASS |
 
-M-28 la [TAT DINH]: poisson `r_rel=-0.164793` nam trong `[-0.20,-0.12]`.
+Amendment 37 dinh chinh estimand M-28 thanh **mean-of-ratios** tren tung
+seed: poisson `r_rel=-0.164744` nam trong `[-0.20,-0.12]`. Gia tri
+`-0.164793` truoc day la **ratio-of-means** va duoc giu nhu chan doan, khong
+con la gia tri cham M-28. Ca hai van cho cung verdict HIT.
+
 M-30 bang 0 chinh xac ca ba cell. M-29 HIT 3/3 va cho thay phep nhan vat ly
 van co the doi argmin 0.42--2.64%; day la hieu ung hop le de do, khac artifact
 clipping 13--25% cua phep cong sai scope.
