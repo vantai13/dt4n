@@ -70,6 +70,29 @@ def test_mode_mismatch_lam_do(rho_small):
         A.audit_rho_matrix(rho_small, "poisson", A._loss_record("h2"), -0.01, 1.0)
 
 
+def test_relative_point_khop_residual_cascade_va_ghi_diem_do():
+    out = A.relative_point_from_raw(mode="poisson")
+    assert out["matches_residual_cascade"]
+    assert out["rho_bar_measured"] == 0.925
+    assert -0.20 <= out["relative_point"] <= -0.12
+    assert out["scale"] == "loss_fraction"
+
+
+def test_estimand_loss_khong_con_ghi_chi_phi():
+    rec = A._loss_record("poisson")
+    assert "ton that" in rec.estimand.lower()
+    assert "chi phi" not in rec.estimand.lower()
+    assert rec.relative_point == pytest.approx(rec.point / rec.baseline_magnitude)
+
+
+def test_M30_mo_hinh_tuong_doi_khong_cat_nguong(rho_small):
+    rel = A.relative_point_from_raw(mode="poisson")["relative_point"]
+    tt = A.RelativePathShiftTruthTable(rel, "poisson")
+    _delay, loss, _cost = tt.path_tables("poisson", rho_small, 3222.244681647411)
+    assert tt.clip_events == 0
+    assert np.all((0.0 <= loss) & (loss <= 1.0))
+
+
 @pytest.mark.skipif(not os.path.exists(ARTIFACT), reason="chua sinh artifact 23.7-bis")
 def test_artifact_chinh_cham_dung_bon_dong_da_khoa():
     with open(ARTIFACT, "r", encoding="utf-8") as handle:
@@ -91,3 +114,15 @@ def test_tong_flip_pairs_khop_n_flip():
             for branch, pairs in endpoint[scope]["flip_pairs"].items():
                 assert sum(pairs.values()) == endpoint[scope]["n_flip"][branch]
 
+
+@pytest.mark.parametrize("cell", ["poisson_0.850", "h2_0.700"])
+def test_heldout_M24_M25_duoc_cham_va_M26_co_ly_do(cell):
+    path = "results/phase-23/residual_level_audit_%s.json" % cell
+    if not os.path.exists(path):
+        pytest.skip("chua tai sinh held-out artifact")
+    with open(path, "r", encoding="utf-8") as handle:
+        verdict = json.load(handle)["verdict"]
+    assert verdict["M_24_H_link0_point_in_0_0_02"] is True
+    assert verdict["M_25_clip_share_gt_0_90"] is True
+    assert verdict["M_26_H_link1_reproduces_0_2130"] is None
+    assert verdict["M_26_reason"] == "main_cell_only_by_definition"

@@ -1,6 +1,7 @@
 {
   "records": [
     {
+      "baseline_magnitude": 0.08812298448076052,
       "channel": "loss",
       "ci90": [
         -0.0030004044999166236,
@@ -23,15 +24,19 @@
       "provenance": {
         "check_report": "results/phase-20R/additivity_check_inband_bg.json",
         "diag_ca": "results/phase-20R/diag_ca_late_inband.json",
-        "git_commit": "53ed69ee38d1dc49bf18164a8c48ea1c4fb5572b",
+        "git_commit": "2ce7a582e0eccbbb39270eee6dedb9829673c7ee",
         "git_dirty": true,
         "source_script": "measurements.additivity_band.load_residuals"
       },
+      "relative_point": -0.021383216878406334,
+      "rho_bar_measured": 0.925,
       "se": 0.0006785110476626411,
       "se_unit": {},
-      "source": "transfer"
+      "source": "transfer",
+      "valid_range": null
     },
     {
+      "baseline_magnitude": 51.63574198644787,
       "channel": "delay_ms",
       "ci90": [
         -0.7435243972479476,
@@ -54,19 +59,23 @@
       "provenance": {
         "check_report": "results/phase-20R/additivity_check_inband_bg.json",
         "diag_ca": "results/phase-20R/diag_ca_late_inband.json",
-        "git_commit": "53ed69ee38d1dc49bf18164a8c48ea1c4fb5572b",
+        "git_commit": "2ce7a582e0eccbbb39270eee6dedb9829673c7ee",
         "git_dirty": true,
         "source_contrast": "Aprime_minus_A_path_delay"
       },
+      "relative_point": -0.008549827135349622,
+      "rho_bar_measured": 0.925,
       "se": 0.18363193891877563,
       "se_unit": {
         "L1": 0.08744458665976867,
         "L2": 0.07685675135063276,
         "L3": 0.15396148162287684
       },
-      "source": "transfer"
+      "source": "transfer",
+      "valid_range": null
     },
     {
+      "baseline_magnitude": 0.021281049466249268,
       "channel": "loss",
       "ci90": [
         -0.0007741042617021706,
@@ -89,15 +98,19 @@
       "provenance": {
         "check_report": "results/phase-20R/additivity_check_inband_bg.json",
         "diag_ca": "results/phase-20R/diag_ca_late_inband.json",
-        "git_commit": "53ed69ee38d1dc49bf18164a8c48ea1c4fb5572b",
+        "git_commit": "2ce7a582e0eccbbb39270eee6dedb9829673c7ee",
         "git_dirty": true,
         "source_script": "measurements.additivity_band.load_residuals"
       },
+      "relative_point": -0.012327716775934533,
+      "rho_bar_measured": 0.925,
       "se": 0.0003111264046460032,
       "se_unit": {},
-      "source": "transfer"
+      "source": "transfer",
+      "valid_range": null
     },
     {
+      "baseline_magnitude": 40.530377473723675,
       "channel": "delay_ms",
       "ci90": [
         -0.7156968610055205,
@@ -120,18 +133,21 @@
       "provenance": {
         "check_report": "results/phase-20R/additivity_check_inband_bg.json",
         "diag_ca": "results/phase-20R/diag_ca_late_inband.json",
-        "git_commit": "53ed69ee38d1dc49bf18164a8c48ea1c4fb5572b",
+        "git_commit": "2ce7a582e0eccbbb39270eee6dedb9829673c7ee",
         "git_dirty": true,
         "source_contrast": "Aprime_minus_A_path_delay"
       },
+      "relative_point": -0.0062820370588105665,
+      "rho_bar_measured": 0.925,
       "se": 0.2803188171764834,
       "se_unit": {
         "L1": 0.0723564896363083,
         "L2": 0.16094787483691955,
         "L3": 0.1957623134187545
       },
-      "source": "transfer"
+      "source": "transfer",
+      "valid_range": null
     }
   ],
-  "schema": "residual_spec/v1"
+  "schema": "residual_spec/v2"
 }

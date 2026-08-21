@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Convert existing A' - A artifacts to residual_spec/v1.
+"""Convert existing A' - A artifacts to residual_spec/v2.
 
 This is a smoke/golden-test input for ``band_v2``. It preserves the old transfer
 artifact as a residual source without pretending it is the new cascade estimand.
@@ -35,10 +35,29 @@ def _link_delay_rows(check_report: str) -> Dict[str, Dict[str, Dict[str, Any]]]:
     return out
 
 
+def _branch_a_baselines(check_report: str, rho_bar: float = 0.925) -> Dict[str, Dict[str, float]]:
+    with open(check_report, "r", encoding="utf-8") as f:
+        rows = json.load(f).get("branch_a", [])
+    out: Dict[str, Dict[str, float]] = {}
+    for mode in sorted({str(row["mode"]) for row in rows}):
+        selected = [
+            row for row in rows
+            if str(row["mode"]) == mode and abs(float(row["rho_bar"]) - float(rho_bar)) <= 1e-9
+        ]
+        if not selected:
+            raise ValueError("missing branch-A baseline for %s@%.3f" % (mode, rho_bar))
+        out[mode] = {
+            "loss": float(sum(float(row["loss"]) for row in selected) / len(selected)),
+            "delay_ms": float(sum(float(row["delay_ms"]) for row in selected)),
+        }
+    return out
+
+
 def build_records(diag_ca: str, check_report: str) -> List[RS.ResidualRecord]:
     residuals = additivity_band.load_residuals(diag_ca, check_report)
     delay_rows = _path_delay_rows(check_report)
     delay_link_rows = _link_delay_rows(check_report)
+    baselines = _branch_a_baselines(check_report)
     records: List[RS.ResidualRecord] = []
     for mode, info in sorted(residuals.items()):
         records.append(
@@ -54,6 +73,10 @@ def build_records(diag_ca: str, check_report: str) -> List[RS.ResidualRecord]:
                 mode=mode,
                 point=float(info["point"]),
                 se=float(info["se_pooled"]),
+                rho_bar_measured=0.925,
+                baseline_magnitude=float(baselines[mode]["loss"]),
+                relative_point=float(info["point"]) / float(baselines[mode]["loss"]),
+                valid_range=None,
                 per_unit={str(k): float(v) for k, v in dict(info.get("per_link", {})).items()},
                 cochran_q=float(info["cochran_q"]),
                 cochran_df=int(info["cochran_df"]),
@@ -82,6 +105,10 @@ def build_records(diag_ca: str, check_report: str) -> List[RS.ResidualRecord]:
                     mode=mode,
                     point=float(delay.get("mean_ms", 0.0)),
                     se=float(delay.get("se_ms", 0.0)),
+                    rho_bar_measured=0.925,
+                    baseline_magnitude=float(baselines[mode]["delay_ms"]),
+                    relative_point=float(delay.get("mean_ms", 0.0)) / float(baselines[mode]["delay_ms"]),
+                    valid_range=None,
                     per_unit={link: float(row["mean_ms"]) for link, row in links.items()},
                     se_unit={link: float(row["se_ms"]) for link, row in links.items()},
                     provenance={

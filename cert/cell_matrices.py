@@ -158,18 +158,20 @@ def cell_matrices(
     cv = C.CostV2(strict_reliable=False)
     cell = _load_cell(str(mode), float(rho_bar))
     lb = block_len(DT)
-    yt, yh, zs, bid, sd = [], [], [], [], []
+    yt, yh, lt, zs, bid, sd = [], [], [], [], [], []
     for seed in seeds:
         arr = _cell_arrays(tt, cv, cell, seed=int(seed), n=int(n), dt=DT, sigma_override=SIGMA)
         cur, old, _ = _valid_rows(int(n), DT)
         yt.append(arr["c_true"][cur])
         yh.append(y_hat_row_shift(arr["c_fresh"], old))
+        lt.append(arr["l_true"][cur])
         zs.append((cur - old) * float(DT))
         bid.append((int(seed) * 100_000 + cur // lb).astype(np.int32))
         sd.append(np.full(len(cur), int(seed), dtype=np.int16))
     return {
         "y_true": np.concatenate(yt, axis=0),
         "y_hat": np.concatenate(yh, axis=0),
+        "loss_true": np.concatenate(lt, axis=0),
         "z_s": np.concatenate(zs, axis=0),
         "block_id": np.concatenate(bid, axis=0),
         "seed": np.concatenate(sd, axis=0),

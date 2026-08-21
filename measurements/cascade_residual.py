@@ -120,6 +120,19 @@ def paired_residuals(
     rho_bar: float,
     channel: str,
 ) -> Tuple[np.ndarray, List[int]]:
+    residuals, _baselines, seeds = paired_residuals_with_baseline(
+        rows_b, rows_c, mode, rho_bar, channel
+    )
+    return residuals, seeds
+
+
+def paired_residuals_with_baseline(
+    rows_b: Sequence[Mapping[str, Any]],
+    rows_c: Sequence[Mapping[str, Any]],
+    mode: str,
+    rho_bar: float,
+    channel: str,
+) -> Tuple[np.ndarray, np.ndarray, List[int]]:
     idx_b: Dict[Tuple[int, str], Mapping[str, Any]] = {}
     for row in rows_b:
         if str(row["mode"]) == str(mode) and abs(float(row["rho_bar"]) - float(rho_bar)) <= 1e-9:
@@ -135,6 +148,7 @@ def paired_residuals(
         raise ValueError("khong ghep duoc cap nao cho (%s, %.3f) -- o RONG (RC8)" % (mode, rho_bar))
 
     vals: List[float] = []
+    baselines: List[float] = []
     kept: List[int] = []
     for seed in seeds:
         try:
@@ -165,11 +179,12 @@ def paired_residuals(
             raise ValueError("channel khong hop le: %s" % channel)
 
         vals.append(c_val - b_val)
+        baselines.append(b_val)
         kept.append(seed)
 
     if len(vals) < 3:
         raise ValueError("chi ghep duoc %d cap -- qua it de bootstrap" % len(vals))
-    return np.asarray(vals, dtype=float), kept
+    return np.asarray(vals, dtype=float), np.asarray(baselines, dtype=float), kept
 
 
 def bootstrap_seed_mean(diffs: np.ndarray, n_boot: int = N_BOOT, seed: int = 20206) -> Dict[str, float]:
@@ -276,14 +291,19 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     print(hdr % ("mode", "kenh", "r", "se", "CI90", "n_cap", "CI~0"))
     for mode in [part.strip() for part in args.modes.split(",") if part.strip()]:
         for channel in ("loss", "delay_ms"):
-            diffs, seeds = paired_residuals(rows_b, rows_c, mode, args.rho_bar, channel)
+            diffs, baselines, seeds = paired_residuals_with_baseline(
+                rows_b, rows_c, mode, args.rho_bar, channel
+            )
             bs = bootstrap_seed_mean(diffs, args.n_boot)
+            baseline_magnitude = float(np.mean(baselines))
+            relative_point = float(bs["point"]) / baseline_magnitude
             rec = RS.ResidualRecord(
                 estimand=(
-                    "Chenh lech chi phi trung binh do end-to-end tren duong 3-link "
-                    "(nhanh C) tru tong chi phi tung link do rieng (nhanh B), cung "
-                    "topology/session/seed/background/kich-thuoc-goi/carve-out. "
-                    "Bang tra A khong tham gia. Kenh: %s." % channel
+                    ("Chenh lech ton that trung binh" if channel == "loss" else "Chenh lech delay trung binh")
+                    + " do end-to-end tren duong 3-link (nhanh C) tru dai luong "
+                    "ghep tu tung link do rieng (nhanh B), cung topology/session/"
+                    "seed/background/kich-thuoc-goi/carve-out. Bang tra A khong "
+                    "tham gia. Kenh: %s." % channel
                 ),
                 source="cascade",
                 channel=channel,
@@ -291,12 +311,20 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                 mode=mode,
                 point=bs["point"],
                 se=bs["se"],
+                rho_bar_measured=float(args.rho_bar),
+                baseline_magnitude=baseline_magnitude,
+                relative_point=relative_point,
+                valid_range=None,
                 per_unit={"seed_%d" % seed: float(val) for seed, val in zip(seeds, diffs)},
                 provenance={
                     **RS.git_commit(),
                     "branch_b_files": [part.strip() for part in args.branch_b.split(",") if part.strip()],
                     "branch_c_files": [part.strip() for part in args.branch_c.split(",") if part.strip()],
                     "rho_bar": float(args.rho_bar),
+                    "baseline_per_seed": {
+                        "seed_%d" % seed: float(value)
+                        for seed, value in zip(seeds, baselines)
+                    },
                     "n_boot": int(args.n_boot),
                     "ci90_percentile": [bs["ci90_lo"], bs["ci90_hi"]],
                     "dc3": dc3,

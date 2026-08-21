@@ -51,6 +51,8 @@ CELL_SPECS: Dict[str, Dict[str, Any]] = {
     "poisson@0.850": {"mode": "poisson", "rho_bar": 0.850, "slug": "poisson_0.850"},
     "h2@0.700": {"mode": "h2", "rho_bar": 0.700, "slug": "h2_0.700"},
 }
+RAW_RELATIVE_B = "results/phase-20R/branch_b_fixed_s104_108.json"
+RAW_RELATIVE_C = "results/phase-20R/branch_c_fixed_s104_108.json"
 
 
 class PathShiftTruthTable(D.TruthTable):
@@ -113,6 +115,35 @@ class PathShiftClipTruthTable(PathShiftTruthTable):
         return delay, shifted, delay + float(w_loss) * shifted
 
 
+class RelativePathShiftTruthTable(D.TruthTable):
+    """Multiplicative path-loss residual, scoped to one traffic mode.
+
+    ``loss * (1 + rel)`` with ``rel in (-1, 1)`` preserves the physical
+    domain for the measured negative residual.  Counters remain validity
+    detectors; no clipping is performed.
+    """
+
+    def __init__(self, rel: float, mode: str, parquet_path: str = TRUTH_TABLE) -> None:
+        super().__init__(parquet_path)
+        if not (-1.0 < float(rel) < 1.0):
+            raise ValueError("rel phai thuoc (-1, 1)")
+        self._rel = float(rel)
+        self._mode = str(mode)
+        self.clip_events = 0
+        self.eval_count = 0
+
+    def path_tables(
+        self, mode: str, rho_mat: np.ndarray, w_loss: float
+    ) -> Tuple[np.ndarray, np.ndarray, np.ndarray]:
+        delay, loss, _cost = super().path_tables(mode, rho_mat, w_loss)
+        if str(mode) != self._mode:
+            return delay, loss, delay + float(w_loss) * loss
+        self.eval_count += int(loss.size)
+        biased = loss * (1.0 + self._rel)
+        self.clip_events += int(np.sum((biased < 0.0) | (biased > 1.0)))
+        return delay, biased, delay + float(w_loss) * biased
+
+
 class LinkShiftNoClipTruthTable(D.TruthTable):
     """Evenly re-attributed per-link shift, without domain clipping."""
 
@@ -143,6 +174,78 @@ class LinkShiftNoClipTruthTable(D.TruthTable):
 
 def artifact_path(cell: str) -> str:
     return "results/phase-23/residual_level_audit_%s.json" % CELL_SPECS[cell]["slug"]
+
+
+def relative_artifact_path(cell: str) -> str:
+    return "results/phase-23/residual_relative_audit_%s.json" % CELL_SPECS[cell]["slug"]
+
+
+def relative_point_from_raw(
+    branch_b: str = RAW_RELATIVE_B,
+    branch_c: str = RAW_RELATIVE_C,
+    mode: str = "poisson",
+) -> Dict[str, Any]:
+    """Recompute absolute and relative loss residuals from raw B/C rows."""
+    with open(branch_b, "r", encoding="utf-8") as handle:
+        rows_b = json.load(handle).get("rows", [])
+    with open(branch_c, "r", encoding="utf-8") as handle:
+        rows_c = json.load(handle).get("rows", [])
+
+    by_seed_b: Dict[int, list[float]] = {}
+    by_seed_c: Dict[int, float] = {}
+    rho_bars = set()
+    for row in rows_b:
+        if str(row.get("mode")) != str(mode):
+            continue
+        rho_bars.add(float(row["rho_bar"]))
+        by_seed_b.setdefault(int(row["seed"]), []).append(float(row["loss"]))
+    for row in rows_c:
+        if str(row.get("mode")) != str(mode):
+            continue
+        rho_bars.add(float(row["rho_bar"]))
+        by_seed_c[int(row["seed"])] = float(row["loss"])
+    if len(rho_bars) != 1:
+        raise ValueError("residual raw phai co dung mot rho_bar, thay %s" % sorted(rho_bars))
+    if set(by_seed_b) != set(by_seed_c) or not by_seed_c:
+        raise ValueError("B/C seed mismatch hoac rong")
+
+    absolute, relative, baseline = [], [], []
+    per_seed = {}
+    for seed in sorted(by_seed_c):
+        links = by_seed_b[seed]
+        if len(links) != N_LINKS_IN_PATH:
+            raise ValueError("seed %d co %d link, can 3" % (seed, len(links)))
+        composed = 1.0 - float(np.prod([1.0 - value for value in links]))
+        resid = float(by_seed_c[seed]) - composed
+        absolute.append(resid)
+        baseline.append(composed)
+        relative.append(resid / composed)
+        per_seed[str(seed)] = {
+            "B_composed_loss": composed,
+            "C_path_loss": float(by_seed_c[seed]),
+            "absolute": resid,
+            "relative": resid / composed,
+        }
+    absolute_point = float(np.mean(absolute))
+    baseline_magnitude = float(np.mean(baseline))
+    relative_point = absolute_point / baseline_magnitude
+    published = _loss_record(mode)
+    return {
+        "mode": str(mode),
+        "rho_bar_measured": float(next(iter(rho_bars))),
+        "n_seed": len(absolute),
+        "baseline_magnitude": baseline_magnitude,
+        "absolute_point": absolute_point,
+        "relative_point": relative_point,
+        "mean_seed_relative": float(np.mean(relative)),
+        "relative_sd": float(np.std(relative, ddof=1)),
+        "matches_residual_cascade": bool(abs(absolute_point - float(published.point)) < 5e-4),
+        "published_absolute_point": float(published.point),
+        "scale": "loss_fraction",
+        "level_tag": "per_path",
+        "rowset": "branch_bc_seeds_104_108",
+        "per_seed": per_seed,
+    }
 
 
 def _loss_record(mode: str, residual_path: str = RESIDUAL) -> RS.ResidualRecord:
@@ -366,6 +469,10 @@ def _record_dict(rec: RS.ResidualRecord) -> Dict[str, Any]:
         "point": float(rec.point),
         "ci90": [float(x) for x in rec.ci90],
         "estimand": rec.estimand,
+        "rho_bar_measured": float(rec.rho_bar_measured),
+        "baseline_magnitude": float(rec.baseline_magnitude),
+        "relative_point": float(rec.relative_point),
+        "valid_range": rec.valid_range,
     }
 
 
@@ -392,13 +499,12 @@ def _verdict(report: Mapping[str, Any]) -> Dict[str, Any]:
     return {
         "scenario": scenario,
         "M_23_H_path_exact_zero": m23,
-        "M_24_H_link0_point_in_0_0_02": (
-            bool(0.0 <= test_f["H_link_no_clip"] <= 0.020) if main else None
-        ),
-        "M_25_clip_share_gt_0_90": (bool(share is not None and share > 0.90) if main else None),
+        "M_24_H_link0_point_in_0_0_02": bool(0.0 <= test_f["H_link_no_clip"] <= 0.020),
+        "M_25_clip_share_gt_0_90": bool(share is not None and share > 0.90),
         "M_26_H_link1_reproduces_0_2130": (
             bool(abs(test_f["H_link_with_clip"] - 0.2130) < 0.005) if main else None
         ),
+        "M_26_reason": None if main else "main_cell_only_by_definition",
         "point_all_rows": all_f,
         "point_test_rows": test_f,
         "clip_share_of_total_test": share,
@@ -451,6 +557,76 @@ def run_cell(cell: str) -> Dict[str, Any]:
     return json_clean(report)
 
 
+def run_relative_cell(cell: str) -> Dict[str, Any]:
+    """Lesson 23.7-ter S8 audit using a multiplicative path residual."""
+    if cell not in CELL_SPECS:
+        raise ValueError("cell phai thuoc %s" % sorted(CELL_SPECS))
+    spec = CELL_SPECS[cell]
+    mode, rho_bar = str(spec["mode"]), float(spec["rho_bar"])
+    rec = _loss_record(mode)
+    relative = relative_point_from_raw(mode=mode)
+    rel = float(relative["relative_point"])
+    base = cell_matrices(D.TruthTable(TRUTH_TABLE), mode=mode, rho_bar=rho_bar)
+    shifted_tt = RelativePathShiftTruthTable(rel, mode)
+    shifted = cell_matrices(shifted_tt, mode=mode, rho_bar=rho_bar)
+    prep = prepare(base)
+    test = ~prep["is_calib"]
+    base_astar = np.asarray(base["y_true"]).argmin(axis=1)
+    shifted_astar = np.asarray(shifted["y_true"]).argmin(axis=1)
+    flip = shifted_astar != base_astar
+    min_path_loss = np.asarray(base["loss_true"], dtype=float).min(axis=1)
+    q01 = float(np.quantile(min_path_loss[test], 0.01))
+    ratio = abs(float(rec.point)) / q01
+    flip_fraction = float(flip[test].mean())
+    clip_ratio = float(shifted_tt.clip_events / max(shifted_tt.eval_count, 1))
+    m27_expected = None
+    if cell == "poisson@0.925":
+        m27_expected = bool(ratio < 1.0)
+    elif cell == "poisson@0.850":
+        m27_expected = bool(ratio > 1.0)
+    return json_clean({
+        "schema": "residual_relative_audit/v1",
+        "lesson": "23.7-ter",
+        "cell": cell,
+        "status": "APPLICABLE",
+        "relative_residual": relative,
+        "absolute_residual_record": _record_dict(rec),
+        "metrics": {
+            "q01_min_path_loss_test": q01,
+            "M_27_abs_r_over_q01_min_path_loss": ratio,
+            "M_29_flip_fraction_test": flip_fraction,
+            "M_30_path_clip_ratio": clip_ratio,
+            "n_test": int(test.sum()),
+            "n_flip_test": int(flip[test].sum()),
+        },
+        "diagnostics": {
+            "H_path_relative": {
+                "clip_events": int(shifted_tt.clip_events),
+                "eval_count": int(shifted_tt.eval_count),
+                "clip_ratio": clip_ratio,
+                "clipping_applied": False,
+            },
+        },
+        "verdict": {
+            "M_27": m27_expected,
+            "M_28": bool(-0.20 <= float(relative["relative_point"]) <= -0.12) if mode == "poisson" else None,
+            "M_28_label": "TAT_DINH" if mode == "poisson" else "poisson_only",
+            "M_29": bool(0.0 <= flip_fraction <= 0.05),
+            "M_30": bool(clip_ratio == 0.0),
+        },
+        "provenance": {
+            "generated_utc": datetime.now(timezone.utc).isoformat(),
+            "git_commit": git("git", "rev-parse", "HEAD"),
+            "git_dirty": bool(git("git", "status", "--porcelain")),
+            "amendment_35": pin("docs/phase-23/00zk-amendment-35.md"),
+            "truth_table": pin(TRUTH_TABLE),
+            "residual": pin(RESIDUAL),
+            "raw_branch_b": pin(RAW_RELATIVE_B),
+            "raw_branch_c": pin(RAW_RELATIVE_C),
+        },
+    })
+
+
 def write_json(path: str, payload: Mapping[str, Any]) -> None:
     os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
     with open(path, "w", encoding="utf-8") as handle:
@@ -484,18 +660,35 @@ def _print_report(report: Mapping[str, Any], out: str) -> None:
     print("artifact=%s" % out)
 
 
+def _print_relative_report(report: Mapping[str, Any], out: str) -> None:
+    metrics = report["metrics"]
+    rel = report["relative_residual"]
+    print("=== LESSON 23.7-ter: RELATIVE RESIDUAL (S8) ===")
+    print("cell=%s  measured_at_rho=%.3f  relative=%+.6f" % (
+        report["cell"], rel["rho_bar_measured"], rel["relative_point"],
+    ))
+    print("|r_abs|/q01(min path loss)=%.6f" % metrics["M_27_abs_r_over_q01_min_path_loss"])
+    print("flip_fraction=%.6f  path_clip_ratio=%.6f" % (
+        metrics["M_29_flip_fraction_test"], metrics["M_30_path_clip_ratio"],
+    ))
+    print("M-27=%s M-28=%s M-29=%s M-30=%s" % tuple(
+        report["verdict"][key] for key in ("M_27", "M_28", "M_29", "M_30")
+    ))
+    print("artifact=%s" % out)
+
+
 def main(argv: Optional[Sequence[str]] = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
     parser.add_argument("--cell", required=True, choices=sorted(CELL_SPECS))
     parser.add_argument("--out", default=None)
+    parser.add_argument("--relative", action="store_true")
     args = parser.parse_args(argv)
-    out = args.out or artifact_path(args.cell)
-    report = run_cell(args.cell)
+    out = args.out or (relative_artifact_path(args.cell) if args.relative else artifact_path(args.cell))
+    report = run_relative_cell(args.cell) if args.relative else run_cell(args.cell)
     write_json(out, report)
-    _print_report(report, out)
+    (_print_relative_report if args.relative else _print_report)(report, out)
     return 0
 
 
 if __name__ == "__main__":
     raise SystemExit(main())
-

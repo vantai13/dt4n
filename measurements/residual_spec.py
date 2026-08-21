@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""Phase 20R.6-v2 -- common schema for systematic residuals."""
+"""Phase 20R.6-v2 -- common schema for operating-point-scoped residuals."""
 
 from __future__ import annotations
 
@@ -45,6 +45,10 @@ class ResidualRecord:
     mode: str
     point: float
     se: float
+    rho_bar_measured: Optional[float] = None
+    baseline_magnitude: Optional[float] = None
+    relative_point: Optional[float] = None
+    valid_range: Optional[List[float]] = None
     per_unit: Dict[str, float] = field(default_factory=dict)
     se_unit: Dict[str, float] = field(default_factory=dict)
     cochran_q: Optional[float] = None
@@ -64,6 +68,21 @@ class ResidualRecord:
             raise ValueError("level phai thuoc %s" % (VALID_LEVELS,))
         if self.se < 0:
             raise ValueError("se am -> loi tinh toan")
+        if self.rho_bar_measured is None or not math.isfinite(float(self.rho_bar_measured)):
+            raise ValueError("rho_bar_measured la truong bat buoc va phai huu han (NT44)")
+        if self.baseline_magnitude is None or not math.isfinite(float(self.baseline_magnitude)) or float(self.baseline_magnitude) <= 0.0:
+            raise ValueError("baseline_magnitude la truong bat buoc va phai > 0 (NT44)")
+        if self.relative_point is None or not math.isfinite(float(self.relative_point)):
+            raise ValueError("relative_point la truong bat buoc (NT44)")
+        expected_relative = float(self.point) / float(self.baseline_magnitude)
+        if not math.isclose(float(self.relative_point), expected_relative, rel_tol=1e-9, abs_tol=1e-12):
+            raise ValueError("relative_point phai bang point / baseline_magnitude")
+        if self.valid_range is not None:
+            if len(self.valid_range) != 2 or not all(math.isfinite(float(x)) for x in self.valid_range):
+                raise ValueError("valid_range phai la [rho_lo, rho_hi] hoac None")
+            lo, hi = (float(x) for x in self.valid_range)
+            if lo > hi or not (lo <= float(self.rho_bar_measured) <= hi):
+                raise ValueError("valid_range khong chua rho_bar_measured")
         if not self.provenance:
             self.provenance = git_commit()
 
@@ -119,7 +138,7 @@ def pool_inverse_variance(values: Sequence[float], ses: Sequence[float]) -> Dict
 
 def save(records: Sequence[ResidualRecord], path: str) -> None:
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
-    payload = {"schema": "residual_spec/v1", "records": [record.to_dict() for record in records]}
+    payload = {"schema": "residual_spec/v2", "records": [record.to_dict() for record in records]}
     with open(path, "w", encoding="utf-8") as f:
         json.dump(payload, f, indent=2, sort_keys=True)
         f.write("\n")
@@ -128,7 +147,7 @@ def save(records: Sequence[ResidualRecord], path: str) -> None:
 def load(path: str) -> List[ResidualRecord]:
     with open(path, "r", encoding="utf-8") as f:
         payload = json.load(f)
-    if payload.get("schema") != "residual_spec/v1":
+    if payload.get("schema") != "residual_spec/v2":
         raise ValueError("schema khong khop: %r" % payload.get("schema"))
     records = []
     for raw in payload.get("records", []):
@@ -152,4 +171,4 @@ def records_by_mode_channel(records: Sequence[ResidualRecord]) -> Dict[tuple[str
 
 
 def as_jsonable(records: Sequence[ResidualRecord]) -> Dict[str, Any]:
-    return {"schema": "residual_spec/v1", "records": [record.to_dict() for record in records]}
+    return {"schema": "residual_spec/v2", "records": [record.to_dict() for record in records]}

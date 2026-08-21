@@ -1,6 +1,7 @@
 {
   "records": [
     {
+      "baseline_magnitude": 0.0597938903421118,
       "channel": "loss",
       "ci90": [
         -0.0101350817936804,
@@ -9,7 +10,7 @@
       "ci_contains_zero": false,
       "cochran_df": null,
       "cochran_q": null,
-      "estimand": "Chenh lech chi phi trung binh do end-to-end tren duong 3-link (nhanh C) tru tong chi phi tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: loss.",
+      "estimand": "Chenh lech ton that trung binh do end-to-end tren duong 3-link (nhanh C) tru dai luong ghep tu tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: loss.",
       "homogeneous": null,
       "i_squared": null,
       "level": "per_path",
@@ -26,6 +27,16 @@
       },
       "point": -0.009521786236599921,
       "provenance": {
+        "baseline_per_seed": {
+          "seed_101": 0.058411889888595914,
+          "seed_102": 0.05834431867701695,
+          "seed_103": 0.060091552996838105,
+          "seed_104": 0.06068232217469449,
+          "seed_105": 0.05890726716757544,
+          "seed_106": 0.061584957883216496,
+          "seed_107": 0.05998357210798344,
+          "seed_108": 0.06034524184097356
+        },
         "branch_b_files": [
           "results/phase-20R/branch_b_fixed_pilot3.json",
           "results/phase-20R/branch_b_fixed_s104_108.json"
@@ -582,16 +593,20 @@
           "pass": true,
           "threshold_z": 3.0
         },
-        "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+        "git_commit": "2ce7a582e0eccbbb39270eee6dedb9829673c7ee",
         "git_dirty": true,
         "n_boot": 2000,
         "rho_bar": 0.925
       },
+      "relative_point": -0.15924346420881552,
+      "rho_bar_measured": 0.925,
       "se": 0.0003728571393451816,
       "se_unit": {},
-      "source": "cascade"
+      "source": "cascade",
+      "valid_range": null
     },
     {
+      "baseline_magnitude": 40.978192951417014,
       "channel": "delay_ms",
       "ci90": [
         -0.8441664663562818,
@@ -600,7 +615,7 @@
       "ci_contains_zero": false,
       "cochran_df": null,
       "cochran_q": null,
-      "estimand": "Chenh lech chi phi trung binh do end-to-end tren duong 3-link (nhanh C) tru tong chi phi tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: delay_ms.",
+      "estimand": "Chenh lech delay trung binh do end-to-end tren duong 3-link (nhanh C) tru dai luong ghep tu tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: delay_ms.",
       "homogeneous": null,
       "i_squared": null,
       "level": "per_path",
@@ -617,6 +632,16 @@
       },
       "point": -0.7463995189989756,
       "provenance": {
+        "baseline_per_seed": {
+          "seed_101": 40.89763870669591,
+          "seed_102": 40.878423670061764,
+          "seed_103": 40.973912966108664,
+          "seed_104": 40.9926435574173,
+          "seed_105": 40.93745098971379,
+          "seed_106": 41.15871343583051,
+          "seed_107": 41.14600782233967,
+          "seed_108": 40.84075246316857
+        },
         "branch_b_files": [
           "results/phase-20R/branch_b_fixed_pilot3.json",
           "results/phase-20R/branch_b_fixed_s104_108.json"
@@ -1173,16 +1198,20 @@
           "pass": true,
           "threshold_z": 3.0
         },
-        "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+        "git_commit": "2ce7a582e0eccbbb39270eee6dedb9829673c7ee",
         "git_dirty": true,
         "n_boot": 2000,
         "rho_bar": 0.925
       },
+      "relative_point": -0.018214554260210864,
+      "rho_bar_measured": 0.925,
       "se": 0.05943807010063273,
       "se_unit": {},
-      "source": "cascade"
+      "source": "cascade",
+      "valid_range": null
     },
     {
+      "baseline_magnitude": 0.14224222657173868,
       "channel": "loss",
       "ci90": [
         -0.010061922706130285,
@@ -1191,7 +1220,7 @@
       "ci_contains_zero": false,
       "cochran_df": null,
       "cochran_q": null,
-      "estimand": "Chenh lech chi phi trung binh do end-to-end tren duong 3-link (nhanh C) tru tong chi phi tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: loss.",
+      "estimand": "Chenh lech ton that trung binh do end-to-end tren duong 3-link (nhanh C) tru dai luong ghep tu tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: loss.",
       "homogeneous": null,
       "i_squared": null,
       "level": "per_path",
@@ -1208,6 +1237,16 @@
       },
       "point": -0.009351404492577604,
       "provenance": {
+        "baseline_per_seed": {
+          "seed_101": 0.14156202775728466,
+          "seed_102": 0.14056683929635327,
+          "seed_103": 0.1425675075125804,
+          "seed_104": 0.14276181046912206,
+          "seed_105": 0.14278423960401776,
+          "seed_106": 0.14302830358606267,
+          "seed_107": 0.14065255115544573,
+          "seed_108": 0.14401453319304303
+        },
         "branch_b_files": [
           "results/phase-20R/branch_b_fixed_pilot3.json",
           "results/phase-20R/branch_b_fixed_s104_108.json"
@@ -1764,16 +1803,20 @@
           "pass": true,
           "threshold_z": 3.0
         },
-        "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+        "git_commit": "2ce7a582e0eccbbb39270eee6dedb9829673c7ee",
         "git_dirty": true,
         "n_boot": 2000,
         "rho_bar": 0.925
       },
+      "relative_point": -0.06574281574439009,
+      "rho_bar_measured": 0.925,
       "se": 0.0004319643041587166,
       "se_unit": {},
-      "source": "cascade"
+      "source": "cascade",
+      "valid_range": null
     },
     {
+      "baseline_magnitude": 46.0545887606949,
       "channel": "delay_ms",
       "ci90": [
         -0.49869213794322576,
@@ -1782,7 +1825,7 @@
       "ci_contains_zero": false,
       "cochran_df": null,
       "cochran_q": null,
-      "estimand": "Chenh lech chi phi trung binh do end-to-end tren duong 3-link (nhanh C) tru tong chi phi tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: delay_ms.",
+      "estimand": "Chenh lech delay trung binh do end-to-end tren duong 3-link (nhanh C) tru dai luong ghep tu tung link do rieng (nhanh B), cung topology/session/seed/background/kich-thuoc-goi/carve-out. Bang tra A khong tham gia. Kenh: delay_ms.",
       "homogeneous": null,
       "i_squared": null,
       "level": "per_path",
@@ -1799,6 +1842,16 @@
       },
       "point": -0.44924137696913036,
       "provenance": {
+        "baseline_per_seed": {
+          "seed_101": 45.94384271378193,
+          "seed_102": 46.1664261751946,
+          "seed_103": 46.01794302248497,
+          "seed_104": 46.0682400232373,
+          "seed_105": 45.9573412485763,
+          "seed_106": 46.003048653285035,
+          "seed_107": 46.17008255297155,
+          "seed_108": 46.109785696027494
+        },
         "branch_b_files": [
           "results/phase-20R/branch_b_fixed_pilot3.json",
           "results/phase-20R/branch_b_fixed_s104_108.json"
@@ -2355,15 +2408,18 @@
           "pass": true,
           "threshold_z": 3.0
         },
-        "git_commit": "c4fb70d75605e2539b357841c39be8cd547c6307",
+        "git_commit": "2ce7a582e0eccbbb39270eee6dedb9829673c7ee",
         "git_dirty": true,
         "n_boot": 2000,
         "rho_bar": 0.925
       },
+      "relative_point": -0.009754541057861613,
+      "rho_bar_measured": 0.925,
       "se": 0.030063921159017983,
       "se_unit": {},
-      "source": "cascade"
+      "source": "cascade",
+      "valid_range": null
     }
   ],
-  "schema": "residual_spec/v1"
+  "schema": "residual_spec/v2"
 }

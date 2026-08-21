@@ -17,9 +17,19 @@ from twin import cost_v2 as C
 from twin import topology_v7 as T7
 
 
+def _record(**kwargs):
+    point = float(kwargs.get("point", 0.0))
+    baseline = max(abs(point) * 2.0, 1.0)
+    kwargs.setdefault("rho_bar_measured", 0.925)
+    kwargs.setdefault("baseline_magnitude", baseline)
+    kwargs.setdefault("relative_point", point / baseline)
+    kwargs.setdefault("valid_range", None)
+    return RS.ResidualRecord(**kwargs)
+
+
 def test_residual_requires_written_estimand():
     with pytest.raises(ValueError, match="estimand"):
-        RS.ResidualRecord(
+        _record(
             estimand="G6",
             source="cascade",
             channel="loss",
@@ -33,6 +43,25 @@ def test_residual_requires_written_estimand():
 def test_empty_join_raises_not_returns_empty():
     with pytest.raises(ValueError, match="RC8|rong"):
         RS.pool_inverse_variance([], [])
+
+
+def test_residual_requires_operating_point_scope():
+    with pytest.raises(ValueError, match="rho_bar_measured"):
+        RS.ResidualRecord(
+            estimand="cascade residual with deliberately missing operating-point metadata",
+            source="cascade", channel="loss", level="per_path", mode="h2",
+            point=-0.01, se=0.001,
+        )
+
+
+def test_relative_point_must_match_point_over_baseline():
+    with pytest.raises(ValueError, match="point / baseline"):
+        RS.ResidualRecord(
+            estimand="cascade residual with inconsistent relative scaling metadata",
+            source="cascade", channel="loss", level="per_path", mode="h2",
+            point=-0.01, se=0.001, rho_bar_measured=0.925,
+            baseline_magnitude=0.05, relative_point=-0.10, valid_range=None,
+        )
 
 
 def test_missing_branch_raises(tmp_path):
@@ -50,7 +79,7 @@ def test_structural_invariant_rejects_mismatched_probe_size():
 
 
 def test_power_gate_blocks_underpowered_claim():
-    rec = RS.ResidualRecord(
+    rec = _record(
         estimand="phan du ghep C tru tong B, kenh loss, cung topology",
         source="cascade",
         channel="loss",
@@ -203,7 +232,7 @@ def test_common_mode_delay_leaves_err_bitwise_unchanged():
             if c["mode"] == "poisson" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
     cv2 = C.CostV2()
     base = B2.cell_metrics(D.TruthTable(), cv2, cell, seeds=[101], n=400)
-    rec = RS.ResidualRecord(
+    rec = _record(
         estimand="common mode delay residual applied equally to every measured link class",
         source="test",
         channel="delay_ms",
@@ -237,7 +266,7 @@ def test_path_level_residual_rejects_differential():
 
 def test_path_level_residual_only_supports_common_mode():
     records = [
-        RS.ResidualRecord(
+        _record(
             estimand="cascade path-level loss residual",
             source="cascade",
             channel="loss",
@@ -247,7 +276,7 @@ def test_path_level_residual_only_supports_common_mode():
             se=0.002,
             per_unit={},
         ),
-        RS.ResidualRecord(
+        _record(
             estimand="cascade path-level loss residual peer",
             source="cascade",
             channel="loss",
@@ -288,7 +317,7 @@ def test_full_equals_differential_on_err_for_delay_channel():
     cell = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True)
             if c["mode"] == "h2" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
     cv2 = C.CostV2()
-    rec = RS.ResidualRecord(
+    rec = _record(
         estimand="per-link delay residual from transfer smoke used for algebraic invariant",
         source="test",
         channel="delay_ms",
@@ -314,7 +343,7 @@ def test_differential_injection_changes_err_more_than_common_mode():
             if c["mode"] == "poisson" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
     cv2 = C.CostV2()
     base = B2.cell_metrics(D.TruthTable(), cv2, cell, seeds=[101], n=5000)
-    rec = RS.ResidualRecord(
+    rec = _record(
         estimand="per-link delay residual with large differential component on L3",
         source="test",
         channel="delay_ms",
@@ -375,7 +404,7 @@ def test_small_discordance_uses_exact_sign_test():
 
 
 def test_common_mode_delay_identity_is_not_a_mc_claim():
-    rec = RS.ResidualRecord(
+    rec = _record(
         estimand="common mode delay residual is an algebraic argmin identity",
         source="test",
         channel="delay_ms",
@@ -404,7 +433,7 @@ def test_block_bootstrap_se_exposes_clustered_flips():
 
 
 def test_potency_uses_rms_injected_vector():
-    rec = RS.ResidualRecord(
+    rec = _record(
         estimand="loss residual with known vector rms for potency",
         source="test",
         channel="loss",
@@ -480,7 +509,7 @@ def test_pilot_power_only_prints_sd_and_seed_count_not_mean(tmp_path, capsys):
 
 def test_joint_qt3_uses_dimensionless_anchor_symmetric_lambda():
     records = [
-        RS.ResidualRecord(
+        _record(
             estimand="anchor h2 delay residual for joint scaling rule test",
             source="test",
             channel="delay_ms",
@@ -490,7 +519,7 @@ def test_joint_qt3_uses_dimensionless_anchor_symmetric_lambda():
             se=0.0,
             per_unit={"L1": 1.0, "L2": 2.0, "L3": 3.0},
         ),
-        RS.ResidualRecord(
+        _record(
             estimand="poisson delay residual must also be applied by joint mode",
             source="test",
             channel="delay_ms",
@@ -519,7 +548,7 @@ def test_joint_equals_full_in_band_mode_by_construction():
             if c["mode"] == "h2" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
     cv2 = C.CostV2()
     records = [
-        RS.ResidualRecord(
+        _record(
             estimand="h2 loss residual for band joint identity test",
             source="test",
             channel="loss",
@@ -529,7 +558,7 @@ def test_joint_equals_full_in_band_mode_by_construction():
             se=0.0,
             per_unit={"L1": -0.01, "L2": -0.02, "L3": -0.03},
         ),
-        RS.ResidualRecord(
+        _record(
             estimand="poisson loss residual should not affect h2 per-cell band metric",
             source="test",
             channel="loss",
@@ -601,7 +630,7 @@ def test_independent_variants_canonicalize_joint_only_for_band():
 def test_run_band_marks_d_sla_and_joint_fields():
     cell = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True)
             if c["mode"] == "h2" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
-    rec = RS.ResidualRecord(
+    rec = _record(
         estimand="common mode delay residual exposes d_sla paired standard error fields",
         source="test",
         channel="delay_ms",
@@ -626,7 +655,7 @@ def test_run_band_marks_d_sla_and_joint_fields():
 
 def test_band_artifact_records_full_provenance(tmp_path):
     residual = tmp_path / "residual.json"
-    residual.write_text('{"schema":"residual_spec/v1","records":[]}\n', encoding="utf-8")
+    residual.write_text('{"schema":"residual_spec/v2","records":[]}\n', encoding="utf-8")
 
     report = B2.build_report(
         "band",

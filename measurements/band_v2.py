@@ -1499,7 +1499,7 @@ def build_report(
 
 def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--residual", required=True, help="residual_spec/v1 JSON")
+    ap.add_argument("--residual", required=True, help="residual_spec/v2 JSON")
     ap.add_argument("--mode", choices=["band", "scan"], default="band")
     ap.add_argument("--seeds", default="101,102,103,104,105")
     ap.add_argument("--n", type=int, default=120_000)
