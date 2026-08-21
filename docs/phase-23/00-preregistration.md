@@ -234,6 +234,22 @@ Nhan nguon:
 | K-13 | 23.6 | `max(\|drop\| / MDE)` tren hai cell co vi pham (Amd 23-27 muc 5.3) | [MO TA] | < 1.0 | 0.69 | DA NHIN SO -- KHONG tinh diem |
 | K-14 | 23.6 | Ket luan cua `K-10` duoc ghi `UNDETECTED`, khong phai PASS (Amd 23-27 muc 5.3) | [GATE thu tuc] | UNDETECTED | UNDETECTED | dat |
 | K-15 | 23.6 | `c_supt(luoi 0.01) / c_supt(luoi 0.02)`, cung seed, cung B (Amd 23-27 muc 6.2) | [CO CHE] | 0.98-1.04 | 1.0273 / 1.0194 / 1.0303 | **HIT 3/3** (xem F-23.6-5) |
+| M-4 | 23.7 | Jaccard(C3, C3 bo `m_hat_bin`), accept-set tai coverage 0.78 | [CO CHE] | 0.94-0.99 | 0.998970 / 0.998975 / 0.994568 | **MISS 0/3** -- vuot tran, co che manh hon du doan |
+| M-5 | 23.7 | Min VA max cua 16 ti so qhat(K'=3,alpha/2)/qhat(K=4,alpha/3), slot 1 | [CO CHE] | moi o trong 0.905-0.935 | [0.907212,0.932194] / [0.895203,0.919408] / [0.901142,0.936162] | **HIT 1/3, MISS 2/3** (cach cham lam ro hau kiem, Amd 23-31 muc 6) |
+| M-6 | 23.7 | Delta acceptance nhanh (iii) tai S2, hai cell giu kin | [NGOAI SUY] | 0.08-0.18 | 0.139041 / 0.076709 | **HIT 1/2, MISS h2 thap** |
+| M-6b | 23.7 | Phan NGAN SACH cua Delta acceptance tai S2, hai cell giu kin | [NGOAI SUY] | 0.75-1.00 | 0.881322 / 0.991604 | **HIT 2/2** |
+| M-6c | 23.7 | Phan ngan sach S1 lon hon S2, hai cell giu kin | [CO CHE] | S1 > S2 | margin 0.119122 / 0.008396 | **HIT 2/2** |
+| M-9 | 23.7 | Khe tach duoc cua tensor qhat tren hai cell giu kin | [CO CHE] | <= 0.05 | 0.036479 / 0.053079 | **HIT 1/2, MISS h2 +0.003079** |
+| M-10 | 23.7 | Spearman(z_s,m_hat_1), row, test; artifact Phase 22 da ghi corr xap xi 0 | **[TAT DINH]** | -0.7 ... -0.3 (SAI) | +0.000091 / +0.000071 / -0.000517 | **RUT** -- trai build report da commit, khong tinh diem (Amd 23-31 muc 1) |
+| M-11 | 23.7 | q95 residual mot phia / mean(m_hat_1), all-test, hai cell giu kin | [NGOAI SUY] | 1.45-1.76 | 1.642175 / 1.091198 | **HIT 1/2, MISS h2 thap** |
+| M-12a | 23.7 | Dau cua Delta(c_F2-c*) duoi bom tai ba endpoint, ba cell | [CO CHE] | DUONG | DUONG 3/3 endpoint x 3/3 cell | **HIT 3/3** |
+| M-12b | 23.7 | Ket luan 23.6 doi dau tai ba endpoint tren cell chinh | [NGOAI SUY] | CO | Delta -0.012869 -> +0.041529 / +0.044875 / +0.047429 | **HIT 1/1** -- doi dau 3/3 endpoint |
+| M-13 | 23.7 | Cat P4 co lai iff a/b > 1.3144, hai cell giu kin | [CO CHE] | tuong duong dung | poisson@0.850: 2.123575 > 1.314387 va CO LAI; h2 a=b=0 | **HIT 1/1 EVALUABLE; NEUTRAL h2** |
+| M-13b | 23.7 | Ti so bien P(a_twin=P4)/P(a*=P4), hai cell giu kin | [NGOAI SUY] | 1.0-2.5 | 0.916695 / 0.000000 | **MISS 0/2** |
+| M-13c | 23.7 | P_fix khi cat P4, hai cell giu kin | [NGOAI SUY] | 0.60-0.90 | 0.763260 / n/a (h2 a=b=0) | **HIT 1/1 EVALUABLE; NEUTRAL h2** |
+| M-14 | 23.7 | ratio(M-11 accept-only)/ratio(M-11 all-test), hai cell giu kin | [CO CHE] | < 1.0 | 0.827402 / 0.851461 | **HIT 2/2** |
+| M-15 | 23.7 | n_flip/n_test tai CI90 xau, hai cell giu kin | [NGOAI SUY] | 0.10-0.40 | 0.134359 / 0.284635 | **HIT 2/2** |
+| M-16 | 23.7 | Coverage khi bom test va giu qhat goc, kem NC bom/bom | [CO CHE] | PC < 0.90; NC >= 0.90 | PC=0.727862; NC=0.923055; baseline=0.922749 | **HIT 1/1**, cap doi chung phan biet duoc |
 
 `A-1'..A-4'`, `A-7'`, `A-8'` mang nhan `[MO TA]` va KHONG tinh prediction-hit.
 `A-1'..A-4'`: uoc luong diem da tinh trong kiem toan bay cua Amendment 23-22

@@ -115,6 +115,11 @@ PRED_ID = _re.compile(r"[A-Z][-\w']*")
 # tap nay RONG: moi lesson da dong deu duoc cham.
 PINNED_UNFILLED: set[str] = set()
 
+LESSON_237_IDS = {
+    "M-4", "M-5", "M-6", "M-6b", "M-6c", "M-9", "M-10", "M-11",
+    "M-12a", "M-12b", "M-13", "M-13b", "M-13c", "M-14", "M-15", "M-16",
+}
+
 
 def _pred_rows() -> dict[str, dict[str, str]]:
     """Doc bang du doan thanh dict. Dung CELL_SPLIT, KHONG dung str.split('|')."""
@@ -177,6 +182,24 @@ def test_unfilled_prediction_set_is_pinned():
     assert unfilled == PINNED_UNFILLED, (
         "tap dong chua dien lech ban ghim.\n  them: %s\n  bot : %s"
         % (sorted(unfilled - PINNED_UNFILLED), sorted(PINNED_UNFILLED - unfilled)))
+
+
+def test_lesson237_co_du_16_dong_da_cham_trong_registry():
+    """16 dong M-* khong duoc chi song trong Amendment 30 ngoai phep quet."""
+    rows = _pred_rows()
+    got = {key for key, value in rows.items() if value["lesson"] == "23.7"}
+    assert got == LESSON_237_IDS
+    for key in LESSON_237_IDS:
+        assert rows[key]["measured"] != "___"
+        assert rows[key]["verdict"] != "___"
+
+
+def test_M10_duoc_rut_khoi_mau_so_thay_vi_ghi_MISS():
+    """Amd 23-31: build report Phase 22 da lam M-10 thanh [TAT DINH]."""
+    row = _pred_rows()["M-10"]
+    assert "TAT DINH" in row["label"]
+    assert "RUT" in row["verdict"]
+    assert "MISS" not in row["verdict"]
 
 
 def test_naive_split_would_miss_B1p_and_the_escaped_parser_does_not():
