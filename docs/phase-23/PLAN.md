@@ -59,6 +59,8 @@ Lesson 23.1 duoc phep chay sau khi cac amendment duoi day duoc commit:
       PHONG, khong suy tu tom tat vo huong); khoa K-D0..K-D7 va K-1..K-8
 23-39 khoa Lesson 23.15: xac nhan bien objective hau nghiem tren 5 gate cell
       chua dung, mo rong lift/swing va selection-vs-default len du 8 cell
+23-40 khoa Lesson 23.16: phan tang tien nghiem theo err_neo, lam day truc
+      Poisson va severe-test H2 voi truth-domain control truoc builder
 ```
 
 Lesson 23.11 cu (sua `LINKS` de tao truc swing) bi huy bo, khong xoa khoi
