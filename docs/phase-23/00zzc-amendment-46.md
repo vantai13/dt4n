@@ -7,6 +7,11 @@ Ghi chu : Ban ke hoach 23.19 goi amendment nay la "23-47". Danh so trong repo
           test_amendment_numbers_are_contiguous_from_one`, khoa boi Amendment
           23-26 muc 0); amendment gan nhat la 23-45c, nen so dung la **23-46**.
           Da doi truoc khi push -- khong co ban ghi nao bi viet lai.
+          Dau vet chinh xac: amendment duoc KY MOT MINH tai commit `e076a5d`,
+          luc do file ten `00zzc-amendment-47.md` va tieu de ghi 23-47.
+          Doi so o commit ke tiep `c0c2c45`. Tag `amendment-46` van tro toi
+          `e076a5d` -- tuc tro toi luc KY, khong phai luc doi ten -- de thu
+          tu "ky truoc, phan tich sau" van kiem chung duoc bang `git log`.
 Lesson  : 23.19 Task A
 Loai    : PREREGISTRATION + mot CORRECTION (muc 1)
 
