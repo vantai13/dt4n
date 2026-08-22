@@ -5,6 +5,7 @@ verify_things.py — Nghiệm thu bootstrap (Lesson 2.2 Validation).
 
 CHẠY:  python3 -m scenarios.verify_things
 """
+import argparse
 import sys
 import json
 import requests
@@ -48,6 +49,22 @@ def main(spec_path='ditto/topology_spec.json'):
         if extra:
             print('  Thừa ngoài spec: %s' % ', '.join(extra))
 
+    missing_meta = []
+    for entity in entities:
+        if entity.get('kind') != 'link':
+            continue
+        thing_id = entity['thing_id']
+        rr = requests.get('%s/things/%s' % (DITTO_BASE_URL, thing_id),
+                          auth=DITTO_AUTH, timeout=HTTP_TIMEOUT)
+        try:
+            rr.json()['features']['meta']['properties']['tSource']
+        except (KeyError, TypeError, ValueError):
+            missing_meta.append(thing_id)
+    if missing_meta:
+        print('❌ Link Thing thieu meta.tSource: %s' % ', '.join(missing_meta))
+    else:
+        print('✅ Mọi link Thing mong đợi đều có meta.tSource.')
+
     # GET 1 host xem cấu trúc
     if items:
         sample = items[0]['thingId']
@@ -55,7 +72,11 @@ def main(spec_path='ditto/topology_spec.json'):
                           auth=DITTO_AUTH, timeout=HTTP_TIMEOUT)
         print('\nMẫu cấu trúc (%s):' % sample)
         print(json.dumps(rr.json(), indent=2, ensure_ascii=False)[:600])
+    return not missing and not missing_meta
 
 
 if __name__ == '__main__':
-    main()
+    parser = argparse.ArgumentParser()
+    parser.add_argument('--spec', default='ditto/topology_spec.json')
+    args = parser.parse_args()
+    sys.exit(0 if main(args.spec) else 1)

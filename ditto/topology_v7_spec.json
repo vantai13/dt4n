@@ -1,0 +1,31 @@
+{
+  "_comment": "topology_v7 butterfly 2x2, K=4. Must match twin/topology_v7.py::LINKS.",
+  "schema": "dt4n.topology.v7.spec.v1",
+  "switches": [
+    {"name": "sSRC"},
+    {"name": "sA"},
+    {"name": "sB"},
+    {"name": "sC"},
+    {"name": "sD"},
+    {"name": "sDST"}
+  ],
+  "hosts": [
+    {"name": "hsrc", "ip": "10.20.0.1", "role": "client"},
+    {"name": "hA", "ip": "10.20.0.2", "role": "load"},
+    {"name": "hB", "ip": "10.20.0.3", "role": "load"},
+    {"name": "hC", "ip": "10.20.0.4", "role": "load"},
+    {"name": "hD", "ip": "10.20.0.5", "role": "load"},
+    {"name": "hdst", "ip": "10.20.0.6", "role": "server"}
+  ],
+  "links": [
+    {"logical": "uA", "endpoints": ["sSRC", "sA"], "bwMbps": 8.0, "delayMs": 2.0, "maxQueuePkts": 18},
+    {"logical": "uB", "endpoints": ["sSRC", "sB"], "bwMbps": 6.0, "delayMs": 2.0, "maxQueuePkts": 13},
+    {"logical": "ac", "endpoints": ["sA", "sC"], "bwMbps": 6.0, "delayMs": 3.0, "maxQueuePkts": 13},
+    {"logical": "ad", "endpoints": ["sA", "sD"], "bwMbps": 4.0, "delayMs": 3.0, "maxQueuePkts": 10},
+    {"logical": "bc", "endpoints": ["sB", "sC"], "bwMbps": 6.0, "delayMs": 4.0, "maxQueuePkts": 13},
+    {"logical": "bd", "endpoints": ["sB", "sD"], "bwMbps": 6.0, "delayMs": 3.0, "maxQueuePkts": 13},
+    {"logical": "vC", "endpoints": ["sC", "sDST"], "bwMbps": 8.0, "delayMs": 2.0, "maxQueuePkts": 18},
+    {"logical": "vD", "endpoints": ["sD", "sDST"], "bwMbps": 6.0, "delayMs": 2.5, "maxQueuePkts": 13}
+  ],
+  "pathProbes": [["hsrc", "hdst"]]
+}
