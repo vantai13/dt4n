@@ -129,7 +129,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-82 | 23.18 | PASS | `aoi_decomposition.json` -> `T4_d_estimate.nested_ci` (CI long nhau df=4 + CI iid + ICC) |
 | G23-83 | 23.18 | FAIL | phase trong [0, T_eff] = 89.92% (96.61% sau khu bias) < 99.5%. Nguyen nhan: bias he thong +50 ms cua probe. `22-aoi-stall-anatomy.md` muc 5 |
 | G23-84 | 23.18 | FAIL | ba cach lech 99.32 ms > 15 ms. Dieu tra: estimator `cycle_trace` do 20 Thing chu khong do 1 link -> dac ta sai. Cap KHOP dai luong lech 10.24 ms. `22-aoi-stall-anatomy.md` muc 5 |
-| G23-85 | 23.18 | PASS | `T6_prod_verdict`: sd(p05) PROD/CLEAN = 5.79x; mo hinh lay tu CLEAN, PROD la threat to validity |
+| G23-85 | 23.18 | PASS | `T6_prod_verdict`: sd(p05) PROD/CLEAN = 5.79x; mo hinh lay tu CLEAN, PROD la threat to validity (han che L31 -- ban ke hoach goi la L29, va cham voi L29 cua `11-abstain-cost.md`) |
+| G23-86 | 23.18b | PASS | null rang cua tinh dung (amendment 23-45b): CV quan sat 0.395182 vs null 0.394289, khoang cach 0.000893 |
+| G23-87 | 23.18b | PASS | d = 115.50 ms qua 3 duong doc lap voi hang so bias, trai 13.25 ms; bias DO DUOC 53.01 ms (M-93) |
+| G23-88 | 23.18b | PASS | co che vong PATCH duoc DO: Var(d)~E[d] R2=0.8410 giao truc 151.89 ms (M-98); slope theo vi tri that 3.035 ms R2=0.7120 (M-99) |
+| G23-89 | 23.18b | PASS | corr(AoI,rho) TRONG link sau cat warm-up = +0.0263; giua-link -0.9134 la confounding (amendment 23-45c) |
+| G23-90 | 23.18b | FAIL | KS vs Uniform[d,d+T]: D = 0.03093 > 0.03. Lech 2% da dinh danh (alpha tron 8 rang cua lech pha) -> positive control cho 23.19 |
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
@@ -168,6 +173,9 @@ Ba ma nay duoc dinh nghia nhung khong xuat hien trong bang gate cua
 vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 
 ## Gate tu 74 tro len
+
+`G23-86 .. G23-90` (lesson `23.18b`) la vong RA SOAT cua Lesson 23.18, mo boi
+amendment 23-45b (bug cong thuc null) va 23-45c (sua ket luan T5).
 
 `G23-74 .. G23-78` mo o Lesson 23.17; `G23-79 .. G23-85` o Lesson 23.18
 (`22-aoi-stall-anatomy.md`, amendment 23-45). `G23-83` va `G23-84` la FAIL

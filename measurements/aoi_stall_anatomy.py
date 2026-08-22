@@ -28,6 +28,7 @@ import numpy as np
 # CO Y THUC: sua code + viet amendment moi.
 WARMUP_CYCLES = 20      # chu ky 1..19 bi cat; moc la t_cycle_start cua cycle 20
 LONG_CYCLE_S = 0.55     # nguong "chu ky dai"
+TAIL_CYCLES = 5         # amendment 23-45b muc 9(a): transient TAT MAY
 
 RUN_KEY = re.compile(r"(clean|prod)_rho([0-9.]+)_rep([0-9]+)")
 
@@ -203,14 +204,17 @@ def recompute_without_warmup(aoi_files: list[str], cycle_files: list[str]) -> di
     probe (0.1 s) la HAI DONG HO khac nhau; cat "20 probe dau" != cat "20
     chu ky dau".
     """
-    cutoff = {}
+    cutoff, tail_cut = {}, {}
     for path in cycle_files:
         rows = load_jsonl(path)
         starts = {r["cycle"]: r["t_cycle_start"] for r in rows
                   if r.get("t_cycle_start") is not None}
         cutoff[run_key(path)] = starts.get(WARMUP_CYCLES)
+        # cat doi xung: bo them TAIL_CYCLES chu ky CUOI
+        hi = max(starts) if starts else None
+        tail_cut[run_key(path)] = starts.get(hi - TAIL_CYCLES) if hi else None
 
-    by_mode = defaultdict(lambda: {"full": [], "trimmed": [],
+    by_mode = defaultdict(lambda: {"full": [], "trimmed": [], "sym": [],
                                    "rho_trim": [], "aoi_trim": []})
     per_run = []
     for path in sorted(aoi_files):
@@ -218,7 +222,8 @@ def recompute_without_warmup(aoi_files: list[str], cycle_files: list[str]) -> di
         mode, rho_bar, rep = parse_key(key)
         rows = load_jsonl(path)
         t_cut = cutoff.get(key)
-        full, trim, rr, aa = [], [], [], []
+        full, trim, rr, aa, sym = [], [], [], [], []
+        t_tail = tail_cut.get(key)
         for r in rows:
             if r.get("record") != "probe":
                 continue
@@ -230,8 +235,11 @@ def recompute_without_warmup(aoi_files: list[str], cycle_files: list[str]) -> di
                     trim.append(v["aoi_s"])
                     if v.get("rho") is not None:
                         rr.append(v["rho"]); aa.append(v["aoi_s"])
+                    if t_tail is None or v["t_obs"] < t_tail:
+                        sym.append(v["aoi_s"])
         by_mode[mode]["full"].extend(full)
         by_mode[mode]["trimmed"].extend(trim)
+        by_mode[mode]["sym"].extend(sym)
         by_mode[mode]["rho_trim"].extend(rr)
         by_mode[mode]["aoi_trim"].extend(aa)
         a = np.asarray(trim, float)
@@ -244,6 +252,53 @@ def recompute_without_warmup(aoi_files: list[str], cycle_files: list[str]) -> di
             "corr_aoi_rho": (float(np.corrcoef(aa, rr)[0, 1])
                              if len(rr) > 2 and np.std(rr) > 0 else None),
         })
+
+    def sawtooth_null(st: dict, sample=None) -> dict:
+        """Null rang cua thuan, tinh DUNG.  (amendment 23-45b)
+
+        BUG cu: dung p05 lam `d`. Voi Uniform[d, d+T] thi
+        p05 = d + 0.05 T, tuc p05 LON HON d mot khoang 0.05*500 = 25 ms.
+        Dung p05 lam d thoi MEAN null len 25 ms va keo CV null xuong.
+
+        Cach dung: uoc luong ca hai tham so bang PHUONG PHAP MOMENT
+            T_hat = sd * sqrt(12)
+            d_hat = mean - T_hat/2
+        """
+        sd, mean = st["sd_ms"], st["mean_ms"]
+        T_hat = sd * np.sqrt(12.0)
+        d_hat = mean - T_hat / 2.0
+        out = {
+            "T_hat_ms": float(T_hat), "d_hat_ms": float(d_hat),
+            "sd_uniform_T500_ms": float(500.0 / np.sqrt(12.0)),
+            "sd_ratio_observed_over_uniform": float(sd / (500.0 / np.sqrt(12.0))),
+            "cv_null": float((500.0 / np.sqrt(12.0)) / mean),
+            "cv_observed": float(st["cv"]),
+            # giu lai gia tri SAI de doi chieu duoc voi ban ghi cu
+            "cv_null_BUGGED_p05_as_d": float(
+                0.5 / np.sqrt(12) / (st["p05_ms"] / 1000 + 0.25)),
+            # M-92: hai duong suy T
+            "T_from_quantiles_ms": float((st["p95_ms"] - st["p05_ms"]) / 0.90),
+            "d_from_p05_ms": float(st["p05_ms"] - 25.0),
+        }
+        out["cv_gap"] = out["cv_observed"] - out["cv_null"]
+        out["M_92_T_disagreement_ms"] = abs(
+            out["T_hat_ms"] - out["T_from_quantiles_ms"])
+        out["M_92_hit"] = out["M_92_T_disagreement_ms"] < 20.0
+        if sample is not None and len(sample):
+            # M-91: KHOP MOMENT KHONG CHUNG MINH LA UNIFORM. Phai kiem HINH DANG.
+            from scipy import stats as _st
+            a = np.asarray(sample, float) * 1000.0
+            ks = _st.kstest(a, "uniform", args=(d_hat, T_hat))
+            out["M_91_ks_statistic"] = float(ks.statistic)
+            out["M_91_ks_pvalue"] = float(ks.pvalue)
+            out["M_91_hit"] = float(ks.statistic) < 0.03
+            out["quantile_comparison_ms"] = {
+                q: {"observed": st["p%02d_ms" % q],
+                    "uniform_null": float(d_hat + (q / 100.0) * T_hat),
+                    "delta": float(st["p%02d_ms" % q] - (d_hat + (q / 100.0) * T_hat))}
+                for q in (5, 50, 95)
+            }
+        return out
 
     def stats(a):
         a = np.asarray(a, float)
@@ -261,12 +316,14 @@ def recompute_without_warmup(aoi_files: list[str], cycle_files: list[str]) -> di
     for mode, d in by_mode.items():
         full, trim = stats(d["full"]), stats(d["trimmed"])
         rr, aa = d["rho_trim"], d["aoi_trim"]
+        symst = stats(d["sym"])
         out[mode] = {
-            "full": full, "trimmed": trim,
+            "full": full, "trimmed": trim, "symmetric_trim": symst,
             "cv_before": full["cv"], "cv_after": trim["cv"],
             # null cu: rang cua Uniform[d, d+T], T = 0.5 s, d uoc bang p05
-            "cv_sawtooth_null": float(
-                0.5 / np.sqrt(12) / (trim["p05_ms"] / 1000 + 0.25)),
+            "sawtooth_null": sawtooth_null(trim, d["trimmed"]),
+            "sawtooth_null_symmetric": (sawtooth_null(symst, d["sym"])
+                                        if symst else None),
             "corr_aoi_rho_trimmed": (float(np.corrcoef(aa, rr)[0, 1])
                                      if len(rr) > 2 else None),
         }
@@ -287,6 +344,22 @@ def recompute_without_warmup(aoi_files: list[str], cycle_files: list[str]) -> di
                          360 <= cln["trimmed"]["mean_ms"] <= 372),
         "M_86_corr_aoi_rho_clean_trimmed": corr,
         "M_86_hit": bool(corr is not None and -0.10 <= corr <= -0.02),
+        "M_91_ks_statistic": cln.get("sawtooth_null", {}).get("M_91_ks_statistic"),
+        "M_91_hit": cln.get("sawtooth_null", {}).get("M_91_hit"),
+        "M_92_T_disagreement_ms": cln.get("sawtooth_null", {}).get(
+            "M_92_T_disagreement_ms"),
+        "M_92_hit": cln.get("sawtooth_null", {}).get("M_92_hit"),
+        "M_97_symmetric_trim": {
+            "tail_cycles_dropped": TAIL_CYCLES,
+            "cv_warmup_only": cln.get("cv_after"),
+            "cv_symmetric": (cln.get("symmetric_trim") or {}).get("cv"),
+            "delta_cv": ((cln.get("symmetric_trim") or {}).get("cv", 0)
+                         - (cln.get("cv_after") or 0)),
+            "max_ms_warmup_only": (cln.get("trimmed") or {}).get("max_ms"),
+            "max_ms_symmetric": (cln.get("symmetric_trim") or {}).get("max_ms"),
+        },
+        "M_97_hit": abs((cln.get("symmetric_trim") or {}).get("cv", 0)
+                        - (cln.get("cv_after") or 0)) < 0.005,
     }
 
 
@@ -384,9 +457,28 @@ def main() -> None:
     print("-" * 68)
     print("T2  CAT WARM-UP")
     print("-" * 68)
+    n = c["sawtooth_null"]
     print(f"  M-79   CV CLEAN  {c['cv_before']:.4f} -> "
-          f"{t2['M_79_cv_clean_trimmed']:.4f}"
-          f"   (null rang cua {c['cv_sawtooth_null']:.4f})  HIT={t2['M_79_hit']}")
+          f"{t2['M_79_cv_clean_trimmed']:.4f}   HIT={t2['M_79_hit']}")
+    print(f"  null rang cua DUNG (amendment 45b)          : {n['cv_null']:.6f}"
+          f"   khoang cach {n['cv_gap']:+.6f}")
+    print(f"    (null CU bi BUG, p05 lam d               : "
+          f"{n['cv_null_BUGGED_p05_as_d']:.6f}   khoang cach "
+          f"{n['cv_observed'] - n['cv_null_BUGGED_p05_as_d']:+.6f})")
+    print(f"  sd quan sat / sd Uniform[d,d+500]           : "
+          f"{n['sd_ratio_observed_over_uniform']:.6f}  (lech "
+          f"{abs(n['sd_ratio_observed_over_uniform']-1)*100:.2f}%)")
+    print(f"  MOMENT: T = {n['T_hat_ms']:.3f} ms,  d = {n['d_hat_ms']:.3f} ms")
+    print(f"  M-91   KS vs Uniform[d,d+T]                 : D="
+          f"{n['M_91_ks_statistic']:.5f}  HIT={n['M_91_hit']}")
+    print(f"  M-92   T tu sd vs T tu phan vi lech         : "
+          f"{n['M_92_T_disagreement_ms']:7.2f} ms   HIT={n['M_92_hit']}")
+    sy = t2["M_97_symmetric_trim"]
+    print(f"  M-97   cat doi xung (bo {TAIL_CYCLES} chu ky cuoi)  : CV "
+          f"{sy['cv_warmup_only']:.6f} -> {sy['cv_symmetric']:.6f}"
+          f"  delta {sy['delta_cv']:+.6f}  HIT={t2['M_97_hit']}")
+    print(f"         max AoI {sy['max_ms_warmup_only']:.1f} -> "
+          f"{sy['max_ms_symmetric']:.1f} ms")
     print(f"  M-80   mean CLEAN sau cat                   : "
           f"{t2['M_80_mean_clean_trimmed_ms']:7.2f} ms  HIT={t2['M_80_hit']}")
     print(f"  M-86   corr(AoI, rho) CLEAN sau cat         : "

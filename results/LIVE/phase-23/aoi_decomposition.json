@@ -131,6 +131,19 @@
   },
   "M_85_max_spread_ms": 99.31670223929055,
   "T_fit_ms": 487.76874277326795,
+  "T_moment_ms": 501.13231748976983,
+  "d_final_moment_ms": 115.50427545833705,
+  "independent_of_debias": {
+   "_note": "Ba estimator KHONG phu thuoc hang so debias gia dinh. `decomposition_debiased_measured` dung bias DO DUOC (M-93) chu khong dung 50 ms.",
+   "chosen_ms": 115.50427545833705,
+   "chosen_why": "MOMENT dung toan bo du lieu (mean + sd) chu khong chi hai phan vi, va khong phu thuoc bias.",
+   "estimates_ms": {
+    "decomposition_debiased_measured": 105.97761372311248,
+    "moment": 115.50427545833705,
+    "quantile_fit": 119.22330392731561
+   },
+   "spread_ms": 13.245690204203129
+  },
   "nested_ci": {
    "ci95_naive_iid": [
     154.87273393020632,
@@ -168,14 +181,40 @@
   }
  },
  "T5_partial_correlation": {
-  "corr_link_adjusted": -0.3139392259679032,
-  "corr_link_and_teff_adjusted": -0.19937820319156663,
-  "corr_raw_epoch_level": -0.20656418808491575,
-  "hypothesis_b_mechanical_artifact": false,
-  "n_epochs": 28800,
-  "note": "Phep kiem trong-epoch cua ban ke hoach 23.18 THOAI HOA: rho la hang so trong moi epoch (0/1928 epoch co >1 gia tri), nen phan du luon bang 0. Da thay bang phep kiem muc epoch.",
+  "K3b_partial_both_forms": 0.026265097121862174,
+  "L30_note": "canonical_link_key xep ten switch truoc nen hai canh bien phia nguon thanh link-sA-sSRC / link-sB-sSRC; util_direction=tx do chieu sA->SRC va sB->SRC, khong co luu luong. rho cua uA/uB vi the ~0 trong toan bo chien dich. KHONG anh huong AoI (AoI la hieu hai dau thoi gian). Anh huong moi phan tich dung rho theo link.",
+  "M_94_K1_corr_rho_vs_teff_prev": 0.0004241876531973205,
+  "M_94_hit": false,
+  "M_95_K2_partial_teff_prev": 0.026267259134438264,
+  "M_95_hit": true,
+  "M_96_K3_partial_inverse_dt": 0.026266754517166997,
+  "M_96_hit": true,
+  "action": "corr(AoI,rho) TRONG tung link, sau khi cat warm-up, la KHONG (|r| = 0.0263 < 0.05). Tuong quan am quan sat duoc khi gop 8 link (-0.3667) la NHIEU GIA GIUA CAC LINK: corr giua-link = -0.9134. Quy tac phan xu (b') khong ap dung vi tien de 'co mot hieu ung can giai thich' khong duoc thoa. corr(AoI,rho) RA KHOI threats to validity; gia dinh corr = 0 cua mo hinh rang cua duoc BIEN MINH bang so do.",
+  "corr_between_links": -0.9133694970722682,
+  "corr_link_adjusted": 0.02625320797781403,
+  "corr_link_adjusted_excluding_broken_rho": 0.030836728620739495,
+  "corr_link_and_teff_NEXT_adjusted": 0.02634192744592292,
+  "corr_raw_epoch_level": -0.36670974039996473,
+  "links_with_broken_rho": [
+   "uA",
+   "uB"
+  ],
+  "n_epochs": 26640,
+  "note": "Phep kiem TRONG-epoch cua ban ke hoach 23.18 thoai hoa: rho la hang so trong moi epoch. Da thay bang phep kiem muc epoch, va bien khu dung la T_eff cua khoang TRUOC (amendment 45b).",
   "rho_constant_within_epoch": true,
-  "shrinkage_from_teff_control": 0.36491465003500123
+  "rho_zero_share_by_link": {
+   "ac": 0.00105643591882124,
+   "ad": 0.0011120378092855157,
+   "bc": 0.001278843480678343,
+   "bd": 0.0008340283569641367,
+   "uA": 0.9805949402279678,
+   "uB": 0.9795941061996107,
+   "vC": 0.0015012510425354462,
+   "vD": 0.0016124548234639979
+  },
+  "shrinkage_next_control": -0.0033793762721823217,
+  "shrinkage_prev_control": -0.0005352167489820481,
+  "verdict": "NO_EFFECT_TO_EXPLAIN"
  },
  "T6_prod_verdict": {
   "clean_p05_mean_ms": 143.68978103001913,
@@ -188,6 +227,84 @@
   "prod_p05_sd_ms": 16.532056670155043,
   "sd_ratio_prod_over_clean": 5.790105887215685,
   "verdict": "Mo hinh AoI CHINH lay tu CLEAN. PROD bao cao nhu threat to validity. delta-sync giam bang thong dieu khien nhung lam san AoI bien thien manh hon -> he chung nhan phu thuoc AoI on dinh nen chay full-push."
+ },
+ "T7_patch_position": {
+  "M_99_hit": true,
+  "M_99_r2": 0.7119521967443452,
+  "M_99_slope_d_transport_ms_per_position": 3.0345661299569344,
+  "global_position": {
+   "ac": 13,
+   "ad": 14,
+   "bc": 15,
+   "bd": 16,
+   "uA": 19,
+   "uB": 20,
+   "vC": 17,
+   "vD": 18
+  },
+  "identity": "d_transport = (cycle_scan - scan_offset) + patch_time; do do slope(d_transport) = slope(visible) - slope(scan), tuc hai thanh phan DAU NGUOC NHAU nhu amendment 23-45 muc 2 du doan.",
+  "n_nonlink_before_links": 12,
+  "n_things": 20,
+  "r2_scan": 0.999802529685158,
+  "r2_visible": 0.9055948358825975,
+  "scan_order_measured": [
+   "ac",
+   "ad",
+   "bc",
+   "bd",
+   "vC",
+   "vD",
+   "uA",
+   "uB"
+  ],
+  "slope_consistency_check_ms": -2.220446049250313e-15,
+  "slope_scan_offset_ms_per_position": 3.0748162950788256,
+  "slope_visible_offset_ms_per_position": 6.109382425035758
+ },
+ "T7_probe_bias": {
+  "M_93_ci95": [
+   52.896515865726066,
+   53.12250620994026
+  ],
+  "M_93_hit": true,
+  "M_93_measured_bias_ms": 53.009511037833164,
+  "assumed_bias_ms": 50.0,
+  "delta_vs_assumed_ms": 3.009511037833164,
+  "n_refresh_transitions": 28800,
+  "probe_gap_mean_ms": 106.01902207566633,
+  "probe_gap_median_ms": 106.55713081359863
+ },
+ "T7_variance_accumulation": {
+  "M_98_hit": true,
+  "M_98_r2": 0.8409683945884885,
+  "_note": "HAU NGHIEM -- phat hien khi ra soat artifact da co (amendment 23-45b muc 6). KHONG duoc tinh nhu du doan da ky.",
+  "crossing_vs_min_observed_ms": -1.8950299793259262,
+  "intercept_ms2": -2277.1782030411973,
+  "interpretation": "Var tuyen tinh theo E voi giao truc roi vao vi tri DAU vong lap -> chu ky cua cong don tuan tu. Day la bang chung CO CHE, doc lap voi phep phan ra (v\u1ed1n dung theo cau truc).",
+  "mean_d_ms_by_link": {
+   "ac": 156.0185,
+   "ad": 154.9755,
+   "bc": 153.7838,
+   "bd": 154.1357,
+   "uA": 173.6649,
+   "uB": 181.4332,
+   "vC": 156.2189,
+   "vD": 165.7252
+  },
+  "min_observed_d_ms": 153.78379027048746,
+  "relative_noise_of_each_sd": 0.1889822365046136,
+  "slope_ms": 14.992407592740799,
+  "var_d_ms2_by_link": {
+   "ac": 36.475,
+   "ad": 36.219,
+   "bc": 30.943,
+   "bd": 96.706,
+   "uA": 240.815,
+   "uB": 542.004,
+   "vC": 114.4,
+   "vD": 114.507
+  },
+  "var_zero_crossing_ms": 151.88876029116153
  },
  "instrument_limit": {
   "d_transport_is": "CAN TREN",
@@ -209,9 +326,9 @@
    "stall": "results/LIVE/phase-23/aoi_stall_anatomy.json"
   },
   "git_dirty": true,
-  "git_hash": "11a4c61d2a4ba5d5f80cec47909b8449811be601",
+  "git_hash": "e39d7ab26d5b5451223fc8c631bb805917364b65",
   "script": "measurements/aoi_decompose.py",
-  "timestamp_utc": "2026-08-22T09:18:53.932955+00:00"
+  "timestamp_utc": "2026-08-22T12:50:51.552864+00:00"
  },
  "runs_clean": [
   {
@@ -1877,7 +1994,7 @@
   "instrument": {
    "module": "measurements.aoi_decompose",
    "source_path": "measurements/aoi_decompose.py",
-   "source_sha256": "0a5cf89a9b396946d18fdafeb3864144924ebf837555966a99d807ab8403548d"
+   "source_sha256": "c3e748e60b5f850795e2001ab9efdf6a718cb42c9d829ceab490092b2c89d0d1"
   },
   "note": "Artifact DO chinh truc tuoi z (vai tro MEASURES). Alpha doc tu aoi_v7_estimates.json chu khong go tay.",
   "schema": "dt4n.validity.v1"

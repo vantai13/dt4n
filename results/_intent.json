@@ -7,6 +7,6 @@
  "LIVE/phase-23/aoi_v7_estimates.json": "So do AoI tren topology_v7, 30 run x 120 s, 287.760 quan sat (Lesson 23.8). Co so SO cua amendment 23-44 va cua aoi_model_v7 se dung o Lesson 23.19/23.20",
  "LIVE/phase-23/dsync_sensitivity.json": "Quet d_sync tren {51, 175, 205, 230, 260} ms. Cong cu do do nhay -- chinh no la thu do truc, nen khong the bi truc lam sai",
  "LIVE/phase-23/a0_instrument_calibration.json": "Hieu chuan nhac cu do A0 (M-66..M-69, NC-do-1..3). Doc boi instrument_calibration.py",
- "LIVE/phase-23/aoi_stall_anatomy.json": "Giai phau chu ky stall (Lesson 23.18 T1/T2). Phan xu H1 vs H2 vs H3; CV CLEAN sau khi cat 20 chu ky warm-up = 0.3952. Dau vao cho hinh dang aoi_model_v7 o Lesson 23.19",
- "LIVE/phase-23/aoi_decomposition.json": "Phan ra AoI = d_transport + phase (Lesson 23.18 T3-T6). Chot d = 114.11 ms; dong nhat thuc alpha(l) = d_transport(l) - mean(d_transport); CI long nhau vs iid (ICC = 0); phan quyet L29 ve PROD"
+ "LIVE/phase-23/aoi_stall_anatomy.json": "Giai phau chu ky stall (Lesson 23.18 T1/T2 + vong ra soat 45b). Phan xu H1 vs H2 vs H3; sau khi cat 20 chu ky warm-up AoI la RANG CUA SACH (sd lech 0.23%, CV lech 0.000893 so voi null DUNG). Muc tieu selfcheck cho aoi_model_v7 o Lesson 23.19",
+ "LIVE/phase-23/aoi_decomposition.json": "Phan ra AoI = d_transport + phase (Lesson 23.18 T3-T7). Chot d = 115.50 ms (moment, khong phu thuoc bias); co che vong PATCH do bang Var~E va vi tri that; corr(AoI,rho) trong link = +0.026; phat hien L30 (rho uA/uB sai chieu)"
 }

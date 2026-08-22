@@ -117,7 +117,105 @@ def test_degenerate_partial_correlation_was_replaced():
     """Phep kiem trong-epoch cu thoai hoa vi rho la hang so trong epoch."""
     pc = _load(DECOMP)["T5_partial_correlation"]
     assert pc["rho_constant_within_epoch"] is True
-    assert "corr_link_and_teff_adjusted" in pc
+    assert "M_94_K1_corr_rho_vs_teff_prev" in pc      # bien khu TRE
+    assert "M_96_K3_partial_inverse_dt" in pc         # quan he TI SO
+
+
+# ---------------------------------------------------------------------------
+# Vong ra soat: amendment 23-45b (bug cong thuc null) va 23-45c (ket luan T5)
+# ---------------------------------------------------------------------------
+
+
+def test_sawtooth_null_does_not_use_p05_as_d():
+    """BUG 23-45b: `p05 = d + 0.05T`, dung no lam `d` keo CV null xuong.
+
+    Test nay chan viec quay lai cong thuc cu.
+    """
+    n = _load(STALL)["T2_warmup_trim"]["by_mode"]["clean"]["sawtooth_null"]
+    # d phai suy tu MEAN, khong phai tu p05
+    assert abs(n["d_hat_ms"] - (n["T_hat_ms"] / 2 + n["d_hat_ms"])
+               + n["T_hat_ms"] / 2) < 1e-6
+    st = _load(STALL)["T2_warmup_trim"]["by_mode"]["clean"]["trimmed"]
+    assert n["d_hat_ms"] == pytest.approx(st["mean_ms"] - n["T_hat_ms"] / 2)
+    # va gia tri SAI phai duoc giu lai de doi chieu, KHAC gia tri dung
+    assert n["cv_null_BUGGED_p05_as_d"] < n["cv_null"]
+
+
+def test_aoi_is_a_clean_sawtooth_after_trim():
+    """Ket qua trung tam cua vong ra soat."""
+    n = _load(STALL)["T2_warmup_trim"]["by_mode"]["clean"]["sawtooth_null"]
+    assert abs(n["sd_ratio_observed_over_uniform"] - 1.0) < 0.01, (
+        "sd khong con khop Uniform[d, d+500]")
+    assert abs(n["cv_gap"]) < 0.005, "khoang cach CV toi null DUNG qua lon"
+
+
+def test_shape_test_exists_because_moments_are_not_shape():
+    """sd khop KHONG chung minh la uniform. Phai co phep kiem HINH DANG."""
+    n = _load(STALL)["T2_warmup_trim"]["by_mode"]["clean"]["sawtooth_null"]
+    assert "M_91_ks_statistic" in n
+    q = n["quantile_comparison_ms"]
+    # lech phan vi la POSITIVE CONTROL cho mo hinh co alpha o 23.19
+    assert all(abs(v["delta"]) < 20 for v in q.values())
+
+
+def test_t5_applies_the_warmup_cut():
+    """23-45c loi 1: ba ham, hai ham cat warm-up, mot ham quen."""
+    import inspect
+
+    from measurements import aoi_decompose as D
+    src = inspect.getsource(D.partial_corr_within_epoch)
+    assert "warmup_cut" in src and "t_cut" in src, (
+        "partial_corr_within_epoch phai ap dung moc cat warm-up nhu T2")
+
+
+def test_between_and_within_link_are_reported_separately():
+    """23-45c loi 2: gop 8 link roi tinh MOT he so lat dau ket qua."""
+    pc = _load(DECOMP)["T5_partial_correlation"]
+    assert pc["corr_between_links"] < -0.5, "confounding giua-link phai hien ra"
+    assert abs(pc["corr_link_adjusted"]) < 0.05, (
+        "corr TRONG link phai ~ 0 sau khi cat warm-up")
+    assert pc["verdict"] == "NO_EFFECT_TO_EXPLAIN"
+
+
+def test_broken_rho_links_are_flagged():
+    """L30: uA/uB do rho sai chieu trong toan bo chien dich."""
+    pc = _load(DECOMP)["T5_partial_correlation"]
+    assert set(pc["links_with_broken_rho"]) == {"uA", "uB"}
+    for l in ("uA", "uB"):
+        assert pc["rho_zero_share_by_link"][l] > 0.9
+    for l in ("ac", "ad", "bc", "bd", "vC", "vD"):
+        assert pc["rho_zero_share_by_link"][l] < 0.01
+
+
+def test_probe_bias_is_measured_not_assumed():
+    """M-93: hang so 50 ms phai duoc DO, kem CI."""
+    b = _load(DECOMP)["T7_probe_bias"]
+    assert b["M_93_ci95"][0] < b["M_93_measured_bias_ms"] < b["M_93_ci95"][1]
+    assert b["n_refresh_transitions"] > 1000
+
+
+def test_variance_accumulation_signature():
+    """M-98: Var ~ E voi giao truc o vi tri DAU vong lap."""
+    va = _load(DECOMP)["T7_variance_accumulation"]
+    assert va["M_98_r2"] > 0.7
+    assert abs(va["crossing_vs_min_observed_ms"]) < 15.0, (
+        "giao truc Var=0 phai roi gan d_transport nho nhat quan sat duoc")
+
+
+def test_patch_position_decomposition_is_exact():
+    """slope(visible) = slope(scan) + slope(d_transport) -- dong nhat thuc."""
+    pp = _load(DECOMP)["T7_patch_position"]
+    assert abs(pp["slope_consistency_check_ms"]) < 0.01
+    # hai thanh phan DAU NGUOC NHAU trong AoI
+    assert pp["slope_scan_offset_ms_per_position"] > 0
+    assert pp["M_99_slope_d_transport_ms_per_position"] > 0
+
+
+def test_d_final_does_not_depend_on_the_bias_constant():
+    ind = _load(DECOMP)["T4_d_estimate"]["independent_of_debias"]
+    assert ind["spread_ms"] <= 15.0
+    assert ind["chosen_ms"] == pytest.approx(
+        _load(DECOMP)["T4_d_estimate"]["d_final_moment_ms"])
 
 
 def test_artifacts_declare_measures_role():
