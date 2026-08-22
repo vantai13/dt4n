@@ -9,6 +9,7 @@ from datetime import datetime, timezone
 import glob
 import json
 import os
+import math
 from typing import Any, Dict, Iterable, Mapping, Sequence, Tuple
 
 import matplotlib.pyplot as plt
@@ -54,6 +55,10 @@ def estimate_offsets(probes: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     alpha = raw - raw.mean()
     fitted = matrix @ coef
     residual = y_arr - fitted
+    dof = len(y_arr) - int(rank)
+    sigma2 = float(np.dot(residual, residual) / dof)
+    covariance = sigma2 * np.linalg.inv(matrix.T @ matrix)
+    beta_se = float(np.sqrt(covariance[n_links, n_links]))
     return {
         "offset_ms": {
             name: float(value * 1000.0)
@@ -61,6 +66,8 @@ def estimate_offsets(probes: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
         },
         "max_offset_spread_ms": float((alpha.max() - alpha.min()) * 1000.0),
         "beta_ms_per_pos": float(coef[n_links] * 1000.0),
+        "beta_se_ms_per_pos": beta_se * 1000.0,
+        "beta_t": float(coef[n_links] / beta_se),
         "mu_ms": float(raw.mean() * 1000.0),
         "design_rank": int(rank),
         "design_columns": int(matrix.shape[1]),
@@ -114,6 +121,42 @@ def effective_periods(probes: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     }
 
 
+def effective_periods_across_runs(
+    runs: Sequence[Sequence[Mapping[str, Any]]],
+) -> Dict[str, Any]:
+    """Pool within-run tSource differences without counting gaps between runs."""
+    by_link = defaultdict(list)
+    updates = defaultdict(int)
+    for probes in runs:
+        report = effective_periods(probes)
+        for logical, row in report["by_link"].items():
+            updates[logical] += row["n_updates"]
+        sources = defaultdict(list)
+        for probe in probes:
+            for logical, value in probe["links"].items():
+                if value.get("t_source") is not None:
+                    sources[logical].append(float(value["t_source"]))
+        for logical, values in sources.items():
+            unique = []
+            for value in values:
+                if not unique or value != unique[-1]:
+                    unique.append(value)
+            by_link[logical].extend(np.diff(np.asarray(unique)).tolist())
+    all_diffs = [value for values in by_link.values() for value in values]
+    return {
+        "by_link": {
+            logical: {
+                "n_updates": int(updates[logical]),
+                "median_s": None if not by_link[logical] else float(np.median(by_link[logical])),
+                "max_s": None if not by_link[logical] else float(max(by_link[logical])),
+            }
+            for logical in T7.LINK_NAMES
+        },
+        "median_s": None if not all_diffs else float(np.median(all_diffs)),
+        "max_s": None if not all_diffs else float(max(all_diffs)),
+    }
+
+
 def profile_match(offsets_ms: Mapping[str, float]) -> Dict[str, Any]:
     observed = np.asarray([offsets_ms[name] for name in T7.LINK_NAMES], dtype=float)
     observed -= observed.mean()
@@ -142,12 +185,16 @@ def _pearson_aoi_rho(probes: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
 def estimate(paths: Sequence[str], cycle_paths: Sequence[str] = ()) -> Dict[str, Any]:
     runs = []
     all_by_mode = defaultdict(list)
+    runs_by_mode = defaultdict(list)
+    by_cell = defaultdict(list)
     headers = []
     for path in paths:
         header, probes = load_probe_file(path)
         headers.append(header)
         mode = str(header["mode"])
         all_by_mode[mode].extend(probes)
+        runs_by_mode[mode].append(probes)
+        by_cell[(mode, float(header["rho_bar"]))].extend(probes)
         values = [
             float(value["aoi_s"])
             for probe in probes
@@ -175,9 +222,24 @@ def estimate(paths: Sequence[str], cycle_paths: Sequence[str] = ()) -> Dict[str,
         offsets = estimate_offsets(probes)
         modes[mode] = {
             "aoi": _summary(values),
-            "effective_period": effective_periods(probes),
+            "effective_period": effective_periods_across_runs(runs_by_mode[mode]),
             "offset_regression": offsets,
             "profile_match": profile_match(offsets["offset_ms"]),
+            "aoi_rho": _pearson_aoi_rho(probes),
+        }
+
+    cells = {}
+    for (mode, rho_bar), probes in sorted(by_cell.items()):
+        values = [
+            float(value["aoi_s"])
+            for probe in probes
+            for value in probe["links"].values()
+            if value.get("aoi_s") is not None
+        ]
+        cells[f"{mode}_rho{rho_bar:.3f}"] = {
+            "mode": mode,
+            "rho_bar": rho_bar,
+            "aoi": _summary(values),
             "aoi_rho": _pearson_aoi_rho(probes),
         }
 
@@ -185,6 +247,15 @@ def estimate(paths: Sequence[str], cycle_paths: Sequence[str] = ()) -> Dict[str,
     for path in cycle_paths:
         with open(path, encoding="utf-8") as handle:
             cycle_rows.extend(json.loads(line) for line in handle if line.strip())
+    cycle_by_mode = {}
+    for mode in sorted({row.get("mode") for row in cycle_rows}):
+        rows = [row for row in cycle_rows if row.get("mode") == mode]
+        cycle_by_mode[mode] = {
+            "n": len(rows),
+            "overrun_ratio": float(np.mean([row["overrun"] for row in rows])),
+            "lock_wait_ms_p95": float(np.percentile([row["lock_wait_ms"] for row in rows], 95)),
+            "all_full_push": bool(all(row["n_pushed"] == row["n_things"] for row in rows)),
+        }
     cycle_controls = {
         "n": len(cycle_rows),
         "overrun_ratio": None if not cycle_rows else float(np.mean([row["overrun"] for row in cycle_rows])),
@@ -193,17 +264,63 @@ def estimate(paths: Sequence[str], cycle_paths: Sequence[str] = ()) -> Dict[str,
             for row in cycle_rows
         )),
         "lock_wait_ms_p95": None if not cycle_rows else float(np.percentile([row["lock_wait_ms"] for row in cycle_rows], 95)),
+        "by_mode": cycle_by_mode,
     }
+    clean = modes["clean"]
+    prod = modes["prod"]
+    clean_period = clean["effective_period"]["median_s"]
+    clean_d = clean["aoi"]["p05"]
+    expected_clean_cv = clean_period / math.sqrt(12.0) / (clean_d + clean_period / 2.0)
+    clean_p05_by_rho = {
+        key: value["aoi"]["p05"]
+        for key, value in cells.items()
+        if value["mode"] == "clean"
+    }
+    p05_variation = max(clean_p05_by_rho.values()) - min(clean_p05_by_rho.values())
+    clean_offset_spread = clean["offset_regression"]["max_offset_spread_ms"]
+    prod_corr = prod["aoi_rho"]["pearson"]
+    prediction_checks = {
+        "M70": {"value_ms": clean_d * 1000.0, "hit": 140.0 <= clean_d * 1000.0 <= 220.0},
+        "M71": {"variation_ms": p05_variation * 1000.0, "hit": p05_variation <= 0.040},
+        "M72": {"value": clean["aoi"]["cv"], "hit": 0.32 <= clean["aoi"]["cv"] <= 0.41},
+        "M72b": {
+            "observed_cv": clean["aoi"]["cv"],
+            "expected_cv": expected_clean_cv,
+            "absolute_gap": abs(clean["aoi"]["cv"] - expected_clean_cv),
+            "hit": abs(clean["aoi"]["cv"] - expected_clean_cv) <= 0.05,
+        },
+        "M73": {"value": prod["aoi"]["cv"], "hit": prod["aoi"]["cv"] > 0.41},
+        "M74": {"value_s": prod["effective_period"]["median_s"], "hit": prod["effective_period"]["median_s"] > 0.5},
+        "M75": {"value_ms": clean_offset_spread, "hit": 20.0 <= clean_offset_spread <= 70.0},
+        "M76": {"value": clean["profile_match"]["best_profile"], "hit": clean["profile_match"]["best_profile"] == "U0"},
+        "M77": {"value": prod_corr, "hit": prod_corr is not None and prod_corr < 0.0 and abs(prod_corr) > 0.2},
+    }
+    controls = {
+        "NC_R": {
+            "beta_ms_per_pos": clean["offset_regression"]["beta_ms_per_pos"],
+            "beta_t": clean["offset_regression"]["beta_t"],
+            "design_full_rank": clean["offset_regression"]["design_rank"] == clean["offset_regression"]["design_columns"],
+        },
+        "NC_S": {"n_negative": sum(mode["aoi"]["n_negative"] for mode in modes.values()), "pass": all(mode["aoi"]["n_negative"] == 0 for mode in modes.values())},
+        "NC_T": {"overrun_ratio": cycle_controls["overrun_ratio"], "pass": cycle_controls["overrun_ratio"] <= 0.05},
+        "NC_U": {"clean_all_full_push": cycle_controls["clean_all_full_push"], "pass": cycle_controls["clean_all_full_push"]},
+        "NC_V": {"spec_sha256_values": sorted({str(header["spec_sha256"]) for header in headers}), "pass": len({str(header["spec_sha256"]) for header in headers}) == 1},
+    }
+    closes = bool(prediction_checks["M70"]["hit"] and prediction_checks["M72b"]["hit"] and all(control.get("pass", True) for control in controls.values()))
     return {
         "schema": "dt4n.aoi.v7.estimates.v1",
         "status": "MEASUREMENT_ESTIMATE",
-        "closes_P23A": False,
+        "closes_P23A": closes,
         "timestamp_utc": datetime.now(timezone.utc).isoformat(),
         "input_files": list(paths),
         "spec_sha256_values": sorted({str(header["spec_sha256"]) for header in headers}),
+        "git_hash_values": sorted({str(header["git_hash"]) for header in headers}),
         "runs": runs,
+        "cells": cells,
         "modes": modes,
         "cycle_controls": cycle_controls,
+        "prediction_checks": prediction_checks,
+        "controls": controls,
     }
 
 

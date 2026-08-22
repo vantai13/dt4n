@@ -181,3 +181,15 @@ def test_feasible_rho_projection_is_identity_when_raw_vector_is_valid():
         "uA": 0.8575, "uB": 0.8775, "ac": 0.9775, "ad": 0.9875,
         "bc": 0.9725, "bd": 0.9825, "vC": 0.8575, "vD": 0.8875,
     })
+
+
+def test_effective_period_pool_does_not_count_gap_between_runs():
+    def probes(start):
+        return [
+            {"links": {name: {"t_source": start + k * 0.5} for name in T7.LINK_NAMES}}
+            for k in range(3)
+        ]
+
+    pooled = ESTIMATE.effective_periods_across_runs([probes(100.0), probes(1000.0)])
+    assert pooled["median_s"] == pytest.approx(0.5)
+    assert pooled["max_s"] == pytest.approx(0.5)
