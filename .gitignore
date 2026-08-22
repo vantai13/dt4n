@@ -143,3 +143,8 @@ cert/*.parquet
 !results/phase-21R/**/*.csv
 !results/phase-21R/.gitkeep
 !docs/phase-21R/**
+
+# Phase 23 AoI campaign: keep 427 MiB raw/traffic auxiliaries locally. The
+# compact manifest, per-run metadata, estimates, and figure are tracked.
+results/phase-23/aoi_v7_campaign/flows_*/
+results/phase-23/aoi_v7_campaign/rho_*.csv
