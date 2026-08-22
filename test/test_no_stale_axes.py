@@ -57,9 +57,11 @@ def test_registry_readable():
 def test_results_is_tiered():
     """results/ chi duoc chua bon tang -- khong con file mo coi o goc."""
     root = os.path.join(REPO, "results")
+    # So sach cua chinh kho: khong phai artifact, khong thuoc tang nao.
+    BOOKKEEPING = {"MANIFEST.md", "PATH_MAP.tsv", "_intent.json"}
     stray = sorted(
         e for e in os.listdir(root)
-        if e not in TIERS and not e.startswith(".") and e != "MANIFEST.md"
+        if e not in TIERS and e not in BOOKKEEPING and not e.startswith(".")
     )
     assert not stray, (
         "results/ con muc ngoai bon tang: %s\n"
