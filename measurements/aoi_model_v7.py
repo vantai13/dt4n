@@ -60,6 +60,17 @@ TARGET_MS = {"mean": 366.070, "p05": 143.612, "p50": 358.141, "p95": 582.604}
 LEGACY_D_S = 0.051
 LEGACY_T_S = 0.5
 
+# Canh bin tuoi -- KHOA o amendment 23-48 muc 4.
+# Canh trong (241, 366, 491) la TU PHAN VI cua phan bo z mo hinh.
+# Canh ngoai noi rong tu bien thuc (107, 634) ra (100, 641) de phu ca `d` o
+# hai dau CI +/-6.5 ms; noi rong nay KHONG doi ty trong bin vi khong co khoi
+# luong nao o ngoai.
+Z_EDGES_V7 = (0.100, 0.241, 0.366, 0.491, 0.641)
+
+# Bo canh CU -- VO tren truc moi (B0 rong 0.0%, 13.21% ngoai dai).
+# Giu lai chi de lam doi chung duong PC-E2.
+Z_EDGES_LEGACY = (0.055, 0.10, 0.20, 0.30, 0.5501)
+
 
 class AoIModelV7:
     def __init__(self, d_s: float = D_SYNC_S, T_s: float = SYNC_PERIOD_S,
@@ -97,6 +108,9 @@ class AoIModelV7:
                   phase0: float = 0.0) -> np.ndarray:
         """Tuoi theo BUOC nguyen -- cung chu ky voi sawtooth_age_steps()."""
         return np.round(self.process_mode(n, dt, link, phase0) / dt).astype(int)
+
+    # ten ro rang cho cho goi trong pipeline: KHONG duoc lo goi instrument_mode
+    process_mode_steps = age_steps
 
     # ---------------------------------------------------------------- (2)
     def instrument_mode(self, rng: np.random.Generator,
@@ -164,17 +178,39 @@ class AoIModelV7:
                     + rng.random(n // 8) * self.T
                     for l in LINK_READ_ORDER])
             rows.append(self._stats_ms(z))
+        # ★ CHUAN HOA THEO MEAN. Hai ly do, ca hai bat buoc:
+        #
+        # (1) `mean` KHONG PHAI mot phep kiem: `d` duoc uoc luong bang
+        #     d = mean_quan_sat - T/2 tren CHINH du lieu do, nen mo hinh khop
+        #     mean THEO CAU TAO. No khong the fail. (amendment 23-46 muc 7)
+        # (2) Vi the KHONG duoc cong bat dinh cua `d` vao dai: dich `d` mot
+        #     luong x lam dich CA mean cua mo hinh, ma mean da bi ghim vao
+        #     mean quan sat. Bat dinh cua `d` TUONG QUAN HOAN TOAN voi mean
+        #     quan sat; cong no vao dai la DEM HAI LAN va lam moi thu PASS
+        #     mot cach gia tao.
+        #
+        # Dai luong mang thong tin la HINH DANG: (phan vi - mean). Trong do
+        # `d` TRIET TIEU chinh xac, nen bat dinh cua no khong con lien quan.
         band, inside = {}, {}
         for k in TARGET_MS:
-            v = np.array([r[k] for r in rows])
+            if k == "mean":
+                band[k] = {"tautology": True,
+                           "_note": "d fit tu mean -> khong phai phep kiem"}
+                continue
+            v = np.array([r[k] - r["mean"] for r in rows])
             lo, hi = np.percentile(v, [5, 95])
+            obs = TARGET_MS[k] - TARGET_MS["mean"]
             band[k] = {"lo": float(lo), "hi": float(hi),
-                       "sd": float(v.std(ddof=1)), "median": float(np.median(v))}
-            inside[k] = bool(lo <= TARGET_MS[k] <= hi)
+                       "sd": float(v.std(ddof=1)),
+                       "observed_centred": float(obs),
+                       "sigma": float(abs(obs - v.mean()) / v.std(ddof=1))}
+            inside[k] = bool(lo <= obs <= hi)
         return {"mode": mode, "profile": self.profile,
                 "n_campaigns": n_campaigns,
+                "centred_on_mean": True,
                 "d_ms": self.d * 1000, "T_ms": self.T * 1000,
                 "band_ms": band, "observed_ms": TARGET_MS,
                 "inside": inside,
                 "n_inside": int(sum(inside.values())),
+                "n_informative": len(inside),
                 "pass": all(inside.values())}

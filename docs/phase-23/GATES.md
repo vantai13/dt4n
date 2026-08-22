@@ -144,6 +144,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-100 | 23.19B | FAIL | selfcheck M-110 chi 2/4 thong ke trong dai (mean, p05 TRONG; p50, p95 NGOAI). Nguyen nhan xac dinh: `d` lech phai, mo hinh coi la hang so -> sai o momen 3. `24-aoi-model-v7.md` muc 3 |
 | G23-101 | 23.19B | PASS | M-109b: alpha tinh lai tren du lieu da cat warm-up lech ban cong bo toi da 0.970 ms (< 2 ms) |
 | G23-102 | 23.19B | PASS | `measurements/aoi_model_v7.py` tach `process_mode()` (pipeline) va `instrument_mode()` (selfcheck); M-111 chung minh phan biet duoc |
+| G23-103 | 23.19DE | PASS | `Z_EDGES_V7 = (0.100, 0.241, 0.366, 0.491, 0.641)` khoa o amendment 23-48 TRUOC khi nhin s(z); 4 bin 24.99-25.02%, 0.000000% ngoai dai |
+| G23-104 | 23.19DE | PASS | NC-E1: `process_mode_steps(d=0.051,T=0.5,U0,phase0=-d)` bit-exact voi `sawtooth_age_steps` tren 3 cau hinh, VA `_valid_rows` trung khit |
+| G23-105 | 23.19DE | PASS | NC-E2: pha CHUNG cho 8 link -- kiem dai so `allclose` sau khi tru alpha (em ruot cua S13) |
+| G23-106 | 23.19DE | PASS | PC-E2: canh CU tren truc moi -> B0 [55,100) RONG 0.0%, mat 13.21% hang |
+| G23-107 | 23.19DE | FAIL | PC-E1: ty trong bin chi lech ~2 diem % khi dung nham `instrument_mode` (du doan > 5). O do phan giai 4 bin cai luoc bi lam phang -> tach bach phai la RANG BUOC THIET KE, khong phai phep kiem ha nguon. `25-zedges-and-task-e-controls.md` muc 3 |
+| G23-108 | 23.19DE | PASS | selfcheck chuan hoa theo mean; `mean` bi loai khoi phep kiem vi `d` fit tu no (amendment 23-48 muc 2) |
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
@@ -182,6 +188,8 @@ Ba ma nay duoc dinh nghia nhung khong xuat hien trong bang gate cua
 vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 
 ## Gate tu 74 tro len
+
+`G23-103 .. G23-108` (lesson `23.19DE`) la Task D + E.
 
 `G23-91 .. G23-94` (lesson `23.19A`) la Task A cua Lesson 23.19. Ban ke hoach
 23.19 danh so tu 91 den 102 (theo cach danh so cua ban ke hoach), nhung `G23-97 .. G23-99` DA duoc cap cho

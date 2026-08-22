@@ -40,7 +40,10 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L33 | duoi phai cua `d_transport` chi do duoc qua nhac cu tho (MIN, luong tu 100 ms, khoa luoc): SU TON TAI chac, HINH DANG khong | `00zzd-amendment-47.md` muc 3 | |
 | L34 | diem doi dau cua `lift_minus_swing` noi suy TUYEN TINH qua khoang 124 ms tren artifact `SENSITIVITY_ONLY` voi z_edges CU | `00zzd-amendment-47.md` muc 4 | |
 
-So ke tiep duoc cap: **L35**.
+| L35 | phan du hinh dang cua z: `p50-mean` lech 4.10 sigma, `p95-mean` 4.03 sigma so voi mo hinh. Da LOAI bon co che (alpha, nghich ly kiem tra, cai luoc, `d` lech phai). CO CHE CHUA BIET. Do lon ~8 ms = 1.6% cua T, nho hon hieu ung dang do (65 ms) 8 lan | `00zze-amendment-48.md` muc 3 | KHONG duoc dieu chinh mo hinh de che |
+| L36 | ty trong bin (4 bin) KHONG phat hien duoc viec dung nham `instrument_mode` trong pipeline (lech chi ~2 diem %). Tach bach hai che do phai la RANG BUOC THIET KE, khong phai phep kiem ha nguon | `25-zedges-and-task-e-controls.md` muc 3 | G23-107 FAIL |
+
+So ke tiep duoc cap: **L37**.
 
 ## Va cham da phat hien
 
