@@ -31,6 +31,12 @@ from mininet.traffic_v7 import (
     stop_traffic_for_v7_hosts,
     traffic_profile,
 )
+from bridge.bootstrap import bootstrap_all, entities_from_spec
+from bridge.differ import DEFAULT_TOL
+from bridge import pusher as PUSH
+from bridge.sync_agent import run as sync_run
+from measurements.aoi_probe_v7 import run as aoi_probe_run
+from twin import cost_v2 as C
 from twin import topology_v7 as T7
 
 
@@ -82,6 +88,7 @@ LINK_ENDPOINTS = {
 }
 ACCESS_BW_MBPS = 1000.0
 ACCESS_DELAY_MS = 0.1
+V7_SPEC = "ditto/topology_v7_spec.json"
 
 MEASURED_CSV_FIELDS = (
     "sample_index",
@@ -413,6 +420,77 @@ def write_metadata(path: str, data: object) -> None:
         f.write("\n")
 
 
+def _start_ditto_sync(net, args, net_lock):
+    """Bootstrap topology_v7 Things and start the filtered sync loop."""
+    info("*** Bootstrap topology_v7 Things in Ditto\n")
+    with open(args.policy, encoding="utf-8") as handle:
+        policy = json.load(handle)
+    entities = entities_from_spec(V7_SPEC)
+    bootstrap_all(entities, policy, mode="create")
+    allowed_ids = {
+        entity["thing_id"]
+        for entity in entities
+        if entity["kind"] in {"host", "switch", "link"}
+    }
+    if args.cycle_trace:
+        ensure_parent(args.cycle_trace)
+        open(args.cycle_trace, "w", encoding="utf-8").close()
+    if args.push_trace:
+        ensure_parent(args.push_trace)
+        open(args.push_trace, "w", encoding="utf-8").close()
+        PUSH.PUSH_TRACE_PATH = args.push_trace
+
+    stop_event = threading.Event()
+    thread = threading.Thread(
+        target=sync_run,
+        kwargs={
+            "net": net,
+            "period": args.sync_period,
+            "tol": args.tol,
+            "measurement_mode": args.measurement_mode,
+            "reconcile_every": args.reconcile_every,
+            "ping_every": 0,
+            "net_lock": net_lock,
+            "stop_event": stop_event,
+            "cycle_trace_path": args.cycle_trace,
+            "thing_ids": allowed_ids,
+        },
+        daemon=True,
+        name="sync-agent-v7",
+    )
+    thread.start()
+    return stop_event, thread
+
+
+def _start_aoi_probe(args, stop_event):
+    errors = []
+
+    def _target():
+        try:
+            aoi_probe_run(
+                duration_s=args.duration,
+                interval_s=args.aoi_probe_interval,
+                out_path=args.aoi_probe_out,
+                meta={
+                    "mode": args.measurement_mode,
+                    "rho_bar": float(args.rho_bar),
+                    "repeat": int(args.repeat),
+                    "sync_period_s": float(args.sync_period),
+                    "tol": 0.0 if args.measurement_mode == "clean" else float(args.tol),
+                    "reconcile_every": 1 if args.measurement_mode == "clean" else int(args.reconcile_every),
+                    "probe_interval_s": float(args.aoi_probe_interval),
+                    "duration_s": float(args.duration),
+                },
+                stop_event=stop_event,
+            )
+        except BaseException as exc:
+            errors.append(exc)
+
+    thread = threading.Thread(target=_target, daemon=True, name="aoi-probe-v7")
+    thread.start()
+    return thread, errors
+
+
 def wait_for_generator_summaries(gens, timeout_s: float = 8.0) -> None:
     deadline = time.monotonic() + float(timeout_s)
     paths = [gen.run_summary_path for gen in gens]
@@ -537,6 +615,7 @@ def parse_args():
         help="counter-based measured rho window in seconds",
     )
     p.add_argument("--duration", type=float, default=300.0)
+    p.add_argument("--rho-bar", type=float, default=sum(T7.LOAD_MEAN.values()) / len(T7.LOAD_MEAN))
     p.add_argument("--out", default=None, help="legacy alias for --offered-out")
     p.add_argument("--offered-out", default="results/phase-20/rho_offered.csv")
     p.add_argument("--measured-out", default="results/phase-20/rho_measured.csv")
@@ -552,6 +631,17 @@ def parse_args():
     p.add_argument("--ping", action="store_true")
     p.add_argument("--quick-check", action="store_true")
     p.add_argument("--dry-run", action="store_true", help="print predicted profile only")
+    p.add_argument("--ditto", action="store_true", help="enable topology_v7 Digital Twin sync")
+    p.add_argument("--policy", default="ditto/policy.json")
+    p.add_argument("--sync-period", type=float, default=0.5)
+    p.add_argument("--tol", type=float, default=DEFAULT_TOL)
+    p.add_argument("--reconcile-every", type=int, default=30)
+    p.add_argument("--measurement-mode", choices=("clean", "prod"), default=None)
+    p.add_argument("--cycle-trace", default=None)
+    p.add_argument("--push-trace", default=None)
+    p.add_argument("--aoi-probe-out", default=None)
+    p.add_argument("--aoi-probe-interval", type=float, default=0.1)
+    p.add_argument("--repeat", type=int, default=0)
     return p.parse_args()
 
 
@@ -561,7 +651,7 @@ def main() -> None:
     offered_out = args.out or args.offered_out
 
     link_caps = link_caps_from_topology()
-    rho_targets = default_rho_targets()
+    rho_targets = C.rho_vector(float(args.rho_bar))
     profile = traffic_profile(
         link_caps=link_caps,
         rho_targets=rho_targets,
@@ -575,18 +665,31 @@ def main() -> None:
         return
 
     stop_event = threading.Event()
+    sync_stop_event = None
+    sync_thread = None
+    probe_stop_event = threading.Event()
+    probe_thread = None
+    probe_errors = []
     gens = []
     logger = None
     net = build_v7_net()
+    net_lock = threading.RLock()
 
     try:
         info("*** Starting Phase 20 v7 topology\n")
         start_v7_net(net, do_ping=args.ping)
 
+        if args.ditto:
+            sync_stop_event, sync_thread = _start_ditto_sync(net, args, net_lock)
+            # Let the first full sync replace bootstrap tSource=0 before probing.
+            time.sleep(max(0.1, min(1.0, args.sync_period * 2.0)))
+        elif args.aoi_probe_out:
+            raise ValueError("--aoi-probe-out requires --ditto")
+
         if args.traffic == "v7":
             info("*** Starting flow-level v7 load\n")
-            gens = list(
-                start_all(
+            with net_lock:
+                gens = list(start_all(
                     net,
                     link_caps=link_caps,
                     rho_targets=rho_targets,
@@ -602,8 +705,10 @@ def main() -> None:
                     log_dir=args.flow_log_dir,
                     payload_bytes=args.payload_bytes,
                     stop_event=stop_event,
-                )
-            )
+                ))
+
+        if args.aoi_probe_out:
+            probe_thread, probe_errors = _start_aoi_probe(args, probe_stop_event)
 
         info(
             "*** Logging measured rho every %.3fs -> %s\n"
@@ -641,6 +746,7 @@ def main() -> None:
                 "offered_dt_s": float(args.log_dt),
                 "measured_window_s": float(args.measured_window),
                 "seed": int(args.seed),
+                "rho_bar": float(args.rho_bar),
                 "core_sigma_target": float(args.core_sigma),
                 "edge_sigma_target": float(args.edge_sigma),
                 "kappa": float(args.kappa),
@@ -654,13 +760,31 @@ def main() -> None:
                 "offered_rows": int(offered_rows),
                 "measured_samples_written": logger.samples_written if logger else 0,
                 "quick_check_ok": quick_ok,
+                "ditto": bool(args.ditto),
+                "measurement_mode": args.measurement_mode,
+                "sync_period_s": float(args.sync_period),
+                "reconcile_every": int(args.reconcile_every),
+                "cycle_trace": args.cycle_trace,
+                "push_trace": args.push_trace,
+                "aoi_probe_out": args.aoi_probe_out,
             },
         )
+        if probe_thread is not None:
+            probe_thread.join(timeout=max(5.0, args.aoi_probe_interval * 4.0))
+            if probe_thread.is_alive():
+                raise RuntimeError("AoI probe did not stop after duration")
+            if probe_errors:
+                raise RuntimeError("AoI probe failed: %s" % probe_errors[0])
         info("*** Done. Metadata -> %s\n" % args.meta_out)
         if quick_ok is False:
             raise SystemExit(2)
     finally:
         stop_event.set()
+        probe_stop_event.set()
+        if sync_stop_event is not None:
+            sync_stop_event.set()
+        if sync_thread is not None:
+            sync_thread.join(timeout=5.0)
         try:
             stop_traffic_for_v7_hosts(net)
         finally:

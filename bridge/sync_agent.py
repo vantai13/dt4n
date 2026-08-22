@@ -52,7 +52,7 @@ def status_state_in(patch):
 
 def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
         ping_every=20, net_lock=None, stop_event=None, reconcile_every=30,
-        measurement_mode=None, cycle_trace_path=None):
+        measurement_mode=None, cycle_trace_path=None, thing_ids=None):
     """Run delta sync, optionally in an explicitly traced calibration mode.
 
     ``clean`` forces a full push every cycle; ``prod`` preserves the supplied
@@ -80,6 +80,7 @@ def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
     prev_things = None
     cycle = 0
     consecutive_failures = 0     # đếm chu kỳ có ÍT NHẤT 1 patch lỗi, liên tiếp
+    allowed_thing_ids = None if thing_ids is None else set(thing_ids)
 
     while (max_cycles is None or cycle < max_cycles) and not (
             stop_event is not None and stop_event.is_set()):
@@ -93,6 +94,12 @@ def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
                 float(snapshot.get('t_cycle_start', t_lock_req)) - t_lock_req
             ) * 1000.0
             things_now = collector_to_things(snapshot)
+            if allowed_thing_ids is not None:
+                things_now = {
+                    thing_id: body
+                    for thing_id, body in things_now.items()
+                    if thing_id in allowed_thing_ids
+                }
         except Exception as e:
             log.error('Collector lỗi: %s — bỏ qua chu kỳ', e)
             if stop_event is not None:
