@@ -973,7 +973,7 @@ def phase22_reproduction_check(
     cell: str,
     maxscore_result: Mapping[str, Any],
     acceptance_maxscore: Mapping[str, Any],
-    root: str = "results/phase-22",
+    root: str = "results/SUPERSEDED/phase-22",
 ) -> Dict[str, Any]:
     """Compare today's maxscore reference against the committed Phase 22 artifact.
 

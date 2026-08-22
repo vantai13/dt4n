@@ -262,7 +262,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--modes", default="poisson,h2")
     ap.add_argument("--rho-bar", type=float, default=0.925)
     ap.add_argument("--n-boot", type=int, default=N_BOOT)
-    ap.add_argument("--out", default="results/phase-20R/residual_cascade.json")
+    ap.add_argument("--out", default="results/SUPERSEDED/phase-20R/residual_cascade.json")
     args = ap.parse_args(argv)
 
     rows_b = load_rows([part.strip() for part in args.branch_b.split(",") if part.strip()], "B")

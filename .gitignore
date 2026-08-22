@@ -64,56 +64,62 @@ results/*
 results/**/*
 !results/**/
 !results/**/*.json
-!results/calib/**
-!results/phase-*/**/*.json
-!results/phase-*/**/*.md
-!results/phase-*/**/*.csv
-!results/phase-*/**/*.png
-!results/phase-*/**/*.sha256
-!results/phase-*/*.json
-!results/phase-*/*.md
-!results/phase-*/*.csv
-!results/phase-*/*.png
-!results/phase-*/*.sha256
+!results/**/calib/**
+!results/**/phase-*/**/*.json
+!results/**/phase-*/**/*.md
+!results/**/phase-*/**/*.csv
+!results/**/phase-*/**/*.png
+!results/**/phase-*/**/*.sha256
+!results/**/phase-*/*.json
+!results/**/phase-*/*.md
+!results/**/phase-*/*.csv
+!results/**/phase-*/*.png
+!results/**/phase-*/*.sha256
+
+# Lesson 23.17 -- so sach cua kho phan tang. Phai duoc track.
+!results/MANIFEST.md
+!results/_intent.json
+!results/PATH_MAP.tsv
+!results/**/README.md
 
 # Phase L raw binary traces stay outside git; commit manifest + metadata.
-results/phase-L/raw/*.bin
-!results/phase-L/raw/MANIFEST.sha256.json
+results/**/phase-L/raw/*.bin
+!results/**/phase-L/raw/MANIFEST.sha256.json
 
 # Phase 20R live campaign raw payloads stay local; compact state/table artifacts
 # are committed after validation.
-results/phase-20R/raw/*.bin
-results/phase-20R/raw/*.json
-!results/phase-20R/raw/MANIFEST.sha256.json
-!results/phase-20R/*.parquet
-!results/phase-20R/truth_table.parquet
+results/**/phase-20R/raw/*.bin
+results/**/phase-20R/raw/*.json
+!results/**/phase-20R/raw/MANIFEST.sha256.json
+!results/**/phase-20R/*.parquet
+!results/**/phase-20R/truth_table.parquet
 results/**/raw_additivity_*/
-results/phase-23/raw_differential/
-results/phase-23/raw_differential_v2/
+results/**/phase-23/raw_differential/
+results/**/phase-23/raw_differential_v2/
 
 # Historical local experiment outputs kept on this workstation. They are not
 # part of Phase 20R provenance and would otherwise make live git fingerprints
 # dirty through the broad results JSON unignore rules above.
-results/ablation/
-results/ablation_dyn/
-results/asym_300/
-results/asym_500/
-results/eval/
-results/pilot/
+results/**/ablation/
+results/**/ablation_dyn/
+results/**/asym_300/
+results/**/asym_500/
+results/**/eval/
+results/**/pilot/
 
 # Raw/generated experiment payloads stay local. Commit compact summaries,
 # diagnostics, and docs instead of large traces/log folders.
-results/phase-14/
-results/phase-14b/*.json
-results/phase-14c/*.json
-results/phase-20/flow_logs*/
-results/phase-20/rho_*.csv
-results/phase-20/rho_trace*.csv
-results/phase-20/rho_trace*_meta.json
-results/phase-20/tau_summary.json
-results/phase-20/tau_summary_*_fixed.json
-results/phase-20/tau_summary_smoke.json
-results/phase-20/estimator_compare_smoke.json
+results/**/phase-14/
+results/**/phase-14b/*.json
+results/**/phase-14c/*.json
+results/**/phase-20/flow_logs*/
+results/**/phase-20/rho_*.csv
+results/**/phase-20/rho_trace*.csv
+results/**/phase-20/rho_trace*_meta.json
+results/**/phase-20/tau_summary.json
+results/**/phase-20/tau_summary_*_fixed.json
+results/**/phase-20/tau_summary_smoke.json
+results/**/phase-20/estimator_compare_smoke.json
 
 runs/
 !frozen_policies/**
@@ -125,8 +131,8 @@ runs/
 # Hinh phai sinh tu CSV bang script, khong commit hinh ve tay.
 *.png
 !docs/**/*.png
-!results/phase-*/**/*.png
-!results/phase-*/*.png
+!results/**/phase-*/**/*.png
+!results/**/phase-*/*.png
 
 # Thư mục làm việc tạm
 _graveyard/
@@ -137,14 +143,14 @@ scratch/
 cert/*.parquet
 
 # --- Phase 21R: cho phep commit artifact ket qua ---
-!results/phase-21R/
-!results/phase-21R/**/*.json
-!results/phase-21R/**/*.parquet
-!results/phase-21R/**/*.csv
-!results/phase-21R/.gitkeep
+!results/**/phase-21R/
+!results/**/phase-21R/**/*.json
+!results/**/phase-21R/**/*.parquet
+!results/**/phase-21R/**/*.csv
+!results/**/phase-21R/.gitkeep
 !docs/phase-21R/**
 
 # Phase 23 AoI campaign: keep 427 MiB raw/traffic auxiliaries locally. The
 # compact manifest, per-run metadata, estimates, and figure are tracked.
-results/phase-23/aoi_v7_campaign/flows_*/
-results/phase-23/aoi_v7_campaign/rho_*.csv
+results/**/phase-23/aoi_v7_campaign/flows_*/
+results/**/phase-23/aoi_v7_campaign/rho_*.csv

@@ -67,4 +67,4 @@ def main(root: str) -> None:
 
 
 if __name__ == "__main__":
-    main(sys.argv[1] if len(sys.argv) > 1 else "results/phase-L/raw")
+    main(sys.argv[1] if len(sys.argv) > 1 else "results/RAW/phase-L/raw")

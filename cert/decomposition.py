@@ -251,7 +251,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--mode", required=True)
     parser.add_argument("--rho-bar", type=float, required=True)
-    parser.add_argument("--out", default="results/phase-21R/decomposition.json")
+    parser.add_argument("--out", default="results/SUPERSEDED/phase-21R/decomposition.json")
     parser.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
     parser.add_argument("--n", type=int, default=N)
     parser.add_argument("--noise-floor-ms", type=float, default=1.4851)

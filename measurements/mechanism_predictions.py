@@ -41,9 +41,9 @@ from twin import topology_v7 as T7
 
 
 MODES: Tuple[str, ...] = ("poisson", "h2")
-MAPS = "results/phase-20R/mechanism_maps.json"
-RADIUS = "results/phase-20R/margin_radius.json"
-DEFAULT_OUT = "results/phase-20R/mechanism_predictions.json"
+MAPS = "results/SUPERSEDED/phase-20R/mechanism_maps.json"
+RADIUS = "results/SUPERSEDED/phase-20R/margin_radius.json"
+DEFAULT_OUT = "results/SUPERSEDED/phase-20R/mechanism_predictions.json"
 MAX_GRID_STEPS = 1.0
 
 

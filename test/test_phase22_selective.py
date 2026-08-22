@@ -10,7 +10,7 @@ import cert.selective_conformal as SC
 from cert.simultaneous_score import ALPHA
 
 
-CALIB = "results/phase-22/calib_set_v3_poisson_0.925.parquet"
+CALIB = "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet"
 pytestmark = pytest.mark.skipif(not os.path.exists(CALIB), reason="thieu calib_set_v3")
 
 

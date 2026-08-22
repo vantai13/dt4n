@@ -109,7 +109,7 @@ def print_mode_table(rows) -> None:
 
 def parse_args(argv: Iterable[str] | None = None):
     ap = argparse.ArgumentParser(description="Analyze Lesson 9.0c AoI CSV")
-    ap.add_argument("--csv", default="results/calib/raw_aoi_routing.csv")
+    ap.add_argument("--csv", default="results/SUPERSEDED/calib/raw_aoi_routing.csv")
     return ap.parse_args(argv)
 
 

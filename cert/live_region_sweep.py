@@ -20,9 +20,9 @@ from twin import cost_v2 as C
 
 
 AMENDMENT = "docs/phase-23/00zq-amendment-40.md"
-BASE_SLA = "results/phase-20R/sla_calibration.json"
-SLA_OUTPUT = "results/phase-23/sla_calibration_lesson23_16.json"
-OUTPUT = "results/phase-23/live_region_sweep.json"
+BASE_SLA = "results/LIVE/phase-20R/sla_calibration.json"
+SLA_OUTPUT = "results/SUPERSEDED/phase-23/sla_calibration_lesson23_16.json"
+OUTPUT = "results/SUPERSEDED/phase-23/live_region_sweep.json"
 EIGHT_CELL_ARTIFACT = E.OUTPUT
 DOMAIN_LIMIT = 1e-4
 LIVE_THRESHOLD = 0.05
@@ -30,10 +30,10 @@ CONFIRM_RATIO = E.CONFIRM_RATIO
 PRIMARY_CANDIDATES = (("poisson", 0.875), ("poisson", 0.900), ("h2", 0.650))
 H2_FALLBACK = ("h2", 0.675)
 NEW_SPECS: Dict[str, Dict[str, Any]] = {
-    "poisson@0.875": {"mode": "poisson", "rho_bar": 0.875, "parquet": "results/phase-22/calib_set_v3_poisson_0.875.parquet"},
-    "poisson@0.900": {"mode": "poisson", "rho_bar": 0.900, "parquet": "results/phase-22/calib_set_v3_poisson_0.900.parquet"},
-    "h2@0.650": {"mode": "h2", "rho_bar": 0.650, "parquet": "results/phase-22/calib_set_v3_h2_0.650.parquet"},
-    "h2@0.675": {"mode": "h2", "rho_bar": 0.675, "parquet": "results/phase-22/calib_set_v3_h2_0.675.parquet"},
+    "poisson@0.875": {"mode": "poisson", "rho_bar": 0.875, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.875.parquet"},
+    "poisson@0.900": {"mode": "poisson", "rho_bar": 0.900, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.900.parquet"},
+    "h2@0.650": {"mode": "h2", "rho_bar": 0.650, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.650.parquet"},
+    "h2@0.675": {"mode": "h2", "rho_bar": 0.675, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.675.parquet"},
 }
 
 

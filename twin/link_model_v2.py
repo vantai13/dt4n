@@ -106,7 +106,7 @@ class MonotonePchip:
 
 
 class LinkModelV2:
-    """Runtime wrapper around ``results/phase-L/link_model_v2_fit.json``."""
+    """Runtime wrapper around ``results/LIVE/phase-L/link_model_v2_fit.json``."""
 
     def __init__(self, fit: Dict):
         self.fit = fit

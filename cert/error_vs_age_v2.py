@@ -419,7 +419,7 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--calib", required=True)
     parser.add_argument("--out", required=True)
-    parser.add_argument("--ref-20r", default="results/phase-20R/decision_error_constant_sigma.parquet")
+    parser.add_argument("--ref-20r", default="results/SUPERSEDED/phase-20R/decision_error_constant_sigma.parquet")
     parser.add_argument("--mode", required=True)
     parser.add_argument("--rho-bar", type=float, required=True)
     parser.add_argument("--n-boot", type=int, default=N_BOOT)

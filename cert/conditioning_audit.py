@@ -82,15 +82,15 @@ CELL_SPECS: Dict[str, Dict[str, Any]] = {
     "poisson@0.850": {
         "mode": "poisson",
         "rho_bar": 0.850,
-        "parquet": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
-        "fallback": "results/phase-23/fallback_poisson_0.850_C3_k0.50.json",
+        "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet",
+        "fallback": "results/SUPERSEDED/phase-23/fallback_poisson_0.850_C3_k0.50.json",
         "slug": "poisson_0.850",
     },
     "h2@0.700": {
         "mode": "h2",
         "rho_bar": 0.700,
-        "parquet": "results/phase-22/calib_set_v3_h2_0.700.parquet",
-        "fallback": "results/phase-23/fallback_h2_0.700_C3_k0.50.json",
+        "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet",
+        "fallback": "results/SUPERSEDED/phase-23/fallback_h2_0.700_C3_k0.50.json",
         "slug": "h2_0.700",
     },
 }
@@ -101,11 +101,11 @@ MAIN_BASELINE_EXPECTED = {
     "delta": -0.01286885,
 }
 MAIN_BASELINE_TOL = 2e-8
-MAIN_PFIX_PATH = "results/phase-23/lesson23_7_calibration_2b.json"
+MAIN_PFIX_PATH = "results/SUPERSEDED/phase-23/lesson23_7_calibration_2b.json"
 AMENDMENT = "docs/phase-23/00zf-amendment-30.md"
 AMENDMENT_37 = "docs/phase-23/00zn-amendment-37.md"
-SUMMARY_PATH = "results/phase-23/conditioning_audit_summary.json"
-FIGURE_PATH = "results/phase-23/fig6_conditioning_audit.png"
+SUMMARY_PATH = "results/SUPERSEDED/phase-23/conditioning_audit_summary.json"
+FIGURE_PATH = "results/SUPERSEDED/phase-23/fig6_conditioning_audit.png"
 DOC_PATH = "docs/phase-23/12-mechanisms.md"
 PREDICTION_ORDER = (
     "M-4", "M-5", "M-6", "M-6b", "M-6c", "M-9", "M-10", "M-11",
@@ -114,11 +114,11 @@ PREDICTION_ORDER = (
 
 
 def artifact_path(cell: str) -> str:
-    return "results/phase-23/conditioning_audit_%s.json" % CELL_SPECS[cell]["slug"]
+    return "results/SUPERSEDED/phase-23/conditioning_audit_%s.json" % CELL_SPECS[cell]["slug"]
 
 
 def relative_artifact_path(cell: str) -> str:
-    return "results/phase-23/relative_conclusions_%s.json" % CELL_SPECS[cell]["slug"]
+    return "results/SUPERSEDED/phase-23/relative_conclusions_%s.json" % CELL_SPECS[cell]["slug"]
 
 
 def _fit_original(df: pd.DataFrame) -> Dict[str, Any]:
@@ -1152,8 +1152,8 @@ def markdown_report(summary: Mapping[str, Any]) -> str:
         "# 12 -- Lesson 23.7: conditioning va do nhay cua chan ly",
         "",
         "Code: `cert/conditioning_audit.py`  ",
-        "Artifact: `results/phase-23/conditioning_audit_*.json`  ",
-        "Hinh: `results/phase-23/fig6_conditioning_audit.png`",
+        "Artifact: `results/SUPERSEDED/phase-23/conditioning_audit_*.json`  ",
+        "Hinh: `results/SUPERSEDED/phase-23/fig6_conditioning_audit.png`",
         "",
         "## 1. Doi chung truoc khi doc cell giu kin",
         "",

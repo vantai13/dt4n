@@ -1124,7 +1124,7 @@ def print_run_report(result: Mapping[str, object]) -> None:
 
 def parse_args():
     p = argparse.ArgumentParser(description="Measure Phase 20 decision error from a rho trace")
-    p.add_argument("--trace", default="results/phase-20/rho_offered_long.csv")
+    p.add_argument("--trace", default="results/SUPERSEDED/phase-20/rho_offered_long.csv")
     p.add_argument("--dt", type=float, default=None)
     p.add_argument("--warmup-frac", type=float, default=0.2)
     p.add_argument("--z-list", default=",".join("%g" % z for z in DEFAULT_Z_LIST_S))
@@ -1156,7 +1156,7 @@ def parse_args():
     p.add_argument("--n-boot", type=int, default=DEFAULT_BOOTSTRAPS)
     p.add_argument("--seeds", default=",".join(str(s) for s in DEFAULT_SEEDS))
     p.add_argument("--nc-only", action="store_true")
-    p.add_argument("--out", default="results/phase-20/decision_error_offered.json")
+    p.add_argument("--out", default="results/SUPERSEDED/phase-20/decision_error_offered.json")
     return p.parse_args()
 
 

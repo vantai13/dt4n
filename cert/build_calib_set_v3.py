@@ -55,6 +55,7 @@ from cert.build_calib_set_v2 import (
     split_by_sample_V3,
     z_edges_for,
 )
+from measurements.validity import validity_block
 from measurements.decision_error import (
     DEFAULT_D_SYNC_S,
     DEFAULT_SYNC_PERIOD_S,
@@ -88,9 +89,9 @@ AOI_PROFILES: Dict[str, Tuple[float, ...]] = {
     "PC4": (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 500.0),
 }
 
-OUT_PARQUET = "results/phase-22/calib_set_v3.parquet"
-OUT_REPORT = "results/phase-22/calib_set_v3_report.json"
-V2_TEMPLATE = "results/phase-21R/calib_set_%s_%.3f.parquet"
+OUT_PARQUET = "results/SUPERSEDED/phase-22/calib_set_v3.parquet"
+OUT_REPORT = "results/SUPERSEDED/phase-22/calib_set_v3_report.json"
+V2_TEMPLATE = "results/SUPERSEDED/phase-21R/calib_set_%s_%.3f.parquet"
 
 
 def _json_clean(value: Any) -> Any:
@@ -730,7 +731,7 @@ def main() -> None:
                     for f in (
                         TRUTH_TABLE,
                         str(args.calibration),
-                        "results/phase-20R/decision_error_constant_sigma.parquet",
+                        "results/SUPERSEDED/phase-20R/decision_error_constant_sigma.parquet",
                         "twin/cost_v2.py",
                         "twin/link_model_v2.py",
                         "cert/margin_score.py",
@@ -740,6 +741,15 @@ def main() -> None:
                     if os.path.exists(f)
                 },
             },
+            # Lesson 23.17 -- pham vi hieu luc, SUY RA tu bo sinh z that su
+            # duoc goi o dong 217/328, khong phai mot chuoi khai bao tay.
+            "validity": validity_block(
+                aoi_generator=sawtooth_age_steps,
+                z_edges=meta["z_edges_primary"],
+                sla_path=str(args.calibration),
+                w_loss=float(meta["w_loss"]),
+                omega=None,          # truc omega chua ton tai (Lesson 23.26)
+            ),
         }
     )
 

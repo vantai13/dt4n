@@ -18,30 +18,30 @@ from measurements.additivity_check import write_json
 
 MODES = ("poisson", "h2")
 Z_KEYS_MAIN = ("0.050", "0.100", "0.200", "0.300", "0.550")
-OUT = "results/phase-20R/h9_separability.json"
+OUT = "results/SUPERSEDED/phase-20R/h9_separability.json"
 FIGURE = "docs/phase-20R/figures/decision_error_h9_separability.png"
 H9_K_SD_THRESHOLD = 0.15
 H9_C_SPEARMAN_THRESHOLD = 0.9
 H9_R_THRESHOLD = 0.30
 H8B_DELTA_THRESHOLD = 0.02
-H8B_CI = "results/phase-20R/margin_cv_ci.json"
-H8B_CI_N800K = "results/phase-20R/margin_cv_ci_n800k.json"
+H8B_CI = "results/SUPERSEDED/phase-20R/margin_cv_ci.json"
+H8B_CI_N800K = "results/SUPERSEDED/phase-20R/margin_cv_ci_n800k.json"
 
 DESIGNS = (
     {
         "name": "sigma_fixed",
-        "err_path": "results/phase-20R/decision_error_unimodal.parquet",
-        "cv_path": "results/phase-20R/margin_cv_unimodal.parquet",
+        "err_path": "results/SUPERSEDED/phase-20R/decision_error_unimodal.parquet",
+        "cv_path": "results/SUPERSEDED/phase-20R/margin_cv_unimodal.parquet",
     },
     {
         "name": "operational",
-        "err_path": "results/phase-20R/decision_error_by_age_by_regime.parquet",
-        "cv_path": "results/phase-20R/margin_cv_operational.parquet",
+        "err_path": "results/LIVE/phase-20R/decision_error_by_age_by_regime.parquet",
+        "cv_path": "results/SUPERSEDED/phase-20R/margin_cv_operational.parquet",
     },
     {
         "name": "a02",
-        "err_path": "results/phase-20R/sensitivity_a02.parquet",
-        "cv_path": "results/phase-20R/margin_cv_a02.parquet",
+        "err_path": "results/SUPERSEDED/phase-20R/sensitivity_a02.parquet",
+        "cv_path": "results/SUPERSEDED/phase-20R/margin_cv_a02.parquet",
     },
 )
 
@@ -49,11 +49,11 @@ TAU_DESIGNS = (
     {
         "name": "tau_operational",
         "err_paths": (
-            "results/phase-20R/decision_error_tau0.2.parquet",
-            "results/phase-20R/decision_error_tau1.0.parquet",
-            "results/phase-20R/decision_error_tau5.0.parquet",
+            "results/SUPERSEDED/phase-20R/decision_error_tau0.2.parquet",
+            "results/SUPERSEDED/phase-20R/decision_error_tau1.0.parquet",
+            "results/SUPERSEDED/phase-20R/decision_error_tau5.0.parquet",
         ),
-        "cv_path": "results/phase-20R/margin_cv_by_tau_operational.parquet",
+        "cv_path": "results/SUPERSEDED/phase-20R/margin_cv_by_tau_operational.parquet",
     },
 )
 

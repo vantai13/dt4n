@@ -22,8 +22,8 @@ from mininet.load_spec import FRAME_BG
 from twin.link_model_v2 import MonotonePchip, is_non_decreasing, kingman_ceiling
 
 
-OUT = "results/phase-L/link_model_v2_fit.json"
-REICH_OUT = "results/phase-L/l7_reich_workload.json"
+OUT = "results/LIVE/phase-L/link_model_v2_fit.json"
+REICH_OUT = "results/SUPERSEDED/phase-L/l7_reich_workload.json"
 REPORT = "docs/phase-L/07-fit.md"
 FIG_DIR = "docs/phase-L/figures"
 
@@ -916,7 +916,7 @@ def write_report(
         "",
         "Source: `%s`" % fit["source"],
         "",
-        "Output model: `results/phase-L/link_model_v2_fit.json`",
+        "Output model: `results/LIVE/phase-L/link_model_v2_fit.json`",
         "",
         "## Gates",
         "",
@@ -1162,7 +1162,7 @@ def fit_from_state(
 
 def print_summary(fit: Dict[str, Any]) -> None:
     print("Dung %d/%d campaign rows cho fit (probe=20, block A/B/C)" % (fit["n_fit_rows"], fit["n_campaign_rows"]))
-    print("Ghi -> results/phase-L/link_model_v2_fit.json")
+    print("Ghi -> results/LIVE/phase-L/link_model_v2_fit.json")
     print("Ghi -> docs/phase-L/07-fit.md")
     print("Ghi -> docs/phase-L/figures/l7_ref_curves.svg")
     print("Ghi -> docs/phase-L/figures/l7_ref_sigma.svg")

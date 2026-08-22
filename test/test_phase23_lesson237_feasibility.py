@@ -14,7 +14,7 @@ import pytest
 
 from cert import lesson23_7_feasibility as F
 
-ARTIFACT = "results/phase-23/lesson23_7_feasibility.json"
+ARTIFACT = "results/SUPERSEDED/phase-23/lesson23_7_feasibility.json"
 
 pytestmark = pytest.mark.skipif(
     not os.path.exists(ARTIFACT), reason="chua chay cert.lesson23_7_feasibility"

@@ -335,7 +335,7 @@ def summary_table(results: Mapping[str, Mapping[str, Any]]) -> list[Dict[str, An
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", default="results/phase-21R/operational_sigma.json")
+    parser.add_argument("--out", default="results/SUPERSEDED/phase-21R/operational_sigma.json")
     parser.add_argument("--alpha", type=float, default=ALPHA)
     parser.add_argument("--also-fixed", action="store_true")
     args = parser.parse_args()

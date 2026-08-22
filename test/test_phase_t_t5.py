@@ -30,7 +30,7 @@ from mininet.rho_spec import step_trajectory
 from twin.link_model_v2 import LinkModelV2
 
 
-MODEL = LinkModelV2.load("results/phase-L/link_model_v2_fit.json")
+MODEL = LinkModelV2.load("results/LIVE/phase-L/link_model_v2_fit.json")
 
 
 def test_step_trajectory_tat_dinh_va_dung_do_dai():
@@ -218,8 +218,8 @@ def test_public_state_khong_lo_metric_niem_phong():
 def test_moi_row_cua_chien_dich_co_van_tay_moi_truong():
     cutoff = "2026-08-02T12:00:00Z"
     for path in (
-        "results/phase-T/control_sameseed_state.json",
-        "results/phase-T/control_state.json",
+        "results/SUPERSEDED/phase-T/control_sameseed_state.json",
+        "results/SUPERSEDED/phase-T/control_state.json",
     ):
         if not os.path.exists(path):
             continue

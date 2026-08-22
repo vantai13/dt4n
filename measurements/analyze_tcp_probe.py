@@ -42,7 +42,7 @@ def pct(values, q):
 
 def parse_args(argv: Iterable[str] | None = None):
     p = argparse.ArgumentParser(description="Analyze Lesson 9.0 TCP probe")
-    p.add_argument("--csv", default="results/calib/raw_tcp_probe.csv")
+    p.add_argument("--csv", default="results/SUPERSEDED/calib/raw_tcp_probe.csv")
     return p.parse_args(argv)
 
 

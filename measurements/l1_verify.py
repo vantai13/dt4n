@@ -170,7 +170,7 @@ def parse_args() -> argparse.Namespace:
     ap.add_argument("--bw", type=float, default=6.0)
     ap.add_argument("--queue", type=int, default=13)
     ap.add_argument("--delay", type=float, default=3.0)
-    ap.add_argument("--out-dir", default="results/phase-L")
+    ap.add_argument("--out-dir", default="results/SUPERSEDED/phase-L")
     ap.add_argument("--blast-secs", type=float, default=5.0)
     return ap.parse_args()
 

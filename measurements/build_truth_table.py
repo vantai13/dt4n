@@ -19,14 +19,14 @@ from measurements import l6_campaign as L6
 from measurements import l6_campaign_fine as FINE
 
 
-PHASE_L_STATE = "results/phase-L/campaign_state.json"
-PHASE_20R_STATE = "results/phase-20R/campaign_state.json"
+PHASE_L_STATE = "results/SUPERSEDED/phase-L/campaign_state.json"
+PHASE_20R_STATE = "results/SUPERSEDED/phase-20R/campaign_state.json"
 CALIBRATION = FINE.CALIBRATION
-CONTINUITY_STATE = "results/phase-20R/continuity_state.json"
-TRUTH_TABLE = "results/phase-20R/truth_table.parquet"
-TRUTH_TABLE_CSV = "results/phase-20R/truth_table.csv"
-CONTINUITY_JSON = "results/phase-20R/continuity_check.json"
-SENTINEL_JSON = "results/phase-20R/sentinel_control.json"
+CONTINUITY_STATE = "results/SUPERSEDED/phase-20R/continuity_state.json"
+TRUTH_TABLE = "results/LIVE/phase-20R/truth_table.parquet"
+TRUTH_TABLE_CSV = "results/SUPERSEDED/phase-20R/truth_table.csv"
+CONTINUITY_JSON = "results/SUPERSEDED/phase-20R/continuity_check.json"
+SENTINEL_JSON = "results/SUPERSEDED/phase-20R/sentinel_control.json"
 VALID_MODES = {"cbr", "poisson", "h2"}
 TRUTH_FIELD = "q_mean_ms"
 TRUTH_FIELD_NOTE = "probe_mean_ms KHONG dung -- probe deu dan, khong thoa PASTA"

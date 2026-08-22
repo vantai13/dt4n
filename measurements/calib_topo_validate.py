@@ -167,7 +167,7 @@ def run_once(path, rate_mbps: float, duration_s: float, ping_count: int, ping_in
 
 def parse_args():
     p = argparse.ArgumentParser(description="Lesson 9.0 topology composition validation")
-    p.add_argument("--out", default="results/calib/raw_topo_validate.csv")
+    p.add_argument("--out", default="results/SUPERSEDED/calib/raw_topo_validate.csv")
     p.add_argument("--path", default=",".join(DEFAULT_ROUTING_PATH))
     p.add_argument("--rate-mbps", type=float, default=2.0)
     p.add_argument("--duration", type=float, default=5.0)

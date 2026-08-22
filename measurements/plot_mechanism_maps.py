@@ -25,7 +25,7 @@ matplotlib.use("Agg")
 import matplotlib.pyplot as plt
 
 
-MAPS = "results/phase-20R/mechanism_maps.json"
+MAPS = "results/SUPERSEDED/phase-20R/mechanism_maps.json"
 FIGDIR = "docs/phase-20R/figures"
 MODES = ("poisson", "h2")
 

@@ -37,7 +37,7 @@ from mininet.rho_spec import RhoTrajectory, ou_trajectory, sigma_from_a
 from twin.link_model_v2 import LinkModelV2
 
 
-MODEL = LinkModelV2.load("results/phase-L/link_model_v2_fit.json")
+MODEL = LinkModelV2.load("results/LIVE/phase-L/link_model_v2_fit.json")
 BW, Q, DUR, DT = 6.0, 13, 90.0, 0.005
 NSTEP = int(round(DUR / DT))
 T5_DUR, T5_WARM, T5_WINDOW = 105.0, 15.0, 0.100

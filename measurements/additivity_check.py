@@ -38,11 +38,11 @@ GAP_FRACTION = 0.20
 N_LINKS_IN_PATH = 3
 DELTA_LOSS = 0.005
 PROBE_INTRUSION_MAX = 0.02
-OUT = "results/phase-20R/additivity_check.json"
-DEFAULT_APRIME_STATE = "results/phase-20R/additivity_branch_a_state.json"
-DEFAULT_B_STATE = "results/phase-20R/additivity_branch_b_state.json"
-DEFAULT_C_STATE = "results/phase-20R/additivity_branch_c_state.json"
-CAMPAIGN_STATE = "results/phase-20R/campaign_state.json"
+OUT = "results/SUPERSEDED/phase-20R/additivity_check.json"
+DEFAULT_APRIME_STATE = "results/SUPERSEDED/phase-20R/additivity_branch_a_state.json"
+DEFAULT_B_STATE = "results/SUPERSEDED/phase-20R/additivity_branch_b_state.json"
+DEFAULT_C_STATE = "results/SUPERSEDED/phase-20R/additivity_branch_c_state.json"
+CAMPAIGN_STATE = "results/SUPERSEDED/phase-20R/campaign_state.json"
 
 
 def stable_digest(obj: object) -> str:

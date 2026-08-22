@@ -19,8 +19,8 @@ from measurements.decision_error_v2 import TruthTable
 
 
 AMENDMENT = "docs/phase-23/00zp-amendment-39.md"
-SLA_ARTIFACT = "results/phase-20R/sla_calibration.json"
-OUTPUT = "results/phase-23/eight_cell_sweep.json"
+SLA_ARTIFACT = "results/LIVE/phase-20R/sla_calibration.json"
+OUTPUT = "results/SUPERSEDED/phase-23/eight_cell_sweep.json"
 SEEN_CELLS = ("poisson@0.925", "poisson@0.850", "h2@0.700")
 NEW_CELLS = (
     "poisson@0.700",
@@ -31,14 +31,14 @@ NEW_CELLS = (
 )
 ALL_CELLS = SEEN_CELLS + NEW_CELLS
 CELL_SPECS: Dict[str, Dict[str, Any]] = {
-    "poisson@0.925": {"mode": "poisson", "rho_bar": 0.925, "parquet": "results/phase-22/calib_set_v3.parquet"},
-    "poisson@0.850": {"mode": "poisson", "rho_bar": 0.850, "parquet": "results/phase-22/calib_set_v3_poisson_0.850.parquet"},
-    "h2@0.700": {"mode": "h2", "rho_bar": 0.700, "parquet": "results/phase-22/calib_set_v3_h2_0.700.parquet"},
-    "poisson@0.700": {"mode": "poisson", "rho_bar": 0.700, "parquet": "results/phase-22/calib_set_v3_poisson_0.700.parquet"},
-    "poisson@0.960": {"mode": "poisson", "rho_bar": 0.960, "parquet": "results/phase-22/calib_set_v3_poisson_0.960.parquet"},
-    "h2@0.850": {"mode": "h2", "rho_bar": 0.850, "parquet": "results/phase-22/calib_set_v3_h2_0.850.parquet"},
-    "h2@0.925": {"mode": "h2", "rho_bar": 0.925, "parquet": "results/phase-22/calib_set_v3_h2_0.925.parquet"},
-    "h2@0.960": {"mode": "h2", "rho_bar": 0.960, "parquet": "results/phase-22/calib_set_v3_h2_0.960.parquet"},
+    "poisson@0.925": {"mode": "poisson", "rho_bar": 0.925, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3.parquet"},
+    "poisson@0.850": {"mode": "poisson", "rho_bar": 0.850, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet"},
+    "h2@0.700": {"mode": "h2", "rho_bar": 0.700, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet"},
+    "poisson@0.700": {"mode": "poisson", "rho_bar": 0.700, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.700.parquet"},
+    "poisson@0.960": {"mode": "poisson", "rho_bar": 0.960, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.960.parquet"},
+    "h2@0.850": {"mode": "h2", "rho_bar": 0.850, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.850.parquet"},
+    "h2@0.925": {"mode": "h2", "rho_bar": 0.925, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.925.parquet"},
+    "h2@0.960": {"mode": "h2", "rho_bar": 0.960, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.960.parquet"},
 }
 RATIOS = tuple(float(x) for x in np.round(np.arange(0.50, 1.5001, 0.05), 2))
 CONFIRM_RATIO = 0.8352557797157567

@@ -25,7 +25,7 @@ from bridge.ditto_common import make_thing_id_link
 from bridge.pusher import patch_thing
 
 
-OUTPUT = "results/phase-23/a0_instrument_calibration.json"
+OUTPUT = "results/LIVE/phase-23/a0_instrument_calibration.json"
 
 
 def _summary(values: Sequence[float]) -> Dict[str, float]:

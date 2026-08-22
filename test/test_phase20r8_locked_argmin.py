@@ -19,7 +19,7 @@ def report():
 
 
 def test_every_measured_zero_error_cell_has_a_locking_mechanism(report):
-    df = pd.read_parquet("results/phase-20R/decision_error_unimodal.parquet")
+    df = pd.read_parquet("results/SUPERSEDED/phase-20R/decision_error_unimodal.parquet")
     df = df[df.z_key == "0.550"]
     zero = df.groupby(["mode", "rho_bar"])["err_total"].mean()
     zero = zero[zero == 0.0]

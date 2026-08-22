@@ -233,7 +233,7 @@ def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description="Summarize Phase 20 decision-error replicate outputs")
     p.add_argument("--inputs", required=True, help="Comma-separated decision_error JSON files")
     p.add_argument("--run-seed", default=None, help="Run seed to read from each JSON; default is the first run")
-    p.add_argument("--out", default="results/phase-20/decision_error_replicates_summary.json")
+    p.add_argument("--out", default="results/SUPERSEDED/phase-20/decision_error_replicates_summary.json")
     return p.parse_args()
 
 

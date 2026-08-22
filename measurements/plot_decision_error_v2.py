@@ -12,22 +12,22 @@ from typing import Dict, List, Tuple
 import pandas as pd
 
 
-SUMMARY = "results/phase-20R/decision_error_by_age_summary.parquet"
-PREDICTION = "results/phase-20R/prediction_pre_campaign.json"
-CONSTANT_SIGMA = "results/phase-20R/decision_error_constant_sigma.parquet"
+SUMMARY = "results/SUPERSEDED/phase-20R/decision_error_by_age_summary.parquet"
+PREDICTION = "results/SUPERSEDED/phase-20R/prediction_pre_campaign.json"
+CONSTANT_SIGMA = "results/SUPERSEDED/phase-20R/decision_error_constant_sigma.parquet"
 TAU_PATHS = (
-    "results/phase-20R/decision_error_tau0.2.parquet",
-    "results/phase-20R/decision_error_tau1.0.parquet",
-    "results/phase-20R/decision_error_tau5.0.parquet",
+    "results/SUPERSEDED/phase-20R/decision_error_tau0.2.parquet",
+    "results/SUPERSEDED/phase-20R/decision_error_tau1.0.parquet",
+    "results/SUPERSEDED/phase-20R/decision_error_tau5.0.parquet",
 )
-UNIMODAL = "results/phase-20R/decision_error_unimodal.parquet"
-W2500 = "results/phase-20R/decision_error_w2500.parquet"
-DELAY_ONLY = "results/phase-20R/decision_error_delay_only.parquet"
-MARGIN_CV_UNIMODAL = "results/phase-20R/margin_cv_unimodal.parquet"
-MARGIN_CV_OPERATIONAL = "results/phase-20R/margin_cv_operational.parquet"
-SENSITIVITY_A02 = "results/phase-20R/sensitivity_a02.parquet"
-MARGIN_CV_A02 = "results/phase-20R/margin_cv_a02.parquet"
-OPERATIONAL_RAW = "results/phase-20R/decision_error_by_age_by_regime.parquet"
+UNIMODAL = "results/SUPERSEDED/phase-20R/decision_error_unimodal.parquet"
+W2500 = "results/SUPERSEDED/phase-20R/decision_error_w2500.parquet"
+DELAY_ONLY = "results/SUPERSEDED/phase-20R/decision_error_delay_only.parquet"
+MARGIN_CV_UNIMODAL = "results/SUPERSEDED/phase-20R/margin_cv_unimodal.parquet"
+MARGIN_CV_OPERATIONAL = "results/SUPERSEDED/phase-20R/margin_cv_operational.parquet"
+SENSITIVITY_A02 = "results/SUPERSEDED/phase-20R/sensitivity_a02.parquet"
+MARGIN_CV_A02 = "results/SUPERSEDED/phase-20R/margin_cv_a02.parquet"
+OPERATIONAL_RAW = "results/LIVE/phase-20R/decision_error_by_age_by_regime.parquet"
 OUT_DIR = "docs/phase-20R/figures"
 
 

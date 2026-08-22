@@ -15,8 +15,8 @@ import matplotlib.pyplot as plt
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--input", default="results/phase-22/config_matrix_poisson_0.925.json")
-    parser.add_argument("--out", default="results/phase-22/fig_risk_coverage.pdf")
+    parser.add_argument("--input", default="results/SUPERSEDED/phase-22/config_matrix_poisson_0.925.json")
+    parser.add_argument("--out", default="results/SUPERSEDED/phase-22/fig_risk_coverage.pdf")
     args = parser.parse_args()
 
     res = json.load(open(args.input, encoding="utf-8"))

@@ -16,21 +16,21 @@ from typing import Any, Dict, Mapping, Sequence
 import numpy as np
 
 
-DEFAULT_G23_17A = "results/phase-23/g23_17a_cell_margins.json"
+DEFAULT_G23_17A = "results/SUPERSEDED/phase-23/g23_17a_cell_margins.json"
 DEFAULT_AUDITS: Mapping[str, str] = {
-    "poisson@0.925": "results/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json",
-    "poisson@0.850": "results/phase-23/baseline_c3_b2_audit_poisson_0.850_C3_static.json",
-    "h2@0.700": "results/phase-23/baseline_c3_b2_audit_h2_0.700_C3_static.json",
+    "poisson@0.925": "results/SUPERSEDED/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json",
+    "poisson@0.850": "results/SUPERSEDED/phase-23/baseline_c3_b2_audit_poisson_0.850_C3_static.json",
+    "h2@0.700": "results/SUPERSEDED/phase-23/baseline_c3_b2_audit_h2_0.700_C3_static.json",
 }
 DEFAULT_BASELINES: Mapping[str, str] = {
-    "poisson@0.925": "results/phase-23/baseline_rankings_poisson_0.925_C3_static.json",
-    "poisson@0.850": "results/phase-23/baseline_rankings_poisson_0.850_C3_static.json",
-    "h2@0.700": "results/phase-23/baseline_rankings_h2_0.700_C3_static.json",
+    "poisson@0.925": "results/SUPERSEDED/phase-23/baseline_rankings_poisson_0.925_C3_static.json",
+    "poisson@0.850": "results/SUPERSEDED/phase-23/baseline_rankings_poisson_0.850_C3_static.json",
+    "h2@0.700": "results/SUPERSEDED/phase-23/baseline_rankings_h2_0.700_C3_static.json",
 }
-DEFAULT_LIFT_JSON = "results/phase-23/g23_23_lift_law.json"
-DEFAULT_SUMMARY_JSON = "results/phase-23/cross_cell_summary.json"
-DEFAULT_SUMMARY_CSV = "results/phase-23/cross_cell_summary.csv"
-DEFAULT_PLOT = "results/phase-23/cross_cell_err_panels.png"
+DEFAULT_LIFT_JSON = "results/SUPERSEDED/phase-23/g23_23_lift_law.json"
+DEFAULT_SUMMARY_JSON = "results/SUPERSEDED/phase-23/cross_cell_summary.json"
+DEFAULT_SUMMARY_CSV = "results/SUPERSEDED/phase-23/cross_cell_summary.csv"
+DEFAULT_PLOT = "results/SUPERSEDED/phase-23/cross_cell_err_panels.png"
 SELECTORS_AT_TARGET = (
     "B1_random",
     "B2_constant_gap",

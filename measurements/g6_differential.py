@@ -39,9 +39,9 @@ from twin import cost_v2 as C
 from twin import topology_v7 as T7
 
 
-DIAG_CA = "results/phase-20R/diag_ca_late.json"
-CHECK_REPORT = "results/phase-20R/additivity_check_budgetfix_bg.json"
-OUT = "results/phase-20R/g6_differential.json"
+DIAG_CA = "results/SUPERSEDED/phase-20R/diag_ca_late.json"
+CHECK_REPORT = "results/SMOKE/phase-20R/additivity_check_budgetfix_bg.json"
+OUT = "results/SUPERSEDED/phase-20R/g6_differential.json"
 RHO_BAR = 0.925
 MODES = ("poisson", "h2")
 SEEDS = (11, 12, 13)

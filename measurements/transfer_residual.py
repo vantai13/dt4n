@@ -126,7 +126,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--diag-ca", default=additivity_band.DIAG_CA)
     ap.add_argument("--check-report", default=additivity_band.CHECK_REPORT)
-    ap.add_argument("--out", default="results/phase-20R/residual_transfer.json")
+    ap.add_argument("--out", default="results/SUPERSEDED/phase-20R/residual_transfer.json")
     args = ap.parse_args(argv)
 
     records = build_records(args.diag_ca, args.check_report)

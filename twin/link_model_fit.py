@@ -258,9 +258,9 @@ def write_report(path: str, profiles: Sequence[Dict[str, object]], source: str) 
 
 def parse_args():
     p = argparse.ArgumentParser(description="Fit Lesson 9.0 link models")
-    p.add_argument("--csv", default="results/calib/raw_sweep_2node.csv")
-    p.add_argument("--out-json", default="results/calib/link_profiles.json")
-    p.add_argument("--out-report", default="results/calib/fit_report.md")
+    p.add_argument("--csv", default="results/SUPERSEDED/calib/raw_sweep_2node.csv")
+    p.add_argument("--out-json", default="results/SUPERSEDED/calib/link_profiles.json")
+    p.add_argument("--out-report", default="results/SUPERSEDED/calib/fit_report.md")
     return p.parse_args()
 
 

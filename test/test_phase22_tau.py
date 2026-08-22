@@ -9,7 +9,7 @@ import pytest
 import cert.tau_sweep as TS
 
 
-MAIN = "results/phase-22/tau_sweep_poisson_0.925.json"
+MAIN = "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json"
 pytestmark = pytest.mark.skipif(not os.path.exists(MAIN), reason="thieu tau_sweep result")
 
 

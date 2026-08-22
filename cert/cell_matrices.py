@@ -51,13 +51,13 @@ from twin import topology_v7 as T7
 # ---------------------------------------------------------------------------
 
 MAIN_CELL = "poisson@0.925"
-MAIN_CALIB = "results/phase-22/calib_set_v3.parquet"
-MAIN_QHAT = "results/phase-23/fallback_poisson_0.925_k0.5.json"
-MAIN_AUDIT = "results/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json"
-SCAN_20R = "results/phase-20R/breakdown_scan_cascade.json"
-TRUTH_TABLE = "results/phase-20R/truth_table.parquet"
-SLA_CALIB = "results/phase-20R/sla_calibration.json"
-RESIDUAL = "results/phase-20R/residual_cascade.json"
+MAIN_CALIB = "results/SUPERSEDED/phase-22/calib_set_v3.parquet"
+MAIN_QHAT = "results/SUPERSEDED/phase-23/fallback_poisson_0.925_k0.5.json"
+MAIN_AUDIT = "results/SUPERSEDED/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json"
+SCAN_20R = "results/SUPERSEDED/phase-20R/breakdown_scan_cascade.json"
+TRUTH_TABLE = "results/LIVE/phase-20R/truth_table.parquet"
+SLA_CALIB = "results/LIVE/phase-20R/sla_calibration.json"
+RESIDUAL = "results/SUPERSEDED/phase-20R/residual_cascade.json"
 
 HELD_OUT_CELLS = ("poisson@0.850", "h2@0.700")
 SCOPE_GUARD = (MAIN_CELL,)

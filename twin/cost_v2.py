@@ -29,7 +29,7 @@ from twin.link_model_v2 import LinkModelV2
 
 
 FRAME_BYTES = 1512
-FIT_PATH = "results/phase-L/link_model_v2_fit.json"
+FIT_PATH = "results/LIVE/phase-L/link_model_v2_fit.json"
 RHO_MIN, RHO_MAX = 0.50, 1.05
 GRID_STEP = 0.0005
 Z_FEASIBLE = 2.58

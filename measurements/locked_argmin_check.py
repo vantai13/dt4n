@@ -30,7 +30,7 @@ TAU = 1.0
 DT = 0.005
 N = 200_000
 SEEDS = (101, 102, 103, 104, 105)
-OUT = "results/phase-20R/locked_argmin_check.json"
+OUT = "results/SUPERSEDED/phase-20R/locked_argmin_check.json"
 
 
 def check_cell(tt, cv2, mode: str, rho_bar: float, seed: int, n: int) -> Dict[str, Any]:

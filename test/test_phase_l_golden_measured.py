@@ -9,7 +9,7 @@ import pytest
 from mininet.tc_spec import DEFAULT_BURST_BYTES, fit_staircase
 
 
-GOLDEN = "results/phase-L/golden/l2_staircase_golden.json"
+GOLDEN = "results/RAW/phase-L/golden/l2_staircase_golden.json"
 pytestmark = pytest.mark.skipif(not os.path.exists(GOLDEN), reason="chua sinh golden file")
 
 

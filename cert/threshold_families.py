@@ -668,7 +668,7 @@ def run_report(
     config: str = "C3",
     policy: str = "static",
     cell_label: str = "poisson@0.925",
-    input_path: str = "results/phase-22/calib_set_v3.parquet",
+    input_path: str = "results/SUPERSEDED/phase-22/calib_set_v3.parquet",
     scales: Sequence[str] = FB.SCALES,
     targets: Sequence[float] = MATCHED_COVERAGE,
     n_boot: int = 1000,
@@ -825,13 +825,13 @@ def run_report(
 
 def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--input", default="results/phase-22/calib_set_v3.parquet")
+    ap.add_argument("--input", default="results/SUPERSEDED/phase-22/calib_set_v3.parquet")
     ap.add_argument("--cell-label", default="poisson@0.925")
     ap.add_argument("--config", default="C3")
     ap.add_argument("--policy", default="static", choices=("static", "sticky", "wait"))
     ap.add_argument("--scales", nargs="+", choices=FB.SCALES, default=list(FB.SCALES))
-    ap.add_argument("--out-json", default="results/phase-23/threshold_families_poisson_0.925_C3_static.json")
-    ap.add_argument("--out-csv", default="results/phase-23/threshold_families_poisson_0.925_C3_static.csv")
+    ap.add_argument("--out-json", default="results/SUPERSEDED/phase-23/threshold_families_poisson_0.925_C3_static.json")
+    ap.add_argument("--out-csv", default="results/SUPERSEDED/phase-23/threshold_families_poisson_0.925_C3_static.csv")
     ap.add_argument("--n-boot", type=int, default=1000)
     args = ap.parse_args(argv)
 

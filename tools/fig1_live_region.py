@@ -9,8 +9,8 @@ import os
 from typing import Any, Mapping, Sequence
 
 
-INPUT = "results/phase-23/live_region_sweep.json"
-OUTPUT = "results/phase-23/fig1_live_region.png"
+INPUT = "results/SUPERSEDED/phase-23/live_region_sweep.json"
+OUTPUT = "results/SUPERSEDED/phase-23/fig1_live_region.png"
 
 
 def plot(report: Mapping[str, Any], out: str) -> None:

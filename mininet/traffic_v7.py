@@ -337,7 +337,7 @@ def start_all(
     python_bin: Optional[str] = None,
     repo_root: Optional[str] = None,
     log_dt_s: float = 0.010,
-    log_dir: str = "results/phase-20/flow_logs",
+    log_dir: str = "results/RAW/phase-20/flow_logs",
     payload_bytes: int = 1400,
     stop_event=None,
 ) -> Iterable[ResidentLoadGenerator]:

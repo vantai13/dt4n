@@ -27,7 +27,7 @@ from bridge.ditto_reader import fetch_all_things
 from bridge.pusher import push_changes
 
 
-DEFAULT_OUTPUT = "results/phase-23/dsync_bridge_micro_pilot.json"
+DEFAULT_OUTPUT = "results/SUPERSEDED/phase-23/dsync_bridge_micro_pilot.json"
 
 
 def _git(*cmd: str) -> str:

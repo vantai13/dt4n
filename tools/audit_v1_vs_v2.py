@@ -26,8 +26,8 @@ from twin.link_model_v2 import LinkModelV2  # noqa: E402
 
 
 FRAME_BYTES = 1512
-MODEL_PATH = REPO_ROOT / "results/phase-L/link_model_v2_fit.json"
-PHASE20_CALIBRATION_PATH = REPO_ROOT / "results/phase-20/decision_error_offered.json"
+MODEL_PATH = REPO_ROOT / "results/LIVE/phase-L/link_model_v2_fit.json"
+PHASE20_CALIBRATION_PATH = REPO_ROOT / "results/SUPERSEDED/phase-20/decision_error_offered.json"
 TABLE_DIR = REPO_ROOT / "docs/phase-20R/tables"
 AUDIT_PATH = REPO_ROOT / "docs/phase-20R/01-inherited-audit.md"
 AUDIT_DATE = "2026-08-04"
@@ -270,7 +270,7 @@ def audit_markdown() -> str:
         "# INHERITED AUDIT -- Phase 20R",
         "",
         "Ngay lap: %s" % AUDIT_DATE,
-        "Trang thai: viet truoc khi sinh `results/phase-20R/`. Khong sua nguoc Phase 20.",
+        "Trang thai: viet truoc khi sinh `results/SUPERSEDED/phase-20R/`. Khong sua nguoc Phase 20.",
         "",
         "## Muc dich",
         "",
@@ -285,8 +285,8 @@ def audit_markdown() -> str:
         "```",
         "",
         "Nguon so lieu: `twin/topology_v7.py`, `twin/link_model.py`,",
-        "`twin/link_model_v2.py`, `results/phase-L/link_model_v2_fit.json`, va",
-        "`results/phase-20/decision_error_offered.json`.",
+        "`twin/link_model_v2.py`, `results/LIVE/phase-L/link_model_v2_fit.json`, va",
+        "`results/SUPERSEDED/phase-20/decision_error_offered.json`.",
         "",
         "## Bang 1 -- link_model v1 -> v2 la sai so vi sai",
         "",
@@ -343,7 +343,7 @@ def audit_markdown() -> str:
         "## Hanh dong",
         "",
         "1. Khong chay lai Phase 20.",
-        "2. Khong sua `results/phase-20/`.",
+        "2. Khong sua `results/SUPERSEDED/phase-20/`.",
         "3. Them erratum moi tai `docs/phase-20/99c-erratum-2.md`.",
         "4. Phase 20R dung `link_model_v2` va pre-registration Q1-Q7.",
         "",

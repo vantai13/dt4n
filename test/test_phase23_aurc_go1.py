@@ -13,7 +13,7 @@ import pytest
 import cert.aurc_go1 as AG
 from cert.config_matrix import DEGENERATE_ERR
 
-CALIB = "results/phase-22/calib_set_v3_poisson_0.925.parquet"
+CALIB = "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet"
 needs_data = pytest.mark.skipif(not os.path.exists(CALIB), reason="thieu artifact v3")
 
 
@@ -191,7 +191,7 @@ def test_A16_pairing_is_not_cosmetic(real_stats):
 def test_A17_degenerate_cell_is_flagged_not_scored():
     """B-D5/B-D6: poisson@0.700 co err_neo ~ 0 -> DEGENERATE, ratio None.
     aurc() cu tra 0.0 o day, tuc 'tot nhat co the' -> 0/0."""
-    path = "results/phase-22/calib_set_v3_poisson_0.700.parquet"
+    path = "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.700.parquet"
     if not os.path.exists(path):
         pytest.skip("thieu cell suy bien")
     res = AG.run_cell(pd.read_parquet(path), n_boot=10)

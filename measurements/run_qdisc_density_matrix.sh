@@ -11,7 +11,7 @@ PY="${PYTHON:-$(command -v python3)}"
 STAMP="$(date +%m%d_%H%M)"
 SUMMARY_FILES=()
 
-mkdir -p results/calib logs/calib
+mkdir -p results/SUPERSEDED/calib logs/calib
 
 rates_for_bw() {
   "$PY" - "$1" <<'PY'
@@ -34,8 +34,8 @@ run_cfg() {
   local status
 
   rates="$(rates_for_bw "$bw")"
-  out="results/calib/density_${tag}.csv"
-  raw="results/calib/density_${tag}_raw.csv"
+  out="results/SUPERSEDED/calib/density_${tag}.csv"
+  raw="results/SUPERSEDED/calib/density_${tag}_raw.csv"
   log="logs/calib/density_${tag}.log"
   SUMMARY_FILES+=("$out")
 

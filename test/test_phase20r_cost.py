@@ -7,7 +7,7 @@ from twin import cost_v2 as C
 from twin import topology_v7 as T7
 
 
-FIT = "results/phase-L/link_model_v2_fit.json"
+FIT = "results/LIVE/phase-L/link_model_v2_fit.json"
 W_LOSS = 2500.0
 
 

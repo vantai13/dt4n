@@ -28,10 +28,10 @@ from cert import threshold_families as TF
 
 
 BASELINE_COVERAGES = tuple(np.linspace(0.0, 1.0, 101))
-DEFAULT_ARTIFACT = "results/phase-22/calib_set_v3.parquet"
-DEFAULT_OUT_JSON = "results/phase-23/baseline_rankings_poisson_0.925_C3_static.json"
-DEFAULT_OUT_CSV = "results/phase-23/baseline_rankings_poisson_0.925_C3_static.csv"
-DEFAULT_AUDIT_JSON = "results/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json"
+DEFAULT_ARTIFACT = "results/SUPERSEDED/phase-22/calib_set_v3.parquet"
+DEFAULT_OUT_JSON = "results/SUPERSEDED/phase-23/baseline_rankings_poisson_0.925_C3_static.json"
+DEFAULT_OUT_CSV = "results/SUPERSEDED/phase-23/baseline_rankings_poisson_0.925_C3_static.csv"
+DEFAULT_AUDIT_JSON = "results/SUPERSEDED/phase-23/baseline_c3_b2_audit_poisson_0.925_C3_static.json"
 STAR_COL = "a_star"
 
 

@@ -9,8 +9,8 @@ import pytest
 
 from cert import lesson23_7_calibration_2b as C
 
-ARTIFACT = "results/phase-23/lesson23_7_calibration_2b.json"
-TABLES = "results/phase-23/lesson23_7_tables.md"
+ARTIFACT = "results/SUPERSEDED/phase-23/lesson23_7_calibration_2b.json"
+TABLES = "results/SUPERSEDED/phase-23/lesson23_7_tables.md"
 
 pytestmark = pytest.mark.skipif(
     not os.path.exists(ARTIFACT), reason="chua chay cert.lesson23_7_calibration_2b"

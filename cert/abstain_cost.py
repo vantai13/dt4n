@@ -1123,14 +1123,14 @@ def run_cell(df: pd.DataFrame, cell: str,
 # doc nham file `calib_set_v3_poisson_0.925.parquet` -- mot file KHAC.
 CELL_INPUTS: Dict[str, tuple[str, str]] = {
     "poisson@0.925": (
-        "results/phase-22/calib_set_v3.parquet",
-        "results/phase-23/baseline_rankings_poisson_0.925_C3_static.json"),
+        "results/SUPERSEDED/phase-22/calib_set_v3.parquet",
+        "results/SUPERSEDED/phase-23/baseline_rankings_poisson_0.925_C3_static.json"),
     "poisson@0.850": (
-        "results/phase-22/calib_set_v3_poisson_0.850.parquet",
-        "results/phase-23/baseline_rankings_poisson_0.850_C3_static.json"),
+        "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet",
+        "results/SUPERSEDED/phase-23/baseline_rankings_poisson_0.850_C3_static.json"),
     "h2@0.700": (
-        "results/phase-22/calib_set_v3_h2_0.700.parquet",
-        "results/phase-23/baseline_rankings_h2_0.700_C3_static.json"),
+        "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet",
+        "results/SUPERSEDED/phase-23/baseline_rankings_h2_0.700_C3_static.json"),
 }
 
 
@@ -1159,7 +1159,7 @@ def _json_clean(v: Any) -> Any:
     return v
 
 
-def run_and_write(cell: str, out_dir: str = "results/phase-23",
+def run_and_write(cell: str, out_dir: str = "results/SUPERSEDED/phase-23",
                   n_boot: int = N_BOOT, seed: int = SEED_BOOT) -> str:
     import json
     from pathlib import Path
@@ -1183,7 +1183,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Lesson 23.6 -- chi phi abstain c*")
     p.add_argument("--cell", action="append", choices=sorted(CELL_INPUTS),
                    help="lap lai de chay nhieu cell; mac dinh: ca ba")
-    p.add_argument("--out-dir", default="results/phase-23")
+    p.add_argument("--out-dir", default="results/SUPERSEDED/phase-23")
     p.add_argument("--n-boot", type=int, default=N_BOOT)
     p.add_argument("--seed", type=int, default=SEED_BOOT)
     a = p.parse_args(list(argv) if argv is not None else None)

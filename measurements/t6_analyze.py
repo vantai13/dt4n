@@ -35,7 +35,7 @@ from twin.link_model_v2 import LinkModelV2
 DELTA_HAT_MS = 0.0158
 DELTA_SE_MS = 0.0023
 HOMOGENEOUS_N_LATE_MAX = 1e-3
-CONTROL_STATE = "results/phase-T/control_state.json"
+CONTROL_STATE = "results/SUPERSEDED/phase-T/control_state.json"
 SCRIPT_VERSION = "t6_analyze_v7_t6h_kappa_map"
 KAPPA_BOOTSTRAP_N = 2000
 

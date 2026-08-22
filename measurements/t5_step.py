@@ -14,8 +14,8 @@ from typing import Any, Dict, List, Optional, Sequence, Tuple
 BW, Q = 6.0, 13
 DT = 0.005
 PORT = 5555
-RAW = "results/phase-T/raw"
-STATE = "results/phase-T/step_v2_state.json"
+RAW = "results/RAW/phase-T/raw"
+STATE = "results/SUPERSEDED/phase-T/step_v2_state.json"
 RG = "python3 -m measurements.rho_gen"
 PB = "python3 -m measurements.owd_probe"
 AMP_SIGNIFICANCE_K = 5.0

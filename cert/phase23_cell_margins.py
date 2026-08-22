@@ -23,13 +23,13 @@ from cert import fallback as FB
 
 
 DEFAULT_CELLS: Mapping[str, str] = {
-    "poisson@0.925": "results/phase-22/calib_set_v3_poisson_0.925.parquet",
-    "poisson@0.850": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
-    "h2@0.700": "results/phase-22/calib_set_v3_h2_0.700.parquet",
+    "poisson@0.925": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet",
+    "poisson@0.850": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet",
+    "h2@0.700": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet",
 }
-DEFAULT_OUT_G23_17A_JSON = "results/phase-23/g23_17a_cell_margins.json"
-DEFAULT_OUT_G23_17B_JSON = "results/phase-23/g23_17b_code_sanity.json"
-DEFAULT_OUT_G23_17C_JSON = "results/phase-23/g23_17c_scale_and_sla.json"
+DEFAULT_OUT_G23_17A_JSON = "results/SUPERSEDED/phase-23/g23_17a_cell_margins.json"
+DEFAULT_OUT_G23_17B_JSON = "results/SUPERSEDED/phase-23/g23_17b_code_sanity.json"
+DEFAULT_OUT_G23_17C_JSON = "results/SUPERSEDED/phase-23/g23_17c_scale_and_sla.json"
 
 
 def _git(*cmd: str) -> str:

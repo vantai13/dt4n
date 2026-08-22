@@ -74,7 +74,7 @@ def ensure_parent(path: str) -> None:
 
 def parse_args(argv: Iterable[str] | None = None):
     p = argparse.ArgumentParser(description="Lesson 9.0 measurement C AoI auto-runner")
-    p.add_argument("--out", default="results/calib/raw_aoi_routing.csv")
+    p.add_argument("--out", default="results/SUPERSEDED/calib/raw_aoi_routing.csv")
     p.add_argument("--mode", choices=["static", "step", "ramp", "all"], default="all")
     p.add_argument("--duration", type=float, default=60.0)
     p.add_argument("--interval", type=float, default=0.2)

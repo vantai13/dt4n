@@ -4,11 +4,11 @@ set -euo pipefail
 cd /home/ubuntu/dt4n
 export PYTHON_BIN="${PYTHON_BIN:-$(command -v python3)}"
 
-mkdir -p logs results/phase-20 /tmp/p20_audit
+mkdir -p logs results/SUPERSEDED/phase-20 /tmp/p20_audit
 
 Z_LIST="0,0.05,0.10,0.20,0.298,0.50,1.0,2.0,4.0"
 MEASURED_Z_LIST="0,0.2,0.4,0.6,1.0,2.0,4.0"
-OFFERED_TRACES="results/phase-20/rho_offered_long.csv,results/phase-20/rho_offered_long_s1.csv,results/phase-20/rho_offered_long_s2.csv,results/phase-20/rho_offered_long_s3.csv,results/phase-20/rho_offered_long_s4.csv"
+OFFERED_TRACES="results/SUPERSEDED/phase-20/rho_offered_long.csv,results/SUPERSEDED/phase-20/rho_offered_long_s1.csv,results/SUPERSEDED/phase-20/rho_offered_long_s2.csv,results/SUPERSEDED/phase-20/rho_offered_long_s3.csv,results/SUPERSEDED/phase-20/rho_offered_long_s4.csv"
 
 echo "== Phase 20 appendix/audit once =="
 echo "PYTHON_BIN=$PYTHON_BIN"
@@ -17,20 +17,20 @@ echo "No Mininet is started by this script."
 echo "== 1. L7 diagnostics: core mean and block crossing =="
 "$PYTHON_BIN" -m measurements.phase20_core_load_diagnostic \
   --traces "$OFFERED_TRACES" \
-  --summary results/phase-20/between_trace_summary_n5.json \
-  --out results/phase-20/core_load_diagnostic_n5.json \
+  --summary results/SUPERSEDED/phase-20/between_trace_summary_n5.json \
+  --out results/SUPERSEDED/phase-20/core_load_diagnostic_n5.json \
   2>&1 | tee logs/phase20_appendix_01_core_load_diagnostic.log
 
 "$PYTHON_BIN" -m measurements.phase20_block_crossing_diagnostic \
   --traces "$OFFERED_TRACES" \
-  --calibration results/phase-20/decision_error_offered.json \
-  --out results/phase-20/block_crossing_diagnostic_n5.json \
+  --calibration results/SUPERSEDED/phase-20/decision_error_offered.json \
+  --out results/SUPERSEDED/phase-20/block_crossing_diagnostic_n5.json \
   2>&1 | tee logs/phase20_appendix_01_block_crossing_diagnostic.log
 
 echo "== 2. L8 measured fixed cross-check =="
 for S in 0 1 2 3 4; do
-  TRACE="results/phase-20/rho_measured_long.csv"
-  if [[ "$S" != "0" ]]; then TRACE="results/phase-20/rho_measured_long_s${S}.csv"; fi
+  TRACE="results/SUPERSEDED/phase-20/rho_measured_long.csv"
+  if [[ "$S" != "0" ]]; then TRACE="results/SUPERSEDED/phase-20/rho_measured_long_s${S}.csv"; fi
   "$PYTHON_BIN" -m measurements.decision_error \
     --trace "$TRACE" \
     --tau-core 2.87 \
@@ -38,37 +38,37 @@ for S in 0 1 2 3 4; do
     --d-sync 0.051 \
     --z-list "$MEASURED_Z_LIST" \
     --operational-mode bracket \
-    --freeze-calibration results/phase-20/decision_error_offered.json \
+    --freeze-calibration results/SUPERSEDED/phase-20/decision_error_offered.json \
     --seeds 100 \
     --n-boot 2000 \
-    --out "results/phase-20/decision_error_measured_fixed_trace_s${S}.json" \
+    --out "results/SUPERSEDED/phase-20/decision_error_measured_fixed_trace_s${S}.json" \
     2>&1 | tee "logs/phase20_appendix_02_measured_fixed_s${S}.log"
 done
 
-MEASURED_INPUTS="results/phase-20/decision_error_measured_fixed_trace_s0.json,results/phase-20/decision_error_measured_fixed_trace_s1.json,results/phase-20/decision_error_measured_fixed_trace_s2.json,results/phase-20/decision_error_measured_fixed_trace_s3.json,results/phase-20/decision_error_measured_fixed_trace_s4.json"
+MEASURED_INPUTS="results/SUPERSEDED/phase-20/decision_error_measured_fixed_trace_s0.json,results/SUPERSEDED/phase-20/decision_error_measured_fixed_trace_s1.json,results/SUPERSEDED/phase-20/decision_error_measured_fixed_trace_s2.json,results/SUPERSEDED/phase-20/decision_error_measured_fixed_trace_s3.json,results/SUPERSEDED/phase-20/decision_error_measured_fixed_trace_s4.json"
 "$PYTHON_BIN" -m measurements.summarize_decision_error_replicates \
   --inputs "$MEASURED_INPUTS" \
   --run-seed 100 \
-  --out results/phase-20/decision_error_measured_fixed_replicates_summary.json \
+  --out results/SUPERSEDED/phase-20/decision_error_measured_fixed_replicates_summary.json \
   2>&1 | tee logs/phase20_appendix_02_measured_fixed_summary.log
 
 "$PYTHON_BIN" -m measurements.phase20_measured_crosscheck_diagnostic \
-  --out results/phase-20/measured_fixed_crosscheck_diagnostic_n5.json \
+  --out results/SUPERSEDED/phase-20/measured_fixed_crosscheck_diagnostic_n5.json \
   2>&1 | tee logs/phase20_appendix_02_measured_fixed_diagnostic.log
 
 echo "== 3. Reproducibility audit for offered n=5 =="
 rm -rf /tmp/p20_audit
 mkdir -p /tmp/p20_audit
 for S in 0 1 2 3 4; do
-  TRACE="results/phase-20/rho_offered_long.csv"
-  if [[ "$S" != "0" ]]; then TRACE="results/phase-20/rho_offered_long_s${S}.csv"; fi
+  TRACE="results/SUPERSEDED/phase-20/rho_offered_long.csv"
+  if [[ "$S" != "0" ]]; then TRACE="results/SUPERSEDED/phase-20/rho_offered_long_s${S}.csv"; fi
   "$PYTHON_BIN" -m measurements.decision_error \
     --trace "$TRACE" \
     --tau-core 2.87 \
     --sync-period 0.5 \
     --d-sync 0.051 \
     --z-list "$Z_LIST" \
-    --freeze-calibration results/phase-20/decision_error_offered.json \
+    --freeze-calibration results/SUPERSEDED/phase-20/decision_error_offered.json \
     --seeds 100 \
     --n-boot 2000 \
     --out "/tmp/p20_audit/s${S}.json" \
@@ -83,7 +83,7 @@ tol = 1e-12
 ok = True
 for s in range(5):
     new = json.load(open(f"/tmp/p20_audit/s{s}.json"))["runs"]["100"]["evaluation"]["operational"]
-    old = json.load(open(f"results/phase-20/decision_error_trace_s{s}.json"))["runs"]["100"]["evaluation"]["operational"]
+    old = json.load(open(f"results/SUPERSEDED/phase-20/decision_error_trace_s{s}.json"))["runs"]["100"]["evaluation"]["operational"]
     derr = abs(float(new["err"]) - float(old["err"]))
     dd = abs(float(new["d_sla"]) - float(old["d_sla"]))
     passed = derr < tol and dd < tol
@@ -106,10 +106,10 @@ def metric_line(name, row):
     ci = row["ci95_mean_t"]
     return f"{name}: mean={row['point_mean']:.5f}, CI95=[{ci['lo']:.5f}, {ci['hi']:.5f}]"
 
-offered = json.load(open("results/phase-20/between_trace_summary_n5.json"))
-measured = json.load(open("results/phase-20/decision_error_measured_fixed_replicates_summary.json"))
-block = json.load(open("results/phase-20/block_crossing_diagnostic_n5.json"))
-paired = json.load(open("results/phase-20/measured_fixed_crosscheck_diagnostic_n5.json"))
+offered = json.load(open("results/SUPERSEDED/phase-20/between_trace_summary_n5.json"))
+measured = json.load(open("results/SUPERSEDED/phase-20/decision_error_measured_fixed_replicates_summary.json"))
+block = json.load(open("results/SUPERSEDED/phase-20/block_crossing_diagnostic_n5.json"))
+paired = json.load(open("results/SUPERSEDED/phase-20/measured_fixed_crosscheck_diagnostic_n5.json"))
 
 print("\n=== offered n=5 ===")
 print(metric_line("err", offered["err"]))

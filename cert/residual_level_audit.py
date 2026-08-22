@@ -51,8 +51,8 @@ CELL_SPECS: Dict[str, Dict[str, Any]] = {
     "poisson@0.850": {"mode": "poisson", "rho_bar": 0.850, "slug": "poisson_0.850"},
     "h2@0.700": {"mode": "h2", "rho_bar": 0.700, "slug": "h2_0.700"},
 }
-RAW_RELATIVE_B = "results/phase-20R/branch_b_fixed_s104_108.json"
-RAW_RELATIVE_C = "results/phase-20R/branch_c_fixed_s104_108.json"
+RAW_RELATIVE_B = "results/SUPERSEDED/phase-20R/branch_b_fixed_s104_108.json"
+RAW_RELATIVE_C = "results/SUPERSEDED/phase-20R/branch_c_fixed_s104_108.json"
 
 
 class PathShiftTruthTable(D.TruthTable):
@@ -147,11 +147,11 @@ class LinkShiftNoClipTruthTable(D.TruthTable):
 
 
 def artifact_path(cell: str) -> str:
-    return "results/phase-23/residual_level_audit_%s.json" % CELL_SPECS[cell]["slug"]
+    return "results/SUPERSEDED/phase-23/residual_level_audit_%s.json" % CELL_SPECS[cell]["slug"]
 
 
 def relative_artifact_path(cell: str) -> str:
-    return "results/phase-23/residual_relative_audit_%s.json" % CELL_SPECS[cell]["slug"]
+    return "results/SUPERSEDED/phase-23/residual_relative_audit_%s.json" % CELL_SPECS[cell]["slug"]
 
 
 def relative_point_from_raw(

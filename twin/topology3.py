@@ -1,5 +1,33 @@
 #!/usr/bin/env python3
-"""Three symmetric routing paths with an undirected event process.
+"""Topology 3 duong (9 canh) -- giai doan TIEN Phase 20.
+
+!!! DEPRECATED. KHONG dung cho bat ky ket qua moi nao.
+
+TAI SAO GIU LAI:
+    Day la he ma d_sync = 51 ms duoc do tren do. Gia tri do sau do bi ke thua
+    sang topology_v7 (butterfly, 8 link) ma khong ai do lai -- do la loi cau
+    truc S12, phat hien o Lesson 23.8 ngay 2026-08-22.
+
+    Do lai truc tiep tren topology_v7 (30 run x 120 s, 287.760 quan sat) cho:
+        p05  143.072 ms    (CLEAN, gop 15 run; CI95 t14 [141.82, 144.38])
+        mean 368.924 ms    (CI95 t14 [365.92, 371.93])
+        CV   0.419529      (sd giua run 0.005305)
+        -> san d fit tu phan vi ~118 ms, KHONG phai 51 ms
+
+    File nay la BANG CHUNG cho phan Threats to Validity cua paper.
+    KHONG git rm.
+
+    Kiem chung: khong module song nao import file nay (chi legacy/ import
+    `rl.routing3.topology3`, la mot module khac).
+
+Xem:
+    docs/phase-23/20-aoi-on-topology-v7.md
+    docs/phase-23/00zx-amendment-44.md
+    results/LIVE/phase-23/aoi_v7_estimates.json
+
+--- mo ta goc ---
+
+Three symmetric routing paths with an undirected event process.
 
 This topology is the Phase 14 stage for measuring whether AoI can have
 decision value after the 2-path negative control rejected the old design.

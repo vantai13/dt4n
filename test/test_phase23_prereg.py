@@ -15,7 +15,7 @@ import pytest
 from twin import topology_v7 as T7
 
 
-ARTIFACT = "results/phase-22/calib_set_v3.parquet"
+ARTIFACT = "results/SUPERSEDED/phase-22/calib_set_v3.parquet"
 
 
 @pytest.fixture(scope="module")

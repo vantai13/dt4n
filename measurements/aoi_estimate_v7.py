@@ -20,8 +20,8 @@ from measurements.aoi_probe_v7 import SCHEMA
 from twin import topology_v7 as T7
 
 
-OUTPUT = "results/phase-23/aoi_v7_estimates.json"
-FIGURE = "results/phase-23/fig8_aoi_v7.png"
+OUTPUT = "results/LIVE/phase-23/aoi_v7_estimates.json"
+FIGURE = "results/SUPERSEDED/phase-23/fig8_aoi_v7.png"
 
 
 def load_probe_file(path: str) -> Tuple[Dict[str, Any], list[Dict[str, Any]]]:

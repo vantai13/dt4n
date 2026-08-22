@@ -40,7 +40,7 @@ Z_AC = 1.959963984540054
 # artifact rather than a measurement.
 LOW_COUNT_MIN = 10.0
 
-DEFAULT_OUT = "results/phase-20R/mechanism_maps.json"
+DEFAULT_OUT = "results/SUPERSEDED/phase-20R/mechanism_maps.json"
 
 
 def ensure_parent(path: str) -> None:

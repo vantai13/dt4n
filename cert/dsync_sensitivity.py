@@ -23,12 +23,12 @@ from cert.cell_matrices import git, json_clean, pin
 
 
 AMENDMENT = "docs/phase-23/00zs-amendment-42.md"
-PILOT = "results/phase-23/dsync_bridge_micro_pilot.json"
-SLA_ARTIFACT = "results/phase-23/sla_calibration_lesson23_16.json"
-LIVE_ARTIFACT = "results/phase-23/live_region_sweep.json"
-EIGHT_CELL_ARTIFACT = "results/phase-23/eight_cell_sweep.json"
-OUTPUT = "results/phase-23/dsync_sensitivity.json"
-FIGURE = "results/phase-23/fig7_dsync_sensitivity.png"
+PILOT = "results/SUPERSEDED/phase-23/dsync_bridge_micro_pilot.json"
+SLA_ARTIFACT = "results/SUPERSEDED/phase-23/sla_calibration_lesson23_16.json"
+LIVE_ARTIFACT = "results/SUPERSEDED/phase-23/live_region_sweep.json"
+EIGHT_CELL_ARTIFACT = "results/SUPERSEDED/phase-23/eight_cell_sweep.json"
+OUTPUT = "results/LIVE/phase-23/dsync_sensitivity.json"
+FIGURE = "results/SUPERSEDED/phase-23/fig7_dsync_sensitivity.png"
 
 D_SYNC_VALUES = (0.051, 0.175, 0.205, 0.230, 0.260)
 TIER_1 = ("poisson@0.900", "poisson@0.925")

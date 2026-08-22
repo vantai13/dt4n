@@ -23,7 +23,7 @@ giu kin la PHONG THI.
 
 Chay:
     python -m cert.lesson23_7_calibration_2b \
-        --out results/phase-23/lesson23_7_calibration_2b.json
+        --out results/SUPERSEDED/phase-23/lesson23_7_calibration_2b.json
 """
 
 from __future__ import annotations
@@ -350,7 +350,7 @@ def build(out_path: str) -> Dict[str, Any]:
         "script": "cert/lesson23_7_calibration_2b.py",
         "truth_table": TRUTH_TABLE,
         "pins_previous_step": pin(
-            "results/phase-23/lesson23_7_feasibility.json"
+            "results/SUPERSEDED/phase-23/lesson23_7_feasibility.json"
         ),
         "git_hash": _git("git", "rev-parse", "HEAD"),
         "git_dirty": bool(_git("git", "status", "--porcelain", "--untracked-files=no")),
@@ -431,8 +431,8 @@ def _print(rep: Mapping[str, Any]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--out", default="results/phase-23/lesson23_7_calibration_2b.json")
-    ap.add_argument("--markdown", default="results/phase-23/lesson23_7_tables.md")
+    ap.add_argument("--out", default="results/SUPERSEDED/phase-23/lesson23_7_calibration_2b.json")
+    ap.add_argument("--markdown", default="results/SUPERSEDED/phase-23/lesson23_7_tables.md")
     args = ap.parse_args()
     rep = build(args.out)
     _print(rep)

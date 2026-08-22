@@ -183,7 +183,7 @@ def parse_args():
     ap.add_argument("--repeats", type=int, default=10)
     ap.add_argument("--duration", type=float, default=10.0)
     ap.add_argument("--settle", type=float, default=2.0)
-    ap.add_argument("--out", default="results/calib/raw_sweep_2node.csv")
+    ap.add_argument("--out", default="results/SUPERSEDED/calib/raw_sweep_2node.csv")
     return ap.parse_args()
 
 

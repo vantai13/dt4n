@@ -43,7 +43,7 @@ Z_OPERATING = 0.55
 SEEDS: Tuple[int, ...] = (101, 102, 103, 104, 105)
 N_STEPS = 200_000
 ERR_SUMMARY = D.SUMMARY_OUT
-DEFAULT_OUT = "results/phase-20R/margin_radius.json"
+DEFAULT_OUT = "results/SUPERSEDED/phase-20R/margin_radius.json"
 
 
 def ensure_parent(path: str) -> None:

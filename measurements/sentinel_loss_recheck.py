@@ -32,9 +32,9 @@ from measurements import l6_campaign as L
 
 # The Phase L sentinel cell, verbatim. Changing any of these voids the contrast.
 SENTINEL = {"mode": "h2", "bw": 6.0, "q": 13, "rho": 0.90, "seed": 999, "probe_pps": 20.0}
-CAMPAIGN_STATE = "results/phase-20R/campaign_state.json"
-OUT = "results/phase-20R/sentinel_loss_recheck.json"
-RAW = "results/phase-20R/raw_sentinel_recheck"
+CAMPAIGN_STATE = "results/SUPERSEDED/phase-20R/campaign_state.json"
+OUT = "results/SUPERSEDED/phase-20R/sentinel_loss_recheck.json"
+RAW = "results/SUPERSEDED/phase-20R/raw_sentinel_recheck"
 N_REPS = 5
 Z_ALERT = 3.0
 IDX_BASE = 90000

@@ -13,7 +13,7 @@ from cert import fallback as FB
 from cert import threshold_families as TF
 
 
-ARTIFACT = "results/phase-22/calib_set_v3.parquet"
+ARTIFACT = "results/SUPERSEDED/phase-22/calib_set_v3.parquet"
 
 
 @pytest.fixture(scope="module")

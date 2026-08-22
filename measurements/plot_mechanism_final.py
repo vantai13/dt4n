@@ -29,9 +29,9 @@ from measurements import mechanism_map as MM
 from twin import topology_v7 as T7
 
 
-K4 = "results/phase-20R/mechanism_k4_closed_form.json"
-MAPS = "results/phase-20R/mechanism_maps.json"
-RADIUS = "results/phase-20R/margin_radius.json"
+K4 = "results/SUPERSEDED/phase-20R/mechanism_k4_closed_form.json"
+MAPS = "results/SUPERSEDED/phase-20R/mechanism_maps.json"
+RADIUS = "results/SUPERSEDED/phase-20R/margin_radius.json"
 FIGDIR = "docs/phase-20R/figures"
 MODES = ("poisson", "h2")
 

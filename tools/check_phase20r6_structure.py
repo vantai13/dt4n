@@ -43,10 +43,10 @@ def check_pair(label: str, baseline_path: str, candidate_path: str) -> None:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--pilot-b", default="results/phase-20R/branch_b_fixed_pilot3.json")
-    ap.add_argument("--pilot-c", default="results/phase-20R/branch_c_fixed_pilot3.json")
-    ap.add_argument("--new-b", default="results/phase-20R/branch_b_fixed_s104_108.json")
-    ap.add_argument("--new-c", default="results/phase-20R/branch_c_fixed_s104_108.json")
+    ap.add_argument("--pilot-b", default="results/SMOKE/phase-20R/branch_b_fixed_pilot3.json")
+    ap.add_argument("--pilot-c", default="results/SMOKE/phase-20R/branch_c_fixed_pilot3.json")
+    ap.add_argument("--new-b", default="results/SUPERSEDED/phase-20R/branch_b_fixed_s104_108.json")
+    ap.add_argument("--new-c", default="results/SUPERSEDED/phase-20R/branch_c_fixed_s104_108.json")
     args = ap.parse_args()
 
     missing = [path for path in (args.pilot_b, args.pilot_c, args.new_b, args.new_c) if not Path(path).exists()]

@@ -20,8 +20,8 @@ import pytest
 
 from cert import abstain_cost as AC
 
-CALIB = "results/phase-22/calib_set_v3.parquet"
-BAND_JSON = "results/phase-23/baseline_rankings_poisson_0.925_C3_static.json"
+CALIB = "results/SUPERSEDED/phase-22/calib_set_v3.parquet"
+BAND_JSON = "results/SUPERSEDED/phase-23/baseline_rankings_poisson_0.925_C3_static.json"
 needs_data = pytest.mark.skipif(
     not (os.path.exists(CALIB) and os.path.exists(BAND_JSON)),
     reason="thieu artifact phase-22 v3 hoac baseline_rankings",
@@ -606,7 +606,7 @@ def test_R10_artifact_schema_matches_K_D11(real):
     """K-D11 (Amendment 23-28 muc 4) + K-D3: moi khoa mang thang phai co hau to."""
     import json
     from pathlib import Path
-    p = Path("results/phase-23/abstain_cost_poisson_0.925.json")
+    p = Path("results/SUPERSEDED/phase-23/abstain_cost_poisson_0.925.json")
     if not p.exists():
         pytest.skip("chua sinh artifact; chay `python -m cert.abstain_cost`")
     d = json.loads(p.read_text())
@@ -637,7 +637,7 @@ def test_R11_NC23v2_7_sticky_collapses_to_static_at_gamma_zero(real):
     """
     import json
     from pathlib import Path
-    p = Path("results/phase-23/abstain_cost_poisson_0.925.json")
+    p = Path("results/SUPERSEDED/phase-23/abstain_cost_poisson_0.925.json")
     if not p.exists():
         pytest.skip("chua sinh artifact")
     row0 = json.loads(p.read_text())["sweep_locked"][0]

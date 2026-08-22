@@ -292,7 +292,7 @@ def measurement_floor(
     mode: str,
     rho_bar: float,
     w_loss: float,
-    truth_table: str = "results/phase-20R/truth_table.parquet",
+    truth_table: str = "results/LIVE/phase-20R/truth_table.parquet",
     diff_links: Sequence[str] = ("uA", "ac", "uB", "bc"),
 ) -> Dict[str, float]:
     """Measurement floor for the P1-vs-P3 decision-margin cost scale."""
@@ -325,7 +325,7 @@ def measurement_floor(
 
 
 def measurement_floor_table(
-    operational_path: str = "results/phase-21R/operational_sigma.json",
+    operational_path: str = "results/SUPERSEDED/phase-21R/operational_sigma.json",
 ) -> list[Dict[str, Any]]:
     """Return G11 per-cell floor checks using operational q_hat(B0)."""
     with open(operational_path, encoding="utf-8") as f:
@@ -348,7 +348,7 @@ def measurement_floor_table(
 
 
 def _w_loss_for_cell(result: Mapping[str, Any]) -> float:
-    with open("results/phase-20R/sla_calibration.json", encoding="utf-8") as f:
+    with open("results/LIVE/phase-20R/sla_calibration.json", encoding="utf-8") as f:
         cells = json.load(f)["cells"]
     for cell in cells:
         if str(cell.get("mode")) == str(result["mode"]) and np.isclose(float(cell.get("rho_bar")), float(result["rho_bar"])):
@@ -454,9 +454,9 @@ def collect_gates(artifacts: Mapping[str, Any]) -> pd.DataFrame:
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--calib", help="Phase 21R calib parquet for G5 CI")
-    parser.add_argument("--out", default="results/phase-21R/gate_report.json")
+    parser.add_argument("--out", default="results/SUPERSEDED/phase-21R/gate_report.json")
     parser.add_argument("--observed", help="JSON with observed prediction-scorecard values")
-    parser.add_argument("--operational", default="results/phase-21R/operational_sigma.json")
+    parser.add_argument("--operational", default="results/SUPERSEDED/phase-21R/operational_sigma.json")
     parser.add_argument("--n-boot", type=int, default=N_BOOT)
     args = parser.parse_args()
 

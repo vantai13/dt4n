@@ -23,8 +23,8 @@ def main(src: str) -> None:
             for bw in (4.0, 6.0, 8.0)
         },
     }
-    os.makedirs("results/phase-L/golden", exist_ok=True)
-    dst = "results/phase-L/golden/l2_staircase_golden.json"
+    os.makedirs("results/RAW/phase-L/golden", exist_ok=True)
+    dst = "results/RAW/phase-L/golden/l2_staircase_golden.json"
     with open(dst, "w", encoding="utf-8") as f:
         json.dump(golden, f, indent=2, sort_keys=True)
     print("-> %s" % dst)
@@ -32,5 +32,5 @@ def main(src: str) -> None:
 
 if __name__ == "__main__":
     if len(sys.argv) != 2:
-        raise SystemExit("usage: python3 tools/freeze_l2_golden.py results/phase-L/l2_probe_XXXX.json")
+        raise SystemExit("usage: python3 tools/freeze_l2_golden.py results/SUPERSEDED/phase-L/l2_probe_XXXX.json")
     main(sys.argv[1])

@@ -35,7 +35,7 @@ from mininet.topology_split_qdisc import (
 
 REC_RX = struct.Struct("<Qdd")
 PROBE_PORT = 5555
-RAW = "results/phase-L/raw"
+RAW = "results/RAW/phase-L/raw"
 PY = "python3 -m measurements.owd_probe"
 STAIR_REPS = 5
 
@@ -303,8 +303,8 @@ def main() -> None:
             pass
         net.stop()
 
-    os.makedirs("results/phase-L", exist_ok=True)
-    path = "results/phase-L/l2_probe_%s.json" % stamp
+    os.makedirs("results/SUPERSEDED/phase-L", exist_ok=True)
+    path = "results/SUPERSEDED/phase-L/l2_probe_%s.json" % stamp
     with open(path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, sort_keys=True)
     print("\nGhi -> %s" % path)

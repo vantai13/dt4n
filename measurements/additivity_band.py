@@ -36,9 +36,9 @@ from twin import cost_v2 as C
 from twin import topology_v7 as T7
 
 
-DIAG_CA = "results/phase-20R/diag_ca_late_inband.json"
-CHECK_REPORT = "results/phase-20R/additivity_check_inband_bg.json"
-OUT = "results/phase-20R/additivity_band_sawtooth.json"
+DIAG_CA = "results/SUPERSEDED/phase-20R/diag_ca_late_inband.json"
+CHECK_REPORT = "results/SMOKE/phase-20R/additivity_check_inband_bg.json"
+OUT = "results/SUPERSEDED/phase-20R/additivity_band_sawtooth.json"
 N_CLASS = 3
 Z90 = 1.644854
 G2_FLOOR = 0.03

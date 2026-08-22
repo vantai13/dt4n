@@ -17,8 +17,8 @@ from typing import Any, Dict, Mapping, Sequence
 from cert.cell_matrices import git, json_clean, pin
 
 
-INPUT = "results/phase-23/g23_23_lift_law.json"
-OUTPUT = "results/phase-23/lift_decomposition_by_cell.json"
+INPUT = "results/SUPERSEDED/phase-23/g23_23_lift_law.json"
+OUTPUT = "results/SUPERSEDED/phase-23/lift_decomposition_by_cell.json"
 
 
 def analyze(payload: Mapping[str, Any]) -> Dict[str, Any]:

@@ -7,7 +7,7 @@ import pytest
 from cert import gate_report_22 as G
 
 
-MAIN = "results/phase-22/config_matrix_poisson_0.925.json"
+MAIN = "results/SUPERSEDED/phase-22/config_matrix_poisson_0.925.json"
 pytestmark = pytest.mark.skipif(not os.path.exists(MAIN), reason="thieu Phase 22 artifacts")
 
 

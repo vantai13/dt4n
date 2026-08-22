@@ -541,7 +541,7 @@ def parse_windows_s(text: str) -> Tuple[float, ...]:
 
 def parse_args():
     p = argparse.ArgumentParser(description="Measure tau/sigma from Phase 20 rho trace")
-    p.add_argument("--input", default="results/phase-20/rho_offered.csv")
+    p.add_argument("--input", default="results/SUPERSEDED/phase-20/rho_offered.csv")
     p.add_argument("--dt", type=float, default=None)
     p.add_argument("--warmup-frac", type=float, default=0.2)
     p.add_argument("--max-lag", type=int, default=None)
@@ -560,7 +560,7 @@ def parse_args():
     p.add_argument("--edge-sigma-target", type=float, default=0.03)
     p.add_argument("--kappa", type=float, default=2.5)
     p.add_argument("--size-min-kb", type=float, default=20.0)
-    p.add_argument("--out", default="results/phase-20/tau_summary.json")
+    p.add_argument("--out", default="results/SUPERSEDED/phase-20/tau_summary.json")
     return p.parse_args()
 
 

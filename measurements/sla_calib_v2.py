@@ -40,7 +40,7 @@ DEFAULT_TAU = 1.0
 DEFAULT_A = 0.9
 DEFAULT_SEED = 100
 
-RESULT_PATH = "results/phase-20R/sla_calibration.json"
+RESULT_PATH = "results/LIVE/phase-20R/sla_calibration.json"
 DOC_PATH = "docs/phase-20R/03-sla-calibration.md"
 FIGURE_PATH = "docs/phase-20R/figures/opt_path_share.svg"
 AMENDMENT_PATH = "docs/phase-20R/00c-amendment-2.md"
@@ -278,7 +278,7 @@ def run_calibration(
         "inputs": {
             "twin/cost_v2.py": sha256_file("twin/cost_v2.py"),
             "twin/link_model_v2.py": sha256_file("twin/link_model_v2.py"),
-            "results/phase-L/link_model_v2_fit.json": sha256_file("results/phase-L/link_model_v2_fit.json"),
+            "results/LIVE/phase-L/link_model_v2_fit.json": sha256_file("results/LIVE/phase-L/link_model_v2_fit.json"),
             "twin/topology_v7.py": sha256_file("twin/topology_v7.py"),
             "docs/phase-20R/00-preregistration.md": sha256_file("docs/phase-20R/00-preregistration.md"),
             "docs/phase-20R/00b-amendment-1.md": sha256_file("docs/phase-20R/00b-amendment-1.md"),

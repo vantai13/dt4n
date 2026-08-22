@@ -16,7 +16,7 @@ from cert.dsync_sensitivity import D_SYNC_VALUES, labelled_payload
 
 
 ROOT = Path(__file__).resolve().parents[1]
-ARTIFACT = ROOT / "results/phase-23/dsync_sensitivity.json"
+ARTIFACT = ROOT / "results/LIVE/phase-23/dsync_sensitivity.json"
 
 
 def _shares(d_sync: float) -> np.ndarray:

@@ -13,7 +13,7 @@ from measurements import decision_error_v2 as D
 from twin import topology_v7 as T7
 
 
-ARTIFACT = "results/phase-23/residual_level_audit_poisson_0.925.json"
+ARTIFACT = "results/SUPERSEDED/phase-23/residual_level_audit_poisson_0.925.json"
 
 
 @pytest.fixture(scope="module")
@@ -122,7 +122,7 @@ def test_tong_flip_pairs_khop_n_flip():
 
 @pytest.mark.parametrize("cell", ["poisson_0.850", "h2_0.700"])
 def test_heldout_M24_M25_duoc_cham_va_M26_co_ly_do(cell):
-    path = "results/phase-23/residual_level_audit_%s.json" % cell
+    path = "results/SUPERSEDED/phase-23/residual_level_audit_%s.json" % cell
     if not os.path.exists(path):
         pytest.skip("chua tai sinh held-out artifact")
     with open(path, "r", encoding="utf-8") as handle:

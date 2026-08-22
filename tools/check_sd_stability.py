@@ -108,16 +108,16 @@ def main() -> int:
     ap.add_argument(
         "--branch-b",
         default=(
-            "results/phase-20R/branch_b_fixed_pilot3.json,"
-            "results/phase-20R/branch_b_fixed_s104_108.json"
+            "results/SMOKE/phase-20R/branch_b_fixed_pilot3.json,"
+            "results/SUPERSEDED/phase-20R/branch_b_fixed_s104_108.json"
         ),
         help="comma-separated Branch B state files",
     )
     ap.add_argument(
         "--branch-c",
         default=(
-            "results/phase-20R/branch_c_fixed_pilot3.json,"
-            "results/phase-20R/branch_c_fixed_s104_108.json"
+            "results/SMOKE/phase-20R/branch_c_fixed_pilot3.json,"
+            "results/SUPERSEDED/phase-20R/branch_c_fixed_s104_108.json"
         ),
         help="comma-separated Branch C state files",
     )

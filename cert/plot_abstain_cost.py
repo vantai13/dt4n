@@ -35,7 +35,7 @@ matplotlib.use("Agg")            # khong can display; tai lap duoc trong CI
 import matplotlib.pyplot as plt  # noqa: E402
 import numpy as np               # noqa: E402
 
-RESULTS = Path("results/phase-23")
+RESULTS = Path("results/SUPERSEDED/phase-23")
 CELLS = ("poisson@0.925", "poisson@0.850", "h2@0.700")
 GAMMA_MAX = 0.98                 # (2) K-D4 cam ngoai suy
 
@@ -157,7 +157,7 @@ def panel(ax, art: dict, cell: str, band_v1: Mapping[str, Any],
             "c_star_max": float(np.nanmax(cs)), "c_star_min": float(np.nanmin(cs))}
 
 
-def make_figure4(out: str = "results/phase-23/fig4_cstar_by_coverage.png") -> dict:
+def make_figure4(out: str = "results/SUPERSEDED/phase-23/fig4_cstar_by_coverage.png") -> dict:
     arts = {c: load(c) for c in CELLS}
     hi = max(float(np.nanmax(np.asarray(a["supt_bands"]["c_star_err"]["hi"], float)))
              for a in arts.values())
@@ -182,7 +182,7 @@ def make_figure4(out: str = "results/phase-23/fig4_cstar_by_coverage.png") -> di
 
 
 def make_figure4b(cell: str = "poisson@0.925",
-                  out: str = "results/phase-23/fig4b_risk_vs_coverage_by_c.png") -> str:
+                  out: str = "results/SUPERSEDED/phase-23/fig4b_risk_vs_coverage_by_c.png") -> str:
     """Phu luc: R_system(gamma, c) cho vai gia tri c. KHONG phai dong gop.
 
     Duong `c = c*(0.78)` phai CHAM neo dung tai gamma = 0.78. Do la G23-32

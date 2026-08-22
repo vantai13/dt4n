@@ -20,6 +20,7 @@ import numpy as np
 import pandas as pd
 
 from cert import margin_score as MS
+from measurements.validity import validity_block
 from measurements.decision_error import (
     DEFAULT_SYNC_PERIOD_S,
     sawtooth_age_steps,
@@ -51,9 +52,9 @@ Z_EDGES_SECONDARY = (0.055, 0.155, 0.255, 0.355, 0.455, 0.5501)
 Z_STEP_OFFSETS_PRIMARY = (0, 9, 29, 49)
 Z_STEP_OFFSETS_SECONDARY = (0, 20, 40, 60, 80)
 
-OUT_PARQUET = "results/phase-21R/calib_set.parquet"
-OUT_REPORT = "results/phase-21R/calib_set_report.json"
-CONST_SIGMA_PARQUET = "results/phase-20R/decision_error_constant_sigma.parquet"
+OUT_PARQUET = "results/SUPERSEDED/phase-21R/calib_set.parquet"
+OUT_REPORT = "results/SUPERSEDED/phase-21R/calib_set_report.json"
+CONST_SIGMA_PARQUET = "results/SUPERSEDED/phase-20R/decision_error_constant_sigma.parquet"
 
 
 def z_edges_for(
@@ -408,13 +409,21 @@ def main() -> None:
                     for f in (
                         TRUTH_TABLE,
                         CALIBRATION,
-                        "results/phase-20R/decision_error_constant_sigma.parquet",
+                        "results/SUPERSEDED/phase-20R/decision_error_constant_sigma.parquet",
                         "twin/cost_v2.py",
                         "twin/link_model_v2.py",
                         "cert/margin_score.py",
                     )
                 },
             },
+            # Lesson 23.17 -- xem measurements/validity.py
+            "validity": validity_block(
+                aoi_generator=sawtooth_age_steps,
+                z_edges=Z_EDGES_PRIMARY,
+                sla_path=CALIBRATION,
+                w_loss=float(metas[0]["w_loss"]),
+                omega=None,
+            ),
         }
     )
 

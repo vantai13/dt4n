@@ -22,9 +22,9 @@ RHO_BAR = 0.925
 SEEDS = (101, 102, 103)
 DURATION_S = 600.0
 WINDOW_S = 60.0
-OUT = "results/phase-20R/quasistatic_check.json"
-STATE = "results/phase-20R/quasistatic_state.json"
-RAW = "results/phase-20R/raw_quasistatic"
+OUT = "results/SUPERSEDED/phase-20R/quasistatic_check.json"
+STATE = "results/SUPERSEDED/phase-20R/quasistatic_state.json"
+RAW = "results/SUPERSEDED/phase-20R/raw_quasistatic"
 POINT_TIMEOUT_S = 150.0
 PROBE_RATE_PPS = 5.0
 PROBE_SIZE_BYTES = 1470
@@ -434,8 +434,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--from-state", default="", help="comma-separated JSON state/result files containing quasistatic rows")
     ap.add_argument("--out", default=OUT)
     ap.add_argument("--state", default=STATE)
-    ap.add_argument("--truth-table", default="results/phase-20R/truth_table.parquet")
-    ap.add_argument("--calibration", default="results/phase-20R/sla_calibration.json")
+    ap.add_argument("--truth-table", default="results/LIVE/phase-20R/truth_table.parquet")
+    ap.add_argument("--calibration", default="results/LIVE/phase-20R/sla_calibration.json")
     ap.add_argument("--mode", default=MODE)
     ap.add_argument("--rho-bar", type=float, default=RHO_BAR)
     ap.add_argument("--seeds", default=",".join(str(seed) for seed in SEEDS))

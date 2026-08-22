@@ -29,7 +29,7 @@ from twin import topology_v7 as T7
 PATHS = ("P1", "P3")
 N_BOOT = 10_000
 BOOT_SEED = 20260821
-OUT = "results/phase-23/differential_residual_p1_p3.json"
+OUT = "results/SUPERSEDED/phase-23/differential_residual_p1_p3.json"
 
 
 def sha256_file(path: str) -> str:

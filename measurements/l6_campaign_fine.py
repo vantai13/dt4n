@@ -38,12 +38,12 @@ SIGMA_MARGIN = 3.5
 NOISE_FLOOR_MS = 0.4646
 INTERP_BUDGET_MS = 0.10 * NOISE_FLOOR_MS
 
-CALIBRATION = "results/phase-20R/sla_calibration.json"
-STATE = "results/phase-20R/campaign_state.json"
-SMOKE_STATE = "results/phase-20R/smoke_state.json"
-CONTINUITY_STATE = "results/phase-20R/continuity_state.json"
-RAW = "results/phase-20R/raw"
-RUNLOG = "results/phase-20R/RUNLOG.md"
+CALIBRATION = "results/LIVE/phase-20R/sla_calibration.json"
+STATE = "results/SUPERSEDED/phase-20R/campaign_state.json"
+SMOKE_STATE = "results/SMOKE/phase-20R/smoke_state.json"
+CONTINUITY_STATE = "results/SUPERSEDED/phase-20R/continuity_state.json"
+RAW = "results/RAW/phase-20R/raw"
+RUNLOG = "results/SUPERSEDED/phase-20R/RUNLOG.md"
 
 DUR = L6.DUR
 WARM = L6.WARM
@@ -114,18 +114,18 @@ def is_campaign_output_path(path: str) -> bool:
         "logs/20r4_00_smoke.log",
         "logs/20r4_01_continuity.log",
         "logs/20r4_02_full.log",
-        "results/phase-20R/RUNLOG.md",
-        "results/phase-20R/smoke_state.json",
-        "results/phase-20R/continuity_state.json",
-        "results/phase-20R/continuity_check.json",
-        "results/phase-20R/campaign_state.json",
-        "results/phase-20R/sentinel_control.json",
-        "results/phase-20R/truth_table.csv",
-        "results/phase-20R/truth_table.parquet",
+        "results/SUPERSEDED/phase-20R/RUNLOG.md",
+        "results/SMOKE/phase-20R/smoke_state.json",
+        "results/SUPERSEDED/phase-20R/continuity_state.json",
+        "results/SUPERSEDED/phase-20R/continuity_check.json",
+        "results/SUPERSEDED/phase-20R/campaign_state.json",
+        "results/SUPERSEDED/phase-20R/sentinel_control.json",
+        "results/SUPERSEDED/phase-20R/truth_table.csv",
+        "results/LIVE/phase-20R/truth_table.parquet",
     }
     if path in allowed_exact:
         return True
-    return path.startswith("results/phase-20R/raw/")
+    return path.startswith("results/RAW/phase-20R/raw/")
 
 
 def campaign_clean_status() -> Dict[str, Any]:
@@ -826,9 +826,9 @@ def write_grid_doc(path: str = "docs/phase-20R/04-campaign-grid.md") -> None:
             "## Stages",
             "",
             "```text",
-            "smoke      %3d diem -> results/phase-20R/smoke_state.json" % len(smoke),
-            "continuity %3d diem -> results/phase-20R/continuity_state.json" % len(continuity),
-            "full       %3d diem -> results/phase-20R/campaign_state.json" % len(full),
+            "smoke      %3d diem -> results/SMOKE/phase-20R/smoke_state.json" % len(smoke),
+            "continuity %3d diem -> results/SUPERSEDED/phase-20R/continuity_state.json" % len(continuity),
+            "full       %3d diem -> results/SUPERSEDED/phase-20R/campaign_state.json" % len(full),
             "```",
             "",
             "## Gate Chay Song",

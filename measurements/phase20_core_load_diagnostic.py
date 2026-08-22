@@ -68,11 +68,11 @@ def parse_args() -> argparse.Namespace:
         required=True,
         help="Comma-separated offered rho traces in the same order as the summary points.",
     )
-    p.add_argument("--summary", default="results/phase-20/between_trace_summary_n5.json")
+    p.add_argument("--summary", default="results/SUPERSEDED/phase-20/between_trace_summary_n5.json")
     p.add_argument("--dt", type=float, default=0.010)
     p.add_argument("--warmup-frac", type=float, default=0.2)
     p.add_argument("--core-links", default=",".join(DEFAULT_CORE_LINKS))
-    p.add_argument("--out", default="results/phase-20/core_load_diagnostic_n5.json")
+    p.add_argument("--out", default="results/SUPERSEDED/phase-20/core_load_diagnostic_n5.json")
     return p.parse_args()
 
 

@@ -173,7 +173,7 @@ def _fmt_bool(value: Any) -> str:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description="Audit T5 controls and rescore V-T5.")
-    parser.add_argument("--state", default="results/phase-T/control_state.json")
+    parser.add_argument("--state", default="results/SUPERSEDED/phase-T/control_state.json")
     parser.add_argument("--sealed-dir", default=SEALED)
     parser.add_argument("--phase-l-state", default=PHASE_L_STATE)
     parser.add_argument("--stage", choices=("controls", "controls-sameseed", "controls-samesed"), default="controls")

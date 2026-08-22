@@ -267,7 +267,7 @@ def parse_args():
     p.add_argument("--ping-interval", type=float, default=0.2)
     p.add_argument("--idle-ping-count", type=int, default=10)
     p.add_argument("--loaded-ping-count", type=int, default=3)
-    p.add_argument("--out", default="results/calib/raw_tcp_probe.csv")
+    p.add_argument("--out", default="results/SUPERSEDED/calib/raw_tcp_probe.csv")
     return p.parse_args()
 
 

@@ -118,6 +118,14 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-71 | 23.13 | NOT_RUN | - |
 | G23-72 | 23.13 | NOT_RUN | - |
 | G23-73 | 23.13 | NOT_RUN | - |
+| G23-74 | 23.17 | NOT_RUN | - |
+| G23-75 | 23.17 | NOT_RUN | - |
+| G23-76 | 23.17 | PASS | `results/MANIFEST.md` -- 7/7 dong LIVE co cot "Dung cho"; nguon nguoi dien: `results/_intent.json` |
+| G23-77 | 23.17 | PASS | `measurements/validity.py`; goi boi `cert/build_calib_set_v2.py`, `cert/build_calib_set_v3.py` |
+| G23-78 | 23.17 | PASS | `test/test_no_stale_axes.py` (3 passed, 5 skipped) + buoc "axis guard" trong `.github/workflows/tests.yml` |
+| G23-97 | 23.20 | NOT_RUN | - |
+| G23-98 | 23.20 | NOT_RUN | - |
+| G23-99 | 23.20 | NOT_RUN | - |
 
 ## Lesson da dong
 
@@ -151,6 +159,18 @@ Ba ma nay duoc dinh nghia nhung khong xuat hien trong bang gate cua
 `02-fallback.md`, `03-threshold-families.md`, `04-baselines.md`,
 `05-cross-cell.md` hay `99-gate-decision.md`. Chung KHONG duoc goi la PASS chi
 vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
+
+## Gate tu 74 tro len
+
+`G23-74 .. G23-78` mo o Lesson 23.17 (`21-freeze-label-tidy.md`,
+amendment 23-44). `G23-97 .. G23-99` la gate DU KIEN cua Lesson 23.20, duoc
+ghi truoc trong amendment 23-44 muc 5 de du doan khong the sua sau khi thay
+so. Chung KHONG lien tuc voi dai 24..73 va khong nam trong rang buoc day du
+cua dai do.
+
+G23-74 va G23-75 con MO vi ca hai can thong tin xac thuc cua tac gia (tai
+khoan Zenodo de lay DOI; credential git de push tag). Chung khong duoc cham
+PASS thay mat tac gia.
 
 ## Ghi chu ve pham vi ID
 

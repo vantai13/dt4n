@@ -21,7 +21,7 @@ KHONG dong du doan nao duoc ky o day.
 
 Chay:
     python -m cert.lesson23_7_feasibility \
-        --out results/phase-23/lesson23_7_feasibility.json
+        --out results/SUPERSEDED/phase-23/lesson23_7_feasibility.json
 """
 
 from __future__ import annotations
@@ -363,11 +363,11 @@ def action_ladder(base: Mapping[str, np.ndarray]) -> Dict[str, Any]:
 
     # DOI CHUNG: S0 la chinh C3 da chay o Lesson 23.1. Neu no khong tai lap
     # ti le chap nhan da commit thi CA thang deu vo nghia, va M-6/M-13 phai rut.
-    committed = _load_json("results/phase-23/fallback_poisson_0.925_k0.5.json")
+    committed = _load_json("results/SUPERSEDED/phase-23/fallback_poisson_0.925_k0.5.json")
     ref_rate = float(committed["accept"]["rate"])
     got_rate = float(base_row[key])
     approval = {
-        "reference_artifact": "results/phase-23/fallback_poisson_0.925_k0.5.json",
+        "reference_artifact": "results/SUPERSEDED/phase-23/fallback_poisson_0.925_k0.5.json",
         "committed_accept_rate": ref_rate,
         "ladder_S0_accept_rate": got_rate,
         "abs_gap": float(abs(got_rate - ref_rate)),
@@ -404,7 +404,7 @@ def action_ladder(base: Mapping[str, np.ndarray]) -> Dict[str, Any]:
 # D. Chot dai M-11
 # ---------------------------------------------------------------------------
 
-def band_M11(prior_path: str = "results/phase-23/lesson23_7_range_calibration.json") -> Dict[str, Any]:
+def band_M11(prior_path: str = "results/SUPERSEDED/phase-23/lesson23_7_range_calibration.json") -> Dict[str, Any]:
     prior = _load_json(prior_path)
     node = prior["calibration_2_M11"]["free_control_which_residual_definition"]["one_sided_M11"]
     all_test = float(node["ratio_q95_over_mean_mhat1"])
@@ -474,7 +474,7 @@ def build(out_path: str) -> Dict[str, Any]:
         "residual": RESIDUAL,
         "calib_parquet": MAIN_CALIB,
         "pins_previous_step": pin(
-            "results/phase-23/lesson23_7_range_calibration.json"
+            "results/SUPERSEDED/phase-23/lesson23_7_range_calibration.json"
         ),
         "git_hash": _git("git", "rev-parse", "HEAD"),
         "git_dirty": bool(_git("git", "status", "--porcelain", "--untracked-files=no")),
@@ -594,7 +594,7 @@ def _print(rep: Mapping[str, Any]) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--out", default="results/phase-23/lesson23_7_feasibility.json")
+    ap.add_argument("--out", default="results/SUPERSEDED/phase-23/lesson23_7_feasibility.json")
     args = ap.parse_args()
     rep = build(args.out)
     _print(rep)

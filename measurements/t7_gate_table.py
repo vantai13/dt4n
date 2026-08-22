@@ -3,7 +3,7 @@
 
 Chay bang interpreter live:
     sudo -n env PYTHONPATH="$PWD" /usr/bin/python3 -m measurements.t7_gate_table \
-        --out results/phase-T/t7_gate_table.json
+        --out results/SUPERSEDED/phase-T/t7_gate_table.json
 
 LUU Y T-G2: so sanh voi GIA TRI KY VONG GIAI TICH duoi cua so huu han,
 KHONG so voi gia tri thiet ke tho.
@@ -32,8 +32,8 @@ from mininet.rho_spec import (
 )
 
 
-MAIN = "results/phase-T/campaign_state.json"
-CTRL = "results/phase-T/control_state.json"
+MAIN = "results/SUPERSEDED/phase-T/campaign_state.json"
+CTRL = "results/SUPERSEDED/phase-T/control_state.json"
 BW, Q, PROBE = 6.0, 13, 20.0
 
 
@@ -214,7 +214,7 @@ def gate_g5(rows: List[Dict[str, Any]]) -> Dict[str, Any]:
 
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", default="results/phase-T/t7_gate_table.json")
+    parser.add_argument("--out", default="results/SUPERSEDED/phase-T/t7_gate_table.json")
     args = parser.parse_args()
 
     main_rows = load(MAIN)

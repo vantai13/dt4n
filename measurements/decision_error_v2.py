@@ -36,14 +36,14 @@ Z_EXTRAP = (1.0, 2.0, 4.0)
 Z_ALL = Z_GRID + Z_EXTRAP
 Z_SCALED_RATIOS = (0.10, 0.30, 0.55, 1.00)
 
-TRUTH_TABLE = "results/phase-20R/truth_table.parquet"
-CALIBRATION = "results/phase-20R/sla_calibration.json"
-CONTROLS_OUT = "results/phase-20R/controls.json"
-FIXED_OUT = "results/phase-20R/decision_error_by_age_by_regime.parquet"
-SUMMARY_OUT = "results/phase-20R/decision_error_by_age_summary.parquet"
-SAWTOOTH_OUT = "results/phase-20R/decision_error_sawtooth.json"
-MARGIN_CV_OUT = "results/phase-20R/margin_cv_by_tau.parquet"
-MARGIN_CV_CI_OUT = "results/phase-20R/margin_cv_ci.json"
+TRUTH_TABLE = "results/LIVE/phase-20R/truth_table.parquet"
+CALIBRATION = "results/LIVE/phase-20R/sla_calibration.json"
+CONTROLS_OUT = "results/SUPERSEDED/phase-20R/controls.json"
+FIXED_OUT = "results/LIVE/phase-20R/decision_error_by_age_by_regime.parquet"
+SUMMARY_OUT = "results/SUPERSEDED/phase-20R/decision_error_by_age_summary.parquet"
+SAWTOOTH_OUT = "results/SUPERSEDED/phase-20R/decision_error_sawtooth.json"
+MARGIN_CV_OUT = "results/SUPERSEDED/phase-20R/margin_cv_by_tau.parquet"
+MARGIN_CV_CI_OUT = "results/SUPERSEDED/phase-20R/margin_cv_ci.json"
 RHO_SOURCE = "calibration_ar1"
 EXTRA_RHO_MODES = ("poisson", "h2")
 

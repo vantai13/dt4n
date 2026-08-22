@@ -20,7 +20,7 @@ from typing import Any, Callable, Dict, Mapping, Sequence
 
 
 MAIN_CELL = "poisson_0.925"
-RESULT_ROOT = Path("results/phase-22")
+RESULT_ROOT = Path("results/SUPERSEDED/phase-22")
 DECISION_RULE = (
     "GO requires zero FAIL/ERROR and zero NOT_RUN. Prediction hit rate is "
     "REPORTED, never a gate: a missed prediction with an understood mechanism "

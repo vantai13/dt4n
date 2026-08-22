@@ -241,8 +241,8 @@ def parse_args():
     p.add_argument("--samples", type=int, default=200)
     p.add_argument("--interval", type=float, default=0.05)
     p.add_argument("--settle", type=float, default=3.0)
-    p.add_argument("--out", default="results/calib/qdisc_density.csv")
-    p.add_argument("--raw-out", default="results/calib/qdisc_density_raw.csv")
+    p.add_argument("--out", default="results/SUPERSEDED/calib/qdisc_density.csv")
+    p.add_argument("--raw-out", default="results/SUPERSEDED/calib/qdisc_density_raw.csv")
     return p.parse_args()
 
 

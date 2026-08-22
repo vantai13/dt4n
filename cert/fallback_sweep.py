@@ -29,19 +29,19 @@ from twin import topology_v7 as T7
 
 
 AMENDMENT = "docs/phase-23/00zo-amendment-38.md"
-LIFT_ARTIFACT = "results/phase-23/lift_decomposition_by_cell.json"
-OUTPUT = "results/phase-23/fallback_sweep.json"
+LIFT_ARTIFACT = "results/SUPERSEDED/phase-23/lift_decomposition_by_cell.json"
+OUTPUT = "results/SUPERSEDED/phase-23/fallback_sweep.json"
 CELL_SPECS: Dict[str, Dict[str, Any]] = {
     MAIN_CELL: {
-        "parquet": "results/phase-22/calib_set_v3.parquet",
+        "parquet": "results/SUPERSEDED/phase-22/calib_set_v3.parquet",
         "slug": "poisson_0.925",
     },
     "poisson@0.850": {
-        "parquet": "results/phase-22/calib_set_v3_poisson_0.850.parquet",
+        "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet",
         "slug": "poisson_0.850",
     },
     "h2@0.700": {
-        "parquet": "results/phase-22/calib_set_v3_h2_0.700.parquet",
+        "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet",
         "slug": "h2_0.700",
     },
 }

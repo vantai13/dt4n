@@ -245,7 +245,7 @@ def analyze_mode(
 def build_report(
     rho_bar: float = 0.925,
     modes: Sequence[str] = ("poisson", "h2"),
-    scan_path: Optional[str] = "results/phase-20R/breakdown_scan_cascade.json",
+    scan_path: Optional[str] = "results/SUPERSEDED/phase-20R/breakdown_scan_cascade.json",
 ) -> Dict[str, Any]:
     tt = D.TruthTable()
     scan_lookup = scan_k4_lookup(scan_path)
@@ -304,8 +304,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--rho-bar", type=float, default=0.925)
     ap.add_argument("--modes", default="poisson,h2")
-    ap.add_argument("--scan", default="results/phase-20R/breakdown_scan_cascade.json")
-    ap.add_argument("--out", default="results/phase-20R/mechanism_k4_closed_form.json")
+    ap.add_argument("--scan", default="results/SUPERSEDED/phase-20R/breakdown_scan_cascade.json")
+    ap.add_argument("--out", default="results/SUPERSEDED/phase-20R/mechanism_k4_closed_form.json")
     args = ap.parse_args(argv)
 
     modes = [part.strip() for part in args.modes.split(",") if part.strip()]

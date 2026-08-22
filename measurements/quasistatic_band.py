@@ -30,7 +30,7 @@ from measurements import decision_error_v2 as D
 from twin import cost_v2 as C
 
 
-PHASE_T_PAIRED = "results/phase-T/t6e_paired.json"
+PHASE_T_PAIRED = "results/SUPERSEDED/phase-T/t6e_paired.json"
 DELAY_SWEEP_MS = (0.0, -0.05, -0.10, -0.20, -0.50, -1.00, -2.00)
 LOSS_SWEEP = (
     0.0,
@@ -47,7 +47,7 @@ LOSS_SWEEP = (
 # not a choice made after seeing this table. Both numbers are always reported.
 FRAGILE_CELLS = (("poisson", 0.700),)
 G2_FLOOR = 0.03
-OUT = "results/phase-20R/quasistatic_band.json"
+OUT = "results/SUPERSEDED/phase-20R/quasistatic_band.json"
 
 
 def phase_t_err_dyn(path: str = PHASE_T_PAIRED) -> Dict[str, Dict[str, float]]:

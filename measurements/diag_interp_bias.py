@@ -35,7 +35,7 @@ from twin import cost_v2 as C
 from twin import topology_v7 as T7
 
 
-OUT = "results/phase-20R/diag_interp_bias.json"
+OUT = "results/SUPERSEDED/phase-20R/diag_interp_bias.json"
 RHO_BAR = 0.925
 MODES = ("poisson", "h2")
 LOO_SPACING = 0.10
@@ -239,7 +239,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--truth-table", default=D.TRUTH_TABLE)
     ap.add_argument("--rho-bar", type=float, default=RHO_BAR)
     ap.add_argument("--loo-spacing", type=float, default=LOO_SPACING)
-    ap.add_argument("--check-report", default="results/phase-20R/additivity_check_budgetfix_bg.json")
+    ap.add_argument("--check-report", default="results/SMOKE/phase-20R/additivity_check_budgetfix_bg.json")
     ap.add_argument("--out", default=OUT)
     args = ap.parse_args(argv)
 

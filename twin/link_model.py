@@ -15,11 +15,11 @@ have three regimes under UDP constant-rate load:
   by loss.
 
 Primary data:
-    results/calib/raw_sweep_2node.csv
-    results/calib/link_profiles.json
-    results/calib/qdisc_density.csv
-    results/calib/density_bw{4,6,8}_*.csv
-    results/calib/cliff_fine_*.csv
+    results/SUPERSEDED/calib/raw_sweep_2node.csv
+    results/SUPERSEDED/calib/link_profiles.json
+    results/SUPERSEDED/calib/qdisc_density.csv
+    results/SUPERSEDED/calib/density_bw{4,6,8}_*.csv
+    results/SUPERSEDED/calib/cliff_fine_*.csv
 """
 
 # Rev5 interpretation: below the cliff, q_delay ~= base_delay * rho_measured

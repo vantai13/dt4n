@@ -85,7 +85,7 @@ def summarize_corr(name: str, xs: np.ndarray, ys: np.ndarray) -> dict:
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--traces", required=True, help="Comma-separated offered rho traces.")
-    p.add_argument("--calibration", default="results/phase-20/decision_error_offered.json")
+    p.add_argument("--calibration", default="results/SUPERSEDED/phase-20/decision_error_offered.json")
     p.add_argument("--dt", type=float, default=0.010)
     p.add_argument("--warmup-frac", type=float, default=0.2)
     p.add_argument("--tau-core", type=float, default=DEFAULT_TAU_CORE_S)
@@ -93,7 +93,7 @@ def parse_args() -> argparse.Namespace:
     p.add_argument("--d-sync", type=float, default=DEFAULT_D_SYNC_S)
     p.add_argument("--z-list", default=",".join("%g" % z for z in DEFAULT_Z_LIST_S))
     p.add_argument("--core-links", default=",".join(DEFAULT_CORE_LINKS))
-    p.add_argument("--out", default="results/phase-20/block_crossing_diagnostic_n5.json")
+    p.add_argument("--out", default="results/SUPERSEDED/phase-20/block_crossing_diagnostic_n5.json")
     return p.parse_args()
 
 

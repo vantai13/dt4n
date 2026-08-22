@@ -1592,7 +1592,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.rho_bar,
             variants,
         )
-        default_out = "results/phase-20R/band_v2_cascade.json"
+        default_out = "results/SUPERSEDED/phase-20R/band_v2_cascade.json"
     else:
         result = build_report(
             "scan",
@@ -1603,7 +1603,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
             args.rho_bar,
             variants,
         )
-        default_out = "results/phase-20R/breakdown_scan.json"
+        default_out = "results/SUPERSEDED/phase-20R/breakdown_scan.json"
 
     out = args.out or default_out
     os.makedirs(os.path.dirname(os.path.abspath(out)) or ".", exist_ok=True)

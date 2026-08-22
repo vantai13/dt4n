@@ -51,11 +51,11 @@ from twin import cost_v2 as C
 
 
 BRANCHES = ("Aprime", "B", "C")
-RAW = "results/phase-20R/raw_additivity"
+RAW = "results/RAW/phase-20R/raw_additivity"
 DEFAULT_STATE = {
-    "Aprime": "results/phase-20R/additivity_branch_a_state.json",
-    "B": "results/phase-20R/additivity_branch_b_state.json",
-    "C": "results/phase-20R/additivity_branch_c_state.json",
+    "Aprime": "results/SUPERSEDED/phase-20R/additivity_branch_a_state.json",
+    "B": "results/SUPERSEDED/phase-20R/additivity_branch_b_state.json",
+    "C": "results/SUPERSEDED/phase-20R/additivity_branch_c_state.json",
 }
 DUR = 70.0
 WARM = 10.0
@@ -1369,7 +1369,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
 
     if not args.state:
         if args.t7_path:
-            args.state = "results/phase-23/differential_live/%s_%s.json" % (args.t7_path.lower(), args.branch.lower())
+            args.state = "results/RAW/phase-23/differential_live/%s_%s.json" % (args.t7_path.lower(), args.branch.lower())
         else:
             args.state = DEFAULT_STATE[args.branch]
     if args.probe_rate is not None and args.probe_rate <= 0.0:

@@ -7,7 +7,7 @@ of paths, so link errors can affect rankings instead of adding a common
 constant to every action.
 
 Calibration constraint: link bandwidths stay in {4, 6, 8} Mbps, the measured
-bandwidths used by ``results/calib/density_bw{4,6,8}_*.csv``.
+bandwidths used by ``results/SUPERSEDED/calib/density_bw{4,6,8}_*.csv``.
 """
 
 from __future__ import annotations

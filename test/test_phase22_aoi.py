@@ -9,7 +9,7 @@ import cert.aoi_profiles as AP
 import cert.build_calib_set_v3 as V3
 
 
-MAIN = "results/phase-22/aoi_profiles_poisson_0.925.json"
+MAIN = "results/SUPERSEDED/phase-22/aoi_profiles_poisson_0.925.json"
 pytestmark = pytest.mark.skipif(not os.path.exists(MAIN), reason="thieu aoi_profiles result")
 
 

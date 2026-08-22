@@ -34,9 +34,9 @@ BW, Q = 6.0, 13
 DUR, WARM, DT = 105.0, 15.0, DT_DEFAULT
 PHASE_L_DUR, PHASE_L_WARM = 70.0, 10.0
 PORT = 5555
-RAW = "results/phase-T/raw"
-STATE = "results/phase-T/campaign_state.json"
-SEALED = "results/phase-T/sealed"
+RAW = "results/RAW/phase-T/raw"
+STATE = "results/SUPERSEDED/phase-T/campaign_state.json"
+SEALED = "results/RAW/phase-T/sealed"
 ORDER_SEED = 7000
 SENTINEL_EVERY = 30
 SENTINEL = {
@@ -49,8 +49,8 @@ SENTINEL = {
 }
 RG = "python3 -m measurements.rho_gen"
 PB = "python3 -m measurements.owd_probe"
-MODEL_PATH = "results/phase-L/link_model_v2_fit.json"
-PHASE_L_STATE = "results/phase-L/campaign_state.json"
+MODEL_PATH = "results/LIVE/phase-L/link_model_v2_fit.json"
+PHASE_L_STATE = "results/SUPERSEDED/phase-L/campaign_state.json"
 
 GATES_TRANSIENT = set(gate_names_by_kind("transient"))
 GATES_DETERMINISTIC = set(gate_names_by_kind("deterministic"))

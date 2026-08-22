@@ -25,7 +25,7 @@ SEEDS_VAR = (11, 12, 13, 14, 15)
 DUR = 70.0
 WARM = 10.0
 PORT = 5555
-RAW = "results/phase-L/raw"
+RAW = "results/RAW/phase-L/raw"
 LG = "python3 -m measurements.load_gen"
 PB = "python3 -m measurements.owd_probe"
 ORDER_SEED = 9000
@@ -461,7 +461,7 @@ def run_live() -> str:
     summary = summarize_pilot(rows)
     _print_summary(rows, summary)
 
-    out = "results/phase-L/l5_pilot_%s.json" % stamp
+    out = "results/SUPERSEDED/phase-L/l5_pilot_%s.json" % stamp
     with open(out, "w", encoding="utf-8") as f:
         json.dump(
             {

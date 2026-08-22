@@ -604,7 +604,7 @@ def test_broken_detail_records_path_ranking_cell():
 
 
 def test_joint_differs_from_full_in_scan_smoke_when_inter_mode_terms_matter():
-    path = Path("results/phase-20R/breakdown_scan_transfer_smoke.json")
+    path = Path("results/SMOKE/phase-20R/breakdown_scan_transfer_smoke.json")
     if not path.exists():
         pytest.skip("scan smoke artifact not present")
     scans = json.loads(path.read_text(encoding="utf-8"))["scans"]

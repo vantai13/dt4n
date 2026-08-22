@@ -26,7 +26,7 @@ RHOS = (0.850, 0.925)
 SEEDS = tuple(range(101, 109))
 N_BOOT = 10_000
 BOOT_SEED = 20260821
-OUT = "results/phase-23/relative_differential_campaign.json"
+OUT = "results/SUPERSEDED/phase-23/relative_differential_campaign.json"
 ORIGINAL_CI90 = (-0.0101350817936804, -0.008908490679519442)
 
 

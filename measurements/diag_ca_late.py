@@ -35,9 +35,9 @@ from twin import topology_v7 as T7
 from mininet.topology_tandem import TANDEM_LINKS
 
 
-APRIME_RAW = "results/phase-20R/raw_additivity_budgetfix"
-CAMPAIGN_STATES = ("results/phase-20R/campaign_state.json", "results/phase-L/campaign_state.json")
-OUT = "results/phase-20R/diag_ca_late.json"
+APRIME_RAW = "results/SUPERSEDED/phase-20R/raw_additivity_budgetfix"
+CAMPAIGN_STATES = ("results/SUPERSEDED/phase-20R/campaign_state.json", "results/SUPERSEDED/phase-L/campaign_state.json")
+OUT = "results/SUPERSEDED/phase-20R/diag_ca_late.json"
 RHO_BAR = 0.925
 RHO_TOL = 0.021
 MODES = ("poisson", "h2")
@@ -228,8 +228,8 @@ def compare(
 
 def burstiness_sensitivity(
     cells: Sequence[Dict[str, Any]],
-    truth_table: str = "results/phase-20R/truth_table.parquet",
-    check_report: str = "results/phase-20R/additivity_check_budgetfix_bg.json",
+    truth_table: str = "results/LIVE/phase-20R/truth_table.parquet",
+    check_report: str = "results/SMOKE/phase-20R/additivity_check_budgetfix_bg.json",
 ) -> List[Dict[str, Any]]:
     """How much of the loss deficit a drop in c_a can account for.
 
@@ -312,7 +312,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--campaign-states", default=",".join(CAMPAIGN_STATES))
     ap.add_argument("--rho-bar", type=float, default=RHO_BAR)
     ap.add_argument("--rho-tol", type=float, default=RHO_TOL)
-    ap.add_argument("--check-report", default="results/phase-20R/additivity_check_budgetfix_bg.json",
+    ap.add_argument("--check-report", default="results/SMOKE/phase-20R/additivity_check_budgetfix_bg.json",
                     help="report whose Aprime_minus_A_loss means are the observed deficit")
     ap.add_argument("--out", default=OUT)
     args = ap.parse_args(argv)

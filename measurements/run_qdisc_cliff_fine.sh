@@ -9,11 +9,11 @@ export PYTHONPATH="$PWD"
 
 PY="${PYTHON:-$(command -v python3)}"
 STAMP="$(date +%m%d_%H%M)"
-OUT="results/calib/cliff_fine_${STAMP}.csv"
-RAW="results/calib/cliff_fine_${STAMP}_raw.csv"
+OUT="results/SUPERSEDED/calib/cliff_fine_${STAMP}.csv"
+RAW="results/SUPERSEDED/calib/cliff_fine_${STAMP}_raw.csv"
 LOG="logs/calib/cliff_fine_${STAMP}.log"
 
-mkdir -p results/calib logs/calib
+mkdir -p results/SUPERSEDED/calib logs/calib
 sudo mn -c >/dev/null 2>&1 || true
 
 sudo -E env PYTHONPATH="$PWD" "$PY" measurements/qdisc_density_probe.py \

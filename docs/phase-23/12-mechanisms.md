@@ -1,8 +1,8 @@
 # 12 -- Lesson 23.7: conditioning va do nhay cua chan ly
 
 Code: `cert/conditioning_audit.py`  
-Artifact: `results/phase-23/conditioning_audit_*.json`  
-Hinh: `results/phase-23/fig6_conditioning_audit.png`
+Artifact: `results/SUPERSEDED/phase-23/conditioning_audit_*.json`  
+Hinh: `results/SUPERSEDED/phase-23/fig6_conditioning_audit.png`
 
 ## 1. Doi chung truoc khi doc cell giu kin
 

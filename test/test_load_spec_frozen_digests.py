@@ -2,7 +2,7 @@
 """Freeze bit-exact provenance for the Phase L / Phase T schedule generator.
 
 The digests below were extracted from the Phase L campaign
-(`results/phase-L/raw/*_tx.meta.json`) using the interpreter that ran the live
+(`results/RAW/phase-L/raw/*_tx.meta.json`) using the interpreter that ran the live
 campaign. They are the contract between Phase L and Phase T.
 
 IF THIS TEST FAILS, check in this order; do not edit the reference digests:

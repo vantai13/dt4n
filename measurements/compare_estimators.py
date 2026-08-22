@@ -103,10 +103,10 @@ def print_report(result: Mapping[str, Mapping[str, object]], offered_dt: float, 
 
 def parse_args():
     p = argparse.ArgumentParser(description="Compare rho_offered and rho_measured traces")
-    p.add_argument("--offered", default="results/phase-20/rho_offered.csv")
-    p.add_argument("--measured", default="results/phase-20/rho_measured.csv")
+    p.add_argument("--offered", default="results/SUPERSEDED/phase-20/rho_offered.csv")
+    p.add_argument("--measured", default="results/SUPERSEDED/phase-20/rho_measured.csv")
     p.add_argument("--warmup-frac", type=float, default=0.2)
-    p.add_argument("--out", default="results/phase-20/estimator_compare.json")
+    p.add_argument("--out", default="results/SUPERSEDED/phase-20/estimator_compare.json")
     return p.parse_args()
 
 

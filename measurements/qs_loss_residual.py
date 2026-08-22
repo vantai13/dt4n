@@ -29,10 +29,10 @@ from twin.link_model_v2 import LinkModelV2
 
 BW = 6.0
 Q = 13
-MODEL_PATH = "results/phase-L/link_model_v2_fit.json"
-MAIN_STATE = "results/phase-T/campaign_state.json"
-CONTROL_STATE = "results/phase-T/control_state.json"
-OUT = "results/phase-20R/qs_loss_residual.json"
+MODEL_PATH = "results/LIVE/phase-L/link_model_v2_fit.json"
+MAIN_STATE = "results/SUPERSEDED/phase-T/campaign_state.json"
+CONTROL_STATE = "results/SUPERSEDED/phase-T/control_state.json"
+OUT = "results/SUPERSEDED/phase-20R/qs_loss_residual.json"
 LOSS_SUP_NEG = -0.001
 LOSS_SUP_POS = 0.00005
 

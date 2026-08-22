@@ -14,7 +14,7 @@ dung lai va bao loi -- day la `NT-v2-20` ap nguoc len chinh script nay.
 
 Chay:
     python -m cert.lesson23_7_range_calibration \
-        --out results/phase-23/lesson23_7_range_calibration.json
+        --out results/SUPERSEDED/phase-23/lesson23_7_range_calibration.json
 """
 
 from __future__ import annotations
@@ -772,7 +772,7 @@ def _print_report(rep: Mapping[str, Any]) -> None:
 
 def main() -> None:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--out", default="results/phase-23/lesson23_7_range_calibration.json")
+    parser.add_argument("--out", default="results/SUPERSEDED/phase-23/lesson23_7_range_calibration.json")
     args = parser.parse_args()
 
     rep = build(args.out)

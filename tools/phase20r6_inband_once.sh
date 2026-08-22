@@ -19,10 +19,10 @@ SEEDS="${SEEDS:-101,102,103,104,105,106,107,108}"
 MODES="${MODES:-poisson,h2}"
 DUR="${DUR:-70}"
 
-STATE="results/phase-20R/additivity_branch_a_state_${RUN_TAG}.json"
-BG_STATE="results/phase-20R/additivity_branch_a_state_${RUN_TAG}_bg.json"
-CHECK="results/phase-20R/additivity_check_${RUN_TAG}_bg.json"
-RAW="results/phase-20R/raw_additivity_${RUN_TAG}"
+STATE="results/SUPERSEDED/phase-20R/additivity_branch_a_state_${RUN_TAG}.json"
+BG_STATE="results/SUPERSEDED/phase-20R/additivity_branch_a_state_${RUN_TAG}_bg.json"
+CHECK="results/SUPERSEDED/phase-20R/additivity_check_${RUN_TAG}_bg.json"
+RAW="results/SUPERSEDED/phase-20R/raw_additivity_${RUN_TAG}"
 mkdir -p logs "$RAW"
 
 log_msg() { printf '[%s] %s\n' "$(date -u +%Y-%m-%dT%H:%M:%SZ)" "$*"; }
@@ -70,15 +70,15 @@ run_logged "additivity check" "logs/20r6_${RUN_TAG}_03_check.log" \
 
 run_logged "c_a / late / probe injection" "logs/20r6_${RUN_TAG}_04_ca.log" \
   python3 -m measurements.diag_ca_late --aprime-raw "$RAW" \
-  --out "results/phase-20R/diag_ca_late_${RUN_TAG}.json"
+  --out "results/SUPERSEDED/phase-20R/diag_ca_late_${RUN_TAG}.json"
 
 log_msg "ALL DONE"
 log_msg "  state : $STATE"
 log_msg "  check : $CHECK"
-log_msg "  c_a   : results/phase-20R/diag_ca_late_${RUN_TAG}.json"
+log_msg "  c_a   : results/SUPERSEDED/phase-20R/diag_ca_late_${RUN_TAG}.json"
 echo
 echo "So sanh voi lan chay out-of-band:"
 echo "  python3 -m measurements.g6_differential \\"
-echo "    --diag-ca results/phase-20R/diag_ca_late_${RUN_TAG}.json \\"
+echo "    --diag-ca results/SUPERSEDED/phase-20R/diag_ca_late_${RUN_TAG}.json \\"
 echo "    --check-report $CHECK \\"
-echo "    --out results/phase-20R/g6_differential_${RUN_TAG}.json"
+echo "    --out results/SUPERSEDED/phase-20R/g6_differential_${RUN_TAG}.json"

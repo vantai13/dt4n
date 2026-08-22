@@ -56,32 +56,32 @@ def paired_summary(xs: np.ndarray) -> dict:
 
 def parse_args() -> argparse.Namespace:
     p = argparse.ArgumentParser(description=__doc__)
-    p.add_argument("--offered-summary", default="results/phase-20/between_trace_summary_n5.json")
+    p.add_argument("--offered-summary", default="results/SUPERSEDED/phase-20/between_trace_summary_n5.json")
     p.add_argument(
         "--offered-runs",
         default=",".join(
-            "results/phase-20/decision_error_trace_s%d.json" % i for i in range(5)
+            "results/SUPERSEDED/phase-20/decision_error_trace_s%d.json" % i for i in range(5)
         ),
     )
     p.add_argument(
         "--measured-summary",
-        default="results/phase-20/decision_error_measured_fixed_replicates_summary.json",
+        default="results/SUPERSEDED/phase-20/decision_error_measured_fixed_replicates_summary.json",
     )
     p.add_argument(
         "--measured-runs",
         default=",".join(
-            "results/phase-20/decision_error_measured_fixed_trace_s%d.json" % i
+            "results/SUPERSEDED/phase-20/decision_error_measured_fixed_trace_s%d.json" % i
             for i in range(5)
         ),
     )
     p.add_argument(
         "--measured-traces",
         default=",".join(
-            ["results/phase-20/rho_measured_long.csv"]
-            + ["results/phase-20/rho_measured_long_s%d.csv" % i for i in range(1, 5)]
+            ["results/SUPERSEDED/phase-20/rho_measured_long.csv"]
+            + ["results/SUPERSEDED/phase-20/rho_measured_long_s%d.csv" % i for i in range(1, 5)]
         ),
     )
-    p.add_argument("--out", default="results/phase-20/measured_fixed_crosscheck_diagnostic_n5.json")
+    p.add_argument("--out", default="results/SUPERSEDED/phase-20/measured_fixed_crosscheck_diagnostic_n5.json")
     return p.parse_args()
 
 

@@ -5,17 +5,17 @@ ROOT="${ROOT:-$HOME/dt4n}"
 cd "$ROOT"
 export PYTHONPATH="$PWD"
 export PYTHONUNBUFFERED="${PYTHONUNBUFFERED:-1}"
-mkdir -p logs results/phase-20R
+mkdir -p logs results/SUPERSEDED/phase-20R
 
 RUN_TAG="${RUN_TAG:-budgetfix}"
 SMOKE_REPS="${SMOKE_REPS:-5}"
-RAW_ADD="results/phase-20R/raw_additivity_${RUN_TAG}"
-APRIME_STATE="results/phase-20R/additivity_branch_a_state_${RUN_TAG}.json"
-APRIME_BG_STATE="results/phase-20R/additivity_branch_a_state_${RUN_TAG}_bg.json"
-B_STATE="results/phase-20R/additivity_branch_b_state_${RUN_TAG}.json"
-B_BG_STATE="results/phase-20R/additivity_branch_b_state_${RUN_TAG}_bg.json"
-C_STATE="results/phase-20R/additivity_branch_c_state_${RUN_TAG}.json"
-ADD_CHECK="results/phase-20R/additivity_check_${RUN_TAG}.json"
+RAW_ADD="results/SUPERSEDED/phase-20R/raw_additivity_${RUN_TAG}"
+APRIME_STATE="results/SUPERSEDED/phase-20R/additivity_branch_a_state_${RUN_TAG}.json"
+APRIME_BG_STATE="results/SUPERSEDED/phase-20R/additivity_branch_a_state_${RUN_TAG}_bg.json"
+B_STATE="results/SUPERSEDED/phase-20R/additivity_branch_b_state_${RUN_TAG}.json"
+B_BG_STATE="results/SUPERSEDED/phase-20R/additivity_branch_b_state_${RUN_TAG}_bg.json"
+C_STATE="results/SUPERSEDED/phase-20R/additivity_branch_c_state_${RUN_TAG}.json"
+ADD_CHECK="results/SUPERSEDED/phase-20R/additivity_check_${RUN_TAG}.json"
 
 DRY_RUN=0
 if [[ "${1:-}" == "--dry-run" ]]; then
@@ -172,7 +172,7 @@ PY
 }
 
 require_quasistatic_state_ok() {
-  local state="results/phase-20R/quasistatic_state.json"
+  local state="results/SUPERSEDED/phase-20R/quasistatic_state.json"
   log_msg "CHECK quasistatic state=${state}"
   if [[ "$DRY_RUN" == "1" ]]; then
     return 0
@@ -208,7 +208,7 @@ require_quasistatic_analysis_ok() {
   fi
   python3 - <<'PY'
 import json
-path = "results/phase-20R/quasistatic_check.json"
+path = "results/SUPERSEDED/phase-20R/quasistatic_check.json"
 with open(path, "r", encoding="utf-8") as f:
     report = json.load(f)
 summary = report.get("summary", {})
@@ -276,7 +276,7 @@ run_logged "B5 quasistatic live" "logs/20r6_04_quasistatic.log" \
   sudo -n env PYTHONPATH="$PWD" PYTHONUNBUFFERED=1 python3 -m measurements.quasistatic_check \
   --live --duration 600 --tau 1.0 --rho-bar 0.925 --mode poisson \
   --seeds 101,102,103 \
-  --state results/phase-20R/quasistatic_state.json
+  --state results/SUPERSEDED/phase-20R/quasistatic_state.json
 require_quasistatic_state_ok
 
 run_logged "B6 additivity analyze" "logs/20r6_05_additivity_analyze.log" \
@@ -293,6 +293,6 @@ cleanup_mininet
 log_msg "ALL DONE. Outputs:"
 printf '  %s\n' \
   "$ADD_CHECK" \
-  "results/phase-20R/quasistatic_check.json" \
+  "results/SUPERSEDED/phase-20R/quasistatic_check.json" \
   "logs/20r6_05_additivity_analyze.log" \
   "logs/20r6_06_quasistatic_analyze.log"

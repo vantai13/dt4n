@@ -4,7 +4,7 @@
 This compatibility entry point matches the command used in the Lesson notes:
 
     sudo -E env PYTHONPATH="$PWD" python3 measurements/calib_composition.py \
-        --repeats 8 --duration 8 --out results/calib/raw_composition.csv
+        --repeats 8 --duration 8 --out results/SUPERSEDED/calib/raw_composition.csv
 
 It starts the routing Ryu controller in the ``sdn_net`` conda environment,
 runs several path loads through the 8-node routing topology, writes raw CSV
@@ -126,7 +126,7 @@ def stop_controller(proc, log_f) -> None:
 
 def parse_args(argv: Iterable[str] | None = None):
     p = argparse.ArgumentParser(description="Lesson 9.0 measurement B composition")
-    p.add_argument("--out", default="results/calib/raw_composition.csv")
+    p.add_argument("--out", default="results/SUPERSEDED/calib/raw_composition.csv")
     p.add_argument("--rates", default="1.5,3.2,4.4",
                    help="comma-separated offered Mbps values")
     p.add_argument("--repeats", type=int, default=8)

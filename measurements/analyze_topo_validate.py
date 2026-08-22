@@ -72,7 +72,7 @@ def corr(xs, ys):
 
 def parse_args(argv: Iterable[str] | None = None):
     p = argparse.ArgumentParser(description="Analyze Lesson 9.0 path composition")
-    p.add_argument("--csv", default="results/calib/raw_topo_validate.csv")
+    p.add_argument("--csv", default="results/SUPERSEDED/calib/raw_topo_validate.csv")
     return p.parse_args(argv)
 
 

@@ -22,6 +22,8 @@ from typing import Any, Dict, List
 
 import pytest
 
+from measurements import path_map
+
 CALIBRATION_SCRIPTS = (
     "lesson23_7_range_calibration",
     "lesson23_7_feasibility",
@@ -84,7 +86,7 @@ def test_module_nen_khong_import_vong():
 def test_hai_buoc_sau_ghim_sha256_buoc_truoc():
     """Neu buoc truoc bi chay lai, buoc sau phai do ngay, khong lech am tham."""
     for name in ("lesson23_7_feasibility", "lesson23_7_calibration_2b"):
-        path = "results/phase-23/%s.json" % name
+        path = "results/SUPERSEDED/phase-23/%s.json" % name
         if not os.path.exists(path):
             pytest.skip("chua chay %s" % name)
         with open(path, "r", encoding="utf-8") as fh:
@@ -92,7 +94,13 @@ def test_hai_buoc_sau_ghim_sha256_buoc_truoc():
         pinned = prov.get("pins_previous_step")
         assert pinned is not None, name
         assert pinned["sha256"], name
-        assert os.path.exists(pinned["path"]), pinned["path"]
+        # Lesson 23.17: pin ghi duong dan TAI THOI DIEM KY. Sau khi phan tang
+        # results/, vi tri doi nhung ban ghi lich su thi khong duoc sua ->
+        # tra qua results/PATH_MAP.tsv thay vi viet lai provenance.
+        assert path_map.exists(pinned["path"]), (
+            "%s: pin tro toi %r, khong tim thay ke ca sau khi tra PATH_MAP"
+            % (name, pinned["path"])
+        )
 
 
 # ---------------------------------------------------------------------------
@@ -134,7 +142,7 @@ def test_refactor_khong_doi_mot_con_so_nao(name, tmp_path):
     """Chay lai script va doi chieu tung con so voi artifact da commit."""
     import importlib
 
-    artifact = "results/phase-23/%s.json" % name
+    artifact = "results/SUPERSEDED/phase-23/%s.json" % name
     if not os.path.exists(artifact):
         pytest.skip("chua co artifact %s" % artifact)
     with open(artifact, "r", encoding="utf-8") as fh:

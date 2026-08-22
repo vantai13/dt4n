@@ -23,7 +23,7 @@ from mininet.topology_split_qdisc import (
 
 
 PORT = 5555
-RAW = "results/phase-L/raw"
+RAW = "results/RAW/phase-L/raw"
 LG = "python3 -m measurements.load_gen"
 PB = "python3 -m measurements.owd_probe"
 
@@ -258,8 +258,8 @@ def main() -> None:
         and report["checks"]["V-L4"]["smoke_order_pass"]
         and report["checks"]["V-L7"]["pass"]
     )
-    os.makedirs("results/phase-L", exist_ok=True)
-    path = "results/phase-L/l4_loadgen_%s.json" % stamp
+    os.makedirs("results/SUPERSEDED/phase-L", exist_ok=True)
+    path = "results/SUPERSEDED/phase-L/l4_loadgen_%s.json" % stamp
     with open(path, "w", encoding="utf-8") as f:
         json.dump(report, f, indent=2, sort_keys=True)
     print("\nGhi -> %s" % path)

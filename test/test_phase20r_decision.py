@@ -622,7 +622,7 @@ def test_paths_do_not_share_one_link_class_multiset():
 
 def test_g6_differential_keeps_the_sign_of_the_shift():
     """max|.| hides direction, and direction decides how a number may be stated."""
-    report = json.load(open("results/phase-20R/g6_differential_inband.json"))
+    report = json.load(open("results/SUPERSEDED/phase-20R/g6_differential_inband.json"))
 
     for block in report["modes"].values():
         for row in block["sensitivity"]:
@@ -640,7 +640,7 @@ def test_g6_differential_keeps_the_sign_of_the_shift():
 
 
 def test_additivity_band_flags_only_cells_the_band_actually_flips():
-    report = json.load(open("results/phase-20R/additivity_band_sawtooth.json"))
+    report = json.load(open("results/SUPERSEDED/phase-20R/additivity_band_sawtooth.json"))
     rows = report["rows"]
 
     # A cell already under the floor at baseline was never in the G2 set; only a
@@ -653,7 +653,7 @@ def test_additivity_band_flags_only_cells_the_band_actually_flips():
 
 
 def test_fragility_index_tracks_the_width_of_the_dsla_band():
-    report = json.load(open("results/phase-20R/additivity_band_sawtooth.json"))
+    report = json.load(open("results/SUPERSEDED/phase-20R/additivity_band_sawtooth.json"))
     rows = [r for r in report["rows"] if r["g2_baseline"] == "DAT"]
     frag = np.array([r["fragility_index"] for r in rows])
     width = np.array([r["d_sla_hi"] - r["d_sla_lo"] for r in rows])

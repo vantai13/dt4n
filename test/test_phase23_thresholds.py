@@ -12,7 +12,7 @@ from cert import fallback as FB
 from cert import threshold_families as TF
 
 
-ARTIFACT = "results/phase-22/calib_set_v3.parquet"
+ARTIFACT = "results/SUPERSEDED/phase-22/calib_set_v3.parquet"
 
 
 @pytest.fixture(scope="module")
@@ -211,8 +211,8 @@ def test_run_report_preserves_cell_label_and_input_provenance(raw: pd.DataFrame)
     out = TF.run_report(
         raw,
         cell_label="unit@test",
-        input_path="results/phase-22/unit.parquet",
+        input_path="results/SUPERSEDED/phase-22/unit.parquet",
         n_boot=3,
     )
     assert out["cell"] == "unit@test"
-    assert out["provenance"]["input"] == "results/phase-22/unit.parquet"
+    assert out["provenance"]["input"] == "results/SUPERSEDED/phase-22/unit.parquet"

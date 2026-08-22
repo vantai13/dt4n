@@ -35,9 +35,9 @@ TAU_SENS = (0.2, 1.0, 5.0)
 A_SENS = (0.2, 0.9)
 SCALING_RATIOS = (0.10, 0.30, 0.55, 1.00)
 N = 200_000
-FIT_PATH = "results/phase-L/link_model_v2_fit.json"
-CAL_PATH = "results/phase-20R/sla_calibration.json"
-OUT_PATH = "results/phase-20R/prediction_pre_campaign.json"
+FIT_PATH = "results/LIVE/phase-L/link_model_v2_fit.json"
+CAL_PATH = "results/LIVE/phase-20R/sla_calibration.json"
+OUT_PATH = "results/SUPERSEDED/phase-20R/prediction_pre_campaign.json"
 DOC_PATH = "docs/phase-20R/02-prediction.md"
 AMENDMENT_PATH = "docs/phase-20R/00d-amendment-3.md"
 FIGURE_PATH = "docs/phase-20R/figures/err_scaling_z_over_tau.svg"
@@ -403,8 +403,8 @@ def run_predictions(
             "measurements/predict_err_quick.py": sha256_file("measurements/predict_err_quick.py"),
             "measurements/sla_calib_v2.py": sha256_file("measurements/sla_calib_v2.py"),
             "twin/cost_v2.py": sha256_file("twin/cost_v2.py"),
-            "results/phase-20R/sla_calibration.json": sha256_file(cal_path),
-            "results/phase-L/link_model_v2_fit.json": sha256_file(fit_path),
+            "results/LIVE/phase-20R/sla_calibration.json": sha256_file(cal_path),
+            "results/LIVE/phase-L/link_model_v2_fit.json": sha256_file(fit_path),
         },
         "sla_calibration_summary": cal_report["summary"],
         "main": main,

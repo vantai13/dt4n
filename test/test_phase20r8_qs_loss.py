@@ -9,7 +9,7 @@ from measurements import qs_loss_residual as QL
 
 
 def test_qs_loss_reconstructs_the_phase_t_trajectory():
-    rows = json.load(open("results/phase-T/campaign_state.json", encoding="utf-8"))["rows"]
+    rows = json.load(open("results/SUPERSEDED/phase-T/campaign_state.json", encoding="utf-8"))["rows"]
     row = next(
         r
         for r in rows
@@ -28,7 +28,7 @@ def test_qs_loss_reconstructs_the_phase_t_trajectory():
 
 
 def test_qs_loss_artifact_closes_poisson_but_not_h2():
-    report = json.load(open("results/phase-20R/qs_loss_residual.json", encoding="utf-8"))
+    report = json.load(open("results/SUPERSEDED/phase-20R/qs_loss_residual.json", encoding="utf-8"))
     poisson = report["summary"]["headline"]["poisson_a0p9"]
     h2 = report["summary"]["headline"]["h2_a0p9"]
 
@@ -45,7 +45,7 @@ def test_qs_loss_artifact_closes_poisson_but_not_h2():
 
 
 def test_qs_loss_a09_is_larger_than_a02_for_poisson():
-    report = json.load(open("results/phase-20R/qs_loss_residual.json", encoding="utf-8"))
+    report = json.load(open("results/SUPERSEDED/phase-20R/qs_loss_residual.json", encoding="utf-8"))
     mode_a = report["summary"]["mode_a"]
     a02 = mode_a["mode=poisson,a=0.2"]["seed_cluster_packet_weighted_normal"]["mean"]
     a09 = mode_a["mode=poisson,a=0.9"]["seed_cluster_packet_weighted_normal"]["mean"]

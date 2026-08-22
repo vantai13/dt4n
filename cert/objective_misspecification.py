@@ -20,8 +20,8 @@ from measurements.decision_error_v2 import TruthTable
 
 AMENDMENT = "docs/phase-23/00zo-amendment-38.md"
 FALLBACK_ARTIFACT = F.OUTPUT
-OUTPUT = "results/phase-23/objective_misspecification_sweep.json"
-FIGURE = "results/phase-23/fig2_objective_misspecification.png"
+OUTPUT = "results/SUPERSEDED/phase-23/objective_misspecification_sweep.json"
+FIGURE = "results/SUPERSEDED/phase-23/fig2_objective_misspecification.png"
 RATIOS = tuple(float(x) for x in np.linspace(0.5, 1.5, 11))
 CELL_META = {
     "poisson@0.925": {"mode": "poisson", "rho_bar": 0.925, "slug": "poisson_0.925"},
@@ -31,7 +31,7 @@ CELL_META = {
 
 
 def _relative_artifact(cell: str) -> str:
-    return "results/phase-23/residual_relative_audit_%s.json" % CELL_META[cell]["slug"]
+    return "results/SUPERSEDED/phase-23/residual_relative_audit_%s.json" % CELL_META[cell]["slug"]
 
 
 def _measured_ratio(cell: str) -> float:

@@ -19,7 +19,7 @@ MODES = ("clean", "prod")
 RHOS = (0.700, 0.850, 0.900, 0.925, 0.960)
 REPS = (1, 2, 3)
 SEED = 23843
-OUTDIR = "results/phase-23/aoi_v7_campaign"
+OUTDIR = "results/RAW/phase-23/aoi_v7_campaign"
 
 
 def frozen_schedule() -> list[Dict[str, Any]]:

@@ -244,7 +244,7 @@ def parse_args(argv: Iterable[str] | None = None):
     ap.add_argument("--duration", type=float, default=60.0)
     ap.add_argument("--interval", type=float, default=0.2)
     ap.add_argument("--iperf-grace", type=float, default=5.0)
-    ap.add_argument("--out", default="results/calib/raw_aoi_routing.csv")
+    ap.add_argument("--out", default="results/SUPERSEDED/calib/raw_aoi_routing.csv")
     return ap.parse_args(argv)
 
 

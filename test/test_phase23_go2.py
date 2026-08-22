@@ -10,7 +10,7 @@ import pytest
 import cert.go2_simultaneous as G2
 from cert.conformal_simultaneous import _slot_cols
 
-CALIB = "results/phase-22/calib_set_v3_poisson_0.925.parquet"
+CALIB = "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet"
 needs_data = pytest.mark.skipif(not os.path.exists(CALIB), reason="thieu artifact v3")
 
 
@@ -107,7 +107,7 @@ def test_C7_global_draw_covers_every_bin(struct):
 def test_C8_point_estimate_reproduces_phase22_qhat(struct):
     """picks = arange(n) phai tai lap qhat cua fit_eval_simultaneous.
     Day la neo giu duong ong moi khong troi khoi Phase 22."""
-    with open("results/phase-22/conformal_sim_poisson_0.925.json", encoding="utf-8") as f:
+    with open("results/SUPERSEDED/phase-22/conformal_sim_poisson_0.925.json", encoding="utf-8") as f:
         ref = json.load(f)
     nb = struct["n_blocks"]
     m = struct["m"]
