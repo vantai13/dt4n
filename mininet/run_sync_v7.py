@@ -89,6 +89,7 @@ LINK_ENDPOINTS = {
 ACCESS_BW_MBPS = 1000.0
 ACCESS_DELAY_MS = 0.1
 V7_SPEC = "ditto/topology_v7_spec.json"
+TRAFFIC_RHO_CEILING = 0.995
 
 MEASURED_CSV_FIELDS = (
     "sample_index",
@@ -99,6 +100,33 @@ MEASURED_CSV_FIELDS = (
     "tx_bytes_delta",
     "dt_s",
 )
+
+
+def feasible_traffic_rho_targets(rho_bar: float) -> Dict[str, float]:
+    """Project model rho offsets into the physical generator domain.
+
+    ``cost_v2.rho_vector`` intentionally permits overload up to 1.05, whereas
+    the stationary flow generator requires every target to be below one.  Use
+    the closest common-shift/clipping projection while preserving ``rho_bar``.
+    """
+    raw = C.rho_vector(float(rho_bar))
+    target_sum = float(rho_bar) * len(T7.LINK_NAMES)
+    low, high = -2.0, 2.0
+    for _ in range(100):
+        shift = (low + high) / 2.0
+        total = sum(
+            min(TRAFFIC_RHO_CEILING, max(1e-6, raw[name] + shift))
+            for name in T7.LINK_NAMES
+        )
+        if total < target_sum:
+            low = shift
+        else:
+            high = shift
+    shift = (low + high) / 2.0
+    return {
+        name: min(TRAFFIC_RHO_CEILING, max(1e-6, raw[name] + shift))
+        for name in T7.LINK_NAMES
+    }
 OFFERED_CSV_FIELDS = (
     "sample_index",
     "timestamp_s",
@@ -651,7 +679,7 @@ def main() -> None:
     offered_out = args.out or args.offered_out
 
     link_caps = link_caps_from_topology()
-    rho_targets = C.rho_vector(float(args.rho_bar))
+    rho_targets = feasible_traffic_rho_targets(float(args.rho_bar))
     profile = traffic_profile(
         link_caps=link_caps,
         rho_targets=rho_targets,

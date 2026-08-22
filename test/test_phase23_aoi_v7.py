@@ -9,6 +9,7 @@ from measurements import aoi_probe_v7 as PROBE
 from measurements import aoi_estimate_v7 as ESTIMATE
 from measurements import run_aoi_campaign_v7 as CAMPAIGN
 from twin import topology_v7 as T7
+from mininet.run_sync_v7 import feasible_traffic_rho_targets
 
 
 def test_probe_counterbalances_order_and_records_individual_observation(monkeypatch):
@@ -165,3 +166,18 @@ def test_campaign_schedule_is_frozen_randomized_full_factorial():
     assert [row["order"] for row in schedule] == list(range(1, 31))
     assert schedule == CAMPAIGN.frozen_schedule()
     assert schedule[0]["tag"] == "prod_rho0.700_rep3"
+
+
+def test_high_rho_projection_preserves_campaign_mean_and_generator_domain():
+    targets = feasible_traffic_rho_targets(0.960)
+    assert sum(targets.values()) / len(targets) == pytest.approx(0.960)
+    assert max(targets.values()) == pytest.approx(0.995)
+    assert all(0.0 < value < 1.0 for value in targets.values())
+
+
+def test_feasible_rho_projection_is_identity_when_raw_vector_is_valid():
+    targets = feasible_traffic_rho_targets(0.925)
+    assert targets == pytest.approx({
+        "uA": 0.8575, "uB": 0.8775, "ac": 0.9775, "ad": 0.9875,
+        "bc": 0.9725, "bd": 0.9825, "vC": 0.8575, "vD": 0.8875,
+    })
