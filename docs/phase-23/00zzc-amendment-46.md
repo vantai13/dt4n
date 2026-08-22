@@ -1,7 +1,12 @@
-# AMENDMENT 23-47 -- Chan doan lay mau probe truoc khi xay mo hinh AoI
+# AMENDMENT 23-46 -- Chan doan lay mau probe truoc khi xay mo hinh AoI
 
 Ngay ky : 2026-08-22
-Tag     : amendment-47
+Tag     : amendment-46
+Ghi chu : Ban ke hoach 23.19 goi amendment nay la "23-47". Danh so trong repo
+          phai LIEN TUC tu 1 (`test_phase23_gate_ledger.py::
+          test_amendment_numbers_are_contiguous_from_one`, khoa boi Amendment
+          23-26 muc 0); amendment gan nhat la 23-45c, nen so dung la **23-46**.
+          Da doi truoc khi push -- khong co ban ghi nao bi viet lai.
 Lesson  : 23.19 Task A
 Loai    : PREREGISTRATION + mot CORRECTION (muc 1)
 

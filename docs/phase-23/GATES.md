@@ -134,7 +134,11 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-87 | 23.18b | PASS | d = 115.50 ms qua 3 duong doc lap voi hang so bias, trai 13.25 ms; bias DO DUOC 53.01 ms (M-93) |
 | G23-88 | 23.18b | PASS | co che vong PATCH duoc DO: Var(d)~E[d] R2=0.8410 giao truc 151.89 ms (M-98); slope theo vi tri that 3.035 ms R2=0.7120 (M-99) |
 | G23-89 | 23.18b | PASS | corr(AoI,rho) TRONG link sau cat warm-up = +0.0263; giua-link -0.9134 la confounding (amendment 23-45c) |
-| G23-90 | 23.18b | FAIL | KS vs Uniform[d,d+T]: D = 0.03093 > 0.03. Lech 2% da dinh danh (alpha tron 8 rang cua lech pha) -> positive control cho 23.19 |
+| G23-90 | 23.18b | FAIL | KS vs Uniform[d,d+T]: D = 0.03093 > 0.03. Nguyen nhan XAC DINH o Lesson 23.19 Task A: probe lay mau khoa tuong uoc (luoc 5 rang), KHONG phai alpha -- xem amendment 23-46 muc 2 |
+| G23-91 | 23.19A | PASS | `docs/phase-23/00zzc-amendment-46.md`, commit rieng, tag `amendment-46` |
+| G23-92 | 23.19A | PASS | phan xu bang cong thuc (nguong khoa o amendment 23-46 muc 6): M-100 0.18063 / M-101 0.12812 / M-103 152.0 -> H7_BIASED_MUST_CORRECT |
+| G23-93 | 23.19A | PASS | muc tieu selfcheck duoc hieu chinh: mo hinh hoa CA NHAC CU roi so qua probe mo phong (`23-sampling-diagnostic.md` muc 6) |
+| G23-94 | 23.19A | PASS | sai so lay mau len `d`: +/-6.5 ms (95%), mo phong lai dung dieu kien do duoc |
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
@@ -173,6 +177,11 @@ Ba ma nay duoc dinh nghia nhung khong xuat hien trong bang gate cua
 vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 
 ## Gate tu 74 tro len
+
+`G23-91 .. G23-94` (lesson `23.19A`) la Task A cua Lesson 23.19. Ban ke hoach
+23.19 danh so tu 91 den 102 (theo cach danh so cua ban ke hoach), nhung `G23-97 .. G23-99` DA duoc cap cho
+Lesson 23.20 boi amendment 23-44 muc 5. Gate cua Task B..E se lay tu so 100 tro len. Day la va cham ma thu hai (truoc do la `L29`); so `LIMITS.md` van chua
+duoc tao.
 
 `G23-86 .. G23-90` (lesson `23.18b`) la vong RA SOAT cua Lesson 23.18, mo boi
 amendment 23-45b (bug cong thuc null) va 23-45c (sua ket luan T5).
