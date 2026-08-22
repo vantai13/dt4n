@@ -70,11 +70,17 @@ truc sai lang le vao paper).
 ## 5. Doi chung
 
 ```text
-Test suite TRUOC phan tang    1060 passed,  5 skipped,  0 failed   (531 s)
-Test suite SAU  phan tang     1060 passed,  5 skipped,  0 failed   (534 s)
-git diff --name-status         4061 R,  0 D      <- KHONG file nao bi xoa
-.gitignore viet lai            danh sach ignore truoc/sau IDENTICAL
-                               tren layout cu (2201 = 2201)
+TRUOC phan tang         1060 passed,  5 skipped,  0 failed    531 s
+NGAY SAU phan tang      1057 passed,  5 skipped,  3 failed    534 s
+SAU khi sua 3 rao chan  1063 passed, 10 skipped,  0 failed    548 s
+
+Doi chieu con so: 1063 = 1060 + 3 test moi cua test_no_stale_axes.py
+                    10 =    5 + 5 file json trong LIVE/ deu legacy-exempt
+-> khong test cu nao bi mat, khong test cu nao bi doi thanh skip.
+
+git diff --name-status  4061 R,  0 D       <- KHONG file nao bi xoa
+.gitignore viet lai     danh sach ignore truoc/sau IDENTICAL tren
+                        layout cu (2201 = 2201)
 ```
 
 Ba test that bai sau phan tang, ca ba deu la mot rao chan lam dung viec:
