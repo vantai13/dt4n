@@ -40,6 +40,17 @@ _REGISTRY_PATH = os.path.join(_REPO, "docs", "phase-23", "axis_registry.json")
 UNREGISTERED = "UNREGISTERED"
 SCHEMA = "dt4n.validity.v1"
 
+# Vai tro cua artifact doi voi TRUC tuoi. Hai vai tro nay khac nhau ve
+# nguyen tac, khong phai ve muc do:
+#   CONSUMES  artifact DUNG truc z de tinh ra ket qua. Truc sai -> ket qua
+#             chi dung co dieu kien. Phai cho truc duoc DUYET moi vao LIVE.
+#   MEASURES  artifact DO CHINH truc z (hoac chinh nhac cu do no). No khong
+#             the bi lam sai boi cai ma no dang do. Vao LIVE duoc ngay.
+# Day la ly do NGAM cua LEGACY_EXEMPT trong test_no_stale_axes.py; Lesson
+# 23.18 lam no TUONG MINH (amendment 23-45a).
+ROLE_CONSUMES = "consumes_axis"
+ROLE_MEASURES = "measures_axis"
+
 
 def _load_registry() -> dict:
     with open(_REGISTRY_PATH, "r", encoding="utf-8") as fh:
@@ -113,18 +124,54 @@ def validity_block(
     sla_path: str,
     w_loss: float,
     omega: float | None = None,
+    axis_role: str = ROLE_CONSUMES,
 ) -> dict[str, Any]:
     """Khoi validity hoan chinh. Moi script ghi artifact goi ham NAY.
+
+    axis_role=ROLE_MEASURES danh cho artifact DO chinh truc z (vd ket qua
+    giai phau AoI cua Lesson 23.18). Chung khong bi truc lam sai nen khong
+    phai cho `approved_for_live`.
 
     omega=None nghia la "truc chua ton tai" (truoc Lesson 23.26), khac han voi
     omega=0.0 nghia la "da do va bang khong". Gop hai trang thai nay lam mot
     la cach mat dau mot truc thi nghiem.
     """
+    if axis_role not in (ROLE_CONSUMES, ROLE_MEASURES):
+        raise ValueError("axis_role khong hop le: %r" % (axis_role,))
     return {
         "schema": SCHEMA,
+        "axis_role": axis_role,
         "aoi_axis": aoi_axis(aoi_generator),
         "sla_axis": sla_axis(sla_path),
         "z_edges": [float(x) for x in z_edges],
         "w_loss": float(w_loss),
         "omega": None if omega is None else float(omega),
+    }
+
+
+def measurement_validity_block(
+    *,
+    instrument_module: object,
+    inputs: Sequence[str],
+    note: str,
+) -> dict[str, Any]:
+    """Khoi validity cho artifact DO chinh truc z (vai tro MEASURES).
+
+    Khac `validity_block`: khong co bo sinh z, vi artifact nay khong DUNG
+    truc -- no DO ra truc. Van bam ma nguon cua NHAC CU do va sha256 cua moi
+    file dau vao, nen van la nhan SUY chu khong phai nhan KHAI.
+    """
+    src_path = inspect.getsourcefile(instrument_module)
+    return {
+        "schema": SCHEMA,
+        "axis_role": ROLE_MEASURES,
+        "instrument": {
+            "module": instrument_module.__name__,
+            "source_path": os.path.relpath(src_path, _REPO),
+            "source_sha256": _sha256_file(src_path),
+        },
+        "inputs_sha256": {
+            os.path.relpath(p, _REPO): _sha256_file(p) for p in sorted(inputs)
+        },
+        "note": note,
     }

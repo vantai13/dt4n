@@ -123,6 +123,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-76 | 23.17 | PASS | `results/MANIFEST.md` -- 7/7 dong LIVE co cot "Dung cho"; nguon nguoi dien: `results/_intent.json` |
 | G23-77 | 23.17 | PASS | `measurements/validity.py`; goi boi `cert/build_calib_set_v2.py`, `cert/build_calib_set_v3.py` |
 | G23-78 | 23.17 | PASS | `test/test_no_stale_axes.py` (3 passed, 5 skipped) + buoc "axis guard" trong `.github/workflows/tests.yml` |
+| G23-79 | 23.18 | PASS | `docs/phase-23/00zy-amendment-45.md`, commit rieng 1161da2, tag `amendment-45` |
+| G23-80 | 23.18 | PASS | `results/LIVE/phase-23/aoi_stall_anatomy.json` -> `T1_stall_positions.position_histogram_fraction_of_run`, 30/30 run |
+| G23-81 | 23.18 | PASS | phan xu tinh bang cong thuc (nguong 0.80/0.50 khoa o amendment 23-45 muc 4): M-78 = 100% -> H1_STARTUP_TRANSIENT |
+| G23-82 | 23.18 | PASS | `aoi_decomposition.json` -> `T4_d_estimate.nested_ci` (CI long nhau df=4 + CI iid + ICC) |
+| G23-83 | 23.18 | FAIL | phase trong [0, T_eff] = 89.92% (96.61% sau khu bias) < 99.5%. Nguyen nhan: bias he thong +50 ms cua probe. `22-aoi-stall-anatomy.md` muc 5 |
+| G23-84 | 23.18 | FAIL | ba cach lech 99.32 ms > 15 ms. Dieu tra: estimator `cycle_trace` do 20 Thing chu khong do 1 link -> dac ta sai. Cap KHOP dai luong lech 10.24 ms. `22-aoi-stall-anatomy.md` muc 5 |
+| G23-85 | 23.18 | PASS | `T6_prod_verdict`: sd(p05) PROD/CLEAN = 5.79x; mo hinh lay tu CLEAN, PROD la threat to validity |
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
@@ -162,6 +169,10 @@ vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 
 ## Gate tu 74 tro len
 
+`G23-74 .. G23-78` mo o Lesson 23.17; `G23-79 .. G23-85` o Lesson 23.18
+(`22-aoi-stall-anatomy.md`, amendment 23-45). `G23-83` va `G23-84` la FAIL
+duoc BAO CAO, khong phai NOT_RUN: ca hai da chay, ket qua duoi nguong, va
+nguyen nhan da xac dinh trong bao cao lesson.
 `G23-74 .. G23-78` mo o Lesson 23.17 (`21-freeze-label-tidy.md`,
 amendment 23-44). `G23-97 .. G23-99` la gate DU KIEN cua Lesson 23.20, duoc
 ghi truoc trong amendment 23-44 muc 5 de du doan khong the sua sau khi thay

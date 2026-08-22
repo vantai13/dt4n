@@ -1,12 +1,12 @@
 # MANIFEST -- kho artifact DT4N
 
-Sinh tu dong boi `tools/build_manifest.py` tai commit `9e905eb`. Cot **Dung cho** do NGUOI dien, luu trong `results/_intent.json` de khong bi ghi de.
+Sinh tu dong boi `tools/build_manifest.py` tai commit `11a4c61`. Cot **Dung cho** do NGUOI dien, luu trong `results/_intent.json` de khong bi ghi de.
 
 Bon tang (Lesson 23.17, amendment 23-44):
 
 ```text
   RAW           5849 file
-  LIVE             7 file
+  LIVE             9 file
   SUPERSEDED     373 file
   SMOKE           34 file
 ```
@@ -14,12 +14,14 @@ Bon tang (Lesson 23.17, amendment 23-44):
 `RAW/` khong liet ke tung file o day: do la du lieu do tho, Hang 1 (khong tai tao duoc), chi doc, khong bao gio ghi de. Xem `results/RAW/README.md`.
 
 
-## LIVE  (7 artifact json/parquet)
+## LIVE  (9 artifact json/parquet)
 
 | Artifact | Sinh boi | git | Ngay | Truc AoI | Truc SLA | Dung cho |
 |---|---|---|---|---|---|---|
 | `phase-20R/sla_calibration.json` | `measurements.sla_calib_v2` | `?` | 2026-08-04 | - | - | Nguong SLA + w_loss theo cell. Doc boi build_calib_set_v2/v3, cell_matrices, decomposition, eight_cell_sweep, gate_report, live_region_sweep, decision_error_v2. CANH BAO S14 (self-calibrated), thay o Lesson 23.21 |
 | `phase-23/a0_instrument_calibration.json` | `?` | `?` | ? | - | - | Hieu chuan nhac cu do A0 (M-66..M-69, NC-do-1..3). Doc boi instrument_calibration.py |
+| `phase-23/aoi_decomposition.json` | `measurements/aoi_decompose.py` | `11a4c61` | 2026-08-22 | - | - | Phan ra AoI = d_transport + phase (Lesson 23.18 T3-T6). Chot d = 114.11 ms; dong nhat thuc alpha(l) = d_transport(l) - mean(d_transport); CI long nhau vs iid (ICC = 0); phan quyet L29 ve PROD |
+| `phase-23/aoi_stall_anatomy.json` | `measurements/aoi_stall_anatomy.py` | `11a4c61` | 2026-08-22 | - | - | Giai phau chu ky stall (Lesson 23.18 T1/T2). Phan xu H1 vs H2 vs H3; CV CLEAN sau khi cat 20 chu ky warm-up = 0.3952. Dau vao cho hinh dang aoi_model_v7 o Lesson 23.19 |
 | `phase-23/aoi_v7_estimates.json` | `?` | `71cd524` | 2026-08-22 | - | - | So do AoI tren topology_v7, 30 run x 120 s, 287.760 quan sat (Lesson 23.8). Co so SO cua amendment 23-44 va cua aoi_model_v7 se dung o Lesson 23.19/23.20 |
 | `phase-23/dsync_sensitivity.json` | `cert/dsync_sensitivity.py` | `d899a4f` | 2026-08-21 | - | - | Quet d_sync tren {51, 175, 205, 230, 260} ms. Cong cu do do nhay -- chinh no la thu do truc, nen khong the bi truc lam sai |
 | `phase-L/link_model_v2_fit.json` | `results/phase-L/campaign_state.json` | `?` | ? | - | - | Fit mo hinh link v2 tren do Phase L. Dau vao cua twin/cost_v2 (FIT_PATH); doc boi l7_fit, sla_calib_v2, t5_campaign, qs_loss_residual; **can xac nhan hinh/bang** |

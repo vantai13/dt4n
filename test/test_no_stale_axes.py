@@ -12,6 +12,7 @@ ca deu nam trong LEGACY_EXEMPT. Do la dung. Suc manh cua no the hien o Lesson
 """
 from __future__ import annotations
 
+import ast
 import glob
 import json
 import os
@@ -98,6 +99,45 @@ def test_live_artifact_has_approved_axes(path):
     )
     v = payload["validity"]
     approved = _approved()
+
+    # (1b) VAI TRO TRUC (amendment 23-45a).
+    # Artifact DO chinh truc z khong the bi lam sai boi cai no dang do, nen
+    # no khong phai cho `approved_for_live`. Nhung mien duyet KHONG phai
+    # mien kiem: no van phai ghim ma nguon nhac cu va sha256 dau vao, va
+    # KHONG duoc goi bat ky bo sinh z nao.
+    if v.get("axis_role") == "measures_axis":
+        inst = v.get("instrument", {})
+        assert inst.get("source_sha256"), (
+            f"{rel}: vai tro measures_axis nhung khong ghim sha256 ma nguon "
+            f"nhac cu.")
+        assert v.get("inputs_sha256"), (
+            f"{rel}: vai tro measures_axis nhung khong ghim sha256 dau vao.")
+        src = os.path.join(REPO, inst["source_path"])
+        assert os.path.exists(src), f"{rel}: ma nguon nhac cu khong ton tai: {src}"
+        # KHONG tin loi khai -- doc MA NGUON. Dung AST chu khong dung
+        # tim chuoi: mot cau van xuoi nhac ten bo sinh trong docstring
+        # KHONG phai la dung no.
+        with open(src, "r", encoding="utf-8") as fh:
+            tree = ast.parse(fh.read())
+        used = set()
+        for node in ast.walk(tree):
+            if isinstance(node, ast.Name):
+                used.add(node.id)
+            elif isinstance(node, ast.Attribute):
+                used.add(node.attr)
+            elif isinstance(node, ast.ImportFrom):
+                used.add(node.module or "")
+                used.update(al.name for al in node.names)
+            elif isinstance(node, ast.Import):
+                used.update(al.name for al in node.names)
+        forbidden = {"sawtooth_age_steps", "DEFAULT_D_SYNC_S", "D_SYNC",
+                     "measurements.decision_error", "cert.freshness_requirement"}
+        clash = sorted(used & forbidden)
+        assert not clash, (
+            f"{rel}: khai la measures_axis nhung nhac cu "
+            f"{inst['source_path']} THUC SU dung {clash}. Neu no DUNG truc z "
+            f"thi vai tro dung la consumes_axis.")
+        return
 
     # (2) nhan truc tuoi phai duoc DUYET
     lbl = v["aoi_axis"]["label"]

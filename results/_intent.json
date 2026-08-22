@@ -1,11 +1,12 @@
 {
-  "_note": "Cot 'Dung cho' cua results/MANIFEST.md. NGUOI dien -- may khong suy duoc Y DINH tu du lieu. Doan sau dau ';' la nguoi dung phai xac nhan hinh/bang nao trong paper.",
-
-  "LIVE/phase-20R/truth_table.parquet": "Bang tra chi phi do duoc cua Phase 20R. Doc boi decision_error_v2, cell_matrices, gate_report, build_truth_table, l6_campaign_fine, quasistatic_check; **can xac nhan hinh/bang**",
-  "LIVE/phase-20R/decision_error_by_age_by_regime.parquet": "Duong cong sai so quyet dinh tren LUOI z CO DINH [0, .05, .1, .2, .3, .55, 1, 2, 4] s. Doc boi decision_error_v2, h9_separability, plot_decision_error_v2; **can xac nhan hinh/bang**",
-  "LIVE/phase-20R/sla_calibration.json": "Nguong SLA + w_loss theo cell. Doc boi build_calib_set_v2/v3, cell_matrices, decomposition, eight_cell_sweep, gate_report, live_region_sweep, decision_error_v2. CANH BAO S14 (self-calibrated), thay o Lesson 23.21",
-  "LIVE/phase-L/link_model_v2_fit.json": "Fit mo hinh link v2 tren do Phase L. Dau vao cua twin/cost_v2 (FIT_PATH); doc boi l7_fit, sla_calib_v2, t5_campaign, qs_loss_residual; **can xac nhan hinh/bang**",
-  "LIVE/phase-23/aoi_v7_estimates.json": "So do AoI tren topology_v7, 30 run x 120 s, 287.760 quan sat (Lesson 23.8). Co so SO cua amendment 23-44 va cua aoi_model_v7 se dung o Lesson 23.19/23.20",
-  "LIVE/phase-23/dsync_sensitivity.json": "Quet d_sync tren {51, 175, 205, 230, 260} ms. Cong cu do do nhay -- chinh no la thu do truc, nen khong the bi truc lam sai",
-  "LIVE/phase-23/a0_instrument_calibration.json": "Hieu chuan nhac cu do A0 (M-66..M-69, NC-do-1..3). Doc boi instrument_calibration.py"
+ "_note": "Cot 'Dung cho' cua results/MANIFEST.md. NGUOI dien -- may khong suy duoc Y DINH tu du lieu. Doan sau dau ';' la nguoi dung phai xac nhan hinh/bang nao trong paper.",
+ "LIVE/phase-20R/truth_table.parquet": "Bang tra chi phi do duoc cua Phase 20R. Doc boi decision_error_v2, cell_matrices, gate_report, build_truth_table, l6_campaign_fine, quasistatic_check; **can xac nhan hinh/bang**",
+ "LIVE/phase-20R/decision_error_by_age_by_regime.parquet": "Duong cong sai so quyet dinh tren LUOI z CO DINH [0, .05, .1, .2, .3, .55, 1, 2, 4] s. Doc boi decision_error_v2, h9_separability, plot_decision_error_v2; **can xac nhan hinh/bang**",
+ "LIVE/phase-20R/sla_calibration.json": "Nguong SLA + w_loss theo cell. Doc boi build_calib_set_v2/v3, cell_matrices, decomposition, eight_cell_sweep, gate_report, live_region_sweep, decision_error_v2. CANH BAO S14 (self-calibrated), thay o Lesson 23.21",
+ "LIVE/phase-L/link_model_v2_fit.json": "Fit mo hinh link v2 tren do Phase L. Dau vao cua twin/cost_v2 (FIT_PATH); doc boi l7_fit, sla_calib_v2, t5_campaign, qs_loss_residual; **can xac nhan hinh/bang**",
+ "LIVE/phase-23/aoi_v7_estimates.json": "So do AoI tren topology_v7, 30 run x 120 s, 287.760 quan sat (Lesson 23.8). Co so SO cua amendment 23-44 va cua aoi_model_v7 se dung o Lesson 23.19/23.20",
+ "LIVE/phase-23/dsync_sensitivity.json": "Quet d_sync tren {51, 175, 205, 230, 260} ms. Cong cu do do nhay -- chinh no la thu do truc, nen khong the bi truc lam sai",
+ "LIVE/phase-23/a0_instrument_calibration.json": "Hieu chuan nhac cu do A0 (M-66..M-69, NC-do-1..3). Doc boi instrument_calibration.py",
+ "LIVE/phase-23/aoi_stall_anatomy.json": "Giai phau chu ky stall (Lesson 23.18 T1/T2). Phan xu H1 vs H2 vs H3; CV CLEAN sau khi cat 20 chu ky warm-up = 0.3952. Dau vao cho hinh dang aoi_model_v7 o Lesson 23.19",
+ "LIVE/phase-23/aoi_decomposition.json": "Phan ra AoI = d_transport + phase (Lesson 23.18 T3-T6). Chot d = 114.11 ms; dong nhat thuc alpha(l) = d_transport(l) - mean(d_transport); CI long nhau vs iid (ICC = 0); phan quyet L29 ve PROD"
 }
