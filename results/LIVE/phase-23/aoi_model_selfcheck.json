@@ -1,0 +1,140 @@
+{
+ "M_109b_alpha_stability": {
+  "M_109b_hit": true,
+  "M_109b_max_abs_diff_ms": 0.9701462191870256,
+  "_note": "M-109 nhu ky KHONG estimable (link x read_pos cong tuyen trong mot chieu doc). Thay bang M-109b.",
+  "alpha_published_ms": {
+   "ac": -8.690344772,
+   "ad": -8.541153302000001,
+   "bc": -8.559493550000001,
+   "bd": -6.720544039,
+   "uA": 12.110617257,
+   "uB": 17.263197251,
+   "vC": -2.6815370400000003,
+   "vD": 5.819258196
+  },
+  "alpha_recomputed_ms": {
+   "ac": -7.720198552812974,
+   "ad": -8.02084004779357,
+   "bc": -8.322465861426622,
+   "bd": -6.880654603757762,
+   "uA": 12.465197550718472,
+   "uB": 16.760072417989193,
+   "vC": -3.63541393989658,
+   "vD": 5.354303036979786
+  },
+  "beta_ms_per_pos": -1.609107002404528,
+  "design_columns": 9,
+  "design_rank": 9,
+  "diff_ms": {
+   "ac": 0.9701462191870256,
+   "ad": 0.5203132542064317,
+   "bc": 0.23702768857337908,
+   "bd": -0.16011056475776186,
+   "uA": 0.3545802937184721,
+   "uB": -0.5031248330108085,
+   "vC": -0.9538768998965796,
+   "vD": -0.46495515902021367
+  }
+ },
+ "M_110_hit": false,
+ "M_110_selfcheck": {
+  "T_ms": 500.2922,
+  "band_ms": {
+   "mean": {
+    "hi": 370.51294522319847,
+    "lo": 362.0414264079178,
+    "median": 366.4764901771978,
+    "sd": 2.581555267174807
+   },
+   "p05": {
+    "hi": 147.45546227258617,
+    "lo": 136.7386031236673,
+    "median": 141.0992940366651,
+    "sd": 3.447211425726663
+   },
+   "p50": {
+    "hi": 373.45402665719547,
+    "lo": 359.37653414868004,
+    "median": 366.73279714932346,
+    "sd": 4.515213305862159
+   },
+   "p95": {
+    "hi": 595.9186126964252,
+    "lo": 585.4392693367456,
+    "median": 591.5741931050493,
+    "sd": 3.3446300405763827
+   }
+  },
+  "d_ms": 115.9,
+  "inside": {
+   "mean": true,
+   "p05": true,
+   "p50": false,
+   "p95": false
+  },
+  "mode": "instrument",
+  "n_campaigns": 200,
+  "n_inside": 2,
+  "observed_ms": {
+   "mean": 366.07,
+   "p05": 143.612,
+   "p50": 358.141,
+   "p95": 582.604
+  },
+  "pass": false,
+  "profile": "U3"
+ },
+ "M_111_process_mode_misuse": {
+  "_note": "PC: dung nham process_mode cho selfcheck PHAI fail",
+  "hit": true,
+  "n_inside": 1,
+  "pass": false
+ },
+ "M_112_wrong_d": {
+  "_note": "PC: d = p05 PHAI fail o mean",
+  "d_ms": 143.6,
+  "hit": true,
+  "mean_band_ms": {
+   "hi": 397.7675585033015,
+   "lo": 389.7327790675611,
+   "median": 394.2539563645505,
+   "sd": 2.565108468832769
+  },
+  "mean_inside": false
+ },
+ "M_113_negative_control": {
+  "_note": "d=0.051, T=0.5, alpha=0, phase0=-d phai trung KHIT bo sinh cu. Khong bit-exact = da doi HAI thu. Chay trong bo test chu khong o day: artifact vai tro MEASURES khong duoc import bo sinh z (amendment 23-45a muc 3).",
+  "enforced_by": "test/test_phase23_aoi_model.py::test_negative_control_is_bit_exact"
+ },
+ "NC23v3_2_u0_sd": {
+  "hit": true,
+  "rel_error": 4.518798220361767e-06,
+  "sd_expected_ms": 144.42191817173506,
+  "sd_simulated_ms": 144.42257078524187
+ },
+ "lesson": "23.19",
+ "model_params": {
+  "T_ms": 500.2922,
+  "d_ci95_ms": 6.5,
+  "d_ms": 115.9,
+  "profile": "U3"
+ },
+ "prereg": "docs/phase-23/00zzd-amendment-47.md",
+ "schema": "dt4n.aoi.model_selfcheck.v1",
+ "status": "MEASUREMENT_ESTIMATE",
+ "task": "B+C",
+ "validity": {
+  "axis_role": "measures_axis",
+  "inputs_sha256": {
+   "results/LIVE/phase-23/aoi_sampling_diagnostic.json": "db684abb80ec0f6b49a6b723336f3e3c6c0bddbd123593586d57b3908f7c5826"
+  },
+  "instrument": {
+   "module": "measurements.aoi_model_selfcheck",
+   "source_path": "measurements/aoi_model_selfcheck.py",
+   "source_sha256": "58e3e3de848b70441d4aa9a695599f581ddad2d36a85ddbf9960b588c7a09ef5"
+  },
+  "note": "Artifact DO/KIEM chinh truc tuoi z va mo hinh cua no.",
+  "schema": "dt4n.validity.v1"
+ }
+}

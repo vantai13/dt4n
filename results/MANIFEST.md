@@ -1,12 +1,12 @@
 # MANIFEST -- kho artifact DT4N
 
-Sinh tu dong boi `tools/build_manifest.py` tai commit `e076a5d`. Cot **Dung cho** do NGUOI dien, luu trong `results/_intent.json` de khong bi ghi de.
+Sinh tu dong boi `tools/build_manifest.py` tai commit `5700c2b`. Cot **Dung cho** do NGUOI dien, luu trong `results/_intent.json` de khong bi ghi de.
 
 Bon tang (Lesson 23.17, amendment 23-44):
 
 ```text
   RAW           5849 file
-  LIVE            10 file
+  LIVE            11 file
   SUPERSEDED     373 file
   SMOKE           34 file
 ```
@@ -14,13 +14,14 @@ Bon tang (Lesson 23.17, amendment 23-44):
 `RAW/` khong liet ke tung file o day: do la du lieu do tho, Hang 1 (khong tai tao duoc), chi doc, khong bao gio ghi de. Xem `results/RAW/README.md`.
 
 
-## LIVE  (10 artifact json/parquet)
+## LIVE  (11 artifact json/parquet)
 
 | Artifact | Sinh boi | git | Ngay | Truc AoI | Truc SLA | Dung cho |
 |---|---|---|---|---|---|---|
 | `phase-20R/sla_calibration.json` | `measurements.sla_calib_v2` | `?` | 2026-08-04 | - | - | Nguong SLA + w_loss theo cell. Doc boi build_calib_set_v2/v3, cell_matrices, decomposition, eight_cell_sweep, gate_report, live_region_sweep, decision_error_v2. CANH BAO S14 (self-calibrated), thay o Lesson 23.21 |
 | `phase-23/a0_instrument_calibration.json` | `?` | `?` | ? | - | - | Hieu chuan nhac cu do A0 (M-66..M-69, NC-do-1..3). Doc boi instrument_calibration.py |
 | `phase-23/aoi_decomposition.json` | `measurements/aoi_decompose.py` | `e39d7ab` | 2026-08-22 | - | - | Phan ra AoI = d_transport + phase (Lesson 23.18 T3-T7). Chot d = 115.50 ms (moment, khong phu thuoc bias); co che vong PATCH do bang Var~E va vi tri that; corr(AoI,rho) trong link = +0.026; phat hien L30 (rho uA/uB sai chieu) |
+| `phase-23/aoi_model_selfcheck.json` | `?` | `?` | ? | - | - | Selfcheck + doi chung cho aoi_model_v7 (Lesson 23.19 Task B/C). M-113 NC bit-exact voi sawtooth_age_steps; M-111/M-112 chung minh selfcheck co suc phan biet; M-110 chi 2/4 (mo hinh dung o momen 1-2, sai o momen 3 vi d lech phai); M-109b alpha vung trong 0.970 ms |
 | `phase-23/aoi_sampling_diagnostic.json` | `?` | `?` | ? | - | - | Chan doan lay mau probe (Lesson 23.19 Task A). Phan xu H7_BIASED_MUST_CORRECT: probe khoa tuong uoc gan 5:1 voi vong sync (jitter chi 0.079 ms) -> phan bo AoI do duoc la mot LUOC 5 rang, KHONG phai phan bo trung binh theo thoi gian ma pipeline can. Dinh luong sai so lay mau len d: +/-6.5 ms (95%) |
 | `phase-23/aoi_stall_anatomy.json` | `measurements/aoi_stall_anatomy.py` | `3ae6390` | 2026-08-22 | - | - | Giai phau chu ky stall (Lesson 23.18 T1/T2 + vong ra soat 45b). Phan xu H1 vs H2 vs H3; sau khi cat 20 chu ky warm-up AoI la RANG CUA SACH (sd lech 0.23%, CV lech 0.000893 so voi null DUNG). Muc tieu selfcheck cho aoi_model_v7 o Lesson 23.19 |
 | `phase-23/aoi_v7_estimates.json` | `?` | `71cd524` | 2026-08-22 | - | - | So do AoI tren topology_v7, 30 run x 120 s, 287.760 quan sat (Lesson 23.8). Co so SO cua amendment 23-44 va cua aoi_model_v7 se dung o Lesson 23.19/23.20 |
