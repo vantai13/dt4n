@@ -47,6 +47,7 @@ def _summary(values: Sequence[float]) -> Dict[str, float]:
 def nc_do_1(session, thing_id: str, offset_s: float = 1.0, n: int = 20) -> Dict[str, Any]:
     values = []
     response_values = []
+    residual_ms = []
     for _ in range(int(n)):
         t_fake = time.time() - float(offset_s)
         ok = patch_thing(
@@ -63,6 +64,7 @@ def nc_do_1(session, thing_id: str, offset_s: float = 1.0, n: int = 20) -> Dict[
         if ok and t_source is not None:
             values.append(t_obs - t_source)
             response_values.append(t_response - t_source)
+            residual_ms.append((t_fake - t_source) * 1000.0)
         time.sleep(0.05)
     result = _summary(values)
     result.update(
@@ -73,8 +75,15 @@ def nc_do_1(session, thing_id: str, offset_s: float = 1.0, n: int = 20) -> Dict[
             "reader_added_mean_ms": float(
                 (np.mean(response_values) - np.mean(values)) * 1000.0
             ),
-            "pass_M_68": bool(
+            "pass_M_68_original": bool(
                 result["min_s"] >= 0.995 and result["max_s"] <= 1.010
+            ),
+            "timestamp_residual_ms": {
+                "mean": float(np.mean(residual_ms)),
+                "max_abs": float(np.max(np.abs(residual_ms))),
+            },
+            "pass_M_68b_timestamp_residual": bool(
+                float(np.max(np.abs(residual_ms))) <= 0.001
             ),
         }
     )
@@ -216,13 +225,29 @@ def _run_sync_mode(
         "all_pushes_ok": bool(all(bool(row["ok"]) for row in pushes)),
     }
     if mode == "clean":
+        spread_90 = float(result["aoi"]["p95_s"] - result["aoi"]["p05_s"])
+        d_hat = max(0.0, float(result["aoi"]["p05_s"]) - 0.05 * period)
+        cv_expected = float(
+            period / np.sqrt(12.0) / (d_hat + period / 2.0)
+        )
         result["NC_U_all_cycles_full_push"] = bool(
             all(int(row["n_pushed"]) == int(row["n_things"]) for row in cycles)
         )
-        result["pass_NC_do_2"] = bool(
+        result["pass_NC_do_2_original"] = bool(
             0.44 <= float(result["aoi"]["cv"]) <= 0.52
             and result["NC_U_all_cycles_full_push"]
         )
+        result["uniform_shape"] = {
+            "p95_minus_p05_s": spread_90,
+            "d_hat_from_p05_s": d_hat,
+            "cv_expected": cv_expected,
+            "cv_observed": float(result["aoi"]["cv"]),
+            "cv_abs_gap": abs(float(result["aoi"]["cv"]) - cv_expected),
+            "pass_NC_do_2a_spread": bool(0.42 <= spread_90 <= 0.48),
+            "pass_NC_do_2b_cv_identity": bool(
+                abs(float(result["aoi"]["cv"]) - cv_expected) <= 0.03
+            ),
+        }
     else:
         result["pass_M_69_NC_do_3"] = bool(result["aoi"]["max_s"] >= 5.0)
     return result
@@ -310,9 +335,14 @@ def run(clean_duration_s: float = 15.0, prod_duration_s: float = 60.0) -> Dict[s
             "verdict": {
                 "M_66": True,
                 "M_67": bool(smoke["pass_M_67"]),
-                "M_68": bool(nc1["pass_M_68"]),
+                "M_68b": bool(nc1["pass_M_68b_timestamp_residual"]),
                 "M_69": bool(prod["pass_M_69_NC_do_3"]),
-                "NC_do_2": bool(clean["pass_NC_do_2"]),
+                "NC_do_2a": bool(clean["uniform_shape"]["pass_NC_do_2a_spread"]),
+                "NC_do_2b": bool(clean["uniform_shape"]["pass_NC_do_2b_cv_identity"]),
+            },
+            "original_preregistered_misses": {
+                "M_68_original": not bool(nc1["pass_M_68_original"]),
+                "NC_do_2_original_CV_band": not bool(clean["pass_NC_do_2_original"]),
             },
             "environment": {
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
