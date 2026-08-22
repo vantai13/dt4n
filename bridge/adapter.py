@@ -63,7 +63,9 @@ def collector_to_things(snapshot):
         features['health'] = {'state': state}
         t_source = data.get('t_source', snapshot_ts)
         if t_source is not None:
-            features['meta'] = {'tSource': round(float(t_source), 3)}
+            # A0: millisecond quantisation is the same scale as the per-link
+            # offset estimand E3. Epoch float64 supports meaningful microseconds.
+            features['meta'] = {'tSource': round(float(t_source), 6)}
 
         # short_key dạng 'host-h1' / 'switch-s1' / 'link-h1-srv1'
         if kind == 'host' or short_key.startswith('host-'):

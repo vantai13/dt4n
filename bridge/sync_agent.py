@@ -8,7 +8,9 @@ Ba tầng chống lỗi:
   - Reconciliation (2.5): định kỳ gửi full state -> vá drift im lặng.
 """
 
+import json
 import logging
+import os
 import time
 
 from bridge.adapter import collector_to_things
@@ -49,9 +51,27 @@ def status_state_in(patch):
 
 
 def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
-        ping_every=20, net_lock=None, stop_event=None, reconcile_every=30):
-    log.info('Sync Agent start: period=%.1fs, tol=%.2f, ping_every=%d, reconcile_every=%d',
-             period, tol, ping_every, reconcile_every)
+        ping_every=20, net_lock=None, stop_event=None, reconcile_every=30,
+        measurement_mode=None, cycle_trace_path=None):
+    """Run delta sync, optionally in an explicitly traced calibration mode.
+
+    ``clean`` forces a full push every cycle; ``prod`` preserves the supplied
+    delta/reconciliation settings and only enables measurement metadata.
+    """
+    if measurement_mode not in (None, 'clean', 'prod'):
+        raise ValueError("measurement_mode phai la None, 'clean', hoac 'prod'")
+    if measurement_mode == 'clean':
+        tol = 0.0
+        reconcile_every = 1
+    if cycle_trace_path:
+        parent = os.path.dirname(os.path.abspath(cycle_trace_path))
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+    log.info(
+        'Sync Agent start: period=%.3fs, tol=%.3f, ping_every=%d, '
+        'reconcile_every=%d, mode=%s',
+        period, tol, ping_every, reconcile_every, measurement_mode,
+    )
 
     collector = Collector(net, interval=period, ping_every=ping_every,
                           net_lock=net_lock)
@@ -64,10 +84,14 @@ def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
     while (max_cycles is None or cycle < max_cycles) and not (
             stop_event is not None and stop_event.is_set()):
         cycle_start = time.monotonic()
+        t_lock_req = time.time()
 
         # ===== Bước 1: COLLECT (bọc try -> Mininet lỗi không sập agent) =====
         try:
             snapshot = collector.collect_all()
+            lock_wait_ms = (
+                float(snapshot.get('t_cycle_start', t_lock_req)) - t_lock_req
+            ) * 1000.0
             things_now = collector_to_things(snapshot)
         except Exception as e:
             log.error('Collector lỗi: %s — bỏ qua chu kỳ', e)
@@ -111,6 +135,23 @@ def run(net, period=1.0, tol=DEFAULT_TOL, log_every=10, max_cycles=None,
 
         cycle += 1
         elapsed = time.monotonic() - cycle_start
+
+        if cycle_trace_path:
+            with open(cycle_trace_path, 'a', encoding='utf-8') as handle:
+                handle.write(json.dumps({
+                    'cycle': cycle,
+                    'mode': measurement_mode,
+                    'is_reconcile': bool(is_reconcile),
+                    'n_ok': n_ok,
+                    'n_fail': n_fail,
+                    'n_things': len(things_now),
+                    'n_pushed': len(changes),
+                    'cycle_elapsed_ms': elapsed * 1000.0,
+                    'cycle_scan_ms': snapshot.get('cycle_scan_ms'),
+                    'lock_wait_ms': lock_wait_ms,
+                    'overrun': bool(elapsed > period),
+                    't_cycle_start': snapshot.get('t_cycle_start'),
+                }, sort_keys=True) + '\n')
 
         # ===== Bước 4: theo dõi sức khỏe (graceful degradation) =====
         tag = 'RECONCILE' if is_reconcile else 'delta'

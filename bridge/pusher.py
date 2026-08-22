@@ -14,6 +14,7 @@ NGUYÊN TẮC (Lesson 2.4 Phần 2):
   - Timeout BẮT BUỘC mọi request (default của requests là CHỜ VÔ HẠN - bẫy).
 """
 
+import json
 import logging
 import os
 import random
@@ -32,6 +33,7 @@ MAX_RETRIES  = 3       # số lần thử LẠI sau lần đầu (tổng tối �
 BASE_BACKOFF = 1.0     # giây — thời gian chờ gốc
 MAX_BACKOFF  = 8.0     # giây — trần chờ (không để backoff phình vô hạn)
 JITTER       = 0.3     # ±30% nhiễu ngẫu nhiên — chống thundering herd
+PUSH_TRACE_PATH = os.environ.get('DT4N_PUSH_TRACE', '')
 
 # ---- Chế độ fast-fail cho RL training/diagnostic ----
 # Production ưu tiên bền: retry kiên nhẫn để không mất update.
@@ -54,7 +56,7 @@ def compute_backoff(attempt):
     return max(0.1, base + noise)
 
 
-def patch_thing(thing_id, features_patch, session=None):
+def _do_patch(thing_id, features_patch, session=None):
     """PATCH 1 Thing, retry exponential backoff khi lỗi tạm thời.
     Trả True nếu thành công (kể cả sau retry), False nếu hết retry/lỗi vĩnh viễn."""
     if not features_patch:
@@ -115,6 +117,41 @@ def patch_thing(thing_id, features_patch, session=None):
             return False
 
     return False
+
+
+def _trace_t_source(features_patch):
+    """Extract meta.tSource from either accepted PATCH body shape."""
+    body = features_patch if isinstance(features_patch, dict) else {}
+    features = body.get('features', body)
+    try:
+        return features['meta']['properties']['tSource']
+    except (KeyError, TypeError):
+        return None
+
+
+def patch_thing(thing_id, features_patch, session=None):
+    """PATCH one Thing and optionally trace source/send/ack timestamps.
+
+    A0 keeps the original retry semantics in ``_do_patch``. Tracing is disabled
+    unless ``DT4N_PUSH_TRACE`` is set before this module is imported.
+    """
+    t_send = time.time()
+    ok = _do_patch(thing_id, features_patch, session=session)
+    t_ack = time.time()
+    if PUSH_TRACE_PATH:
+        parent = os.path.dirname(os.path.abspath(PUSH_TRACE_PATH))
+        if parent:
+            os.makedirs(parent, exist_ok=True)
+        with open(PUSH_TRACE_PATH, 'a', encoding='utf-8') as handle:
+            handle.write(json.dumps({
+                'thing_id': thing_id,
+                't_source': _trace_t_source(features_patch),
+                't_send': t_send,
+                't_ack': t_ack,
+                'push_ms': (t_ack - t_send) * 1000.0,
+                'ok': bool(ok),
+            }, sort_keys=True) + '\n')
+    return ok
 
 
 def push_changes(changes, session=None):

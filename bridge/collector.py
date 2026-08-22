@@ -564,26 +564,32 @@ class Collector:
     def collect_all(self):
         """Thu snapshot nhanh từ counter/status, không ping trong vòng nóng.
 
-        State v2 suy delay từ util counter (M/M/1), nên không còn cần path
-        latency/loss từ ping. Bỏ ping ở đây giúp sync cycle phẳng hơn.
+        A0 (Amendment 23-42b): moi Thing mang dau thoi gian rieng tai thoi
+        diem counter cua no sap duoc doc. Dau chung cho ca vong se xoa mat do
+        lech tuoi giua cac link va lam estimand E3 khong do duoc.
         """
         lock = self.net_lock if self.net_lock is not None else nullcontext()
         with lock:
-            now_ts = time.time()
-            snapshot = {'timestamp': utc_now_iso(),
-                        't_source': now_ts,
-                        'things': {}}
+            t_cycle_start = time.time()
+            snapshot = {
+                'timestamp': utc_now_iso(),
+                't_source': t_cycle_start,       # backward-compatible fallback
+                't_cycle_start': t_cycle_start,
+                'things': {},
+            }
 
             # hosts
             for host in self.net.hosts:
-                data = self.collect_host(host, now_ts)
-                data['t_source'] = now_ts
+                t_i = time.time()
+                data = self.collect_host(host, t_i)
+                data['t_source'] = t_i
                 snapshot['things']['host-%s' % host.name] = data
 
             # switches
             for sw in self.net.switches:
+                t_i = time.time()
                 data = self.collect_switch(sw)
-                data['t_source'] = now_ts
+                data['t_source'] = t_i
                 snapshot['things']['switch-%s' % sw.name] = data
 
             # physical links: cần để đo sync latency khi link up/down
@@ -595,9 +601,16 @@ class Collector:
                 if key in seen_links:
                     continue
                 seen_links.add(key)
-                data = self.collect_link(link, now_ts)
-                data['t_source'] = now_ts
+                # Timestamp before reading counters: any scan delay becomes a
+                # conservative AoI bias instead of under-reporting freshness.
+                t_i = time.time()
+                data = self.collect_link(link, t_i)
+                data['t_source'] = t_i
                 snapshot['things'][key] = data
+            snapshot['t_cycle_end'] = time.time()
+            snapshot['cycle_scan_ms'] = (
+                snapshot['t_cycle_end'] - t_cycle_start
+            ) * 1000.0
         return snapshot
 
     # ---- VÒNG LẶP chu kỳ ----

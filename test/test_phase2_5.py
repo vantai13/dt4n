@@ -170,11 +170,11 @@ things = collector_to_things(snapshot)
 host_tid = '%s:host-h1' % NAMESPACE
 path_tid = '%s:path-h1-srv1' % NAMESPACE
 check('adapter gắn meta.tSource cho host từ snapshot fallback',
-      things[host_tid]['features']['meta']['properties']['tSource'] == 1000.123)
+      things[host_tid]['features']['meta']['properties']['tSource'] == 1000.1234)
 check('adapter không vứt path Thing nữa',
       path_tid in things)
 check('adapter dùng tSource riêng của path',
-      things[path_tid]['features']['meta']['properties']['tSource'] == 1001.568)
+      things[path_tid]['features']['meta']['properties']['tSource'] == 1001.5678)
 check('adapter giữ quality của path',
       things[path_tid]['features']['quality']['properties']['latency_ms'] == 1.2)
 
