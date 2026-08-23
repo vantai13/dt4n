@@ -39,7 +39,7 @@ Hang so mac cung mot benh, chi khac ten benh: khong phai va cham ma la MO COI
 
 | K06 | `w_loss` -- ty gia doi loss sang ms trong ham chi phi | 5000 | equal-budget: `w = T_delay / T_loss = 50 / 0.01`. KHONG phai mot fit -- la dinh nghia "dung het ngan sach TRE == dung het ngan sach MAT GOI" | `00zzo-amendment-52.md` muc 2a | `sla_exogenous`, `eight_cell_sweep` (qua artifact) | -- (lua chon co nguyen tac). Do nhay: sweep {1250, 5000, 20000} |
 
-| K07 | Spearman(`t_loss_endo`, `T*`) -- do can chinh song nui | 0.9940 | `scipy.stats.spearmanr` tren 8 cap `(t_loss_endo, T*)`, `T*` = argmax `S_pivotal` tren luoi log 1.25x (32 diem) | `t_loss_fine.json` + `sla_calibration.json`; `00zzq-amendment-54.md` muc 1a | Bang chung dinh luong cua `S14` | n = 8 cap. Tren luoi THO (7 diem) cho 0.9856 -- khac nhau la do phan giai luoi, khong phai do du lieu |
+| K07 | Spearman(`t_loss_endo`, `T*`) -- do can chinh song nui | 1.0000 | `scipy.stats.spearmanr` tren BAY cap `(t_loss_endo, T*)` co `T*` XAC DINH; `T*` = argmax `S_pivotal` tren luoi log 1.25x, bo sung tu luoi cuc bo 1.05x | `t_loss_fine.json` + `t_loss_local_fine.json` + `sla_calibration.json`; `00zzq-amendment-54.md` muc 1a | Bang chung dinh luong cua `S14` | n = 7 cap. `h2@0.960` bi LOAI: cuc dai la CAO NGUYEN cham mut, `T*` khong xac dinh (`L63`). Ban truoc ghi 0.9940 tren 8 cap, trong do mot cap co `T*` sai |
 
 So ke tiep duoc cap: **K08**.
 

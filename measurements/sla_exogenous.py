@@ -110,11 +110,13 @@ RHO_GRID_SIGMA_LOW: Tuple[float, ...] = (
 # o mut, va cach dung la NOI LUOI chu khong phai goi mut la dinh.
 LOCAL_FINE: Dict[str, Tuple[float, float]] = {
     "poisson@0.960": (0.0400, 0.0900),
-    "h2@0.960": (0.1500, 0.3200),
+    "h2@0.925": (0.1500, 0.3500),     # `G23-185`: cell cuoi cung con o mut
+    "h2@0.960": (0.1500, 0.6000),     # noi de tim MEP PHAI cua cao nguyen
 }
 # Luoi 2D `(rho, sigma)` -- doi tuong THAT (`G23-179`).
 RHO_GRID_2D: Tuple[float, ...] = (
     0.600, 0.625, 0.650, 0.675, 0.700, 0.750, 0.800, 0.850, 0.900, 0.925)
+A_GRID: Tuple[float, ...] = (0.90, 0.95, 0.99)
 SIGMA_GRID_2D: Tuple[float, ...] = (
     0.004, 0.008, 0.012, 0.016, 0.020, 0.028, 0.036, 0.046, 0.058, 0.072)
 
@@ -385,6 +387,37 @@ def run_t_loss_sweep(t_delay_ms: float = 50.0, **kw) -> Dict[str, Any]:
     }
 
 
+
+def peak_diagnostics(curve, grid) -> Dict[str, Any]:
+    """Chan doan cuc dai: o MUT hay khong, va co phai CAO NGUYEN khong.
+
+    `G23-183`/`G23-184`. Ban dau co `peak_at_grid_edge` kiem CHI SO `argmax`:
+
+        argmax(curve) in (0, len(curve) - 1)          # SAI
+
+    `argmax` tra chi so DAU TIEN trong nhom bang nhau, nen khi cuc dai dat o
+    NHIEU diem (cao nguyen) va cao nguyen CHAM mut, co van bao `false`.
+    `h2@0.960` co 9/16 diem cung dat 1.0000 va cham mut phai -> bi bo lot.
+
+    Cau hoi dung khong phai "chi so argmax co o mut" ma la "GIA TRI cuc dai
+    co dat tai mut". Xem `L63`.
+    """
+    mx = float(max(curve))
+    idx = [i for i, v in enumerate(curve) if v == mx]
+    at_edge = bool(curve[0] == mx or curve[-1] == mx)
+    plateau = len(idx) > 1
+    return {
+        "max": mx,
+        "peak_at_grid_edge": at_edge,
+        "plateau": plateau,
+        "n_at_max": len(idx),
+        # `T_star` chi XAC DINH duoc khi cuc dai la DUY NHAT va KHONG o mut
+        "T_star": None if (plateau or at_edge) else grid[idx[0]],
+        "T_star_range": [grid[idx[0]], grid[idx[-1]]] if plateau else None,
+        "bracketed": bool(not plateau and not at_edge and mx > 0.0),
+    }
+
+
 def run_t_loss_fine(t_delay_ms: float = 50.0, seed: int = S14.DEFAULT_SEED,
                     n: int = S14.DEFAULT_N) -> Dict[str, Any]:
     """Luoi `T_loss` log 1.25x (32 diem) + doi chieu voi nguong NOI SINH cu.
@@ -413,20 +446,19 @@ def run_t_loss_fine(t_delay_ms: float = 50.0, seed: int = S14.DEFAULT_SEED,
             sh = regime_shares(delay, loss, t_delay_ms, tl)
             sh.pop("_viol")
             curve.append(float(sh["S_pivotal"]))
-        best = int(np.argmax(curve))
-        t_star = T_LOSS_FINE[best]
-        at_edge = best in (0, len(T_LOSS_FINE) - 1)
+        pk = peak_diagnostics(curve, list(T_LOSS_FINE))
+        ts = pk["T_star"]
         out["%s@%.3f" % (mode, rb)] = {
             "t_loss_endogenous": t_endo,
-            "T_star": None if (at_edge and curve[best] == 0.0) else t_star,
-            "S_pivotal_at_T_star": curve[best],
-            # G23-173: dinh o mut luoi -> KHONG duoc goi la dinh
-            "peak_at_grid_edge": bool(at_edge),
-            "bracketed": bool(not at_edge and curve[best] > 0.0),
-            "log2_ratio": (float(math.log2(t_endo / t_star))
-                           if t_star > 0 and t_endo > 0 else None),
+            "S_pivotal_at_T_star": pk["max"],
+            **{k: pk[k] for k in ("T_star", "T_star_range", "plateau",
+                                  "n_at_max", "peak_at_grid_edge", "bracketed")},
+            # `log2_ratio` chi tinh duoc khi `T*` XAC DINH (`G23-188`)
+            "log2_ratio": (float(math.log2(t_endo / ts))
+                           if ts and t_endo > 0 else None),
             "S_pivotal_curve": curve,
         }
+    # `G23-188`: chi cell co `T*` XAC DINH moi gop vao `M-147`.
     ratios = [abs(v["log2_ratio"]) for v in out.values()
               if v["log2_ratio"] is not None and v["bracketed"]]
     step = math.log2(1.25)
@@ -451,6 +483,11 @@ def run_t_loss_fine(t_delay_ms: float = 50.0, seed: int = S14.DEFAULT_SEED,
             sum(1 for v in out.values()
                 if v["log2_ratio"] is not None and abs(v["log2_ratio"]) <= 1.0),
         "M148_n_cells": len(out),
+        "M147_n_cells_used": len(ratios),
+        "M147_n_cells_undetermined": sum(
+            1 for v in out.values() if not v["bracketed"]),
+        "M147_undetermined_cells": sorted(
+            k for k, v in out.items() if not v["bracketed"]),
         "provenance": env_fingerprint(), "cells": out,
     }
 
@@ -491,13 +528,13 @@ def run_local_fine(seed: int = S14.DEFAULT_SEED,
         f = (te - grid[i]) / (grid[i + 1] - grid[i])
         s_te = curve[i] + f * (curve[i + 1] - curve[i])
         mx = max(curve)
+        pk = peak_diagnostics(curve, grid)
         out[key] = {
             "grid_lo": lo, "grid_hi": hi, "grid_factor": 1.05,
             "n_points": len(grid),
             "t_loss_endogenous": te,
-            "T_star": grid[int(np.argmax(curve))],
-            "peak_at_grid_edge": bool(int(np.argmax(curve))
-                                      in (0, len(grid) - 1)),
+            **{k: pk[k] for k in ("T_star", "T_star_range", "plateau",
+                                  "n_at_max", "peak_at_grid_edge", "bracketed")},
             "S_pivotal_at_T_star": mx,
             "S_pivotal_at_t_endo": float(s_te),
             "efficiency": float(s_te / mx) if mx > 0 else None,
@@ -555,6 +592,52 @@ def run_sigma_rho_plane(spec_id: str = PRIMARY_SPEC,
                    "sigma_grid": list(SIGMA_GRID_2D),
                    "pivotal_min": PIVOTAL_MIN},
         "provenance": env_fingerprint(), "planes": planes,
+    }
+
+
+def run_a_sweep(spec_id: str = PRIMARY_SPEC,
+                n: int = S14.DEFAULT_N) -> Dict[str, Any]:
+    """Quet `a` de KEP dinh `V` (`G23-186`).
+
+    Dinh `V` nam TREN BIEN kha thi `sigma = sigma_max(rho)` o 13/14 gia tri
+    `rho` (`L64`). Bien do DI CHUYEN theo `rho`, nen quet theo `sigma` khong
+    kep duoc no -- phai quet theo `a`, vi `sigma = a * sigma_max(rho)` va
+    `a` = 1.0 CHINH LA bien.
+    """
+    spec = SLA_SPECS[spec_id]
+    w = w_loss_equal_budget(spec["t_delay_ms"], spec["t_loss"])
+    cv2 = C.CostV2(strict_reliable=True)
+    out: Dict[str, Any] = {}
+    for a in A_GRID:
+        row = {}
+        for mode in ("poisson", "h2"):
+            for rb in RHO_GRID_2D:
+                c = evaluate_cell(cv2, mode, rb, t_delay_ms=spec["t_delay_ms"],
+                                  t_loss=spec["t_loss"], w_loss=w, n=n, a=a)
+                if not c["feasible"]:
+                    continue
+                row["%s@%.3f" % (mode, rb)] = {
+                    "sigma_rho": c["sigma_rho"], "regime": c["regime"],
+                    "S_pivotal": c["S_pivotal"], "V": c["decision_value_V"]}
+        out["a=%.2f" % a] = row
+    ref = out["a=%.2f" % A_GRID[0]]
+    keys = sorted(ref)
+    return {
+        "phase": "23.21e", "script": "measurements.sla_exogenous --a-sweep",
+        "prereg": "docs/phase-23/00zzs-amendment-56.md",
+        "a_grid": list(A_GRID),
+        "M164_n_V_increasing_to_last_a": sum(
+            1 for k in keys
+            if all(out["a=%.2f" % A_GRID[i + 1]][k]["V"]
+                   >= out["a=%.2f" % A_GRID[i]][k]["V"] - 1e-9
+                   for i in range(len(A_GRID) - 1)
+                   if k in out["a=%.2f" % A_GRID[i + 1]])),
+        "M164_n_cells": len(keys),
+        "M165_n_regime_changed": sum(
+            1 for k in keys
+            if k in out["a=%.2f" % A_GRID[-1]]
+            and out["a=%.2f" % A_GRID[-1]][k]["regime"] != ref[k]["regime"]),
+        "provenance": env_fingerprint(), "by_a": out,
     }
 
 
@@ -765,6 +848,7 @@ def main() -> None:
     p.add_argument("--rho-grid", action="store_true")
     p.add_argument("--local-fine", action="store_true")
     p.add_argument("--plane", action="store_true")
+    p.add_argument("--a-sweep", action="store_true")
     p.add_argument("--sigma-low", action="store_true",
                    help="doi chung THU HAI o sigma = %g (G23-177): kep dinh "
                         "h2 HAI phia. sigma = 0.020 khong kha thi duoi rho = 0.625."
@@ -798,6 +882,13 @@ def main() -> None:
         with open(path, "w", encoding="utf-8") as fh:
             json.dump(art, fh, indent=1, sort_keys=True)
         print("[ok] local-fine -> %s" % path)
+        return
+    if a.a_sweep:
+        art = run_a_sweep(a.spec, n=a.n)
+        path = os.path.join(a.out_dir, "a_sweep.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(art, fh, indent=1, sort_keys=True)
+        print("[ok] a-sweep -> %s" % path)
         return
     if a.plane:
         art = run_sigma_rho_plane(a.spec, n=a.n)

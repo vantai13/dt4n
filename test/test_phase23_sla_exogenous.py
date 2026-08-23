@@ -358,7 +358,18 @@ def test_spearman_ridge_alignment_matches_ledger():
         pytest.skip("chua chay --t-loss-fine")
     from scipy.stats import spearmanr
     d = json.load(open(p, encoding="utf-8"))
-    pairs = [(v["t_loss_endogenous"], v["T_star"]) for v in d["cells"].values()]
+    lf_path = os.path.join("results", "PENDING", "phase-23",
+                           "t_loss_local_fine.json")
+    lf = (json.load(open(lf_path, encoding="utf-8"))["cells"]
+          if os.path.exists(lf_path) else {})
+    # Chi cell co `T*` XAC DINH. Cell co CAO NGUYEN cham mut bi LOAI (`L63`):
+    # dua `T*` cua chung vao se lam `K07` tinh tren mot gia tri BIA.
+    pairs = []
+    for k, v in d["cells"].items():
+        ts = v["T_star"] or lf.get(k, {}).get("T_star")
+        if ts:
+            pairs.append((v["t_loss_endogenous"], ts))
+    assert len(pairs) >= 6, "qua it cell co T* xac dinh: %d" % len(pairs)
     rho = spearmanr([a for a, _ in pairs], [b for _, b in pairs]).statistic
     txt = open(os.path.join("docs", "phase-23", "CONSTANTS.md"),
                encoding="utf-8").read()
@@ -367,3 +378,47 @@ def test_spearman_ridge_alignment_matches_ledger():
     val = float(row[0].split("|")[3].strip())
     assert abs(val - rho) < 5e-4, (
         "K07 ghi %r nhung tai tinh tu artifact cho %.4f" % (val, rho))
+
+
+# -- amendment 23-56: cao nguyen va bien kha thi ------------------------------
+def test_peak_at_edge_checks_value_not_argmax_index():
+    """`G23-183`. Phep kiem cu dung `argmax` nen MU voi CAO NGUYEN.
+
+    `argmax` tra chi so DAU TIEN trong nhom bang nhau. Neu cuc dai dat o
+    nhieu diem va cao nguyen CHAM mut, `argmax` van tra mot chi so o GIUA
+    -> co bao "khong o mut" trong khi gia tri cuc dai CO o mut. Do la loi
+    that da xay ra voi `h2@0.960` (9/16 diem cung dat 1.0000). Xem `L63`.
+    """
+    import numpy as np
+    curve = [0.0, 0.5, 1.0, 1.0, 1.0]          # cao nguyen cham mut PHAI
+    grid = [1.0, 2.0, 3.0, 4.0, 5.0]
+    assert int(np.argmax(curve)) == 2          # phep kiem CU se bao "khong o mut"
+    pk = X.peak_diagnostics(curve, grid)
+    assert pk["peak_at_grid_edge"] is True     # phep kiem MOI bat duoc
+    assert pk["plateau"] is True
+    assert pk["n_at_max"] == 3
+    assert pk["T_star"] is None                # cao nguyen -> khong xac dinh
+    assert pk["T_star_range"] == [3.0, 5.0]
+    assert pk["bracketed"] is False
+
+
+def test_peak_diagnostics_accepts_a_genuine_interior_peak():
+    """Doi chung am: dinh THAT o trong phai duoc nhan la kep duoc."""
+    pk = X.peak_diagnostics([0.1, 0.9, 0.3], [1.0, 2.0, 3.0])
+    assert pk["peak_at_grid_edge"] is False
+    assert pk["plateau"] is False
+    assert pk["T_star"] == 2.0
+    assert pk["bracketed"] is True
+
+
+def test_m147_excludes_cells_without_a_determined_peak():
+    """`G23-188`: chi cell co `T*` XAC DINH moi gop vao `M-147`."""
+    import json
+    import os
+    p = os.path.join("results", "PENDING", "phase-23", "t_loss_fine.json")
+    if not os.path.exists(p):
+        pytest.skip("chua chay --t-loss-fine")
+    d = json.load(open(p, encoding="utf-8"))
+    assert d["M147_n_cells_used"] + d["M147_n_cells_undetermined"] == 8
+    for k in d["M147_undetermined_cells"]:
+        assert d["cells"][k]["log2_ratio"] is None or not d["cells"][k]["bracketed"]

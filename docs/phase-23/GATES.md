@@ -224,13 +224,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-180 | 23.21d | PASS | `V` tinh cho MOI cell. Dinh `V` va dinh `S_pivotal` o HAI cho khac nhau o CA HAI ho (poisson: sigma 0.046 vs 0.004; h2: (0.650,0.028) vs (0.600,0.004)). `L55` xac nhan bang DO LUONG |
 | G23-181 | 23.21d | PASS | Spearman(`t_endo`, `T*`) = 0.9940 vao `CONSTANTS.md` (`K07`) kem nguon va so cap; `test_spearman_ridge_alignment_matches_ledger` ghim |
 | G23-182 | 23.21d | PASS | Truong `M148_*` doi ten: `n_bracketed_and_within_one_octave` = 6, them `n_within_one_grid_step` = 7 va `n_within_one_octave` = 8 |
-| G23-183 | 23.21e | NOT_RUN | - |
-| G23-184 | 23.21e | NOT_RUN | - |
-| G23-185 | 23.21e | NOT_RUN | - |
-| G23-186 | 23.21e | NOT_RUN | - |
-| G23-187 | 23.21e | NOT_RUN | - |
-| G23-188 | 23.21e | NOT_RUN | - |
-| G23-189 | 23.21e | NOT_RUN | - |
+| G23-183 | 23.21e | PASS | `peak_diagnostics()` kiem GIA TRI o mut (`curve[0]==max or curve[-1]==max`) thay vi CHI SO `argmax`. DC29: quay ve `argmax` -> test DO |
+| G23-184 | 23.21e | PASS | Phat hien CAO NGUYEN: `h2@0.960` co 22 diem cung dat 1.0000, `T_star = None`, `T_star_range = [0.21107, 0.58802]` (he so 2.786) |
+| G23-185 | 23.21e | PASS | Luoi cuc bo 1.05x cho `h2@0.925`: `T*` = 0.18233, KHONG cao nguyen, KHONG o mut -> KEP DUOC. `efficiency` = 0.8837. `M-161` MISS (da ky "khong kep duoc") |
+| G23-186 | 23.21e | PASS | Quet `a` thuoc {0.90, 0.95, 0.99}: `V` VAN tang o 19/20 cell toi `a` = 0.99 -> dinh `V` nam tai `a` = 1.0, tuc TREN BIEN kha thi. Khong kep duoc bang cau tao (`L64`). 0 cell doi nhan `regime` |
+| G23-187 | 23.21e | PASS | Yeu cau ve `sigma_max(rho)` chong len HINH 2 duoc ghi thanh dieu kien BAT BUOC o `35-close-23-21.md` muc 5 va `L65`; du lieu `sigma_max` co san trong `sigma_rho_plane.json` (truong `sigma_max` moi hang) |
+| G23-188 | 23.21e | PASS | `M-147` bao cao kem `M147_n_cells_used` = 6 va `M147_n_cells_undetermined` = 2 (`h2@0.925`, `h2@0.960` tren luoi tho). Trung vi 0.2216 |
+| G23-189 | 23.21e | PASS | DC29: quay ve phep kiem `argmax` -> `test_peak_at_edge_checks_value_not_argmax_index` DO. Doi chung am kem theo: dinh THAT o trong van duoc nhan la kep duoc |
 
 ## Va cham da phat hien
 
