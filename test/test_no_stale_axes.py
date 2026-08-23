@@ -60,6 +60,9 @@ def test_results_is_tiered():
     root = os.path.join(REPO, "results")
     # So sach cua chinh kho: khong phai artifact, khong thuoc tang nao.
     BOOKKEEPING = {"MANIFEST.md", "PATH_MAP.tsv", "_intent.json"}
+    # so ledger cua ma tran 23.20: ghi cong nhanh + thoi gian moi job, khong
+    # phai mot ket qua (amendment 23-49c muc 5)
+    BOOKKEEPING |= {e for e in os.listdir(root) if e.startswith("RUN_LEDGER_")}
     stray = sorted(
         e for e in os.listdir(root)
         if e not in TIERS and e not in BOOKKEEPING and not e.startswith(".")

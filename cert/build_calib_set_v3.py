@@ -113,6 +113,34 @@ OUT_REPORT = "results/SUPERSEDED/phase-22/calib_set_v3_report.json"
 V2_TEMPLATE = "results/SUPERSEDED/phase-21R/calib_set_%s_%.3f.parquet"
 
 
+def out_stem(axis: str, mode: str, rho_bar: float, profile: str) -> str:
+    """Tien to duong dan dau ra -- theo TANG va mang DU DINH DANH.
+
+    (a) TANG: artifact truc DO DUOC vao `LIVE/`; doi chung am (truc ke thua)
+        vao `SUPERSEDED/`. `test_no_stale_axes.py` CHI quet `LIVE/`, nen neu
+        artifact truc moi nam o SUPERSEDED thi cai chan cua Lesson 23.17 vo
+        hieu MOT CACH AM THAM.
+    (b) TEN mang ca HO SO va TRUC: chay U0 roi chay U3 se KHONG ghi de nhau,
+        neu khong Dot 1 (cau hoi "sua truc da lam gi") bi mat.
+    Xem amendment 23-49b muc 3.
+    """
+    # amendment 23-49c muc 3: LIVE chi khi MOI truc DA DUOC DUYET, khong
+    # phai khi MOT truc da duoc sua. `calib_set` van dung nguong SLA mang
+    # nhan `self_calibrated` (DEPRECATED, loi cau truc S14, sua o Lesson
+    # 23.21), nen ke ca truc AoI da do duoc thi artifact VAN chua "sach".
+    tier = "LIVE" if _all_axes_approved() else "SUPERSEDED"
+    return "results/%s/phase-21R/calib_set_%s_%.3f_%s_%s" % (
+        tier, mode, float(rho_bar), profile, axis)
+
+
+def _all_axes_approved() -> bool:
+    """Ca truc AoI lan truc SLA deu nam trong `approved_for_live`?"""
+    import json as _json
+    with open("docs/phase-23/axis_registry.json", encoding="utf-8") as fh:
+        ap = _json.load(fh)["approved_for_live"]
+    return bool(ap.get("aoi_axis")) and bool(ap.get("sla_axis"))
+
+
 def _json_clean(value: Any) -> Any:
     if isinstance(value, Mapping):
         return {str(k): _json_clean(v) for k, v in value.items()}
@@ -665,8 +693,11 @@ def main() -> None:
     parser.add_argument("--cell", help="shortcut for --mode/--rho-bar, e.g. poisson_0.925")
     parser.add_argument("--mode")
     parser.add_argument("--rho-bar", type=float)
-    parser.add_argument("--out", default=OUT_PARQUET)
-    parser.add_argument("--report", default=OUT_REPORT)
+    parser.add_argument("--out", default=None)
+    parser.add_argument("--report", default=None)
+    parser.add_argument("--out-stem", default=None,
+                        help="tien to duong dan dau ra; mang ca ho so va truc "
+                             "de khong ghi de nhau giua cac dot")
     parser.add_argument("--n", type=int, default=N)
     parser.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
     parser.add_argument("--aoi-profile", default="U0", choices=sorted(AOI_PROFILES))
@@ -823,6 +854,14 @@ def main() -> None:
         }
     )
 
+    # Duong dan dau ra: uu tien --out/--report; neu khong thi dung --out-stem;
+    # neu ca hai deu khong co thi DAN XUAT theo tang + dinh danh (23-49b muc 3).
+    if args.out is None or args.report is None:
+        stem = args.out_stem or out_stem(
+            str(args.axis), str(args.mode), float(args.rho_bar),
+            str(args.aoi_profile))
+        args.out = args.out or (stem + ".parquet")
+        args.report = args.report or (stem + "_report.json")
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     df.to_parquet(args.out, index=False)
     with open(args.report, "w", encoding="utf-8") as f:

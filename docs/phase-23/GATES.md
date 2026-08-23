@@ -164,6 +164,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-120 | 23.19F | PASS | PILOT M-125a 1 cell: q_hat bien 20.5032 -> 22.3289 = +8.90% (dai +5..13%), tien doan +8.56% |
 | G23-121 | 23.19F | PASS | PILOT M-125b 1 cell: 4/4 bin trong +/-25%, thuc te <= 1.5%. Bon ty so z tu 1.30 den 2.38 -> bon tien doan 1.121-1.452, deu khop |
 | G23-122 | 23.19F | PASS | PILOT M-126 1 cell: q_hat(B3)/q_hat(B0) = 1.604 vs tien doan 1.630, lech -1.6% |
+| G23-123 | 23.20A | ADJUDICATED | `out_stem()` ban dau cho LIVE khi axis=measured; test chan 23.17 tu choi 9 artifact vi sla_axis (S14) CHUA duoc duyet. Phan xu (amendment 23-49c muc 3): LIVE chi khi MOI truc duoc duyet -> Dot 1/2/3 vao SUPERSEDED den sau Lesson 23.21 |
+| G23-124 | 23.20A | PASS | ten file mang CA ho so VA truc (`calib_set_<mode>_<rho>_<profile>_<axis>`); chay U0 roi U3 khong ghi de |
+| G23-125 | 23.20A | NOT_RUN | - |
+| G23-126 | 23.20A | PASS | Dot 1, 16/16 job: bon cong nhanh PASS. mean_z 302.488 -> 366.023 ms, ty trong lech <= 0.31 diem %, 0 hang ngoai dai, block/bin >= 9 |
+| G23-129 | 23.20A | PASS | M-125a: 8/8 cell trong +5%..+13% (do duoc +7.92%..+10.27%, tien doan +8.56%) |
+| G23-130 | 23.20A | PASS | M-125b: 16/16 o dem duoc trong +/-25% (100%), lech lon nhat 2.6%. Ke ca 16 o suy bien: 32/32, lech lon nhat 6.0% |
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
@@ -205,6 +211,10 @@ vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 
 `G23-103 .. G23-108` (lesson `23.19DE`) la Task D + E.
 `G23-109 .. G23-116` (lesson `23.19E`) la phan tich hop con lai.
+`G23-123 .. G23-130` (lesson `23.20A`) la Dot 1 cua Lesson 23.20.
+`G23-125` (ha nguon co `--axis`) NOT_RUN: bay script ha nguon chua co co do;
+`conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
 `G23-117 .. G23-122` (lesson `23.19F`) la hai sua truoc 5b va PILOT M-125
 tren MOT cell -- KHONG phai ket qua cua 23.20. Ban ke hoach
 danh so `G23-101 .. G23-114` nhung vung do DA duoc cap -- va cham ma thu NAM;

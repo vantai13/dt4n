@@ -1,0 +1,520 @@
+{
+ "M125a": {
+  "all_in_band": true,
+  "predicted_pct": 8.56431316312143,
+  "range_pct": [
+   7.916280172084655,
+   10.27195521556723
+  ]
+ },
+ "M125b": {
+  "_note": "Nguong err_neo >= 0.05 ky TRUOC o amendment 23-49b muc 1. Bon cell suy bien bao cao nhung khong dem.",
+  "counted_cells": [
+   "h2@0.700",
+   "poisson@0.850",
+   "poisson@0.925",
+   "poisson@0.960"
+  ],
+  "max_abs_dev_all": 0.059905367472649185,
+  "max_abs_dev_counted": 0.02649630859108676,
+  "n_all": 32,
+  "n_counted": 16,
+  "n_hit": 16,
+  "n_hit_all": 32,
+  "share": 1.0
+ },
+ "_tier_note": "Artifact TONG HOP nay o LIVE vi no la ket qua DO (vai tro MEASURES qua validity). Cac calib_set parquet/report nguon o SUPERSEDED/ vi chung DUNG truc SLA chua duoc duyet (S14) -- amendment 23-49c muc 3.",
+ "cells": {
+  "h2@0.700": {
+   "M125a": {
+    "delta": 0.09815989291682903,
+    "deviation": 0.011529351516099018,
+    "hit": true,
+    "predicted": 0.08564313163121429,
+    "q_marginal_new": 12.61950292503744,
+    "q_marginal_old": 11.491498648269427
+   },
+   "M125b_bins": [
+    {
+     "bin": 0,
+     "deviation": -0.01836134115245147,
+     "hit": true,
+     "predicted": 1.4555015160605087,
+     "q_new": 9.743794441223145,
+     "q_old": 6.819676876068115,
+     "ratio": 1.4287765561762114,
+     "z_new_ms": 179.1764373779297,
+     "z_old_ms": 75.0
+    },
+    {
+     "bin": 1,
+     "deviation": -0.01142581975389989,
+     "hit": true,
+     "predicted": 1.367678028146152,
+     "q_new": 11.973201751708984,
+     "q_old": 8.855583190917969,
+     "ratio": 1.3520511855151849,
+     "z_new_ms": 305.0,
+     "z_old_ms": 147.5
+    },
+    {
+     "bin": 2,
+     "deviation": -0.011172902249516836,
+     "hit": true,
+     "predicted": 1.2688024008258136,
+     "q_new": 13.804872512817383,
+     "q_old": 11.003175735473633,
+     "ratio": 1.2546261956274345,
+     "z_new_ms": 430.0,
+     "z_old_ms": 247.5
+    },
+    {
+     "bin": 3,
+     "deviation": -0.01090282014971744,
+     "hit": true,
+     "predicted": 1.1213534071478368,
+     "q_new": 15.019083976745605,
+     "q_old": 13.541350364685059,
+     "ratio": 1.109127492625431,
+     "z_new_ms": 554.3572998046875,
+     "z_old_ms": 424.9892272949219
+    }
+   ],
+   "counted_M125b": true,
+   "err_neo_old": 0.12653635139919234
+  },
+  "h2@0.850": {
+   "M125a": {
+    "delta": 0.09453154592807134,
+    "deviation": 0.008187233942614114,
+    "hit": true,
+    "predicted": 0.08564313163121429,
+    "q_marginal_new": 32.70277808842622,
+    "q_marginal_old": 29.87833307325738
+   },
+   "M125b_bins": [
+    {
+     "bin": 0,
+     "deviation": 0.01924451923518311,
+     "hit": true,
+     "predicted": 1.4555015160605087,
+     "q_new": 24.831369400024414,
+     "q_old": 16.73823356628418,
+     "ratio": 1.4835119429831733,
+     "z_new_ms": 179.1764373779297,
+     "z_old_ms": 75.0
+    },
+    {
+     "bin": 1,
+     "deviation": 0.002686406345271175,
+     "hit": true,
+     "predicted": 1.367678028146152,
+     "q_new": 31.04949951171875,
+     "q_old": 22.641521453857422,
+     "ratio": 1.371352167079252,
+     "z_new_ms": 305.0,
+     "z_old_ms": 147.5
+    },
+    {
+     "bin": 2,
+     "deviation": -0.007982583619408845,
+     "hit": true,
+     "predicted": 1.2688024008258136,
+     "q_new": 36.02861404418945,
+     "q_old": 28.62425994873047,
+     "ratio": 1.2586740795647149,
+     "z_new_ms": 430.0,
+     "z_old_ms": 247.5
+    },
+    {
+     "bin": 3,
+     "deviation": -0.019257036995952492,
+     "hit": true,
+     "predicted": 1.1213534071478368,
+     "q_new": 39.07175064086914,
+     "q_old": 35.52754211425781,
+     "ratio": 1.0997594631008536,
+     "z_new_ms": 554.3572998046875,
+     "z_old_ms": 424.9892272949219
+    }
+   ],
+   "counted_M125b": false,
+   "err_neo_old": 0.0029441943168249103
+  },
+  "h2@0.925": {
+   "M125a": {
+    "delta": 0.07916280172084655,
+    "deviation": -0.005969116113350048,
+    "hit": true,
+    "predicted": 0.08564313163121429,
+    "q_marginal_new": 42.518897844097154,
+    "q_marginal_old": 39.39989200544717
+   },
+   "M125b_bins": [
+    {
+     "bin": 0,
+     "deviation": -0.059905367472649185,
+     "hit": true,
+     "predicted": 1.4555015160605087,
+     "q_new": 33.006282806396484,
+     "q_old": 24.1219482421875,
+     "ratio": 1.368309162883906,
+     "z_new_ms": 179.1764373779297,
+     "z_old_ms": 75.0
+    },
+    {
+     "bin": 1,
+     "deviation": -0.040895728020605815,
+     "hit": true,
+     "predicted": 1.367678028146152,
+     "q_new": 40.486412048339844,
+     "q_old": 30.864524841308594,
+     "ratio": 1.3117458394873285,
+     "z_new_ms": 305.0,
+     "z_old_ms": 147.5
+    },
+    {
+     "bin": 2,
+     "deviation": -0.03379991993361642,
+     "hit": true,
+     "predicted": 1.2688024008258136,
+     "q_new": 46.27205276489258,
+     "q_old": 37.744850158691406,
+     "ratio": 1.2259169812663209,
+     "z_new_ms": 430.0,
+     "z_old_ms": 247.5
+    },
+    {
+     "bin": 3,
+     "deviation": -0.02257387819977419,
+     "hit": true,
+     "predicted": 1.1213534071478368,
+     "q_new": 50.51973342895508,
+     "q_old": 46.092960357666016,
+     "ratio": 1.0960401119159797,
+     "z_new_ms": 554.3572998046875,
+     "z_old_ms": 424.9892272949219
+    }
+   ],
+   "counted_M125b": false,
+   "err_neo_old": 0.00023801570903679643
+  },
+  "h2@0.960": {
+   "M125a": {
+    "delta": 0.08844662975035189,
+    "deviation": 0.0025823385580907576,
+    "hit": true,
+    "predicted": 0.08564313163121429,
+    "q_marginal_new": 47.02697335619454,
+    "q_marginal_old": 43.20558497845754
+   },
+   "M125b_bins": [
+    {
+     "bin": 0,
+     "deviation": 0.004330144619197895,
+     "hit": true,
+     "predicted": 1.4555015160605087,
+     "q_new": 35.617828369140625,
+     "q_old": 24.365665435791016,
+     "ratio": 1.4618040481185124,
+     "z_new_ms": 179.1764373779297,
+     "z_old_ms": 75.0
+    },
+    {
+     "bin": 1,
+     "deviation": -0.003461306034462819,
+     "hit": true,
+     "predicted": 1.367678028146152,
+     "q_new": 44.697296142578125,
+     "q_old": 32.7946662902832,
+     "ratio": 1.3629440759341276,
+     "z_new_ms": 305.0,
+     "z_old_ms": 147.5
+    },
+    {
+     "bin": 2,
+     "deviation": -0.01764528770528928,
+     "hit": true,
+     "predicted": 1.2688024008258136,
+     "q_new": 51.50665283203125,
+     "q_old": 41.32387161254883,
+     "ratio": 1.2464140174220804,
+     "z_new_ms": 430.0,
+     "z_old_ms": 247.5
+    },
+    {
+     "bin": 3,
+     "deviation": -0.018196267145967338,
+     "hit": true,
+     "predicted": 1.1213534071478368,
+     "q_new": 56.53570556640625,
+     "q_old": 51.3517951965332,
+     "ratio": 1.100948960986334,
+     "z_new_ms": 554.3572998046875,
+     "z_old_ms": 424.9892272949219
+    }
+   ],
+   "counted_M125b": false,
+   "err_neo_old": 0.0005240345862826946
+  },
+  "poisson@0.700": {
+   "M125a": {
+    "delta": 0.09189654877144204,
+    "deviation": 0.005760103811306649,
+    "hit": true,
+    "predicted": 0.08564313163121429,
+    "q_marginal_new": 0.42181138776425775,
+    "q_marginal_old": 0.38631076198460645
+   },
+   "M125b_bins": [
+    {
+     "bin": 0,
+     "deviation": -0.04521063397298397,
+     "hit": true,
+     "predicted": 1.4555015160605087,
+     "q_new": 0.32744139432907104,
+     "q_old": 0.2356206476688385,
+     "ratio": 1.3896973697707737,
+     "z_new_ms": 179.1764373779297,
+     "z_old_ms": 75.0
+    },
+    {
+     "bin": 1,
+     "deviation": -0.023251116053518484,
+     "hit": true,
+     "predicted": 1.367678028146152,
+     "q_new": 0.4036109447479248,
+     "q_old": 0.3021315932273865,
+     "ratio": 1.3358779875898785,
+     "z_new_ms": 305.0,
+     "z_old_ms": 147.5
+    },
+    {
+     "bin": 2,
+     "deviation": -0.022408846591582376,
+     "hit": true,
+     "predicted": 1.2688024008258136,
+     "q_new": 0.4603763222694397,
+     "q_old": 0.37116047739982605,
+     "ratio": 1.2403700024706765,
+     "z_new_ms": 430.0,
+     "z_old_ms": 247.5
+    },
+    {
+     "bin": 3,
+     "deviation": -0.017456149762807183,
+     "hit": true,
+     "predicted": 1.1213534071478368,
+     "q_new": 0.49785304069519043,
+     "q_old": 0.4518629312515259,
+     "ratio": 1.1017788941356301,
+     "z_new_ms": 554.3572998046875,
+     "z_old_ms": 424.9892272949219
+    }
+   ],
+   "counted_M125b": false,
+   "err_neo_old": 0.0
+  },
+  "poisson@0.850": {
+   "M125a": {
+    "delta": 0.10211471635406633,
+    "deviation": 0.015172190789898732,
+    "hit": true,
+    "predicted": 0.08564313163121429,
+    "q_marginal_new": 6.2156697507409095,
+    "q_marginal_old": 5.639766585553929
+   },
+   "M125b_bins": [
+    {
+     "bin": 0,
+     "deviation": 0.008434148014695442,
+     "hit": true,
+     "predicted": 1.4555015160605087,
+     "q_new": 4.673858642578125,
+     "q_old": 3.1843101978302,
+     "ratio": 1.4677774312825767,
+     "z_new_ms": 179.1764373779297,
+     "z_old_ms": 75.0
+    },
+    {
+     "bin": 1,
+     "deviation": 0.008114744142307728,
+     "hit": true,
+     "predicted": 1.367678028146152,
+     "q_new": 5.897943019866943,
+     "q_old": 4.277664661407471,
+     "ratio": 1.378776385413614,
+     "z_new_ms": 305.0,
+     "z_old_ms": 147.5
+    },
+    {
+     "bin": 2,
+     "deviation": 0.0025047257122865485,
+     "hit": true,
+     "predicted": 1.2688024008258136,
+     "q_new": 6.834940433502197,
+     "q_old": 5.3734636306762695,
+     "ratio": 1.271980402822973,
+     "z_new_ms": 430.0,
+     "z_old_ms": 247.5
+    },
+    {
+     "bin": 3,
+     "deviation": -0.004881716285616733,
+     "hit": true,
+     "predicted": 1.1213534071478368,
+     "q_new": 7.4895453453063965,
+     "q_old": 6.711788177490234,
+     "ratio": 1.1158792779582314,
+     "z_new_ms": 554.3572998046875,
+     "z_old_ms": 424.9892272949219
+    }
+   ],
+   "counted_M125b": true,
+   "err_neo_old": 0.22072656795348494
+  },
+  "poisson@0.925": {
+   "M125a": {
+    "delta": 0.10244877854619583,
+    "deviation": 0.015479899817291365,
+    "hit": true,
+    "predicted": 0.08564313163121429,
+    "q_marginal_new": 22.60374268060012,
+    "q_marginal_old": 20.503213501136788
+   },
+   "M125b_bins": [
+    {
+     "bin": 0,
+     "deviation": 0.016456496299541934,
+     "hit": true,
+     "predicted": 1.4555015160605087,
+     "q_new": 17.1435546875,
+     "q_old": 11.58775806427002,
+     "ratio": 1.4794539713735362,
+     "z_new_ms": 179.1764373779297,
+     "z_old_ms": 75.0
+    },
+    {
+     "bin": 1,
+     "deviation": 0.002305028395362063,
+     "hit": true,
+     "predicted": 1.367678028146152,
+     "q_new": 21.432662963867188,
+     "q_old": 15.634800910949707,
+     "ratio": 1.3708305648367416,
+     "z_new_ms": 305.0,
+     "z_old_ms": 147.5
+    },
+    {
+     "bin": 2,
+     "deviation": -0.005449739626558703,
+     "hit": true,
+     "predicted": 1.2688024008258136,
+     "q_new": 24.791181564331055,
+     "q_old": 19.646106719970703,
+     "ratio": 1.2618877581037604,
+     "z_new_ms": 430.0,
+     "z_old_ms": 247.5
+    },
+    {
+     "bin": 3,
+     "deviation": -0.003911135198247262,
+     "hit": true,
+     "predicted": 1.1213534071478368,
+     "q_new": 27.167158126831055,
+     "q_old": 24.322242736816406,
+     "ratio": 1.1169676423674664,
+     "z_new_ms": 554.3572998046875,
+     "z_old_ms": 424.9892272949219
+    }
+   ],
+   "counted_M125b": true,
+   "err_neo_old": 0.22239867831276863
+  },
+  "poisson@0.960": {
+   "M125a": {
+    "delta": 0.1027195521556723,
+    "deviation": 0.01572931290856161,
+    "hit": true,
+    "predicted": 0.08564313163121429,
+    "q_marginal_new": 35.58191866847478,
+    "q_marginal_old": 32.267423388763525
+   },
+   "M125b_bins": [
+    {
+     "bin": 0,
+     "deviation": 0.02649630859108676,
+     "hit": true,
+     "predicted": 1.4555015160605087,
+     "q_new": 26.658842086791992,
+     "q_old": 17.843137741088867,
+     "ratio": 1.4940669333848426,
+     "z_new_ms": 179.1764373779297,
+     "z_old_ms": 75.0
+    },
+    {
+     "bin": 1,
+     "deviation": 0.008798501843932716,
+     "hit": true,
+     "predicted": 1.367678028146152,
+     "q_new": 33.69390869140625,
+     "q_old": 24.42098045349121,
+     "ratio": 1.3797115457987021,
+     "z_new_ms": 305.0,
+     "z_old_ms": 147.5
+    },
+    {
+     "bin": 2,
+     "deviation": 0.007277518542795347,
+     "hit": true,
+     "predicted": 1.2688024008258136,
+     "q_new": 39.30997848510742,
+     "q_old": 30.75811195373535,
+     "ratio": 1.2780361338249666,
+     "z_new_ms": 430.0,
+     "z_old_ms": 247.5
+    },
+    {
+     "bin": 3,
+     "deviation": -0.0068141926109323014,
+     "hit": true,
+     "predicted": 1.1213534071478368,
+     "q_new": 42.8584098815918,
+     "q_old": 38.482479095458984,
+     "ratio": 1.1137122890466062,
+     "z_new_ms": 554.3572998046875,
+     "z_old_ms": 424.9892272949219
+    }
+   ],
+   "counted_M125b": true,
+   "err_neo_old": 0.19949316654899224
+  }
+ },
+ "dilation_exponent": 0.431,
+ "interpolation_note": "z_tb moi 179/305/430 nam TRONG dai cu 75..425 -> noi suy. Chi B3 (554.4) la NGOAI SUY, vuot 30% ngoai dai da hieu chuan.",
+ "lesson": "23.20",
+ "paired_comparison_note": "Hai ve dung CUNG 5 seed, CUNG trace rho, CUNG truth table; chi truc z doi. Sai so lay mau tuong quan va triet tieu phan lon trong ty so. Do chinh xac o day la cua mot SO SANH GHEP CAP, KHONG phai sai so tuyet doi cua q_hat.",
+ "prereg": "docs/phase-23/00zzh-amendment-49b.md",
+ "provenance": {
+  "git_hash": "0231286bad390e07dfc1ba3dd48485989e16c8e7",
+  "script": "tools/run_23_20_matrix.py + cert/conformal_v2.py",
+  "timestamp_utc": "2026-08-23T01:56:14.795970+00:00"
+ },
+ "question": "U0 @ legacy vs U0 @ measured -- chi truc z doi, ho so giu nguyen",
+ "schema": "dt4n.axis.remeasure_impact.v1",
+ "status": "MEASUREMENT_ESTIMATE",
+ "validity": {
+  "axis_role": "measures_axis",
+  "inputs_sha256": {
+   "results/LIVE/phase-23/aoi_model_selfcheck.json": "b788d2832f720fca46a21b3ee0e303cac7d310f216febeaf96571987fce045b7"
+  },
+  "instrument": {
+   "module": "measurements.aoi_model_v7",
+   "source_path": "measurements/aoi_model_v7.py",
+   "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151"
+  },
+  "note": "Truc tuoi do duoc (measured_v7); doi chung am la truc ke thua.",
+  "schema": "dt4n.validity.v1"
+ },
+ "wave": 1
+}

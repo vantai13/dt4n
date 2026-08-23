@@ -146,6 +146,10 @@ cert/*.parquet
 !results/**/phase-21R/
 !results/**/phase-21R/**/*.json
 !results/**/phase-21R/**/*.parquet
+# Lesson 23.20 (amendment 23-49b muc 3): parquet cua MA TRAN 23.20 la HANG 3
+# (tai tao re, ~1.4 GB cho 30 file). KHONG commit. Report json THI commit --
+# no nho va mang khoi `validity` ma test_no_stale_axes.py can.
+results/LIVE/phase-21R/*.parquet
 !results/**/phase-21R/**/*.csv
 !results/**/phase-21R/.gitkeep
 !docs/phase-21R/**

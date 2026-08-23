@@ -3,25 +3,32 @@
   "_schema": "dt4n.axis_registry.v1",
   "aoi_axis": {
     "6197c74c16816d2d2b37c6310bb7bce147babcab69bebfc22ec8c5dac8bab92e": {
-      "label": "assumed_sawtooth_51ms",
-      "registered_in": "amendment-44",
-      "status": "DEPRECATED",
-      "source_path": "measurements/decision_error.py",
       "generator_source_sha256": "a60d7fe50a6672cd3f529f22904dd138764a80d18520731f24f463ccdba1bcae",
-      "note": "Rang cua tat dinh d=51ms T=500ms. d do tren topology3 (3 duong, 9 canh), KHONG phai topology_v7 (butterfly, 8 link). Loi cau truc S12. Do lai tren v7 cho p05=143.072ms, mean=368.924ms, CV=0.419529."
-    }
-  },
-  "sla_axis": {
-    "results/LIVE/phase-20R/sla_calibration.json": {
-      "label": "self_calibrated",
+      "label": "assumed_sawtooth_51ms",
+      "note": "Rang cua tat dinh d=51ms T=500ms. d do tren topology3 (3 duong, 9 canh), KHONG phai topology_v7 (butterfly, 8 link). Loi cau truc S12. Do lai tren v7 cho p05=143.072ms, mean=368.924ms, CV=0.419529.",
       "registered_in": "amendment-44",
-      "status": "DEPRECATED",
-      "content_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
-      "note": "Nguong SLA suy tu chinh du lieu duoc danh gia. Loi cau truc S14. Thay o Lesson 23.21."
+      "source_path": "measurements/decision_error.py",
+      "status": "DEPRECATED"
+    },
+    "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151": {
+      "label": "measured_v7_uniform",
+      "note": "z = d + alpha(link) + Uniform[0,T]. d = 115.9 +/- 6.5 ms (L32), T = 500.2922 ms do BRIDGE-SIDE, alpha do tren topology_v7. Thay assumed_sawtooth_51ms (loi cau truc S12).",
+      "registered_in": "amendment-49c",
+      "source_path": "measurements/aoi_model_v7.py",
+      "status": "ACTIVE"
     }
   },
   "approved_for_live": {
     "aoi_axis": [],
     "sla_axis": []
+  },
+  "sla_axis": {
+    "results/LIVE/phase-20R/sla_calibration.json": {
+      "content_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
+      "label": "self_calibrated",
+      "note": "Nguong SLA suy tu chinh du lieu duoc danh gia. Loi cau truc S14. Thay o Lesson 23.21.",
+      "registered_in": "amendment-44",
+      "status": "DEPRECATED"
+    }
   }
 }

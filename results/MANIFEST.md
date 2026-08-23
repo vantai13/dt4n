@@ -1,20 +1,20 @@
 # MANIFEST -- kho artifact DT4N
 
-Sinh tu dong boi `tools/build_manifest.py` tai commit `85ffde5`. Cot **Dung cho** do NGUOI dien, luu trong `results/_intent.json` de khong bi ghi de.
+Sinh tu dong boi `tools/build_manifest.py` tai commit `7d0df5b`. Cot **Dung cho** do NGUOI dien, luu trong `results/_intent.json` de khong bi ghi de.
 
 Bon tang (Lesson 23.17, amendment 23-44):
 
 ```text
   RAW           5849 file
-  LIVE            11 file
-  SUPERSEDED     373 file
+  LIVE            12 file
+  SUPERSEDED     405 file
   SMOKE           34 file
 ```
 
 `RAW/` khong liet ke tung file o day: do la du lieu do tho, Hang 1 (khong tai tao duoc), chi doc, khong bao gio ghi de. Xem `results/RAW/README.md`.
 
 
-## LIVE  (11 artifact json/parquet)
+## LIVE  (12 artifact json/parquet)
 
 | Artifact | Sinh boi | git | Ngay | Truc AoI | Truc SLA | Dung cho |
 |---|---|---|---|---|---|---|
@@ -25,12 +25,13 @@ Bon tang (Lesson 23.17, amendment 23-44):
 | `phase-23/aoi_sampling_diagnostic.json` | `?` | `?` | ? | - | - | Chan doan lay mau probe (Lesson 23.19 Task A). Phan xu H7_BIASED_MUST_CORRECT: probe khoa tuong uoc gan 5:1 voi vong sync (jitter chi 0.079 ms) -> phan bo AoI do duoc la mot LUOC 5 rang, KHONG phai phan bo trung binh theo thoi gian ma pipeline can. Dinh luong sai so lay mau len d: +/-6.5 ms (95%) |
 | `phase-23/aoi_stall_anatomy.json` | `measurements/aoi_stall_anatomy.py` | `3ae6390` | 2026-08-22 | - | - | Giai phau chu ky stall (Lesson 23.18 T1/T2 + vong ra soat 45b). Phan xu H1 vs H2 vs H3; sau khi cat 20 chu ky warm-up AoI la RANG CUA SACH (sd lech 0.23%, CV lech 0.000893 so voi null DUNG). Muc tieu selfcheck cho aoi_model_v7 o Lesson 23.19 |
 | `phase-23/aoi_v7_estimates.json` | `?` | `71cd524` | 2026-08-22 | - | - | So do AoI tren topology_v7, 30 run x 120 s, 287.760 quan sat (Lesson 23.8). Co so SO cua amendment 23-44 va cua aoi_model_v7 se dung o Lesson 23.19/23.20 |
+| `phase-23/axis_remeasure_impact_wave1.json` | `tools/run_23_20_matrix.py + cert/conformal_v2.py` | `0231286` | 2026-08-23 | - | - | Lesson 23.20 Dot 1: U0@legacy vs U0@measured tren 8 cell. M-125a 8/8 trong +5..13%; M-125b 16/16 o dem duoc trong +/-25% (lech lon nhat 2.6%), ke ca suy bien 32/32. Xac nhan dinh luat z^0.431 DUNG DUOC -- dau vao cho 23.28 |
 | `phase-23/dsync_sensitivity.json` | `cert/dsync_sensitivity.py` | `d899a4f` | 2026-08-21 | - | - | Quet d_sync tren {51, 175, 205, 230, 260} ms. Cong cu do do nhay -- chinh no la thu do truc, nen khong the bi truc lam sai |
 | `phase-L/link_model_v2_fit.json` | `results/phase-L/campaign_state.json` | `?` | ? | - | - | Fit mo hinh link v2 tren do Phase L. Dau vao cua twin/cost_v2 (FIT_PATH); doc boi l7_fit, sla_calib_v2, t5_campaign, qs_loss_residual; **can xac nhan hinh/bang** |
 | `phase-20R/decision_error_by_age_by_regime.parquet` | `?` | `?` | ? | - | - | Duong cong sai so quyet dinh tren LUOI z CO DINH [0, .05, .1, .2, .3, .55, 1, 2, 4] s. Doc boi decision_error_v2, h9_separability, plot_decision_error_v2; **can xac nhan hinh/bang** |
 | `phase-20R/truth_table.parquet` | `?` | `?` | ? | - | - | Bang tra chi phi do duoc cua Phase 20R. Doc boi decision_error_v2, cell_matrices, gate_report, build_truth_table, l6_campaign_fine, quasistatic_check; **can xac nhan hinh/bang** |
 
-## SUPERSEDED  (320 artifact json/parquet)
+## SUPERSEDED  (352 artifact json/parquet)
 
 | Artifact | Sinh boi | git | Ngay | Truc AoI | Truc SLA | Dung cho |
 |---|---|---|---|---|---|---|
@@ -140,12 +141,28 @@ Bon tang (Lesson 23.17, amendment 23-44):
 | `phase-21R/anchor.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_cbr_0.700.json` | `cert/build_calib_set_v2.py` | `cdc4a56` | 2026-08-12 | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_h2_0.700.json` | `cert/build_calib_set_v2.py` | `cdc4a56` | 2026-08-12 | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.700_U0_legacy_sawtooth_51ms_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | assumed_sawtooth_51ms | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.700_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | UNREGISTERED | self_calibrated | _(dien tay)_ |
 | `phase-21R/calib_set_h2_0.850.json` | `cert/build_calib_set_v2.py` | `cdc4a56` | 2026-08-12 | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.850_U0_legacy_sawtooth_51ms_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | assumed_sawtooth_51ms | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.850_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | UNREGISTERED | self_calibrated | _(dien tay)_ |
 | `phase-21R/calib_set_h2_0.925.json` | `cert/build_calib_set_v2.py` | `cdc4a56` | 2026-08-12 | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.925_U0_legacy_sawtooth_51ms_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | assumed_sawtooth_51ms | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.925_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | UNREGISTERED | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.960_U0_legacy_sawtooth_51ms_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | assumed_sawtooth_51ms | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.960_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | UNREGISTERED | self_calibrated | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.700.json` | `cert/build_calib_set_v2.py` | `cdc4a56` | 2026-08-12 | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.700_U0_legacy_sawtooth_51ms_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | assumed_sawtooth_51ms | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.700_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | UNREGISTERED | self_calibrated | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.850.json` | `cert/build_calib_set_v2.py` | `cdc4a56` | 2026-08-12 | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.850_U0_legacy_sawtooth_51ms_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | assumed_sawtooth_51ms | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.850_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | UNREGISTERED | self_calibrated | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.925.json` | `cert/build_calib_set_v2.py` | `cdc4a56` | 2026-08-12 | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.925_U0_legacy_sawtooth_51ms_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | assumed_sawtooth_51ms | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.925_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | UNREGISTERED | self_calibrated | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.925_V3.json` | `cert/build_calib_set_v2.py` | `cdc4a56` | 2026-08-12 | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.960_U0_legacy_sawtooth_51ms_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | assumed_sawtooth_51ms | self_calibrated | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.960_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `0231286` | 2026-08-23 | UNREGISTERED | self_calibrated | _(dien tay)_ |
 | `phase-21R/conformal_cbr_0.700.json` | `cert/conformal_v2.py` | `46c7245` | 2026-08-12 | - | - | _(dien tay)_ |
 | `phase-21R/conformal_h2_0.700.json` | `cert/conformal_v2.py` | `46c7245` | 2026-08-12 | - | - | _(dien tay)_ |
 | `phase-21R/conformal_poisson_0.850.json` | `cert/conformal_v2.py` | `46c7245` | 2026-08-12 | - | - | _(dien tay)_ |
@@ -334,12 +351,28 @@ Bon tang (Lesson 23.17, amendment 23-44):
 | `phase-20R/sensitivity_a02.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_cbr_0.700.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_h2_0.700.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.700_U0_legacy_sawtooth_51ms.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.700_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_h2_0.850.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.850_U0_legacy_sawtooth_51ms.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.850_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_h2_0.925.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.925_U0_legacy_sawtooth_51ms.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.925_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.960_U0_legacy_sawtooth_51ms.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_h2_0.960_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.700.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.700_U0_legacy_sawtooth_51ms.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.700_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.850.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.850_U0_legacy_sawtooth_51ms.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.850_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.925.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.925_U0_legacy_sawtooth_51ms.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.925_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.925_V3.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.960_U0_legacy_sawtooth_51ms.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-21R/calib_set_poisson_0.960_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-22/calib_set_v3.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-22/calib_set_v3_cbr_0.700.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-22/calib_set_v3_h2_0.650.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
