@@ -216,6 +216,14 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-172 | 23.21c | PASS | Doi chung `sigma` = 0.020 co dinh: confound `L58` CO that (S_piv(h2@0.700) tut 70 lan) nhung KHONG lai duoc hinh dang -- ca hai luoi don dieu giam tren `h2`, vi tri dinh `poisson` bat bien o 0.850. M-152 MISS |
 | G23-173 | 23.21c | PASS | Hai dinh gio KEP DUOC: `h2` o 0.625 (kep boi 0.600/0.650), `poisson` o 0.850 (kep boi 0.825/0.875). `h2@0.925`/`h2@0.960` co T* o MUT luoi -> ghi "KHONG KEP DUOC", T* la can duoi |
 | G23-174 | 23.21c | NOT_RUN | - |
+| G23-175 | 23.21d | NOT_RUN | - |
+| G23-176 | 23.21d | NOT_RUN | - |
+| G23-177 | 23.21d | NOT_RUN | - |
+| G23-178 | 23.21d | NOT_RUN | - |
+| G23-179 | 23.21d | NOT_RUN | - |
+| G23-180 | 23.21d | NOT_RUN | - |
+| G23-181 | 23.21d | NOT_RUN | - |
+| G23-182 | 23.21d | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -330,6 +338,10 @@ dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
 12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
 `G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
+`G23-175 .. G23-182` (lesson `23.21d`) mo boi amendment 23-55: sua dai luong
+vong tron, dao nghia tieu chi thu cap, va chuyen tu TRUC `rho` sang MAT PHANG
+`(rho, sigma)`. KE TIEP `G23-174`.
 
 `G23-169 .. G23-174` (lesson `23.21c`) mo boi amendment 23-54: song nui
 `T_loss`, dong nhat thuc `S_pivotal`, va tach confound `sigma`. KE TIEP `G23-168`.

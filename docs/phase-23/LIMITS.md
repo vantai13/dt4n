@@ -77,7 +77,12 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L57 | `M-135` so sanh hai phan hoach do duoi HAI ham muc tieu khac nhau: `err_neo` duoi SLA NOI SINH tung cell, `regime` duoi SLA CHUNG | `00zzq-amendment-54.md` muc 2 | Ill-posed, DOC LAP voi n -- khong sua duoc bang thong ke. Cot `err_neo` cua bang `G23-167` dang TRON hai truc SLA |
 | L58 | Quet `rho` doi DONG THOI `rho_bar` va `sigma_rho`: `sigma` = 0.9 x `sigma_max(rho)`, va `sigma_max` co DINH o `rho` ~ 0.775 (0.0804). Giua `h2@0.650` va `h2@0.700` `sigma` chenh 1.60 lan | `00zzq-amendment-54.md` muc 3 | Cung lop loi voi `L37`. Moi phat bieu "vung song o `rho` thuoc [x,y]" PHAI kem doi chung `sigma` co dinh (`G23-172`) |
 
-So ke tiep duoc cap: **L59**.
+| L59 | Can duoi vung song ho `h2` TRUNG cho `sigma_max(rho)` roi khoi 0 (`rho` ~ 0.565). `S_pivotal` nhay ~1000 lan tu 0.575 sang 0.600 trong khi `sigma` chi tang 4.3 lan | `00zzr-amendment-55.md` muc 4 | Do la bien cua THAM SO HOA mo hinh, KHONG phai bien cua MANG. Tham so hoa `sigma` khac -> can duoi dich |
+| L60 | `efficiency` cua `poisson@0.960` va `h2@0.960` duoc noi suy BAC NGANG qua mot buoc nhay ([0.500, 0.993] va [0.000, 0.992]) -> VO NGHIA | `00zzr-amendment-55.md` muc 1 | Lop loi `L34`/`L35`/`M-133`, lan thu TU. Sua bang luoi cuc bo he so 1.05 (`G23-176`) |
+| L61 | Tieu chi `opt_viol in [0.01, 0.50]` ke thua tu thoi NOI SINH khi `opt_viol` bi EP = 0.15 va dai do chi la phep kiem VE SINH. Duoi SLA ngoai sinh y nghia DAO: `opt_viol` thap = ORACLE THANH CONG | `00zzr-amendment-55.md` muc 2 | Cung lop loi voi `S12` nhung tren mot TIEU CHI thay vi mot BIEN. `M-153` dung KET QUA (trung top-4 theo `V`) nhung sai LY DO |
+| L62 | Do rong vung song theo `rho` CO LAI ~3 lan khi giu `sigma` co dinh (11 cell LIVE -> 4); `poisson@0.750` tut 1104 lan | `00zzr-amendment-55.md` muc 3b | Phat bieu MOT CHIEU ve vung song la KHONG DAY DU. Doi tuong that la mot MIEN trong mat phang `(rho, sigma)` |
+
+So ke tiep duoc cap: **L63**.
 
 ## Va cham da phat hien
 
