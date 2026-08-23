@@ -56,11 +56,57 @@ VALID_STATUS = {
 CONTIGUOUS_LO, CONTIGUOUS_HI = 24, 73
 
 # Lesson da dong: gate cua chung khong duoc NOT_RUN.
-CLOSED_LESSONS = {"23.1", "23.2", "23.3", "23.4", "23.5A", "23.5B", "23.5C"}
+#
+# Tieu chi vao day la CO MOT TAI LIEU TUYEN BO DONG, khong phai "gate tinh co
+# deu xanh". `23.20*` duoc them o amendment 23-51 vi `30-close-23-20.md` tuyen
+# bo `DONG`. `23.17` KHONG duoc them: `G23-74`/`G23-75` con MO chinh dang (can
+# thong tin xac thuc cua tac gia), them vao se ep chung sang DEBT -- bien mot
+# viec dang cho thanh mot mon no. `23.18`, `23.18b`, `23.19*` chua co tai lieu dong.
+CLOSED_LESSONS = {
+    "23.1", "23.2", "23.3", "23.4", "23.5A", "23.5B", "23.5C",
+    "23.20", "23.20A", "23.20B", "23.20C", "23.20D",
+}
 
 # Mon no GHIM (Amendment 23-26 muc 7.3). Them mot mon no moi phai sua dong nay,
 # tuc phai co mot amendment -- no khong duoc xuat hien im lang.
-PINNED_DEBT = {"G23-10", "G23-12a", "G23-12b"}
+# `G23-141`/`G23-142` them o amendment 23-51: Dot 4 va mo rong M-125, bi chan
+# boi S14 (`L41`), mo lai sau Lesson 23.21.
+PINNED_DEBT = {"G23-10", "G23-12a", "G23-12b", "G23-141", "G23-142"}
+
+# Ma gate bi dung NHAM trong mot tai lieu DA KY. Tai lieu khong duoc sua, nen
+# anh xa song o day VA o muc "Va cham da phat hien" cua GATES.md.
+#   (ten file, ma bi dung nham) -> (ma dung, amendment phan xu)
+ADJUDICATED_GATE_TYPO = {
+    ("30-close-23-20.md", "G23-135"): ("G23-141", "00zzn-amendment-51.md"),
+    ("30-close-23-20.md", "G23-136"): ("G23-142", "00zzn-amendment-51.md"),
+}
+
+# Tai lieu DA KY ghi trang thai DUNG TAI THOI DIEM VIET, roi gate bi phan xu
+# lai sau do. Khong phai loi danh may -- la do lech thoi gian.
+#   (ten file, ma) -> (trang thai o doc, trang thai dung, amendment phan xu)
+ADJUDICATED_STALE_STATUS = {
+    ("28-axis-remeasure-impact.md", "G23-123"):
+        ("PASS", "ADJUDICATED", "00zzi-amendment-49c.md"),
+    # Lesson 23.6 HA CAP nam gate xuong DIAGNOSTIC (`06-reframe.md` muc 5,
+    # khoa boi amendment 23-25 muc 6). `99-gate-decision.md` giu trang thai
+    # TRUOC tai khung. KHONG mot con so nao bi rut -- chi doi VAI TRO.
+    ("99-gate-decision.md", "G23-15"):
+        ("FAIL", "DIAGNOSTIC", "00z-amendment-25.md"),
+    ("99-gate-decision.md", "G23-17"):
+        ("FAIL", "DIAGNOSTIC", "00z-amendment-25.md"),
+    ("99-gate-decision.md", "G23-23"):
+        ("PASS", "DIAGNOSTIC", "00z-amendment-25.md"),
+}
+
+# Mot dong bang gate o BAT KY tai lieu nao (bang o doc lesson chi co 3 cot).
+GATE_ROW_ANY = re.compile(r"^\s*\|\s*(G23-\d+[a-z]?)\s*\|")
+STATUS_WORD = re.compile(
+    r"\b(PASS|FAIL|NOT_RUN|UNDETECTED|DIAGNOSTIC|ADJUDICATED|DEBT)\b")
+# Mot O la o TRANG THAI khi no BAT DAU bang tu trang thai ("PASS -- PARTIAL").
+# Neu chi `search` ca dong thi "M-121 FAIL dung du kien" trong o MO TA bi doc
+# nham thanh trang thai.
+STATUS_CELL = re.compile(
+    r"^(PASS|FAIL|NOT_RUN|UNDETECTED|DIAGNOSTIC|ADJUDICATED|DEBT)\b")
 
 # Noi duoc quet de tim ma gate duoc nhac den.
 SCAN_DIRS = (DOCS, ROOT / "cert", ROOT / "test")
@@ -220,6 +266,113 @@ def test_every_gate_id_mentioned_in_repo_is_in_the_ledger():
         "ma gate duoc nhac den nhung khong co trong GATES.md: %s"
         % {k: sorted(v) for k, v in sorted(unknown.items(), key=lambda kv: _sort_key(kv[0]))}
     )
+
+
+def test_gate_status_is_consistent_across_documents():
+    """Mot ma gate khong duoc mang HAI trang thai o hai tai lieu.
+
+    Day la lo hong da cho ra va cham `L21`/`L29` o ho `L*`, nay bit cho ho
+    `G23-*`. `test_every_gate_id_mentioned_in_repo_is_in_the_ledger` chi kiem
+    MEMBERSHIP ("ma nay co ton tai khong"), khong kiem NHAT QUAN TRANG THAI
+    ("ma nay co duoc mo ta giong nhau o moi noi khong"). `_rows()` cung khong
+    thay bang o doc lesson vi bang do chi co BA cot.
+
+    Trang thai phai lay theo O, khong phai tim tu dau tien trong DONG. Ban
+    nhap dau dung `STATUS_WORD.search(line)` va sinh 10 bao dong gia: chuoi
+    "FAIL" nam trong o MO TA ("M-121 FAIL dung du kien") bi doc thanh trang
+    thai, con bang REFRAME o `06-reframe.md` von co HAI cot trang thai
+    (`CU` -> `MOI`) thi bi doc mat cot thu hai.
+
+    Nen luat la: gom moi o BAT DAU bang mot tu trang thai; dong nhat quan neu
+    trang thai o so nam trong tap do.
+    """
+    ledger = {r[0]: r[2] for r in _rows()}
+    bad = []
+    for p in sorted(DOCS.rglob("*.md")):
+        if p.name == "GATES.md":
+            continue
+        for line in p.read_text(encoding="utf-8").splitlines():
+            m = GATE_ROW_ANY.match(line)
+            if not m:
+                continue
+            gid = m.group(1)
+            if (p.name, gid) in ADJUDICATED_GATE_TYPO:
+                continue  # ma bi danh nham, da phan xu
+            if (p.name, gid) in ADJUDICATED_STALE_STATUS:
+                continue  # trang thai cu, da phan xu
+            if gid not in ledger:
+                continue
+            cells = [c.strip() for c in line.strip().strip("|").split("|")]
+            doc_status = {
+                s.group(1) for s in (STATUS_CELL.match(c) for c in cells[1:]) if s
+            }
+            if doc_status and ledger[gid] not in doc_status:
+                bad.append((p.name, gid, sorted(doc_status), ledger[gid]))
+    assert not bad, (
+        "trang thai gate lech giua tai lieu va GATES.md "
+        "(file, ma, o doc, o so): %s" % bad)
+
+
+def test_adjudicated_gate_typos_are_documented():
+    """Anh xa phan xu phai song o HAI noi va bi khoa vao nhau.
+
+    Kiem DONG BANG chu khong phai chuoi con -- bai hoc tu `G23-144`: ban nhap
+    dau cua test tuong duong ben `LIMITS.md` chi kiem `"L43" in txt` va doi
+    chung duong KHONG do, vi chuoi con nam trong van xuoi.
+    """
+    txt = LEDGER.read_text(encoding="utf-8")
+    for (fname, wrong), (right, amd) in ADJUDICATED_GATE_TYPO.items():
+        row = "| `%s` | `%s` | `%s` |" % (wrong, fname, right)
+        assert row in txt, (
+            "GATES.md thieu DONG BANG phan xu cho %s trong %s (can: %r)"
+            % (wrong, fname, row))
+        assert (DOCS / amd).exists(), "thieu amendment phan xu %s" % amd
+    for (fname, gid), (old, new, amd) in ADJUDICATED_STALE_STATUS.items():
+        row = "| `%s` | `%s` | `%s` | `%s` |" % (gid, fname, old, new)
+        assert row in txt, (
+            "GATES.md thieu DONG BANG phan xu trang thai cu cho %s trong %s "
+            "(can: %r)" % (gid, fname, row))
+        assert (DOCS / amd).exists(), "thieu amendment phan xu %s" % amd
+
+
+def test_adjudicated_gate_typo_still_matches_a_real_line():
+    """Ma bi dung nham phai CON xuat hien trong file do.
+
+    Neu ai do sua tai lieu (dang le khong duoc) hoac doi ten file, anh xa tro
+    thanh vo hieu va va cham quay lai im lang. Chan giong
+    `test_adjudicated_alias_fragments_still_match_a_real_line` ben so LIMITS.
+    """
+    keys = list(ADJUDICATED_GATE_TYPO) + list(ADJUDICATED_STALE_STATUS)
+    for fname, gid in keys:
+        p = DOCS / fname
+        assert p.exists(), "tai lieu %s khong con ton tai" % fname
+        hit = [l for l in p.read_text(encoding="utf-8").splitlines()
+               if (m := GATE_ROW_ANY.match(l)) and m.group(1) == gid]
+        assert hit, (
+            "anh xa (%s, %s) khong con khop dong bang nao -- anh xa da chet"
+            % (fname, gid))
+
+
+def test_prose_in_ledger_does_not_restate_status():
+    """Van xuoi trong GATES.md khong duoc mang tu trang thai canh mot ma gate.
+
+    GATES.md tu khai la "NGUON CHAN LY DUY NHAT", nhung van xuoi trong chinh
+    no khong bi may doc. Da co mot mau thuan that: bang ghi `G23-125` PASS
+    trong khi van xuoi ngay duoi ghi NOT_RUN (tan du chua cap nhat).
+
+    Nguyen tac: van xuoi giai thich PHAM VI va LY DO; TRANG THAI chi song o
+    bang, vi chi bang bi may doc.
+    """
+    bad = []
+    for line in LEDGER.read_text(encoding="utf-8").splitlines():
+        s = line.lstrip()
+        if s.startswith("|") or s.startswith("#"):
+            continue
+        if GATE_MENTION.search(line) and STATUS_WORD.search(line):
+            bad.append(line.strip()[:90])
+    assert not bad, (
+        "van xuoi trong GATES.md phat bieu TRANG THAI (chi bang duoc phep): %s"
+        % bad)
 
 
 # --------------------------------------------------------------------------

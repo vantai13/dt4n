@@ -56,7 +56,10 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 
 | L43 | `alpha/3` vs `alpha/4` da dong boi Amendment 23-16; pruning action chet con la limitation OPTIONAL, chua duoc dung de dien giai ket qua | `00s-amendment-18.md:139` | cap moi o amendment 23-50; truoc do mang nham ma `L21`. Tai lieu DA KY khong duoc sua nen dong do VAN mang chuoi `L21`; anh xa o `test/test_limits_ledger.py :: ADJUDICATED_ALIAS` |
 
-So ke tiep duoc cap: **L44**.
+| L44 | `ar1_matrix()` sinh TAM chuoi shock DOC LAP cho tam link (`measurements/sla_calib_v2.py:79`, docstring tu khai "independent AR(1) per link"). Trong `topology_v7` (butterfly) cac duong DUNG CHUNG link, nen tai that su tuong quan. Mo hinh doc lap danh gia THAP phuong sai cua margin giua cac duong -> conformal band hep gia tao. Day la `S13` | `00zzn-amendment-51.md` muc 6 | Lesson 23.21 hieu chuan `w_loss` TREN CHINH mo hinh nay: khong lam S13 te hon nhung cung KHONG sua. Sua o 23.25/23.26 |
+| L45 | Xuat xu chinh xac cua `beta = 0.431` CHUA truy duoc. Hai ung vien tai dung tu Phase 22 cho 0.4340 va 0.4371; ca hai nam trong CI95 cua phep fit `[0.4195, 0.4425]` nhung khong cai nao ra dung 0.431 | `CONSTANTS.md` muc "K01" | KHONG lam hong `M-125b` (fit tren phep doi BIN, kiem tren phep doi TRUC -> ngoai mau). Anh huong: khong tai lap duoc chinh xac con so tu tai lieu Phase 22 |
+
+So ke tiep duoc cap: **L46**.
 
 ## Va cham da phat hien
 

@@ -179,25 +179,99 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-138 | 23.20C | PASS | Bang 3 + doi chieu M-127..M-130: 1/4 HIT, bao cao NGUYEN kem giai thich (L34: noi suy tuyen tinh qua 124 ms tren artifact SENSITIVITY_ONLY) |
 | G23-139 | 23.20C | PASS | P23-A, L11, L13 DONG; L37..L41 ghi vao LIMITS.md |
 | G23-140 | 23.20C | PASS | Nhan CONDITIONAL_ON_DSYNC_51MS GIU nguyen: `approved_for_live` con rong vi truc SLA (S14) chua sua. `30-close-23-20.md` muc 4 |
-| G23-141 | 23.20C | NOT_RUN | - |
-| G23-142 | 23.20C | NOT_RUN | - |
-| G23-97 | 23.20 | NOT_RUN | - |
-| G23-98 | 23.20 | NOT_RUN | - |
-| G23-99 | 23.20 | NOT_RUN | - |
+| G23-141 | 23.20C | DEBT | dinh nghia o `30-close-23-20.md` muc 5 (Dot 4: 12 build). Bi chan boi S14 -- xem `L41`; mo lai sau Lesson 23.21 |
+| G23-142 | 23.20C | DEBT | dinh nghia o `30-close-23-20.md` muc 5 (mo rong M-125a/b len 12 cell / 48 o). Cung ly do `L41` |
+| G23-97 | 23.20 | ADJUDICATED | ma DU KIEN ky truoc o amendment 23-44 muc 5; noi dung DA chay duoi ma khac. Alias -> `G23-137` (doi chung am ha nguon, bit-exact). Phan xu: amendment 23-51 muc 4 |
+| G23-98 | 23.20 | ADJUDICATED | ma DU KIEN; noi dung DA chay duoi `G23-129` + `G23-130` (M-125a 8/8, M-125b 16/16). Phan xu: amendment 23-51 muc 4 |
+| G23-99 | 23.20 | ADJUDICATED | ma DU KIEN; noi dung DA chay duoi `G23-138` (Bang 3 + doi chieu M-127..M-130, bao cao ca MISS). Phan xu: amendment 23-51 muc 4 |
 | G23-143 | 23.20D | PASS | `L21` phan xu: `00s-amendment-18.md:139` cap ma moi `L43`; `KNOWN_OPEN` rong; `test_no_duplicate_limit_ids` xanh ma khong con mien tru |
 | G23-144 | 23.20D | PASS | Anh xa song o HAI noi (`ADJUDICATED_ALIAS` + bang `LIMITS.md`) va bi khoa vao nhau. DC1: go dong `\| L43 \|` khoi bang -> `test_adjudicated_aliases_are_documented` DO. Ban nhap dau chi kiem `"L43" in txt` va DC1 KHONG do (chuoi con trong van xuoi) -> da siet thanh kiem DONG BANG |
 | G23-145 | 23.20D | PASS | DC2: lam hong manh 40 ky tu -> `test_adjudicated_alias_fragments_still_match_a_real_line` VA `test_no_duplicate_limit_ids` cung DO. DC3: go han anh xa -> `test_no_duplicate_limit_ids` DO (va cham quay lai). Khoi phuc -> 6 passed |
 | G23-146 | 23.20D | PASS | `docs/phase-23/00zzm-amendment-50.md` la commit RIENG, co tag `amendment-50`, TRUOC moi code chay thi nghiem cua Lesson 23.21 |
+| G23-147 | 23.20E | PASS | Va cham thu SAU (`G23-135`/`G23-136` trong `30-close-23-20.md`) phan xu -> `G23-141`/`G23-142`. Anh xa song o bang GATES.md VA `ADJUDICATED_GATE_TYPO`, khoa boi `test_adjudicated_gate_typos_are_documented` |
+| G23-148 | 23.20E | PASS | `test_gate_status_is_consistent_across_documents` tim them BON do lech trang thai (`G23-123`; `G23-15`/`G23-17`/`G23-23`) ma kiem toan bang mat khong thay; ca bon da phan xu vao `ADJUDICATED_STALE_STATUS` |
+| G23-149 | 23.20E | PASS | `G23-97 .. G23-99` (ma DU KIEN ky truoc o amendment 23-44) dong vong lap -> ADJUDICATED, evidence tro toi `G23-137` / `G23-129`+`G23-130` / `G23-138` |
+| G23-150 | 23.20E | PASS | `CLOSED_LESSONS` + `PINNED_DEBT` lap dan: `23.20*` vao danh sach, `G23-141`/`G23-142` -> DEBT va duoc ghim. `test_no_closed_lesson_gate_is_still_not_run` xanh |
+| G23-151 | 23.20E | PASS | `test_prose_in_ledger_does_not_restate_status`: van xuoi GATES.md khong con phat bieu trang thai. Da sua mau thuan `G23-125` (bang PASS vs van xuoi NOT_RUN) |
+| G23-152 | 23.20E | PASS | `docs/phase-23/CONSTANTS.md` (so thu BA) + `test/test_constants_ledger.py` 7/7. `sd(beta) = 0.0059` tai tinh duoc tu CI bootstrap Phase 22; chat hon can hau kiem `L39` khoang 3 lan |
+
+## Va cham da phat hien
+
+Song song voi muc cung ten trong `LIMITS.md`. Ho `G23-*` cung mac benh nhu ho
+`L*`: mot ma duoc dung cho hai viec o hai tai lieu.
+
+### G23-135 / G23-136 -- `30-close-23-20.md` dung NHAM ma
+
+```text
+GATES.md + 29-waves-2-3-and-bin-geometry.md:145-146
+  G23-135  phep kiem HINH HOC BIN            <- nghia DUNG
+  G23-136  tang PENDING + `pending_on`       <- nghia DUNG
+
+30-close-23-20.md:152-153
+  G23-135  "Dot 4: 12 build"                 <- ma SAI, dung phai la G23-141
+  G23-136  "M-125a/b mo rong 12 cell / 48 o" <- ma SAI, dung phai la G23-142
+```
+
+NOI DUNG cua hai dong trong `30-close-23-20.md` la DUNG (ca hai viec do that su
+chua chay, bi chan boi S14). Chi MA la sai. Hau qua: doc van ban DONG lesson,
+nguoi ta ket luan phep kiem hinh hoc bin chua chay -- trong khi no da chay va
+da sinh ra `L39`.
+
+| ma bi dung nham | trong file | ma dung | phan xu tai |
+|---|---|---|---|
+| `G23-135` | `30-close-23-20.md` | `G23-141` | `00zzn-amendment-51.md` |
+| `G23-136` | `30-close-23-20.md` | `G23-142` | `00zzn-amendment-51.md` |
+
+Ma o cot dau duoc boc BACKTICK co chu dich: `_rows()` nhan mot dong bang la
+dong gate khi o dau tien khop `^G23-\d+[a-z]?$`. Khong boc backtick thi bang
+phan xu nay bi doc thanh hai dong gate that -- va `test_no_duplicate_gate_id`
+do ngay. Do la chuyen da xay ra o ban nhap.
+
+### Trang thai CU con sot lai trong tai lieu da ky
+
+Khac loai voi tren: MA dung, nhung TRANG THAI la trang thai dung tai thoi diem
+VIET, roi gate bi phan xu lai sau do. Tai lieu da ky nen khong sua.
+
+| ma | trong file | o doc | dung | phan xu tai |
+|---|---|---|---|---|
+| `G23-123` | `28-axis-remeasure-impact.md` | `PASS` | `ADJUDICATED` | `00zzi-amendment-49c.md` |
+| `G23-15` | `99-gate-decision.md` | `FAIL` | `DIAGNOSTIC` | `00z-amendment-25.md` |
+| `G23-17` | `99-gate-decision.md` | `FAIL` | `DIAGNOSTIC` | `00z-amendment-25.md` |
+| `G23-23` | `99-gate-decision.md` | `PASS` | `DIAGNOSTIC` | `00z-amendment-25.md` |
+
+`G23-123`: bao cao Dot 1 viet TRUOC khi amendment 23-49c phan xu viec
+`out_stem()` tro nham tang.
+
+`G23-15`/`G23-17`/`G23-23`: Lesson 23.6 (`06-reframe.md` muc 5) HA CAP nam gate
+xuong `DIAGNOSTIC` khi tai khung fallback thanh tham so ngoai sinh.
+`99-gate-decision.md` giu trang thai truoc tai khung. Nhu `06-reframe.md` ghi
+ro: KHONG mot con so nao bi rut lai, chi doi VAI TRO.
+
+Bon dong nay KHONG nam trong ban kiem toan ban dau; ca bon do
+`test_gate_status_is_consistent_across_documents` tim ra trong hai lan chay dau.
+
+`30-close-23-20.md` DA KY nen KHONG duoc sua. Anh xa song o HAI noi -- bang
+tren va `test/test_phase23_gate_ledger.py :: ADJUDICATED_GATE_TYPO` -- va
+`test_adjudicated_gate_typos_are_documented` bat buoc hai noi phai khop.
 
 ## Lesson da dong
 
 ```text
 23.1  23.2  23.3  23.4  23.5A  23.5B  23.5C
+23.20  23.20A  23.20B  23.20C  23.20D
 ```
 
 Gate thuoc mot lesson trong danh sach nay KHONG duoc mang trang thai `NOT_RUN`.
 Neu no chua duoc cham thi trang thai dung la `DEBT`, va mon no do bi GHIM trong
 test de khong the xuat hien them mot cach im lang.
+
+Tieu chi vao danh sach nay la CO MOT TAI LIEU TUYEN BO DONG, khong phai "cac
+gate tinh co deu xanh". Den 2026-08-23 chi `30-close-23-20.md` tuyen bo `DONG`,
+nen chi ho `23.20*` duoc them. Cu the, `23.17` KHONG duoc them du gate cua no
+gan het da cham: `G23-74`/`G23-75` con MO mot cach chinh dang (can thong tin
+xac thuc cua tac gia), va them `23.17` vao day se ep chung sang `DEBT` --
+tuc bien mot viec dang cho thanh mot mon no, sai ban chat. `23.18`, `23.18b`,
+`23.19*` cung chua co tai lieu dong.
 
 ## G23-34 -- dinh nghia khong biet
 
@@ -230,9 +304,9 @@ vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 `G23-127`, `G23-128`, `G23-131`, `G23-135`, `G23-136` (lesson `23.20B`) la
 Dot 2 + Dot 3 va phep kiem hinh hoc bin.
 `G23-125`, `G23-137 .. G23-142` (lesson `23.20C`) la tich hop ha nguon va
-dong Lesson 23.20. `G23-141`/`G23-142` (Dot 4 va mo rong M-125 len 12 cell /
-48 o) NOT_RUN: bi chan boi S14 -- xem `L41`.
-`G23-125` (ha nguon co `--axis`) NOT_RUN: bay script ha nguon chua co co do;
+dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
+12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
+`G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
 
 `G23-143 .. G23-146` (lesson `23.20D`) mo boi amendment 23-50: phan xu va cham
@@ -256,9 +330,10 @@ duoc tao.
 amendment 23-45b (bug cong thuc null) va 23-45c (sua ket luan T5).
 
 `G23-74 .. G23-78` mo o Lesson 23.17; `G23-79 .. G23-85` o Lesson 23.18
-(`22-aoi-stall-anatomy.md`, amendment 23-45). `G23-83` va `G23-84` la FAIL
-duoc BAO CAO, khong phai NOT_RUN: ca hai da chay, ket qua duoi nguong, va
-nguyen nhan da xac dinh trong bao cao lesson.
+(`22-aoi-stall-anatomy.md`, amendment 23-45). Trang thai cua `G23-83` va
+`G23-84` trong bang la mot KET QUA duoc bao cao, khong phai mot gate chua ai
+cham: ca hai da chay, ket qua duoi nguong, va nguyen nhan da xac dinh trong
+bao cao lesson.
 `G23-74 .. G23-78` mo o Lesson 23.17 (`21-freeze-label-tidy.md`,
 amendment 23-44). `G23-97 .. G23-99` la gate DU KIEN cua Lesson 23.20, duoc
 ghi truoc trong amendment 23-44 muc 5 de du doan khong the sua sau khi thay
