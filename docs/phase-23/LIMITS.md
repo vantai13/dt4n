@@ -86,7 +86,11 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L64 | Dinh `V` nam TREN BIEN kha thi `sigma = sigma_max(rho)` o 13/14 gia tri `rho` do duoc; chua kep duoc | `00zzs-amendment-56.md` muc 3 | Phat bieu "V cuc dai o sigma trung binh" DA BI RUT. Muon kep phai quet theo `a`, khong quet theo `sigma` |
 | L65 | Chieu truot cua mien song theo `sigma` bi TRON voi hinh dang mien kha thi: tai `sigma` = 0.072 chi con MOT cot `rho` kha thi (0.800) | `00zzs-amendment-56.md` muc 4 | Phat bieu "mien song truot sang rho cao hon o ca hai ho" DA BI RUT (hai ho di NGUOC chieu). HINH 2 BAT BUOC ve `sigma_max(rho)` chong len |
 
-So ke tiep duoc cap: **L66**.
+| L66 | Van ban dong lesson (`NN-close-*.md`) va `GATES.md` duoc cap nhat bang tay o HAI cho. `35-close-23-21.md` BO SOT `G23-156` va `G23-158` khoi muc "No mang sang" (do duoc: grep = 0 lan) | `00zzt-amendment-57.md` muc 2a | Khong test nao buoc hai cho khop ve TAP gate mang sang. Chan bang `G23-194` |
+| L67 | So no khong co co che chan CHU TRINH CHO: moi `DEBT` duoc phep ghi "mo lai sau X" ma khong ai kiem `X` co phu thuoc NGUOC vao no khong | `00zzt-amendment-57.md` muc 2b | Hau qua that: `G23-158` <-> `G23-141`/`G23-142` DEADLOCK tu 2026-08-23. Chan bang `G23-195` |
+| L68 | Artifact cua `sla_exogenous` dung schema rieng (`sla_axis_label` + `sla_spec_id`) thay vi truong `validity` chuan | `00zzt-amendment-57.md` muc 8 | `test_no_stale_axes` KHONG kiem duoc chung neu chung len `LIVE/`. Manifest moi PHAI co `validity` |
+
+So ke tiep duoc cap: **L69**.
 
 ## Va cham da phat hien
 

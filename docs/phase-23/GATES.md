@@ -231,6 +231,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-187 | 23.21e | PASS | Yeu cau ve `sigma_max(rho)` chong len HINH 2 duoc ghi thanh dieu kien BAT BUOC o `35-close-23-21.md` muc 5 va `L65`; du lieu `sigma_max` co san trong `sigma_rho_plane.json` (truong `sigma_max` moi hang) |
 | G23-188 | 23.21e | PASS | `M-147` bao cao kem `M147_n_cells_used` = 6 va `M147_n_cells_undetermined` = 2 (`h2@0.925`, `h2@0.960` tren luoi tho). Trung vi 0.2216 |
 | G23-189 | 23.21e | PASS | DC29: quay ve phep kiem `argmax` -> `test_peak_at_edge_checks_value_not_argmax_index` DO. Doi chung am kem theo: dinh THAT o trong van duoc nhan la kep duoc |
+| G23-190 | 23.21f | NOT_RUN | - |
+| G23-191 | 23.21f | NOT_RUN | - |
+| G23-192 | 23.21f | NOT_RUN | - |
+| G23-193 | 23.21f | NOT_RUN | - |
+| G23-194 | 23.21f | NOT_RUN | - |
+| G23-195 | 23.21f | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -345,6 +351,10 @@ dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
 12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
 `G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
+`G23-190 .. G23-195` (lesson `23.21f`) mo boi amendment 23-57: pha DEADLOCK
+so sach giua `G23-158` va `G23-141`/`G23-142`, va dung hai cai chan de lan
+sau khong xay ra duoc. KE TIEP `G23-189`.
 
 `G23-183 .. G23-189` (lesson `23.21e`) mo boi amendment 23-56: sua phep kiem
 dinh-o-mut cho truong hop CAO NGUYEN, va rut hai phat bieu chua chung minh
