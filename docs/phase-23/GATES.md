@@ -203,6 +203,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-159 | 23.21 | PASS | NC-1 muc MODULE: nap lai SLA+w_loss noi sinh cu -> 10/10 cell, `d_opt_viol` = 0.0 va `d_share` = 0.0 CHINH XAC, `d_margin` = 2.84e-14 (cong don dau phay dong, nguong 1e-9). Muc DUONG ONG con cho: 8 calib parquet khong co tren dia -- `31-exogenous-sla.md` muc 6 |
 | G23-160 | 23.21 | PASS | `S_pivotal` max_dev = 0.0 qua ca ba `w_loss`. Bat bien duoc chan o CHU KY HAM (`regime_shares` khong nhan `w_loss`/`opt`), khong chi kiem o gia tri -- `test_regime_shares_signature_has_no_w_loss` |
 | G23-161 | 23.21 | PASS | `role` giu semantics cu (`gate`/`pc1`/`pc1_excluded_by_q8`); ket luan moi o truong `regime`. Doi chung duong DC17: gan `role = regime` -> test DO |
+| G23-162 | 23.21b | NOT_RUN | - |
+| G23-163 | 23.21b | NOT_RUN | - |
+| G23-164 | 23.21b | NOT_RUN | - |
+| G23-165 | 23.21b | NOT_RUN | - |
+| G23-166 | 23.21b | NOT_RUN | - |
+| G23-167 | 23.21b | NOT_RUN | - |
+| G23-168 | 23.21b | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -317,6 +324,12 @@ dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
 12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
 `G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
+`G23-162 .. G23-168` (lesson `23.21b`) mo boi amendment 23-53: doc lai ket qua
+23.21 (thang do bi bien chan, khoang tin cay, phan loai hai chieu). Chung KE
+TIEP `G23-161`. Trang thai cua `G23-141`/`G23-142` trong bang KHONG doi:
+chung can calib parquet ma `sla_exogenous` khong dung den, nen viec chay bon
+cell moi khong tra duoc hai mon do.
 
 `G23-153 .. G23-161` (lesson `23.21`) mo boi amendment 23-52: SLA ngoai sinh.
 Chung KE TIEP `G23-152`. Ban thao ngoai repo danh so `G23-147 .. G23-155`,

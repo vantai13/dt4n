@@ -64,7 +64,11 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 
 | L48 | DINH CHINH amendment 23-52 muc 3: can duoi sweep `w_loss = 1250` KHONG "bao tron dai noi sinh cu [1245.6, 4722.7]" -- `1250 > 1245.6`. So `1245.6` la cua HAI cell `cbr` role=`pc1`; tam cell `gate` (co so cua moi ket luan) co dai `[1656.4, 4722.7]`, va `1250` bao tron dai do | `00zzo-amendment-52.md` muc 3 (cau chu sai); do duoc tren `sla_calibration.json` | Sweep VAN du cho pham vi ket luan. Amendment DA KY nen khong sua; dinh chinh ghi o day va o `test_spec_table_is_locked` |
 
-So ke tiep duoc cap: **L49**.
+| L49 | `M-135` dung thang do bi BIEN CHAN: voi bien 2-vs-6 (SLA) va 4-vs-4 (err_neo), so cell trung chi nhan {2,4,6} va 6/8 la TRAN co the dat. Nguong ">= 6/8" duoc ky TRUOC khi biet bien | `00zzp-amendment-53.md` muc 1 | Bang chung thuc: `kappa` = 0.50, `P(>=6/8 ngau nhien)` = 0.214, n = 8. KHONG duoc viet "SLA ngoai sinh xac nhan vung song cu" |
+| L50 | `S_pivotal` bao cao o Lesson 23.21 KHONG kem khoang tin cay. Chuoi `rho` la AR(1) (`tau` = 1 s, `dt` = 5 ms) nen `n_eff` = 500 chu khong phai 200 000 | `00zzp-amendment-53.md` muc 2 | Sai so thuc lon gap ~20 lan so voi gia dinh iid. `h2@0.700` cach nguong 0.80 sigma -> nhan `AMBIGUOUS` |
+| L51 | Tam calib parquet cua `M-136` va bon parquet Dot 4 khong con tren dia, va report cu KHONG luu digest cua chung | `00zzp-amendment-53.md` muc 9 | Dung lai ma tham so khong khop goc -> doi chung am muc duong ong vo nghia IM LANG. Bao cao "khong tai dung duoc", KHONG dung so thay the |
+
+So ke tiep duoc cap: **L52**.
 
 ## Va cham da phat hien
 
