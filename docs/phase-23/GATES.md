@@ -184,6 +184,10 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
+| G23-143 | 23.20D | PASS | `L21` phan xu: `00s-amendment-18.md:139` cap ma moi `L43`; `KNOWN_OPEN` rong; `test_no_duplicate_limit_ids` xanh ma khong con mien tru |
+| G23-144 | 23.20D | PASS | Anh xa song o HAI noi (`ADJUDICATED_ALIAS` + bang `LIMITS.md`) va bi khoa vao nhau. DC1: go dong `\| L43 \|` khoi bang -> `test_adjudicated_aliases_are_documented` DO. Ban nhap dau chi kiem `"L43" in txt` va DC1 KHONG do (chuoi con trong van xuoi) -> da siet thanh kiem DONG BANG |
+| G23-145 | 23.20D | PASS | DC2: lam hong manh 40 ky tu -> `test_adjudicated_alias_fragments_still_match_a_real_line` VA `test_no_duplicate_limit_ids` cung DO. DC3: go han anh xa -> `test_no_duplicate_limit_ids` DO (va cham quay lai). Khoi phuc -> 6 passed |
+| G23-146 | 23.20D | PASS | `docs/phase-23/00zzm-amendment-50.md` la commit RIENG, co tag `amendment-50`, TRUOC moi code chay thi nghiem cua Lesson 23.21 |
 
 ## Lesson da dong
 
@@ -230,6 +234,13 @@ dong Lesson 23.20. `G23-141`/`G23-142` (Dot 4 va mo rong M-125 len 12 cell /
 48 o) NOT_RUN: bi chan boi S14 -- xem `L41`.
 `G23-125` (ha nguon co `--axis`) NOT_RUN: bay script ha nguon chua co co do;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
+`G23-143 .. G23-146` (lesson `23.20D`) mo boi amendment 23-50: phan xu va cham
+ma `L21` (cap `L43` cho muc `00s-amendment-18.md:139`) va khoa anh xa do vao
+HAI noi. Chung KE TIEP `G23-142`, khong dung lai vung 117..122 da cap cho
+`23.19F`. Amendment 23-50 KHONG dang ky truc nao va KHONG duyet truc nao --
+viec dang ky truc AoI da xong o amendment 23-49c (`measured_v7_uniform`), va
+truc SLA van bi TU CHOI duyet cho den Lesson 23.21 (xem `G23-140`, `L41`).
 
 `G23-117 .. G23-122` (lesson `23.19F`) la hai sua truoc 5b va PILOT M-125
 tren MOT cell -- KHONG phai ket qua cua 23.20. Ban ke hoach

@@ -30,7 +30,7 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L15 | F1 STICKY reset dau block la quy uoc phuong phap | `01-inherited-audit.md:137` | |
 | L16 | ba thang risk do tren cung tap hang nen tuong quan | `01-inherited-audit.md:140` | |
 | L20 | intervention-rate check | `04-baselines.md:218` | |
-| L21 | khong gian hanh dong hieu dung la 3 | `04-baselines.md:365` | **VA CHAM** -- xem duoi |
+| L21 | khong gian hanh dong hieu dung la 3 | `04-baselines.md:365` | va cham **DA PHAN XU** (amendment 23-50) -- xem duoi. Dinh nghia goc `00p-amendment-15.md:144`; dong nay la TRICH DAN |
 | L22 | gamma != 1 la diagnostic-only, khong guarantee-preserving | `00s-amendment-18.md:141` | |
 | L26 | dai tin cay cua c*(gamma) la dai CO DIEU KIEN | `11-abstain-cost.md:358` | |
 | L27 | c* la dai luong PHAN THUC (counterfactual) | `11-abstain-cost.md:364` | |
@@ -54,7 +54,9 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L41 | `live_region_sweep` phu thuoc `--prepare-sla`, von goi `SLA.calibrate_cell` -- CHINH co che tu-hieu-chuan mang loi S14. Khong the mo rong sang 4 cell `rho = 0.650/0.675/0.875/0.900` truoc Lesson 23.21 | `00zzl-amendment-49f.md` muc 3 | Dot 4 hoan; M-125a giu 8 cell, M-125b giu 32 o |
 | L42 | `cert/cell_matrices.py` co BAN SAO row-selection rieng (`_valid_rows` goi tu dong 177). Neu no va `calib_set` dung hai truc khac nhau thi so hang lech (999.945 vs 999.495) | `00zzl-amendment-49f.md` muc 1 | Da truyen `axis`/`aoi_profile` xuong. Loi la ON AO (AssertionError), khong im lang |
 
-So ke tiep duoc cap: **L43**.
+| L43 | `alpha/3` vs `alpha/4` da dong boi Amendment 23-16; pruning action chet con la limitation OPTIONAL, chua duoc dung de dien giai ket qua | `00s-amendment-18.md:139` | cap moi o amendment 23-50; truoc do mang nham ma `L21`. Tai lieu DA KY khong duoc sua nen dong do VAN mang chuoi `L21`; anh xa o `test/test_limits_ledger.py :: ADJUDICATED_ALIAS` |
+
+So ke tiep duoc cap: **L44**.
 
 ## Va cham da phat hien
 
@@ -70,9 +72,25 @@ Hai dong dau la cung mot han che (mot dinh nghia + mot trich dan) -- khong
 sao. Dong thu ba la mot han che KHAC mang cung ma.
 
 ```text
-TRANG THAI: MO. Khong duoc sua lang le -- ca ba dong deu nam trong tai lieu
-DA KY. Phai co mot amendment quyet dinh cap ma moi cho muc nao, roi ghi
-ca hai ten trong bang nay.
+TRANG THAI: PHAN XU o amendment 23-50 (2026-08-23).
+
+  00p-amendment-15.md:144   DINH NGHIA  }  cung mot han che
+  04-baselines.md:365       TRICH DAN   }  -> giu ma L21
+  00s-amendment-18.md:139   han che KHAC   -> cap ma moi L43
+
+Vi sao L43 chu khong phai L39: khi va cham nay duoc phat hien (Lesson 23.19
+Task A) so ke tiep la L39, nhung L39..L42 DA duoc cap o amendment 23-49d,
+23-49f va lesson 29 truoc khi phan xu kip xay ra. Quy tac cap ma #1 cam tai
+su dung so, nen ma phan xu lay so ke tiep tai thoi diem KY, khong phai tai
+thoi diem PHAT HIEN.
+
+Tai lieu DA KY KHONG duoc sua -- dong 139 cua 00s-amendment-18.md VAN mang
+chuoi "L21". Anh xa duoc ghi o HAI noi:
+  - bang tren (dong L43)
+  - test/test_limits_ledger.py :: ADJUDICATED_ALIAS
+va `test_adjudicated_aliases_are_documented` bat buoc hai noi phai khop.
+`test_adjudicated_alias_fragments_still_match_a_real_line` bat buoc manh
+40 ky tu con khop mot dong that, de anh xa khong chet im lang.
 ```
 
 ### L29 vs L31 -- ban ke hoach va repo dung cung so cho hai viec
