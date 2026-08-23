@@ -224,6 +224,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-180 | 23.21d | PASS | `V` tinh cho MOI cell. Dinh `V` va dinh `S_pivotal` o HAI cho khac nhau o CA HAI ho (poisson: sigma 0.046 vs 0.004; h2: (0.650,0.028) vs (0.600,0.004)). `L55` xac nhan bang DO LUONG |
 | G23-181 | 23.21d | PASS | Spearman(`t_endo`, `T*`) = 0.9940 vao `CONSTANTS.md` (`K07`) kem nguon va so cap; `test_spearman_ridge_alignment_matches_ledger` ghim |
 | G23-182 | 23.21d | PASS | Truong `M148_*` doi ten: `n_bracketed_and_within_one_octave` = 6, them `n_within_one_grid_step` = 7 va `n_within_one_octave` = 8 |
+| G23-183 | 23.21e | NOT_RUN | - |
+| G23-184 | 23.21e | NOT_RUN | - |
+| G23-185 | 23.21e | NOT_RUN | - |
+| G23-186 | 23.21e | NOT_RUN | - |
+| G23-187 | 23.21e | NOT_RUN | - |
+| G23-188 | 23.21e | NOT_RUN | - |
+| G23-189 | 23.21e | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -338,6 +345,10 @@ dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
 12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
 `G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
+`G23-183 .. G23-189` (lesson `23.21e`) mo boi amendment 23-56: sua phep kiem
+dinh-o-mut cho truong hop CAO NGUYEN, va rut hai phat bieu chua chung minh
+duoc (vi tri dinh `V`, chieu truot mien song). KE TIEP `G23-182`.
 
 `G23-175 .. G23-182` (lesson `23.21d`) mo boi amendment 23-55: sua dai luong
 vong tron, dao nghia tieu chi thu cap, va chuyen tu TRUC `rho` sang MAT PHANG

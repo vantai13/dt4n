@@ -82,7 +82,11 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L61 | Tieu chi `opt_viol in [0.01, 0.50]` ke thua tu thoi NOI SINH khi `opt_viol` bi EP = 0.15 va dai do chi la phep kiem VE SINH. Duoi SLA ngoai sinh y nghia DAO: `opt_viol` thap = ORACLE THANH CONG | `00zzr-amendment-55.md` muc 2 | Cung lop loi voi `S12` nhung tren mot TIEU CHI thay vi mot BIEN. `M-153` dung KET QUA (trung top-4 theo `V`) nhung sai LY DO |
 | L62 | Do rong vung song theo `rho` CO LAI ~3 lan khi giu `sigma` co dinh (11 cell LIVE -> 4); `poisson@0.750` tut 1104 lan | `00zzr-amendment-55.md` muc 3b | Phat bieu MOT CHIEU ve vung song la KHONG DAY DU. Doi tuong that la mot MIEN trong mat phang `(rho, sigma)` |
 
-So ke tiep duoc cap: **L63**.
+| L63 | Co `peak_at_grid_edge` kiem CHI SO `argmax` nen MU voi CAO NGUYEN. `h2@0.960` co 9/16 diem cung dat `S_pivotal` = 1.0000, cao nguyen trai `T` thuoc [0.211, 0.312] va CHAM mut phai, nhung co bao `false` | `00zzs-amendment-56.md` muc 1 | Loi o cap PHEP KIEM, khong o cap du lieu. Cao nguyen pha VI TRI (`M-147`) nhung KHONG pha GIA TRI (`efficiency`) |
+| L64 | Dinh `V` nam TREN BIEN kha thi `sigma = sigma_max(rho)` o 13/14 gia tri `rho` do duoc; chua kep duoc | `00zzs-amendment-56.md` muc 3 | Phat bieu "V cuc dai o sigma trung binh" DA BI RUT. Muon kep phai quet theo `a`, khong quet theo `sigma` |
+| L65 | Chieu truot cua mien song theo `sigma` bi TRON voi hinh dang mien kha thi: tai `sigma` = 0.072 chi con MOT cot `rho` kha thi (0.800) | `00zzs-amendment-56.md` muc 4 | Phat bieu "mien song truot sang rho cao hon o ca hai ho" DA BI RUT (hai ho di NGUOC chieu). HINH 2 BAT BUOC ve `sigma_max(rho)` chong len |
+
+So ke tiep duoc cap: **L66**.
 
 ## Va cham da phat hien
 
