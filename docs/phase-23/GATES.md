@@ -210,11 +210,11 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-166 | 23.21b | PASS | Bon cell Dot 4 chay tren `sla_exogenous` -> `sla_exogenous_wave4.json`. CA BON LIVE. KHONG tra `G23-141`/`G23-142` (can calib parquet) |
 | G23-167 | 23.21b | PASS | Bang hai chieu ca 8 cell, ke ca o TRONG (`32-scale-ci-and-wave4.md` muc 6). Goc tren-trai TRONG dung du kien -- khong cell nao vi pham tien doan |
 | G23-168 | 23.21b | PASS | do rong CI block / iid = 7.45..11.36 lan -> bo qua tu tuong quan cho CI hep gia mot bac. Nhung `n_eff` do duoc 1551..3603 chu khong phai 500 (cong thuc AR(1) la can duoi) -> `L52` |
-| G23-169 | 23.21c | NOT_RUN | - |
-| G23-170 | 23.21c | NOT_RUN | - |
-| G23-171 | 23.21c | NOT_RUN | - |
-| G23-172 | 23.21c | NOT_RUN | - |
-| G23-173 | 23.21c | NOT_RUN | - |
+| G23-169 | 23.21c | PASS | Luoi `T_loss` log 1.25x, 32 diem (0.0002..0.2019), 8 cell -> `t_loss_fine.json`. Mot buoc = log2(1.25) = 0.322 |
+| G23-170 | 23.21c | PASS | M-147: median \|log2(t_endo/T*)\| = **0.2216** < mot buoc luoi. M-148: 8/8 cell trong mot octave (max 0.440). `S_pivotal(T*)` thuoc [0.864, 0.993] o ca tam cell |
+| G23-171 | 23.21c | PASS | Dong nhat thuc `F_min - F_max` kiem NGOAI MAU tren 26 cell cua hai luoi `rho` MOI: lech lon nhat 2.07e-03 (M-149 HIT) |
+| G23-172 | 23.21c | PASS | Doi chung `sigma` = 0.020 co dinh: confound `L58` CO that (S_piv(h2@0.700) tut 70 lan) nhung KHONG lai duoc hinh dang -- ca hai luoi don dieu giam tren `h2`, vi tri dinh `poisson` bat bien o 0.850. M-152 MISS |
+| G23-173 | 23.21c | PASS | Hai dinh gio KEP DUOC: `h2` o 0.625 (kep boi 0.600/0.650), `poisson` o 0.850 (kep boi 0.825/0.875). `h2@0.925`/`h2@0.960` co T* o MUT luoi -> ghi "KHONG KEP DUOC", T* la can duoi |
 | G23-174 | 23.21c | NOT_RUN | - |
 
 ## Va cham da phat hien

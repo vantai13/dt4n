@@ -252,3 +252,49 @@ def test_t_loss_grid_brackets_all_three_signed_specs():
     for spec in X.SLA_SPECS.values():
         assert min(X.T_LOSS_GRID) <= spec["t_loss"] <= max(X.T_LOSS_GRID)
     assert X.BLOCK_STEPS == 1000        # 5 s >> tau = 1 s
+
+
+# -- amendment 23-54: luoi min, luoi rho, doi chung sigma --------------------
+def test_fine_grid_brackets_the_endogenous_range():
+    """Luoi min PHAI bao dai `t_loss` noi sinh, neu khong no khong thay dinh."""
+    assert X.T_LOSS_FINE[0] <= 0.00042           # t_loss_endo nho nhat
+    assert len(X.T_LOSS_FINE) == 32
+    ratio = X.T_LOSS_FINE[1] / X.T_LOSS_FINE[0]
+    assert abs(ratio - 1.25) < 1e-6
+
+
+def test_sigma_override_reports_infeasible_instead_of_clipping(cv2):
+    """`sigma` vuot tran phai tra `feasible = False`, KHONG cat lang le.
+
+    Neu no cat xuong `sigma_max` thi doi chung `G23-172` se so hai cell o
+    hai `sigma` KHAC nhau ma khong ai biet -- dung cai confound no sinh ra
+    de chan.
+    """
+    c = X.evaluate_cell(cv2, "h2", 0.960, t_delay_ms=50.0, t_loss=0.01,
+                        w_loss=5000.0, n=N_FAST, sigma_override=X.SIGMA_FIXED)
+    assert c["feasible"] is False          # sigma_max(h2, 0.960) = 0.0107 < 0.020
+    ok = X.evaluate_cell(cv2, "h2", 0.700, t_delay_ms=50.0, t_loss=0.01,
+                         w_loss=5000.0, n=N_FAST, sigma_override=X.SIGMA_FIXED)
+    assert ok["feasible"] is True
+    assert ok["sigma_rho"] == pytest.approx(X.SIGMA_FIXED)
+
+
+def test_sigma_fixed_grid_stays_inside_feasible_range():
+    """Moi `rho` cua luoi doi chung phai chiu duoc `sigma` = 0.020."""
+    for rb in X.RHO_GRID_SIGMA_FIXED:
+        for mode in ("poisson", "h2"):
+            assert C.sigma_max_regime(mode, rb) >= X.SIGMA_FIXED, (
+                "%s@%.3f khong chiu duoc sigma = %g" % (mode, rb, X.SIGMA_FIXED))
+
+
+def test_pivotal_identity_holds(cv2):
+    """`S_pivotal` = `pct_t_loss/100 - S_trivial` khi truc tre TRO.
+
+    Dong nhat thuc cua amendment 23-54 muc 1b. Neu no vo hieu, moi lap luan
+    "mot dinh duy nhat" va "bat bien w_loss" mat co so giai tich.
+    """
+    c = X.evaluate_cell(cv2, "poisson", 0.850, t_delay_ms=50.0, t_loss=0.01,
+                        w_loss=5000.0, n=X.S14.DEFAULT_N)
+    assert c["percentile_of_t_delay"] == 100.0          # truc tre TRO
+    pred = c["percentile_of_t_loss"] / 100.0 - c["S_trivial"]
+    assert abs(pred - c["S_pivotal"]) < 5e-3
