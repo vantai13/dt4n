@@ -92,15 +92,43 @@ def u3_profile_ms(dt: float = DT_PIPELINE) -> tuple[float, ...]:
     return tuple(float(x) for x in steps * dt * 1000.0)
 
 
-def d_base_s(dt: float = DT_PIPELINE) -> float:
-    """San tuoi CO SO sau khi bu tru phan dich cua U3.
+def d_base_s(profile_ms=None, dt: float = DT_PIPELINE) -> float:
+    """San tuoi CO SO, BU TRU trung binh cua HO SO DANG DUNG.
 
-    Bu tru dung TRUNG BINH THUC (sau luong tu hoa), khong phai danh dinh:
-    voi dt = 5 ms, thuc = 8.125 ms nhung danh dinh = 8.690 ms. Dung nham lam
-    mean(z) lech -0.565 ms MOT CACH AM THAM -- khong ai thay bang mat.
-    Xem amendment 23-49 muc 2, va doi chung PC-E4.
+    Muc dich: MOI ho so cho CUNG mot muc tuoi trung binh (D_SYNC_S + T/2),
+    de so hai ho so la so RIENG HINH DANG, khong lan muc tuoi.
+
+    `profile_ms = None` -> dung U3 (mac dinh lich su).
+
+    HAI cai bay o day, ca hai deu am tham:
+
+    (1) Bu tru phai dung TRUNG BINH THUC (sau luong tu hoa), khong phai danh
+        dinh: voi dt = 5 ms, thuc = 8.125 ms nhung danh dinh = 8.690 ms.
+        Dung nham -> mean(z) lech -0.565 ms. (amendment 23-49 muc 2, PC-E4)
+
+    (2) `d_base` phai la HAM cua HO SO, khong phai mot hang so tinh cho rieng
+        U3. Neu co dinh theo U3 thi:
+            U0 -> mean z 357.889   U1 -> 380.389   U2 -> 370.389   U3 -> 366.014
+        tuc so bon ho so lai la so DONG THOI hinh dang VA muc tuoi -- dung
+        cai confound ma amendment 23-49 muc 3 duoc viet ra de sua.
+        (amendment 23-49a muc 2)
+
+    Nguyen tac chung: **hang so bu tru phai la HAM cua thu no bu tru.**
     """
-    return D_SYNC_S - float(np.mean(u3_profile_ms(dt))) / 1000.0
+    if profile_ms is None:
+        off = u3_profile_ms(dt)
+    else:
+        off = np.atleast_1d(np.asarray(profile_ms, float))
+        # Chan cai bay cua chinh chu ky ham nay: truoc amendment 23-49a,
+        # `d_base_s(dt)` la hop le. Sau khi them `profile_ms` len dau, mot
+        # cuoc goi cu se truyen `dt` vao vi tri `profile_ms` va tra ve mot
+        # so SAI mot cach im lang. Bien no thanh loi ON AO.
+        if off.size != len(LINK_NAMES):
+            raise TypeError(
+                "profile_ms phai la ho so %d link (don vi ms), nhan %r. "
+                "Neu ban dinh truyen `dt` thi dung d_base_s(dt=%r)."
+                % (len(LINK_NAMES), profile_ms, profile_ms))
+    return D_SYNC_S - float(np.mean(off)) / 1000.0
 
 
 def u_centred_profile_ms(nominal_ms, dt: float = DT_PIPELINE) -> tuple[float, ...]:

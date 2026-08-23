@@ -49,7 +49,7 @@ def test_PC_E4_d_base_uses_realised_not_nominal_mean():
     realised_shift = float(np.mean(u3_profile_ms(DT)))  # 8.125
     assert abs(nominal_shift - 8.690344772) < 1e-6
     assert abs(realised_shift - 8.125) < 1e-9
-    assert abs(d_base_s(DT) * 1000 - (D_SYNC_S * 1000 - realised_shift)) < 1e-9
+    assert abs(d_base_s(dt=DT) * 1000 - (D_SYNC_S * 1000 - realised_shift)) < 1e-9
     # hai cach KHAC nhau du de gay hai, nhung qua nho de thay bang mat
     assert 0.5 < abs(nominal_shift - realised_shift) < 1.0
 
@@ -84,7 +84,7 @@ def test_NC_E3_u0_on_measured_axis():
     """axis=measured + U0: mean(z_s) = D_BASE + T/2 (alpha = 0)."""
     cur, old, _ = B._valid_rows(N, DT, axis=B.AXIS_MEASURED)
     z_ms = (cur - old) * DT * 1000.0
-    expect = d_base_s(DT) * 1000.0 + T_MS / 2
+    expect = d_base_s(dt=DT) * 1000.0 + T_MS / 2
     assert abs(z_ms.mean() - expect) < 0.10, "%.4f vs %.4f" % (z_ms.mean(), expect)
 
 
@@ -157,8 +157,49 @@ def test_U1_U2_are_not_mean_preserving_but_U3_is_compensated():
     assert abs(float(np.mean(B.AOI_PROFILES["U1"])) - 22.5) < 1e-9
     assert abs(float(np.mean(B.AOI_PROFILES["U2"])) - 12.5) < 1e-9
     # U3 co mean != 0 nhung duoc BU TRU qua d_base -> tuoi trung binh bao toan
-    assert abs(d_base_s(DT) * 1000
+    assert abs(d_base_s(dt=DT) * 1000
                + float(np.mean(B.AOI_PROFILES["U3"])) - D_SYNC_S * 1000) < 1e-6
+
+
+def test_M132_all_profiles_give_the_same_mean_age():
+    """★ M-132 (amendment 23-49a muc 2): bu tru d_base phai lam MOI ho so
+    cung MUC TUOI, de so hai ho so la so RIENG HINH DANG.
+
+    Neu d_base la hang so tinh cho rieng U3 thi:
+        U0 -> 357.889   U1 -> 380.389   U2 -> 370.389   U3 -> 366.014 ms
+    tuc confound "hinh dang lan muc tuoi" quay lai qua cua sau.
+    """
+    from measurements.aoi_model_v7 import SYNC_PERIOD_S
+    means = {}
+    for name in B.AOI_PROFILES:
+        if name == "PC4":                 # ho so soc, khong dung de so hinh dang
+            continue
+        off = B.offset_steps(name, DT)
+        m = AoIModelV7(d_s=d_base_s(tuple(off * DT * 1000.0), DT), profile="U0")
+        # dung DUNG n cua san xuat: phan du con lai la luong tu hoa d_base
+        # len luoi 5 ms, va no co dan theo n.
+        cur, old, _ = B._valid_rows(N, DT, axis=B.AXIS_MEASURED, aoi=m)
+        means[name] = ((cur - old) * DT * 1000).mean() + float(
+            np.mean(off * DT * 1000.0))
+    spread = max(means.values()) - min(means.values())
+    # dai KHOA o amendment 23-49a muc 2. San luong tu hoa ~0.009 ms o n san
+    # xuat; doi chieu: confound truoc khi sua la 22.5 ms (lon hon 2400 lan).
+    assert spread < 0.01, (
+        "cac ho so KHONG cung muc tuoi (trai %.4f ms) -> confound hinh dang "
+        "lan muc tuoi: %s" % (spread, {k: round(v, 4) for k, v in means.items()}))
+
+
+def test_d_base_is_a_function_of_the_profile():
+    """Doi chung: d_base phai DOI theo ho so, khong duoc la hang so."""
+    off_u0 = B.offset_steps("U0", DT) * DT * 1000.0
+    off_u1 = B.offset_steps("U1", DT) * DT * 1000.0
+    assert d_base_s(tuple(off_u0), DT) != d_base_s(tuple(off_u1), DT)
+    # va bu tru dung bang mean cua chinh ho so
+    from measurements.aoi_model_v7 import D_SYNC_S
+    for name in ("U0", "U1", "U2", "U3"):
+        off = B.offset_steps(name, DT) * DT * 1000.0
+        assert abs(d_base_s(tuple(off), DT) * 1000
+                   - (D_SYNC_S * 1000 - float(np.mean(off)))) < 1e-9, name
 
 
 def test_centred_profiles_preserve_shape_not_level():

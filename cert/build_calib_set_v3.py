@@ -104,7 +104,7 @@ AOI_PROFILES["U2c"] = u_centred_profile_ms(AOI_PROFILES["U2"], DT)
 
 # Truc tuoi DO DUOC (Lessons 23.8 / 23.18 / 23.19).
 # profile="U0" o day vi alpha di duong off_steps, khong di trong mo hinh.
-AOI_V7 = AoIModelV7(d_s=d_base_s(DT), profile="U0")
+AOI_V7 = AoIModelV7(d_s=d_base_s(dt=DT), profile="U0")
 AXIS_MEASURED = "measured_v7"
 AXIS_LEGACY = "legacy_sawtooth_51ms"
 
@@ -231,7 +231,8 @@ def y_hat_rho_shift(
 
 
 def _valid_rows(
-    n: int, dt: float, d_sync: float = D_SYNC, axis: str = AXIS_LEGACY
+    n: int, dt: float, d_sync: float = D_SYNC, axis: str = AXIS_LEGACY,
+    aoi: "AoIModelV7 | None" = None,
 ) -> Tuple[np.ndarray, np.ndarray, int]:
     """Chon hang: bo z=0, giu t >= age.
 
@@ -239,7 +240,9 @@ def _valid_rows(
     axis = AXIS_MEASURED truc do duoc, d_base + Uniform[0, T]
     """
     if axis == AXIS_MEASURED:
-        age = AOI_V7.base_age_steps(n, dt)
+        # `aoi` mang d_base DA BU TRU theo ho so dang dung (amendment 23-49a
+        # muc 2). Mac dinh AOI_V7 (bu tru cho U3) chi de tuong thich nguoc.
+        age = (aoi or AOI_V7).base_age_steps(n, dt)
     elif axis == AXIS_LEGACY:
         age = sawtooth_age_steps(n, dt, SYNC_PERIOD, d_sync)
     else:
@@ -274,8 +277,15 @@ def build_one_v3(
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """Build one operating cell, one seed, one AoI profile."""
     arr = _cell_arrays(tt, cv, cell, seed=seed, n=n, dt=dt, sigma_override=sigma)
-    cur, old, n_z0 = _valid_rows(n, dt, d_sync, axis=axis)
     off = offset_steps(aoi_profile, dt)
+    if axis == AXIS_MEASURED:
+        # d_base phu thuoc HO SO: moi ho so cho cung mot muc tuoi trung binh,
+        # nen so hai ho so la so RIENG HINH DANG (amendment 23-49a muc 2).
+        aoi_model = AoIModelV7(
+            d_s=d_base_s(tuple(off * float(dt) * 1000.0), dt), profile="U0")
+    else:
+        aoi_model = None
+    cur, old, n_z0 = _valid_rows(n, dt, d_sync, axis=axis, aoi=aoi_model)
     if axis == AXIS_MEASURED:
         # canh KHOA o amendment 23-48 muc 4 -- KHONG duoc dan xuat lai
         z_edges_p = Z_EDGES_V7
@@ -374,7 +384,7 @@ def build_one_v3(
         # amendment 23-49: truc phai HIEN trong metadata, khong duoc de an
         "axis": axis,
         "z_shift_ms": z_shift_s * 1000.0,
-        "d_base_ms": (d_base_s(dt) * 1000.0 if axis == AXIS_MEASURED else None),
+        "d_base_ms": (aoi_model.d * 1000.0 if axis == AXIS_MEASURED else None),
         "T_ms": (AOI_V7.T * 1000.0 if axis == AXIS_MEASURED
                  else SYNC_PERIOD * 1000.0),
         "offset_ms_realised": [float(x) for x in off * float(dt) * 1000.0],
