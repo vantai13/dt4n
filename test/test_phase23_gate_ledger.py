@@ -435,3 +435,91 @@ def test_amendment_numbers_are_contiguous_from_one():
     assert nums == list(range(1, len(nums) + 1)), (
         "so amendment khong lien tuc: %s" % nums
     )
+
+
+# --------------------------------------------------------------------------
+# 6. Amendment 23-57: hai cai chan cho hai loi so sach
+# --------------------------------------------------------------------------
+
+CLOSE_DOC = re.compile(r"^\d+-close-(.+)\.md$")
+
+# Lesson ma van ban dong cua no chua duoc viet -> bo qua.
+# Them mot muc vao day phai co amendment.
+CLOSE_DOC_LESSON = {"35-close-23-21.md": {"23.21", "23.21b", "23.21c",
+                                          "23.21d", "23.21e", "23.21f"}}
+
+
+def test_close_doc_lists_every_not_run_gate_of_that_lesson():
+    """`G23-194`. Van ban dong lesson phai liet ke MOI gate `NOT_RUN` cua no.
+
+    Loi that da xay ra (`L66`): `35-close-23-21.md` muc "No mang sang" liet ke
+    `G23-174` nhung BO SOT `G23-156` va `G23-158` -- ca hai con `NOT_RUN`, va
+    `G23-158` la BAT BUOC.
+
+    Nguyen nhan goc: van ban dong va `GATES.md` duoc cap nhat bang tay o HAI
+    cho, khong co gi buoc chung khop ve TAP GATE MANG SANG.
+    """
+    rows = _rows()
+    bad = []
+    for p in sorted(DOCS.glob("*-close-*.md")):
+        lessons = CLOSE_DOC_LESSON.get(p.name)
+        if lessons is None:
+            continue
+        txt = p.read_text(encoding="utf-8")
+        missing = [gid for gid, lesson, status, _ in rows
+                   if lesson in lessons and status == "NOT_RUN"
+                   and gid not in txt]
+        if missing:
+            bad.append((p.name, sorted(missing, key=_sort_key)))
+    assert not bad, (
+        "van ban dong lesson BO SOT gate NOT_RUN cua chinh lesson do: %s\n"
+        "  -> moi gate chua chay phai xuat hien trong muc 'No mang sang'." % bad)
+
+
+# Do thi phu thuoc giua cac mon `DEBT` / gate bi chan.
+#   canh (A -> B) nghia la "A CHO B xong truoc".
+# Them mot canh phai co amendment; chu trinh se lam test do.
+DEBT_DEPENDS_ON: dict[str, tuple[str, ...]] = {
+    # `G23-158` da tung cho `G23-141`/`G23-142`, va chung lai cho 23.21 dong
+    # -- tuc cho `G23-158`. DEADLOCK do (`L67`), da cat o amendment 23-57
+    # bang cach cho `G23-141`/`G23-142` chay DUOC ma khong can 23.21 dong.
+    "G23-158": ("G23-141", "G23-142"),
+    "G23-141": (),
+    "G23-142": (),
+}
+
+
+def test_debt_dependency_graph_has_no_cycle():
+    """`G23-195`. So no KHONG duoc chua CHU TRINH CHO.
+
+    Moi `DEBT` duoc phep ghi "mo lai sau X". Neu `X` lai phu thuoc nguoc vao
+    chinh mon no do, ta co mot deadlock: khong lesson nao sai, khong gate nao
+    sai, nhung he DUNG IM. Da xay ra that giua `G23-158` va
+    `G23-141`/`G23-142` (`L67`).
+
+    Phat hien bang DFS tim back-edge.
+    """
+    WHITE, GREY, BLACK = 0, 1, 2
+    color = {k: WHITE for k in DEBT_DEPENDS_ON}
+    cycle: list[str] = []
+
+    def visit(node: str, path: list[str]) -> bool:
+        color[node] = GREY
+        for nxt in DEBT_DEPENDS_ON.get(node, ()):
+            if nxt not in color:          # nut ngoai do thi -> khong the tao chu trinh
+                continue
+            if color[nxt] == GREY:        # BACK-EDGE
+                cycle.extend(path + [node, nxt])
+                return True
+            if color[nxt] == WHITE and visit(nxt, path + [node]):
+                return True
+        color[node] = BLACK
+        return False
+
+    for n in sorted(DEBT_DEPENDS_ON):
+        if color[n] == WHITE and visit(n, []):
+            break
+    assert not cycle, (
+        "CHU TRINH CHO trong so no: %s\n"
+        "  -> mot mon no ghi 'mo lai sau X' trong khi X phu thuoc nguoc vao no."
+        % " -> ".join(cycle))

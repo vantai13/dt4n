@@ -90,7 +90,9 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L67 | So no khong co co che chan CHU TRINH CHO: moi `DEBT` duoc phep ghi "mo lai sau X" ma khong ai kiem `X` co phu thuoc NGUOC vao no khong | `00zzt-amendment-57.md` muc 2b | Hau qua that: `G23-158` <-> `G23-141`/`G23-142` DEADLOCK tu 2026-08-23. Chan bang `G23-195` |
 | L68 | Artifact cua `sla_exogenous` dung schema rieng (`sla_axis_label` + `sla_spec_id`) thay vi truong `validity` chuan | `00zzt-amendment-57.md` muc 8 | `test_no_stale_axes` KHONG kiem duoc chung neu chung len `LIVE/`. Manifest moi PHAI co `validity` |
 
-So ke tiep duoc cap: **L69**.
+| L69 | Doi chung am muc DUONG ONG (`G23-191`) dat max\|diff\| = 5.72e-06 chu khong phai 0. 155/156 truong khop o muc nhieu float64 (<= 3.7e-13); rieng `gap_true_pct.p90` lech 2.0e-07 TUONG DOI | `00zzt-amendment-57.md` muc 6; do tren `poisson@0.925` U0 legacy | Co che DA XAC DINH: `gap_true` la `float32`; `np.percentile` tren float32 cho 28.5448761, tren float64 cho 28.5448826. Khac biet MOI TRUONG (numpy/dtype), KHONG phai logic. `M-167` MISS |
+
+So ke tiep duoc cap: **L70**.
 
 ## Va cham da phat hien
 

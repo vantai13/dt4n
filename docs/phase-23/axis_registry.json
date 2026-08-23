@@ -19,8 +19,12 @@
     }
   },
   "approved_for_live": {
-    "aoi_axis": [],
-    "sla_axis": []
+    "aoi_axis": [
+      "measured_v7_uniform"
+    ],
+    "sla_axis": [
+      "exogenous_g114_S-B"
+    ]
   },
   "sla_axis": {
     "results/LIVE/phase-20R/sla_calibration.json": {
@@ -29,6 +33,14 @@
       "note": "Nguong SLA suy tu chinh du lieu duoc danh gia. Loi cau truc S14. Thay o Lesson 23.21.",
       "registered_in": "amendment-44",
       "status": "DEPRECATED"
+    },
+    "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json": {
+      "content_sha256": "b7214dceb8e3af4336323b4636abe3e66ae92e71aea0b2a530b4867b8ca16058",
+      "label": "exogenous_g114_S-B",
+      "note": "T_delay = 50 ms (ITU-T G.114, MOT chang), T_loss = 1%, w_loss = 5000 (equal-budget, K06). Thay `self_calibrated` (loi cau truc S14). Sinh boi `measurements/sla_manifest_exogenous.py`.",
+      "registered_in": "amendment-57",
+      "source_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+      "status": "ACTIVE"
     }
   }
 }

@@ -197,9 +197,9 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-153 | 23.21 | PASS | SLA co dinh tu ITU-T G.114, ghi o `00zzo-amendment-52.md` muc 2, ky TRUOC khi chay (tag `amendment-52`, commit `2ac8ec5`) |
 | G23-154 | 23.21 | PASS | `w_loss = 5000` = `T_delay/T_loss` (equal-budget), khoa o `CONSTANTS.md` K06; `test_w_loss_of_primary_spec_matches_constants_ledger_k06` ghim |
 | G23-155 | 23.21 | PASS | sweep {1250, 5000, 20000} bao cao DU o `w_loss_sensitivity.json`; ba spec S-A/S-B/S-C deu co artifact rieng |
-| G23-156 | 23.21 | NOT_RUN | - |
+| G23-156 | 23.21 | PASS | `M-171`: dau cua `delta_system_vs_neo` GIU nguyen o 7/8 cell khi `w_loss` doi tu NOI SINH [1245.6, 4722.7] sang CO DINH 5000. Mot cell doi dau: `h2@0.700` (+0.000176 -> -0.002592). Bao cao NGUYEN |
 | G23-157 | 23.21 | PASS | M-135: phan hoach S-B vs phan hoach `err_neo >= 0.05` trung 6/8 cell (dai da ky >= 6/8). Bang 8 cell day du o `31-exogenous-sla.md` muc 3 |
-| G23-158 | 23.21 | NOT_RUN | - |
+| G23-158 | 23.21 | PASS | `L40` DONG: Dot 2 da chay lai duoi SLA ngoai sinh (`eight_cell_sweep_U3_measured_v7_slaB.json`), nhan `CONDITIONAL_ON_SLA_AXIS` go. `L41` UNBLOCKED (khong con can `--prepare-sla`) nhung `live_region_sweep` CHUA chay -> `L41` giu MO |
 | G23-159 | 23.21 | PASS | NC-1 muc MODULE: nap lai SLA+w_loss noi sinh cu -> 10/10 cell, `d_opt_viol` = 0.0 va `d_share` = 0.0 CHINH XAC, `d_margin` = 2.84e-14 (cong don dau phay dong, nguong 1e-9). Muc DUONG ONG con cho: 8 calib parquet khong co tren dia -- `31-exogenous-sla.md` muc 6 |
 | G23-160 | 23.21 | PASS | `S_pivotal` max_dev = 0.0 qua ca ba `w_loss`. Bat bien duoc chan o CHU KY HAM (`regime_shares` khong nhan `w_loss`/`opt`), khong chi kiem o gia tri -- `test_regime_shares_signature_has_no_w_loss` |
 | G23-161 | 23.21 | PASS | `role` giu semantics cu (`gate`/`pc1`/`pc1_excluded_by_q8`); ket luan moi o truong `regime`. Doi chung duong DC17: gan `role = regime` -> test DO |
@@ -231,12 +231,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-187 | 23.21e | PASS | Yeu cau ve `sigma_max(rho)` chong len HINH 2 duoc ghi thanh dieu kien BAT BUOC o `35-close-23-21.md` muc 5 va `L65`; du lieu `sigma_max` co san trong `sigma_rho_plane.json` (truong `sigma_max` moi hang) |
 | G23-188 | 23.21e | PASS | `M-147` bao cao kem `M147_n_cells_used` = 6 va `M147_n_cells_undetermined` = 2 (`h2@0.925`, `h2@0.960` tren luoi tho). Trung vi 0.2216 |
 | G23-189 | 23.21e | PASS | DC29: quay ve phep kiem `argmax` -> `test_peak_at_edge_checks_value_not_argmax_index` DO. Doi chung am kem theo: dinh THAT o trong van duoc nhan la kep duoc |
-| G23-190 | 23.21f | NOT_RUN | - |
-| G23-191 | 23.21f | NOT_RUN | - |
-| G23-192 | 23.21f | NOT_RUN | - |
-| G23-193 | 23.21f | NOT_RUN | - |
-| G23-194 | 23.21f | NOT_RUN | - |
-| G23-195 | 23.21f | NOT_RUN | - |
+| G23-190 | 23.21f | PASS | `sla_manifest_exogenous_S-B.json` cung schema ban cu, 12 cell, `w_loss` = 5000, mang truong `validity`. Builder KHONG doi mot dong nao |
+| G23-191 | 23.21f | PASS | NC muc DUONG ONG tren `poisson@0.925` U0 legacy: 156 truong so, 150 khop CHINH XAC, 5 lech <= 3.7e-13. Rieng `gap_true_pct.p90` lech 5.72e-06 -- co che xac dinh: `gap_true` la `float32`, khac biet numpy/dtype chu khong phai logic. `M-167` MISS, ghi `L69` |
+| G23-192 | 23.21f | PASS | 16/16 build (8 cell x U0/U3) hoan tat duoi SLA ngoai sinh; artifact mang `validity.aoi_axis = measured_v7_uniform` va `validity.sla_axis = exogenous_g114_S-B` |
+| G23-193 | 23.21f | PASS | `approved_for_live` co CA HAI truc -> 16 artifact len `results/LIVE/phase-21R/`. `sha256` trong registry tinh TU FILE THAT; `test_registered_sha_matches_the_file_on_disk` ghim |
+| G23-194 | 23.21f | PASS | `test_close_doc_lists_every_not_run_gate_of_that_lesson`: bat ngay `35-close-23-21.md` bo sot `G23-156`/`G23-158` (`L66`). Da sua muc 6 thanh "TAI MO" va liet ke DU |
+| G23-195 | 23.21f | PASS | `test_debt_dependency_graph_has_no_cycle` (DFS tim back-edge). DC30: them canh `G23-141 -> G23-158` -> test DO, tai hien dung deadlock da xay ra (`L67`) |
 
 ## Va cham da phat hien
 
