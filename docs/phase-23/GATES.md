@@ -194,6 +194,15 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-150 | 23.20E | PASS | `CLOSED_LESSONS` + `PINNED_DEBT` lap dan: `23.20*` vao danh sach, `G23-141`/`G23-142` -> DEBT va duoc ghim. `test_no_closed_lesson_gate_is_still_not_run` xanh |
 | G23-151 | 23.20E | PASS | `test_prose_in_ledger_does_not_restate_status`: van xuoi GATES.md khong con phat bieu trang thai. Da sua mau thuan `G23-125` (bang PASS vs van xuoi NOT_RUN) |
 | G23-152 | 23.20E | PASS | `docs/phase-23/CONSTANTS.md` (so thu BA) + `test/test_constants_ledger.py` 7/7. `sd(beta) = 0.0059` tai tinh duoc tu CI bootstrap Phase 22; chat hon can hau kiem `L39` khoang 3 lan |
+| G23-153 | 23.21 | NOT_RUN | - |
+| G23-154 | 23.21 | NOT_RUN | - |
+| G23-155 | 23.21 | NOT_RUN | - |
+| G23-156 | 23.21 | NOT_RUN | - |
+| G23-157 | 23.21 | NOT_RUN | - |
+| G23-158 | 23.21 | NOT_RUN | - |
+| G23-159 | 23.21 | NOT_RUN | - |
+| G23-160 | 23.21 | NOT_RUN | - |
+| G23-161 | 23.21 | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -308,6 +317,11 @@ dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
 12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
 `G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
+`G23-153 .. G23-161` (lesson `23.21`) mo boi amendment 23-52: SLA ngoai sinh.
+Chung KE TIEP `G23-152`. Ban thao ngoai repo danh so `G23-147 .. G23-155`,
+nhung vung do DA cap cho `23.20E` o amendment 23-51 -- suyt la va cham ma thu
+BAY; da doi truoc khi ky.
 
 `G23-143 .. G23-146` (lesson `23.20D`) mo boi amendment 23-50: phan xu va cham
 ma `L21` (cap `L43` cho muc `00s-amendment-18.md:139`) va khoa anh xa do vao

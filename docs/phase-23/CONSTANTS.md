@@ -37,7 +37,9 @@ Hang so mac cung mot benh, chi khac ten benh: khong phai va cham ma la MO COI
 | K04 | `D_BASE` -- san tuoi co so | 107.775 ms | `d` tru TRUNG BINH THUC cua ho so sau luong tu hoa (U3: 8.125 ms, KHONG phai danh dinh 8.690) | `26-axis-integration.md`, `aoi_model_v7.d_base_s()` | `build_calib_set_v3` | ke thua K03 |
 | K05 | `T` -- chu ky lam moi | 500.2922 ms | do BRIDGE-SIDE tu `t_source` ke tiep, khong bi luoc | `measurements/aoi_model_v7.py:25` | `aoi_model_v7` | `T/dt = 100.0584` khong nguyen -- day la LY DO khong dung rang cua |
 
-So ke tiep duoc cap: **K06**.
+| K06 | `w_loss` -- ty gia doi loss sang ms trong ham chi phi | 5000 | equal-budget: `w = T_delay / T_loss = 50 / 0.01`. KHONG phai mot fit -- la dinh nghia "dung het ngan sach TRE == dung het ngan sach MAT GOI" | `00zzo-amendment-52.md` muc 2a | `sla_exogenous`, `eight_cell_sweep` (qua artifact) | -- (lua chon co nguyen tac). Do nhay: sweep {1250, 5000, 20000} |
+
+So ke tiep duoc cap: **K07**.
 
 ## K01 -- `beta` chua bao gio co dong nguon goc
 
