@@ -210,6 +210,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-166 | 23.21b | PASS | Bon cell Dot 4 chay tren `sla_exogenous` -> `sla_exogenous_wave4.json`. CA BON LIVE. KHONG tra `G23-141`/`G23-142` (can calib parquet) |
 | G23-167 | 23.21b | PASS | Bang hai chieu ca 8 cell, ke ca o TRONG (`32-scale-ci-and-wave4.md` muc 6). Goc tren-trai TRONG dung du kien -- khong cell nao vi pham tien doan |
 | G23-168 | 23.21b | PASS | do rong CI block / iid = 7.45..11.36 lan -> bo qua tu tuong quan cho CI hep gia mot bac. Nhung `n_eff` do duoc 1551..3603 chu khong phai 500 (cong thuc AR(1) la can duoi) -> `L52` |
+| G23-169 | 23.21c | NOT_RUN | - |
+| G23-170 | 23.21c | NOT_RUN | - |
+| G23-171 | 23.21c | NOT_RUN | - |
+| G23-172 | 23.21c | NOT_RUN | - |
+| G23-173 | 23.21c | NOT_RUN | - |
+| G23-174 | 23.21c | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -324,6 +330,9 @@ dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
 12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
 `G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
+`G23-169 .. G23-174` (lesson `23.21c`) mo boi amendment 23-54: song nui
+`T_loss`, dong nhat thuc `S_pivotal`, va tach confound `sigma`. KE TIEP `G23-168`.
 
 `G23-162 .. G23-168` (lesson `23.21b`) mo boi amendment 23-53: doc lai ket qua
 23.21 (thang do bi bien chan, khoang tin cay, phan loai hai chieu). Chung KE

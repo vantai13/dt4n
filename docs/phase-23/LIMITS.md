@@ -72,7 +72,12 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L53 | Dinh cua `S_pivotal(poisson, rho)` nam o MUT TRAI cua luoi (`rho` = 0.850); dinh cua ho `h2` nam DUOI 0.650, ngoai moi diem da do | `32-scale-ci-and-wave4.md` muc 2, 5 | Vi tri dinh CHUA duoc kep. Can luoi min hon; chi phi ~1 s/cell, KHONG can calib parquet |
 | L54 | Ket luan "1/8 cell song" cua Lesson 23.21 la phat bieu ve LUOI LAY MAU (`rho` thuoc [0.700, 0.960]), KHONG phai ve MANG | `32-scale-ci-and-wave4.md` muc 5 | Dot 4: ho `h2` co vung song o `rho <= 0.675`, hoan toan ngoai luoi goc. Ca bon cell Dot 4 deu LIVE |
 
-So ke tiep duoc cap: **L55**.
+| L55 | `S_pivotal = F_min - F_max` do CAC DUONG KHAC NHAU BAO NHIEU, KHONG do duoc lieu twin CU co chon dung duong hay khong | `00zzq-amendment-54.md` muc 1b, 6 | `S_pivotal` cao KHONG keo theo "chung nhan co gia tri". Bang hai chieu la dieu kien CAN ve logic, khong phai cach trinh bay dep |
+| L56 | Dinh `S_pivotal` cua ho `h2` co the nam duoi `rho` = 0.575, tuc NGOAI mien kha thi cua mo hinh (`sigma_max` -> 0 duoi do) | `00zzq-amendment-54.md` muc 6 | Neu xay ra: ghi "KHONG KEP DUOC", khong ghi la dinh (`G23-173`) |
+| L57 | `M-135` so sanh hai phan hoach do duoi HAI ham muc tieu khac nhau: `err_neo` duoi SLA NOI SINH tung cell, `regime` duoi SLA CHUNG | `00zzq-amendment-54.md` muc 2 | Ill-posed, DOC LAP voi n -- khong sua duoc bang thong ke. Cot `err_neo` cua bang `G23-167` dang TRON hai truc SLA |
+| L58 | Quet `rho` doi DONG THOI `rho_bar` va `sigma_rho`: `sigma` = 0.9 x `sigma_max(rho)`, va `sigma_max` co DINH o `rho` ~ 0.775 (0.0804). Giua `h2@0.650` va `h2@0.700` `sigma` chenh 1.60 lan | `00zzq-amendment-54.md` muc 3 | Cung lop loi voi `L37`. Moi phat bieu "vung song o `rho` thuoc [x,y]" PHAI kem doi chung `sigma` co dinh (`G23-172`) |
+
+So ke tiep duoc cap: **L59**.
 
 ## Va cham da phat hien
 
