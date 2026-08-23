@@ -216,14 +216,14 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-172 | 23.21c | PASS | Doi chung `sigma` = 0.020 co dinh: confound `L58` CO that (S_piv(h2@0.700) tut 70 lan) nhung KHONG lai duoc hinh dang -- ca hai luoi don dieu giam tren `h2`, vi tri dinh `poisson` bat bien o 0.850. M-152 MISS |
 | G23-173 | 23.21c | PASS | Hai dinh gio KEP DUOC: `h2` o 0.625 (kep boi 0.600/0.650), `poisson` o 0.850 (kep boi 0.825/0.875). `h2@0.925`/`h2@0.960` co T* o MUT luoi -> ghi "KHONG KEP DUOC", T* la can duoi |
 | G23-174 | 23.21c | NOT_RUN | - |
-| G23-175 | 23.21d | NOT_RUN | - |
-| G23-176 | 23.21d | NOT_RUN | - |
-| G23-177 | 23.21d | NOT_RUN | - |
-| G23-178 | 23.21d | NOT_RUN | - |
-| G23-179 | 23.21d | NOT_RUN | - |
-| G23-180 | 23.21d | NOT_RUN | - |
-| G23-181 | 23.21d | NOT_RUN | - |
-| G23-182 | 23.21d | NOT_RUN | - |
+| G23-175 | 23.21d | PASS | `efficiency = S_piv(t_endo)/max_T S_piv` thay `S_pivotal_at_T_star` o moi phat bieu. Trung vi 8/8 cell = **0.9356**, min 0.8215. Cau vong tron da bi RUT khoi `33-ridge-alignment.md` |
+| G23-176 | 23.21d | PASS | Luoi cuc bo 1.05x: buoc nhay tai diem noi suy giam 0.49 -> 0.1087 (`poisson@0.960`) va 0.99 -> 0.2489 (`h2@0.960`). Dai dau QUA HEP -> da NOI LUOI theo `G23-173`, khong goi mut la dinh |
+| G23-177 | 23.21d | PASS | Doi chung `sigma` = 0.010: dinh `h2` o `rho` = 0.625 KEP DUOC hai phia (0.96076 / 0.99994 / 0.46503). Vi tri dinh BAT BIEN qua ca ba cach dat `sigma` |
+| G23-178 | 23.21d | PASS | NC tai giao diem hai luoi: `h2@0.625` co `sigma(a=0.9)` = 0.02006 ~ 0.020; hai duong code khac nhau cho 0.98355 vs 0.98374, lech 1.9e-04 |
+| G23-179 | 23.21d | PASS | Luoi 2D `(rho, sigma)` 10x10, ca hai ho, 134 o kha thi. Ty le o SONG = 33/134 = 0.2463. Mien song la SONG NUI CHEO: `sigma` tang -> mien truot sang `rho` cao hon |
+| G23-180 | 23.21d | PASS | `V` tinh cho MOI cell. Dinh `V` va dinh `S_pivotal` o HAI cho khac nhau o CA HAI ho (poisson: sigma 0.046 vs 0.004; h2: (0.650,0.028) vs (0.600,0.004)). `L55` xac nhan bang DO LUONG |
+| G23-181 | 23.21d | PASS | Spearman(`t_endo`, `T*`) = 0.9940 vao `CONSTANTS.md` (`K07`) kem nguon va so cap; `test_spearman_ridge_alignment_matches_ledger` ghim |
+| G23-182 | 23.21d | PASS | Truong `M148_*` doi ten: `n_bracketed_and_within_one_octave` = 6, them `n_within_one_grid_step` = 7 va `n_within_one_octave` = 8 |
 
 ## Va cham da phat hien
 

@@ -298,3 +298,72 @@ def test_pivotal_identity_holds(cv2):
     assert c["percentile_of_t_delay"] == 100.0          # truc tre TRO
     pred = c["percentile_of_t_loss"] / 100.0 - c["S_trivial"]
     assert abs(pred - c["S_pivotal"]) < 5e-3
+
+
+# -- amendment 23-55: V, luoi 2D, ten truong ---------------------------------
+def test_decision_value_is_zero_at_all_three_degenerate_ends():
+    """`V` = 0 o CA BA dau suy bien: tam thuong, sup, va oracle-cung-thua."""
+    triv = {"feasible": True, "mean_paths_violating": 0.0, "opt_viol_rate": 0.0}
+    coll = {"feasible": True, "mean_paths_violating": 4.0, "opt_viol_rate": 1.0}
+    lose = {"feasible": True, "mean_paths_violating": 2.0, "opt_viol_rate": 0.5}
+    for c in (triv, coll, lose):
+        assert X.decision_value(c) == pytest.approx(0.0)
+    good = {"feasible": True, "mean_paths_violating": 1.0, "opt_viol_rate": 0.0}
+    assert X.decision_value(good) == pytest.approx(0.25)
+
+
+def test_low_opt_viol_alone_does_not_mean_easy(cv2):
+    """`L61`: `opt_viol` thap = ORACLE THANH CONG, khong phai "bai toan de".
+
+    `h2@0.600` co oracle 0% vi pham NHUNG `S_pivotal` ~ 0.94 va `V` ~ 0.24:
+    SLA dat duoc, va CHI KHI chon dung duong. Neu ai do quay lai dung
+    `in_band` lam tieu chi duy nhat, test nay nhac vi sao khong duoc.
+    """
+    c = X.evaluate_cell(cv2, "h2", 0.600, t_delay_ms=50.0, t_loss=0.01,
+                        w_loss=5000.0, n=X.S14.DEFAULT_N)
+    assert c["opt_viol_rate"] == pytest.approx(0.0, abs=1e-9)
+    assert c["in_band"] is False                 # tieu chi CU loai no
+    assert c["S_pivotal"] > 0.9                  # nhung chon duong QUYET DINH
+    assert c["decision_value_V"] > 0.2           # va co gia tri that
+
+
+def test_plane_grid_marks_infeasible_instead_of_clipping():
+    """O `sigma > sigma_max` phai duoc danh dau, KHONG bi cat xuong tran.
+
+    Cat lang le se tao ra mot bien GIA tren mat phang (rho, sigma).
+    """
+    import json
+    import os
+    p = os.path.join("results", "PENDING", "phase-23", "sigma_rho_plane.json")
+    if not os.path.exists(p):
+        pytest.skip("chua chay --plane")
+    d = json.load(open(p, encoding="utf-8"))
+    for mode, plane in d["planes"].items():
+        for rk, row in plane.items():
+            smax = row["sigma_max"]
+            for sk, cell in row["by_sigma"].items():
+                sg = float(sk.split("=")[1])
+                assert cell["feasible"] == (sg <= smax), (
+                    "%s %s %s: feasible=%r nhung sigma_max=%.4f"
+                    % (mode, rk, sk, cell["feasible"], smax))
+
+
+def test_spearman_ridge_alignment_matches_ledger():
+    """`G23-181`: `K07` phai tai tinh duoc tu artifact, khong phai so troi."""
+    import json
+    import os
+    import re
+    p = os.path.join("results", "PENDING", "phase-23", "t_loss_fine.json")
+    if not os.path.exists(p):
+        pytest.skip("chua chay --t-loss-fine")
+    from scipy.stats import spearmanr
+    d = json.load(open(p, encoding="utf-8"))
+    pairs = [(v["t_loss_endogenous"], v["T_star"]) for v in d["cells"].values()]
+    rho = spearmanr([a for a, _ in pairs], [b for _, b in pairs]).statistic
+    txt = open(os.path.join("docs", "phase-23", "CONSTANTS.md"),
+               encoding="utf-8").read()
+    row = [l for l in txt.splitlines() if l.startswith("| K07 |")]
+    assert row, "CONSTANTS.md thieu dong K07"
+    val = float(row[0].split("|")[3].strip())
+    assert abs(val - rho) < 5e-4, (
+        "K07 ghi %r nhung tai tinh tu artifact cho %.4f" % (val, rho))

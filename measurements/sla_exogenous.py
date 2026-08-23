@@ -98,6 +98,42 @@ SIGMA_FIXED = 0.020
 RHO_GRID_SIGMA_FIXED: Tuple[float, ...] = (
     0.625, 0.650, 0.675, 0.700, 0.750, 0.800, 0.850, 0.900, 0.925)
 
+# -- KHOA O AMENDMENT 23-55 ---------------------------------------------------
+# Doi chung THU HAI: sigma nho hon de kep dinh `h2` HAI phia (`G23-177`).
+# sigma_max(h2, 0.600) = 0.0126 > 0.010, nen 0.600 kha thi o sigma nay.
+SIGMA_FIXED_LOW = 0.010
+RHO_GRID_SIGMA_LOW: Tuple[float, ...] = (
+    0.600, 0.625, 0.650, 0.675, 0.700, 0.750, 0.800, 0.850, 0.900, 0.925)
+# Luoi cuc bo he so 1.05 quanh bac nhay cua hai cell @0.960 (`G23-176`).
+# Dai ban dau (0.0400, 0.0560) cho `poisson@0.960` QUA HEP: dinh roi dung MUT
+# phai. Da noi rong. Ghi lai vi `G23-173` doi hoi bao "KHONG KEP DUOC" khi dinh
+# o mut, va cach dung la NOI LUOI chu khong phai goi mut la dinh.
+LOCAL_FINE: Dict[str, Tuple[float, float]] = {
+    "poisson@0.960": (0.0400, 0.0900),
+    "h2@0.960": (0.1500, 0.3200),
+}
+# Luoi 2D `(rho, sigma)` -- doi tuong THAT (`G23-179`).
+RHO_GRID_2D: Tuple[float, ...] = (
+    0.600, 0.625, 0.650, 0.675, 0.700, 0.750, 0.800, 0.850, 0.900, 0.925)
+SIGMA_GRID_2D: Tuple[float, ...] = (
+    0.004, 0.008, 0.012, 0.016, 0.020, 0.028, 0.036, 0.046, 0.058, 0.072)
+
+
+def decision_value(cell: Mapping[str, Any], k: int = 4) -> float | None:
+    """`V` = P(vi pham | chon NGAU NHIEN) - P(vi pham | ORACLE).
+
+    Truc thu hai dung, thay cho `in_band` (amendment 23-55 muc 2). `V` bang 0
+    o CA BA dau suy bien: tam thuong, sup, va "oracle cung thua".
+
+    `opt_viol` THAP mot minh KHONG co nghia "bai toan de" -- no co nghia
+    ORACLE THANH CONG. Chi khi ghep voi `mean_paths_violating` no moi noi
+    duoc viec chon duong dang gia bao nhieu.
+    """
+    if not cell.get("feasible"):
+        return None
+    return float(cell["mean_paths_violating"]) / float(k) - float(
+        cell["opt_viol_rate"])
+
 AXIS_LABEL = "exogenous_itu_g114_50ms_1pct"
 LEGACY_SLA = "results/LIVE/phase-20R/sla_calibration.json"
 OUT_DIR = "results/PENDING/phase-23"   # PENDING cho toi khi mot amendment duyet truc
@@ -297,6 +333,10 @@ def evaluate_cell(
             float(margin[piv].mean()) if bool(piv.any()) else None,
         "pivotal_steps": int(piv.sum()),
         "opt_path_share": S14._opt_path_share(opt),
+        # `V` -- truc thu hai dung (amendment 23-55 muc 2). `in_band` GIU lai
+        # de doi chieu lich su, nhung KHONG duoc dung de dien giai nua (`L61`).
+        "decision_value_V": float(sh["mean_paths_violating"] / viol.shape[1]
+                                  - opt_viol),
         "S_pivotal_ci": ci_info,                 # None neu khong bat --with-ci
         "fixpoint_rounds": 0,                    # khong con vong lap -- day la DIEM
         "fixpoint_converged": True,
@@ -398,9 +438,123 @@ def run_t_loss_fine(t_delay_ms: float = 50.0, seed: int = S14.DEFAULT_SEED,
                  "one_step_in_log2": step},
         "M147_median_abs_log2_ratio": (float(np.median(ratios))
                                        if ratios else None),
-        "M148_n_within_one_octave": sum(1 for r in ratios if r <= 1.0),
+        # `G23-182`: ten truong phai KHOP dinh nghia. Ban dau mot truong ten
+        # "n_within_one_octave" thuc ra dem "bracketed VA <= 1 octave" = 6,
+        # khong khop dinh nghia nao ma ten no goi y.
+        "M148_n_bracketed_and_within_one_octave":
+            sum(1 for r in ratios if r <= 1.0),
         "M148_n_bracketed": len(ratios),
+        "M148_n_within_one_grid_step":
+            sum(1 for v in out.values()
+                if v["log2_ratio"] is not None and abs(v["log2_ratio"]) <= step),
+        "M148_n_within_one_octave":
+            sum(1 for v in out.values()
+                if v["log2_ratio"] is not None and abs(v["log2_ratio"]) <= 1.0),
+        "M148_n_cells": len(out),
         "provenance": env_fingerprint(), "cells": out,
+    }
+
+
+def run_local_fine(seed: int = S14.DEFAULT_SEED,
+                   n: int = S14.DEFAULT_N) -> Dict[str, Any]:
+    """Luoi cuc bo he so 1.05 quanh bac nhay cua hai cell `@0.960` (`G23-176`).
+
+    `efficiency` cua chung o luoi 1.25x duoc noi suy BAC NGANG qua mot buoc
+    nhay ([0.500, 0.993] va [0.000, 0.992]) -> vo nghia (`L60`). Luoi min 5%
+    lam bac do thanh doc doc duoc.
+    """
+    with open(LEGACY_SLA, "r", encoding="utf-8") as fh:
+        endo = {"%s@%.3f" % (c["mode"], float(c["rho_bar"])): float(c["t_loss"])
+                for c in json.load(fh)["cells"]
+                if c.get("feasible") and c.get("role") == "gate"}
+    cv2 = C.CostV2(strict_reliable=True)
+    out: Dict[str, Any] = {}
+    for key, (lo, hi) in sorted(LOCAL_FINE.items()):
+        mode, rb = key.split("@")[0], float(key.split("@")[1])
+        grid = []
+        t = lo
+        while t <= hi * 1.0000001:
+            grid.append(round(t, 8))
+            t *= 1.05
+        sigma = C.sigma_from_a_regime(mode, rb, S14.DEFAULT_A)
+        rho_mat = S14.ar1_matrix(mode, rb, sigma, S14.DEFAULT_TAU,
+                                 S14.DEFAULT_DT, n, seed)
+        delay, loss, _ = cv2.tables_batch(rho_mat, mode, 5000.0)
+        curve = []
+        for tl in grid:
+            sh = regime_shares(delay, loss, 50.0, tl)
+            sh.pop("_viol")
+            curve.append(float(sh["S_pivotal"]))
+        te = endo[key]
+        i = int(np.searchsorted(grid, te)) - 1
+        i = max(0, min(i, len(grid) - 2))
+        f = (te - grid[i]) / (grid[i + 1] - grid[i])
+        s_te = curve[i] + f * (curve[i + 1] - curve[i])
+        mx = max(curve)
+        out[key] = {
+            "grid_lo": lo, "grid_hi": hi, "grid_factor": 1.05,
+            "n_points": len(grid),
+            "t_loss_endogenous": te,
+            "T_star": grid[int(np.argmax(curve))],
+            "peak_at_grid_edge": bool(int(np.argmax(curve))
+                                      in (0, len(grid) - 1)),
+            "S_pivotal_at_T_star": mx,
+            "S_pivotal_at_t_endo": float(s_te),
+            "efficiency": float(s_te / mx) if mx > 0 else None,
+            "interp_bracket": [curve[i], curve[i + 1]],
+            "interp_jump": float(abs(curve[i + 1] - curve[i])),
+            "curve": curve, "grid": grid,
+        }
+    return {
+        "phase": "23.21d", "script": "measurements.sla_exogenous --local-fine",
+        "prereg": "docs/phase-23/00zzr-amendment-55.md",
+        "provenance": env_fingerprint(), "cells": out,
+    }
+
+
+def run_sigma_rho_plane(spec_id: str = PRIMARY_SPEC,
+                        n: int = S14.DEFAULT_N) -> Dict[str, Any]:
+    """Luoi 2D `(rho, sigma)` -- doi tuong THAT (`G23-179`, amendment 55 muc 5).
+
+    Luoi chinh (`a` = 0.9) la MOT DUONG cong tren mat phang nay; doi chung
+    `sigma` co dinh la MOT DUONG NGANG. Ca hai deu khong mo ta duoc MIEN.
+
+    O nao co `sigma > sigma_max(mode, rho)` duoc danh dau `infeasible` chu
+    KHONG bi cat xuong tran -- cat lang le se tao ra mot bien gia.
+    """
+    spec = SLA_SPECS[spec_id]
+    w = w_loss_equal_budget(spec["t_delay_ms"], spec["t_loss"])
+    cv2 = C.CostV2(strict_reliable=True)
+    planes: Dict[str, Any] = {}
+    for mode in ("poisson", "h2"):
+        rows = {}
+        for rb in RHO_GRID_2D:
+            smax = C.sigma_max_regime(mode, rb)
+            row = {}
+            for sg in SIGMA_GRID_2D:
+                if sg > smax:
+                    row["sigma=%.3f" % sg] = {"feasible": False}
+                    continue
+                c = evaluate_cell(cv2, mode, rb, t_delay_ms=spec["t_delay_ms"],
+                                  t_loss=spec["t_loss"], w_loss=w, n=n,
+                                  sigma_override=sg)
+                row["sigma=%.3f" % sg] = {
+                    "feasible": True, "regime": c["regime"],
+                    "S_pivotal": c["S_pivotal"],
+                    "V": c["decision_value_V"],
+                    "opt_viol_rate": c["opt_viol_rate"],
+                }
+            rows["rho=%.3f" % rb] = {"sigma_max": float(smax), "by_sigma": row}
+        planes[mode] = rows
+    return {
+        "phase": "23.21d",
+        "script": "measurements.sla_exogenous --plane",
+        "prereg": "docs/phase-23/00zzr-amendment-55.md",
+        "config": {"t_delay_ms": spec["t_delay_ms"], "t_loss": spec["t_loss"],
+                   "w_loss": w, "rho_grid": list(RHO_GRID_2D),
+                   "sigma_grid": list(SIGMA_GRID_2D),
+                   "pivotal_min": PIVOTAL_MIN},
+        "provenance": env_fingerprint(), "planes": planes,
     }
 
 
@@ -609,6 +763,12 @@ def main() -> None:
     p.add_argument("--wave4", action="store_true")
     p.add_argument("--t-loss-fine", action="store_true")
     p.add_argument("--rho-grid", action="store_true")
+    p.add_argument("--local-fine", action="store_true")
+    p.add_argument("--plane", action="store_true")
+    p.add_argument("--sigma-low", action="store_true",
+                   help="doi chung THU HAI o sigma = %g (G23-177): kep dinh "
+                        "h2 HAI phia. sigma = 0.020 khong kha thi duoi rho = 0.625."
+                        % SIGMA_FIXED_LOW)
     p.add_argument("--sigma-fixed", action="store_true",
                    help="doi chung G23-172: giu sigma = %g CO DINH thay vi "
                         "a co dinh, de tach MUC tai khoi BIEN DONG tai (L58)."
@@ -632,6 +792,20 @@ def main() -> None:
             json.dump(art, fh, indent=1, sort_keys=True)
         print("[ok] t-loss-sweep -> %s" % path)
         return
+    if a.local_fine:
+        art = run_local_fine(n=a.n)
+        path = os.path.join(a.out_dir, "t_loss_local_fine.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(art, fh, indent=1, sort_keys=True)
+        print("[ok] local-fine -> %s" % path)
+        return
+    if a.plane:
+        art = run_sigma_rho_plane(a.spec, n=a.n)
+        path = os.path.join(a.out_dir, "sigma_rho_plane.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(art, fh, indent=1, sort_keys=True)
+        print("[ok] plane -> %s" % path)
+        return
     if a.t_loss_fine:
         art = run_t_loss_fine(n=a.n)
         path = os.path.join(a.out_dir, "t_loss_fine.json")
@@ -640,10 +814,14 @@ def main() -> None:
         print("[ok] t-loss-fine -> %s" % path)
         return
     if a.rho_grid:
-        sf = SIGMA_FIXED if a.sigma_fixed else None
-        art = run_rho_grid(sigma_fixed=sf, n=a.n)
+        sf = (SIGMA_FIXED_LOW if a.sigma_low
+              else (SIGMA_FIXED if a.sigma_fixed else None))
+        grid = ({m: RHO_GRID_SIGMA_LOW for m in ("poisson", "h2")}
+                if a.sigma_low else None)
+        art = run_rho_grid(grid=grid, sigma_fixed=sf, n=a.n)
         path = os.path.join(a.out_dir, "rho_grid%s.json"
-                            % ("_sigma_fixed" if sf else "_main"))
+                            % ("_sigma_low" if a.sigma_low
+                               else ("_sigma_fixed" if sf else "_main")))
         with open(path, "w", encoding="utf-8") as fh:
             json.dump(art, fh, indent=1, sort_keys=True)
         print("[ok] rho-grid -> %s" % path)
