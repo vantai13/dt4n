@@ -237,6 +237,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-193 | 23.21f | PASS | `approved_for_live` co CA HAI truc -> 16 artifact len `results/LIVE/phase-21R/`. `sha256` trong registry tinh TU FILE THAT; `test_registered_sha_matches_the_file_on_disk` ghim |
 | G23-194 | 23.21f | PASS | `test_close_doc_lists_every_not_run_gate_of_that_lesson`: bat ngay `35-close-23-21.md` bo sot `G23-156`/`G23-158` (`L66`). Da sua muc 6 thanh "TAI MO" va liet ke DU |
 | G23-195 | 23.21f | PASS | `test_debt_dependency_graph_has_no_cycle` (DFS tim back-edge). DC30: them canh `G23-141 -> G23-158` -> test DO, tai hien dung deadlock da xay ra (`L67`) |
+| G23-196 | 23.21g | NOT_RUN | - |
+| G23-197 | 23.21g | NOT_RUN | - |
+| G23-198 | 23.21g | NOT_RUN | - |
+| G23-199 | 23.21g | NOT_RUN | - |
+| G23-200 | 23.21g | NOT_RUN | - |
+| G23-201 | 23.21g | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -351,6 +357,10 @@ dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
 12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
 `G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
+
+`G23-196 .. G23-201` (lesson `23.21g`) mo boi amendment 23-58: xoa truong
+PHAI SINH khoi manifest, ghi van tay parquet DAU RA, va ep float64.
+`G23-198`/`G23-199` dong `G23-174`. KE TIEP `G23-195`.
 
 `G23-190 .. G23-195` (lesson `23.21f`) mo boi amendment 23-57: pha DEADLOCK
 so sach giua `G23-158` va `G23-141`/`G23-142`, va dung hai cai chan de lan

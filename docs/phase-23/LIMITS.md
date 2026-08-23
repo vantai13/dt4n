@@ -92,7 +92,9 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 
 | L69 | Doi chung am muc DUONG ONG (`G23-191`) dat max\|diff\| = 5.72e-06 chu khong phai 0. 155/156 truong khop o muc nhieu float64 (<= 3.7e-13); rieng `gap_true_pct.p90` lech 2.0e-07 TUONG DOI | `00zzt-amendment-57.md` muc 6; do tren `poisson@0.925` U0 legacy | Co che DA XAC DINH: `gap_true` la `float32`; `np.percentile` tren float32 cho 28.5448761, tren float64 cho 28.5448826. Khac biet MOI TRUONG (numpy/dtype), KHONG phai logic. `M-167` MISS |
 
-So ke tiep duoc cap: **L70**.
+| L70 | Manifest ban dau (amendment 23-57) mang NAM truong PHAI SINH (`opt_viol_rate`, `in_band`, `cost_margin_mean_ms`, `cost_margin_p10_ms`, `opt_path_share`) va BAY khoa `config` cua vong fixpoint. `opt_viol_rate` ghi 0.15 trong khi su that duoi `S-B` la 0.99-1.00 | `00zzu-amendment-58.md` muc 1 | KHONG hong SO (`cert/` khong doc chung) nhung hong NHAN: `sla_calib_v2` doc 21 lan de sinh bang/hinh paper. Xoa THEO NGHIA chu khong theo TEN -- `NT 50` |
+
+So ke tiep duoc cap: **L71**.
 
 ## Va cham da phat hien
 
