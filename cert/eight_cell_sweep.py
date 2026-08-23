@@ -3,6 +3,24 @@
 
 from __future__ import annotations
 
+def _calib_path(spec: dict, tpl) -> str:
+    """Duong dan calib_set: mau neu co, khong thi giu NGUYEN duong cu.
+
+    Ban do duong dan hien tai KHONG deu (poisson@0.925 la
+    `calib_set_v3.parquet`, khong hau to), nen mot mau lam mac dinh se doc
+    nham file. Mac dinh None -> di dung nhanh cu, khong doi mot byte nao.
+    """
+    import os as _os
+    if tpl is None:
+        return spec["parquet"]
+    p = tpl.format(mode=spec["mode"], rho=float(spec["rho_bar"]))
+    if not _os.path.exists(p):
+        raise FileNotFoundError(
+            "thieu calib_set: %s\n  -> chay tools/run_23_20_matrix.py cho "
+            "cell %s@%.3f" % (p, spec["mode"], float(spec["rho_bar"])))
+    return p
+
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -13,6 +31,7 @@ import numpy as np
 import pandas as pd
 
 from cert import fallback_sweep as F
+from cert.build_calib_set_v3 import AXIS_LEGACY
 from cert.cell_matrices import TRUTH_TABLE, cell_matrices, git, json_clean, pin
 from cert.objective_misspecification import _risk_at_truth
 from measurements.decision_error_v2 import TruthTable
@@ -154,6 +173,8 @@ def _objective_curve(
     selected_at_one: Mapping[str, float],
     spec: Mapping[str, Any] | None = None,
     sla_artifact: str = SLA_ARTIFACT,
+    axis: str | None = None,
+    aoi_profile: str = "U0",
 ) -> Dict[str, Any]:
     spec = CELL_SPECS[cell] if spec is None else spec
     objective = sla_objective_for_cell(cell, sla_artifact, spec=spec)
@@ -164,6 +185,8 @@ def _objective_curve(
         mode=str(spec["mode"]),
         rho_bar=float(spec["rho_bar"]),
         calibration_path=sla_artifact,
+        axis=axis,
+        aoi_profile=aoi_profile,
     )
     if len(base["y_true"]) != len(df):
         raise AssertionError("truth/parquet length mismatch for %s" % cell)
@@ -201,9 +224,12 @@ def analyze_cell(
     cell: str,
     spec: Mapping[str, Any] | None = None,
     sla_artifact: str = SLA_ARTIFACT,
+    calib_template: str | None = None,
+    axis: str | None = None,
+    aoi_profile: str = "U0",
 ) -> Dict[str, Any]:
     spec = CELL_SPECS[cell] if spec is None else spec
-    df = pd.read_parquet(spec["parquet"])
+    df = pd.read_parquet(_calib_path(spec, calib_template))
     score, accept = F.c3_accept_set(df)
     crossfit = F.build_crossfit_predictions(df, score, accept)
     test_idx = crossfit["test_idx"]
@@ -223,6 +249,8 @@ def analyze_cell(
         selected,
         spec=spec,
         sla_artifact=sla_artifact,
+        axis=axis,
+        aoi_profile=aoi_profile,
     )
     return json_clean(
         {
@@ -281,8 +309,16 @@ def _common_crossing(cells: Mapping[str, Any]) -> Dict[str, Any]:
     return {"r_cross": common, "per_cell": per_cell}
 
 
-def run_eight_cells() -> Dict[str, Any]:
-    cells = {cell: analyze_cell(cell) for cell in ALL_CELLS}
+def _axis_or_legacy(axis):
+    return AXIS_LEGACY if axis is None else axis
+
+
+def run_eight_cells(calib_template: str | None = None,
+                    axis: str | None = None,
+                    aoi_profile: str = "U0") -> Dict[str, Any]:
+    cells = {cell: analyze_cell(cell, calib_template=calib_template,
+                                axis=axis, aoi_profile=aoi_profile)
+             for cell in ALL_CELLS}
     nc_d = {
         cell: {
             "expected": expected,
@@ -291,7 +327,18 @@ def run_eight_cells() -> Dict[str, Any]:
         }
         for cell, expected in LEGACY_DELTA.items()
     }
-    if max(row["absolute_gap"] for row in nc_d.values()) > 1e-12:
+    # NC-D ghim gia tri `delta_system_vs_neo` do tren TRUC KE THUA. Tren mot
+    # truc khac, chung PHAI doi -- do la muc dich cua viec doi truc. Nen NC-D
+    # la mot doi chung CUA TRUC KE THUA, khong ap dung cho truc khac.
+    # KHONG tat lang le: ghi ro da bo qua va vi sao (amendment 23-49f).
+    _nc_d_applies = _axis_or_legacy(axis) == AXIS_LEGACY
+    nc_d_status = {
+        "applies": _nc_d_applies,
+        "max_absolute_gap": max(row["absolute_gap"] for row in nc_d.values()),
+        "_note": ("NC-D ghim gia tri do tren truc ke thua; tren truc khac no "
+                  "KHONG ap dung. Gia tri gap van duoc ghi de doi chieu."),
+    }
+    if _nc_d_applies and nc_d_status["max_absolute_gap"] > 1e-12:
         raise AssertionError("NC-D old-cell parity failed")
     twin = _spread(cells, "twin_deg")
     prior = _spread(cells, "prior_deg")
@@ -348,6 +395,7 @@ def run_eight_cells() -> Dict[str, Any]:
             "controls": {
                 "NC_D_old_cell_F2_parity": nc_d,
                 "NC_D_max_absolute_gap": max(row["absolute_gap"] for row in nc_d.values()),
+                "NC_D_status": nc_d_status,
                 "NC_E_all_leakage_controls": bool(all(
                     cells[cell]["controls"][name]
                     for cell in ALL_CELLS
@@ -390,9 +438,17 @@ def print_report(report: Mapping[str, Any]) -> None:
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--calib-template", default=None,
+
+                       help='mau duong dan calib_set, truong {mode} va {rho}. Mac dinh None = DUNG NGUYEN duong dan cu (doi chung am dung THEO CAU TRUC). KHONG them --axis o day: quy uoc duong dan phai song o MOT cho (runner), khong nhan ba lan roi lech nhau. Amendment 23-49e muc 4.')
+    parser.add_argument("--axis", default=None,
+                        help="truc tuoi cho ban sao row-selection cua "
+                             "cell_matrices; phai KHOP voi calib_set")
+    parser.add_argument("--aoi-profile", default="U0")
     parser.add_argument("--out", default=OUTPUT)
     args = parser.parse_args(argv)
-    report = run_eight_cells()
+    report = run_eight_cells(calib_template=args.calib_template,
+                             axis=args.axis, aoi_profile=args.aoi_profile)
     print_report(report)
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as handle:

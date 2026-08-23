@@ -37,7 +37,10 @@ from cert.build_calib_set_v3 import (
     N,
     N_MHAT_BINS,
     _load_cell,
+    AXIS_LEGACY,
+    AXIS_MEASURED,
     _valid_rows,
+    offset_steps,
     assign_mhat_bin,
     y_hat_row_shift,
 )
@@ -140,6 +143,19 @@ def pin(path: str) -> Dict[str, Any]:
 # Ma tran chi phi cua mot cell
 # ---------------------------------------------------------------------------
 
+def _axis_or_default(axis):
+    return AXIS_LEGACY if axis is None else axis
+
+
+def _aoi_for(axis, profile):
+    """Mo hinh AoI mang `d_base` DA BU TRU theo ho so (amendment 23-49a muc 2)."""
+    if _axis_or_default(axis) != AXIS_MEASURED:
+        return None
+    from measurements.aoi_model_v7 import AoIModelV7, d_base_s
+    off = offset_steps(profile, DT) * float(DT) * 1000.0
+    return AoIModelV7(d_s=d_base_s(tuple(off), DT), profile="U0")
+
+
 def cell_matrices(
     tt: TruthTable,
     mode: str = MODE,
@@ -148,6 +164,8 @@ def cell_matrices(
     n: int = N,
     w_loss_override: float | None = None,
     calibration_path: str = SLA_CALIB,
+    axis: str | None = None,
+    aoi_profile: str = "U0",
 ) -> Dict[str, np.ndarray]:
     """Ma tran chi phi that / du doan twin, theo dung duong ong `build_one_v3`.
 
@@ -174,7 +192,11 @@ def cell_matrices(
             sigma_override=SIGMA,
             w_loss_override=w_loss_override,
         )
-        cur, old, _ = _valid_rows(int(n), DT)
+        # `cell_matrices` co BAN SAO row-selection rieng. No phai dung CUNG
+        # truc voi calib_set, neu khong so hang lech va eight_cell_sweep
+        # raise "truth/parquet length mismatch". Amendment 23-49f.
+        cur, old, _ = _valid_rows(int(n), DT, axis=_axis_or_default(axis),
+                                  aoi=_aoi_for(axis, aoi_profile))
         yt.append(arr["c_true"][cur])
         yh.append(y_hat_row_shift(arr["c_fresh"], old))
         lt.append(arr["l_true"][cur])

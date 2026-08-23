@@ -67,6 +67,24 @@ pham vi luot sau, xem Amendment 23-25 muc 8.
 
 from __future__ import annotations
 
+def _calib_path(spec: dict, tpl) -> str:
+    """Duong dan calib_set: mau neu co, khong thi giu NGUYEN duong cu.
+
+    Ban do duong dan hien tai KHONG deu (poisson@0.925 la
+    `calib_set_v3.parquet`, khong hau to), nen mot mau lam mac dinh se doc
+    nham file. Mac dinh None -> di dung nhanh cu, khong doi mot byte nao.
+    """
+    import os as _os
+    if tpl is None:
+        return spec["parquet"]
+    p = tpl.format(mode=spec["mode"], rho=float(spec["rho_bar"]))
+    if not _os.path.exists(p):
+        raise FileNotFoundError(
+            "thieu calib_set: %s\n  -> chay tools/run_23_20_matrix.py cho "
+            "cell %s@%.3f" % (p, spec["mode"], float(spec["rho_bar"])))
+    return p
+
+
 import math
 import subprocess
 from typing import Any, Dict, Mapping, Sequence
@@ -1183,6 +1201,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     p = argparse.ArgumentParser(description="Lesson 23.6 -- chi phi abstain c*")
     p.add_argument("--cell", action="append", choices=sorted(CELL_INPUTS),
                    help="lap lai de chay nhieu cell; mac dinh: ca ba")
+    p.add_argument("--calib-template", default=None,
+
+                       help='mau duong dan calib_set, truong {mode} va {rho}. Mac dinh None = DUNG NGUYEN duong dan cu (doi chung am dung THEO CAU TRUC). KHONG them --axis o day: quy uoc duong dan phai song o MOT cho (runner), khong nhan ba lan roi lech nhau. Amendment 23-49e muc 4.')
     p.add_argument("--out-dir", default="results/SUPERSEDED/phase-23")
     p.add_argument("--n-boot", type=int, default=N_BOOT)
     p.add_argument("--seed", type=int, default=SEED_BOOT)

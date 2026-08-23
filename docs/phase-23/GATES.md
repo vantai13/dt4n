@@ -166,7 +166,6 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-122 | 23.19F | PASS | PILOT M-126 1 cell: q_hat(B3)/q_hat(B0) = 1.604 vs tien doan 1.630, lech -1.6% |
 | G23-123 | 23.20A | ADJUDICATED | `out_stem()` ban dau cho LIVE khi axis=measured; test chan 23.17 tu choi 9 artifact vi sla_axis (S14) CHUA duoc duyet. Phan xu (amendment 23-49c muc 3): LIVE chi khi MOI truc duoc duyet -> Dot 1/2/3 vao SUPERSEDED den sau Lesson 23.21 |
 | G23-124 | 23.20A | PASS | ten file mang CA ho so VA truc (`calib_set_<mode>_<rho>_<profile>_<axis>`); chay U0 roi U3 khong ghi de |
-| G23-125 | 23.20A | NOT_RUN | - |
 | G23-126 | 23.20A | PASS | Dot 1, 16/16 job: bon cong nhanh PASS. mean_z 302.488 -> 366.023 ms, ty trong lech <= 0.31 diem %, 0 hang ngoai dai, block/bin >= 9 |
 | G23-129 | 23.20A | PASS | M-125a: 8/8 cell trong +5%..+13% (do duoc +7.92%..+10.27%, tien doan +8.56%) |
 | G23-130 | 23.20A | PASS | M-125b: 16/16 o dem duoc trong +/-25% (100%), lech lon nhat 2.6%. Ke ca 16 o suy bien: 32/32, lech lon nhat 6.0% |
@@ -175,6 +174,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-131 | 23.20B | PASS | M-131 q_hat(U3)/q_hat(U0) = 0.9878..0.9958 tren 4 cell dem duoc (dai 0.98-1.03). Ho so AoI gan nhu khong anh huong khi MUC tuoi bang nhau |
 | G23-135 | 23.20B | PASS | Phep kiem hinh hoc bin: khop hinh hoc lam corr(r,lech) 0.9899 -> 0.5008 va mat don dieu; |lech|max 2.69% -> 1.56%. Phan xu PARTIAL -> L39 |
 | G23-136 | 23.20B | PASS | Tang PENDING + truong `pending_on` + test tu don; doi chung duong: gia vo duyet sla_axis -> test DO doi PROMOTE |
+| G23-125 | 23.20C | PASS | 3/7 script ha nguon nhan `--calib-template` (mac dinh None = giu duong cu). Bon script kia da nhan duong dan tuong minh, khong can sua |
+| G23-137 | 23.20C | PASS | Doi chung am ha nguon: `eight_cell_sweep` chay mac dinh tai tao ban cu, moi gia tri bit-exact (chi khac chuoi duong dan do phan tang 23.17) |
+| G23-138 | 23.20C | PASS | Bang 3 + doi chieu M-127..M-130: 1/4 HIT, bao cao NGUYEN kem giai thich (L34: noi suy tuyen tinh qua 124 ms tren artifact SENSITIVITY_ONLY) |
+| G23-139 | 23.20C | PASS | P23-A, L11, L13 DONG; L37..L41 ghi vao LIMITS.md |
+| G23-140 | 23.20C | PASS | Nhan CONDITIONAL_ON_DSYNC_51MS GIU nguyen: `approved_for_live` con rong vi truc SLA (S14) chua sua. `30-close-23-20.md` muc 4 |
+| G23-141 | 23.20C | NOT_RUN | - |
+| G23-142 | 23.20C | NOT_RUN | - |
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
@@ -219,6 +225,9 @@ vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 `G23-123 .. G23-130` (lesson `23.20A`) la Dot 1 cua Lesson 23.20.
 `G23-127`, `G23-128`, `G23-131`, `G23-135`, `G23-136` (lesson `23.20B`) la
 Dot 2 + Dot 3 va phep kiem hinh hoc bin.
+`G23-125`, `G23-137 .. G23-142` (lesson `23.20C`) la tich hop ha nguon va
+dong Lesson 23.20. `G23-141`/`G23-142` (Dot 4 va mo rong M-125 len 12 cell /
+48 o) NOT_RUN: bi chan boi S14 -- xem `L41`.
 `G23-125` (ha nguon co `--axis`) NOT_RUN: bay script ha nguon chua co co do;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
 

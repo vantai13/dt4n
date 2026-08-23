@@ -1,13 +1,13 @@
 # MANIFEST -- kho artifact DT4N
 
-Sinh tu dong boi `tools/build_manifest.py` tai commit `433062f`. Cot **Dung cho** do NGUOI dien, luu trong `results/_intent.json` de khong bi ghi de.
+Sinh tu dong boi `tools/build_manifest.py` tai commit `5f562c2`. Cot **Dung cho** do NGUOI dien, luu trong `results/_intent.json` de khong bi ghi de.
 
 Bon tang (Lesson 23.17, amendment 23-44):
 
 ```text
   RAW           5849 file
   LIVE            13 file
-  PENDING         44 file
+  PENDING         45 file
   SUPERSEDED     389 file
   SMOKE           34 file
 ```
@@ -33,7 +33,7 @@ Bon tang (Lesson 23.17, amendment 23-44):
 | `phase-20R/decision_error_by_age_by_regime.parquet` | `?` | `?` | ? | - | - | Duong cong sai so quyet dinh tren LUOI z CO DINH [0, .05, .1, .2, .3, .55, 1, 2, 4] s. Doc boi decision_error_v2, h9_separability, plot_decision_error_v2; **can xac nhan hinh/bang** |
 | `phase-20R/truth_table.parquet` | `?` | `?` | ? | - | - | Bang tra chi phi do duoc cua Phase 20R. Doc boi decision_error_v2, cell_matrices, gate_report, build_truth_table, l6_campaign_fine, quasistatic_check; **can xac nhan hinh/bang** |
 
-## PENDING  (44 artifact json/parquet)
+## PENDING  (45 artifact json/parquet)
 
 | Artifact | Sinh boi | git | Ngay | Truc AoI | Truc SLA | Dung cho |
 |---|---|---|---|---|---|---|
@@ -59,6 +59,7 @@ Bon tang (Lesson 23.17, amendment 23-44):
 | `phase-21R/calib_set_poisson_0.925_U3_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `433062f` | 2026-08-23 | measured_v7_uniform | self_calibrated | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.960_U0_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `433062f` | 2026-08-23 | measured_v7_uniform | self_calibrated | _(dien tay)_ |
 | `phase-21R/calib_set_poisson_0.960_U3_measured_v7_report.json` | `cert/build_calib_set_v3.py` | `433062f` | 2026-08-23 | measured_v7_uniform | self_calibrated | _(dien tay)_ |
+| `phase-23/eight_cell_sweep_U3_measured_v7.json` | `cert/eight_cell_sweep.py` | `05b597f` | 2026-08-23 | - | - | eight_cell_sweep tren truc DO DUOC, ho so U3 (Lesson 23.20 Dot 2). Bang 3 CU vs MOI va doi chieu M-127..M-130 (1/4 HIT). CONDITIONAL_ON_SLA_AXIS: w_loss va nguong SLA bi thay o 23.21 -- khong phai headline |
 | `phase-21R/calib_set_h2_0.700_U0_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_h2_0.700_U1_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-21R/calib_set_h2_0.700_U2_measured_v7.parquet` | `?` | `?` | ? | - | - | _(dien tay)_ |

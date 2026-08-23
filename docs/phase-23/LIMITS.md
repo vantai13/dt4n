@@ -24,6 +24,8 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | ma | han che (rut gon) | dinh nghia tai | ghi chu |
 |---|---|---|---|
 | L10 | campaign Mininet Amendment 36 tam dung | `15-fallback-and-objective-robustness.md:176` | |
+| L11 | AoI ke thua tu he khac: `d_sync = 51 ms` do tren `topology3` (3 duong, 9 canh) roi dung cho `topology_v7` (butterfly, 8 link) | `PHASE_23_v3.md` (NGOAI repo), trich o `00zx-amendment-44.md` | **DONG** o Lesson 23.20: `d = 115.9 +/- 6.5 ms` do tren chinh `topology_v7` |
+| L13 | Ho so AoI theo tung link chua duoc do; Phase 22 dung ho so danh dinh U0/U1/U2 | `PHASE_23_v3.md` (NGOAI repo) | **DONG** o Lesson 23.20: ho so `U3` do duoc, `M-109b` lech ban cong bo <= 0.970 ms |
 | L14 | ngu nghia fallback do ta chon, khong phai he thong bat buoc | `01-inherited-audit.md:134` | |
 | L15 | F1 STICKY reset dau block la quy uoc phuong phap | `01-inherited-audit.md:137` | |
 | L16 | ba thang risk do tren cung tap hang nen tuong quan | `01-inherited-audit.md:140` | |
@@ -49,7 +51,10 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L39 | Phan du cua `M-125b`: phan CO HE THONG do HINH HOC BIN (cu 45/100/100/250 ms vs moi ~125-150). Khop hinh hoc lam `corr(r,lech)` tut 0.9899 -> 0.5008 va mat don dieu; `\|lech\|max` 2.69% -> 1.56%. Con ~1% tan xa CHUA giai thich (nghi pham L35) | `00zzj-amendment-49d.md` muc 2 | Transfer giua bin CUNG hinh hoc se chinh xac hon 2.6%. Gioi han: khop hinh hoc lam dai r hep lai nen it don bay hon |
 | L40 | `Dot 2` (con so TUYET DOI: LS, err_neo, acceptance, c*) phu thuoc `w_loss` va nguong SLA -> BI THAY THE boi Lesson 23.21. `Dot 1` va `Dot 3` la GHEP CAP nen SLA triet tieu va VAN DUNG | `29-waves-2-3-and-bin-geometry.md` muc 4 | Dot 2 mang nhan `CONDITIONAL_ON_SLA_AXIS`; headline viet sau 23.21 |
 
-So ke tiep duoc cap: **L41**.
+| L41 | `live_region_sweep` phu thuoc `--prepare-sla`, von goi `SLA.calibrate_cell` -- CHINH co che tu-hieu-chuan mang loi S14. Khong the mo rong sang 4 cell `rho = 0.650/0.675/0.875/0.900` truoc Lesson 23.21 | `00zzl-amendment-49f.md` muc 3 | Dot 4 hoan; M-125a giu 8 cell, M-125b giu 32 o |
+| L42 | `cert/cell_matrices.py` co BAN SAO row-selection rieng (`_valid_rows` goi tu dong 177). Neu no va `calib_set` dung hai truc khac nhau thi so hang lech (999.945 vs 999.495) | `00zzl-amendment-49f.md` muc 1 | Da truyen `axis`/`aoi_profile` xuong. Loi la ON AO (AssertionError), khong im lang |
+
+So ke tiep duoc cap: **L43**.
 
 ## Va cham da phat hien
 

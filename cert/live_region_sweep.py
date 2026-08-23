@@ -3,6 +3,24 @@
 
 from __future__ import annotations
 
+def _calib_path(spec: dict, tpl) -> str:
+    """Duong dan calib_set: mau neu co, khong thi giu NGUYEN duong cu.
+
+    Ban do duong dan hien tai KHONG deu (poisson@0.925 la
+    `calib_set_v3.parquet`, khong hau to), nen mot mau lam mac dinh se doc
+    nham file. Mac dinh None -> di dung nhanh cu, khong doi mot byte nao.
+    """
+    import os as _os
+    if tpl is None:
+        return spec["parquet"]
+    p = tpl.format(mode=spec["mode"], rho=float(spec["rho_bar"]))
+    if not _os.path.exists(p):
+        raise FileNotFoundError(
+            "thieu calib_set: %s\n  -> chay tools/run_23_20_matrix.py cho "
+            "cell %s@%.3f" % (p, spec["mode"], float(spec["rho_bar"])))
+    return p
+
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -303,6 +321,9 @@ def main(argv: Sequence[str] | None = None) -> int:
     parser.add_argument("--prepare-sla", action="store_true")
     parser.add_argument("--run", action="store_true")
     parser.add_argument("--sla-out", default=SLA_OUTPUT)
+    parser.add_argument("--calib-template", default=None,
+
+                       help='mau duong dan calib_set, truong {mode} va {rho}. Mac dinh None = DUNG NGUYEN duong dan cu (doi chung am dung THEO CAU TRUC). KHONG them --axis o day: quy uoc duong dan phai song o MOT cho (runner), khong nhan ba lan roi lech nhau. Amendment 23-49e muc 4.')
     parser.add_argument("--out", default=OUTPUT)
     args = parser.parse_args(argv)
     if args.prepare_sla == args.run:

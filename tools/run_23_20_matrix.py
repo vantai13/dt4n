@@ -26,6 +26,7 @@ CELLS8 = ["h2@0.700", "h2@0.850", "h2@0.925", "h2@0.960",
           "poisson@0.700", "poisson@0.850", "poisson@0.925", "poisson@0.960"]
 # cell song (err_neo >= 0.05, amendment 23-49b muc 1)
 CELLS_LIVE = ["h2@0.700", "poisson@0.850", "poisson@0.925", "poisson@0.960"]
+CELLS_REGION = ["h2@0.650", "h2@0.675", "poisson@0.875", "poisson@0.900"]
 SEEDS = ["101", "102", "103", "104", "105"]
 AX_LEG, AX_MEA = "legacy_sawtooth_51ms", "measured_v7"
 
@@ -33,6 +34,11 @@ WAVES = {
     1: [(c, "U0", ax) for c in CELLS8 for ax in (AX_LEG, AX_MEA)],
     2: [(c, "U3", AX_MEA) for c in CELLS8],
     3: [(c, p, AX_MEA) for c in CELLS_LIVE[:3] for p in ("U1", "U2")],
+    # Dot 4 (amendment 23-49e muc 3): bon cell cua live_region_sweep, chua
+    # build. Ba bien the moi cell -> mo rong M-125a 8->12 cell, M-125b 32->48 o,
+    # o BA muc tai moi (rho = 0.650, 0.675, 0.875).
+    4: ([(c, "U3", AX_MEA) for c in CELLS_REGION]
+        + [(c, "U0", ax) for c in CELLS_REGION for ax in (AX_LEG, AX_MEA)]),
 }
 TARGET_MEAN_MS = 366.05
 
@@ -80,7 +86,7 @@ def gates(path, axis) -> dict:
 
 def main() -> int:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--wave", type=int, required=True, choices=[1, 2, 3])
+    ap.add_argument("--wave", type=int, required=True, choices=[1, 2, 3, 4])
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--force", action="store_true")
     a = ap.parse_args()
