@@ -21,8 +21,9 @@ import pytest
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 LIVE = os.path.join(REPO, "results", "LIVE")
+PENDING = os.path.join(REPO, "results", "PENDING")
 REGISTRY = os.path.join(REPO, "docs", "phase-23", "axis_registry.json")
-TIERS = ("RAW", "LIVE", "SUPERSEDED", "SMOKE")
+TIERS = ("RAW", "LIVE", "PENDING", "SUPERSEDED", "SMOKE")
 
 # Artifact z-INDEPENDENT co TRUOC khi co co che validity.
 # Moi muc PHAI kem ly do. Danh sach nay CHI duoc ngan di, khong duoc dai ra.
@@ -164,3 +165,42 @@ def test_live_artifact_has_approved_axes(path):
     assert slbl in approved["sla_axis"], (
         f"{rel}: sla_axis.label = {slbl!r} chua duoc duyet cho LIVE (loi S14)."
     )
+
+
+# ---------------------------------------------------------------------------
+# Tang PENDING (amendment 23-49d muc 4)
+# ---------------------------------------------------------------------------
+
+
+def _pending_json() -> list[str]:
+    return sorted(glob.glob(os.path.join(PENDING, "**", "*.json"), recursive=True))
+
+
+@pytest.mark.parametrize("path", _pending_json())
+def test_pending_artifacts_declare_what_they_wait_for(path):
+    """PENDING/ khac SUPERSEDED/: no CHO, khong bi THAY THE.
+
+    Hai rang buoc, va cai thu hai lam tang nay TU DON:
+      (1) phai khai `pending_on` -- truc nao chua duyet
+      (2) truc do phai THUC SU chua duyet; neu no DA duoc duyet thi test do
+          va bat phai promote len LIVE/, thay vi de artifact nam quen o day.
+    """
+    rel = os.path.relpath(path, PENDING).replace(os.sep, "/")
+    with open(path, "r", encoding="utf-8") as fh:
+        payload = json.load(fh)
+    if not isinstance(payload, dict) or "validity" not in payload:
+        pytest.skip("khong phai artifact co khoi validity")
+    v = payload["validity"]
+    pend = v.get("pending_on")
+    assert pend, (
+        f"{rel}: nam o PENDING/ nhung khong khai `pending_on`.\n"
+        f"  -> khai chinh xac truc nao chua duyet, de Lesson 23.21 tim lai duoc."
+    )
+    approved = _approved()
+    for axis in pend:
+        assert axis in approved, f"{rel}: `pending_on` co truc la {axis!r}"
+        label = v.get(axis, {}).get("label")
+        assert label not in approved[axis], (
+            f"{rel}: khai cho {axis} nhung truc {label!r} DA duoc duyet.\n"
+            f"  -> PROMOTE artifact nay len LIVE/. Tang PENDING tu don la o day."
+        )

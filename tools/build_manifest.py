@@ -18,7 +18,7 @@ import subprocess
 import sys
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
-TIERS = ("LIVE", "SUPERSEDED", "SMOKE")
+TIERS = ("LIVE", "PENDING", "SUPERSEDED", "SMOKE")
 INTENT_PATH = os.path.join(REPO, "results", "_intent.json")
 
 
@@ -86,7 +86,7 @@ def main() -> None:
           "`results/_intent.json` de khong bi ghi de.\n")
     print("Bon tang (Lesson 23.17, amendment 23-44):\n")
     print("```text")
-    for t in ("RAW", "LIVE", "SUPERSEDED", "SMOKE"):
+    for t in ("RAW", "LIVE", "PENDING", "SUPERSEDED", "SMOKE"):
         root = os.path.join(REPO, "results", t)
         print(f"  {t:12} {count(root):5} file")
     print("```\n")

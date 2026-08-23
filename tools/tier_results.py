@@ -7,7 +7,9 @@ la bang chung goc, va chung thuoc Hang 1 (khong tai tao duoc).
 
 Tieu chi:
     RAW         file sinh boi mot lan chay Mininet/probe/campaign -> PHEP DO
-    LIVE        file dan xuat ma mot hinh/bang trong paper dang dung
+    LIVE        file dan xuat ma MOI truc cua no DA DUOC DUYET
+    PENDING     hien hanh, nhung CHO mot truc duoc duyet (amendment 23-49d
+                muc 4). Khac SUPERSEDED: no CHO, khong bi THAY THE.
     SUPERSEDED  file dan xuat co ban thay the moi hon / tren truc z sai
     SMOKE       pilot, attempt, preflight, FAILED, smoke -- moi lan chay
                 KHONG nham tao ket qua cuoi
@@ -34,7 +36,7 @@ import subprocess
 import sys
 
 ROOT = "results"
-TIERS = ("RAW", "LIVE", "SUPERSEDED", "SMOKE")
+TIERS = ("RAW", "LIVE", "PENDING", "SUPERSEDED", "SMOKE")
 
 # --- Luat phan loai, theo thu tu uu tien (khop dau tien thang) -------------
 

@@ -41,7 +41,7 @@ def stem_of(cell, profile, axis):
     mode, rho = cell.split("@")
     # amendment 23-49c muc 3: LIVE chi khi MOI truc duoc duyet. Truc SLA
     # (S14) chua duoc duyet den Lesson 23.21 -> tat ca vao SUPERSEDED.
-    tier = "SUPERSEDED"
+    tier = "PENDING" if axis == AX_MEA else "SUPERSEDED"
     return "results/%s/phase-21R/calib_set_%s_%.3f_%s_%s" % (
         tier, mode, float(rho), profile, axis)
 

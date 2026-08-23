@@ -1,0 +1,32 @@
+{
+ "beta": 0.431,
+ "cells": [
+  "h2@0.700",
+  "poisson@0.850",
+  "poisson@0.925",
+  "poisson@0.960"
+ ],
+ "matched_geometry": {
+  "max_abs": 0.015645397451684584,
+  "mean_abs": 0.006923716899179769
+ },
+ "mismatched_geometry": {
+  "max_abs": 0.026944584128389293,
+  "mean_abs": 0.009680186883471373
+ },
+ "schema": "dt4n.bin_geometry.v1",
+ "validity": {
+  "axis_role": "measures_axis",
+  "inputs_sha256": {
+   "results/LIVE/phase-23/axis_remeasure_impact_wave1.json": "347046379cd9dc247afbcc62ab79b02cf8c7011b66cd70ed194581148148685b"
+  },
+  "instrument": {
+   "module": "tools.check_bin_geometry",
+   "source_path": "tools/check_bin_geometry.py",
+   "source_sha256": "eebcfb4224636649193645004ef1d9c5b23acfaa08abf7b2f154c80a4a6920c9"
+  },
+  "note": "So sanh GHEP CAP hai luoi bin tren CUNG du lieu -> nguong SLA triet tieu trong ty so, nen ket luan mien nhiem voi Lesson 23.21 (amendment 23-49d muc 5).",
+  "schema": "dt4n.validity.v1"
+ },
+ "verdict": "PARTIAL"
+}

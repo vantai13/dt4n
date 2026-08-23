@@ -128,9 +128,23 @@ def out_stem(axis: str, mode: str, rho_bar: float, profile: str) -> str:
     # phai khi MOT truc da duoc sua. `calib_set` van dung nguong SLA mang
     # nhan `self_calibrated` (DEPRECATED, loi cau truc S14, sua o Lesson
     # 23.21), nen ke ca truc AoI da do duoc thi artifact VAN chua "sach".
-    tier = "LIVE" if _all_axes_approved() else "SUPERSEDED"
+    # PENDING = hien hanh nhung CHO mot truc duoc duyet (amendment 23-49d
+    # muc 4). KHAC SUPERSEDED, von co nghia "da bi thay the".
+    if axis != AXIS_MEASURED:
+        tier = "SUPERSEDED"          # truc ke thua: da BI THAY THE that su
+    else:
+        # PENDING = hien hanh nhung CHO mot truc duoc duyet (23-49d muc 4).
+        tier = "LIVE" if _all_axes_approved() else "PENDING"
     return "results/%s/phase-21R/calib_set_%s_%.3f_%s_%s" % (
         tier, mode, float(rho_bar), profile, axis)
+
+
+def _pending_axes() -> list:
+    """Truc nao CHUA duoc duyet -- de artifact o PENDING/ khai bao chinh xac."""
+    import json as _json
+    with open("docs/phase-23/axis_registry.json", encoding="utf-8") as fh:
+        ap = _json.load(fh)["approved_for_live"]
+    return [k for k in ("aoi_axis", "sla_axis") if not ap.get(k)]
 
 
 def _all_axes_approved() -> bool:
@@ -850,7 +864,8 @@ def main() -> None:
                 sla_path=str(args.calibration),
                 w_loss=float(meta["w_loss"]),
                 omega=None,          # truc omega chua ton tai (Lesson 23.26)
-            ),
+            ) | ({"pending_on": _pending_axes()} if not _all_axes_approved()
+                 else {}),
         }
     )
 

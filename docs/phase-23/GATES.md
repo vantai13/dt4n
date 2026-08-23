@@ -170,6 +170,11 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-126 | 23.20A | PASS | Dot 1, 16/16 job: bon cong nhanh PASS. mean_z 302.488 -> 366.023 ms, ty trong lech <= 0.31 diem %, 0 hang ngoai dai, block/bin >= 9 |
 | G23-129 | 23.20A | PASS | M-125a: 8/8 cell trong +5%..+13% (do duoc +7.92%..+10.27%, tien doan +8.56%) |
 | G23-130 | 23.20A | PASS | M-125b: 16/16 o dem duoc trong +/-25% (100%), lech lon nhat 2.6%. Ke ca 16 o suy bien: 32/32, lech lon nhat 6.0% |
+| G23-127 | 23.20B | PASS | Dot 2 (8 job): bon cong nhanh PASS 8/8, mean_z 366.014 ms |
+| G23-128 | 23.20B | PASS | Dot 3 (6 job) + M-132: U0 366.023 / U1 366.022 / U2 366.022 / U3 366.014 ms, trai 0.009 ms |
+| G23-131 | 23.20B | PASS | M-131 q_hat(U3)/q_hat(U0) = 0.9878..0.9958 tren 4 cell dem duoc (dai 0.98-1.03). Ho so AoI gan nhu khong anh huong khi MUC tuoi bang nhau |
+| G23-135 | 23.20B | PASS | Phep kiem hinh hoc bin: khop hinh hoc lam corr(r,lech) 0.9899 -> 0.5008 va mat don dieu; |lech|max 2.69% -> 1.56%. Phan xu PARTIAL -> L39 |
+| G23-136 | 23.20B | PASS | Tang PENDING + truong `pending_on` + test tu don; doi chung duong: gia vo duyet sla_axis -> test DO doi PROMOTE |
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
@@ -212,6 +217,8 @@ vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 `G23-103 .. G23-108` (lesson `23.19DE`) la Task D + E.
 `G23-109 .. G23-116` (lesson `23.19E`) la phan tich hop con lai.
 `G23-123 .. G23-130` (lesson `23.20A`) la Dot 1 cua Lesson 23.20.
+`G23-127`, `G23-128`, `G23-131`, `G23-135`, `G23-136` (lesson `23.20B`) la
+Dot 2 + Dot 3 va phep kiem hinh hoc bin.
 `G23-125` (ha nguon co `--axis`) NOT_RUN: bay script ha nguon chua co co do;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
 

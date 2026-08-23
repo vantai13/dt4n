@@ -205,7 +205,7 @@
   "d_sync_s": 0.051,
   "dt": 0.005,
   "git_dirty": true,
-  "git_hash": "0231286bad390e07dfc1ba3dd48485989e16c8e7",
+  "git_hash": "433062f0b6d26105bd9dd832ed61ecb93702ac34",
   "n": 200000,
   "script": "cert/build_calib_set_v3.py",
   "seed_split": 7000,
@@ -217,7 +217,7 @@
    105
   ],
   "sha256": {
-   "cert/build_calib_set_v3.py": "483fa06e0a87b84a212d4146483733253fd5fddd1130b9a167869e94466e9ded",
+   "cert/build_calib_set_v3.py": "faceef4d582a016a58c417dce5f4aff9f8ed9b55cdd9f4b32faf22f3c239eceb",
    "cert/margin_score.py": "452f5840ecf867cde9690510ed0e49065c8c29de75c39b62c1a03377bd00b328",
    "cert/simultaneous_score.py": "5e909216a77456e3af1912402d8f9d5c6c91df08b68e057dc026e6c445764803",
    "results/LIVE/phase-20R/sla_calibration.json": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
@@ -229,7 +229,7 @@
   "sigma_rho": 0.0096,
   "sync_period_s": 0.5,
   "tau": 1.0,
-  "timestamp_utc": "2026-08-23T01:44:17.930071+00:00",
+  "timestamp_utc": "2026-08-23T02:35:12.458587+00:00",
   "z_edges_primary": [
    0.1,
    0.241,
@@ -269,13 +269,17 @@
    "generator_module": "measurements.aoi_model_v7",
    "generator_name": "AoIModelV7",
    "generator_source_sha256": null,
-   "label": "UNREGISTERED",
+   "label": "measured_v7_uniform",
    "source_path": "measurements/aoi_model_v7.py",
    "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
    "sync_period_s": null
   },
   "axis_role": "consumes_axis",
   "omega": null,
+  "pending_on": [
+   "aoi_axis",
+   "sla_axis"
+  ],
   "schema": "dt4n.validity.v1",
   "sla_axis": {
    "label": "self_calibrated",

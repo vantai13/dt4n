@@ -46,7 +46,10 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L37 | `U1` va `U2` KHONG bao toan trung binh (mean +22.5 va +12.5 ms), nen so `U0/U1/U2` o Phase 22 la so DONG THOI hinh dang ho so VA muc tuoi. Cung cham `M-76` cua 23.8 | `00zzf-amendment-49.md` muc 3 | da them `U1c`/`U2c`; ket luan cu mang nhan `CONFOUNDED_SHAPE_AND_LEVEL` |
 | L38 | `T = 500 ms` << block `5 s` nen MOI block dong gop hang cho CA BON bin -> so block "hieu dung" moi bin la 500 chu khong phai `600 x 25%`. Cac bin KHONG doc lap ve block | `26-axis-integration.md` muc 4 | tinh chat DA CO tu v2, khong do bo canh moi gay ra; so sanh CU vs MOI van hop le |
 
-So ke tiep duoc cap: **L39**.
+| L39 | Phan du cua `M-125b`: phan CO HE THONG do HINH HOC BIN (cu 45/100/100/250 ms vs moi ~125-150). Khop hinh hoc lam `corr(r,lech)` tut 0.9899 -> 0.5008 va mat don dieu; `\|lech\|max` 2.69% -> 1.56%. Con ~1% tan xa CHUA giai thich (nghi pham L35) | `00zzj-amendment-49d.md` muc 2 | Transfer giua bin CUNG hinh hoc se chinh xac hon 2.6%. Gioi han: khop hinh hoc lam dai r hep lai nen it don bay hon |
+| L40 | `Dot 2` (con so TUYET DOI: LS, err_neo, acceptance, c*) phu thuoc `w_loss` va nguong SLA -> BI THAY THE boi Lesson 23.21. `Dot 1` va `Dot 3` la GHEP CAP nen SLA triet tieu va VAN DUNG | `29-waves-2-3-and-bin-geometry.md` muc 4 | Dot 2 mang nhan `CONDITIONAL_ON_SLA_AXIS`; headline viet sau 23.21 |
+
+So ke tiep duoc cap: **L41**.
 
 ## Va cham da phat hien
 
