@@ -62,7 +62,9 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L46 | `S_pivotal` do tren mo hinh rho DOC LAP theo link (`S13`, xem `L44`; chua sua). Tuong quan tai that se lam cac duong vi pham DONG THOI nhieu hon -> `S_pivotal` THAT nho hon so do duoc | `00zzo-amendment-52.md` muc 11 | Uoc luong hien tai la CAN TREN cua vung song. Sua cung luc voi `L44` o 23.25/23.26 |
 | L47 | Nguong ITU-T G.114 (150 ms one-way) la ngan sach cho THOAI. Nhiem vu cua `topology_v7` khong duoc dac ta la thoai | `00zzo-amendment-52.md` muc 11 | Viec muon nguong nay la mot ANH XA hop ly, KHONG phai mot dac ta hop dong. Phai viet ro trong paper |
 
-So ke tiep duoc cap: **L48**.
+| L48 | DINH CHINH amendment 23-52 muc 3: can duoi sweep `w_loss = 1250` KHONG "bao tron dai noi sinh cu [1245.6, 4722.7]" -- `1250 > 1245.6`. So `1245.6` la cua HAI cell `cbr` role=`pc1`; tam cell `gate` (co so cua moi ket luan) co dai `[1656.4, 4722.7]`, va `1250` bao tron dai do | `00zzo-amendment-52.md` muc 3 (cau chu sai); do duoc tren `sla_calibration.json` | Sweep VAN du cho pham vi ket luan. Amendment DA KY nen khong sua; dinh chinh ghi o day va o `test_spec_table_is_locked` |
+
+So ke tiep duoc cap: **L49**.
 
 ## Va cham da phat hien
 

@@ -194,15 +194,15 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-150 | 23.20E | PASS | `CLOSED_LESSONS` + `PINNED_DEBT` lap dan: `23.20*` vao danh sach, `G23-141`/`G23-142` -> DEBT va duoc ghim. `test_no_closed_lesson_gate_is_still_not_run` xanh |
 | G23-151 | 23.20E | PASS | `test_prose_in_ledger_does_not_restate_status`: van xuoi GATES.md khong con phat bieu trang thai. Da sua mau thuan `G23-125` (bang PASS vs van xuoi NOT_RUN) |
 | G23-152 | 23.20E | PASS | `docs/phase-23/CONSTANTS.md` (so thu BA) + `test/test_constants_ledger.py` 7/7. `sd(beta) = 0.0059` tai tinh duoc tu CI bootstrap Phase 22; chat hon can hau kiem `L39` khoang 3 lan |
-| G23-153 | 23.21 | NOT_RUN | - |
-| G23-154 | 23.21 | NOT_RUN | - |
-| G23-155 | 23.21 | NOT_RUN | - |
+| G23-153 | 23.21 | PASS | SLA co dinh tu ITU-T G.114, ghi o `00zzo-amendment-52.md` muc 2, ky TRUOC khi chay (tag `amendment-52`, commit `2ac8ec5`) |
+| G23-154 | 23.21 | PASS | `w_loss = 5000` = `T_delay/T_loss` (equal-budget), khoa o `CONSTANTS.md` K06; `test_w_loss_of_primary_spec_matches_constants_ledger_k06` ghim |
+| G23-155 | 23.21 | PASS | sweep {1250, 5000, 20000} bao cao DU o `w_loss_sensitivity.json`; ba spec S-A/S-B/S-C deu co artifact rieng |
 | G23-156 | 23.21 | NOT_RUN | - |
-| G23-157 | 23.21 | NOT_RUN | - |
+| G23-157 | 23.21 | PASS | M-135: phan hoach S-B vs phan hoach `err_neo >= 0.05` trung 6/8 cell (dai da ky >= 6/8). Bang 8 cell day du o `31-exogenous-sla.md` muc 3 |
 | G23-158 | 23.21 | NOT_RUN | - |
-| G23-159 | 23.21 | NOT_RUN | - |
-| G23-160 | 23.21 | NOT_RUN | - |
-| G23-161 | 23.21 | NOT_RUN | - |
+| G23-159 | 23.21 | PASS | NC-1 muc MODULE: nap lai SLA+w_loss noi sinh cu -> 10/10 cell, `d_opt_viol` = 0.0 va `d_share` = 0.0 CHINH XAC, `d_margin` = 2.84e-14 (cong don dau phay dong, nguong 1e-9). Muc DUONG ONG con cho: 8 calib parquet khong co tren dia -- `31-exogenous-sla.md` muc 6 |
+| G23-160 | 23.21 | PASS | `S_pivotal` max_dev = 0.0 qua ca ba `w_loss`. Bat bien duoc chan o CHU KY HAM (`regime_shares` khong nhan `w_loss`/`opt`), khong chi kiem o gia tri -- `test_regime_shares_signature_has_no_w_loss` |
+| G23-161 | 23.21 | PASS | `role` giu semantics cu (`gate`/`pc1`/`pc1_excluded_by_q8`); ket luan moi o truong `regime`. Doi chung duong DC17: gan `role = regime` -> test DO |
 
 ## Va cham da phat hien
 

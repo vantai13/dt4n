@@ -315,9 +315,11 @@ def _axis_or_legacy(axis):
 
 def run_eight_cells(calib_template: str | None = None,
                     axis: str | None = None,
-                    aoi_profile: str = "U0") -> Dict[str, Any]:
+                    aoi_profile: str = "U0",
+                    sla_artifact: str = SLA_ARTIFACT) -> Dict[str, Any]:
     cells = {cell: analyze_cell(cell, calib_template=calib_template,
-                                axis=axis, aoi_profile=aoi_profile)
+                                axis=axis, aoi_profile=aoi_profile,
+                                sla_artifact=sla_artifact)
              for cell in ALL_CELLS}
     nc_d = {
         cell: {
@@ -445,10 +447,16 @@ def main(argv: Sequence[str] | None = None) -> int:
                         help="truc tuoi cho ban sao row-selection cua "
                              "cell_matrices; phai KHOP voi calib_set")
     parser.add_argument("--aoi-profile", default="U0")
+    parser.add_argument("--sla", default=SLA_ARTIFACT,
+                        help="duong dan artifact SLA. Mac dinh = duong CU, nen "
+                             "chay KHONG co co nay tai tao ket qua cu bit-exact "
+                             "(doi chung am G23-159). KHONG doi hang so "
+                             "SLA_ARTIFACT: doi = mat doi chung do vinh vien.")
     parser.add_argument("--out", default=OUTPUT)
     args = parser.parse_args(argv)
     report = run_eight_cells(calib_template=args.calib_template,
-                             axis=args.axis, aoi_profile=args.aoi_profile)
+                             axis=args.axis, aoi_profile=args.aoi_profile,
+                             sla_artifact=args.sla)
     print_report(report)
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     with open(args.out, "w", encoding="utf-8") as handle:
