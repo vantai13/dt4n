@@ -43,7 +43,10 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L35 | phan du hinh dang cua z: `p50-mean` lech 4.10 sigma, `p95-mean` 4.03 sigma so voi mo hinh. Da LOAI bon co che (alpha, nghich ly kiem tra, cai luoc, `d` lech phai). CO CHE CHUA BIET. Do lon ~8 ms = 1.6% cua T, nho hon hieu ung dang do (65 ms) 8 lan | `00zze-amendment-48.md` muc 3 | KHONG duoc dieu chinh mo hinh de che |
 | L36 | ty trong bin (4 bin) KHONG phat hien duoc viec dung nham `instrument_mode` trong pipeline (lech chi ~2 diem %). Tach bach hai che do phai la RANG BUOC THIET KE, khong phai phep kiem ha nguon | `25-zedges-and-task-e-controls.md` muc 3 | G23-107 FAIL |
 
-So ke tiep duoc cap: **L37**.
+| L37 | `U1` va `U2` KHONG bao toan trung binh (mean +22.5 va +12.5 ms), nen so `U0/U1/U2` o Phase 22 la so DONG THOI hinh dang ho so VA muc tuoi. Cung cham `M-76` cua 23.8 | `00zzf-amendment-49.md` muc 3 | da them `U1c`/`U2c`; ket luan cu mang nhan `CONFOUNDED_SHAPE_AND_LEVEL` |
+| L38 | `T = 500 ms` << block `5 s` nen MOI block dong gop hang cho CA BON bin -> so block "hieu dung" moi bin la 500 chu khong phai `600 x 25%`. Cac bin KHONG doc lap ve block | `26-axis-integration.md` muc 4 | tinh chat DA CO tu v2, khong do bo canh moi gay ra; so sanh CU vs MOI van hop le |
+
+So ke tiep duoc cap: **L39**.
 
 ## Va cham da phat hien
 
@@ -77,6 +80,11 @@ G23-*  -> GATES.md
 S*     -> loi cau truc, dinh nghia trong PHASE_23_v3.md (NGOAI repo)
 PC*/NC*/V*/C23v2*/NC23v2*  -> doi chung; chua co so rieng
 ```
+
+`test/test_limits_ledger.py` (them o Lesson 23.19E) chan ca hai ho:
+`test_no_duplicate_limit_ids` va `test_no_duplicate_gate_or_limit_ids_in_new_docs`.
+Doi chung duong da chay: chen mot dinh nghia `L30` khac noi dung -> test FAIL;
+go ra -> PASS.
 
 Ba ho ID tren van CHUA co so. Neu chung bat dau va cham nhu `L*` da va cham,
 hay tao `CONTROLS.md` theo dung khuon nay.

@@ -72,6 +72,64 @@ Z_EDGES_V7 = (0.100, 0.241, 0.366, 0.491, 0.641)
 Z_EDGES_LEGACY = (0.055, 0.10, 0.20, 0.30, 0.5501)
 
 
+# --- Ho so offset theo link, DAN XUAT tu ALPHA_S (amendment 23-49) ---------
+DT_PIPELINE = 0.005                 # buoc thoi gian cua build_calib_set_v3
+LINK_NAMES = ("uA", "uB", "ac", "ad", "bc", "bd", "vC", "vD")   # = T7.LINK_NAMES
+
+
+def u3_profile_ms(dt: float = DT_PIPELINE) -> tuple[float, ...]:
+    """Ho so U3 = alpha - min(alpha), luong tu hoa len luoi `dt`. Don vi ms.
+
+    Phai DICH vi `offset_steps()` (build_calib_set_v3.py:163) cam offset am
+    (`raise ValueError("offset am khong hop le")`), ma alpha do duoc co 5/8
+    gia tri am. Phan dich duoc BU TRU o `d_base_s()`.
+
+    DAN XUAT tu ALPHA_S, khong go tay: neu alpha duoc do lai thi U3 va
+    D_BASE tu doi theo, khong the lech nhau.
+    """
+    a = np.array([ALPHA_S[l] for l in LINK_NAMES], float) * 1000.0
+    steps = np.rint((a - a.min()) / (dt * 1000.0))
+    return tuple(float(x) for x in steps * dt * 1000.0)
+
+
+def d_base_s(dt: float = DT_PIPELINE) -> float:
+    """San tuoi CO SO sau khi bu tru phan dich cua U3.
+
+    Bu tru dung TRUNG BINH THUC (sau luong tu hoa), khong phai danh dinh:
+    voi dt = 5 ms, thuc = 8.125 ms nhung danh dinh = 8.690 ms. Dung nham lam
+    mean(z) lech -0.565 ms MOT CACH AM THAM -- khong ai thay bang mat.
+    Xem amendment 23-49 muc 2, va doi chung PC-E4.
+    """
+    return D_SYNC_S - float(np.mean(u3_profile_ms(dt))) / 1000.0
+
+
+def u_centred_profile_ms(nominal_ms, dt: float = DT_PIPELINE) -> tuple[float, ...]:
+    """U1c / U2c: trung tam hoa mot ho so cu roi dich len >= 0.
+
+    U1 (mean +22.5 ms) va U2 (mean +12.5 ms) KHONG bao toan trung binh, nen
+    so chung voi U0 la so DONG THOI hinh dang va muc tuoi. Xem amendment
+    23-49 muc 3.
+    """
+    a = np.asarray(nominal_ms, float)
+    a = a - a.mean()
+    steps = np.rint((a - a.min()) / (dt * 1000.0))
+    return tuple(float(x) for x in steps * dt * 1000.0)
+
+
+# Canh bin PHU (5 bin) -- ngu phan vi cua phan bo z GOP, cung dai ngoai
+Z_EDGES_V7_SECONDARY = (0.100, 0.216, 0.316, 0.416, 0.516, 0.641)
+
+
+class InstrumentSamples(np.ndarray):
+    """Nhan KIEU cho dau ra cua `instrument_mode`.
+
+    L36: cai luoc co rang cach T/5 = 100 ms, con bin rong 125-150 ms, nen o
+    do phan giai 4 bin no BI LAM PHANG -- phep kiem thong ke HA NGUON KHONG
+    THE bat duoc viec dung nham che do (do duoc: ~2 diem % thay vi > 5).
+    Vi vay phai chan o KIEU DU LIEU, khong phai o thong ke.
+    """
+
+
 class AoIModelV7:
     def __init__(self, d_s: float = D_SYNC_S, T_s: float = SYNC_PERIOD_S,
                  alpha_s: dict | None = None, profile: str = "U3",
@@ -112,6 +170,17 @@ class AoIModelV7:
     # ten ro rang cho cho goi trong pipeline: KHONG duoc lo goi instrument_mode
     process_mode_steps = age_steps
 
+    def base_age_steps(self, n: int, dt: float, phase0: float = 0.0,
+                       d_s: float | None = None) -> np.ndarray:
+        """Tuoi CO SO theo buoc nguyen: d_base + phase(t). KHONG co alpha.
+
+        Pipeline goi ham NAY cho `_valid_rows`; alpha di duong `off_steps`
+        (amendment 23-49 muc 1). Cung chu ky voi `sawtooth_age_steps()`.
+        """
+        d = self.d if d_s is None else float(d_s)
+        t = np.arange(int(n), dtype=float) * float(dt)
+        return np.round((d + np.mod(t + phase0, self.T)) / float(dt)).astype(int)
+
     # ---------------------------------------------------------------- (2)
     def instrument_mode(self, rng: np.random.Generator,
                         n_runs: int = RUNS_PER_CAMPAIGN) -> np.ndarray:
@@ -135,7 +204,7 @@ class AoIModelV7:
                 t = t_probe + off
                 out.append(self._d_of(t.size, rng) + self.alpha[link]
                            + np.mod(phi0 + t, self.T))
-        return np.concatenate(out)
+        return np.concatenate(out).view(InstrumentSamples)
 
     def _d_of(self, n: int, rng: np.random.Generator | None = None):
         """`d` hang so (muc 1) hoac lay mau tu phan bo thuc nghiem (muc 2)."""

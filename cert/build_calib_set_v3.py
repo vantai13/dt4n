@@ -55,6 +55,10 @@ from cert.build_calib_set_v2 import (
     split_by_sample_V3,
     z_edges_for,
 )
+from measurements.aoi_model_v7 import (
+    AoIModelV7, InstrumentSamples, Z_EDGES_V7, Z_EDGES_V7_SECONDARY,
+    d_base_s, u3_profile_ms, u_centred_profile_ms,
+)
 from measurements.validity import validity_block
 from measurements.decision_error import (
     DEFAULT_D_SYNC_S,
@@ -88,6 +92,21 @@ AOI_PROFILES: Dict[str, Tuple[float, ...]] = {
     "U2": (0.0, 0.0, 0.0, 0.0, 25.0, 25.0, 25.0, 25.0),
     "PC4": (0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 0.0, 500.0),
 }
+
+# Ho so DAN XUAT tu alpha do duoc (amendment 23-49 muc 2-3).
+# U3  = alpha - min(alpha), luong tu hoa; phan dich bu tru o d_base_s().
+# U1c/U2c = ban TRUNG TAM HOA cua U1/U2, vi hai ho so goc KHONG bao toan
+#           trung binh (+22.5 va +12.5 ms) nen so chung voi U0 la so DONG
+#           THOI hinh dang va muc tuoi.
+AOI_PROFILES["U3"] = u3_profile_ms(DT)
+AOI_PROFILES["U1c"] = u_centred_profile_ms(AOI_PROFILES["U1"], DT)
+AOI_PROFILES["U2c"] = u_centred_profile_ms(AOI_PROFILES["U2"], DT)
+
+# Truc tuoi DO DUOC (Lessons 23.8 / 23.18 / 23.19).
+# profile="U0" o day vi alpha di duong off_steps, khong di trong mo hinh.
+AOI_V7 = AoIModelV7(d_s=d_base_s(DT), profile="U0")
+AXIS_MEASURED = "measured_v7"
+AXIS_LEGACY = "legacy_sawtooth_51ms"
 
 OUT_PARQUET = "results/SUPERSEDED/phase-22/calib_set_v3.parquet"
 OUT_REPORT = "results/SUPERSEDED/phase-22/calib_set_v3_report.json"
@@ -212,10 +231,24 @@ def y_hat_rho_shift(
 
 
 def _valid_rows(
-    n: int, dt: float, d_sync: float = D_SYNC
+    n: int, dt: float, d_sync: float = D_SYNC, axis: str = AXIS_LEGACY
 ) -> Tuple[np.ndarray, np.ndarray, int]:
-    """Reproduce the 21R row selection exactly: drop z=0, keep t >= age."""
-    age = sawtooth_age_steps(n, dt, SYNC_PERIOD, d_sync)
+    """Chon hang: bo z=0, giu t >= age.
+
+    axis = AXIS_LEGACY   rang cua ke thua d = 51 ms  -> NEGATIVE CONTROL
+    axis = AXIS_MEASURED truc do duoc, d_base + Uniform[0, T]
+    """
+    if axis == AXIS_MEASURED:
+        age = AOI_V7.base_age_steps(n, dt)
+    elif axis == AXIS_LEGACY:
+        age = sawtooth_age_steps(n, dt, SYNC_PERIOD, d_sync)
+    else:
+        raise ValueError("axis phai la %r hoac %r" % (AXIS_MEASURED, AXIS_LEGACY))
+    # L36: cai luoc khong phat hien duoc bang thong ke ha nguon -> chan o KIEU
+    if isinstance(age, InstrumentSamples):
+        raise TypeError(
+            "instrument_mode khong duoc dung trong pipeline (L36). "
+            "Pipeline phai dung process_mode/base_age_steps.")
     rows = np.arange(int(n))
     valid = rows >= age
     cur = rows[valid]
@@ -237,17 +270,27 @@ def build_one_v3(
     dt: float = DT,
     sigma: float = SIGMA,
     d_sync: float = D_SYNC,
+    axis: str = AXIS_LEGACY,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """Build one operating cell, one seed, one AoI profile."""
     arr = _cell_arrays(tt, cv, cell, seed=seed, n=n, dt=dt, sigma_override=sigma)
-    cur, old, n_z0 = _valid_rows(n, dt, d_sync)
+    cur, old, n_z0 = _valid_rows(n, dt, d_sync, axis=axis)
     off = offset_steps(aoi_profile, dt)
-    z_edges_p = z_edges_for(
-        d_sync, n, dt, SYNC_PERIOD, offsets=Z_STEP_OFFSETS_PRIMARY
-    )
-    z_edges_s = z_edges_for(
-        d_sync, n, dt, SYNC_PERIOD, offsets=Z_STEP_OFFSETS_SECONDARY
-    )
+    if axis == AXIS_MEASURED:
+        # canh KHOA o amendment 23-48 muc 4 -- KHONG duoc dan xuat lai
+        z_edges_p = Z_EDGES_V7
+        z_edges_s = Z_EDGES_V7_SECONDARY
+        # z_s ghi ra la TUOI TRUNG BINH giua 8 link, khong phai tuoi co so.
+        # O U0 thi mean(off) = 0 nen z_s KHONG doi -> giu bit-exact NC-E1.
+        z_shift_s = float(np.mean(off)) * float(dt)
+    else:
+        z_edges_p = z_edges_for(
+            d_sync, n, dt, SYNC_PERIOD, offsets=Z_STEP_OFFSETS_PRIMARY
+        )
+        z_edges_s = z_edges_for(
+            d_sync, n, dt, SYNC_PERIOD, offsets=Z_STEP_OFFSETS_SECONDARY
+        )
+        z_shift_s = 0.0
 
     y_true = arr["c_true"][cur]
     if aoi_profile == "U0":
@@ -283,7 +326,7 @@ def build_one_v3(
     y_sorted = np.sort(y_true, axis=1)
     gap_true = y_sorted[:, 1] - y_sorted[:, 0]
     viol = arr["viol"]
-    z_s = (cur - old) * float(dt)
+    z_s = (cur - old) * float(dt) + z_shift_s
     lb = block_len(dt)
 
     data: Dict[str, Any] = {
@@ -328,6 +371,14 @@ def build_one_v3(
     z_bin = np.asarray(data["z_bin"], dtype=np.int8)
     age_steps = sawtooth_age_steps(n, dt, SYNC_PERIOD, d_sync)
     meta = {
+        # amendment 23-49: truc phai HIEN trong metadata, khong duoc de an
+        "axis": axis,
+        "z_shift_ms": z_shift_s * 1000.0,
+        "d_base_ms": (d_base_s(dt) * 1000.0 if axis == AXIS_MEASURED else None),
+        "T_ms": (AOI_V7.T * 1000.0 if axis == AXIS_MEASURED
+                 else SYNC_PERIOD * 1000.0),
+        "offset_ms_realised": [float(x) for x in off * float(dt) * 1000.0],
+        "offset_mean_ms": float(np.mean(off)) * float(dt) * 1000.0,
         "clip_fraction_max": float(max(arr["clip_fraction"].values())) if arr["clip_fraction"] else 0.0,
         "w_loss": float(arr["w_loss"]),
         "t_delay_ms": float(cell["t_delay_ms"]),
@@ -529,6 +580,7 @@ def build_cell(
     v3_split: bool = False,
     calibration_path: str = CALIBRATION,
     d_sync: float = D_SYNC,
+    axis: str = AXIS_LEGACY,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     tt = TruthTable(TRUTH_TABLE)
     cv = C.CostV2(strict_reliable=False)
@@ -543,6 +595,7 @@ def build_cell(
             aoi_profile=aoi_profile,
             n=int(n),
             d_sync=float(d_sync),
+            axis=str(axis),
         )
         parts.append(frame)
         metas.append(meta)
@@ -608,6 +661,9 @@ def main() -> None:
     parser.add_argument("--seeds", type=int, nargs="+", default=list(SEEDS))
     parser.add_argument("--aoi-profile", default="U0", choices=sorted(AOI_PROFILES))
     parser.add_argument("--calibration", default=CALIBRATION)
+    parser.add_argument("--axis", default=AXIS_LEGACY,
+                        choices=[AXIS_LEGACY, AXIS_MEASURED],
+                        help="truc tuoi: legacy (doi chung am) | measured (23.20)")
     parser.add_argument("--d-sync", type=float, default=D_SYNC)
     parser.add_argument("--v3-split", action="store_true", help="positive control: split by sample")
     parser.add_argument("--v3", action="store_true", help=argparse.SUPPRESS)
@@ -638,12 +694,14 @@ def main() -> None:
         v3_split=v3_split,
         calibration_path=str(args.calibration),
         d_sync=float(args.d_sync),
+        axis=str(args.axis),
     )
     v2_path = (
         V2_TEMPLATE % (str(args.mode), float(args.rho_bar))
         if args.aoi_profile == "U0"
         and not v3_split
         and float(args.d_sync) == float(D_SYNC)
+        and str(args.axis) == AXIS_LEGACY
         else None
     )
     report = validate_v3(df, v2_path)
@@ -744,8 +802,10 @@ def main() -> None:
             # Lesson 23.17 -- pham vi hieu luc, SUY RA tu bo sinh z that su
             # duoc goi o dong 217/328, khong phai mot chuoi khai bao tay.
             "validity": validity_block(
-                aoi_generator=sawtooth_age_steps,
-                z_edges=meta["z_edges_primary"],
+                aoi_generator=(AOI_V7 if str(args.axis) == AXIS_MEASURED
+                               else sawtooth_age_steps),
+                z_edges=(Z_EDGES_V7 if str(args.axis) == AXIS_MEASURED
+                         else meta["z_edges_primary"]),
                 sla_path=str(args.calibration),
                 w_loss=float(meta["w_loss"]),
                 omega=None,          # truc omega chua ton tai (Lesson 23.26)

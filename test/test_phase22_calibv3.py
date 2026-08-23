@@ -44,13 +44,29 @@ def small():
 
 
 def test_GC1_profiles_locked():
-    assert sorted(V3.AOI_PROFILES) == ["PC4", "U0", "U1", "U2"]
+    """Khoa tap ho so. Ba ho so moi (U3, U1c, U2c) duoc them QUA amendment
+    23-49; muon them nua phai sua dong nay, tuc phai co y thuc."""
+    assert sorted(V3.AOI_PROFILES) == ["PC4", "U0", "U1", "U1c", "U2", "U2c", "U3"]
     for name, ms in V3.AOI_PROFILES.items():
         assert len(ms) == len(T7.LINK_NAMES), name
         assert min(ms) == 0.0, name
     assert V3.AOI_PROFILES["U0"] == (0.0,) * 8
     with pytest.raises(ValueError):
         V3.offset_steps("U9")
+
+
+def test_GC1a_new_profiles_are_derived_not_typed():
+    """Khoa VAN co rang: ba ho so moi phai bang DUNG gia tri dan xuat.
+
+    Neu ai do go tay mot gia tri khac vao AOI_PROFILES, test nay bat duoc --
+    do la diem cua "dan xuat, khong khai bao" (Lesson 23.17).
+    """
+    from measurements.aoi_model_v7 import u3_profile_ms, u_centred_profile_ms
+    assert V3.AOI_PROFILES["U3"] == u3_profile_ms(V3.DT)
+    assert V3.AOI_PROFILES["U1c"] == u_centred_profile_ms(
+        V3.AOI_PROFILES["U1"], V3.DT)
+    assert V3.AOI_PROFILES["U2c"] == u_centred_profile_ms(
+        V3.AOI_PROFILES["U2"], V3.DT)
 
 
 def test_GC1b_cell_cli_alias_is_parseable():

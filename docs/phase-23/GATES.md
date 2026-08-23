@@ -150,6 +150,14 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-106 | 23.19DE | PASS | PC-E2: canh CU tren truc moi -> B0 [55,100) RONG 0.0%, mat 13.21% hang |
 | G23-107 | 23.19DE | FAIL | PC-E1: ty trong bin chi lech ~2 diem % khi dung nham `instrument_mode` (du doan > 5). O do phan giai 4 bin cai luoc bi lam phang -> tach bach phai la RANG BUOC THIET KE, khong phai phep kiem ha nguon. `25-zedges-and-task-e-controls.md` muc 3 |
 | G23-108 | 23.19DE | PASS | selfcheck chuan hoa theo mean; `mean` bi loai khoi phep kiem vi `d` fit tu no (amendment 23-48 muc 2) |
+| G23-109 | 23.19E | PASS | `docs/phase-23/00zzf-amendment-49.md`, commit rieng, tag `amendment-49` |
+| G23-110 | 23.19E | PASS | NC-E1 bit-exact: poisson@0.925 axis=legacy U0 5 seed -> z_s/z_bin/z_bin2/gap_true max|diff| = 0; `validate_v3` (V22-1, V22-5) PASS doc lap |
+| G23-111 | 23.19E | PASS | M-121 mean(z_s) = 366.0140 ms (dai khoa 366.07 +/- 0.10) |
+| G23-112 | 23.19E | PASS | M-122 ty trong bin [0.2494, 0.2499, 0.2499, 0.2509], lech lon nhat 0.089 diem % |
+| G23-113 | 23.19E | PASS | M-123 hang ngoai dai = 0 |
+| G23-114 | 23.19E | PASS | M-124 so block moi bin = 500 (>= 9); T=500ms << block 5s nen moi block gop hang cho ca 4 bin -- tinh chat DA CO tu v2 |
+| G23-115 | 23.19E | PASS | L36 chan o KIEU du lieu: `instrument_mode` tra `InstrumentSamples`, `_valid_rows` raise TypeError; monkeypatch xac nhan chan nam TRONG pipeline |
+| G23-116 | 23.19E | PASS | PC-E4: D_BASE danh dinh (8.690) -> mean(z_s) = 365.4608, M-121 FAIL dung du kien |
 | G23-97 | 23.20 | NOT_RUN | - |
 | G23-98 | 23.20 | NOT_RUN | - |
 | G23-99 | 23.20 | NOT_RUN | - |
@@ -190,6 +198,9 @@ vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 ## Gate tu 74 tro len
 
 `G23-103 .. G23-108` (lesson `23.19DE`) la Task D + E.
+`G23-109 .. G23-116` (lesson `23.19E`) la phan tich hop con lai. Ban ke hoach
+danh so `G23-101 .. G23-114` nhung vung do DA duoc cap -- va cham ma thu NAM;
+xem `test_no_duplicate_gate_or_limit_ids`.
 
 `G23-91 .. G23-94` (lesson `23.19A`) la Task A cua Lesson 23.19. Ban ke hoach
 23.19 danh so tu 91 den 102 (theo cach danh so cua ban ke hoach), nhung `G23-97 .. G23-99` DA duoc cap cho
