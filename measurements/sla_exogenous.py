@@ -42,6 +42,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 from typing import Any, Dict, Mapping, Tuple
 
@@ -72,6 +73,14 @@ W_LOSS_SWEEP: Tuple[float, ...] = (1250.0, 5000.0, 20000.0)
 
 PIVOTAL_MIN = 0.10                  # nguong phan loai CHINH (muc 5)
 VIOL_OPT_BAND = (0.01, 0.50)        # dai thu cap, doi chieu M-133/M-134
+
+# -- KHOA O AMENDMENT 23-53 ---------------------------------------------------
+BLOCK_STEPS = 1000                  # 5 s >> tau = 1 s; cung don vi block cua L38
+T_LOSS_GRID: Tuple[float, ...] = (
+    0.001, 0.002, 0.005, 0.010, 0.020, 0.050, 0.100)
+# Bon cell Dot 4, bi chan boi L41 cho den khi S14 dong (amendment 23-53 muc 0a)
+WAVE4_CELLS: Tuple[Tuple[str, float], ...] = (
+    ("poisson", 0.875), ("poisson", 0.900), ("h2", 0.650), ("h2", 0.675))
 
 AXIS_LABEL = "exogenous_itu_g114_50ms_1pct"
 LEGACY_SLA = "results/LIVE/phase-20R/sla_calibration.json"
@@ -120,8 +129,19 @@ def regime_shares(
     }
 
 
-def classify(shares: Mapping[str, float]) -> str:
-    """Phan loai che do. Nguong khoa o amendment 23-52 muc 5."""
+def classify(shares: Mapping[str, float],
+             ci: Tuple[float, float] | None = None) -> str:
+    """Phan loai che do. Nguong khoa o amendment 23-52 muc 5.
+
+    `ci` la khoang tin cay 95% cua `S_pivotal` (block bootstrap). Neu no CHUA
+    `PIVOTAL_MIN` thi cell KHONG phan biet duoc voi nguong -> `AMBIGUOUS`.
+
+    Muc `AMBIGUOUS` them o amendment 23-53 muc 2. `PIVOTAL_MIN` KHONG DOI:
+    doi TU VUNG de no noi duoc su that, khong doi NGUONG de ra ket qua mong
+    muon. `ci = None` giu nguyen hanh vi cu (dung cho artifact 23.21).
+    """
+    if ci is not None and float(ci[0]) <= PIVOTAL_MIN <= float(ci[1]):
+        return "AMBIGUOUS"
     if float(shares["S_pivotal"]) >= PIVOTAL_MIN:
         return "LIVE"
     if float(shares["S_trivial"]) >= float(shares["S_collapsed"]):
@@ -129,14 +149,64 @@ def classify(shares: Mapping[str, float]) -> str:
     return "COLLAPSED"
 
 
+def s_pivotal_ci(viol: np.ndarray, block_steps: int = BLOCK_STEPS,
+                 n_boot: int = 2000, seed: int = 7) -> Dict[str, Any]:
+    """CI 95% cho `S_pivotal` bang BLOCK bootstrap.
+
+    Vi sao BLOCK chu khong phai iid: chuoi `rho` la AR(1) voi `tau` = 1 s va
+    `dt` = 5 ms, nen hai buoc canh nhau gan nhu trung nhau. Voi
+    `phi = exp(-dt/tau) = 0.995012`:
+
+        n_eff = n (1-phi)/(1+phi) = 200000 x 0.005/1.995 = 500
+
+    tuc 500 chu khong phai 200 000. `iid` bootstrap se cho CI HEP GIA khoang
+    `sqrt(200000/500) = 20` lan. `G23-168` la doi chung cho chinh diem nay.
+
+    `block_steps = 1000` = 5 s >> `tau` = 1 s -- cung don vi block da dung
+    o `L38`.
+    """
+    nv = viol.sum(axis=1)
+    piv = ((nv > 0) & (nv < viol.shape[1])).astype(np.float64)
+    nb = len(piv) // int(block_steps)
+    blocks = piv[:nb * int(block_steps)].reshape(nb, int(block_steps)).mean(axis=1)
+    rng = np.random.default_rng(int(seed))
+    draws = blocks[rng.integers(0, nb, size=(int(n_boot), nb))].mean(axis=1)
+    lo, hi = np.percentile(draws, [2.5, 97.5])
+    # Doi chung G23-168: CUNG so lieu, nhung gia dinh IID (bo qua tu tuong quan).
+    # Phai dung DUNG `n` mau -- ban dau lay `n/100` mau va do khong phai iid
+    # bootstrap ma la mot SUBSAMPLE, cho CI RONG hon block o vai cell, tuc doi
+    # chung chay nguoc. Dung dang tich phan: sd_iid = sqrt(p(1-p)/n).
+    p_hat = float(piv.mean())
+    sd_iid = math.sqrt(max(p_hat * (1.0 - p_hat), 0.0) / len(piv))
+    w_block = float(hi - lo)
+    w_iid = float(2 * 1.96 * sd_iid)
+    # n_eff SUY NGUOC tu do rong CI block: p(1-p)/sd_block^2
+    sd_block = w_block / (2 * 1.96) if w_block > 0 else 0.0
+    n_eff = (p_hat * (1 - p_hat) / sd_block ** 2) if sd_block > 0 else None
+    return {
+        "ci95": [float(lo), float(hi)],
+        "n_blocks": int(nb), "block_steps": int(block_steps),
+        "straddles_threshold": bool(lo <= PIVOTAL_MIN <= hi),
+        "ci_width_block": w_block,
+        "ci_width_iid": w_iid,
+        "width_ratio_block_over_iid": (w_block / w_iid) if w_iid > 0 else None,
+        "n_eff_implied_by_block": float(n_eff) if n_eff else None,
+    }
+
+
 def evaluate_cell(
     cv2: C.CostV2, mode: str, rho_bar: float, *,
     t_delay_ms: float, t_loss: float, w_loss: float,
     seed: int = S14.DEFAULT_SEED, n: int = S14.DEFAULT_N,
     dt: float = S14.DEFAULT_DT, tau: float = S14.DEFAULT_TAU,
-    a: float = S14.DEFAULT_A,
+    a: float = S14.DEFAULT_A, with_ci: bool = False,
 ) -> Dict[str, Any]:
-    """Danh gia MOT cell duoi SLA CO DINH. Khong giai nguoc gi ca."""
+    """Danh gia MOT cell duoi SLA CO DINH. Khong giai nguoc gi ca.
+
+    `with_ci = False` la MAC DINH co chu dich: artifact cua Lesson 23.21 duoc
+    sinh truoc amendment 23-53, va bat CI mac dinh se lam chung khong tai tao
+    duoc. `--with-ci` bat no cho 23.21b.
+    """
     sigma = C.sigma_from_a_regime(mode, rho_bar, a)
     base = {
         "mode": mode, "rho_bar": float(rho_bar), "a": float(a),
@@ -163,7 +233,8 @@ def evaluate_cell(
 
     sh = regime_shares(delay, loss, t_delay_ms, t_loss)
     viol = sh.pop("_viol")
-    regime = classify(sh)
+    ci_info = s_pivotal_ci(viol) if with_ci else None
+    regime = classify(sh, tuple(ci_info["ci95"]) if ci_info else None)
 
     d_opt, l_opt = delay[rows, opt], loss[rows, opt]
     opt_viol = float(viol[rows, opt].mean())
@@ -201,8 +272,75 @@ def evaluate_cell(
             float(margin[piv].mean()) if bool(piv.any()) else None,
         "pivotal_steps": int(piv.sum()),
         "opt_path_share": S14._opt_path_share(opt),
+        "S_pivotal_ci": ci_info,                 # None neu khong bat --with-ci
         "fixpoint_rounds": 0,                    # khong con vong lap -- day la DIEM
         "fixpoint_converged": True,
+    }
+
+
+def run_t_loss_sweep(t_delay_ms: float = 50.0, **kw) -> Dict[str, Any]:
+    """Quet `T_loss` lien tuc, GIU `T_delay` co dinh (amendment 23-53 muc 3).
+
+    Ly do: `percentile_of_t_delay = 100.00` o CA 10 cell -- rang buoc TRE la
+    TRO (inert), khong bao gio can. Toan bo phan hoach treo tren MOT so la
+    `T_loss`. Ba spec roi rac khong du de tra loi "sao chon 1%"; mot duong
+    cong thi du.
+    """
+    cv2 = C.CostV2(strict_reliable=True)
+    grid: Dict[str, Any] = {}
+    for tl in T_LOSS_GRID:
+        w = w_loss_equal_budget(t_delay_ms, tl)
+        row = {}
+        for mode in S14.MODE_GRID:
+            for rb in S14.RHO_BAR_GRID:
+                c = evaluate_cell(cv2, mode, rb, t_delay_ms=t_delay_ms,
+                                  t_loss=tl, w_loss=w, **kw)
+                if not c["feasible"]:
+                    continue
+                row["%s@%.3f" % (mode, rb)] = {
+                    "regime": c["regime"], "S_pivotal": c["S_pivotal"],
+                    "S_trivial": c["S_trivial"], "S_collapsed": c["S_collapsed"],
+                    "opt_viol_rate": c["opt_viol_rate"], "role": c["role"],
+                }
+        grid["T_loss=%.3f" % tl] = {
+            "w_loss": w,
+            "n_LIVE": sum(1 for v in row.values() if v["regime"] == "LIVE"),
+            "n_TRIVIAL": sum(1 for v in row.values() if v["regime"] == "TRIVIAL"),
+            "n_COLLAPSED": sum(1 for v in row.values() if v["regime"] == "COLLAPSED"),
+            "cells": row,
+        }
+    return {
+        "phase": "23.21b", "script": "measurements.sla_exogenous --t-loss-sweep",
+        "prereg": "docs/phase-23/00zzp-amendment-53.md",
+        "t_delay_ms": float(t_delay_ms), "t_loss_grid": list(T_LOSS_GRID),
+        "_note": ("T_delay giu co dinh vi no la rang buoc TRO: "
+                  "percentile_of_t_delay = 100.00 o ca 10 cell (L47 / amendment "
+                  "23-53 muc 3)."),
+        "provenance": env_fingerprint(), "by_t_loss": grid,
+    }
+
+
+def run_wave4(spec_id: str = PRIMARY_SPEC, **kw) -> Dict[str, Any]:
+    """Bon cell Dot 4 tren SLA ngoai sinh (amendment 23-53 muc 0a).
+
+    CHU Y: ban nay KHONG tra `G23-141`/`G23-142`. Hai mon no do dinh nghia
+    "Dot 4: 12 build" va "mo rong M-125a/b len 12 cell / 48 o", ca hai can
+    calib parquet ma ham nay khong dung den. Day la mot phep do KHAC.
+    """
+    spec = SLA_SPECS[spec_id]
+    w = w_loss_equal_budget(spec["t_delay_ms"], spec["t_loss"])
+    cv2 = C.CostV2(strict_reliable=True)
+    cells = [evaluate_cell(cv2, m, rb, t_delay_ms=spec["t_delay_ms"],
+                           t_loss=spec["t_loss"], w_loss=w, with_ci=True, **kw)
+             for m, rb in WAVE4_CELLS]
+    return {
+        "phase": "23.21b", "script": "measurements.sla_exogenous --wave4",
+        "sla_spec_id": spec_id,
+        "prereg": "docs/phase-23/00zzp-amendment-53.md",
+        "_does_not_discharge": ["G23-141", "G23-142"],
+        "config": {"t_delay_ms": spec["t_delay_ms"], "t_loss": spec["t_loss"],
+                   "w_loss": w, "cells": ["%s@%.3f" % c for c in WAVE4_CELLS]},
+        "provenance": env_fingerprint(), "cells": cells,
     }
 
 
@@ -350,6 +488,11 @@ def main() -> None:
     p.add_argument("--all-specs", action="store_true")
     p.add_argument("--sensitivity", action="store_true")
     p.add_argument("--selftest", action="store_true")
+    p.add_argument("--t-loss-sweep", action="store_true")
+    p.add_argument("--wave4", action="store_true")
+    p.add_argument("--with-ci", action="store_true",
+                   help="them CI block bootstrap cho S_pivotal (G23-163). "
+                        "Mac dinh TAT de artifact 23.21 con tai tao duoc.")
     p.add_argument("--n", type=int, default=S14.DEFAULT_N)
     p.add_argument("--out-dir", default=OUT_DIR)
     a = p.parse_args()
@@ -359,6 +502,20 @@ def main() -> None:
         return
 
     os.makedirs(a.out_dir, exist_ok=True)
+    if a.t_loss_sweep:
+        art = run_t_loss_sweep(n=a.n)
+        path = os.path.join(a.out_dir, "t_loss_sweep.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(art, fh, indent=1, sort_keys=True)
+        print("[ok] t-loss-sweep -> %s" % path)
+        return
+    if a.wave4:
+        art = run_wave4(a.spec, n=a.n)
+        path = os.path.join(a.out_dir, "sla_exogenous_wave4.json")
+        with open(path, "w", encoding="utf-8") as fh:
+            json.dump(art, fh, indent=1, sort_keys=True)
+        print("[ok] wave4 -> %s" % path)
+        return
     if a.sensitivity:
         art = run_w_loss_sensitivity(a.spec, n=a.n)
         path = os.path.join(a.out_dir, "w_loss_sensitivity.json")
@@ -368,8 +525,9 @@ def main() -> None:
         return
 
     for s in (sorted(SLA_SPECS) if a.all_specs else [a.spec]):
-        art = run_spec(s, n=a.n)
-        path = os.path.join(a.out_dir, "sla_exogenous_%s.json" % s)
+        art = run_spec(s, n=a.n, with_ci=a.with_ci)
+        suffix = "_ci" if a.with_ci else ""
+        path = os.path.join(a.out_dir, "sla_exogenous_%s%s.json" % (s, suffix))
         with open(path, "w", encoding="utf-8") as fh:
             json.dump(art, fh, indent=1, sort_keys=True)
         print("[ok] %s  ->  %s" % (s, path))

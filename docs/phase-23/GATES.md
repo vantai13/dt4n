@@ -203,13 +203,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-159 | 23.21 | PASS | NC-1 muc MODULE: nap lai SLA+w_loss noi sinh cu -> 10/10 cell, `d_opt_viol` = 0.0 va `d_share` = 0.0 CHINH XAC, `d_margin` = 2.84e-14 (cong don dau phay dong, nguong 1e-9). Muc DUONG ONG con cho: 8 calib parquet khong co tren dia -- `31-exogenous-sla.md` muc 6 |
 | G23-160 | 23.21 | PASS | `S_pivotal` max_dev = 0.0 qua ca ba `w_loss`. Bat bien duoc chan o CHU KY HAM (`regime_shares` khong nhan `w_loss`/`opt`), khong chi kiem o gia tri -- `test_regime_shares_signature_has_no_w_loss` |
 | G23-161 | 23.21 | PASS | `role` giu semantics cu (`gate`/`pc1`/`pc1_excluded_by_q8`); ket luan moi o truong `regime`. Doi chung duong DC17: gan `role = regime` -> test DO |
-| G23-162 | 23.21b | NOT_RUN | - |
-| G23-163 | 23.21b | NOT_RUN | - |
-| G23-164 | 23.21b | NOT_RUN | - |
-| G23-165 | 23.21b | NOT_RUN | - |
-| G23-166 | 23.21b | NOT_RUN | - |
-| G23-167 | 23.21b | NOT_RUN | - |
-| G23-168 | 23.21b | NOT_RUN | - |
+| G23-162 | 23.21b | PASS | `kappa` = 0.5000 va `P(>=6/8 ngau nhien)` = 0.2143 ghi canh moi phat bieu ve `M-135` (`32-scale-ci-and-wave4.md` muc 7, `L49`) |
+| G23-163 | 23.21b | PASS | CI block bootstrap (block 1000 buoc = 5 s, 200 block, 2000 draw) cho ca 10 cell kha thi -> `sla_exogenous_S-B_ci.json` |
+| G23-164 | 23.21b | PASS | `AMBIGUOUS` them vao tu vung `regime`; `PIVOTAL_MIN` GIU 0.10. `h2@0.700` CI95 [0.0956, 0.1269] chua nguong -> doi nhan. 1 cell doi (M-144 HIT) |
+| G23-165 | 23.21b | PASS | Quet `T_loss` 7 diem (0.001..0.100), `T_delay` giu 50 ms -> `t_loss_sweep.json`. Thay ba spec roi rac. Phat hien: moi cell co DINH RIENG, dinh TRUOT theo tai |
+| G23-166 | 23.21b | PASS | Bon cell Dot 4 chay tren `sla_exogenous` -> `sla_exogenous_wave4.json`. CA BON LIVE. KHONG tra `G23-141`/`G23-142` (can calib parquet) |
+| G23-167 | 23.21b | PASS | Bang hai chieu ca 8 cell, ke ca o TRONG (`32-scale-ci-and-wave4.md` muc 6). Goc tren-trai TRONG dung du kien -- khong cell nao vi pham tien doan |
+| G23-168 | 23.21b | PASS | do rong CI block / iid = 7.45..11.36 lan -> bo qua tu tuong quan cho CI hep gia mot bac. Nhung `n_eff` do duoc 1551..3603 chu khong phai 500 (cong thuc AR(1) la can duoi) -> `L52` |
 
 ## Va cham da phat hien
 

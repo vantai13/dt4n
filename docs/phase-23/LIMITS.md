@@ -68,7 +68,11 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L50 | `S_pivotal` bao cao o Lesson 23.21 KHONG kem khoang tin cay. Chuoi `rho` la AR(1) (`tau` = 1 s, `dt` = 5 ms) nen `n_eff` = 500 chu khong phai 200 000 | `00zzp-amendment-53.md` muc 2 | Sai so thuc lon gap ~20 lan so voi gia dinh iid. `h2@0.700` cach nguong 0.80 sigma -> nhan `AMBIGUOUS` |
 | L51 | Tam calib parquet cua `M-136` va bon parquet Dot 4 khong con tren dia, va report cu KHONG luu digest cua chung | `00zzp-amendment-53.md` muc 9 | Dung lai ma tham so khong khop goc -> doi chung am muc duong ong vo nghia IM LANG. Bao cao "khong tai dung duoc", KHONG dung so thay the |
 
-So ke tiep duoc cap: **L52**.
+| L52 | Cong thuc `n_eff = n(1-phi)/(1+phi)` mo ta tu tuong quan cua CHUOI `rho`, khong phai cua CHI BAO `pivotal`. Do duoc bang block bootstrap: `n_eff` = 1551..3603 chu khong phai 500 | `32-scale-ci-and-wave4.md` muc 3 | Ham NGUONG pha tu tuong quan -> cong thuc AR(1) la CAN DUOI bao thu. Ket luan `AMBIGUOUS` cua `h2@0.700` KHONG doi |
+| L53 | Dinh cua `S_pivotal(poisson, rho)` nam o MUT TRAI cua luoi (`rho` = 0.850); dinh cua ho `h2` nam DUOI 0.650, ngoai moi diem da do | `32-scale-ci-and-wave4.md` muc 2, 5 | Vi tri dinh CHUA duoc kep. Can luoi min hon; chi phi ~1 s/cell, KHONG can calib parquet |
+| L54 | Ket luan "1/8 cell song" cua Lesson 23.21 la phat bieu ve LUOI LAY MAU (`rho` thuoc [0.700, 0.960]), KHONG phai ve MANG | `32-scale-ci-and-wave4.md` muc 5 | Dot 4: ho `h2` co vung song o `rho <= 0.675`, hoan toan ngoai luoi goc. Ca bon cell Dot 4 deu LIVE |
+
+So ke tiep duoc cap: **L55**.
 
 ## Va cham da phat hien
 

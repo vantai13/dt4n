@@ -210,3 +210,45 @@ def test_sla_calib_v2_is_untouched():
 #   DC18  doi mot hang so trong ar1_matrix      -> test_NC1 DO
 #   DC19  import solve_percentile               -> test_no_endogenous DO
 #   DC20  doi LOSS_EXCHANGE trong sla_calib_v2  -> test_sla_calib_v2_is_untouched DO
+
+
+# -- amendment 23-53: CI, AMBIGUOUS, quet T_loss, Dot 4 ----------------------
+def test_ambiguous_only_when_ci_straddles_threshold():
+    """`AMBIGUOUS` = CI CHUA nguong. `PIVOTAL_MIN` khong duoc doi."""
+    sh = {"S_pivotal": 0.1112, "S_trivial": 0.0, "S_collapsed": 0.8888}
+    assert X.classify(sh, (0.0956, 0.1269)) == "AMBIGUOUS"   # chua 0.10
+    assert X.classify(sh, (0.1050, 0.1269)) == "LIVE"        # khong chua
+    assert X.classify(sh, None) == "LIVE"                    # hanh vi cu
+    assert X.PIVOTAL_MIN == 0.10
+
+
+def test_block_bootstrap_is_wider_than_iid(cv2):
+    """G23-168. Neu block va iid cho CI BANG NHAU thi lap luan tu tuong quan SAI."""
+    c = X.evaluate_cell(cv2, "h2", 0.700, t_delay_ms=50.0, t_loss=0.01,
+                        w_loss=5000.0, n=X.S14.DEFAULT_N, with_ci=True)
+    ci = c["S_pivotal_ci"]
+    assert ci["ci_width_block"] > 3.0 * ci["ci_width_iid"], (
+        "CI block phai RONG hon iid dang ke; do duoc ratio = %r"
+        % ci["width_ratio_block_over_iid"])
+
+
+def test_with_ci_defaults_off_so_23_21_artifacts_reproduce():
+    """Mac dinh TAT: artifact 23.21 duoc sinh truoc amendment 53 phai tai tao duoc."""
+    import inspect
+    assert inspect.signature(X.evaluate_cell).parameters["with_ci"].default is False
+
+
+def test_wave4_does_not_claim_to_discharge_debt_gates():
+    """Chay 4 cell moi KHONG tra G23-141/G23-142 -- chung can calib parquet."""
+    import inspect
+    src = inspect.getsource(X.run_wave4)
+    assert "_does_not_discharge" in src
+    assert X.WAVE4_CELLS == (("poisson", 0.875), ("poisson", 0.900),
+                             ("h2", 0.650), ("h2", 0.675))
+
+
+def test_t_loss_grid_brackets_all_three_signed_specs():
+    """Quet phai BAO ca ba spec da ky, neu khong no khong thay duoc chung."""
+    for spec in X.SLA_SPECS.values():
+        assert min(X.T_LOSS_GRID) <= spec["t_loss"] <= max(X.T_LOSS_GRID)
+    assert X.BLOCK_STEPS == 1000        # 5 s >> tau = 1 s
