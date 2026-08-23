@@ -46,10 +46,31 @@ OUT_TMPL = "results/LIVE/phase-20R/sla_manifest_exogenous_%s.json"
 # Gia tri phai bang `T_delay / T_loss` cua spec; `build()` kiem lai.
 W_LOSS = 5000.0
 
-# Dau vet cua vong diem bat dong (S14). Phai bi XOA khoi manifest ngoai sinh.
+# Bo may cua vong diem bat dong (S14) -- xoa theo TEN.
 FIXPOINT_TRACES = (
     "fixpoint_history", "fixpoint_rounds", "fixpoint_converged",
     "percentile", "target_viol",
+)
+
+# `NT 50` (amendment 23-58): XOA THEO NGHIA, khong theo TEN.
+# Nam truong duoi day KHONG mang tien to `fixpoint_` nhung VAN la san pham
+# cua vong do. Cach kiem doc lap duy nhat: chay lai phep tinh duoi gia tri
+# MOI (`sla_exogenous_S-B.json`) va so tung truong -- truong nao doi thi
+# truong do LA phai sinh. Do duoc: `opt_viol_rate` cua `poisson@0.925` la
+# 0.15000 trong manifest nhung 0.99131 duoi `S-B`. Sai 6.6 lan.
+DERIVED_FROM_SLA = (
+    "opt_viol_rate",          # dau ra cua bisection, bi EP ve `target_viol`
+    "in_band",                # suy tu `opt_viol_rate`
+    "cost_margin_mean_ms",    # phu thuoc `w_loss`
+    "cost_margin_p10_ms",     # phu thuoc `w_loss`
+    "opt_path_share",         # argmin cost -> DANH TINH duong toi uu doi theo
+)
+
+# `config` cung mang bo may fixpoint. `endogenous: false` canh
+# `target_viol: 0.15` la mot file TU MAU THUAN.
+CONFIG_FIXPOINT_KEYS = (
+    "n_bisect", "n_fixpoint", "p_hi", "p_lo",
+    "target_viol", "tol_w", "viol_band",
 )
 
 
@@ -82,7 +103,7 @@ def build(spec_id: str = PRIMARY_SPEC, legacy: str = LEGACY) -> Dict[str, Any]:
         # `loss_exchange` GIU dang thuc `w = t_delay / loss_exchange`
         # (amendment 23-52 muc 2b) -- no khong bi nap nghia moi.
         new["loss_exchange"] = float(spec["t_loss"])
-        for k in FIXPOINT_TRACES:
+        for k in FIXPOINT_TRACES + DERIVED_FROM_SLA:
             new.pop(k, None)
         new["sla_source"] = "exogenous_g114_%s" % spec_id
         new["sla_citation"] = spec["source"]
@@ -93,11 +114,25 @@ def build(spec_id: str = PRIMARY_SPEC, legacy: str = LEGACY) -> Dict[str, Any]:
         "script": "measurements/sla_manifest_exogenous.py",
         "prereg": "docs/phase-23/00zzt-amendment-57.md",
         "generated_date": datetime.date.today().isoformat(),
-        "config": dict(old.get("config", {}), endogenous=False,
+        "config": dict({k: v for k, v in old.get("config", {}).items()
+                        if k not in CONFIG_FIXPOINT_KEYS}, endogenous=False,
                        sla_spec_id=spec_id, w_loss=w,
                        t_delay_ms=float(spec["t_delay_ms"]),
                        t_loss=float(spec["t_loss"]),
                        w_loss_rule="equal_budget: w = T_delay / T_loss"),
+        # MOT nguon su that cho thong ke duoi SLA moi. Manifest nay DINH NGHIA
+        # truc SLA; no KHONG bao cao thong ke.
+        "derived_statistics": {
+            "_note": ("Manifest nay DINH NGHIA truc SLA, KHONG bao cao thong "
+                      "ke. Cac truong %s duoi SLA ngoai sinh nam o file duoi. "
+                      "Chung DA BI XOA khoi day de khong ai doc nham gia tri "
+                      "cua vong tu hieu chuan cu (`L70`, `NT 50`)."
+                      % ", ".join(DERIVED_FROM_SLA)),
+            "authoritative_source":
+                "results/PENDING/phase-23/sla_exogenous_S-B.json",
+            "removed_fields": list(DERIVED_FROM_SLA),
+            "removed_config_keys": list(CONFIG_FIXPOINT_KEYS),
+        },
         "inputs": {"derived_from": legacy,
                    "derived_from_sha256": sha256_file(legacy)},
         # `L68`: manifest PHAI mang truong `validity` chuan de

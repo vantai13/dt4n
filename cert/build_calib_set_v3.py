@@ -822,6 +822,13 @@ def main() -> None:
                 float(args.rho_bar),
                 calibration_path=str(args.calibration),
             ) if args.aoi_profile == "U0" else {},
+            # GIU float32 -- KHONG ep float64. Amendment 23-58 muc 3 gia thiet phan
+            # du 5.7e-06 o `p90` la do tich luy float32, va DA THU ep float64.
+            # Ket qua BAC BO gia thiet do: `p5` va `p10` khop CHINH XAC voi ban
+            # luu tru khi tinh o float32 (lech 0.0), nhung lech 4.8e-08 khi ep
+            # float64. Tuc du lieu BIT-IDENTICAL va float32 la dung cach ban
+            # goc da tinh. Nguyen nhan cua rieng `p90` VAN CHUA XAC DINH --
+            # xem `L71`. Ep float64 lam viec tai lap TE HON, nen da hoan nguyen.
             "gap_true_pct": {("p%d" % q): float(np.percentile(df["gap_true"], q)) for q in (5, 10, 25, 50, 75, 90)},
             "provenance": {
                 "script": "cert/build_calib_set_v3.py",
@@ -879,6 +886,24 @@ def main() -> None:
         args.report = args.report or (stem + "_report.json")
     os.makedirs(os.path.dirname(os.path.abspath(args.out)), exist_ok=True)
     df.to_parquet(args.out, index=False)
+    # `G23-174` / amendment 23-58: ghi van tay CUA CHINH MINH, khong chi cua
+    # cha me. `L51`: report cu chi luu sha256 cua DAU VAO, nen khi tim thay
+    # mot parquet tren dia thi KHONG chung minh duoc no thuoc report nao --
+    # va doi chung am muc duong ong that bai IM LANG.
+    # Tinh SAU khi ghi, tren BYTE THAT tren dia: `df` trong bo nho va file
+    # tren dia co the khac (nen, kieu du lieu, metadata pyarrow), va chinh
+    # cho khac nhau do la cho loi an nap.
+    _h = hashlib.sha256()
+    with open(args.out, "rb") as _fh:
+        for _chunk in iter(lambda: _fh.read(1 << 20), b""):
+            _h.update(_chunk)
+    report["output"] = {
+        "parquet_path": args.out,
+        "parquet_sha256": _h.hexdigest(),
+        "parquet_bytes": int(os.path.getsize(args.out)),
+        "n_rows": int(len(df)),
+        "digest_scope": "bytes-on-disk-after-flush",
+    }
     with open(args.report, "w", encoding="utf-8") as f:
         json.dump(_json_clean(report), f, indent=1, sort_keys=True)
         f.write("\n")

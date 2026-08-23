@@ -203,13 +203,20 @@
  "n_test_blocks": 500,
  "n_valid_rows": 199899,
  "n_z0_dropped": 0,
+ "output": {
+  "digest_scope": "bytes-on-disk-after-flush",
+  "n_rows": 999495,
+  "parquet_bytes": 69400971,
+  "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.925_U0_measured_v7.parquet",
+  "parquet_sha256": "6af7734b63445ca6aeaf20ad6c3d63eaeb2a066a2de3110d0601dfb255525b98"
+ },
  "pair_ok_rate": 0.9831134723035133,
  "provenance": {
   "block_s": 5.0,
   "d_sync_s": 0.051,
   "dt": 0.005,
   "git_dirty": true,
-  "git_hash": "2c93f0bc2317acb2a76c87ae8c5ed314af79d3cb",
+  "git_hash": "813b5f0664dc6b6a07f4a126c35250f0295f2b03",
   "n": 200000,
   "script": "cert/build_calib_set_v3.py",
   "seed_split": 7000,
@@ -221,11 +228,11 @@
    105
   ],
   "sha256": {
-   "cert/build_calib_set_v3.py": "faceef4d582a016a58c417dce5f4aff9f8ed9b55cdd9f4b32faf22f3c239eceb",
+   "cert/build_calib_set_v3.py": "89e300754029e90aa810599f257d16df86aedbe7c797dd519060cd75c9b738b8",
    "cert/margin_score.py": "452f5840ecf867cde9690510ed0e49065c8c29de75c39b62c1a03377bd00b328",
    "cert/simultaneous_score.py": "5e909216a77456e3af1912402d8f9d5c6c91df08b68e057dc026e6c445764803",
+   "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606",
    "results/LIVE/phase-20R/truth_table.parquet": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e",
-   "results/PENDING/phase-20R/sla_manifest_exogenous_S-B.json": "b0146d2032d5e62cfccf93bd3259148a9b143b1a38265773a43c9d275e05f333",
    "results/SUPERSEDED/phase-20R/decision_error_constant_sigma.parquet": "cdc8263c7a69f7a4ad0e42363f3d88ce1278d828391c7315b7856db6ca8723e2",
    "twin/cost_v2.py": "444d1d24a7d8be3789a1857ed2a5614f9e58594ba69be9d1663912ac5a26a6d8",
    "twin/link_model_v2.py": "a11cfafae0456c41ed8798f2c3ea9d944e7b64aa25dc385ad20eadcdf08219cd"
@@ -233,7 +240,7 @@
   "sigma_rho": 0.0096,
   "sync_period_s": 0.5,
   "tau": 1.0,
-  "timestamp_utc": "2026-08-23T14:43:16.659642+00:00",
+  "timestamp_utc": "2026-08-23T15:23:01.263509+00:00",
   "z_edges_primary": [
    0.1,
    0.241,
@@ -283,8 +290,8 @@
   "schema": "dt4n.validity.v1",
   "sla_axis": {
    "label": "exogenous_g114_S-B",
-   "source_path": "results/PENDING/phase-20R/sla_manifest_exogenous_S-B.json",
-   "source_sha256": "b0146d2032d5e62cfccf93bd3259148a9b143b1a38265773a43c9d275e05f333"
+   "source_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+   "source_sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606"
   },
   "w_loss": 5000.0,
   "z_edges": [

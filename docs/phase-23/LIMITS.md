@@ -90,11 +90,13 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L67 | So no khong co co che chan CHU TRINH CHO: moi `DEBT` duoc phep ghi "mo lai sau X" ma khong ai kiem `X` co phu thuoc NGUOC vao no khong | `00zzt-amendment-57.md` muc 2b | Hau qua that: `G23-158` <-> `G23-141`/`G23-142` DEADLOCK tu 2026-08-23. Chan bang `G23-195` |
 | L68 | Artifact cua `sla_exogenous` dung schema rieng (`sla_axis_label` + `sla_spec_id`) thay vi truong `validity` chuan | `00zzt-amendment-57.md` muc 8 | `test_no_stale_axes` KHONG kiem duoc chung neu chung len `LIVE/`. Manifest moi PHAI co `validity` |
 
-| L69 | Doi chung am muc DUONG ONG (`G23-191`) dat max\|diff\| = 5.72e-06 chu khong phai 0. 155/156 truong khop o muc nhieu float64 (<= 3.7e-13); rieng `gap_true_pct.p90` lech 2.0e-07 TUONG DOI | `00zzt-amendment-57.md` muc 6; do tren `poisson@0.925` U0 legacy | Co che DA XAC DINH: `gap_true` la `float32`; `np.percentile` tren float32 cho 28.5448761, tren float64 cho 28.5448826. Khac biet MOI TRUONG (numpy/dtype), KHONG phai logic. `M-167` MISS |
+| L69 | Doi chung am muc DUONG ONG dat max\|diff\| = 5.72e-06 chu khong phai 0: 150/156 truong khop CHINH XAC, 5 lech <= 3.7e-13, rieng `gap_true_pct.p90` lech 5.72e-06 | `00zzt-amendment-57.md` muc 6 | **CHAN DOAN BAN DAU SAI, da sua o amendment 23-58**: `L69` tung ghi "co che DA XAC DINH: float32". Bac bo o `L71`. Nguyen nhan VAN CHUA biet |
 
 | L70 | Manifest ban dau (amendment 23-57) mang NAM truong PHAI SINH (`opt_viol_rate`, `in_band`, `cost_margin_mean_ms`, `cost_margin_p10_ms`, `opt_path_share`) va BAY khoa `config` cua vong fixpoint. `opt_viol_rate` ghi 0.15 trong khi su that duoi `S-B` la 0.99-1.00 | `00zzu-amendment-58.md` muc 1 | KHONG hong SO (`cert/` khong doc chung) nhung hong NHAN: `sla_calib_v2` doc 21 lan de sinh bang/hinh paper. Xoa THEO NGHIA chu khong theo TEN -- `NT 50` |
 
-So ke tiep duoc cap: **L71**.
+| L71 | BAC BO chan doan cua `L69`. Gia thiet "phan du `p90` do tich luy float32" da duoc THU bang cach ep float64: ket qua TE HON. `p5`/`p10` khop CHINH XAC (lech 0.0) o float32 nhung lech 4.8e-08 o float64; `p90` lech 5.7e-06 o float32 va 7.6e-07 o float64 | `00zzu-amendment-58.md` muc 3; do tren `poisson@0.925` U0 | Du lieu BIT-IDENTICAL (`output.parquet_sha256` giong het qua hai lan chay). Nguyen nhan cua RIENG `p90` CHUA XAC DINH. Da HOAN NGUYEN phep ep float64. Nguong NC `1e-9` KHONG dat duoc voi ban luu tru sinh o moi truong khac |
+
+So ke tiep duoc cap: **L72**.
 
 ## Va cham da phat hien
 

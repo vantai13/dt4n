@@ -19,7 +19,8 @@ def rep():
 def test_same_schema_as_legacy(rep):
     """`G23-190`. Cung schema thi builder KHONG phai doi mot dong nao."""
     old = json.load(open(M.LEGACY, encoding="utf-8"))
-    assert set(rep["cells"][0]) >= (set(old["cells"][0]) - set(M.FIXPOINT_TRACES))
+    dropped = set(M.FIXPOINT_TRACES) | set(M.DERIVED_FROM_SLA)
+    assert set(rep["cells"][0]) >= (set(old["cells"][0]) - dropped)
     assert len(rep["cells"]) == len(old["cells"])
 
 
@@ -27,8 +28,9 @@ def test_only_three_fields_change(rep):
     """Mot thi nghiem doi DUNG MOT THU. Neu doi hon, khong quy trach nhiem duoc."""
     old = {(c["mode"], c["rho_bar"]): c
            for c in json.load(open(M.LEGACY, encoding="utf-8"))["cells"]}
-    allowed = {"t_delay_ms", "t_loss", "w_loss", "loss_exchange",
-               "sla_source", "sla_citation"} | set(M.FIXPOINT_TRACES)
+    allowed = ({"t_delay_ms", "t_loss", "w_loss", "loss_exchange",
+                "sla_source", "sla_citation"}
+               | set(M.FIXPOINT_TRACES) | set(M.DERIVED_FROM_SLA))
     for c in rep["cells"]:
         o = old[(c["mode"], c["rho_bar"])]
         changed = {k for k in set(c) | set(o)
@@ -86,3 +88,34 @@ def test_registered_sha_matches_the_file_on_disk():
     assert entry, "manifest chua duoc dang ky vao axis_registry"
     assert entry["content_sha256"] == M.sha256_file(path)
     assert entry["label"] in reg["approved_for_live"]["sla_axis"]
+
+
+# -- amendment 23-58: xoa theo NGHIA, khong theo TEN (NT 50) -----------------
+def test_manifest_carries_no_endogenous_derived_field(rep):
+    """`G23-196`. Mot truong phai sinh sot lai la mot con SO SAI nam im o LIVE.
+
+    `opt_viol_rate` cua `poisson@0.925` la 0.15000 trong ban cu nhung 0.99131
+    duoi `S-B` -- sai 6.6 lan, o dung dai luong ma `L61` noi ve.
+    """
+    banned = set(M.DERIVED_FROM_SLA) | set(M.FIXPOINT_TRACES)
+    for c in rep["cells"]:
+        leak = sorted(banned & set(c))
+        assert not leak, (
+            "cell %s@%.3f con truong phai sinh tu SLA CU: %s\n"
+            "  -> chung tinh duoi `w_loss`/nguong CU. Xoa, dung tinh lai o day."
+            % (c["mode"], c["rho_bar"], leak))
+
+
+def test_manifest_config_has_no_fixpoint_machinery(rep):
+    """`G23-197`. `endogenous: false` + `target_viol: 0.15` la file TU MAU THUAN."""
+    leak = sorted(set(M.CONFIG_FIXPOINT_KEYS) & set(rep["config"]))
+    assert not leak, (
+        "`config` con bo may tu hieu chuan: %s. File khai `endogenous = false` "
+        "nhung mang MUC TIEU cua vong fixpoint -- reviewer se hoi ngay." % leak)
+
+
+def test_manifest_points_at_the_authoritative_statistics(rep):
+    """Xoa roi thi phai chi cho nguoi doc biet so DUNG nam o dau."""
+    ds = rep["derived_statistics"]
+    assert ds["authoritative_source"].endswith("sla_exogenous_S-B.json")
+    assert set(ds["removed_fields"]) == set(M.DERIVED_FROM_SLA)

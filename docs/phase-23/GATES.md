@@ -237,12 +237,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-193 | 23.21f | PASS | `approved_for_live` co CA HAI truc -> 16 artifact len `results/LIVE/phase-21R/`. `sha256` trong registry tinh TU FILE THAT; `test_registered_sha_matches_the_file_on_disk` ghim |
 | G23-194 | 23.21f | PASS | `test_close_doc_lists_every_not_run_gate_of_that_lesson`: bat ngay `35-close-23-21.md` bo sot `G23-156`/`G23-158` (`L66`). Da sua muc 6 thanh "TAI MO" va liet ke DU |
 | G23-195 | 23.21f | PASS | `test_debt_dependency_graph_has_no_cycle` (DFS tim back-edge). DC30: them canh `G23-141 -> G23-158` -> test DO, tai hien dung deadlock da xay ra (`L67`) |
-| G23-196 | 23.21g | NOT_RUN | - |
-| G23-197 | 23.21g | NOT_RUN | - |
-| G23-198 | 23.21g | NOT_RUN | - |
-| G23-199 | 23.21g | NOT_RUN | - |
-| G23-200 | 23.21g | NOT_RUN | - |
-| G23-201 | 23.21g | NOT_RUN | - |
+| G23-196 | 23.21g | PASS | Manifest khong con NAM truong phai sinh (`opt_viol_rate`, `in_band`, `cost_margin_mean_ms`, `cost_margin_p10_ms`, `opt_path_share`). `M-174` = 0 truong sot. `NT 50`: xoa theo NGHIA |
+| G23-197 | 23.21g | PASS | `config` khong con BAY khoa fixpoint (`target_viol`, `n_bisect`, `n_fixpoint`, `p_hi`, `p_lo`, `tol_w`, `viol_band`). Het tu mau thuan voi `endogenous: false` |
+| G23-198 | 23.21g | PASS | `build_calib_set_v3` ghi khoi `output` voi `parquet_sha256` tinh tren BYTE THAT tren dia sau flush. Dong `G23-174` phan "luu duoc van tay" |
+| G23-199 | 23.21g | PASS | Van tay chung to gia tri NGAY: hai lan chay (float32 vs float64) cho CUNG `parquet_sha256` `5d95343a...` -> du lieu BIT-IDENTICAL, lech `p90` nam o phep tinh trong report chu khong o du lieu |
+| G23-200 | 23.21g | FAIL | `M-173` max\|diff\| = 5.72e-06, khong dat nguong da ky `< 1e-9`. Gia thiet float32 BI BAC BO (`L71`): ep float64 lam viec tai lap TE HON. Da hoan nguyen. Nguyen nhan `p90` CHUA xac dinh. Bao cao NGUYEN, KHONG noi nguong |
+| G23-201 | 23.21g | PASS | `test_no_two_reports_claim_the_same_parquet`: khong hai report nao cung khai mot parquet -- chan loi `out_stem` tro nham tang da xay ra o amendment 23-49c |
 
 ## Va cham da phat hien
 
