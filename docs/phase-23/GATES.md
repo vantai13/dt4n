@@ -263,6 +263,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-223 | 23.21j | PASS | Mtime rieng le khong nang duoc file thanh ORIGINAL. Bang chung manh hon giai thich di thuong: `os.replace` giu mtime NGUON; report timestamp + git/builder hash ghep bon file vao lo 13/08. L82 doi sang VERIFIED_SUPERSEDED_GENERATION, khong phai ORIGINAL |
 | G23-224 | 23.21j | PASS | `tier_results.py` preflight TAT CA dich truoc moi mutation/map-out; dich co san hoac dich lap trong plan -> return 2 va in chi tiet. Bo `git mv -f`; file ignored dung hard-link + unlink no-replace, nen ca va cham xuat hien sau preflight cung fail. DC duong: dich gia giu nguyen ca source/destination va khong tao map; 3 test xanh |
 | G23-225 | 23.21j | PASS | Lint AST tren `cert/`, `measurements/`, `tools/`: moi legacy `(mode,rho_bar)` chi co mot parquet literal. DC L85 voi `calib_set_v3.parquet` + `_poisson_0.925.parquet` -> DO. Da sua `phase23_cell_margins`; 3 regression test doi chieu artifact G23-17a/b/c cu voi canonical moi co 0 khac biet so hoc |
+| G23-226 | 23.21h | NOT_RUN | - |
+| G23-210 | 23.21h | NOT_RUN | - |
+| G23-211 | 23.21h | NOT_RUN | - |
+| G23-212b | 23.21h | NOT_RUN | - |
+| G23-227 | 23.21h | NOT_RUN | - |
+| G23-213 | 23.21h | NOT_RUN | - |
+| G23-214 | 23.21h | NOT_RUN | - |
 
 ## Va cham da phat hien
 
