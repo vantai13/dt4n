@@ -82,11 +82,24 @@ def sha256_file(path: str) -> str:
     return h.hexdigest()
 
 
-def build(spec_id: str = PRIMARY_SPEC, legacy: str = LEGACY) -> Dict[str, Any]:
-    """Doc manifest NOI SINH cu, thay DUNG ba truong, xoa dau vet fixpoint."""
+def build(spec_id: str = PRIMARY_SPEC, legacy: str = LEGACY,
+          w_loss_override: float | None = None) -> Dict[str, Any]:
+    """Doc manifest NOI SINH cu, thay DUNG ba truong, xoa dau vet fixpoint.
+
+    `w_loss_override` (amendment 23-60, cho `M-136`): dat `w_loss` DOC LAP voi
+    ty gia equal-budget, GIU NGUYEN `t_delay_ms` va `t_loss`. Day la cach duy
+    nhat de queo DUNG MOT THU -- `S-A`/`S-C` doi ca nguong lan ty gia nen chung
+    KHONG phuc vu duoc mot phep kiem bat bien theo `w_loss`.
+
+    Khi override duoc dung, `loss_exchange` KHONG con bang `t_loss`: dang thuc
+    `w = t_delay / loss_exchange` duoc giu bang cach suy `loss_exchange` tu `w`,
+    de khong co hai dinh nghia `w` mau thuan trong cung mot file.
+    """
     spec = SLA_SPECS[spec_id]
     w = float(spec["t_delay_ms"]) / float(spec["t_loss"])
-    if spec_id == PRIMARY_SPEC and abs(w - W_LOSS) > 1e-9:
+    if w_loss_override is not None:
+        w = float(w_loss_override)
+    elif spec_id == PRIMARY_SPEC and abs(w - W_LOSS) > 1e-9:
         raise ValueError(
             "w_loss suy tu spec (%r) khac `K06` (%r) -- mot trong hai sai"
             % (w, W_LOSS))
@@ -102,7 +115,8 @@ def build(spec_id: str = PRIMARY_SPEC, legacy: str = LEGACY) -> Dict[str, Any]:
         new["w_loss"] = w
         # `loss_exchange` GIU dang thuc `w = t_delay / loss_exchange`
         # (amendment 23-52 muc 2b) -- no khong bi nap nghia moi.
-        new["loss_exchange"] = float(spec["t_loss"])
+        new["loss_exchange"] = (float(spec["t_loss"]) if w_loss_override is None
+                                else float(spec["t_delay_ms"]) / w)
         for k in FIXPOINT_TRACES + DERIVED_FROM_SLA:
             new.pop(k, None)
         new["sla_source"] = "exogenous_g114_%s" % spec_id
@@ -168,9 +182,13 @@ def main() -> None:
     p = argparse.ArgumentParser(description=__doc__)
     p.add_argument("--spec", default=PRIMARY_SPEC, choices=sorted(SLA_SPECS))
     p.add_argument("--out", default=None)
+    p.add_argument("--w-loss", type=float, default=None,
+                   help="dat w_loss DOC LAP voi ty gia equal-budget, giu nguyen "
+                        "t_delay_ms/t_loss. Chi dung cho phep kiem BAT BIEN "
+                        "M-136. Mac dinh None = ty gia equal-budget (K06).")
     a = p.parse_args()
 
-    rep = build(a.spec)
+    rep = build(a.spec, w_loss_override=a.w_loss)
     out = a.out or (OUT_TMPL % a.spec)
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     with open(out, "w", encoding="utf-8") as fh:

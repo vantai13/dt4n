@@ -403,7 +403,14 @@ def run_eight_cells(calib_template: str | None = None,
                     for cell in ALL_CELLS
                     for name in ("NC_A_all_row_disjoint", "NC_A_all_seed_disjoint", "identity_residual_le_1e_12")
                 )),
-                "NC_F_w_loss_source": SLA_ARTIFACT,
+                # amendment 23-60 (`L75`): TRUOC day ghi hang so `SLA_ARTIFACT`
+                # chu khong phai `sla_artifact` that su duoc nap. Hau qua do
+                # duoc: `eight_cell_sweep_U3_measured_v7_slaB.json` co
+                # `w_loss == 5000` o MOI cell (bang chung no da doc manifest
+                # ngoai sinh) nhung provenance lai KHAI doc `sla_calibration.json`
+                # (truc S14 da DEPRECATED). Mot artifact khai sai nguon cua
+                # chinh no la thu khoi `validity` sinh ra de chong.
+                "NC_F_w_loss_source": sla_artifact,
                 "NC_F_no_hardcoded_cell_weights": True,
             },
             "provenance": {
@@ -411,7 +418,8 @@ def run_eight_cells(calib_template: str | None = None,
                 "git_hash": git("git", "rev-parse", "HEAD"),
                 "git_dirty": bool(git("git", "status", "--porcelain", "--untracked-files=no")),
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-                "inputs": [pin(AMENDMENT), pin(SLA_ARTIFACT), pin(TRUTH_TABLE)]
+                # `sla_artifact`, KHONG phai `SLA_ARTIFACT` -- xem `L75` tren.
+                "inputs": [pin(AMENDMENT), pin(sla_artifact), pin(TRUTH_TABLE)]
                 + [pin(CELL_SPECS[cell]["parquet"]) for cell in ALL_CELLS],
             },
         }

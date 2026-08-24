@@ -35,7 +35,11 @@ DESIGNS = (
     },
     {
         "name": "operational",
-        "err_path": "results/LIVE/phase-20R/decision_error_by_age_by_regime.parquet",
+        # amendment 23-60: file DA HA xuong SUPERSEDED/ (truc SLA `self_calibrated`,
+        # loi S14). Duong doi theo file de script chay NGUYEN, bit-identical.
+        # CHUA chuyen sang `..._slaB.parquet`: doi truc se doi SO cua hinh H9,
+        # viec do thuoc lesson so huu hinh do, khong lam lut o day. Ghi `L76`.
+        "err_path": "results/SUPERSEDED/phase-20R/decision_error_by_age_by_regime.parquet",
         "cv_path": "results/SUPERSEDED/phase-20R/margin_cv_operational.parquet",
     },
     {

@@ -1,0 +1,20 @@
+{
+  "parquet": "results/LIVE/phase-20R/truth_table.parquet",
+  "schema": "dt4n.truth_table.v1_report",
+  "truth_field": "q_mean_ms",
+  "truth_field_note": "probe_mean_ms KHONG dung -- probe deu dan, khong thoa PASTA",
+  "validity": {
+    "axis_role": "measures_axis",
+    "inputs_sha256": {
+      "results/SUPERSEDED/phase-20R/campaign_state.json": "3de8389e8e1acb6b249d61d012081402fbe464fd6c965ba3a4068904192a8cd8",
+      "results/SUPERSEDED/phase-L/campaign_state.json": "31560f0b4517d81a3744aeeca2b64e4cfe3e2a1385621e48bb3691e35e675d1e"
+    },
+    "instrument": {
+      "module": "measurements.build_truth_table",
+      "source_path": "measurements/build_truth_table.py",
+      "source_sha256": "9f24b90b8476a7c64deee45d06bdbe2ce4e3d5b83ff6e12b1ab4de5001dcd476"
+    },
+    "note": "BANG TRA DO, khong dung truc z va khong dung truc SLA. Day la DAU VAO cua ca hai truc, khong phai dau ra -- nen no khong cho `approved_for_live` nao. Truoc amendment 23-60 cau nay chua bao gio duoc VIET RA, chi nam ngam trong LEGACY_EXEMPT ('bang tra do, khong dung z').",
+    "schema": "dt4n.validity.v1"
+  }
+}

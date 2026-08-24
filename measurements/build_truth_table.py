@@ -10,6 +10,7 @@ from __future__ import annotations
 import argparse
 import json
 import math
+import os
 from pathlib import Path
 from typing import Any, Dict, Iterable, List, Mapping, Optional, Sequence, Tuple
 
@@ -174,9 +175,49 @@ def write_truth_table(
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     write_parquet_with_metadata(table, str(out))
+    write_validity_sidecar(str(out), [phase_l_path, phase_20r_path])
     if csv_path:
         table.to_csv(csv_path, index=False)
     return table
+
+
+def write_validity_sidecar(out_path: str, inputs: Sequence[str]) -> str:
+    """Sidecar `<ten>_report.json` cho truth_table (amendment 23-60).
+
+    Vai tro = MEASURES: bang nay DO chi phi that (`q_mean_ms` do tren Phase L
+    + Phase 20R), no khong DUNG truc z va cung khong dung truc SLA de tinh ra
+    gia tri nao. Da kiem bang quet AST: module nay khong cham
+    `sawtooth_age_steps` / `D_SYNC` / `cert.freshness_requirement`.
+
+    Vi sao MEASURES chu khong AXIS_FREE: AXIS_FREE van CHO truc SLA duoc
+    duyet; truth_table thi khong cho gi ca -- no la DAU VAO cua truc, khong
+    phai dau ra.
+    """
+    import measurements.build_truth_table as _self
+    from measurements.validity import measurement_validity_block
+
+    side = out_path[: -len(".parquet")] + "_report.json"
+    payload = {
+        "schema": "dt4n.truth_table.v1_report",
+        "parquet": os.path.relpath(out_path, os.getcwd()),
+        "truth_field": TRUTH_FIELD,
+        "truth_field_note": TRUTH_FIELD_NOTE,
+        "validity": measurement_validity_block(
+            instrument_module=_self,
+            inputs=list(inputs),
+            note=(
+                "BANG TRA DO, khong dung truc z va khong dung truc SLA. "
+                "Day la DAU VAO cua ca hai truc, khong phai dau ra -- nen no "
+                "khong cho `approved_for_live` nao. Truoc amendment 23-60 cau "
+                "nay chua bao gio duoc VIET RA, chi nam ngam trong "
+                "LEGACY_EXEMPT ('bang tra do, khong dung z')."
+            ),
+        ),
+    }
+    with open(side, "w", encoding="utf-8") as fh:
+        json.dump(payload, fh, indent=2, sort_keys=True)
+        fh.write("\n")
+    return side
 
 
 def _matching_phase_l_rows(

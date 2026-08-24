@@ -27,7 +27,11 @@ MARGIN_CV_UNIMODAL = "results/SUPERSEDED/phase-20R/margin_cv_unimodal.parquet"
 MARGIN_CV_OPERATIONAL = "results/SUPERSEDED/phase-20R/margin_cv_operational.parquet"
 SENSITIVITY_A02 = "results/SUPERSEDED/phase-20R/sensitivity_a02.parquet"
 MARGIN_CV_A02 = "results/SUPERSEDED/phase-20R/margin_cv_a02.parquet"
-OPERATIONAL_RAW = "results/LIVE/phase-20R/decision_error_by_age_by_regime.parquet"
+# amendment 23-60: file DA HA xuong SUPERSEDED/ (truc SLA `self_calibrated`, loi
+# S14). Duong doi theo file de hinh tai lap NGUYEN. Ban truc ngoai sinh nam o
+# `decision_error_by_age_by_regime_slaB.parquet`; chuyen sang no se doi SO cua
+# hinh, thuoc lesson so huu hinh do. Ghi `L76`.
+OPERATIONAL_RAW = "results/SUPERSEDED/phase-20R/decision_error_by_age_by_regime.parquet"
 OUT_DIR = "docs/phase-20R/figures"
 
 

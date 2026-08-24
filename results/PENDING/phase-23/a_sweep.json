@@ -390,5 +390,25 @@
    12
   ]
  },
- "script": "measurements.sla_exogenous --a-sweep"
+ "script": "measurements.sla_exogenous --a-sweep",
+ "validity": {
+  "aoi_axis": {
+   "label": "aoi_axis_free",
+   "note": "chay tren ar1_matrix; KHONG sinh z, khong goi bo sinh AoI",
+   "z_grid_s": []
+  },
+  "axis_role": "aoi_axis_free",
+  "note": "regime_shares() khong nhan w_loss va khong nhan opt (test_regime_shares_signature_has_no_w_loss)",
+  "omega": null,
+  "pending_on": [
+   "sla_axis"
+  ],
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "UNREGISTERED",
+   "match_method": "none",
+   "note": "artifact QUET chinh truc SLA (nhieu bo ba t_delay/t_loss/w_loss), khong dung tren MOT truc -> khong muon nhan duoc"
+  },
+  "w_loss": null
+ }
 }

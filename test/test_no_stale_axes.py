@@ -28,8 +28,11 @@ TIERS = ("RAW", "LIVE", "PENDING", "SUPERSEDED", "SMOKE")
 # Artifact z-INDEPENDENT co TRUOC khi co co che validity.
 # Moi muc PHAI kem ly do. Danh sach nay CHI duoc ngan di, khong duoc dai ra.
 LEGACY_EXEMPT = {
-    "phase-20R/truth_table.parquet":                     "bang tra do, khong dung z",
-    "phase-20R/decision_error_by_age_by_regime.parquet": "luoi z co dinh, z-independent",
+    # `truth_table.parquet` va `decision_error_by_age_by_regime.parquet` DA RA
+    # khoi danh sach nay o amendment 23-60: cai dau nay co sidecar
+    # `truth_table_report.json` (vai tro MEASURES), cai sau da bi HA xuong
+    # SUPERSEDED/ va thay bang `..._slaB.parquet` (vai tro AXIS_FREE, truc SLA
+    # ngoai sinh). Mien tru NGAM -> vai tro TUONG MINH.
     "phase-20R/sla_calibration.json":                    "khong dung z; thay o 23.21 vi S14",
     "phase-L/link_model_v2_fit.json":                    "fit tren do Phase L, khong dung z",
     "phase-23/aoi_v7_estimates.json":                    "SO DO cua chinh truc z",
@@ -143,6 +146,19 @@ def test_live_artifact_has_approved_axes(path):
             f"thi vai tro dung la consumes_axis.")
         return
 
+    # (1c) VAI TRO AXIS_FREE (amendment 23-60).
+    # Artifact chay tren luoi z CO DINH: no khong CHO truc AoI, nhung van phai
+    # cho truc SLA. Mien tru MOT truc, khong phai ca hai -- day chinh la cho
+    # `LEGACY_EXEMPT` cu da mien qua tay.
+    if v.get("axis_role") == "aoi_axis_free":
+        assert "z_grid_s" in v.get("aoi_axis", {}), (
+            f"{rel}: khai aoi_axis_free nhung khong ghim luoi z.")
+        slbl = v["sla_axis"]["label"]
+        assert slbl in approved["sla_axis"], (
+            f"{rel}: sla_axis.label = {slbl!r} chua duoc duyet cho LIVE (S14).\n"
+            f"  duyet hien tai: {approved['sla_axis']}")
+        return
+
     # (2) nhan truc tuoi phai duoc DUYET
     lbl = v["aoi_axis"]["label"]
 
@@ -167,9 +183,53 @@ def test_live_artifact_has_approved_axes(path):
     )
 
 
+def test_every_live_parquet_has_a_validity_sidecar():
+    """Cai chan cu chi soi *.json, nen MOI parquet trong LIVE/ deu lot.
+
+    Doi chung duong DA CHAY: `decision_error_by_age_by_regime.parquet` nam o
+    LIVE/ voi truc SLA DEPRECATED (S14) tu Lesson 23.17 den 23.21 ma khong
+    test nao keu -- khong phai vi LEGACY_EXEMPT viet sai, ma vi cai chan
+    KHONG NHIN THAY parquet.
+
+    Parquet khong mang duoc khoi `validity` (metadata chi co key b'pandas'),
+    nen no phai di kem mot sidecar `<ten>_report.json`. Day la mau DA CO cua
+    Phase 21R; amendment 23-60 ap no cho moi tang LIVE.
+    """
+    missing = []
+    for p in sorted(glob.glob(os.path.join(LIVE, "**", "*.parquet"),
+                              recursive=True)):
+        side = p[: -len(".parquet")] + "_report.json"
+        if not os.path.exists(side):
+            missing.append(_rel(p))
+    assert not missing, (
+        "parquet trong LIVE/ khong co sidecar _report.json mang validity:\n"
+        "  %s\n"
+        "  -> sinh sidecar, hoac chuyen parquet sang SUPERSEDED/."
+        % "\n  ".join(missing)
+    )
+
+
 # ---------------------------------------------------------------------------
 # Tang PENDING (amendment 23-49d muc 4)
 # ---------------------------------------------------------------------------
+
+
+# Danh sach nay CHI DUOC NGAN DI, khong duoc dai ra. Moi muc la mot artifact
+# da ton tai TRUOC amendment 23-60 va chua kip mang `validity`. Them muc moi =
+# mot amendment, va phai kem ly do vi sao script sinh ra no KHONG THE goi
+# validity_block(). Khoi tao RONG: khong ai duoc mien tru ngay tu dau.
+PENDING_NO_VALIDITY_GRANDFATHERED: dict[str, str] = {
+    # `L75`: artifact nay KHONG THE duoc dan nhan suy ra, vi ban ghi provenance
+    # cua chinh no la SAI. No co `w_loss == 5000` o moi cell (bang chung no da
+    # doc manifest ngoai sinh S-B) nhung `provenance.inputs` lai khai doc
+    # `results/LIVE/phase-20R/sla_calibration.json` (truc S14 DEPRECATED), vi
+    # `eight_cell_sweep.py` ghim HANG SO `SLA_ARTIFACT` thay vi `args.sla`.
+    # Suy nhan tu mot ban ghi DA BIET LA SAI = vi pham Luat 2. Ma nguon da sua;
+    # artifact phai SINH LAI. Sinh lai dang bi chan boi `L51` (thieu 4/8 parquet
+    # phase-22). Muc nay bi XOA ngay khi `L51` mo khoa va no duoc sinh lai.
+    "phase-23/eight_cell_sweep_U3_measured_v7_slaB.json":
+        "L75: provenance khai sai nguon SLA; phai sinh lai; bi chan boi L51",
+}
 
 
 def _pending_json() -> list[str]:
@@ -188,8 +248,22 @@ def test_pending_artifacts_declare_what_they_wait_for(path):
     rel = os.path.relpath(path, PENDING).replace(os.sep, "/")
     with open(path, "r", encoding="utf-8") as fh:
         payload = json.load(fh)
-    if not isinstance(payload, dict) or "validity" not in payload:
-        pytest.skip("khong phai artifact co khoi validity")
+    if not isinstance(payload, dict):
+        pytest.skip("khong phai artifact dang dict")
+
+    # ★ SUA (amendment 23-60): thieu `validity` KHONG con la ly do bo qua.
+    # Ban cu `skip` khi thieu `validity` -- tuc la muon THOAT test chi can
+    # khong viet `validity`, ma `validity` chinh la thu can kiem. PASS RONG
+    # (vacuous pass), cung lop loi voi `R1` ("sensitivity chua thuc su chay").
+    # Do duoc 2026-08-24: 16/16 file PENDING/phase-23 thoat theo dung duong do.
+    if rel in PENDING_NO_VALIDITY_GRANDFATHERED:
+        pytest.skip("grandfathered: %s" % PENDING_NO_VALIDITY_GRANDFATHERED[rel])
+    assert "validity" in payload, (
+        f"{rel}: nam o PENDING/ nhung KHONG co khoi validity.\n"
+        f"  -> them validity_block(...)/sla_only_validity_block(...) vao script "
+        f"sinh ra no,\n"
+        f"  -> hoac chuyen sang SMOKE/ neu no khong nham tao ket qua."
+    )
     v = payload["validity"]
     pend = v.get("pending_on")
     assert pend, (

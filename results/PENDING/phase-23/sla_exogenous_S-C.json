@@ -524,5 +524,39 @@
   "n_TRIVIAL": 2,
   "n_design_cells": 12,
   "n_feasible": 10
+ },
+ "validity": {
+  "aoi_axis": {
+   "label": "aoi_axis_free",
+   "note": "chay tren ar1_matrix; KHONG sinh z, khong goi bo sinh AoI",
+   "z_grid_s": []
+  },
+  "axis_role": "aoi_axis_free",
+  "note": "regime_shares() khong nhan w_loss va khong nhan opt (test_regime_shares_signature_has_no_w_loss)",
+  "omega": null,
+  "pending_on": [
+   "sla_axis"
+  ],
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "UNREGISTERED",
+   "manifest_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+   "manifest_sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606",
+   "manifest_triples": [
+    [
+     50.0,
+     0.01,
+     5000.0
+    ]
+   ],
+   "match_method": "content_triple",
+   "matches_manifest": false,
+   "spec_triple": {
+    "t_delay_ms": 20.0,
+    "t_loss": 0.001,
+    "w_loss": 20000.0
+   }
+  },
+  "w_loss": 20000.0
  }
 }

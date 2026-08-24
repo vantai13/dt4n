@@ -140,6 +140,72 @@ AXIS_LABEL = "exogenous_itu_g114_50ms_1pct"
 LEGACY_SLA = "results/LIVE/phase-20R/sla_calibration.json"
 OUT_DIR = "results/PENDING/phase-23"   # PENDING cho toi khi mot amendment duyet truc
 
+# Manifest da DANG KY cua truc SLA ngoai sinh. Script nay KHONG doc no de tinh
+# toan (no tu dinh nghia spec trong SLA_SPECS); no chi dung de DOI CHIEU NOI
+# DUNG khi dan nhan -- xem `sla_axis_from_spec`. (amendment 23-60)
+SLA_MANIFEST = "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json"
+
+
+def attach_validity(art: Dict[str, Any]) -> Dict[str, Any]:
+    """Gan khoi `validity` SUY RA tu chinh config cua artifact (amendment 23-60).
+
+    Truoc amendment nay, 16/16 artifact cua script nay KHONG co `validity`, va
+    `test_pending_artifacts_declare_what_they_wait_for` BO QUA chung -- muon
+    thoat test chi can khong viet `validity`. PASS RONG.
+
+    Nhan truc SLA khong duoc GO TAY: no duoc doi chieu NOI DUNG voi manifest da
+    dang ky. Quet nao khong dung dung bo ba cua `S-B` (vd `S-A`, `S-C`, hoac
+    cac quet queo `w_loss`/`t_loss`) se nhan UNREGISTERED va O LAI PENDING.
+
+    `z_grid` rong: cac quet nay chay tren `ar1_matrix`, khong sinh z bao gio.
+    """
+    from measurements.validity import ROLE_AXIS_FREE, SCHEMA, sla_axis_from_spec
+
+    cfg = art.get("config", {}) or {}
+    t_delay = cfg.get("t_delay_ms")
+    t_loss = cfg.get("t_loss")
+    w_loss = cfg.get("w_loss")
+    if t_delay is None or t_loss is None or w_loss is None:
+        # Quet QUEO chinh truc SLA (t_loss_sweep, w_loss_sensitivity, a_sweep...):
+        # no khong DUNG mot truc, no SPAN nhieu truc. Khong duoc muon nhan cua
+        # bat ky truc nao -- noi dung ra bang van ban.
+        sla = {
+            "label": "UNREGISTERED",
+            "match_method": "none",
+            "note": ("artifact QUET chinh truc SLA (nhieu bo ba t_delay/t_loss/"
+                     "w_loss), khong dung tren MOT truc -> khong muon nhan duoc"),
+        }
+    else:
+        sla = sla_axis_from_spec(
+            t_delay_ms=float(t_delay), t_loss=float(t_loss), w_loss=float(w_loss),
+            manifest_path=SLA_MANIFEST,
+        )
+    art["validity"] = {
+        "schema": SCHEMA,
+        "axis_role": ROLE_AXIS_FREE,
+        "aoi_axis": {
+            "label": ROLE_AXIS_FREE,
+            "note": "chay tren ar1_matrix; KHONG sinh z, khong goi bo sinh AoI",
+            "z_grid_s": [],
+        },
+        "sla_axis": sla,
+        "w_loss": None if w_loss is None else float(w_loss),
+        "omega": None,
+        "note": ("regime_shares() khong nhan w_loss va khong nhan opt "
+                 "(test_regime_shares_signature_has_no_w_loss)"),
+    }
+    if sla["label"] == "UNREGISTERED":
+        art["validity"]["pending_on"] = ["sla_axis"]
+    return art
+
+
+def dump_artifact(art: Dict[str, Any], path: str) -> str:
+    """Diem ghi DUY NHAT. Moi artifact deu di qua day nen khong the quen validity."""
+    attach_validity(art)
+    with open(path, "w", encoding="utf-8") as fh:
+        json.dump(art, fh, indent=1, sort_keys=True)
+    return path
+
 
 def w_loss_equal_budget(t_delay_ms: float, t_loss: float) -> float:
     """Ty gia doi ngang ngan sach: dung het ngan sach TRE == dung het MAT GOI.
@@ -872,36 +938,31 @@ def main() -> None:
     if a.t_loss_sweep:
         art = run_t_loss_sweep(n=a.n)
         path = os.path.join(a.out_dir, "t_loss_sweep.json")
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] t-loss-sweep -> %s" % path)
         return
     if a.local_fine:
         art = run_local_fine(n=a.n)
         path = os.path.join(a.out_dir, "t_loss_local_fine.json")
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] local-fine -> %s" % path)
         return
     if a.a_sweep:
         art = run_a_sweep(a.spec, n=a.n)
         path = os.path.join(a.out_dir, "a_sweep.json")
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] a-sweep -> %s" % path)
         return
     if a.plane:
         art = run_sigma_rho_plane(a.spec, n=a.n)
         path = os.path.join(a.out_dir, "sigma_rho_plane.json")
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] plane -> %s" % path)
         return
     if a.t_loss_fine:
         art = run_t_loss_fine(n=a.n)
         path = os.path.join(a.out_dir, "t_loss_fine.json")
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] t-loss-fine -> %s" % path)
         return
     if a.rho_grid:
@@ -913,22 +974,19 @@ def main() -> None:
         path = os.path.join(a.out_dir, "rho_grid%s.json"
                             % ("_sigma_low" if a.sigma_low
                                else ("_sigma_fixed" if sf else "_main")))
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] rho-grid -> %s" % path)
         return
     if a.wave4:
         art = run_wave4(a.spec, n=a.n)
         path = os.path.join(a.out_dir, "sla_exogenous_wave4.json")
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] wave4 -> %s" % path)
         return
     if a.sensitivity:
         art = run_w_loss_sensitivity(a.spec, n=a.n)
         path = os.path.join(a.out_dir, "w_loss_sensitivity.json")
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] sensitivity -> %s" % path)
         return
 
@@ -936,8 +994,7 @@ def main() -> None:
         art = run_spec(s, n=a.n, with_ci=a.with_ci)
         suffix = "_ci" if a.with_ci else ""
         path = os.path.join(a.out_dir, "sla_exogenous_%s%s.json" % (s, suffix))
-        with open(path, "w", encoding="utf-8") as fh:
-            json.dump(art, fh, indent=1, sort_keys=True)
+        dump_artifact(art, path)
         print("[ok] %s  ->  %s" % (s, path))
 
 

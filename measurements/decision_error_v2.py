@@ -9,6 +9,7 @@ not a bug. Only the perfect-twin control is required to be exactly zero.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import math
 import os
@@ -887,7 +888,62 @@ def run_fixed_grid(
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
     table.to_parquet(out, index=False)
+    write_validity_sidecar(str(out), table, calibration_path, z_values)
     return table
+
+
+def _sha256_file(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(65536), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def write_validity_sidecar(
+    out_path: str,
+    table: pd.DataFrame,
+    calibration_path: str,
+    z_values: Sequence[float],
+) -> str:
+    """Ghi sidecar `<ten>_report.json` mang khoi `validity` (amendment 23-60).
+
+    Parquet KHONG mang duoc khoi `validity` (metadata chi co key b'pandas'),
+    nen no phai di kem mot file. Day la mau DA CO cua Phase 21R.
+
+    KHONG khai `w_loss` bang tay: doc tu chinh bang vua sinh ra (Luat 2 --
+    nhan phai duoc SUY RA, khong duoc KHAI BAO).
+    """
+    from measurements.validity import sla_only_validity_block
+
+    w_set = sorted({float(x) for x in table["w_loss"]})
+    side = out_path[: -len(".parquet")] + "_report.json"
+    write_json(
+        side,
+        {
+            "schema": "dt4n.decision_error.v2_report",
+            "parquet": os.path.relpath(out_path, os.getcwd()),
+            "parquet_sha256": _sha256_file(out_path),
+            "n_rows": int(len(table)),
+            "cells": sorted(
+                {"%s@%.3f" % (r.mode, r.rho_bar) for r in table.itertuples()}
+            ),
+            "w_loss_values": w_set,
+            "validity": sla_only_validity_block(
+                sla_path=calibration_path,
+                w_loss=w_set[0] if len(w_set) == 1 else float("nan"),
+                z_grid=z_values,
+                note=(
+                    "err_total/err_stale/d_sla PHU THUOC truc SLA; "
+                    "rms_e_model/rms_e_stale/cov_e KHONG -- chung tinh tren "
+                    "DELAY THUAN (d_true - d_fresh), khong qua ham chi phi, "
+                    "nen w_loss khong cham toi duoc. Do duoc (G23-203): "
+                    "max|diff| = 0.0 qua doi truc SLA."
+                ),
+            ),
+        },
+    )
+    return side
 
 
 def compute_margin_cv(

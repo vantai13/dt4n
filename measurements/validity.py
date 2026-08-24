@@ -48,8 +48,17 @@ SCHEMA = "dt4n.validity.v1"
 #             the bi lam sai boi cai ma no dang do. Vao LIVE duoc ngay.
 # Day la ly do NGAM cua LEGACY_EXEMPT trong test_no_stale_axes.py; Lesson
 # 23.18 lam no TUONG MINH (amendment 23-45a).
+#   AXIS_FREE artifact KHONG dung truc AoI (luoi z CO DINH, tien nghiem) nhung
+#             CO dung truc SLA. No khong phai cho `approved_for_live.aoi_axis`,
+#             NHUNG PHAI cho `approved_for_live.sla_axis`.
+#             Vi sao can vai tro rieng thay vi mot muc LEGACY_EXEMPT:
+#             LEGACY_EXEMPT la MIEN TRU TOAN PHAN, trong khi ly do mien tru chi
+#             dung cho MOT truc. Dung loi nay da cho
+#             `decision_error_by_age_by_regime.parquet` song o LIVE/ voi truc
+#             SLA DEPRECATED suot tu Lesson 23.17 den 23.21 (amendment 23-60).
 ROLE_CONSUMES = "consumes_axis"
 ROLE_MEASURES = "measures_axis"
+ROLE_AXIS_FREE = "aoi_axis_free"
 
 
 def _load_registry() -> dict:
@@ -146,6 +155,96 @@ def validity_block(
         "z_edges": [float(x) for x in z_edges],
         "w_loss": float(w_loss),
         "omega": None if omega is None else float(omega),
+    }
+
+
+def sla_axis_from_spec(
+    *,
+    t_delay_ms: float,
+    t_loss: float,
+    w_loss: float,
+    manifest_path: str,
+) -> dict[str, Any]:
+    """Nhan truc SLA cho artifact TU DINH NGHIA spec (khong doc file manifest).
+
+    KHONG dung duoc `sla_axis(path)` o day: cac quet `measurements/sla_exogenous.py`
+    dinh nghia SLA NOI BO trong `SLA_SPECS` va khong bao gio doc manifest. Bam
+    sha256 mot file ma script khong he mo ra la mot LOI KHAI, khong phai bang
+    chung -- dung sai lech tinh than cua ca khoi `validity` (Luat 2).
+
+    Thay vao do: DOI CHIEU NOI DUNG. Neu bo ba `(t_delay_ms, t_loss, w_loss)`
+    TRUNG KHIT voi MOI cell cua manifest da dang ky, artifact dung tren CUNG
+    MOT TRUC va duoc muon nhan cua manifest. Lech du mot phan nghin -> nhan
+    UNREGISTERED -> khong vao duoc LIVE.
+
+    Nho vay `S-A` (150 ms) va `S-C` (20 ms / 0.1%) TU DONG khong khop va o lai
+    PENDING -- dung nhu ban chat cua chung: canh tay do nhay, khong phai truc
+    chinh. (amendment 23-60)
+    """
+    with open(manifest_path, "r", encoding="utf-8") as fh:
+        manifest = json.load(fh)
+    cells = manifest.get("cells", [])
+    triples = {
+        (
+            round(float(c["t_delay_ms"]), 9),
+            round(float(c["t_loss"]), 12),
+            round(float(c["w_loss"]), 9),
+        )
+        for c in cells
+    }
+    want = (round(float(t_delay_ms), 9), round(float(t_loss), 12), round(float(w_loss), 9))
+    matches = bool(cells) and triples == {want}
+
+    rel = os.path.relpath(os.path.abspath(manifest_path), _REPO).replace(os.sep, "/")
+    entry = _load_registry().get("sla_axis", {}).get(rel)
+    return {
+        "label": (entry["label"] if entry else UNREGISTERED) if matches else UNREGISTERED,
+        "match_method": "content_triple",
+        "spec_triple": {
+            "t_delay_ms": float(t_delay_ms),
+            "t_loss": float(t_loss),
+            "w_loss": float(w_loss),
+        },
+        "manifest_path": rel,
+        "manifest_sha256": _sha256_file(manifest_path),
+        "manifest_triples": sorted(list(t) for t in triples),
+        "matches_manifest": matches,
+    }
+
+
+def sla_only_validity_block(
+    *,
+    sla_path: str,
+    w_loss: float,
+    z_grid: Sequence[float],
+    note: str,
+) -> dict[str, Any]:
+    """Khoi validity cho artifact KHONG dung truc AoI nhung CO dung truc SLA.
+
+    Khac `validity_block`: khong co bo sinh z, vi artifact nay chay tren mot
+    LUOI z CO DINH da tien dang ky. Luoi do duoc GHIM vao artifact, nen neu ai
+    doi luoi thi nhan khong con khop.
+
+    Khac `measurement_validity_block`: artifact nay KHONG do truc z, nen no
+    KHONG duoc mien duyet truc SLA -- `sla_axis` van phai nam trong
+    `approved_for_live`.
+
+    z_grid rong ([]) nghia la artifact khong cham truc z o BAT KY dang nao
+    (vd cac quet `sla_exogenous`, chay tren `ar1_matrix` chu khong sinh z).
+    """
+    return {
+        "schema": SCHEMA,
+        "axis_role": ROLE_AXIS_FREE,
+        "aoi_axis": {
+            "label": ROLE_AXIS_FREE,
+            "note": "luoi z CO DINH, tien dang ky; khong goi bo sinh AoI nao",
+            "z_grid_s": [float(z) for z in z_grid],
+        },
+        # SUY RA: bam sha256 file SLA that su duoc doc, khong go tay nhan.
+        "sla_axis": sla_axis(sla_path),
+        "w_loss": float(w_loss),
+        "omega": None,
+        "note": note,
     }
 
 
