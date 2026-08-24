@@ -23,7 +23,9 @@ from cert import fallback as FB
 
 
 DEFAULT_CELLS: Mapping[str, str] = {
-    "poisson@0.925": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet",
+    # Ten legacy khong hau to la artifact Phase 22 da duoc sweep 8-cell ghim
+    # digest.  `_poisson_0.925.parquet` la the he 13/08 khac (L85).
+    "poisson@0.925": "results/SUPERSEDED/phase-22/calib_set_v3.parquet",
     "poisson@0.850": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet",
     "h2@0.700": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet",
 }
@@ -64,7 +66,14 @@ def _json_clean(value: Any) -> Any:
 def _meta_path(path: str) -> str:
     if not path.endswith(".parquet"):
         raise ValueError("artifact path must end with .parquet: %s" % path)
-    return path[:-8] + ".json"
+    plain = path[:-8] + ".json"
+    report = path[:-8] + "_report.json"
+    if os.path.exists(plain):
+        return plain
+    if os.path.exists(report):
+        return report
+    # Giu loi ha nguon ro rang va on dinh khi ca hai deu vang mat.
+    return plain
 
 
 def _load_meta(path: str) -> Dict[str, Any]:

@@ -260,7 +260,9 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-218 | 23.21i | PASS | `test_no_hardcoded_missing_parquet` (lint AST). So dong DO lan quet DAU TIEN: **29**. Sau khi loc mau `{}`/`%s`, glob `*`, duoi khong co `/`: 16 = 12 `KNOWN_DANGLING` (8 parquet Phase 22 that su mat) + 4 `OUTPUT_PATHS`. Doi chung duong: bo 1 muc -> DO dung hai dong tro toi file do |
 | G23-221 | 23.21j | PASS | Sau backup 23/23 parquet (SHA mismatch 0), `chmod -R a-w results/SUPERSEDED results/RAW`. `test_closed_evidence_tiers_are_read_only` quet de quy moi write bit user/group/other; doi chung truoc chmod DO |
 | G23-222 | 23.21j | PASS | Them marker `custody`; tach presence khoi content drift. Suite portable/CI chay `not custody`; may tac gia chay rieng `-m custody`. Meta-test buoc moi presence check phai mang mark |
-| G23-223 | 23.21j | PASS | Mtime 7 parquet nam 13--15/08, nhung file `poisson_0.700` DA DOI digest cung mang mtime 13/08. Mtime co phan vi duong trong cung tap, khong phan xu duoc ba file UNKNOWN; L82 giu nguyen |
+| G23-223 | 23.21j | PASS | Mtime rieng le khong nang duoc file thanh ORIGINAL. Bang chung manh hon giai thich di thuong: `os.replace` giu mtime NGUON; report timestamp + git/builder hash ghep bon file vao lo 13/08. L82 doi sang VERIFIED_SUPERSEDED_GENERATION, khong phai ORIGINAL |
+| G23-224 | 23.21j | PASS | `tier_results.py` preflight TAT CA dich truoc moi mutation/map-out; dich co san hoac dich lap trong plan -> return 2 va in chi tiet. Bo `git mv -f`; file ignored dung hard-link + unlink no-replace, nen ca va cham xuat hien sau preflight cung fail. DC duong: dich gia giu nguyen ca source/destination va khong tao map; 3 test xanh |
+| G23-225 | 23.21j | PASS | Lint AST tren `cert/`, `measurements/`, `tools/`: moi legacy `(mode,rho_bar)` chi co mot parquet literal. DC L85 voi `calib_set_v3.parquet` + `_poisson_0.925.parquet` -> DO. Da sua `phase23_cell_margins`; 3 regression test doi chieu artifact G23-17a/b/c cu voi canonical moi co 0 khac biet so hoc |
 
 ## Va cham da phat hien
 

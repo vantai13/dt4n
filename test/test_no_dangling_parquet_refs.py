@@ -28,7 +28,8 @@ REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 # Muc DA BIET, moi muc kem ly do va lesson so huu. CHI DUOC NGAN DI.
 KNOWN_DANGLING: dict[str, str] = {
     # `L51`: tam parquet Phase 22 (~1.9 GB) khong duoc commit (gioi han kich
-    # thuoc kho) va digest cua chung khong duoc luu trong bao cao cung thoi.
+    # thuoc kho). Digest lich su VAN CON (`L80`), nhung byte cua bon file Dot 4
+    # da mat nen khong the tai lap bit-exact.
     # Bon file duoi day la bon cell Dot 4 ma `live_region_sweep` can. Viec 3
     # (Lesson 23.21h) so huu chung: chung se duoc SINH LAI tu seed, KHONG duoc
     # "tim thay ban thay the".
@@ -102,10 +103,6 @@ LOCAL_ONLY: dict[str, str] = {
     # KHONG duoc dung lam moc doi chung (xem `G23-212a`, chi 3 cell).
     "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.700.parquet":
         "L80 - NOT_ORIGINAL_DO_NOT_REUSE",
-    # Khong nam trong `provenance.inputs` lich su nen KHONG doi chieu duoc.
-    # Ton tai != duoc phep tai dung (`G23-174`).
-    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet":
-        "L80 - NO_HISTORICAL_DIGEST",
 }
 
 

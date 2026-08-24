@@ -5,6 +5,10 @@ Lesson  : 23.21j (custody truoc Viec 3)
 Loai    : PHAN QUYET XAC MINH + CHAN GHI DE + TACH SUITE
 Prereq  : amendment-60, `df9cd68`
 
+> Hau kiem sau commit: `A061b-amendment-61b.md` giai thich di thuong mtime
+> va doi ba file L82 tu UNKNOWN sang VERIFIED_SUPERSEDED_GENERATION. Noi dung
+> duoi day duoc giu nguyen nhu phan quyet tai thoi diem ky; 61b la ban cap nhat.
+
 ## 1. Tien dang ky
 
 ```text

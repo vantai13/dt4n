@@ -17,8 +17,8 @@ Tieu chi:
 Hai diem khac ban trong giao trinh, do thuc te repo nay:
 
   1. `git mv` chi ap dung cho file DUOC TRACK. Repo co 2.201 file bi
-     .gitignore (raw local, 427 MiB AoI campaign...). Voi chung dung
-     os.replace: chung van phai duoc phan tang, chi la khong co lich su git.
+     .gitignore (raw local, 427 MiB AoI campaign...). Voi chung dung hard-link
+     + unlink NO-REPLACE: van phan tang, khong co lich su git, khong ghi de dich.
   2. RAW_TREES la TIEN TO CAY, khong phai thu muc phang. `aoi_v7_campaign`
      co 30 thu muc con `flows_*`; neu chi khop thu muc cha thi 960 file do
      roi nham vao SUPERSEDED.
@@ -34,6 +34,8 @@ import os
 import re
 import subprocess
 import sys
+from collections import Counter
+from typing import Sequence
 
 ROOT = "results"
 TIERS = ("RAW", "LIVE", "PENDING", "SUPERSEDED", "SMOKE")
@@ -104,12 +106,60 @@ def _tracked() -> set[str]:
     return {p for p in out.split("\0") if p}
 
 
-def main() -> int:
+def destination_collisions(moves) -> list[tuple[str, str, str]]:
+    """Tra cac dich se bi ghi de, TRUOC khi bat ky file nao duoc dich.
+
+    `os.replace` va `git mv -f` deu cho phep mat byte cu im lang. Dung
+    `lexists` thay vi `exists` de mot symlink gay cung khong thanh loi thoat.
+    Mot dich lap lai trong chinh ke hoach cung la va cham, ke ca no chua ton
+    tai tren dia.
+    """
+    normalized = [
+        (src, dst, os.path.normcase(os.path.abspath(dst)))
+        for src, dst, _tier, _tracked_file in moves
+        if os.path.normcase(os.path.abspath(src))
+        != os.path.normcase(os.path.abspath(dst))
+    ]
+    duplicate_dsts = {
+        dst_key for dst_key, count in Counter(row[2] for row in normalized).items()
+        if count > 1
+    }
+    collisions = []
+    for src, dst, dst_key in normalized:
+        if os.path.lexists(dst):
+            collisions.append((src, dst, "destination already exists"))
+        elif dst_key in duplicate_dsts:
+            collisions.append((src, dst, "duplicate destination in move plan"))
+    return collisions
+
+
+def _move_untracked_no_replace(src: str, dst: str) -> None:
+    """Publish a complete file atomically, but never replace `dst`.
+
+    Hard-link creation is atomic and fails with FileExistsError if another
+    process creates `dst` after the preflight.  Unlinking the old name then
+    completes the move.  A crash between the two calls leaves two names for
+    the same bytes (recoverable), never a truncated or overwritten artifact.
+    Source and destination are below the same results/ tree, so they share a
+    filesystem; EXDEV is deliberately fatal rather than falling back to an
+    unsafe copy.
+    """
+    os.link(src, dst, follow_symlinks=False)
+    try:
+        os.unlink(src)
+    except BaseException:
+        # Roll back the new name if removing the source fails.  At this point
+        # `dst` is the hard link created by this function, not a prior file.
+        os.unlink(dst)
+        raise
+
+
+def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser()
     ap.add_argument("--apply", action="store_true", help="thuc su di chuyen")
     ap.add_argument("--map-out", default=None,
                     help="ghi bang anh xa cu->moi ra file TSV")
-    args = ap.parse_args()
+    args = ap.parse_args(argv)
 
     tracked = _tracked()
     moves = []
@@ -127,6 +177,17 @@ def main() -> int:
             is_tracked = src in tracked
             counts[tier][0 if is_tracked else 1] += 1
             moves.append((src, target(src, tier), tier, is_tracked))
+
+    collisions = destination_collisions(moves)
+    if collisions:
+        print(
+            "DUNG: phat hien %d va cham dich; CHUA di chuyen file nao."
+            % len(collisions),
+            file=sys.stderr,
+        )
+        for src, dst, reason in collisions:
+            print("  %s\n    -> %s (%s)" % (src, dst, reason), file=sys.stderr)
+        return 2
 
     print("=== TOM TAT ===")
     print(f"  {'tang':12} {'tracked':>8} {'ignored':>8} {'tong':>8}")
@@ -156,10 +217,11 @@ def main() -> int:
     for src, dst, _tier, is_tracked in moves:
         os.makedirs(os.path.dirname(dst), exist_ok=True)
         if is_tracked:
-            subprocess.run(["git", "mv", "-f", src, dst], check=True)
+            # Khong `-f`: neu dich xuat hien sau preflight, git phai DUNG.
+            subprocess.run(["git", "mv", src, dst], check=True)
             n_git += 1
         else:
-            os.replace(src, dst)
+            _move_untracked_no_replace(src, dst)
             n_fs += 1
 
     # don thu muc rong con lai (khong dung file nao)
@@ -170,7 +232,7 @@ def main() -> int:
             os.rmdir(dirpath)
 
     print(f"\nDa di chuyen {n_git} file bang `git mv` "
-          f"va {n_fs} file (bi .gitignore) bang os.replace.")
+          f"va {n_fs} file (bi .gitignore) bang hard-link + unlink no-replace.")
     return 0
 
 

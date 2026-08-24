@@ -289,9 +289,9 @@ calib_set_v3_poisson_0.850            CO         ★ KHOP  -> BAN GOC
 calib_set_v3_poisson_0.700            CO         ✗ KHAC  -> KHONG PHAI BAN GOC
       lich su : ec49deb8725498f9cf03d7c302983ab5...
       tren dia: 2267423d8d33f3da3ad07ab12a2c5d28...
-calib_set_v3_cbr_0.700                CO         ? UNKNOWN -- chi bam hom nay
-calib_set_v3_poisson_0.925            CO         ? UNKNOWN -- chi bam hom nay
-calib_set_v3_poisson_0.925_V3         CO         ? UNKNOWN -- chi bam hom nay
+calib_set_v3_cbr_0.700                CO         LO 13/08 -- SUPERSEDED_GENERATION
+calib_set_v3_poisson_0.925            CO         LO 13/08 -- SUPERSEDED_GENERATION
+calib_set_v3_poisson_0.925_V3         CO         LO 13/08 -- SUPERSEDED_GENERATION
 calib_set_v3_poisson_0.960            MAT        -
 calib_set_v3_h2_0.850 / _0.925 / _0.960  MAT     -
 ```
@@ -303,9 +303,18 @@ canh bao: *"dung lai ma tham so khong khop goc -> doi chung am muc duong ong
 vo nghia IM LANG."*
 
 Chi phat hien duoc vi co digest LICH SU DOC LAP de doi chieu. Do la lap luan
-tu bao ve cua `G23-174`, hoat dong lan dau tren du lieu that. Ba digest do
-`g23_174_reuse_verdict.json` bam trong ngay KHONG xac minh ba file UNKNOWN:
-dung ban bam hom nay de chung minh chinh file hom nay la vong tron.
+tu bao ve cua `G23-174`, hoat dong lan dau tren du lieu that. Phan quyet ban
+dau dung o `UNKNOWN` vi ba file cuoi khong co digest lich su rieng. Hau kiem
+61b tim duoc bang chung THE HE: ca ba cung `git_hash=f95c6bee`, builder
+`0f534288...`, `git_dirty=true` va cua so 13/08 04:33--04:35 voi
+`poisson_0.700` cu. Report 21/08 cua chinh cell sau dung builder
+`f02b1d1c...`; digest ma eight-cell da ghim thuoc the he sau va nay da mat.
+
+Vi vay ba file khong duoc nang thanh ORIGINAL, ma duoc doi tu `UNKNOWN` sang
+`VERIFIED_SUPERSEDED_GENERATION`: xac minh duoc la thanh vien lo 13/08 da bi
+thay cho muc dich canonical eight-cell/Phase 23. Phan quyet nay KHONG noi moi
+artifact Phase 22 lich su tung doc lo 13/08 la sai; no cam TAI DUNG lo do nhu
+dau vao canonical hien hanh.
 
 ## 6.3. `L51` sua thanh ba menh de rieng
 
@@ -313,8 +322,9 @@ dung ban bam hom nay de chung minh chinh file hom nay la vong tron.
 L51a  DIGEST lich su:      KHONG mat. Nam trong provenance cua artifact cu.
 L51b  DU LIEU GOC:         5/9 parquet input lich su khong dung duoc:
                            4 vang mat + 1 da bi thay noi dung.
-L51c  XAC MINH FILE LOCAL: 3 VERIFIED_ORIGINAL / 1 NOT_ORIGINAL / 3 UNKNOWN.
-                           NOT_ORIGINAL va UNKNOWN deu CAM tai dung.
+L51c  XAC MINH FILE LOCAL: 3 VERIFIED_ORIGINAL / 1 NOT_ORIGINAL /
+                           3 VERIFIED_SUPERSEDED_GENERATION / 0 UNKNOWN.
+                           Hai nhom khong-original deu CAM tai dung.
 ```
 
 Ket luan "khong tai dung duoc bit-exact cac con so Phase 22" VAN DUNG (thieu
@@ -403,9 +413,30 @@ ngoai `/dev/sdd`; SHA-256 nguon/đich lech 0. Sau do khoa write bit cua
 `results/RAW` va `results/SUPERSEDED` o muc OS.
 
 Mtime cua bay file deu nam 13--15/08. Tuy nhien `poisson_0.700`, da chung minh
-bang digest la KHAC ban goc, cung mang mtime 13/08. Vi vay mtime khong du nang
-ba file UNKNOWN thanh ORIGINAL; no co phan vi duong ngay trong cung tap.
+bang digest la KHAC ban goc, cung mang mtime 13/08. Mtime khong du nang ba
+file thanh ORIGINAL. Ket hop timestamp trong report + `git_hash` + builder
+hash, no lai xac nhan ca bon thuoc cung lo 13/08; xem `A061b-amendment-61b.md`.
 
 Test custody da tach: VANG MAT chi do tren may giu du lieu; DOI NOI DUNG van
 la bat bien portable va do o moi noi file co mat. CI/clone sach loai marker
 `custody`, con may tac gia chay rieng marker nay.
+
+## 6.7. Hau kiem 61b -- nguyen nhan ghi de va anh xa cell
+
+`tools/tier_results.py` tai commit phan tang `5e1837f` dung `git mv -f` cho
+file tracked va `os.replace` cho file ignored. Ca hai cho phep dich co san bi
+ghi de; `os.replace` lai de mtime cua file NGUON di theo. Co che nay giai
+thich dong thoi digest 21/08 bien mat va mtime tren dia lui ve 13/08. Quet
+blast radius thay mot va cham Phase 22. Muoi sau cap report Phase-21R cung
+stem la phan tang dung: ban `self_calibrated` o SUPERSEDED, ban
+`exogenous_g114_S-B` o LIVE.
+
+`G23-224` bo ca hai primitive overwrite: preflight dung truoc moi mutation,
+`git mv` khong `-f`, file ignored dung hard-link atomic + unlink va van fail
+neu dich xuat hien sau preflight.
+
+`L85` cung duoc sua tai nguon: `phase23_cell_margins.DEFAULT_CELLS` nay dung
+`calib_set_v3.parquet` cho `poisson@0.925`, giong `eight_cell_sweep`. Chay doi
+chieu cu/moi tren G23-17a/b/c cho **0 khac biet so hoc**; chi path/digest
+provenance doi. Artifact cu giu nguyen trong SUPERSEDED nhu bang chung lich
+su, khong ghi de de "lam dep" qua khu.

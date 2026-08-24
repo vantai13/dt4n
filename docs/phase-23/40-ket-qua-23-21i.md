@@ -316,7 +316,8 @@ hien `provenance.inputs` cua `eight_cell_sweep_U3_measured_v7.json` (git_hash
 Chi phat hien duoc vi co digest de doi chieu.
 
 `L51` tach thanh `L51a` (digest: khong mat), `L51b` (du lieu goc: 5/9 khong
-dung duoc = 4 vang + 1 da doi), `L51c` (file local: 3 goc / 1 doi / 3 UNKNOWN).
+dung duoc = 4 vang + 1 da doi), `L51c` (hau kiem 61b: 3 goc / 1 doi /
+3 VERIFIED_SUPERSEDED_GENERATION / 0 UNKNOWN; xem `A061b-amendment-61b.md`).
 Ket luan cuoi khong doi, nhung LY DO doi han -- va van ban Threats to Validity da phai viet lai
 (`39-l51-adjudication.md` muc 6.3).
 
