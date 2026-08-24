@@ -252,6 +252,7 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-208 | 23.21i | PASS | Ha `eight_cell_sweep_U3_measured_v7.json` xuong `SUPERSEDED/phase-23/` (w_loss noi sinh 8 gia tri, truc S14). Ly do bang van ban o `37-pending-tier-adjudication.md` muc 5 |
 | G23-209 | 23.21i | FAIL | `PENDING/` KHONG rong: con 9 file. Khong phai viec chua xong -- la phat hien ve THIET KE TANG: `PENDING/` gop ca "dang CHO duyet" lan "CO Y ngoai truc chinh" (canh do nhay `S-A`/`S-C`, 5 quet SPAN truc). Loai sau khong bao gio "toi luot". De xuat tach `CONTROLS/`, can amendment rieng |
 | G23-215 | 23.21i | PASS | Phan quyet bang van ban: `L51` (tai lap QUA KHU) != `M-136` (mot BAT BIEN). `M-136` khong bi chan boi parquet lich su -- nhung xem `G23-217`: no bi chan boi mot thu KHAC. DINH CHINH sau review: digest lich su VAN CON; trong 9 parquet input (8 calib + truth), 4 dung duoc, 4 vang mat, 1 da doi noi dung. Van ban Threats to Validity sua o `39-l51-adjudication.md` muc 6 |
+| G23-216 | 23.21i | NOT_RUN | - |
 | G23-217 | 23.21h | NOT_RUN | - |
 | G23-212 | 23.21h | NOT_RUN | - |
 | G23-212a | 23.21h | PASS | Doi chung am cho patch Viec 3, dang TUONG DUONG DUONG CODE (khong phai tai tao so LICH SU). `tools/g23_212a_partial_nc.py`, 8/8 cell, bo calib phase-21R (tu nhat quan voi manifest S-B, `parquet_sha256` ghim o ca hai ve). Ve A: `results/RAW/phase-23/g23_212a_before.json`, 2340 truong, NHOM A lech 0 / NHOM B lech 0. Doi chung duong: nhieu 1e-15 vao mot truong NHOM A -> bat duoc. GIOI HAN: hai ve co the cung sai; gate nay KHONG chung minh manifest dung, chi chung minh patch khong doi ha nguon |
@@ -272,6 +273,15 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-214 | 23.21h | PASS | `regime` tinh lai tu shares/CI khop nhan authoritative `sla_exogenous_S-B` + `wave4` tai 12/12 cell |
 | G23-228 | 23.21h-close | PASS | Clean replay tu HEAD `6aa08c8`: artifact v3 `git_dirty=false`, hash khop HEAD; so commit `08b6879` co `cells` 3564 leaf, `metrics` 31 leaf, `live_definition_table` 60 leaf deu bit-exact, 0 mismatch. `results/RAW/phase-23/g23_228_clean_replay.json` |
 | G23-229 | 23.21h-close | PASS | p@.900 co 2/5 fold chon F6, selected-F2 = 0; ep F2b/P3 qua cung `_risk_summary` cho chenh `+0.012923831842096334`, nen selection wired va F6=F2 la suy bien tren mau. `results/RAW/phase-23/g23_229_family_selection_control.json` |
+| G23-230 | 23.22 | NOT_RUN | - |
+| G23-231 | 23.22 | NOT_RUN | - |
+| G23-232 | 23.22 | NOT_RUN | - |
+| G23-233 | 23.22 | NOT_RUN | - |
+| G23-234 | 23.22 | NOT_RUN | - |
+| G23-235 | 23.22 | NOT_RUN | - |
+| G23-236 | 23.22 | NOT_RUN | - |
+| G23-237 | 23.22 | NOT_RUN | - |
+| G23-238 | 23.22 | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -451,6 +461,18 @@ cua dai do.
 G23-74 va G23-75 con MO vi ca hai can thong tin xac thuc cua tac gia (tai
 khoan Zenodo de lay DOI; credential git de push tag). Chung khong duoc cham
 PASS thay mat tac gia.
+
+
+`G23-230 .. G23-238` (lesson `23.22`) mo boi amendment 23-64: do lai co so
+truc `m_hat` tren truc AoI da duyet (`L89`), va thay `post="none"` bang
+`post="selective"`. KE TIEP `G23-229`.
+
+`G23-216` la mot KHE do chinh Lesson 23.21i tao ra: ke hoach cap no cho
+"dung lai Dot 1, 16/16 job qua bon cong nhanh", nhung phep do do khong chay
+duoc (`M-136` bi chan boi `L77`), va dai `G23-215/217/218` duoc cap bo qua no.
+Nay da dang ky NOT_RUN de khong ai tai su dung ma. Phat hien boi review doc
+lap 2026-08-24, va boi chinh `test_every_gate_id_mentioned_in_repo_is_in_the_ledger`
+khi amendment 23-64 chi CAN NHAC ten no.
 
 ## Ghi chu ve pham vi ID
 
