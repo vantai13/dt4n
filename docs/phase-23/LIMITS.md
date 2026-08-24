@@ -96,7 +96,9 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 
 | L71 | BAC BO chan doan cua `L69`. Gia thiet "phan du `p90` do tich luy float32" da duoc THU bang cach ep float64: ket qua TE HON. `p5`/`p10` khop CHINH XAC (lech 0.0) o float32 nhung lech 4.8e-08 o float64; `p90` lech 5.7e-06 o float32 va 7.6e-07 o float64 | `00zzu-amendment-58.md` muc 3; do tren `poisson@0.925` U0 | Du lieu BIT-IDENTICAL (`output.parquet_sha256` giong het qua hai lan chay). Nguyen nhan cua RIENG `p90` CHUA XAC DINH. Da HOAN NGUYEN phep ep float64. Nguong NC `1e-9` KHONG dat duoc voi ban luu tru sinh o moi truong khac |
 
-So ke tiep duoc cap: **L72**.
+| L72 | Co CLI chet/no-op: `cert/live_region_sweep.py --calib-template` va `cert/abstain_cost.py --calib-template` khong duoc doc; `decision_error_v2.py --boot-metrics` va ba co `--resume` (`l6_campaign.py`, `l6_campaign_fine.py`, `t5_campaign.py`) duoc chap nhan nhung khong doi semantics | `00zzv-amendment-59.md` muc 3; do bang `test_cli_flags_are_wired.py` | Co bi bo qua im lang, cung lop loi `R1`. Sua theo lesson so huu; `live_region_sweep` sang 23.22. Danh sach `KNOWN_DEAD` chi duoc ngan di. Test hieu `getattr`, `dest` alias va hai co controller duoc forward lien module de khong ghi debt gia |
+
+So ke tiep duoc cap: **L73**.
 
 ## Va cham da phat hien
 

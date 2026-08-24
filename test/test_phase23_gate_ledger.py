@@ -65,6 +65,7 @@ CONTIGUOUS_LO, CONTIGUOUS_HI = 24, 73
 CLOSED_LESSONS = {
     "23.1", "23.2", "23.3", "23.4", "23.5A", "23.5B", "23.5C",
     "23.20", "23.20A", "23.20B", "23.20C", "23.20D",
+    "23.21", "23.21b", "23.21c", "23.21d", "23.21e", "23.21f", "23.21g",
 }
 
 # Mon no GHIM (Amendment 23-26 muc 7.3). Them mot mon no moi phai sua dong nay,
@@ -446,7 +447,8 @@ CLOSE_DOC = re.compile(r"^\d+-close-(.+)\.md$")
 # Lesson ma van ban dong cua no chua duoc viet -> bo qua.
 # Them mot muc vao day phai co amendment.
 CLOSE_DOC_LESSON = {"35-close-23-21.md": {"23.21", "23.21b", "23.21c",
-                                          "23.21d", "23.21e", "23.21f"}}
+                                          "23.21d", "23.21e", "23.21f",
+                                          "23.21g"}}
 
 
 def test_close_doc_lists_every_not_run_gate_of_that_lesson():

@@ -1,0 +1,221 @@
+{
+  "adjudication": "KH3 cho bon parquet Dot 4: ca bon vang mat. Checkout con sau parquet legacy calib_set_v3 (ban dau o results/phase-22, sau do phan tang vao results/SUPERSEDED/phase-22), trai voi snapshot trong huong dan; chung duoc kiem ke va CAM tai dung neu chua ghep duoc voi digest da luu. Khong file legacy nao duoc 16 build LIVE hien hanh khai la output hoac input. Ca 16 build LIVE duoc sinh lai tu seed; 16/16 parquet con tren dia va khop output.parquet_sha256. Vi vay khong co tai dung khong xac minh, nhung viec ton tai cua sau file legacy khong duoc dien giai thanh chung co the tai dung.",
+  "does_not_close": [
+    "L51",
+    "G23-141",
+    "G23-142"
+  ],
+  "gate": "G23-174",
+  "legacy_calib_set_v3_found": [
+    {
+      "bytes": 54426490,
+      "claimed_as_live_output": false,
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_cbr_0.700.parquet",
+      "referenced_as_live_input": false,
+      "reuse_policy": "PROHIBITED_UNLESS_PAIRED_WITH_A_PRIOR_DIGEST",
+      "sha256": "c399731a95ed66297b9f71b17faebf6d589e1dd24c5ad8f680a98afacc40c793"
+    },
+    {
+      "bytes": 68572238,
+      "claimed_as_live_output": false,
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet",
+      "referenced_as_live_input": false,
+      "reuse_policy": "PROHIBITED_UNLESS_PAIRED_WITH_A_PRIOR_DIGEST",
+      "sha256": "cae93a3c1008e39e7ef76b4f7f20dea07186b96cef256920725cc2a8bf08ce05"
+    },
+    {
+      "bytes": 67482424,
+      "claimed_as_live_output": false,
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.700.parquet",
+      "referenced_as_live_input": false,
+      "reuse_policy": "PROHIBITED_UNLESS_PAIRED_WITH_A_PRIOR_DIGEST",
+      "sha256": "2267423d8d33f3da3ad07ab12a2c5d28122229392db24ec66b5732dd2d1c47e1"
+    },
+    {
+      "bytes": 69328506,
+      "claimed_as_live_output": false,
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet",
+      "referenced_as_live_input": false,
+      "reuse_policy": "PROHIBITED_UNLESS_PAIRED_WITH_A_PRIOR_DIGEST",
+      "sha256": "1565767d87060304be9ee651a627c2fa0cb737e0fd11e578078b34579aa16f66"
+    },
+    {
+      "bytes": 69161205,
+      "claimed_as_live_output": false,
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet",
+      "referenced_as_live_input": false,
+      "reuse_policy": "PROHIBITED_UNLESS_PAIRED_WITH_A_PRIOR_DIGEST",
+      "sha256": "bf704ca60cb62deb5834631ac239a4554d4317bb5bf5242ea108ae78fdb29aa5"
+    },
+    {
+      "bytes": 69279850,
+      "claimed_as_live_output": false,
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925_V3.parquet",
+      "referenced_as_live_input": false,
+      "reuse_policy": "PROHIBITED_UNLESS_PAIRED_WITH_A_PRIOR_DIGEST",
+      "sha256": "3c0b2ab8195e37a32a12a461f39ff6740ff997d7d170dcd6758b43abb0c80abd"
+    }
+  ],
+  "legacy_n_found": 6,
+  "legacy_reused_by_current_live_builds": [],
+  "lesson": "23.21c",
+  "live_reports": [
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_h2_0.700_U0_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_h2_0.700_U0_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_h2_0.700_U3_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_h2_0.700_U3_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_h2_0.850_U0_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_h2_0.850_U0_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_h2_0.850_U3_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_h2_0.850_U3_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_h2_0.925_U0_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_h2_0.925_U0_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_h2_0.925_U3_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_h2_0.925_U3_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_h2_0.960_U0_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_h2_0.960_U0_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_h2_0.960_U3_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_h2_0.960_U3_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.700_U0_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_poisson_0.700_U0_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.700_U3_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_poisson_0.700_U3_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.850_U0_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_poisson_0.850_U0_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.850_U3_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_poisson_0.850_U3_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.925_U0_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_poisson_0.925_U0_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.925_U3_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_poisson_0.925_U3_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.960_U0_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_poisson_0.960_U0_measured_v7_report.json"
+    },
+    {
+      "digest_matches": true,
+      "has_digest": true,
+      "parquet_on_disk": true,
+      "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.960_U3_measured_v7.parquet",
+      "regenerated_from_seed": true,
+      "report": "results/LIVE/phase-21R/calib_set_poisson_0.960_U3_measured_v7_report.json"
+    }
+  ],
+  "n_live_digest_matches": 16,
+  "n_live_parquet_on_disk": 16,
+  "n_live_regenerated_from_seed": 16,
+  "n_live_reports": 16,
+  "n_live_with_digest": 16,
+  "provenance": {
+    "git_hash": "e2d4efe739cf460ffe2187f91fdfe86d6dec2193",
+    "script": "tools/g23_174_reuse_verdict.py",
+    "timestamp_utc": "2026-08-24T01:44:20.864155+00:00"
+  },
+  "question": "Co calib parquet nao duoc tai dung ma khong kiem duoc van tay?",
+  "validity": {
+    "aoi_axis": {
+      "label": "measured_v7_uniform"
+    },
+    "axis_role": "audits_artifacts",
+    "sla_axis": {
+      "label": "exogenous_g114_S-B"
+    },
+    "w_loss": 5000.0
+  },
+  "verdict": "PASS_NO_UNVERIFIED_REUSE",
+  "wave4_n_missing": 4,
+  "wave4_parquet_exists": {
+    "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.650.parquet": false,
+    "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.675.parquet": false,
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.875.parquet": false,
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.900.parquet": false
+  }
+}
