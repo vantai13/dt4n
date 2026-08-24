@@ -128,15 +128,32 @@ def sha256_of(path: str) -> str:
     return h.hexdigest()
 
 
-def pin(path: str) -> Dict[str, Any]:
+def pin(path: str, allow_missing: bool = False) -> Dict[str, Any]:
     """Ghim artifact buoc truoc vao provenance.
 
     Neu buoc truoc bi chay lai, buoc sau do ngay thay vi am tham lech.
+
+    `L78` (amendment 23-60): ban cu NUOT `OSError` va tra `sha256: None`, tuc
+    lam DUNG NGUOC lai cau docstring tren. Hau qua do duoc:
+    `eight_cell_sweep_U3_measured_v7_slaB.json` khai 8 input calib parquet voi
+    `sha256 = null` o CA 8, va artifact van duoc ghi ra "thanh cong". Do la
+    `provenance` co HINH THUC ma khong co NOI DUNG -- mot artifact tu khai
+    nguon goc trong khi khong bam duoc nguon nao.
+
+    Nay mac dinh la NEM. Ai that su can ghim mot duong CHUA ton tai thi phai
+    noi ra tai diem goi: `pin(p, allow_missing=True)`. Tuong minh tai cho, chu
+    khong am tham toan cuc. (fail loud, khong fail quiet)
     """
     try:
         return {"path": path, "sha256": sha256_of(path)}
-    except OSError:
-        return {"path": path, "sha256": None}
+    except OSError as exc:
+        if not allow_missing:
+            raise FileNotFoundError(
+                "pin(): khong bam duoc %r -- artifact se khai mot input ma no "
+                "khong doc duoc. Neu dieu do la CO Y, goi "
+                "pin(path, allow_missing=True) va ghi ly do." % path
+            ) from exc
+        return {"path": path, "sha256": None, "missing": True}
 
 
 # ---------------------------------------------------------------------------

@@ -16,7 +16,11 @@ from __future__ import annotations
 
 import ast
 import glob
+import hashlib
+import json
 import os
+
+import pytest
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
@@ -83,6 +87,118 @@ OUTPUT_PATHS: dict[str, str] = {
     "results/phase-20R/truth_table.parquet": "ban do di doi tier_results",
     "results/phase-20R/decision_error_by_age_by_regime.parquet": "ban do di doi tier_results",
 }
+
+
+# File CON tren dia tac gia nhung KHONG trong git. Moi muc PHAI co digest
+# trong SURVIVING_CALIB_DIGESTS.json -- `test_local_only_entries_have_pinned_digests`
+# ep dieu do. Khong digest = mot loi khai, khong phai bang chung.
+DIGEST_PIN = "results/RAW/phase-22/SURVIVING_CALIB_DIGESTS.json"
+LOCAL_ONLY: dict[str, str] = {
+    "results/SUPERSEDED/phase-22/calib_set_v3.parquet": "L80 - VERIFIED_ORIGINAL",
+    "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet": "L80 - VERIFIED_ORIGINAL",
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet": "L80 - VERIFIED_ORIGINAL",
+    # ★ KHAC digest lich su -> KHONG phai ban goc. Duoc phep TON TAI nhung
+    # KHONG duoc dung lam moc doi chung (xem `G23-212a`, chi 3 cell).
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.700.parquet":
+        "L80 - NOT_ORIGINAL_DO_NOT_REUSE",
+    # Khong nam trong `provenance.inputs` lich su nen KHONG doi chieu duoc.
+    # Ton tai != duoc phep tai dung (`G23-174`).
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet":
+        "L80 - NO_HISTORICAL_DIGEST",
+}
+
+
+def _tracked_files() -> set[str]:
+    """File git THUC SU theo doi -- day la thu ban CLONE SACH nhan duoc.
+
+    Vi sao KHONG dung `os.path.exists`: no tra loi "co tren MAY TOI", trong khi
+    cau can bao ve la "co tren BAN CLONE SACH". Va hai cau do NGHICH nhau --
+    file rac local LAM IM cai chan. Do duoc 2026-08-24: 7 tham chieu di qua
+    tren may tac gia, do ngay tren clone sach. Cung lop loi voi PASS RONG
+    (`37-pending-tier-adjudication.md` muc 2), lan nay nan nhan la nguoi viet.
+    """
+    import subprocess
+
+    out = subprocess.run(
+        ["git", "ls-files"], cwd=REPO, capture_output=True, text=True, check=True
+    ).stdout
+    return set(out.splitlines())
+
+
+def _scan_all() -> list[tuple[str, str]]:
+    """Moi tham chieu parquet cu the -- KHONG loc theo dia."""
+    found = []
+    for pattern in ("cert/*.py", "measurements/*.py", "tools/*.py"):
+        for py in sorted(glob.glob(os.path.join(REPO, pattern))):
+            rel_py = os.path.relpath(py, REPO).replace(os.sep, "/")
+            for s in _string_constants(py):
+                if s.endswith(".parquet") and _is_concrete_path(s):
+                    found.append((rel_py, s))
+    return found
+
+
+def test_no_hardcoded_untracked_parquet():
+    """Ban KHA CHUYEN: cham theo `git ls-files`, khong theo dia.
+
+    Ba loi thoat TUONG MINH, va chi ba:
+        KNOWN_DANGLING  da mat, co lesson so huu
+        OUTPUT_PATHS    duong GHI RA
+        LOCAL_ONLY      con tren dia tac gia, khong trong git, DA ghim digest
+    """
+    tracked = _tracked_files()
+    bad = [
+        "%s -> %s" % (py, s)
+        for py, s in _scan_all()
+        if s not in KNOWN_DANGLING
+        and s not in OUTPUT_PATHS
+        and s not in LOCAL_ONLY
+        and s not in tracked
+    ]
+    assert not bad, (
+        "tham chieu parquet KHONG duoc git theo doi (clone sach se chet):\n"
+        "  %s\n"
+        "  -> them vao KNOWN_DANGLING/OUTPUT_PATHS/LOCAL_ONLY KEM LY DO, "
+        "hoac commit file." % "\n  ".join(bad)
+    )
+
+
+def test_local_only_entries_have_pinned_digests():
+    """Muc LOCAL_ONLY khong co digest la mot LOI KHAI, khong phai bang chung."""
+    pin = os.path.join(REPO, DIGEST_PIN)
+    assert os.path.exists(pin), "chua ghim digest: " + DIGEST_PIN
+    with open(pin, "r", encoding="utf-8") as fh:
+        have = json.load(fh)["files"]
+    missing = sorted(s for s in LOCAL_ONLY if s not in have)
+    assert not missing, (
+        "muc LOCAL_ONLY khong co digest trong %s:\n  %s"
+        % (DIGEST_PIN, "\n  ".join(missing))
+    )
+
+
+def test_pinned_digests_still_match_disk():
+    """Digest da ghim phai con khop BYTE tren dia.
+
+    Neu mot file doi noi dung ma digest khong doi, moi ket luan dung no thanh
+    vo nghia mot cach IM LANG -- dung dieu `L51` canh bao.
+    """
+    pin = os.path.join(REPO, DIGEST_PIN)
+    if not os.path.exists(pin):
+        pytest.skip("chua ghim digest")
+    with open(pin, "r", encoding="utf-8") as fh:
+        files = json.load(fh)["files"]
+    drift = []
+    for rel, meta in sorted(files.items()):
+        p = os.path.join(REPO, rel)
+        if not os.path.exists(p):
+            drift.append("%s: DA BIEN MAT khoi dia" % rel)
+            continue
+        h = hashlib.sha256()
+        with open(p, "rb") as fh2:
+            for chunk in iter(lambda: fh2.read(1 << 20), b""):
+                h.update(chunk)
+        if h.hexdigest() != meta["sha256"]:
+            drift.append("%s: sha256 DA DOI" % rel)
+    assert not drift, "digest da ghim khong con khop:\n  %s" % "\n  ".join(drift)
 
 
 def _scan() -> list[tuple[str, str]]:

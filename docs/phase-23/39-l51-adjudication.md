@@ -93,6 +93,12 @@ NEU dau CO doi:
        thanh mot truc CO KIEM SOAT. Bao cao nguyen kem diem doi dau.
 ```
 
+### ⚠️ PHAN QUYET NAY DA BI SUA -- xem muc 6
+
+Muc 3 duoi day giu NGUYEN dang da ky ngay 2026-08-24 sang. Tien de cua no
+("digest da mat") DA BI BAC BO chieu cung ngay. Khong xoa, vi mot phan quyet
+bi lat la lich su chu khong phai vet ban.
+
 ### `L51` -> DONG, tuyen VINH VIEN khong tai dung duoc
 
 Day la lua chon dung, khong phai lua chon de.
@@ -250,3 +256,131 @@ KHONG phai chay lai eight_cell_sweep tren bo cu.
 > Cai chan `parity > 1e-12` da lam dung viec cua no: no TU CHOI sinh ra mot
 > con so sai mot cach im lang. Neu no khong co, `M-136` da co ba con so trong
 > tay va ca ba deu vo nghia. *Fail loud, khong fail quiet.*
+
+---
+
+# 6. ★ SUA PHAN QUYET (cung ngay, sau review doc lap)
+
+## 6.1. Tien de "digest da mat" LA SAI
+
+Review doc lap yeu cau ghim digest 5 parquet Phase 22 con song. Khi lam viec
+do, toi doi chieu chung voi `provenance.inputs` cua artifact CU -- va phat
+hien digest lich su **KHONG mat**:
+
+```text
+nguon: results/SUPERSEDED/phase-23/eight_cell_sweep_U3_measured_v7.json
+       provenance.git_hash = 05b597f5a9b27ee390f03ba3be2355aedca17dc0
+```
+
+Artifact do ghi `sha256` cua CA 8 calib parquet + `truth_table` +
+`sla_calibration` + amendment. Muc 3 tren viet *"digest cua 8 parquet (bao cao
+cung thoi khong luu)"* -- **sai**. Bao cao cung thoi CO luu; khong ai di doc.
+
+## 6.2. Doi chieu -- va mot file BI PHAT HIEN KHONG PHAI BAN GOC
+
+```text
+file                                  tren dia   doi chieu digest lich su
+truth_table.parquet                   CO         KHOP
+sla_calibration.json                  CO         KHOP
+00zp-amendment-39.md                  CO         KHOP
+calib_set_v3.parquet      (p@0.925)   CO         ★ KHOP  -> BAN GOC
+calib_set_v3_h2_0.700     (h2@0.700)  CO         ★ KHOP  -> BAN GOC
+calib_set_v3_poisson_0.850            CO         ★ KHOP  -> BAN GOC
+calib_set_v3_poisson_0.700            CO         ✗ KHAC  -> KHONG PHAI BAN GOC
+      lich su : ec49deb8725498f9cf03d7c302983ab5...
+      tren dia: 2267423d8d33f3da3ad07ab12a2c5d28...
+calib_set_v3_poisson_0.960            MAT        -
+calib_set_v3_h2_0.850 / _0.925 / _0.960  MAT     -
+```
+
+**Bay da suyt roi vao:** review de xuat `ALIVE = (poisson@0.925, poisson@0.850,
+poisson@0.700, h2@0.700)` -- BON cell. Mot trong bon (`poisson@0.700`) KHONG
+phai ban goc. Dung no lam moc doi chung se rot dung cai bay chinh `L51` da
+canh bao: *"dung lai ma tham so khong khop goc -> doi chung am muc duong ong
+vo nghia IM LANG."*
+
+Chi phat hien duoc vi co digest de doi chieu. Do la lap luan tu bao ve cua
+`G23-174`, hoat dong lan dau tren du lieu that.
+
+## 6.3. `L51` sua thanh ba menh de rieng
+
+```text
+L51a  DIGEST lich su:      KHONG mat. Nam trong provenance cua artifact cu.
+L51b  DU LIEU:             5/9 input mat vinh vien. Khong hoi sinh duoc.
+L51c  XAC MINH:            4 file con song doi chieu duoc -- 3 goc, 1 khong.
+                           `_poisson_0.700` CAM tai dung lam moc doi chung.
+```
+
+Ket luan "khong tai dung duoc bit-exact cac con so Phase 22" VAN DUNG (thieu
+5/9 input). Nhung **ly do** khac han: khong phai *"mat digest nen khong xac
+minh duoc"* ma *"mat DU LIEU, tuy digest van con nen phan con lai xac minh
+duoc"*. Van ban Threats to Validity o muc 3 phai sua theo -- cau
+*"tong kiem cua chung khong duoc luu trong bao cao cung thoi"* la SAI su that.
+
+Ban sua:
+
+> *"Nam trong chin dau vao cua bang hieu chuan Phase 22 khong con tren dia va
+> khong duoc commit (gioi han kich thuoc kho), nen viec tai lap bit-exact cac
+> con so Phase 22 la khong the. Tong kiem cua chung VAN CON -- chung duoc ghim
+> trong `provenance` cua artifact cung thoi -- nen bon file con song deu doi
+> chieu duoc; ba trong so do xac minh la ban goc va mot bi phat hien KHONG
+> phai, va do dó bi cam tai dung. Chung toi dung lai duong ong tu seed va doi
+> chieu tren cac dai luong GHEP CAP."*
+
+## 6.4. `G23-212a` -- va vi sao no KHONG dung parquet Phase 22
+
+Y dinh ban dau: chay doi chung am tren 3 cell goc con song. **Da thu, da bo**,
+vi phat hien thu hai:
+
+```text
+poisson@0.925 + calib_set_v3.parquet (BAN GOC) + manifest S-B
+    -> AssertionError: objective ratio=1 parity fail: 6.312e-03
+```
+
+Parquet Phase 22 duoc dung duoi SLA NOI SINH (`w_loss` 1245..4722 tuy cell).
+Ghep chung voi manifest NGOAI SINH (`w_loss = 5000`) dung co che `L77`. Ban
+goc hay khong KHONG cuu duoc dieu do -- chung o SAI TRUC.
+
+Duong dung: bo `results/LIVE/phase-21R/calib_set_*_U0_measured_v7.parquet`,
+duoc dung O `w_loss = 5000` nen TU NHAT QUAN voi S-B, va 8/8 co
+`parquet_sha256` ghim san trong sidecar (`G23-198`/`G23-199`).
+
+```text
+G23-212a  8/8 cell   2340 truong so sanh
+          NHOM A (bit-exact) lech: 0
+          NHOM B (qua thu gon, dung sai 3.18e-12*|v|) lech: 0
+          -> PASS
+
+doi chung duong: nhieu 1e-9 vao mot truong NHOM A  -> bat (1 lech)
+                 nhieu 1e-15 vao mot truong NHOM A -> bat (1 lech)
+```
+
+Nen `G23-212a` phu **8/8 cell**, khong phai 3 hay 4. Ten `212a` giu vi no van
+khac `G23-212`: `212` doi tai tao artifact LICH SU (bat kha thi -- `L75`+`L51b`),
+`212a` chi khang dinh TUONG DUONG DUONG CODE tren mot tap du lieu ghim digest.
+
+**Viec 3 khong con bi chan boi `L51`.** Ve A da chup:
+`results/RAW/phase-23/g23_212a_before.json`.
+
+## 6.5. Thu tu dung (sua muc 5 cua ke hoach cu)
+
+Chuoi `mo L51 -> sinh lai _slaB -> G23-212 -> Viec 3` la mot DEADLOCK THU HAI
+cung dang `L67`: mat dau (`mo L51`) khong bao gio giai duoc.
+
+```text
+[0] Ghim digest 7 parquet con song                    XONG (468 MB, git=0/7)
+[1] test_no_dangling cham theo `git ls-files`         XONG (L79)
+[2] pin() fail loud                                   XONG (L78)
+[3] G23-219 phan nhom A/B cho tieu chi bit-exact      XONG
+[4] G23-212a doi chung am 8/8 cell                    XONG -- ve A da chup
+[5] Viec 3 = Lesson 23.21h                            SAN SANG (chua lam)
+```
+
+`L51` khong nam trong chuoi. No da dong bang phan quyet; no chi dang bi dung
+de CHAN thu no khong thuc su chan.
+
+> ⚠️ **CON LAI, GAP, chi ban lam duoc:** 7 parquet Phase 22 (468 MB) va 16
+> parquet phase-21R deu KHONG trong git. Digest da ghim, nhung digest khong
+> thay the duoc DU LIEU. **Sao luu ra ngoai o dia.** Neu o dia hong truoc do:
+> `L51b` tu 5/9 thanh 9/9, `G23-212a` mat luon ve A, va Viec 3 khong bao gio
+> lam dung duoc.

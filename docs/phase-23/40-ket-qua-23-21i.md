@@ -167,6 +167,13 @@ KHONG bat dau, va co chu y:
 **Thu tu dung: mo `L51` (dung lai calib set) -> sinh lai `_slaB` -> `G23-212`
 -> roi moi Viec 3.**
 
+> ⚠️ **MUC 6 DA LAC HAU -- xem muc 9.4.** Thu tu vua neu la mot DEADLOCK THU
+> HAI cung dang `L67`: mat dau ("mo `L51`") khong bao gio giai duoc, vi 5/9
+> dau vao mat vinh vien. `G23-212a` (do sau vong review) di vong duoc: no
+> khang dinh TUONG DUONG DUONG CODE tren bo calib phase-21R co digest ghim,
+> thay vi tai tao artifact LICH SU. Da PASS 8/8 cell.
+> **Viec 3 KHONG con bi chan.** Van chua lam -- can amendment `23-61`.
+
 ## 7. Trang thai test
 
 ```text
@@ -241,3 +248,115 @@ bao cao.
    dau do -- no khong bi vi pham o 10/10 cell tren 9 muc `z`. Con lai (b), va
    (b) duoc xac nhan bang co che: `TRIVIAL` cung cho hieu 0 vi cung ly do cau
    truc voi `COLLAPSED`.
+
+---
+
+# 9. Vong review doc lap (cung ngay) -- 5 muc, va MOT phat hien lat nguoc phan quyet
+
+## 9.1. Xac nhan tu review
+
+`G23-203` (= 0 tren numpy 2.4.4 lan 2.2.6 -> bat bien KHONG phu thuoc moi
+truong), `G23-204` (10/10, 25.7 lan, khop tung chu so), `L75`, `L77`. Review
+con bo sung co che cho `G23-204`: bat dang thuc co CHUNG MINH (twin chi gay
+them vi pham o buoc PIVOTAL; buoc TRIVIAL/COLLAPSED triet tieu), nen no nen la
+mot BO DE trong paper chu khong phai mot bang so.
+
+## 9.2. `G23-202` KHONG TAI LAP DUOC tren may khac -- tieu chi da ky la SAI
+
+```text
+             numpy    ket qua
+toi (WSL2)   2.2.6    3 cot lech 3.11e-15  -> FAIL
+review       2.4.4    22/22 bit-exact      -> PASS
+```
+
+Cung commit, cung artifact, hai phan quyet trai nguoc. Mot tieu chi cho hai
+phan quyet khong phai mot tieu chi.
+
+Co che: review de xuat "thu tu thu gon". Toi thu tai hien tren mang 1-D:
+**KHONG lech** (np.mean == math.fsum == ban xao tron). Thu lai tren dung dang
+that `(200000, 4)`:
+
+```text
+mean() toan mang       lech 0
+mean axis=1 roi mean   lech 4.441e-16
+mean axis=0 roi mean   lech 8.438e-15
+Fortran-order          lech 4.441e-16
+```
+
+=> co che DUNG, nhung chi lo ra o mang 2-D. Dai 4.4e-16..8.4e-15 bao tron
+3.11e-15 da quan sat. `G23-219` mo voi hai nhom:
+
+```text
+NHOM A  so nguyen/bool (.mean() cua 0/1)      -> bit-exact KHA CHUYEN, ky == 0
+NHOM B  float qua PHEP THU GON                -> ky 32*eps*sqrt(n)*|v| = 1.18e-11
+```
+
+`G23-202` GIU nguyen phan quyet FAIL. Khong sua thanh PASS -- so ghi lai rang
+mot tieu chi sai da ton tai va bi thay the.
+
+## 9.3. ★ `L51` bi LAT: digest lich su KHONG mat
+
+Khi ghim digest theo yeu cau cua review, toi doi chieu voi artifact cu va phat
+hien `provenance.inputs` cua `eight_cell_sweep_U3_measured_v7.json` (git_hash
+`05b597f5`) DA LUU sha256 cua ca 9 dau vao.
+
+```text
+3 file con song   KHOP digest goc      -> BAN GOC
+1 file con song   KHAC digest goc      -> KHONG PHAI BAN GOC  ★
+5 file            mat                  -> khong doi chieu duoc
+```
+
+**Bay suyt roi vao:** review de xuat dung BON cell cho `G23-212a`, trong do co
+`poisson@0.700`. File do tren dia KHONG phai ban goc (`ec49deb8...` ->
+`2267423d...`). Dung no lam moc doi chung se rot dung cai bay `L51` canh bao.
+Chi phat hien duoc vi co digest de doi chieu.
+
+`L51` tach thanh `L51a` (digest: khong mat), `L51b` (du lieu: mat 5/9, vinh
+vien), `L51c` (xac minh: 3 goc / 1 khong / cam tai dung). Ket luan cuoi khong
+doi, nhung LY DO doi han -- va van ban Threats to Validity da phai viet lai
+(`39-l51-adjudication.md` muc 6.3).
+
+## 9.4. `G23-212a`: 8/8 cell, khong phai 3 hay 4
+
+Ke ca 3 file GOC cung khong dung duoc: chung o SAI TRUC (`w_loss` noi sinh),
+nen ghep voi manifest S-B lam parity fail 6.312e-03 -- co che `L77`. Duong
+dung la bo phase-21R (`w_loss = 5000`, 8/8 co digest ghim trong sidecar).
+
+```text
+G23-212a  8/8 cell, 2340 truong, NHOM A lech 0, NHOM B lech 0  -> PASS
+doi chung duong: nhieu 1e-15 vao mot truong NHOM A -> bat duoc
+ve A: results/RAW/phase-23/g23_212a_before.json
+```
+
+**Viec 3 khong con bi chan.**
+
+## 9.5. Cai chan cua toi QUA tren may toi, DO tren clone sach (`L79`)
+
+Review chay tren clone sach: `1 failed` thay vi `201 passed`. Nguyen nhan:
+`os.path.exists` hoi "co tren MAY TOI" chu khong "co tren CLONE SACH", va file
+rac local LAM IM cai chan. Da sua sang `git ls-files`. Do lai:
+
+```text
+20 tham chieu tren 9 script se chet tren clone sach   (review uoc 5)
+```
+
+Cung lop loi voi PASS RONG toi vua vach o Viec 2 -- lan nay nan nhan la nguoi
+viet cai chan.
+
+## 9.6. `L78` -- `pin()` fail quiet
+
+`pin()` nuot `OSError`, tra `sha256: None`, lam DUNG NGUOC docstring cua chinh
+no. Da sua: mac dinh NEM; `pin(p, allow_missing=True)` de tuong minh tai diem
+goi. 191 test lien quan van xanh sau khi sua.
+
+## 9.7. Trang thai GAP con lai -- chi ban lam duoc
+
+```text
+7 parquet Phase 22 (468 MB)  git_tracked = 0/7
+16 parquet phase-21R          git_tracked = 0/16
+```
+
+Digest DA ghim (`results/RAW/phase-22/SURVIVING_CALIB_DIGESTS.json`), nhung
+**digest khong thay the duoc DU LIEU**. Sao luu ra ngoai o dia. Neu o dia hong
+truoc do: `L51b` tu 5/9 thanh 9/9, `G23-212a` mat ve A, Viec 3 khong bao gio
+lam dung duoc.

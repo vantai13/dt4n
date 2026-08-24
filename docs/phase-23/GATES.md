@@ -254,6 +254,9 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-215 | 23.21i | PASS | Phan quyet bang van ban: `L51` (tai lap QUA KHU) != `M-136` (mot BAT BIEN). `M-136` khong bi chan boi parquet lich su -- nhung xem `G23-217`: no bi chan boi mot thu KHAC. `L51` tuyen VINH VIEN khong tai dung duoc (khong con digest -> du dung lai duoc cung khong chung minh duoc la file cu). Van ban Threats to Validity da soan o `39-l51-adjudication.md` muc 3 |
 | G23-217 | 23.21h | NOT_RUN | - |
 | G23-212 | 23.21h | NOT_RUN | - |
+| G23-212a | 23.21h | PASS | Doi chung am cho patch Viec 3, dang TUONG DUONG DUONG CODE (khong phai tai tao so LICH SU). `tools/g23_212a_partial_nc.py`, 8/8 cell, bo calib phase-21R (tu nhat quan voi manifest S-B, `parquet_sha256` ghim o ca hai ve). Ve A: `results/RAW/phase-23/g23_212a_before.json`, 2340 truong, NHOM A lech 0 / NHOM B lech 0. Doi chung duong: nhieu 1e-15 vao mot truong NHOM A -> bat duoc |
+| G23-219 | 23.21i | PASS | Tieu chi bit-exact phai PHAN NHOM. NHOM A (so nguyen/bool -> `.mean()` cua 0/1): bit-exact KHA CHUYEN, ky `== 0`. NHOM B (`rms_e_model`/`rms_e_stale`/`cov_e` -- float qua PHEP THU GON tren mang 2-D): KHONG kha chuyen. Bang chung LIEN MOI TRUONG: numpy 2.2.6 -> 3.11e-15, numpy 2.4.4 -> 0.0, cung commit cung artifact. Co che tai hien duoc: tren mang (200000,4), doi thu tu thu gon (axis=0 / axis=1 / toan mang / Fortran-order) sinh lech 4.44e-16..8.44e-15 -- dung dai da quan sat. Chan de xuat `32*eps*sqrt(n)*|v|` = 1.18e-11, du 3 bac |
+| G23-220 | 23.21j | NOT_RUN | - |
 | G23-218 | 23.21i | PASS | `test_no_hardcoded_missing_parquet` (lint AST). So dong DO lan quet DAU TIEN: **29**. Sau khi loc mau `{}`/`%s`, glob `*`, duoi khong co `/`: 16 = 12 `KNOWN_DANGLING` (8 parquet Phase 22 that su mat) + 4 `OUTPUT_PATHS`. Doi chung duong: bo 1 muc -> DO dung hai dong tro toi file do |
 
 ## Va cham da phat hien

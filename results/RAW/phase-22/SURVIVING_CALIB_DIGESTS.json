@@ -1,0 +1,64 @@
+{
+  "captured_utc": "2026-08-24T07:08:39.904406+00:00",
+  "files": {
+    "results/SUPERSEDED/phase-22/calib_set_v3.parquet": {
+      "bytes": 69342527,
+      "git_tracked": false,
+      "historical_sha256": "e37965269d73191f3caf0c9a0d7645d7fced2c82bdc2c3e6217521b39d9b98b3",
+      "sha256": "e37965269d73191f3caf0c9a0d7645d7fced2c82bdc2c3e6217521b39d9b98b3",
+      "verdict": "VERIFIED_ORIGINAL"
+    },
+    "results/SUPERSEDED/phase-22/calib_set_v3_cbr_0.700.parquet": {
+      "bytes": 54426490,
+      "git_tracked": false,
+      "historical_sha256": null,
+      "sha256": "c399731a95ed66297b9f71b17faebf6d589e1dd24c5ad8f680a98afacc40c793",
+      "verdict": "NO_HISTORICAL_DIGEST"
+    },
+    "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet": {
+      "bytes": 68572238,
+      "git_tracked": false,
+      "historical_sha256": "cae93a3c1008e39e7ef76b4f7f20dea07186b96cef256920725cc2a8bf08ce05",
+      "sha256": "cae93a3c1008e39e7ef76b4f7f20dea07186b96cef256920725cc2a8bf08ce05",
+      "verdict": "VERIFIED_ORIGINAL"
+    },
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.700.parquet": {
+      "bytes": 67482424,
+      "git_tracked": false,
+      "historical_sha256": "ec49deb8725498f9cf03d7c302983ab51ff99d36237891f52e932a54bb5e24ac",
+      "sha256": "2267423d8d33f3da3ad07ab12a2c5d28122229392db24ec66b5732dd2d1c47e1",
+      "verdict": "NOT_ORIGINAL_DO_NOT_REUSE"
+    },
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet": {
+      "bytes": 69328506,
+      "git_tracked": false,
+      "historical_sha256": "1565767d87060304be9ee651a627c2fa0cb737e0fd11e578078b34579aa16f66",
+      "sha256": "1565767d87060304be9ee651a627c2fa0cb737e0fd11e578078b34579aa16f66",
+      "verdict": "VERIFIED_ORIGINAL"
+    },
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet": {
+      "bytes": 69161205,
+      "git_tracked": false,
+      "historical_sha256": null,
+      "sha256": "bf704ca60cb62deb5834631ac239a4554d4317bb5bf5242ea108ae78fdb29aa5",
+      "verdict": "NO_HISTORICAL_DIGEST"
+    },
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925_V3.parquet": {
+      "bytes": 69279850,
+      "git_tracked": false,
+      "historical_sha256": null,
+      "sha256": "3c0b2ab8195e37a32a12a461f39ff6740ff997d7d170dcd6758b43abb0c80abd",
+      "verdict": "NO_HISTORICAL_DIGEST"
+    }
+  },
+  "historical_git_hash": "05b597f5a9b27ee390f03ba3be2355aedca17dc0",
+  "historical_source": "results/SUPERSEDED/phase-23/eight_cell_sweep_U3_measured_v7.json",
+  "note": "Parquet Phase 22 con song tren dia tac gia, KHONG trong git. PHAT HIEN 2026-08-24: digest LICH SU KHONG mat -- chung nam trong `provenance.inputs` cua results/SUPERSEDED/phase-23/eight_cell_sweep_U3_measured_v7.json (git_hash 05b597f5). Tien de cua L51 (`report cu khong luu digest`) SAI. Nho vay 3 file duoc XAC MINH la ban goc, va 1 file bi phat hien KHONG phai ban goc.",
+  "schema": "dt4n.surviving_digests.v2",
+  "summary": {
+    "NOT_ORIGINAL_DO_NOT_REUSE": 1,
+    "NO_HISTORICAL_DIGEST": 3,
+    "VERIFIED_ORIGINAL": 3
+  },
+  "total_bytes": 467593240
+}
