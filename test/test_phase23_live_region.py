@@ -65,6 +65,17 @@ def test_prepare_sla_is_removed_with_teaching_error(capsys) -> None:
     assert "SLA.calibrate_cell" in capsys.readouterr().err
 
 
+def test_clean_replay_rejects_tracked_edits(monkeypatch) -> None:
+    monkeypatch.setattr(L, "git", lambda *args: " M cert/live_region_sweep.py")
+    with pytest.raises(SystemExit, match="G23-228"):
+        L._require_clean_worktree()
+
+
+def test_clean_replay_accepts_clean_tracked_tree(monkeypatch) -> None:
+    monkeypatch.setattr(L, "git", lambda *args: "")
+    L._require_clean_worktree()
+
+
 def test_generated_artifact_has_all_new_gates_and_validity() -> None:
     report = _load(L.OUTPUT)
     assert len(report["analyzed_cells"]) == 12
@@ -75,15 +86,45 @@ def test_generated_artifact_has_all_new_gates_and_validity() -> None:
     assert report["controls"]["G23_214_regime_crosscheck"]["pass"] is True
     assert report["validity"]["aoi_axis"]["label"] == "measured_v7_uniform"
     assert report["validity"]["sla_axis"]["label"] == "exogenous_g114_S-B"
-    assert set(report["verdict"]) == {
+    expected_verdict = {
         "M_176_A_B_agreement_at_least_8_of_12",
         "M_177_rho_hit_in_0_900_0_925",
         "M_178_poisson_err_neo_both_in_0_20_0_30",
         "M_179_A_live_twin_deg_spread_in_1_00_1_50",
-        "M_54_poisson_sign_monotone",
         "M_57_h2_A_live_lift_minus_swing_negative",
         "M_47b_delta_nonpositive_all_A_live_heldout",
     }
+    if report["schema"] == "live_region_sweep_slaB/v2":
+        # Kept only until the G23-228 clean replay replaces the old headline.
+        assert set(report["verdict"]) == expected_verdict | {
+            "M_54_poisson_sign_monotone"
+        }
+    else:
+        assert report["schema"] == "live_region_sweep_slaB/v3"
+        assert set(report["verdict"]) == expected_verdict
+        diagnostic = report["diagnostics"]["M_54_poisson_sign_monotone"]
+        assert diagnostic["status"] == "DIAGNOSTIC"
+        assert diagnostic["chance_one_positive_in_last_position"] == 0.25
+        assert diagnostic["evidence_bits"] == 2.0
+        assert diagnostic["counted_in_verdict"] is False
+        structure = report["exploratory"]["M_180_mode_structure"]
+        assert structure["status"] == "EXPLORATORY_POST_HOC"
+        assert structure["counted_as_preregistered"] is False
+        assert structure["counts"] == {
+            "poisson": {
+                "LIVE": {"helpful": 0, "harmful": 3, "neutral": 0},
+                "non_LIVE": {"helpful": 3, "harmful": 0, "neutral": 0},
+            },
+            "h2": {
+                "LIVE": {"helpful": 3, "harmful": 0, "neutral": 0},
+                "non_LIVE": {"helpful": 1, "harmful": 0, "neutral": 2},
+            },
+        }
+        assert report["controls"]["NC_H_stress_checked"] == 4
+        assert report["controls"]["NC_H_stress_passed"] == 0
+        assert report["field_semantics"]["delta_system_vs_neo"][
+            "compatibility_alias_for"
+        ] == "delta_fallback_vs_twin_weighted"
 
 
 def test_M179_recomputes_over_every_A_live_cell() -> None:

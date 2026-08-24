@@ -18,6 +18,7 @@ from measurements.validity import validity_block
 
 
 AMENDMENT = "docs/phase-23/A062-amendment-62.md"
+CLOSURE_AMENDMENT = "docs/phase-23/A063-amendment-63.md"
 SLA_EXOGENOUS_10 = "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json"
 SLA_EXOGENOUS_14 = (
     "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json"
@@ -207,6 +208,69 @@ def _sign_monotone(values: Sequence[float]) -> bool:
     return True
 
 
+def _require_clean_worktree() -> None:
+    """G23-228: a headline replay may not inherit tracked edits."""
+    dirty = git("git", "status", "--porcelain", "--untracked-files=no")
+    if dirty:
+        raise SystemExit(
+            "G23-228: worktree tracked dang ban; commit/stash truoc clean replay:\n%s"
+            % dirty
+        )
+
+
+def _direction(delta: float) -> str:
+    return "helpful" if delta < 0.0 else ("harmful" if delta > 0.0 else "neutral")
+
+
+def _mode_structure(
+    cells: Mapping[str, Any], analyzed: Sequence[str]
+) -> Dict[str, Any]:
+    """Descriptive family grouping only; this is post-hoc, not a verdict."""
+    rows: Dict[str, Any] = {}
+    counts: Dict[str, Any] = {}
+    for mode in ("poisson", "h2"):
+        mode_cells = sorted(
+            (cell for cell in analyzed if cell.startswith(mode + "@")),
+            key=lambda cell: float(cell.split("@")[1]),
+        )
+        mode_counts = {
+            "LIVE": {"helpful": 0, "harmful": 0, "neutral": 0},
+            "non_LIVE": {"helpful": 0, "harmful": 0, "neutral": 0},
+        }
+        for cell in mode_cells:
+            delta = float(cells[cell]["F2"]["delta_system_vs_neo"])
+            regime = str(cells[cell]["live_definitions"]["regime"])
+            group = "LIVE" if regime == "LIVE" else "non_LIVE"
+            direction = _direction(delta)
+            mode_counts[group][direction] += 1
+            rows[cell] = {
+                "mode": mode,
+                "rho_bar": float(cell.split("@")[1]),
+                "regime": regime,
+                "live_group": group,
+                "delta_fallback_vs_twin_weighted": delta,
+                "direction": direction,
+            }
+        counts[mode] = mode_counts
+    return {
+        "status": "EXPLORATORY_POST_HOC",
+        "counted_as_preregistered": False,
+        "delta_zero_policy": "zero_is_neutral",
+        "rows": rows,
+        "counts": counts,
+        "high_load_poisson_sequence": [
+            "poisson@0.850",
+            "poisson@0.875",
+            "poisson@0.900",
+            "poisson@0.925",
+        ],
+        "high_load_switch_statement": (
+            "harmful at 0.850/0.875/0.900; helpful at first COLLAPSED "
+            "cell 0.925. poisson@0.700 is separately helpful and TRIVIAL."
+        ),
+    }
+
+
 def authoritative_regimes(cells_wanted: Sequence[str]) -> Dict[str, Dict[str, Any]]:
     """Recompute B from authoritative shares and cross-check stored labels."""
     rows: Dict[str, Dict[str, Any]] = {}
@@ -302,6 +366,7 @@ def run_sweep(
         )
         for cell in poisson_axis
     ]
+    m54_result = _sign_monotone(axis_values)
     positive = [
         cell for cell, value in zip(poisson_axis, axis_values) if value > 0.0
     ]
@@ -367,7 +432,6 @@ def run_sweep(
         "M_179_A_live_twin_deg_spread_in_1_00_1_50": bool(
             1.00 <= m179 <= 1.50
         ),
-        "M_54_poisson_sign_monotone": _sign_monotone(axis_values),
         "M_57_h2_A_live_lift_minus_swing_negative": (
             None
             if h2_cell is None or not h2_live_a
@@ -383,9 +447,23 @@ def run_sweep(
         for row in sla["cells"]
         if "domain_control" in row
     }
+    stress_by_cell = {
+        cell: {
+            "max_fraction": float(row["stress_sla_regime_max_fraction"]),
+            "threshold_multiple": float(
+                row["stress_sla_regime_max_fraction"] / DOMAIN_LIMIT
+            ),
+            "pass": bool(row["stress_sla_regime_pass"]),
+        }
+        for cell, row in domain.items()
+    }
+    explicit_delta_aliases = {
+        cell: float(cells[cell]["F2"]["delta_system_vs_neo"])
+        for cell in analyzed
+    }
     return json_clean(
         {
-            "schema": "live_region_sweep_slaB/v2",
+            "schema": "live_region_sweep_slaB/v3",
             "lesson": "23.21h",
             "live_threshold": LIVE_THRESHOLD,
             "aoi_profile": base_aoi_profile,
@@ -412,6 +490,43 @@ def run_sweep(
                 "M_179_twin_deg_spread": m179,
             },
             "verdict": verdict,
+            "diagnostics": {
+                "M_54_poisson_sign_monotone": {
+                    "status": "DIAGNOSTIC",
+                    "result": m54_result,
+                    "axis": dict(zip(poisson_axis, axis_values)),
+                    "sign_pattern": [
+                        "+" if value > 0.0 else ("-" if value < 0.0 else "0")
+                        for value in axis_values
+                    ],
+                    "chance_one_positive_in_last_position": 0.25,
+                    "evidence_bits": 2.0,
+                    "counted_in_verdict": False,
+                }
+            },
+            "exploratory": {
+                "M_180_mode_structure": _mode_structure(cells, analyzed),
+            },
+            "field_semantics": {
+                "delta_system_vs_neo": {
+                    "compatibility_alias_for": "delta_fallback_vs_twin_weighted",
+                    "formula": (
+                        "reject_share * (err_F_given_reject - "
+                        "c_star_err_twin_given_reject)"
+                    ),
+                    "note": (
+                        "system uses twin on accepts and fallback on rejects; "
+                        "neo uses twin on every row"
+                    ),
+                },
+                "delta_fallback_vs_twin_weighted": {
+                    "canonical_meaning": True,
+                    "numeric_source": "cells.<cell>.F2.delta_system_vs_neo",
+                },
+            },
+            "explicit_aliases": {
+                "delta_fallback_vs_twin_weighted_by_cell": explicit_delta_aliases,
+            },
             "controls": {
                 "G23_212b_evidence": "results/RAW/phase-23/g23_212b_after.json",
                 "G23_214_regime_crosscheck": {
@@ -424,6 +539,15 @@ def run_sweep(
                 "NC_H_checked": len(domain),
                 "NC_H_passed": sum(row["pass"] for row in domain.values()),
                 "NC_H_by_cell": domain,
+                "NC_H_stress_distribution": "sla_regime",
+                "NC_H_stress_checked": len(stress_by_cell),
+                "NC_H_stress_passed": sum(
+                    row["pass"] for row in stress_by_cell.values()
+                ),
+                "NC_H_stress_max_threshold_multiple": max(
+                    row["threshold_multiple"] for row in stress_by_cell.values()
+                ),
+                "NC_H_stress_by_cell": stress_by_cell,
                 "NC_I_identity_all_valid": bool(
                     all(
                         cells[cell]["controls"]["identity_residual_le_1e_12"]
@@ -457,6 +581,7 @@ def run_sweep(
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
                 "inputs": [
                     pin(AMENDMENT),
+                    pin(CLOSURE_AMENDMENT),
                     pin(sla_path),
                     pin(SLA_REGIME_BASE),
                     pin(SLA_REGIME_WAVE4),
@@ -507,6 +632,17 @@ def print_sweep(report: Mapping[str, Any]) -> None:
         )
     )
     print("verdict=%s" % json.dumps(report["verdict"], sort_keys=True))
+    print(
+        "diagnostic.M_54=%s"
+        % json.dumps(report["diagnostics"]["M_54_poisson_sign_monotone"], sort_keys=True)
+    )
+    print(
+        "exploratory.M_180.counts=%s"
+        % json.dumps(
+            report["exploratory"]["M_180_mode_structure"]["counts"],
+            sort_keys=True,
+        )
+    )
 
 
 def main(argv: Sequence[str] | None = None) -> int:
@@ -530,6 +666,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     if not args.run:
         parser.error("can --run (khong con nhanh hieu chuan SLA noi sinh)")
 
+    _require_clean_worktree()
     report = run_sweep(
         calib_template=args.calib_template,
         sla_path=args.sla,

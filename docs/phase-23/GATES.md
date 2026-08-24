@@ -270,6 +270,8 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-227 | 23.21h | PASS | `NC_H truth_domain_check` chay 4/4 cell Dot 4 truoc build, 4/4 PASS; fallback duoc ghi `None` (khong ap dung), khong ep thanh `False` |
 | G23-213 | 23.21h | PASS | Sweep S-B sinh du 12 cell va bang A/B; M-176=10/12, M-177=0.925, M-178=0.257012/0.252413, M-179=1.281290; artifact `live_region_sweep_slaB.json`. M_57 va M_47b MISS, bao cao nguyen |
 | G23-214 | 23.21h | PASS | `regime` tinh lai tu shares/CI khop nhan authoritative `sla_exogenous_S-B` + `wave4` tai 12/12 cell |
+| G23-228 | 23.21h-close | NOT_RUN | - |
+| G23-229 | 23.21h-close | NOT_RUN | - |
 
 ## Va cham da phat hien
 

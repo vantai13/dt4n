@@ -119,11 +119,13 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 | L86 | `tools/tier_results.py` tung dung `os.replace` / `git mv -f`; tinh atomic cua replace bao ve dich khoi trang thai ghi do, nhung pha huy dich co san va che dau vet bang mtime nguon. Blast radius hau kiem: 1 parquet Phase 22; 16 cap Phase-21R la hai the he dung o hai tang khac nhau | `A061b-amendment-61b.md` muc 3 | `G23-224` PASS. Primitive thay the cho ignored file la hard-link atomic (fail neu dich ton tai) roi unlink; crash giua hai buoc de lai hai ten cho cung byte, khong lam mat byte |
 | L87 | Backup 24/08 o `C:\Users\VAN TAI\...` va WSL `ext4.vhdx` gan nhu chac cung nam tren o C:. Ban sao chong loi logic/VHDX, khong chong hong dia vat ly, mat may, trom/chay | `A061b-amendment-61b.md` muc 6 | Chua tuyen bo backup hai thiet bi. Can Drive/Zenodo/doi tuong luu tru vat ly doc lap; chua thuc hien trong dot `[1]--[3]` nay |
 
+| L88 | `delta_system_vs_neo` dung ve dai so nhung de bi doc nham thanh phep tru truc tiep voi truong `err_neo`; thuc te no la `reject_share * (err_F_given_reject - c_star_err_twin_given_reject)` | `A063-amendment-63.md` muc 5; review doc lap artifact 23.21h | Giu khoa cu de tuong thich; artifact headline them `field_semantics` va alias `delta_fallback_vs_twin_weighted`; tai lieu moi dung ten ro |
+
 | L77 | `w_loss` KHONG phai tham so cham diem, no la tham so SINH: no bi nuong vao calib parquet (`a_twin`, `a_star`, `regret`, `gap_true`, `viol_star` deu suy tu ham chi phi; `calib_set_*_report.json` ghi `w_loss = 5000.0`). Doi `w_loss` o manifest ma giu nguyen parquet -> hai dinh nghia `w_loss` trong cung mot phep tinh | `39-l51-adjudication.md` muc 5; do 2026-08-24 | Bac bo tien de "M-136 chi can chay lai eight_cell_sweep 3 lan tren cung tap du lieu". Do duoc: `--w-loss 1250` -> parity fail 2.815e-02; `20000` -> 8.347e-03; `5000` -> chay duoc (parity = 0 vi hai dinh nghia trung). Cai chan `parity > 1e-12` o `_objective_curve` da TU CHOI sinh so sai im lang. `M-136` can dung lai calib set o TUNG `w_loss` (~11 phut may), thuoc lesson so huu no |
 
 | L72 | PARTIAL: `live_region_sweep.py --calib-template` da dong o 23.21h va duoc xoa khoi `KNOWN_DEAD`. Con `abstain_cost --calib-template`, `decision_error_v2 --boot-metrics` va ba co `--resume` (`l6_campaign.py`, `l6_campaign_fine.py`, `t5_campaign.py`) | `00zzv-amendment-59.md`; `A062-amendment-62.md`; do bang `test_cli_flags_are_wired.py` | Co con lai sua theo lesson so huu. Danh sach `KNOWN_DEAD` da ngan di mot muc; detector van khoa `getattr`, `dest` alias va forwarding lien module |
 
-So ke tiep duoc cap: **L88**.
+So ke tiep duoc cap: **L89**.
 
 ## Va cham da phat hien
 
