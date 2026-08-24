@@ -94,37 +94,31 @@ def test_generated_artifact_has_all_new_gates_and_validity() -> None:
         "M_57_h2_A_live_lift_minus_swing_negative",
         "M_47b_delta_nonpositive_all_A_live_heldout",
     }
-    if report["schema"] == "live_region_sweep_slaB/v2":
-        # Kept only until the G23-228 clean replay replaces the old headline.
-        assert set(report["verdict"]) == expected_verdict | {
-            "M_54_poisson_sign_monotone"
-        }
-    else:
-        assert report["schema"] == "live_region_sweep_slaB/v3"
-        assert set(report["verdict"]) == expected_verdict
-        diagnostic = report["diagnostics"]["M_54_poisson_sign_monotone"]
-        assert diagnostic["status"] == "DIAGNOSTIC"
-        assert diagnostic["chance_one_positive_in_last_position"] == 0.25
-        assert diagnostic["evidence_bits"] == 2.0
-        assert diagnostic["counted_in_verdict"] is False
-        structure = report["exploratory"]["M_180_mode_structure"]
-        assert structure["status"] == "EXPLORATORY_POST_HOC"
-        assert structure["counted_as_preregistered"] is False
-        assert structure["counts"] == {
-            "poisson": {
-                "LIVE": {"helpful": 0, "harmful": 3, "neutral": 0},
-                "non_LIVE": {"helpful": 3, "harmful": 0, "neutral": 0},
-            },
-            "h2": {
-                "LIVE": {"helpful": 3, "harmful": 0, "neutral": 0},
-                "non_LIVE": {"helpful": 1, "harmful": 0, "neutral": 2},
-            },
-        }
-        assert report["controls"]["NC_H_stress_checked"] == 4
-        assert report["controls"]["NC_H_stress_passed"] == 0
-        assert report["field_semantics"]["delta_system_vs_neo"][
-            "compatibility_alias_for"
-        ] == "delta_fallback_vs_twin_weighted"
+    assert report["schema"] == "live_region_sweep_slaB/v3"
+    assert set(report["verdict"]) == expected_verdict
+    diagnostic = report["diagnostics"]["M_54_poisson_sign_monotone"]
+    assert diagnostic["status"] == "DIAGNOSTIC"
+    assert diagnostic["chance_one_positive_in_last_position"] == 0.25
+    assert diagnostic["evidence_bits"] == 2.0
+    assert diagnostic["counted_in_verdict"] is False
+    structure = report["exploratory"]["M_180_mode_structure"]
+    assert structure["status"] == "EXPLORATORY_POST_HOC"
+    assert structure["counted_as_preregistered"] is False
+    assert structure["counts"] == {
+        "poisson": {
+            "LIVE": {"helpful": 0, "harmful": 3, "neutral": 0},
+            "non_LIVE": {"helpful": 3, "harmful": 0, "neutral": 0},
+        },
+        "h2": {
+            "LIVE": {"helpful": 3, "harmful": 0, "neutral": 0},
+            "non_LIVE": {"helpful": 1, "harmful": 0, "neutral": 2},
+        },
+    }
+    assert report["controls"]["NC_H_stress_checked"] == 4
+    assert report["controls"]["NC_H_stress_passed"] == 0
+    assert report["field_semantics"]["delta_system_vs_neo"][
+        "compatibility_alias_for"
+    ] == "delta_fallback_vs_twin_weighted"
 
 
 def test_M179_recomputes_over_every_A_live_cell() -> None:

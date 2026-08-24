@@ -20,6 +20,15 @@ def _git(*args: str) -> str:
     return subprocess.check_output(("git",) + args, text=True).strip()
 
 
+def _is_ancestor(commit: str, head: str) -> bool:
+    return subprocess.run(
+        ("git", "merge-base", "--is-ancestor", commit, head),
+        check=False,
+        stdout=subprocess.DEVNULL,
+        stderr=subprocess.DEVNULL,
+    ).returncode == 0
+
+
 def _canonical_sha256(value: Any) -> str:
     raw = json.dumps(value, sort_keys=True, separators=(",", ":")).encode("utf-8")
     return hashlib.sha256(raw).hexdigest()
@@ -73,8 +82,15 @@ def compare(
     provenance = current.get("provenance", {})
     clean_claim = provenance.get("git_dirty") is False
     head_claim = provenance.get("git_hash") == head
+    source_is_ancestor = bool(
+        provenance.get("git_hash")
+        and _is_ancestor(str(provenance["git_hash"]), head)
+    )
     sections_exact = all(row["bit_exact"] for row in section_rows.values())
-    passed = bool(clean_claim and head_claim and sections_exact)
+    # Immediately after replay, head_claim is true and is captured in OUTPUT.
+    # After the generated artifact is committed, its source hash is necessarily
+    # an ancestor rather than the new HEAD; comparisons must remain runnable.
+    passed = bool(clean_claim and source_is_ancestor and sections_exact)
     return {
         "schema": "dt4n.g23_228.v1",
         "gate": "G23-228",
@@ -89,6 +105,7 @@ def compare(
         "comparison_head": head,
         "current_clean_claim_pass": clean_claim,
         "current_head_matches_provenance": head_claim,
+        "source_commit_is_ancestor_of_comparison_head": source_is_ancestor,
         "all_numeric_trees_bit_exact": sections_exact,
         "sections": section_rows,
         "total_mismatch_count": len(mismatches),
@@ -118,9 +135,10 @@ def main(argv: Sequence[str] | None = None) -> int:
                 row["only_one_side_count"] + row["unequal_count"],
             )
         )
-    print("provenance clean=%s hash_matches_HEAD=%s" % (
+    print("provenance clean=%s hash_matches_HEAD=%s source_is_ancestor=%s" % (
         report["current_clean_claim_pass"],
         report["current_head_matches_provenance"],
+        report["source_commit_is_ancestor_of_comparison_head"],
     ))
     print("G23-228 %s" % ("PASS" if report["pass"] else "FAIL"))
     print("artifact -> %s" % args.out)

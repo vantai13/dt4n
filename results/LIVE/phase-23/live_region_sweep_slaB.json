@@ -5558,6 +5558,32 @@
     "NC_H_checked": 4,
     "NC_H_domain_checked_before_build": true,
     "NC_H_passed": 4,
+    "NC_H_stress_by_cell": {
+      "h2@0.650": {
+        "max_fraction": 0.000325,
+        "pass": false,
+        "threshold_multiple": 3.2499999999999996
+      },
+      "h2@0.675": {
+        "max_fraction": 0.00077,
+        "pass": false,
+        "threshold_multiple": 7.699999999999999
+      },
+      "poisson@0.875": {
+        "max_fraction": 0.00518,
+        "pass": false,
+        "threshold_multiple": 51.8
+      },
+      "poisson@0.900": {
+        "max_fraction": 0.00633,
+        "pass": false,
+        "threshold_multiple": 63.3
+      }
+    },
+    "NC_H_stress_checked": 4,
+    "NC_H_stress_distribution": "sla_regime",
+    "NC_H_stress_max_threshold_multiple": 63.3,
+    "NC_H_stress_passed": 0,
     "NC_I_identity_all_valid": true,
     "NC_J_crossfit_all_valid": true,
     "NC_K_excluded_cells": [],
@@ -5575,7 +5601,193 @@
       "poisson@0.900"
     ]
   },
+  "diagnostics": {
+    "M_54_poisson_sign_monotone": {
+      "axis": {
+        "poisson@0.850": -0.03933304831124412,
+        "poisson@0.875": -0.018556757297626736,
+        "poisson@0.900": -0.030345756051413153,
+        "poisson@0.925": 0.03812322050703609
+      },
+      "chance_one_positive_in_last_position": 0.25,
+      "counted_in_verdict": false,
+      "evidence_bits": 2.0,
+      "result": true,
+      "sign_pattern": [
+        "-",
+        "-",
+        "-",
+        "+"
+      ],
+      "status": "DIAGNOSTIC"
+    }
+  },
   "excluded_domain_cells": [],
+  "explicit_aliases": {
+    "delta_fallback_vs_twin_weighted_by_cell": {
+      "h2@0.650": -0.0025535474497545563,
+      "h2@0.675": -0.019763976970043867,
+      "h2@0.700": -0.002591570491717987,
+      "h2@0.850": -0.0013948452762374002,
+      "h2@0.925": 0.0,
+      "h2@0.960": 0.0,
+      "poisson@0.700": -0.00012807761503471097,
+      "poisson@0.850": 0.008653243865782645,
+      "poisson@0.875": 0.0040824739792313935,
+      "poisson@0.900": 0.006676045683684295,
+      "poisson@0.925": -0.008387082572038657,
+      "poisson@0.960": -0.0006704062661973265
+    }
+  },
+  "exploratory": {
+    "M_180_mode_structure": {
+      "counted_as_preregistered": false,
+      "counts": {
+        "h2": {
+          "LIVE": {
+            "harmful": 0,
+            "helpful": 3,
+            "neutral": 0
+          },
+          "non_LIVE": {
+            "harmful": 0,
+            "helpful": 1,
+            "neutral": 2
+          }
+        },
+        "poisson": {
+          "LIVE": {
+            "harmful": 3,
+            "helpful": 0,
+            "neutral": 0
+          },
+          "non_LIVE": {
+            "harmful": 0,
+            "helpful": 3,
+            "neutral": 0
+          }
+        }
+      },
+      "delta_zero_policy": "zero_is_neutral",
+      "high_load_poisson_sequence": [
+        "poisson@0.850",
+        "poisson@0.875",
+        "poisson@0.900",
+        "poisson@0.925"
+      ],
+      "high_load_switch_statement": "harmful at 0.850/0.875/0.900; helpful at first COLLAPSED cell 0.925. poisson@0.700 is separately helpful and TRIVIAL.",
+      "rows": {
+        "h2@0.650": {
+          "delta_fallback_vs_twin_weighted": -0.0025535474497545563,
+          "direction": "helpful",
+          "live_group": "LIVE",
+          "mode": "h2",
+          "regime": "LIVE",
+          "rho_bar": 0.65
+        },
+        "h2@0.675": {
+          "delta_fallback_vs_twin_weighted": -0.019763976970043867,
+          "direction": "helpful",
+          "live_group": "LIVE",
+          "mode": "h2",
+          "regime": "LIVE",
+          "rho_bar": 0.675
+        },
+        "h2@0.700": {
+          "delta_fallback_vs_twin_weighted": -0.002591570491717987,
+          "direction": "helpful",
+          "live_group": "LIVE",
+          "mode": "h2",
+          "regime": "LIVE",
+          "rho_bar": 0.7
+        },
+        "h2@0.850": {
+          "delta_fallback_vs_twin_weighted": -0.0013948452762374002,
+          "direction": "helpful",
+          "live_group": "non_LIVE",
+          "mode": "h2",
+          "regime": "COLLAPSED",
+          "rho_bar": 0.85
+        },
+        "h2@0.925": {
+          "delta_fallback_vs_twin_weighted": 0.0,
+          "direction": "neutral",
+          "live_group": "non_LIVE",
+          "mode": "h2",
+          "regime": "COLLAPSED",
+          "rho_bar": 0.925
+        },
+        "h2@0.960": {
+          "delta_fallback_vs_twin_weighted": 0.0,
+          "direction": "neutral",
+          "live_group": "non_LIVE",
+          "mode": "h2",
+          "regime": "COLLAPSED",
+          "rho_bar": 0.96
+        },
+        "poisson@0.700": {
+          "delta_fallback_vs_twin_weighted": -0.00012807761503471097,
+          "direction": "helpful",
+          "live_group": "non_LIVE",
+          "mode": "poisson",
+          "regime": "TRIVIAL",
+          "rho_bar": 0.7
+        },
+        "poisson@0.850": {
+          "delta_fallback_vs_twin_weighted": 0.008653243865782645,
+          "direction": "harmful",
+          "live_group": "LIVE",
+          "mode": "poisson",
+          "regime": "LIVE",
+          "rho_bar": 0.85
+        },
+        "poisson@0.875": {
+          "delta_fallback_vs_twin_weighted": 0.0040824739792313935,
+          "direction": "harmful",
+          "live_group": "LIVE",
+          "mode": "poisson",
+          "regime": "LIVE",
+          "rho_bar": 0.875
+        },
+        "poisson@0.900": {
+          "delta_fallback_vs_twin_weighted": 0.006676045683684295,
+          "direction": "harmful",
+          "live_group": "LIVE",
+          "mode": "poisson",
+          "regime": "LIVE",
+          "rho_bar": 0.9
+        },
+        "poisson@0.925": {
+          "delta_fallback_vs_twin_weighted": -0.008387082572038657,
+          "direction": "helpful",
+          "live_group": "non_LIVE",
+          "mode": "poisson",
+          "regime": "COLLAPSED",
+          "rho_bar": 0.925
+        },
+        "poisson@0.960": {
+          "delta_fallback_vs_twin_weighted": -0.0006704062661973265,
+          "direction": "helpful",
+          "live_group": "non_LIVE",
+          "mode": "poisson",
+          "regime": "COLLAPSED",
+          "rho_bar": 0.96
+        }
+      },
+      "status": "EXPLORATORY_POST_HOC"
+    }
+  },
+  "field_semantics": {
+    "delta_fallback_vs_twin_weighted": {
+      "canonical_meaning": true,
+      "numeric_source": "cells.<cell>.F2.delta_system_vs_neo"
+    },
+    "delta_system_vs_neo": {
+      "compatibility_alias_for": "delta_fallback_vs_twin_weighted",
+      "formula": "reject_share * (err_F_given_reject - c_star_err_twin_given_reject)",
+      "note": "system uses twin on accepts and fallback on rejects; neo uses twin on every row"
+    }
+  },
   "lesson": "23.21h",
   "live_definition_table": {
     "h2@0.650": {
@@ -5710,12 +5922,16 @@
     "M_57_h2_lift_minus_swing": 0.01160706976067244
   },
   "provenance": {
-    "git_dirty": true,
-    "git_hash": "cb8bd119126adc22c3f13e7cb94bfb08b6a1c885",
+    "git_dirty": false,
+    "git_hash": "6aa08c865c49000f71b03bebe5c569875b575f25",
     "inputs": [
       {
         "path": "docs/phase-23/A062-amendment-62.md",
         "sha256": "10f1c4f7ad63a151138a29e385bf6a1737588ac5a5dd482d3794fc6d2bb52db9"
+      },
+      {
+        "path": "docs/phase-23/A063-amendment-63.md",
+        "sha256": "65337227696c364ffc04ba3e0cb120a70f38c7877218ca46fb3e25f1d9363741"
       },
       {
         "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json",
@@ -5783,9 +5999,9 @@
       }
     ],
     "script": "cert/live_region_sweep.py::run_sweep",
-    "timestamp_utc": "2026-08-24T08:58:31.651316+00:00"
+    "timestamp_utc": "2026-08-24T09:41:33.278147+00:00"
   },
-  "schema": "live_region_sweep_slaB/v2",
+  "schema": "live_region_sweep_slaB/v3",
   "valid_new_cells": [
     "h2@0.650",
     "h2@0.675",
@@ -5826,7 +6042,6 @@
     "M_178_poisson_err_neo_both_in_0_20_0_30": true,
     "M_179_A_live_twin_deg_spread_in_1_00_1_50": true,
     "M_47b_delta_nonpositive_all_A_live_heldout": false,
-    "M_54_poisson_sign_monotone": true,
     "M_57_h2_A_live_lift_minus_swing_negative": false
   }
 }

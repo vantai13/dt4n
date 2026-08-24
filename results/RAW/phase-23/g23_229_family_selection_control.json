@@ -1,0 +1,32 @@
+{
+  "F2_delta": 0.006676045683684295,
+  "cell": "poisson@0.900",
+  "claim": "the selected-family probability path reaches _risk_summary; F6 ties F2 in this observed cell, while forced F2b changes risk",
+  "forced_F2b_delta": 0.01959987752578063,
+  "forced_F2b_minus_F2": 0.012923831842096334,
+  "forced_family": "F2b_constant_P3",
+  "forced_family_changes_risk": true,
+  "gate": "G23-229",
+  "observed_F6_equals_F2": true,
+  "pass": true,
+  "provenance": {
+    "git_dirty": false,
+    "git_hash": "6aa08c865c49000f71b03bebe5c569875b575f25",
+    "input": {
+      "path": "results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet",
+      "sha256": "d10cabfa2aedff40aae9b3c769bb360393b1b36c64da020d5725e0b82d49c939"
+    },
+    "timestamp_utc": "2026-08-24T09:39:34.865299+00:00"
+  },
+  "schema": "dt4n.g23_229.v1",
+  "selected_delta": 0.006676045683684295,
+  "selected_families_by_fold": {
+    "101": "F2",
+    "102": "F2",
+    "103": "F6",
+    "104": "F2",
+    "105": "F6"
+  },
+  "selected_minus_F2": 0.0,
+  "selection_exercised_nondefault_F6": true
+}
