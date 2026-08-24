@@ -1,0 +1,39 @@
+{
+  "baseline": "results/RAW/phase-23/g23_212a_before.json",
+  "baseline_sha256": "39af2674544b0c1cd9006ad3f93e35762ed93e48994569c4144916b96a7ec006",
+  "calib_template": "results/LIVE/phase-21R/calib_set_{mode}_{rho:.3f}_U0_measured_v7.parquet",
+  "cells": [
+    "poisson@0.700",
+    "poisson@0.850",
+    "poisson@0.925",
+    "poisson@0.960",
+    "h2@0.700",
+    "h2@0.850",
+    "h2@0.925",
+    "h2@0.960"
+  ],
+  "claim": "live_region_sweep.analyze_base_cells under the 10-feasible-cell S-B semantics reproduces the G23-212a side-A path",
+  "gate": "G23-212b",
+  "group_B_relative_tolerance": 3.1776437161565094e-12,
+  "input_parquet_sha256": {
+    "h2@0.700": "04f6899e5a6fa1c760033fab4e813716efd4c8f8edd8f09e1ea90a06bc89274e",
+    "h2@0.850": "1e0adcc38b75ba625b0a9f35c8974ca3bb84ce122a242b20c75ba508cbc1f82a",
+    "h2@0.925": "a613f83f405458a85dcb82c10356649ffa8d26e9dffe738d2f49517bbee6a9ef",
+    "h2@0.960": "a48ca3c6be62f779677148cc6d24f29cbe4e2f7b21ee14cb82bcd61a014de809",
+    "poisson@0.700": "3aef4e8af775d1ef0d4cb35fbe26b233a68c5519896bfa2b91dfb27a43fe5e66",
+    "poisson@0.850": "3dbafd26c000300c45170df4c1622045aef998880b9590441bca9af35ad2a7c2",
+    "poisson@0.925": "6af7734b63445ca6aeaf20ad6c3d63eaeb2a066a2de3110d0601dfb255525b98",
+    "poisson@0.960": "c7f1962e9c475d6989afc98943030f09af03c81973f21e7185982f9978f6874b"
+  },
+  "manifest": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+  "manifest_sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606",
+  "mismatch_sample": [],
+  "n_cells": 8,
+  "n_common_fields": 2340,
+  "n_fields_only_one_side": 0,
+  "n_group_A_exact_mismatch": 0,
+  "n_group_B_tolerance_mismatch": 0,
+  "only_one_side_sample": [],
+  "pass": true,
+  "schema": "dt4n.g23_212b.v1"
+}

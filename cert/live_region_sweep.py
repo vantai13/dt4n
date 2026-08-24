@@ -1,25 +1,6 @@
 #!/usr/bin/env python3
-"""Lesson 23.16 -- prepare and score the preregistered live-region sweep."""
-
+"""Lesson 23.21h -- score the live region under the exogenous S-B SLA."""
 from __future__ import annotations
-
-def _calib_path(spec: dict, tpl) -> str:
-    """Duong dan calib_set: mau neu co, khong thi giu NGUYEN duong cu.
-
-    Ban do duong dan hien tai KHONG deu (poisson@0.925 la
-    `calib_set_v3.parquet`, khong hau to), nen mot mau lam mac dinh se doc
-    nham file. Mac dinh None -> di dung nhanh cu, khong doi mot byte nao.
-    """
-    import os as _os
-    if tpl is None:
-        return spec["parquet"]
-    p = tpl.format(mode=spec["mode"], rho=float(spec["rho_bar"]))
-    if not _os.path.exists(p):
-        raise FileNotFoundError(
-            "thieu calib_set: %s\n  -> chay tools/run_23_20_matrix.py cho "
-            "cell %s@%.3f" % (p, spec["mode"], float(spec["rho_bar"])))
-    return p
-
 
 import argparse
 from datetime import datetime, timezone
@@ -27,36 +8,74 @@ import json
 import os
 from typing import Any, Dict, Mapping, Sequence
 
-import numpy as np
-
 from cert import eight_cell_sweep as E
 from cert.build_calib_set_v2 import SEEDS, SIGMA
+from cert.build_calib_set_v3 import AOI_V7, AXIS_MEASURED, Z_EDGES_V7
 from cert.cell_matrices import TRUTH_TABLE, git, json_clean, pin
-from measurements import sla_calib_v2 as SLA
 from measurements.decision_error_v2 import TruthTable, rho_matrix_from_cell
-from twin import cost_v2 as C
+from measurements.sla_exogenous import classify
+from measurements.validity import validity_block
 
 
-AMENDMENT = "docs/phase-23/00zq-amendment-40.md"
-BASE_SLA = "results/LIVE/phase-20R/sla_calibration.json"
-SLA_OUTPUT = "results/SUPERSEDED/phase-23/sla_calibration_lesson23_16.json"
-OUTPUT = "results/SUPERSEDED/phase-23/live_region_sweep.json"
-EIGHT_CELL_ARTIFACT = E.OUTPUT
+AMENDMENT = "docs/phase-23/A062-amendment-62.md"
+SLA_EXOGENOUS_10 = "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json"
+SLA_EXOGENOUS_14 = (
+    "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json"
+)
+SLA_REGIME_BASE = "results/LIVE/phase-23/sla_exogenous_S-B.json"
+SLA_REGIME_WAVE4 = "results/LIVE/phase-23/sla_exogenous_wave4.json"
+WAVE4_DIGESTS = "results/RAW/phase-21R/WAVE4_DIGESTS.json"
+OUTPUT = "results/LIVE/phase-23/live_region_sweep_slaB.json"
+
+# These artifacts consume two approved axes, hence LIVE. The four legacy
+# controls built alongside them remain in SUPERSEDED and are not sweep inputs.
+BASE_CALIB_TEMPLATE = (
+    "results/LIVE/phase-21R/"
+    "calib_set_{mode}_{rho:.3f}_U3_measured_v7.parquet"
+)
+CALIB_TEMPLATE_WAVE4 = BASE_CALIB_TEMPLATE
+
 DOMAIN_LIMIT = 1e-4
 LIVE_THRESHOLD = 0.05
 CONFIRM_RATIO = E.CONFIRM_RATIO
-PRIMARY_CANDIDATES = (("poisson", 0.875), ("poisson", 0.900), ("h2", 0.650))
-H2_FALLBACK = ("h2", 0.675)
+FIXPOINT_MARKS = (
+    "fixpoint_history",
+    "fixpoint_rounds",
+    "fixpoint_converged",
+    "percentile",
+    "target_viol",
+)
+
 NEW_SPECS: Dict[str, Dict[str, Any]] = {
-    "poisson@0.875": {"mode": "poisson", "rho_bar": 0.875, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.875.parquet"},
-    "poisson@0.900": {"mode": "poisson", "rho_bar": 0.900, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.900.parquet"},
-    "h2@0.650": {"mode": "h2", "rho_bar": 0.650, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.650.parquet"},
-    "h2@0.675": {"mode": "h2", "rho_bar": 0.675, "parquet": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.675.parquet"},
+    "poisson@0.875": {"mode": "poisson", "rho_bar": 0.875},
+    "poisson@0.900": {"mode": "poisson", "rho_bar": 0.900},
+    "h2@0.650": {"mode": "h2", "rho_bar": 0.650},
+    "h2@0.675": {"mode": "h2", "rho_bar": 0.675},
 }
+ANALYZED_CELLS = tuple(E.ALL_CELLS) + tuple(NEW_SPECS)
 
 
 def cell_name(mode: str, rho_bar: float) -> str:
     return "%s@%.3f" % (str(mode), float(rho_bar))
+
+
+def _calib_path(spec: Mapping[str, Any], tpl: str | None) -> str:
+    """Resolve regenerated input and fail loudly instead of using dead L51 paths."""
+    if tpl is None:
+        if "parquet" not in spec:
+            raise SystemExit(
+                "cell %s@%.3f khong co duong parquet co dinh (4 parquet "
+                "Phase 22 da mat -- L51b). Truyen --calib-template."
+                % (spec["mode"], float(spec["rho_bar"]))
+            )
+        return str(spec["parquet"])
+    path = tpl.format(mode=spec["mode"], rho=float(spec["rho_bar"]))
+    if not os.path.exists(path):
+        raise FileNotFoundError(
+            "thieu calib_set: %s\n  -> chay tools/run_23_20_matrix.py "
+            "--wave 4" % path
+        )
+    return path
 
 
 def truth_domain_check(cell: Mapping[str, Any]) -> Dict[str, Any]:
@@ -112,81 +131,69 @@ def truth_domain_check(cell: Mapping[str, Any]) -> Dict[str, Any]:
     }
 
 
-def _calibrate(mode: str, rho_bar: float) -> Dict[str, Any]:
-    row = SLA.calibrate_cell(
-        C.CostV2(strict_reliable=True),
-        str(mode),
-        float(rho_bar),
-        seed=SLA.DEFAULT_SEED,
-        n=SLA.DEFAULT_N,
-        dt=SLA.DEFAULT_DT,
-        tau=SLA.DEFAULT_TAU,
-        a=SLA.DEFAULT_A,
-    )
-    if not row.get("feasible"):
-        raise AssertionError("SLA candidate infeasible: %s" % cell_name(mode, rho_bar))
-    row = dict(row)
-    row["lesson"] = "23.16"
-    row["domain_control"] = truth_domain_check(row)
-    row["role_before_domain"] = row.get("role")
-    if not row["domain_control"]["pass"]:
-        row["role"] = "domain_excluded"
-    return row
+def load_sla_exogenous(path: str = SLA_EXOGENOUS_14) -> Dict[str, Any]:
+    """Load the external manifest without any endogenous calibration step."""
+    with open(path, "r", encoding="utf-8") as handle:
+        sla = json.load(handle)
 
+    for cell in sla["cells"]:
+        bad = sorted(set(cell) & set(FIXPOINT_MARKS))
+        assert not bad, (
+            "cell %s@%.3f con dau vet fixpoint: %s -- day la S14"
+            % (cell["mode"], float(cell["rho_bar"]), bad)
+        )
+    ws = {float(cell["w_loss"]) for cell in sla["cells"]}
+    assert ws == {5000.0}, "w_loss khong dong nhat: %s" % sorted(ws)
 
-def prepare_sla() -> Dict[str, Any]:
-    with open(BASE_SLA, "r", encoding="utf-8") as handle:
-        base = json.load(handle)
-    candidates = [_calibrate(mode, rho) for mode, rho in PRIMARY_CANDIDATES]
-    primary_h2 = next(row for row in candidates if cell_name(row["mode"], row["rho_bar"]) == "h2@0.650")
-    fallback_triggered = not bool(primary_h2["domain_control"]["pass"])
-    if fallback_triggered:
-        candidates.append(_calibrate(*H2_FALLBACK))
-    passed = [cell_name(row["mode"], row["rho_bar"]) for row in candidates if row["domain_control"]["pass"]]
-    excluded = [cell_name(row["mode"], row["rho_bar"]) for row in candidates if not row["domain_control"]["pass"]]
-    return json_clean(
-        {
-            **{key: value for key, value in base.items() if key != "cells"},
-            "schema": "sla_calibration_lesson23_16/v1",
-            "lesson": "23.16",
-            "base_artifact": pin(BASE_SLA),
-            "requested_cells": [cell_name(*row) for row in PRIMARY_CANDIDATES],
-            "fallback_cell": cell_name(*H2_FALLBACK),
-            "fallback_triggered": fallback_triggered,
-            "passed_cells": passed,
-            "excluded_cells": excluded,
-            "domain_limit": DOMAIN_LIMIT,
-            "cells": list(base["cells"]) + candidates,
-            "provenance": {
-                "script": "cert/live_region_sweep.py::prepare_sla",
-                "git_hash": git("git", "rev-parse", "HEAD"),
-                "git_dirty": bool(git("git", "status", "--porcelain", "--untracked-files=no")),
-                "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-                "inputs": [
-                    pin(AMENDMENT),
-                    pin("docs/phase-23/00zr-amendment-41.md"),
-                    pin(BASE_SLA),
-                    pin(TRUTH_TABLE),
-                ],
-            },
-        }
-    )
+    have = {cell_name(cell["mode"], cell["rho_bar"]) for cell in sla["cells"]}
+    missing = sorted(set(NEW_SPECS) - have)
+    assert not missing, "thieu cell Dot 4: %s" % missing
 
+    passed, excluded = [], []
+    for cell in sla["cells"]:
+        name = cell_name(cell["mode"], cell["rho_bar"])
+        if name not in NEW_SPECS:
+            continue
+        cell["domain_control"] = truth_domain_check(cell)
+        cell["role_before_domain"] = cell.get("role")
+        if cell["domain_control"]["pass"]:
+            passed.append(name)
+        else:
+            cell["role"] = "domain_excluded"
+            excluded.append(name)
 
-def write_json(payload: Mapping[str, Any], path: str) -> None:
-    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
-    with open(path, "w", encoding="utf-8") as handle:
-        json.dump(json_clean(payload), handle, indent=2, sort_keys=True)
-        handle.write("\n")
-
-
-def _load_sla() -> Dict[str, Any]:
-    with open(SLA_OUTPUT, "r", encoding="utf-8") as handle:
-        return json.load(handle)
+    sla["passed_cells"] = sorted(passed)
+    sla["excluded_cells"] = sorted(excluded)
+    sla["requested_cells"] = sorted(NEW_SPECS)
+    # No calibration exists on this path. None means not applicable; False
+    # would incorrectly claim that a fallback was evaluated and did not fire.
+    sla["fallback_triggered"] = None
+    return sla
 
 
 def _new_valid_cells(sla: Mapping[str, Any]) -> list[str]:
     return [cell for cell in sla["passed_cells"] if cell in NEW_SPECS]
+
+
+def analyze_base_cells(
+    *,
+    sla_path: str = SLA_EXOGENOUS_14,
+    calib_template: str = BASE_CALIB_TEMPLATE,
+    axis: str = AXIS_MEASURED,
+    aoi_profile: str = "U3",
+) -> Dict[str, Any]:
+    """Shared eight-cell path used by the sweep and the G23-212b NC."""
+    return {
+        cell: E.analyze_cell(
+            cell,
+            spec=E.CELL_SPECS[cell],
+            sla_artifact=sla_path,
+            calib_template=calib_template,
+            axis=axis,
+            aoi_profile=aoi_profile,
+        )
+        for cell in E.ALL_CELLS
+    }
 
 
 def _sign_monotone(values: Sequence[float]) -> bool:
@@ -200,144 +207,337 @@ def _sign_monotone(values: Sequence[float]) -> bool:
     return True
 
 
-def run_sweep() -> Dict[str, Any]:
-    sla = _load_sla()
-    with open(EIGHT_CELL_ARTIFACT, "r", encoding="utf-8") as handle:
-        prior = json.load(handle)
-    cells = dict(prior["cells"])
+def authoritative_regimes(cells_wanted: Sequence[str]) -> Dict[str, Dict[str, Any]]:
+    """Recompute B from authoritative shares and cross-check stored labels."""
+    rows: Dict[str, Dict[str, Any]] = {}
+    for source in (SLA_REGIME_BASE, SLA_REGIME_WAVE4):
+        with open(source, "r", encoding="utf-8") as handle:
+            payload = json.load(handle)
+        for cell in payload["cells"]:
+            name = cell_name(cell["mode"], cell["rho_bar"])
+            if name not in cells_wanted:
+                continue
+            if name in rows:
+                raise AssertionError("regime source trung cell: %s" % name)
+            ci = (cell.get("S_pivotal_ci") or {}).get("ci95")
+            recomputed = classify(cell, ci=None if ci is None else tuple(ci))
+            rows[name] = {
+                "source": source,
+                "S_pivotal": float(cell["S_pivotal"]),
+                "declared_regime": str(cell["regime"]),
+                "recomputed_regime": recomputed,
+                "match": bool(str(cell["regime"]) == recomputed),
+            }
+    missing = sorted(set(cells_wanted) - set(rows))
+    if missing:
+        raise AssertionError("thieu authoritative regime: %s" % missing)
+    return rows
+
+
+def _input_path(cell: str, base_template: str, wave_template: str) -> str:
+    spec = NEW_SPECS.get(cell, E.CELL_SPECS.get(cell))
+    template = wave_template if cell in NEW_SPECS else base_template
+    return _calib_path(spec, template)
+
+
+def run_sweep(
+    calib_template: str | None = CALIB_TEMPLATE_WAVE4,
+    sla_path: str = SLA_EXOGENOUS_14,
+    base_calib_template: str = BASE_CALIB_TEMPLATE,
+    base_aoi_profile: str = "U3",
+) -> Dict[str, Any]:
+    sla = load_sla_exogenous(sla_path)
+    cells = analyze_base_cells(
+        sla_path=sla_path,
+        calib_template=base_calib_template,
+        axis=AXIS_MEASURED,
+        aoi_profile=base_aoi_profile,
+    )
     valid_new = _new_valid_cells(sla)
     for cell in valid_new:
-        cells[cell] = E.analyze_cell(cell, spec=NEW_SPECS[cell], sla_artifact=SLA_OUTPUT)
+        _calib_path(NEW_SPECS[cell], calib_template)
+        cells[cell] = E.analyze_cell(
+            cell,
+            spec=NEW_SPECS[cell],
+            sla_artifact=sla_path,
+            calib_template=calib_template,
+            axis=AXIS_MEASURED,
+            aoi_profile="U3",
+        )
 
-    poisson_axis = ["poisson@0.850", "poisson@0.875", "poisson@0.900", "poisson@0.925"]
-    axis_values = [float(cells[cell]["lift_swing_F2"]["lift"] - cells[cell]["lift_swing_F2"]["swing"]) for cell in poisson_axis]
-    positive = [cell for cell in poisson_axis if float(cells[cell]["lift_swing_F2"]["lift"] - cells[cell]["lift_swing_F2"]["swing"]) > 0.0]
+    analyzed = list(E.ALL_CELLS) + valid_new
+    regime_rows = authoritative_regimes(analyzed)
+    g23_214_matches = sum(row["match"] for row in regime_rows.values())
+    if g23_214_matches != len(analyzed):
+        raise AssertionError(
+            "G23-214 FAIL: regime recomputed != authoritative (%d/%d)"
+            % (g23_214_matches, len(analyzed))
+        )
+
+    agreement: Dict[str, bool] = {}
+    for cell in analyzed:
+        live_a = bool(
+            float(cells[cell]["lift_swing_F2"]["err_neo"]) >= LIVE_THRESHOLD
+        )
+        live_b = regime_rows[cell]["recomputed_regime"] == "LIVE"
+        agreement[cell] = live_a == live_b
+        cells[cell]["live_definitions"] = {
+            "A_err_neo_ge_0_05": live_a,
+            "B_regime_eq_LIVE": live_b,
+            "regime": regime_rows[cell]["recomputed_regime"],
+            "S_pivotal": regime_rows[cell]["S_pivotal"],
+            "agreement": agreement[cell],
+        }
+
+    poisson_axis = [
+        "poisson@0.850",
+        "poisson@0.875",
+        "poisson@0.900",
+        "poisson@0.925",
+    ]
+    axis_values = [
+        float(
+            cells[cell]["lift_swing_F2"]["lift"]
+            - cells[cell]["lift_swing_F2"]["swing"]
+        )
+        for cell in poisson_axis
+    ]
+    positive = [
+        cell for cell, value in zip(poisson_axis, axis_values) if value > 0.0
+    ]
     rho_hit = min(float(cell.split("@")[1]) for cell in positive) if positive else None
     bracket = None
-    for left, right in zip(poisson_axis, poisson_axis[1:]):
-        lv = float(cells[left]["lift_swing_F2"]["lift"] - cells[left]["lift_swing_F2"]["swing"])
-        rv = float(cells[right]["lift_swing_F2"]["lift"] - cells[right]["lift_swing_F2"]["swing"])
+    for left, right, lv, rv in zip(
+        poisson_axis, poisson_axis[1:], axis_values, axis_values[1:]
+    ):
         if lv <= 0.0 < rv:
             bracket = [float(left.split("@")[1]), float(right.split("@")[1])]
             break
 
-    m55 = {cell: float(cells[cell]["lift_swing_F2"]["err_neo"]) for cell in ("poisson@0.875", "poisson@0.900")}
-    h2_valid = [cell for cell in valid_new if cell.startswith("h2@")]
-    h2_cell = h2_valid[0] if h2_valid else None
-    h2_live = None if h2_cell is None else bool(cells[h2_cell]["lift_swing_F2"]["err_neo"] >= LIVE_THRESHOLD)
-    h2_lift_minus_swing = None if h2_cell is None else float(cells[h2_cell]["lift_swing_F2"]["lift"] - cells[h2_cell]["lift_swing_F2"]["swing"])
+    m178 = {
+        cell: float(cells[cell]["lift_swing_F2"]["err_neo"])
+        for cell in ("poisson@0.875", "poisson@0.900")
+    }
+    h2_cell = "h2@0.650" if "h2@0.650" in valid_new else (
+        "h2@0.675" if "h2@0.675" in valid_new else None
+    )
+    h2_live_a = None if h2_cell is None else bool(
+        cells[h2_cell]["live_definitions"]["A_err_neo_ge_0_05"]
+    )
+    h2_lift_minus_swing = None if h2_cell is None else float(
+        cells[h2_cell]["lift_swing_F2"]["lift"]
+        - cells[h2_cell]["lift_swing_F2"]["swing"]
+    )
 
     heldout_candidates = ["poisson@0.960"] + valid_new
-    heldout_live = [cell for cell in heldout_candidates if float(cells[cell]["lift_swing_F2"]["err_neo"]) >= LIVE_THRESHOLD]
+    heldout_live = [
+        cell
+        for cell in heldout_candidates
+        if cells[cell]["live_definitions"]["A_err_neo_ge_0_05"]
+    ]
     m47b = {
-        cell: float(cells[cell]["objective"]["confirm_ratio"]["result"]["delta_system_vs_neo"])
+        cell: float(
+            cells[cell]["objective"]["confirm_ratio"]["result"][
+                "delta_system_vs_neo"
+            ]
+        )
         for cell in heldout_live
     }
-    live_23_15 = [cell for cell in E.ALL_CELLS if float(cells[cell]["lift_swing_F2"]["err_neo"]) >= LIVE_THRESHOLD]
-    twin_values = [float(cells[cell]["lift_swing_F2"]["twin_deg"]) for cell in live_23_15]
-    m48b = max(twin_values) / min(twin_values)
+    all_a_live = [
+        cell
+        for cell in analyzed
+        if cells[cell]["live_definitions"]["A_err_neo_ge_0_05"]
+    ]
+    twin_values = [
+        float(cells[cell]["lift_swing_F2"]["twin_deg"]) for cell in all_a_live
+    ]
+    m179 = max(twin_values) / min(twin_values)
+    agreement_count = sum(agreement.values())
 
     verdict = {
-        "M_53_rho_hit_in_0_860_0_925": bool(rho_hit is not None and 0.860 <= rho_hit <= 0.925),
+        "M_176_A_B_agreement_at_least_8_of_12": bool(
+            len(analyzed) == 12 and agreement_count >= 8
+        ),
+        "M_177_rho_hit_in_0_900_0_925": bool(
+            rho_hit is not None and 0.900 <= rho_hit <= 0.925
+        ),
+        "M_178_poisson_err_neo_both_in_0_20_0_30": bool(
+            all(0.20 <= value <= 0.30 for value in m178.values())
+        ),
+        "M_179_A_live_twin_deg_spread_in_1_00_1_50": bool(
+            1.00 <= m179 <= 1.50
+        ),
         "M_54_poisson_sign_monotone": _sign_monotone(axis_values),
-        "M_55_poisson_err_neo_both_in_0_15_0_26": bool(all(0.15 <= value <= 0.26 for value in m55.values())),
-        "M_56_h2_candidate_live": None if h2_cell is None else bool(h2_live),
-        "M_57_h2_live_lift_minus_swing_negative": None if h2_cell is None or not h2_live else bool(h2_lift_minus_swing < 0.0),
-        "M_47b_delta_nonpositive_all_live_heldout": bool(m47b and all(value <= 0.0 for value in m47b.values())),
-        "M_48b_twin_deg_spread_in_1_00_1_30": bool(1.00 <= m48b <= 1.30),
+        "M_57_h2_A_live_lift_minus_swing_negative": (
+            None
+            if h2_cell is None or not h2_live_a
+            else bool(h2_lift_minus_swing < 0.0)
+        ),
+        "M_47b_delta_nonpositive_all_A_live_heldout": bool(
+            m47b and all(value <= 0.0 for value in m47b.values())
+        ),
+    }
+
+    domain = {
+        cell_name(row["mode"], row["rho_bar"]): row["domain_control"]
+        for row in sla["cells"]
+        if "domain_control" in row
     }
     return json_clean(
         {
-            "schema": "live_region_sweep/v1",
-            "lesson": "23.16",
+            "schema": "live_region_sweep_slaB/v2",
+            "lesson": "23.21h",
             "live_threshold": LIVE_THRESHOLD,
+            "aoi_profile": base_aoi_profile,
+            "analyzed_cells": analyzed,
             "valid_new_cells": valid_new,
             "excluded_domain_cells": list(sla["excluded_cells"]),
             "cells": cells,
+            "live_definition_table": {
+                cell: cells[cell]["live_definitions"] for cell in analyzed
+            },
             "metrics": {
-                "M_53_rho_hit": rho_hit,
-                "M_53_boundary_bracket": bracket,
+                "M_176_agreement_count": agreement_count,
+                "M_176_total_cells": len(analyzed),
+                "M_177_rho_hit": rho_hit,
+                "M_177_boundary_bracket": bracket,
                 "M_54_poisson_axis": dict(zip(poisson_axis, axis_values)),
-                "M_55_err_neo": m55,
-                "M_56_h2_candidate": h2_cell,
-                "M_56_h2_live": h2_live,
+                "M_178_err_neo": m178,
+                "M_56_h2_candidate_A_and_B": (
+                    None if h2_cell is None else cells[h2_cell]["live_definitions"]
+                ),
                 "M_57_h2_lift_minus_swing": h2_lift_minus_swing,
-                "M_47b_live_heldout_delta_at_confirm_ratio": m47b,
-                "M_48b_live_cells_23_15": live_23_15,
-                "M_48b_twin_deg_spread": m48b,
+                "M_47b_A_live_heldout_delta_at_confirm_ratio": m47b,
+                "M_179_A_live_cells": all_a_live,
+                "M_179_twin_deg_spread": m179,
             },
             "verdict": verdict,
             "controls": {
-                "NC_G_old_cell_max_gap": float(prior["controls"]["NC_D_max_absolute_gap"]),
+                "G23_212b_evidence": "results/RAW/phase-23/g23_212b_after.json",
+                "G23_214_regime_crosscheck": {
+                    "matched": g23_214_matches,
+                    "total": len(analyzed),
+                    "pass": g23_214_matches == len(analyzed),
+                    "rows": regime_rows,
+                },
                 "NC_H_domain_checked_before_build": True,
-                "NC_H_domain_limit": DOMAIN_LIMIT,
-                "NC_I_identity_all_valid": bool(all(cells[cell]["controls"]["identity_residual_le_1e_12"] for cell in valid_new)),
-                "NC_J_crossfit_all_valid": bool(all(cells[cell]["controls"]["NC_A_all_row_disjoint"] and cells[cell]["controls"]["NC_A_all_seed_disjoint"] for cell in valid_new)),
+                "NC_H_checked": len(domain),
+                "NC_H_passed": sum(row["pass"] for row in domain.values()),
+                "NC_H_by_cell": domain,
+                "NC_I_identity_all_valid": bool(
+                    all(
+                        cells[cell]["controls"]["identity_residual_le_1e_12"]
+                        for cell in analyzed
+                    )
+                ),
+                "NC_J_crossfit_all_valid": bool(
+                    all(
+                        cells[cell]["controls"]["NC_A_all_row_disjoint"]
+                        and cells[cell]["controls"]["NC_A_all_seed_disjoint"]
+                        for cell in analyzed
+                    )
+                ),
                 "NC_K_requested_cells": list(sla["requested_cells"]),
                 "NC_K_passed_cells": list(sla["passed_cells"]),
                 "NC_K_excluded_cells": list(sla["excluded_cells"]),
-                "NC_K_fallback_triggered": bool(sla["fallback_triggered"]),
+                "NC_K_fallback_triggered": sla["fallback_triggered"],
             },
+            "validity": validity_block(
+                aoi_generator=AOI_V7,
+                z_edges=Z_EDGES_V7,
+                sla_path=sla_path,
+                w_loss=5000.0,
+            ),
             "provenance": {
                 "script": "cert/live_region_sweep.py::run_sweep",
                 "git_hash": git("git", "rev-parse", "HEAD"),
-                "git_dirty": bool(git("git", "status", "--porcelain", "--untracked-files=no")),
+                "git_dirty": bool(
+                    git("git", "status", "--porcelain", "--untracked-files=no")
+                ),
                 "timestamp_utc": datetime.now(timezone.utc).isoformat(),
-                "inputs": [pin(AMENDMENT), pin(SLA_OUTPUT), pin(EIGHT_CELL_ARTIFACT)]
-                + [pin(NEW_SPECS[cell]["parquet"]) for cell in valid_new],
+                "inputs": [
+                    pin(AMENDMENT),
+                    pin(sla_path),
+                    pin(SLA_REGIME_BASE),
+                    pin(SLA_REGIME_WAVE4),
+                    pin(WAVE4_DIGESTS),
+                ]
+                + [
+                    pin(_input_path(cell, base_calib_template, str(calib_template)))
+                    for cell in analyzed
+                ],
             },
         }
     )
 
 
-def print_sla(report: Mapping[str, Any]) -> None:
-    print("=== LESSON 23.16: SLA + TRUTH-DOMAIN CONTROL ===")
-    for row in report["cells"][-len(report["requested_cells"])-int(report["fallback_triggered"]):]:
-        if row.get("lesson") != "23.16":
-            continue
-        d = row["domain_control"]
-        print("%-16s w_loss=%9.3f domain_max=%.6f %-4s %s" % (
-            cell_name(row["mode"], row["rho_bar"]), row["w_loss"], d["max_fraction"],
-            "PASS" if d["pass"] else "FAIL", d["worst_link"],
-        ))
-    print("passed=%s" % report["passed_cells"])
-    print("excluded=%s" % report["excluded_cells"])
+def write_json(payload: Mapping[str, Any], path: str) -> None:
+    os.makedirs(os.path.dirname(os.path.abspath(path)), exist_ok=True)
+    with open(path, "w", encoding="utf-8") as handle:
+        json.dump(json_clean(payload), handle, indent=2, sort_keys=True)
+        handle.write("\n")
 
 
 def print_sweep(report: Mapping[str, Any]) -> None:
-    print("=== LESSON 23.16: LIVE-REGION SWEEP ===")
-    for cell in report["valid_new_cells"]:
+    print("=== LESSON 23.21h: LIVE REGION UNDER EXOGENOUS S-B ===")
+    print("cell              err_neo  A  regime     B  agree  lift-swing")
+    for cell in report["analyzed_cells"]:
         row = report["cells"][cell]
+        defs = row["live_definitions"]
         d = row["lift_swing_F2"]
-        print("%-16s err_neo=%.6f lift-swing=%+.6f Delta=%+.6f" % (
-            cell, d["err_neo"], d["lift"] - d["swing"], d["delta_vs_anchor"],
-        ))
-    print("rho_hit=%s bracket=%s" % (report["metrics"]["M_53_rho_hit"], report["metrics"]["M_53_boundary_bracket"]))
+        print(
+            "%-17s %.6f  %d  %-9s %d    %d    %+.6f"
+            % (
+                cell,
+                d["err_neo"],
+                defs["A_err_neo_ge_0_05"],
+                defs["regime"],
+                defs["B_regime_eq_LIVE"],
+                defs["agreement"],
+                d["lift"] - d["swing"],
+            )
+        )
+    print(
+        "agreement=%d/%d rho_hit=%s spread=%.6f"
+        % (
+            report["metrics"]["M_176_agreement_count"],
+            report["metrics"]["M_176_total_cells"],
+            report["metrics"]["M_177_rho_hit"],
+            report["metrics"]["M_179_twin_deg_spread"],
+        )
+    )
     print("verdict=%s" % json.dumps(report["verdict"], sort_keys=True))
 
 
 def main(argv: Sequence[str] | None = None) -> int:
     parser = argparse.ArgumentParser(description=__doc__)
-    parser.add_argument("--prepare-sla", action="store_true")
     parser.add_argument("--run", action="store_true")
-    parser.add_argument("--sla-out", default=SLA_OUTPUT)
-    parser.add_argument("--calib-template", default=None,
-
-                       help='mau duong dan calib_set, truong {mode} va {rho}. Mac dinh None = DUNG NGUYEN duong dan cu (doi chung am dung THEO CAU TRUC). KHONG them --axis o day: quy uoc duong dan phai song o MOT cho (runner), khong nhan ba lan roi lech nhau. Amendment 23-49e muc 4.')
+    parser.add_argument("--sla", default=SLA_EXOGENOUS_14)
+    parser.add_argument("--calib-template", default=CALIB_TEMPLATE_WAVE4)
+    parser.add_argument("--base-calib-template", default=BASE_CALIB_TEMPLATE)
     parser.add_argument("--out", default=OUTPUT)
+    parser.add_argument("--prepare-sla", action="store_true", help=argparse.SUPPRESS)
     args = parser.parse_args(argv)
-    if args.prepare_sla == args.run:
-        parser.error("chon dung mot trong --prepare-sla hoac --run")
+
     if args.prepare_sla:
-        report = prepare_sla()
-        print_sla(report)
-        write_json(report, args.sla_out)
-        print("artifact -> %s" % args.sla_out)
-    else:
-        report = run_sweep()
-        print_sweep(report)
-        write_json(report, args.out)
-        print("artifact -> %s" % args.out)
+        parser.error(
+            "--prepare-sla DA BI GO (amendment 23-62). No goi "
+            "SLA.calibrate_cell, chinh co che S14 da bi bac bo o Lesson 23.21.\n"
+            "  Thay bang:\n"
+            "    python3 -m measurements.sla_manifest_exogenous_14\n"
+            "    python3 -m cert.live_region_sweep --run --sla <manifest>"
+        )
+    if not args.run:
+        parser.error("can --run (khong con nhanh hieu chuan SLA noi sinh)")
+
+    report = run_sweep(
+        calib_template=args.calib_template,
+        sla_path=args.sla,
+        base_calib_template=args.base_calib_template,
+    )
+    print_sweep(report)
+    write_json(report, args.out)
+    print("artifact -> %s" % args.out)
     return 0
 
 

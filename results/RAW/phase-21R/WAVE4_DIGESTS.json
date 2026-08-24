@@ -1,0 +1,67 @@
+{
+  "captured_utc": "2026-08-24T08:46:37.214023+00:00",
+  "files": {
+    "results/LIVE/phase-21R/calib_set_h2_0.650_U0_measured_v7.parquet": {
+      "bytes": 69267033,
+      "sha256": "7a8171a8e7f52c76a184dbf112e10db5f2b3ed590fada080995858de1291c6a3"
+    },
+    "results/LIVE/phase-21R/calib_set_h2_0.650_U3_measured_v7.parquet": {
+      "bytes": 69257577,
+      "sha256": "d72837836414d81434084c80ee94f84c3ffd993ea5efde4b882870554771da45"
+    },
+    "results/LIVE/phase-21R/calib_set_h2_0.675_U0_measured_v7.parquet": {
+      "bytes": 68942824,
+      "sha256": "7d935dfafcf57c4f9e60084fed7954394dec7a1e8b1f78866050f0a6a1801799"
+    },
+    "results/LIVE/phase-21R/calib_set_h2_0.675_U3_measured_v7.parquet": {
+      "bytes": 68932495,
+      "sha256": "58316e62d7009b654460b5c10601c1e7791d320d7decb6f33a824b9a2363cd51"
+    },
+    "results/LIVE/phase-21R/calib_set_poisson_0.875_U0_measured_v7.parquet": {
+      "bytes": 69664764,
+      "sha256": "dcd31ef702a01de8720320bced458ada3dd8bd3de678bb5ad915172012215d5a"
+    },
+    "results/LIVE/phase-21R/calib_set_poisson_0.875_U3_measured_v7.parquet": {
+      "bytes": 69656300,
+      "sha256": "3f1bcd4bacb39dc48929ff06545c543f00e4734bf6b46d2157438a2fa3f122ad"
+    },
+    "results/LIVE/phase-21R/calib_set_poisson_0.900_U0_measured_v7.parquet": {
+      "bytes": 69508114,
+      "sha256": "9803314336ab6744bc6de6fc3c149d489db3a37eb9c02abc52210090a2018c86"
+    },
+    "results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet": {
+      "bytes": 69483761,
+      "sha256": "d10cabfa2aedff40aae9b3c769bb360393b1b36c64da020d5725e0b82d49c939"
+    },
+    "results/SUPERSEDED/phase-21R/calib_set_h2_0.650_U0_legacy_sawtooth_51ms.parquet": {
+      "bytes": 69133789,
+      "sha256": "719dacc4af28353fa12abb742edf7ae0ec0d4ac773079e69733118df7fc3b6fc"
+    },
+    "results/SUPERSEDED/phase-21R/calib_set_h2_0.675_U0_legacy_sawtooth_51ms.parquet": {
+      "bytes": 68810135,
+      "sha256": "aedd1a4799060488936f1b27135e85451296d20bc5ccffccc776a89d536b60ce"
+    },
+    "results/SUPERSEDED/phase-21R/calib_set_poisson_0.875_U0_legacy_sawtooth_51ms.parquet": {
+      "bytes": 69518979,
+      "sha256": "b8ba5035c0e04b8977921a91dfb540225f4ebadf98452267ff3f0ae6a1558e95"
+    },
+    "results/SUPERSEDED/phase-21R/calib_set_poisson_0.900_U0_legacy_sawtooth_51ms.parquet": {
+      "bytes": 69353238,
+      "sha256": "64c1a8a9acc4a164484f2525aa60ee181fda2e6cb4390078b8fdc2f0fc4cb380"
+    }
+  },
+  "ledger": {
+    "jobs": 12,
+    "passed": 12,
+    "path": "results/RUN_LEDGER_wave4.json",
+    "sha256": "3810af2c3b8f73ebf5de1d7eb9d27bcc9518b265d7df3f1ace0dcc986edec3f6"
+  },
+  "lesson": "23.21h",
+  "manifest": {
+    "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json",
+    "sha256": "6e97ac054cce76284db3a7d3f674440408ee6f9f073c1e627b67a2bdbd1eae2d"
+  },
+  "schema": "dt4n.surviving_digests.v2",
+  "selection": "exact tools.run_23_20_matrix.WAVES[4] job set",
+  "tier_note": "Measured Wave-4 artifacts are LIVE because measured_v7 and the exogenous S-B manifest are registered; legacy controls remain SUPERSEDED."
+}

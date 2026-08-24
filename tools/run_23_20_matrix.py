@@ -41,13 +41,19 @@ WAVES = {
         + [(c, "U0", ax) for c in CELLS_REGION for ax in (AX_LEG, AX_MEA)]),
 }
 TARGET_MEAN_MS = 366.05
+WAVE4_CALIBRATION = (
+    "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json"
+)
 
 
-def stem_of(cell, profile, axis):
+def stem_of(cell, profile, axis, *, wave=None):
     mode, rho = cell.split("@")
-    # amendment 23-49c muc 3: LIVE chi khi MOI truc duoc duyet. Truc SLA
-    # (S14) chua duoc duyet den Lesson 23.21 -> tat ca vao SUPERSEDED.
-    tier = "PENDING" if axis == AX_MEA else "SUPERSEDED"
+    # Wave 4 uses the registered exogenous S-B manifest and the already approved
+    # measured_v7 axis, so its measured artifacts are LIVE.  Earlier waves keep
+    # their historical tier semantics.  Legacy-axis controls remain SUPERSEDED.
+    tier = "LIVE" if wave == 4 and axis == AX_MEA else (
+        "PENDING" if axis == AX_MEA else "SUPERSEDED"
+    )
     return "results/%s/phase-21R/calib_set_%s_%.3f_%s_%s" % (
         tier, mode, float(rho), profile, axis)
 
@@ -89,6 +95,12 @@ def main() -> int:
     ap.add_argument("--wave", type=int, required=True, choices=[1, 2, 3, 4])
     ap.add_argument("--dry", action="store_true")
     ap.add_argument("--force", action="store_true")
+    ap.add_argument(
+        "--calibration",
+        default=WAVE4_CALIBRATION,
+        help=("manifest SLA cho builder. Wave 4 can ban 14-cell vi bon cell "
+              "moi khong co trong sla_calibration.json."),
+    )
     a = ap.parse_args()
 
     jobs = WAVES[a.wave]
@@ -101,7 +113,7 @@ def main() -> int:
     print("DOT %d -- %d job" % (a.wave, len(jobs)))
     print("=" * 78)
     for i, (cell, prof, axis) in enumerate(jobs, 1):
-        stem = stem_of(cell, prof, axis)
+        stem = stem_of(cell, prof, axis, wave=a.wave)
         key = os.path.basename(stem)
         tag = "%2d/%d %-16s %-3s %-21s" % (i, len(jobs), cell, prof, axis)
 
@@ -117,7 +129,8 @@ def main() -> int:
         r = subprocess.run(
             [sys.executable, "-m", "cert.build_calib_set_v3",
              "--cell", cell.replace("@", "_"), "--axis", axis,
-             "--aoi-profile", prof, "--seeds", *SEEDS, "--out-stem", stem],
+             "--aoi-profile", prof, "--seeds", *SEEDS,
+             "--calibration", str(a.calibration), "--out-stem", stem],
             capture_output=True, text=True)
         dt = time.time() - t0
         if r.returncode != 0:

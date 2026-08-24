@@ -70,9 +70,8 @@ CLOSED_LESSONS = {
 
 # Mon no GHIM (Amendment 23-26 muc 7.3). Them mot mon no moi phai sua dong nay,
 # tuc phai co mot amendment -- no khong duoc xuat hien im lang.
-# `G23-141`/`G23-142` them o amendment 23-51: Dot 4 va mo rong M-125, bi chan
-# boi S14 (`L41`), mo lai sau Lesson 23.21.
-PINNED_DEBT = {"G23-10", "G23-12a", "G23-12b", "G23-141", "G23-142"}
+# `G23-141`/`G23-142` da duoc tra o Lesson 23.21h: Dot 4 va M-125 mo rong.
+PINNED_DEBT = {"G23-10", "G23-12a", "G23-12b"}
 
 # Ma gate bi dung NHAM trong mot tai lieu DA KY. Tai lieu khong duoc sua, nen
 # anh xa song o day VA o muc "Va cham da phat hien" cua GATES.md.

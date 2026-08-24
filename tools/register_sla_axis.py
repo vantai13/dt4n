@@ -12,6 +12,7 @@ from __future__ import annotations
 import hashlib
 import json
 import sys
+import argparse
 
 REGISTRY = "docs/phase-23/axis_registry.json"
 MANIFEST = "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json"
@@ -27,30 +28,41 @@ def sha256_file(path: str) -> str:
     return h.hexdigest()
 
 
-def main() -> int:
-    digest = sha256_file(MANIFEST)
+def main(argv=None) -> int:
+    parser = argparse.ArgumentParser(description=__doc__)
+    parser.add_argument("--manifest", default=MANIFEST)
+    parser.add_argument("--label", default=LABEL)
+    parser.add_argument("--registered-in", default="amendment-57")
+    parser.add_argument("--note", default=None)
+    args = parser.parse_args(argv)
+
+    digest = sha256_file(args.manifest)
     with open(REGISTRY, encoding="utf-8") as fh:
         reg = json.load(fh)
 
-    reg["sla_axis"][MANIFEST] = {
+    note = args.note or (
+        "T_delay = 50 ms (ITU-T G.114, MOT chang), T_loss = 1%, "
+        "w_loss = 5000 (equal-budget, K06). Thay `self_calibrated` "
+        "(loi cau truc S14). Sinh boi `measurements/sla_manifest_exogenous.py`."
+    )
+    reg["sla_axis"][args.manifest] = {
         "content_sha256": digest,
-        "label": LABEL,
-        "note": ("T_delay = 50 ms (ITU-T G.114, MOT chang), T_loss = 1%, "
-                 "w_loss = 5000 (equal-budget, K06). Thay `self_calibrated` "
-                 "(loi cau truc S14). Sinh boi "
-                 "`measurements/sla_manifest_exogenous.py`."),
-        "registered_in": "amendment-57",
+        "label": args.label,
+        "note": note,
+        "registered_in": args.registered_in,
         "status": "ACTIVE",
-        "source_path": MANIFEST,
+        "source_path": args.manifest,
     }
     # DUYET ca hai truc -> mo khoa tang LIVE. Mot artifact hop le khi MOI truc
     # hop le (amendment 23-49c muc 3).
-    reg["approved_for_live"]["sla_axis"] = [LABEL]
+    approved = set(reg["approved_for_live"].get("sla_axis", []))
+    approved.add(args.label)
+    reg["approved_for_live"]["sla_axis"] = sorted(approved)
     reg["approved_for_live"]["aoi_axis"] = [AOI_LABEL]
 
     with open(REGISTRY, "w", encoding="utf-8") as fh:
         json.dump(reg, fh, ensure_ascii=False, indent=2, sort_keys=True)
-    print("[ok] dang ky %s  sha=%s..." % (LABEL, digest[:16]))
+    print("[ok] dang ky %s  sha=%s..." % (args.label, digest[:16]))
     print("     approved_for_live =", reg["approved_for_live"])
     return 0
 

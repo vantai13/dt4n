@@ -1,5 +1,4 @@
-"""Locked controls for Lesson 23.16."""
-
+"""Locked controls for the exogenous-SLA live-region sweep (Lesson 23.21h)."""
 from __future__ import annotations
 
 import json
@@ -8,84 +7,89 @@ import os
 import pytest
 
 from cert import live_region_sweep as L
-from cert.build_calib_set_v2 import compare_20R_constant_sigma
-from cert.cell_matrices import cell_matrices
-from measurements.decision_error_v2 import TruthTable
 
 
-def _load(path):
+def _load(path: str) -> dict:
     if not os.path.exists(path):
         pytest.skip("artifact chua duoc sinh: %s" % path)
     with open(path, "r", encoding="utf-8") as handle:
         return json.load(handle)
 
 
-def test_preregistered_cells_va_thresholds_khoa():
-    assert L.PRIMARY_CANDIDATES == (("poisson", 0.875), ("poisson", 0.900), ("h2", 0.650))
-    assert L.H2_FALLBACK == ("h2", 0.675)
+def test_preregistered_cells_thresholds_and_output_are_locked() -> None:
+    assert tuple(L.NEW_SPECS) == (
+        "poisson@0.875",
+        "poisson@0.900",
+        "h2@0.650",
+        "h2@0.675",
+    )
+    assert len(L.ANALYZED_CELLS) == len(set(L.ANALYZED_CELLS)) == 12
     assert L.DOMAIN_LIMIT == 1e-4
     assert L.LIVE_THRESHOLD == 0.05
+    assert L.OUTPUT.startswith("results/LIVE/")
+    assert all("parquet" not in spec for spec in L.NEW_SPECS.values())
 
 
-def test_cell_moi_khong_co_V5_reference_phase20r():
-    with pytest.raises(ValueError, match="got 0"):
-        compare_20R_constant_sigma({"z=0.05": 0.0}, "poisson", 0.875)
+def test_missing_wave4_template_fails_loudly() -> None:
+    with pytest.raises(SystemExit, match="Truyen --calib-template"):
+        L._calib_path(L.NEW_SPECS["h2@0.650"], None)
 
 
-def test_cell_matrices_doc_duoc_SLA_manifest_mo_rong():
-    if not os.path.exists(L.SLA_OUTPUT):
-        pytest.skip("SLA mo rong chua sinh")
-    out = cell_matrices(
-        TruthTable(L.TRUTH_TABLE),
-        mode="poisson",
-        rho_bar=0.875,
-        seeds=(101,),
-        n=1200,
-        calibration_path=L.SLA_OUTPUT,
-    )
-    assert len(out["y_true"]) > 0
-
-
-def test_NC_H_domain_control_du_hai_sigma_va_nam_seed():
-    report = _load(L.SLA_OUTPUT)
-    lesson = [row for row in report["cells"] if row.get("lesson") == "23.16"]
-    assert lesson
-    for row in lesson:
-        checks = row["domain_control"]["rows"]
+def test_exogenous_loader_preserves_domain_control_and_none_semantics() -> None:
+    report = L.load_sla_exogenous()
+    assert len(report["cells"]) == 14
+    assert report["fallback_triggered"] is None
+    assert len(report["requested_cells"]) == 4
+    checked = [cell for cell in report["cells"] if "domain_control" in cell]
+    assert len(checked) == 4
+    for cell in checked:
+        checks = cell["domain_control"]["rows"]
         assert len(checks) == 2 * len(L.SEEDS)
-        assert {item["sigma_source"] for item in checks} == {"sla_regime", "calib_builder"}
-        assert {item["seed"] for item in checks} == set(L.SEEDS)
-        builder = [item for item in checks if item["sigma_source"] == "calib_builder"]
-        stress = [item for item in checks if item["sigma_source"] == "sla_regime"]
-        assert row["domain_control"]["pass"] == all(item["worst_fraction"] < L.DOMAIN_LIMIT for item in builder)
-        assert row["domain_control"]["stress_sla_regime_pass"] == all(item["worst_fraction"] < L.DOMAIN_LIMIT for item in stress)
-        assert row["domain_control"]["eligibility_distribution"] == "calib_builder"
+        assert {row["sigma_source"] for row in checks} == {
+            "sla_regime",
+            "calib_builder",
+        }
+        assert cell["domain_control"]["eligibility_distribution"] == "calib_builder"
 
 
-def test_NC_K_fallback_chi_do_domain_quyet_dinh():
-    report = _load(L.SLA_OUTPUT)
-    h2 = {"%s@%.3f" % (r["mode"], r["rho_bar"]): r for r in report["cells"] if r.get("lesson") == "23.16" and r["mode"] == "h2"}
-    assert report["fallback_triggered"] == (not h2["h2@0.650"]["domain_control"]["pass"])
-    assert ("h2@0.675" in h2) == report["fallback_triggered"]
+def test_authoritative_regime_crosscheck_is_12_of_12() -> None:
+    rows = L.authoritative_regimes(L.ANALYZED_CELLS)
+    assert len(rows) == 12
+    assert all(row["match"] for row in rows.values())
+    assert sum(row["recomputed_regime"] == "LIVE" for row in rows.values()) == 6
 
 
-def test_NC_G_I_J_va_metric_keys():
+def test_prepare_sla_is_removed_with_teaching_error(capsys) -> None:
+    with pytest.raises(SystemExit):
+        L.main(["--prepare-sla"])
+    assert "SLA.calibrate_cell" in capsys.readouterr().err
+
+
+def test_generated_artifact_has_all_new_gates_and_validity() -> None:
     report = _load(L.OUTPUT)
-    assert report["controls"]["NC_G_old_cell_max_gap"] <= 1e-12
-    assert report["controls"]["NC_H_domain_checked_before_build"] is True
-    assert report["controls"]["NC_I_identity_all_valid"] is True
-    assert report["controls"]["NC_J_crossfit_all_valid"] is True
+    assert len(report["analyzed_cells"]) == 12
+    assert report["controls"]["NC_H_checked"] == 4
+    assert report["controls"]["NC_H_passed"] == 4
+    assert report["controls"]["NC_K_fallback_triggered"] is None
+    assert report["controls"]["G23_214_regime_crosscheck"]["matched"] == 12
+    assert report["controls"]["G23_214_regime_crosscheck"]["pass"] is True
+    assert report["validity"]["aoi_axis"]["label"] == "measured_v7_uniform"
+    assert report["validity"]["sla_axis"]["label"] == "exogenous_g114_S-B"
     assert set(report["verdict"]) == {
-        "M_53_rho_hit_in_0_860_0_925",
+        "M_176_A_B_agreement_at_least_8_of_12",
+        "M_177_rho_hit_in_0_900_0_925",
+        "M_178_poisson_err_neo_both_in_0_20_0_30",
+        "M_179_A_live_twin_deg_spread_in_1_00_1_50",
         "M_54_poisson_sign_monotone",
-        "M_55_poisson_err_neo_both_in_0_15_0_26",
-        "M_56_h2_candidate_live",
-        "M_57_h2_live_lift_minus_swing_negative",
-        "M_47b_delta_nonpositive_all_live_heldout",
-        "M_48b_twin_deg_spread_in_1_00_1_30",
+        "M_57_h2_A_live_lift_minus_swing_negative",
+        "M_47b_delta_nonpositive_all_A_live_heldout",
     }
 
 
-def test_M48b_tai_lap_readout_da_khoa():
+def test_M179_recomputes_over_every_A_live_cell() -> None:
     report = _load(L.OUTPUT)
-    assert report["metrics"]["M_48b_twin_deg_spread"] == pytest.approx(1.059170016762354, abs=1e-12)
+    live = report["metrics"]["M_179_A_live_cells"]
+    values = [report["cells"][cell]["lift_swing_F2"]["twin_deg"] for cell in live]
+    assert report["metrics"]["M_179_twin_deg_spread"] == pytest.approx(
+        max(values) / min(values), abs=1e-15
+    )

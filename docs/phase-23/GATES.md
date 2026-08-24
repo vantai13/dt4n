@@ -179,8 +179,8 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-138 | 23.20C | PASS | Bang 3 + doi chieu M-127..M-130: 1/4 HIT, bao cao NGUYEN kem giai thich (L34: noi suy tuyen tinh qua 124 ms tren artifact SENSITIVITY_ONLY) |
 | G23-139 | 23.20C | PASS | P23-A, L11, L13 DONG; L37..L41 ghi vao LIMITS.md |
 | G23-140 | 23.20C | PASS | Nhan CONDITIONAL_ON_DSYNC_51MS GIU nguyen: `approved_for_live` con rong vi truc SLA (S14) chua sua. `30-close-23-20.md` muc 4 |
-| G23-141 | 23.20C | DEBT | dinh nghia o `30-close-23-20.md` muc 5 (Dot 4: 12 build). Bi chan boi S14 -- xem `L41`; mo lai sau Lesson 23.21 |
-| G23-142 | 23.20C | DEBT | dinh nghia o `30-close-23-20.md` muc 5 (mo rong M-125a/b len 12 cell / 48 o). Cung ly do `L41` |
+| G23-141 | 23.20C | PASS | Dot 4 da chay 12/12 build, moi build qua G1..G4; `results/RUN_LEDGER_wave4.json`, digest `results/RAW/phase-21R/WAVE4_DIGESTS.json` |
+| G23-142 | 23.20C | PASS | M-125a mo rong 12/12 cell HIT (+7.916%..+10.886%); M-125b 48/48 o HIT, 32/32 o dem duoc HIT, max lech 3.464%; `axis_remeasure_impact_wave4.json` |
 | G23-97 | 23.20 | ADJUDICATED | ma DU KIEN ky truoc o amendment 23-44 muc 5; noi dung DA chay duoi ma khac. Alias -> `G23-137` (doi chung am ha nguon, bit-exact). Phan xu: amendment 23-51 muc 4 |
 | G23-98 | 23.20 | ADJUDICATED | ma DU KIEN; noi dung DA chay duoi `G23-129` + `G23-130` (M-125a 8/8, M-125b 16/16). Phan xu: amendment 23-51 muc 4 |
 | G23-99 | 23.20 | ADJUDICATED | ma DU KIEN; noi dung DA chay duoi `G23-138` (Bang 3 + doi chieu M-127..M-130, bao cao ca MISS). Phan xu: amendment 23-51 muc 4 |
@@ -263,13 +263,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-223 | 23.21j | PASS | Mtime rieng le khong nang duoc file thanh ORIGINAL. Bang chung manh hon giai thich di thuong: `os.replace` giu mtime NGUON; report timestamp + git/builder hash ghep bon file vao lo 13/08. L82 doi sang VERIFIED_SUPERSEDED_GENERATION, khong phai ORIGINAL |
 | G23-224 | 23.21j | PASS | `tier_results.py` preflight TAT CA dich truoc moi mutation/map-out; dich co san hoac dich lap trong plan -> return 2 va in chi tiet. Bo `git mv -f`; file ignored dung hard-link + unlink no-replace, nen ca va cham xuat hien sau preflight cung fail. DC duong: dich gia giu nguyen ca source/destination va khong tao map; 3 test xanh |
 | G23-225 | 23.21j | PASS | Lint AST tren `cert/`, `measurements/`, `tools/`: moi legacy `(mode,rho_bar)` chi co mot parquet literal. DC L85 voi `calib_set_v3.parquet` + `_poisson_0.925.parquet` -> DO. Da sua `phase23_cell_margins`; 3 regression test doi chieu artifact G23-17a/b/c cu voi canonical moi co 0 khac biet so hoc |
-| G23-226 | 23.21h | NOT_RUN | - |
-| G23-210 | 23.21h | NOT_RUN | - |
-| G23-211 | 23.21h | NOT_RUN | - |
-| G23-212b | 23.21h | NOT_RUN | - |
-| G23-227 | 23.21h | NOT_RUN | - |
-| G23-213 | 23.21h | NOT_RUN | - |
-| G23-214 | 23.21h | NOT_RUN | - |
+| G23-226 | 23.21h | PASS | Wave 4: 12/12 job qua G1..G4; 12 parquet + 12 report; digest ghim tai `results/RAW/phase-21R/WAVE4_DIGESTS.json`; backup logic 12/12 SHA khop tai `C:\\Users\\VAN TAI\\dt4n-evidence-backup-2026-08-24` |
+| G23-210 | 23.21h | PASS | Manifest 14 cell = 10 feasible base + 4 Dot 4, 14 feasible/14 unique, w_loss=5000, 0 fixpoint/derived/ngoai whitelist; sha256 `6e97ac054cce76284db3a7d3f674440408ee6f9f073c1e627b67a2bdbd1eae2d` |
+| G23-211 | 23.21h | PASS | `--prepare-sla` fail-loud kem huong dan thay the; `--calib-template` duoc forward that; xoa debt L72 cua `live_region_sweep`; test CLI/locked controls xanh |
+| G23-212b | 23.21h | PASS | NC am bat buoc: 8 cell, 2340 truong chung, chi mot ve 0, NHOM A lech 0, NHOM B lech 0; `results/RAW/phase-23/g23_212b_after.json` |
+| G23-227 | 23.21h | PASS | `NC_H truth_domain_check` chay 4/4 cell Dot 4 truoc build, 4/4 PASS; fallback duoc ghi `None` (khong ap dung), khong ep thanh `False` |
+| G23-213 | 23.21h | PASS | Sweep S-B sinh du 12 cell va bang A/B; M-176=10/12, M-177=0.925, M-178=0.257012/0.252413, M-179=1.281290; artifact `live_region_sweep_slaB.json`. M_57 va M_47b MISS, bao cao nguyen |
+| G23-214 | 23.21h | PASS | `regime` tinh lai tu shares/CI khop nhan authoritative `sla_exogenous_S-B` + `wave4` tai 12/12 cell |
 
 ## Va cham da phat hien
 
@@ -381,7 +381,7 @@ vi "nhin thi thay dung"; muon dong thi phai cham va ghi evidence.
 Dot 2 + Dot 3 va phep kiem hinh hoc bin.
 `G23-125`, `G23-137 .. G23-142` (lesson `23.20C`) la tich hop ha nguon va
 dong Lesson 23.20. `G23-141`/`G23-142` phu Dot 4 va viec mo rong M-125 len
-12 cell / 48 o; ca hai bi chan boi S14 -- xem `L41`.
+12 cell / 48 o; ca hai da duoc dong o Lesson 23.21h sau khi S14 bi thay.
 `G23-125` phu viec cho ha nguon nhan duong dan calib tuong minh;
 `conformal_v2` khong can vi no nhan `--calib`/`--out` truc tiep.
 

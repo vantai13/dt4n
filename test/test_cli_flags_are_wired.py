@@ -23,7 +23,6 @@ MODULES = sorted(
 # Known debt.  Entries may only be removed, never added without an amendment.
 KNOWN_DEAD = {
     ("cert/abstain_cost.py", "calib_template"): "L72 -- sua o lesson so huu",
-    ("cert/live_region_sweep.py", "calib_template"): "L72 -- sua o 23.22",
     ("measurements/decision_error_v2.py", "boot_metrics"): "L72 -- compatibility flag khong co semantics",
     ("measurements/l6_campaign.py", "resume"): "L72 -- resume la mac dinh, co khong duoc doc",
     ("measurements/l6_campaign_fine.py", "resume"): "L72 -- resume la mac dinh, co khong duoc doc",
