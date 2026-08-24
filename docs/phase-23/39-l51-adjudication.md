@@ -289,6 +289,9 @@ calib_set_v3_poisson_0.850            CO         ★ KHOP  -> BAN GOC
 calib_set_v3_poisson_0.700            CO         ✗ KHAC  -> KHONG PHAI BAN GOC
       lich su : ec49deb8725498f9cf03d7c302983ab5...
       tren dia: 2267423d8d33f3da3ad07ab12a2c5d28...
+calib_set_v3_cbr_0.700                CO         ? UNKNOWN -- chi bam hom nay
+calib_set_v3_poisson_0.925            CO         ? UNKNOWN -- chi bam hom nay
+calib_set_v3_poisson_0.925_V3         CO         ? UNKNOWN -- chi bam hom nay
 calib_set_v3_poisson_0.960            MAT        -
 calib_set_v3_h2_0.850 / _0.925 / _0.960  MAT     -
 ```
@@ -299,16 +302,19 @@ phai ban goc. Dung no lam moc doi chung se rot dung cai bay chinh `L51` da
 canh bao: *"dung lai ma tham so khong khop goc -> doi chung am muc duong ong
 vo nghia IM LANG."*
 
-Chi phat hien duoc vi co digest de doi chieu. Do la lap luan tu bao ve cua
-`G23-174`, hoat dong lan dau tren du lieu that.
+Chi phat hien duoc vi co digest LICH SU DOC LAP de doi chieu. Do la lap luan
+tu bao ve cua `G23-174`, hoat dong lan dau tren du lieu that. Ba digest do
+`g23_174_reuse_verdict.json` bam trong ngay KHONG xac minh ba file UNKNOWN:
+dung ban bam hom nay de chung minh chinh file hom nay la vong tron.
 
 ## 6.3. `L51` sua thanh ba menh de rieng
 
 ```text
 L51a  DIGEST lich su:      KHONG mat. Nam trong provenance cua artifact cu.
-L51b  DU LIEU:             5/9 input mat vinh vien. Khong hoi sinh duoc.
-L51c  XAC MINH:            4 file con song doi chieu duoc -- 3 goc, 1 khong.
-                           `_poisson_0.700` CAM tai dung lam moc doi chung.
+L51b  DU LIEU GOC:         5/9 parquet input lich su khong dung duoc:
+                           4 vang mat + 1 da bi thay noi dung.
+L51c  XAC MINH FILE LOCAL: 3 VERIFIED_ORIGINAL / 1 NOT_ORIGINAL / 3 UNKNOWN.
+                           NOT_ORIGINAL va UNKNOWN deu CAM tai dung.
 ```
 
 Ket luan "khong tai dung duoc bit-exact cac con so Phase 22" VAN DUNG (thieu
@@ -359,6 +365,11 @@ Nen `G23-212a` phu **8/8 cell**, khong phai 3 hay 4. Ten `212a` giu vi no van
 khac `G23-212`: `212` doi tai tao artifact LICH SU (bat kha thi -- `L75`+`L51b`),
 `212a` chi khang dinh TUONG DUONG DUONG CODE tren mot tap du lieu ghim digest.
 
+Gioi han: `G23-212a` co the PASS neu duong cu va duong moi CUNG sai theo mot
+cach. No khang dinh thay `prepare_sla()` bang nap manifest khong doi 2340
+truong ha nguon; no KHONG tu than chung minh manifest ngoai sinh la dung.
+Tinh dung do thuoc cac gate noi dung/validity rieng, khong thuoc parity nay.
+
 **Viec 3 khong con bi chan boi `L51`.** Ve A da chup:
 `results/RAW/phase-23/g23_212a_before.json`.
 
@@ -384,3 +395,17 @@ de CHAN thu no khong thuc su chan.
 > thay the duoc DU LIEU. **Sao luu ra ngoai o dia.** Neu o dia hong truoc do:
 > `L51b` tu 5/9 thanh 9/9, `G23-212a` mat luon ve A, va Viec 3 khong bao gio
 > lam dung duoc.
+
+## 6.6. Custody sau phan quyet (`L82`--`L84`, `G23-221`--`G23-223`)
+
+Da backup 23/23 parquet (7 Phase 22 + 16 Phase-21R) sang filesystem Windows
+ngoai `/dev/sdd`; SHA-256 nguon/đich lech 0. Sau do khoa write bit cua
+`results/RAW` va `results/SUPERSEDED` o muc OS.
+
+Mtime cua bay file deu nam 13--15/08. Tuy nhien `poisson_0.700`, da chung minh
+bang digest la KHAC ban goc, cung mang mtime 13/08. Vi vay mtime khong du nang
+ba file UNKNOWN thanh ORIGINAL; no co phan vi duong ngay trong cung tap.
+
+Test custody da tach: VANG MAT chi do tren may giu du lieu; DOI NOI DUNG van
+la bat bien portable va do o moi noi file co mat. CI/clone sach loai marker
+`custody`, con may tac gia chay rieng marker nay.

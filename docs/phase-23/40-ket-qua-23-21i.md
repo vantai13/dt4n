@@ -156,7 +156,8 @@ Da xac minh ca bon khiem khuyet ton tai dung nhu mo ta:
 
 KHONG bat dau, va co chu y:
 
-- No can amendment `23-61` rieng (chua ky).
+- No can amendment rieng. `23-61` nay da duoc dung cho custody/khoa evidence;
+  Viec 3 neu bat dau se la amendment `23-62`.
 - Gate bat buoc `G23-212` (NC am: nap manifest 10 cell cu -> tai tao
   `eight_cell_sweep_..._slaB.json` bit-exact) KHONG chay duoc: artifact doi
   chung do chinh la file dang bi grandfather vi `L75`, va sinh lai no bi chan
@@ -169,10 +170,12 @@ KHONG bat dau, va co chu y:
 
 > ⚠️ **MUC 6 DA LAC HAU -- xem muc 9.4.** Thu tu vua neu la mot DEADLOCK THU
 > HAI cung dang `L67`: mat dau ("mo `L51`") khong bao gio giai duoc, vi 5/9
-> dau vao mat vinh vien. `G23-212a` (do sau vong review) di vong duoc: no
+> parquet input goc khong dung duoc (4 vang mat + 1 da doi). `G23-212a` (do
+> sau vong review) di vong duoc: no
 > khang dinh TUONG DUONG DUONG CODE tren bo calib phase-21R co digest ghim,
 > thay vi tai tao artifact LICH SU. Da PASS 8/8 cell.
-> **Viec 3 KHONG con bi chan.** Van chua lam -- can amendment `23-61`.
+> **Viec 3 KHONG con bi chan.** Van chua lam -- can amendment `23-62` sau
+> amendment custody `23-61`.
 
 ## 7. Trang thai test
 
@@ -301,9 +304,10 @@ hien `provenance.inputs` cua `eight_cell_sweep_U3_measured_v7.json` (git_hash
 `05b597f5`) DA LUU sha256 cua ca 9 dau vao.
 
 ```text
-3 file con song   KHOP digest goc      -> BAN GOC
-1 file con song   KHAC digest goc      -> KHONG PHAI BAN GOC  ★
-5 file            mat                  -> khong doi chieu duoc
+3 calib con song  KHOP digest goc      -> BAN GOC
+1 calib con song  KHAC digest goc      -> KHONG PHAI BAN GOC  ★
+4 calib           mat                  -> khong doi chieu duoc
+1 truth table     KHOP digest goc      -> BAN GOC
 ```
 
 **Bay suyt roi vao:** review de xuat dung BON cell cho `G23-212a`, trong do co
@@ -311,9 +315,9 @@ hien `provenance.inputs` cua `eight_cell_sweep_U3_measured_v7.json` (git_hash
 `2267423d...`). Dung no lam moc doi chung se rot dung cai bay `L51` canh bao.
 Chi phat hien duoc vi co digest de doi chieu.
 
-`L51` tach thanh `L51a` (digest: khong mat), `L51b` (du lieu: mat 5/9, vinh
-vien), `L51c` (xac minh: 3 goc / 1 khong / cam tai dung). Ket luan cuoi khong
-doi, nhung LY DO doi han -- va van ban Threats to Validity da phai viet lai
+`L51` tach thanh `L51a` (digest: khong mat), `L51b` (du lieu goc: 5/9 khong
+dung duoc = 4 vang + 1 da doi), `L51c` (file local: 3 goc / 1 doi / 3 UNKNOWN).
+Ket luan cuoi khong doi, nhung LY DO doi han -- va van ban Threats to Validity da phai viet lai
 (`39-l51-adjudication.md` muc 6.3).
 
 ## 9.4. `G23-212a`: 8/8 cell, khong phai 3 hay 4
@@ -329,6 +333,10 @@ ve A: results/RAW/phase-23/g23_212a_before.json
 ```
 
 **Viec 3 khong con bi chan.**
+
+Gioi han phai ghi kem: `G23-212a` chi chung minh TUONG DUONG DUONG CODE. Neu
+hai duong cung doc mot manifest sai theo cung cach, 2340 truong van co the
+khop. Tinh dung cua manifest/nhan che do do gate NOI DUNG va validity rieng.
 
 ## 9.5. Cai chan cua toi QUA tren may toi, DO tren clone sach (`L79`)
 
@@ -354,9 +362,10 @@ goi. 191 test lien quan van xanh sau khi sua.
 ```text
 7 parquet Phase 22 (468 MB)  git_tracked = 0/7
 16 parquet phase-21R          git_tracked = 0/16
+backup ngoai filesystem WSL   23/23 parquet, SHA mismatch = 0
 ```
 
-Digest DA ghim (`results/RAW/phase-22/SURVIVING_CALIB_DIGESTS.json`), nhung
-**digest khong thay the duoc DU LIEU**. Sao luu ra ngoai o dia. Neu o dia hong
-truoc do: `L51b` tu 5/9 thanh 9/9, `G23-212a` mat ve A, Viec 3 khong bao gio
-lam dung duoc.
+Digest DA ghim (`results/RAW/phase-22/SURVIVING_CALIB_DIGESTS.json`) va ban
+sao da dat o filesystem Windows ngoai `/dev/sdd`. Vi khong co o roi duoc
+mount, day KHONG phai tuyen bo ve hai thiet bi vat ly doc lap. Sau backup,
+`RAW`/`SUPERSEDED` duoc khoa write bit va custody test ghim trang thai.

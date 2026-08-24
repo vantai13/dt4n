@@ -19,6 +19,7 @@ import glob
 import hashlib
 import json
 import os
+import stat
 
 import pytest
 
@@ -175,30 +176,51 @@ def test_local_only_entries_have_pinned_digests():
     )
 
 
-def test_pinned_digests_still_match_disk():
-    """Digest da ghim phai con khop BYTE tren dia.
-
-    Neu mot file doi noi dung ma digest khong doi, moi ket luan dung no thanh
-    vo nghia mot cach IM LANG -- dung dieu `L51` canh bao.
-    """
+def _pinned_files() -> dict[str, dict]:
     pin = os.path.join(REPO, DIGEST_PIN)
     if not os.path.exists(pin):
-        pytest.skip("chua ghim digest")
+        return {}
     with open(pin, "r", encoding="utf-8") as fh:
-        files = json.load(fh)["files"]
-    drift = []
-    for rel, meta in sorted(files.items()):
+        return json.load(fh)["files"]
+
+
+def _sha256(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as handle:
+        for chunk in iter(lambda: handle.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _missing_pinned_files() -> list[str]:
+    return sorted(
+        rel for rel in _pinned_files()
+        if not os.path.exists(os.path.join(REPO, rel))
+    )
+
+
+def test_pinned_digests_have_not_changed():
+    """B: file CO tren dia thi digest phai khop; vang mat khong phai drift.
+
+    Day la bat bien KHA CHUYEN. Tren clone sach no xanh rong vi khong co file
+    local nao de bi doi. Tren may tac gia, chi MOT byte doi cung lam test do.
+    """
+    changed = []
+    for rel, meta in sorted(_pinned_files().items()):
         p = os.path.join(REPO, rel)
         if not os.path.exists(p):
-            drift.append("%s: DA BIEN MAT khoi dia" % rel)
             continue
-        h = hashlib.sha256()
-        with open(p, "rb") as fh2:
-            for chunk in iter(lambda: fh2.read(1 << 20), b""):
-                h.update(chunk)
-        if h.hexdigest() != meta["sha256"]:
-            drift.append("%s: sha256 DA DOI" % rel)
-    assert not drift, "digest da ghim khong con khop:\n  %s" % "\n  ".join(drift)
+        actual = _sha256(p)
+        if actual != meta["sha256"]:
+            changed.append("%s: %s != %s" % (rel, actual, meta["sha256"]))
+    assert not changed, "file local DA DOI NOI DUNG:\n  %s" % "\n  ".join(changed)
+
+
+@pytest.mark.custody
+def test_pinned_files_still_present():
+    """A: bay file Phase 22 con tren MAY GIU DU LIEU khong."""
+    missing = _missing_pinned_files()
+    assert not missing, "file custody DA BIEN MAT khoi dia:\n  %s" % "\n  ".join(missing)
 
 
 def _scan() -> list[tuple[str, str]]:
@@ -214,8 +236,9 @@ def _scan() -> list[tuple[str, str]]:
     return found
 
 
+@pytest.mark.custody
 def test_no_hardcoded_missing_parquet():
-    """Duong dan parquet CHET (hang so cung, file khong ton tai)."""
+    """May TAC GIA con du lieu cho cac duong dan local da khai khong."""
     bad = [
         (py, s)
         for py, s in _scan()
@@ -242,3 +265,41 @@ def test_known_dangling_only_shrinks():
         "parquet DA co lai tren dia nhung van nam trong KNOWN_DANGLING:\n  %s\n"
         "  -> xoa muc do (danh sach nay chi duoc NGAN DI)." % "\n  ".join(revived)
     )
+
+
+@pytest.mark.custody
+def test_closed_evidence_tiers_are_read_only():
+    """G23-221: RAW/SUPERSEDED khong co bit ghi o muc he dieu hanh."""
+    writable = []
+    for rel in ("results/RAW", "results/SUPERSEDED"):
+        root = os.path.join(REPO, rel)
+        for path in [root] + sorted(glob.glob(os.path.join(root, "**"), recursive=True)):
+            mode = os.stat(path).st_mode
+            if mode & (stat.S_IWUSR | stat.S_IWGRP | stat.S_IWOTH):
+                writable.append(os.path.relpath(path, REPO).replace(os.sep, "/"))
+    assert not writable, "evidence da dong van ghi duoc:\n  %s" % "\n  ".join(writable[:30])
+
+
+def test_every_presence_check_is_marked_custody():
+    """G23-222: test that bai vi VANG MAT local phai mang mark custody.
+
+    Hai helper duoi day co semantics ro: chung bien su vang mat tren MOT may
+    thanh loi. Them test moi goi chung ma quen mark se lam suite clone do.
+    """
+    custody_helpers = {"_missing_pinned_files", "_scan"}
+    with open(__file__, encoding="utf-8") as handle:
+        tree = ast.parse(handle.read())
+    bad = []
+    for fn in (node for node in tree.body if isinstance(node, ast.FunctionDef)
+               and node.name.startswith("test_")):
+        calls = {
+            node.func.id
+            for node in ast.walk(fn)
+            if isinstance(node, ast.Call) and isinstance(node.func, ast.Name)
+        }
+        if not (calls & custody_helpers):
+            continue
+        marked = any("custody" in ast.dump(dec) for dec in fn.decorator_list)
+        if not marked:
+            bad.append(fn.name)
+    assert not bad, "test doc su VANG MAT local nhung thieu mark custody: %s" % bad

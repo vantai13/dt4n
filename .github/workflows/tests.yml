@@ -16,4 +16,6 @@ jobs:
       # khong can biet 1060 test con lai noi gi.
       - name: axis guard (G23-78)
         run: pytest test/test_no_stale_axes.py -q
-      - run: pytest test/ -q -m "not live"
+      # `custody` doc parquet ngoai git tren may tac gia; clone CI khong co va
+      # khong nen do. Bat bien noi dung van nam trong suite portable.
+      - run: pytest test/ -q -m "not live and not custody"
