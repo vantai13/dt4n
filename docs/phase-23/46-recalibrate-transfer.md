@@ -16,9 +16,12 @@ Task B do cai conformal **KHONG** hua: mang nguyen `qhat` sang che do khac.
 ```text
 Cau tra loi co BA ve:
 
-  1. Tai hieu chuan KHOI PHUC HOAN TOAN bao dam bao phu. Tren 60 o co
-     acceptance >= 0.20, so o co `viol > alpha` la **0 / 60**.
-     Cai `kappa` sai lam mat KHONG PHAI tinh hop le -- ma la ACCEPTANCE.
+  1. Tai hieu chuan KHOI PHUC HOAN TOAN bao dam bao phu, tren **64 / 64** o --
+     KHONG mot ngoai le. Gia tri `viol|accept` LON NHAT trong toan bo ma tran
+     la **0.0800** < `alpha` = 0.10. Ke ca bon o roi duoi san acceptance cung
+     KHONG vi pham bao phu.
+     Cai `kappa` mang sai lam mat la ACCEPTANCE (4/64 o duoi san 0.20),
+     KHONG phai tinh hop le.
 
   2. MENH DE BAO TOAN dung theo CA HAI chieu, va do duoc:
          C3-R  giu `viol`  (sd 0.0024)  de troi acceptance (sd 0.1101)  45.5x
@@ -30,12 +33,14 @@ Cau tra loi co BA ve:
 
 ## 1. Bang cham -- 7/7 du doan HIT, 4/4 doi chung dat
 
+![Hinh ba panel Task B-3](../../results/LIVE/phase-23/fig4_recalibrate_transfer.png)
+
 | ma | gate | nguong da ky | do duoc | ket qua |
 |---|---|---|---|---|
 | `M-200` | G23-261 | max abs delta = 0.0 tren 8/8 | `0.000e+00` / `0.000e+00` | **HIT** (kiem wiring) |
 | `M-201` | G23-262 | sd(viol) <= 0.020; sd(acc) trong [0.090, 0.180]; mean(viol) trong [0.05, 0.12] | 0.00242 / 0.11007 / 0.07413 | **HIT** |
 | `M-202` | G23-263 | Spearman >= +0.90; do doc trong [0.40, 0.62] | +0.9674 / 0.4776 | **HIT** |
-| `M-203` | G23-264 | >= 52/64 o | 60/64 | **HIT** |
+| `M-203` | G23-264 | >= 52/64 o (HOP: `viol` <= alpha VA acc >= 0.20) | 60/64 -- tach ve: bao phu **64/64**, acceptance **60/64** | **HIT** |
 | `M-204` | G23-265 | n\*(C3-R) trong [60,250]; n\*(B2-R) <= 60; ti so >= 2.0 | 120 / 30 / 4.00 | **HIT** |
 | `M-205` | G23-266 | trung vi \|derr\| <= 0.02 | 0.00549 | **HIT** (ket qua AM) |
 | `M-206` | G23-267 | sd(err B2-R) >= 0.020; sd(err C3-R) <= 0.025 | 0.03531 / 0.01500 | **HIT** |
@@ -124,9 +129,20 @@ Do la ly do `A068` muc 3.2 ky HAI nguong rieng chu khong mot dai hai phia
 (`M-195`).
 
 ```text
-Tren 60 o CON LAI (acceptance >= 0.20): so o co `viol > alpha` = 0 / 60.
-=> `M-203` (60/64) va "so o tren san acceptance" (60/64) la CUNG MOT TAP.
-   Rang buoc chat la ACCEPTANCE, khong phai bao phu.
+TACH HAI VE cua tieu chi HOP `M-203`:
+
+    ve BAO PHU      viol <= alpha   ->  64 / 64      max viol = 0.0800
+    ve ACCEPTANCE   acc  >= 0.20    ->  60 / 64
+    HOP                             ->  60 / 64      <- con so da ky
+
+=> ve bao phu KHONG BAO GIO BIND. Con so `60/64` do HOAN TOAN ve acceptance
+   quyet dinh. Bao cao mot minh con so hop la LAM YEU ket qua: no goi y bao
+   phu hong o 4 o, trong khi bao phu khong hong o dau ca.
+
+`L104`: moi tieu chi HOP phai bao cao TUNG VE rieng, khong chi bao cao hop.
+Cung ho voi `M-195` (dai hai phia tron "bao thu" voi "vo"), `M-186` (trung
+binh tron ba hieu ung) va `M-205`/`L102` (trung vi gop che xu the mot chieu).
+Day la lan thu TU.
 ```
 
 ## 4. ★ Menh de bao toan -- do duoc theo CA HAI chieu   (`M-201`, `M-206`)
@@ -198,6 +214,17 @@ dieu kien B2-R: |acceptance - a*| <= 0.05
 
 n*(C3-R) = 120     n*(B2-R) = 30 (SAN CUA LUOI)     ti so >= 4.00
 ```
+
+> ⚠️ **Hang `n` = 30 KHONG mo ta C3-R.** Tai `n` = 30, **96.1%** so lan chay
+> co `qhat_source == degenerate_fallback_to_none`, tuc `q` duoc tra ve la gia
+> tri KHOI TAO -- chinh la `qhat` cua thu tuc `none` (`L95`), thu tuc DA DUOC
+> DO LA VO bao dam hau chon loc (`M-187`). Nen `med viol = 0.0036` o hang do
+> la `viol` cua V-N tren mot tap chap nhan co lai, khong phai "C3-R bao thu".
+>
+> Duong cong C3-R chi co nghia tu `n` >= 60 (sup ve `none` con 0.9%) va sach
+> tu `n` = 120 (0.0%). Phan quyet `n*` = 120 KHONG doi, vi 120 nam trong vung
+> sach -- nhung hai hang dau cua bang tren khong duoc doc nhu hai diem cua
+> cung mot duong cong.
 
 Hai dieu phai doc dung:
 
@@ -323,13 +350,25 @@ FIRE dung nhu ky, thay vi duoc phat hien sau khi da ket luan.
 ## 8. `NC-B3-4` -- `L100` do lai o truc `n` moi   (`G23-269`)
 
 ```text
-     n    lan chay   sup ve `none`   hai co `L91`/`L93`   fixed_point   cycle_max
-    30       640        96.1%              3.9%              3.0%          0.9%
-    60       640         0.9%             78.0%             49.2%         21.2%
-   120       640         0.0%              6.2%             48.8%         44.7%
-   250       640         0.0%              1.4%             52.0%         46.7%
-   500        64         0.0%              0.0%             42.2%         57.8%
+     n   lan chay   sup ve `none`  suy bien MOT PHAN  fixed_point  cycle_max  | tong  | hai co `L91`/`L93`
+    30      640        96.1%              0.0%            3.0%       0.9%     | 100%  |       3.9%
+    60      640         0.9%             28.6%           49.2%      21.2%     | 100%  |      78.0%
+   120      640         0.0%              6.6%           48.8%      44.7%     | 100%  |       6.2%
+   250      640         0.0%              1.2%           52.0%      46.7%     | 100%  |       1.4%
+   500       64         0.0%              0.0%           42.2%      57.8%     | 100%  |       0.0%
+
+`suy bien MOT PHAN` = `qhat_source == "degenerate_partial"`
+  (`config_matrix.py:325-331`): vong lap CHAY DUOC >= 1 vong -- nen `q` LA mot
+  iterate that cua V-S -- roi dung san block va break. KHAC HAN
+  `degenerate_fallback_to_none`: cai kia la `none` DOI TEN.
+  Day la `selective` THAT, chua hoi tu, va thu tuc TU KHAI la suy bien.
+
+Ban dau bang nay khuyet cot do va KHONG tong bang 100% (o `n` = 60 chi
+0.9 + 49.2 + 21.2 = 71.3%). Xem `L104b`.
 ```
+
+**Tai `n*` = 120, 6.6% so lan chay tra ve mot `q` ma chinh thu tuc khai la
+suy bien.** Phat bieu `n*(C3-R) = 120` phai di kem con so do.
 
 Cung hinh dang voi doc 45 muc 5 va tai lap tren mot luoi khac: o `n` = 30,
 **96.1%** so lan chay la `none` doi ten, va he thong co cu chi bat duoc
@@ -343,9 +382,11 @@ Chan dung so 4 cua `A068` muc 8 khong kich hoat (0.0% << 20%).
 ## 9. Ket luan Task B-3 -- bon cau
 
 ```text
-1. Tai hieu chuan KHOI PHUC bao dam bao phu, hoan toan. Tren 60 o co
-   acceptance >= 0.20, 0 o co `viol > alpha`. Cai `kappa` mang sai lam mat
-   la ACCEPTANCE, khong phai TINH HOP LE.   (`M-203`, `G23-264`)
+1. Tai hieu chuan KHOI PHUC bao dam bao phu tren **64/64** o -- khong mot
+   ngoai le, `viol` lon nhat = 0.0800 < alpha = 0.10. Cai `kappa` mang sai
+   lam mat la ACCEPTANCE (4/64 o duoi san 0.20), KHONG phai TINH HOP LE.
+   Tieu chi HOP da ky cho 60/64; hai ve tach ra la 64/64 va 60/64 (`L104`).
+   (`M-203`, `G23-264`)
 
 2. Cai gia do CO DAU va DU DOAN DUOC tu mot dai luong quan sat duoc:
    |acceptance - a*| ~ 0.478 x |log(kappa_A/kappa_B)|, Spearman +0.967.

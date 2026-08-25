@@ -1,10 +1,16 @@
-# 99 -- Gate decision, Phase 23 through Lesson 23.4
+# 99 -- Gate decision, Phase 23 through Lesson 23.22
 
-Ngay checkpoint: 2026-08-15
+Ngay checkpoint: 2026-08-26
 
-Trang thai: Lessons 23.0--23.4 da chay. Ket luan cu "C3 giu cross-cell" bi
-rut lai; ket luan moi la law co dieu kien `lift > swing` trong Amendment 23-19
-va `05-cross-cell.md`.
+Trang thai: Lesson 23.22 da dong tai `47-close-23-22.md`. Ket luan abstract:
+C3 khong mua duoc mot quyet dinh tot hon B2 tai acceptance khop; no mua duoc
+mot PHAT BIEU bao phu, mot thu tuc tai hieu chuan de lay lai phat bieu do o
+che do moi, va mot co chan doan khi co mau khong du. Gia phai tra la yeu cau
+co mau lon hon va acceptance troi khi mang `kappa` sai. Tai hieu chuan khoi
+phuc coverage tren 64/64 o; 4/64 o mat acceptance, khong mat validity.
+
+Phan ben duoi giu nguyen checkpoint lich su 23.4 de bao toan dau vet. Ledger
+canonical hien tai nam o `GATES.md`; tong ket 23.22 nam o `47-close-23-22.md`.
 
 Latest cross-cell artifact commit before this document: `095a34d`.
 Latest lift-law artifact commit: `d180804`.
