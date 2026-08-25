@@ -289,6 +289,7 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-243 | 23.22 | NOT_RUN | - |
 | G23-244 | 23.22 | NOT_RUN | - |
 | G23-245 | 23.22 | NOT_RUN | - |
+| G23-246 | 23.22 | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -483,7 +484,7 @@ khi amendment 23-64 chi CAN NHAC ten no.
 
 `G23-239 .. G23-244` (lesson `23.22` vong hai) mo boi amendment 23-65: sua `L91`
 (nguong dung luong cua V-S), tien dang ky `M-188`, va bon doi chung cho lan chay
-lai. KE TIEP `G23-238`. `G23-245` mo boi amendment 23-65b (`L93`).
+lai. KE TIEP `G23-238`. `G23-245` mo boi amendment 23-65b (`L93`); `G23-246` boi amendment 23-65c (`M-192`).
 
 ## Ghi chu ve pham vi ID
 

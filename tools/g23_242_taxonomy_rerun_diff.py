@@ -16,8 +16,10 @@ cham vao thu khac -> DUNG dong lesson, revert, tim nguyen nhan tren ban cu.
 from __future__ import annotations
 
 import argparse
+import hashlib
 import json
 import os
+import subprocess
 from typing import Any, Dict, List, Mapping, Tuple
 
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
@@ -27,7 +29,11 @@ FROZEN_TREES = ("census", "spread", "mhat_concentration")
 # Khoa MOI duoc phep xuat hien; moi khoa khac cua `bootstrap` phai trung.
 BOOTSTRAP_NEW_KEYS = ("M_188",)
 # Truong MOI duoc phep xuat hien trong moi hang cua `variant_sweep`.
-SWEEP_NEW_KEYS = ("qhat_has_infinite", "min_blocks_floor")
+# `L91`: qhat_has_infinite, min_blocks_floor
+# `L93`: qhat_at_sample_max, min_blocks_stable, min_blocks_at_final_qhat
+SWEEP_NEW_KEYS = ("qhat_has_infinite", "min_blocks_floor",
+                  "qhat_at_sample_max", "min_blocks_stable",
+                  "min_blocks_at_final_qhat")
 # Bien the duoc phep doi.
 MUTABLE_VARIANTS = ("selective",)
 
@@ -62,9 +68,41 @@ def _cmp(a: Mapping[str, Any], b: Mapping[str, Any], label: str,
     return bad
 
 
-def diff(old_path: str, new_path: str) -> Dict[str, Any]:
-    with open(old_path, "r", encoding="utf-8") as fh:
-        old = json.load(fh)
+def _sha256(path: str) -> str:
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def load_old(path: str | None, git_ref: str | None) -> Tuple[Dict[str, Any], Dict[str, Any]]:
+    """Nap ban CU. Uu tien git ref.
+
+    Mot git blob TU CHUNG MINH noi dung cua no (SHA-1 la ham cua noi dung, va
+    co mat o MOI ban sao repo). Mot duong dan chi la mot LOI HUA rang ai do da
+    chep dung.
+
+    Va no tranh mot cai bay: ghim ban cu vao `results/RAW/` doi phai `chmod`
+    nguoc lai mot tang DA KHOA custody (amendment 23-61 dong 70), tuc pha chinh
+    hang rao dang bao ve bang chung. Them nua, bit `chmod` KHONG duoc git theo
+    doi, nen hang rao do la CUC BO THEO MAY -- mot ly do nua de dung git blob.
+    """
+    if git_ref:
+        raw = subprocess.check_output(["git", "show", git_ref], text=True)
+        blob = subprocess.check_output(["git", "rev-parse", git_ref], text=True).strip()
+        return json.loads(raw), {"kind": "git", "ref": git_ref, "blob": blob}
+    if not path:
+        raise SystemExit("can --old hoac --old-git-ref")
+    with open(path, "r", encoding="utf-8") as fh:
+        return json.load(fh), {"kind": "file",
+                               "path": os.path.relpath(path, REPO),
+                               "sha256": _sha256(path)}
+
+
+def diff(old_path: str | None, new_path: str,
+         old_git_ref: str | None = None) -> Dict[str, Any]:
+    old, old_prov = load_old(old_path, old_git_ref)
     with open(new_path, "r", encoding="utf-8") as fh:
         new = json.load(fh)
 
@@ -99,7 +137,7 @@ def diff(old_path: str, new_path: str) -> Dict[str, Any]:
 
     return {
         "schema": "dt4n.g23_242.v1",
-        "old": os.path.relpath(old_path, REPO),
+        "old_provenance": old_prov,
         "new": os.path.relpath(new_path, REPO),
         "n_cells": len(set(co) & set(cn)),
         "frozen_violations": bad,
@@ -111,12 +149,16 @@ def diff(old_path: str, new_path: str) -> Dict[str, Any]:
 
 def main() -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--old", required=True)
+    ap.add_argument("--old", default=None, help="duong dan file cu")
+    ap.add_argument("--old-git-ref", default=None,
+                    help="vd `eefd34a:results/LIVE/phase-23/taxonomy_audit.json`. UU TIEN hon --old: git blob TU CHUNG MINH noi dung, va khong doi ghi vao tang da khoa custody.")
     ap.add_argument("--new", required=True)
-    ap.add_argument("--out", default="results/RAW/phase-23/g23_242_rerun_diff.json")
+    ap.add_argument("--out",
+                    default="results/LIVE/phase-23/g23_242_rerun_diff.json",
+                    help="KHONG duoc mac dinh vao results/RAW/ -- tang do da `chmod a-w` theo amendment 23-61 va ghi vao do se phai pha custody.")
     a = ap.parse_args()
 
-    rep = diff(a.old, a.new)
+    rep = diff(a.old, a.new, a.old_git_ref)
     os.makedirs(os.path.dirname(os.path.join(REPO, a.out)), exist_ok=True)
     with open(os.path.join(REPO, a.out), "w", encoding="utf-8") as fh:
         json.dump(rep, fh, indent=2, sort_keys=True)
@@ -128,6 +170,7 @@ def main() -> int:
         print("    %s" % line)
     print("G23-242  hang V-S doi          : %s" % rep["selective_rows_changed_by_cell"])
     print("G23-242  %s" % ("PASS" if rep["G23_242_hit"] else "FAIL"))
+    print("G23-242  ban cu               : %s" % rep["old_provenance"])
     print("-> %s" % a.out)
     return 0 if rep["G23_242_hit"] else 1
 

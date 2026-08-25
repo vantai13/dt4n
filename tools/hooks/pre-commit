@@ -1,0 +1,19 @@
+#!/bin/sh
+# So gate/limit phai XANH truoc moi commit cham vao docs/phase-23/.
+#
+# Ly do ton tai: commit `1b21b2c` duoc tao khi ledger dang DO -- amendment
+# 23-65 da ky `L91`/`L92` va `G23-239..244` nhung chua them dong nao vao so.
+# Sau khi commit, tac gia chi chay `test_phase23_taxonomy_audit.py`. So bat
+# dung ngay khi duoc chay; van de la KHONG AI CHAY NO.
+#
+# Mot buoc kiem tra dat SAU commit la mot buoc kiem tra dua vao tri nho cua
+# nguoi dang voi. Hook nay bien no thanh mot cai CHAN.
+if git diff --cached --name-only | grep -q '^docs/phase-23/'; then
+    if [ -x .venv/bin/python ]; then PY=.venv/bin/python; else PY=python3; fi
+    $PY -m pytest test/test_limits_ledger.py test/test_phase23_gate_ledger.py -q || {
+        echo ""
+        echo "So gate/limit DO. Sua LIMITS.md / GATES.md truoc khi commit."
+        echo "Bo qua (chi khi that su can): git commit --no-verify"
+        exit 1
+    }
+fi
