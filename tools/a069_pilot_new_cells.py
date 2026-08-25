@@ -99,7 +99,12 @@ def _run_builder(mode: str, rho: float, calibration: str, out_dir: str) -> Dict[
         "--calibration", calibration, "--out", parquet, "--report", report,
     ]
     started = time.monotonic()
-    subprocess.run(cmd, check=True)
+    # Builder tu in mot validation report day du. A069 muc 3 cam dua cac bien
+    # do len man hinh truoc tag prereg; chan stdout tai NGUON, khong loc text.
+    subprocess.run(
+        cmd, check=True, stdout=subprocess.DEVNULL,
+        stderr=subprocess.PIPE, text=True,
+    )
     elapsed = time.monotonic() - started
     return {"parquet": parquet, "report": report, "build_seconds": elapsed}
 

@@ -1,3 +1,5 @@
+import subprocess
+
 from tools import a069_pilot_new_cells as P
 
 
@@ -18,6 +20,22 @@ def test_pilot_report_cell_allowlist_is_exact() -> None:
 def test_pilot_never_overwrites_the_frozen_calibration() -> None:
     assert P.PILOT_CALIBRATION != P.BASE_CALIBRATION
     assert "A069" in P.PILOT_CALIBRATION
+
+
+def test_builder_stdout_is_suppressed_before_any_pilot_outcome_is_printed(
+    monkeypatch,
+) -> None:
+    seen = {}
+
+    def fake_run(cmd, **kwargs):
+        seen.update(kwargs)
+
+    monkeypatch.setattr(P.subprocess, "run", fake_run)
+    monkeypatch.setattr(P.time, "monotonic", iter((10.0, 12.0)).__next__)
+    P._run_builder("poisson", 0.740, "sidecar.json", "out")
+    assert seen["stdout"] is subprocess.DEVNULL
+    assert seen["stderr"] is subprocess.PIPE
+    assert seen["text"] is True
 
 
 def test_stop_rules_require_common_alive_rho_and_capacity_and_cost() -> None:
