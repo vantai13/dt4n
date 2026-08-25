@@ -83,7 +83,14 @@ PREDICTIONS: Dict[str, Dict[str, Any]] = {
     "M-184": {"lo": 1.05,  "hi": 1.30,  "what": "spread_m tren truc v7"},
     "M-185": {"lo": 1.10,  "hi": 1.30,  "what": "qhat[m3]/mean(qhat[m0..m2])"},
     "M-186": {"lo": 0.50,  "hi": 1.00,  "what": "ti so do rong CI95 qhat (4 o)/(16 o)"},
+    # amendment 23-65 -- KY THAT, chua do bao gio.
+    "M-188": {"lo": 0.45,  "hi": 1.00,
+              "what": "width95 qhat_flat(z) / qhat_mondrian(z,m), theo TUNG o"},
 }
+
+AMENDMENT_65 = "docs/phase-23/A065-amendment-65.md"
+LIVE_REGION = "results/LIVE/phase-23/live_region_sweep_slaB.json"
+ERR_NEO_LIVE = 0.05        # tieu chi A, amendment 23-62. KHONG dat nguong moi.
 
 
 def cell_name(mode: str, rho: float) -> str:
@@ -265,8 +272,16 @@ def paired_block_bootstrap_qhat(
 
     a_each = float(alpha) / len(CM.SIM_COLS)          # alpha/3, Bonferroni
     out: Dict[str, List[float]] = {"mondrian": [], "flat": []}
+    # M-188 (amendment 23-65): giu TUNG o, khong lay trung binh. Phep trung
+    # binh la nguon cua hien vat (b) trong `L90` -- 16 o trung binh 16 so, 4 o
+    # trung binh 4 so, va hai hieu ung do TRIET TIEU nhau gan het duoi mo hinh
+    # HANG, khien M-186 mat het do phan giai.
+    per_cell: Dict[str, Dict[tuple, List[float]]] = {"mondrian": {}, "flat": {}}
 
     for _ in range(int(n_boot)):
+        # `rng.choice` van duoc goi DUNG MOT LAN moi vong, dung thu tu -> chuoi
+        # ngau nhien KHONG DOI -> moi khoa CU phai bit-exact voi `eefd34a`.
+        # Do la dieu `G23-242` kiem.
         pick = rng.choice(blocks, size=n_blk, replace=True)
         boot = _resample_blocks(by_block, pick)
         for name, keys in (("mondrian", ["z_bin", "m_hat_bin"]), ("flat", ["z_bin"])):
@@ -274,6 +289,8 @@ def paired_block_bootstrap_qhat(
             q = CM._qhat(boot, CM.SIM_COLS, keys, {k: a_each for k in cells})
             vals = [float(v[0]) for v in q.values() if np.isfinite(v[0])]
             out[name].append(float(np.mean(vals)) if vals else float("nan"))
+            for k, v in q.items():                                    # M-188
+                per_cell[name].setdefault(CM._norm(k), []).append(float(v[0]))
 
     def _ci(x: List[float]) -> Dict[str, float]:
         arr = np.asarray([v for v in x if np.isfinite(v)], dtype=np.float64)
@@ -287,7 +304,7 @@ def paired_block_bootstrap_qhat(
         }
 
     ci_m, ci_f = _ci(out["mondrian"]), _ci(out["flat"])
-    return {
+    res = {
         "n_boot": int(n_boot), "seed": int(seed), "resample_unit": "block",
         "paired": True,
         "block_relabelled": True,
@@ -297,6 +314,57 @@ def paired_block_bootstrap_qhat(
         "M_186_width_ratio_flat_over_mondrian": float(
             ci_f["width95"] / max(ci_m["width95"], 1e-12)
         ),
+    }
+    res["M_188"] = m186_prime(per_cell)      # khoa MOI, khong dung khoa cu
+    return res
+
+
+def _width95(x: Sequence[float]) -> float:
+    a = np.asarray([v for v in x if np.isfinite(v)], dtype=np.float64)
+    if a.size == 0:
+        return float("nan")
+    lo, hi = np.percentile(a, [2.5, 97.5])
+    return float(hi - lo)
+
+
+def m186_prime(per_cell: Mapping[str, Mapping[tuple, List[float]]]) -> Dict[str, Any]:
+    """M-188 -- be rong CI cua CHINH con so ma mot hang nhan duoc.
+
+    Trien khai: mot hang o o `(z, m)` nhan `qhat_mondrian(z,m)` duoi V-M, va
+    `qhat_flat(z)` duoi V-N/V-S. Ghep DUNG hai con so do, KHONG lay trung binh
+    tren cac o. Vay ca hai hien vat cua `L90` -- so o duoc trung binh, va tuong
+    quan cheo o qua block dung chung -- deu bien mat.
+
+    Du doan tach bach hoan toan (do tren poisson@0.925):
+        HANG chi phoi   ->  sqrt(31237/124950) = 0.500
+        BLOCK chi phoi  ->  sqrt(457.5/500.0)  = 0.957
+    """
+    ratios: Dict[str, float] = {}
+    n_inf_m = n_inf_f = 0
+    for key_m, series_m in per_cell["mondrian"].items():
+        key_f = (key_m[0],)                       # (z, m) -> (z,)
+        series_f = per_cell["flat"].get(key_f)
+        if series_f is None:
+            raise KeyError("khong ghep duoc o Mondrian %r voi o phang %r"
+                           % (key_m, key_f))
+        n_inf_m += sum(1 for v in series_m if not np.isfinite(v))
+        n_inf_f += sum(1 for v in series_f if not np.isfinite(v))
+        wm, wf = _width95(series_m), _width95(series_f)
+        if np.isfinite(wm) and wm > 0.0 and np.isfinite(wf):
+            ratios[str(key_m)] = float(wf / wm)
+
+    vals = np.asarray(list(ratios.values()), dtype=np.float64)
+    return {
+        "ratio_by_mondrian_cell": ratios,
+        "M_188_ratio_mean": float(vals.mean()) if vals.size else float("nan"),
+        "M_188_ratio_min": float(vals.min()) if vals.size else float("nan"),
+        "M_188_ratio_max": float(vals.max()) if vals.size else float("nan"),
+        "n_paired_cells": int(vals.size),
+        "n_nonfinite_draws_mondrian": int(n_inf_m),
+        "n_nonfinite_draws_flat": int(n_inf_f),
+        "prediction_row_driven": 0.500,
+        "prediction_block_driven": 0.957,
+        "reading_rule": "<=0.70 HANG | >=0.88 BLOCK | giua: bao cao, khong ket luan",
     }
 
 
@@ -318,6 +386,8 @@ def variant_sweep(calib: pd.DataFrame, test: pd.DataFrame, anchor_err: float) ->
             ev = dict(ev)
             ev["variant"] = {"mondrian": "V-M", "none": "V-N", "selective": "V-S"}[post]
             ev["n_taxonomy_cells"] = int(len(fit["_q"]))
+            ev["qhat_has_infinite"] = bool(fit.get("qhat_has_infinite", False))
+            ev["min_blocks_floor"] = fit.get("min_blocks_floor")
             rows.append(ev)
             if float(kappa) == float(KAPPA_OP):
                 fits[post] = fit
@@ -440,9 +510,14 @@ def run_cell(mode: str, rho: float, role: str, n_boot: int = N_BOOT) -> Dict[str
     census_16 = taxonomy_census(calib, ["z_bin", "m_hat_bin"])
     census_4 = taxonomy_census(calib, ["z_bin"])
 
+    flags = live_region_flags().get(cell_name(mode, rho), {
+        "A_err_neo_ge_0_05": None, "regime": None, "S_pivotal": None,
+        "err_neo": float("nan"),
+    })
     return {
         "cell": cell_name(mode, rho),
         "role": role,                                # "MAIN" hoac "ROBUSTNESS"
+        "live_region": flags,                        # tieu chi A, amendment 23-62
         "parquet": pin(path),
         "n_rows": int(len(df)),
         "n_calib_blocks": int(calib["block_id"].nunique()),
@@ -475,6 +550,73 @@ def run_cell(mode: str, rho: float, role: str, n_boot: int = N_BOOT) -> Dict[str
 # (8) Cham du doan + provenance
 # ---------------------------------------------------------------------------
 
+def live_region_flags() -> Dict[str, Dict[str, Any]]:
+    """Tieu chi A cua Lesson 23.21 -- DA KY o amendment 23-62.
+
+    KHONG dat mot nguong moi. `A_err_neo_ge_0_05` da ton tai trong artifact
+    LIVE `live_region_sweep_slaB.json`.
+
+    CANH BAO: KHONG duoc loc bang cot `regime`. `regime = LIVE` la
+    `A ^ S_pivotal` -- no tron "twin co sai bao gio khong" voi "gate co xoay
+    chuyen quyet dinh khong". Do duoc: `poisson@0.925` (regime=COLLAPSED,
+    err_neo=0.2388) va `poisson@0.960` (COLLAPSED, 0.2161) PHAI nam trong mau,
+    va cai dau la cell MAIN.
+    """
+    with open(LIVE_REGION, "r", encoding="utf-8") as fh:
+        art = json.load(fh)
+    tbl, cells = art["live_definition_table"], art["cells"]
+    return {
+        name: {
+            "A_err_neo_ge_0_05": bool(flags["A_err_neo_ge_0_05"]),
+            "regime": str(flags["regime"]),
+            "S_pivotal": float(flags["S_pivotal"]),
+            "err_neo": float(cells[name]["F2"]["err_neo"]),
+        }
+        for name, flags in tbl.items()
+    }
+
+
+def score_M189(cells: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
+    """M-189 -- regression control, KHONG cham diem. [POST-HOC]
+
+    DA XEM: dau cua `V-N - V-S` duong 8/8 tren cell co A=True (min +0.0128).
+    Neu lan chay lai lam con so nay tut, do la dau hieu phep sua da pha mot
+    thu khac. No la CAI CHAN, khong phai bang chung.
+    """
+    live = [c for c in cells if c["live_region"]["A_err_neo_ge_0_05"]]
+    gaps = {c["cell"]: float(c["M_187"]["V_N_viol_given_accept"]
+                             - c["M_187"]["V_S_viol_given_accept"]) for c in live}
+    pos = sum(1 for g in gaps.values() if g > 0.0)
+    dead = [c["cell"] for c in cells if not c["live_region"]["A_err_neo_ge_0_05"]]
+    return {
+        "criterion": "err_neo >= %.2f (tieu chi A, amendment 23-62)" % ERR_NEO_LIVE,
+        "gap_V_N_minus_V_S_by_live_cell": gaps,
+        "n_positive": int(pos),
+        "n_live": int(len(gaps)),
+        "M_189_hit": bool(pos >= 7 and len(gaps) == 8),
+        "negative_control_cells": dead,
+        "label": "POST-HOC -- regression control, KHONG cham diem, KHONG lat G23-234",
+    }
+
+
+def score_G243(cells: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
+    """G23-243 -- `anchor_err` (A0, U3) == `err_neo` (23.21, U0) den 1e-12.
+
+    Hai script doc lap tinh cung mot dai luong. Do la mot doi chung nhat quan
+    mien phi ma truoc day chua ai khai.
+    """
+    rows = {c["cell"]: (float(c["anchor_err"]), float(c["live_region"]["err_neo"]))
+            for c in cells}
+    gaps = {k: abs(a - e) for k, (a, e) in rows.items()}
+    mx = max(gaps.values()) if gaps else float("nan")
+    return {
+        "max_abs_gap": float(mx),
+        "n_cells": int(len(gaps)),
+        "G23_243_hit": bool(mx < 1e-12),
+        "gap_by_cell": gaps,
+    }
+
+
 def score_predictions(cells: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
     """Cham theo dai DA KY. Khong doi dai sau khi xem so."""
     getters = {
@@ -484,6 +626,7 @@ def score_predictions(cells: Sequence[Mapping[str, Any]]) -> Dict[str, Any]:
         "M-184": lambda c: c["spread"]["M_184_spread_m"],
         "M-185": lambda c: c["mhat_concentration"]["M_185_ratio_mean"],
         "M-186": lambda c: c["bootstrap"]["M_186_width_ratio_flat_over_mondrian"],
+        "M-188": lambda c: c["bootstrap"]["M_188"]["M_188_ratio_mean"],
     }
     main = [c for c in cells if c["role"] == "MAIN"]
     out: Dict[str, Any] = {}
@@ -514,6 +657,7 @@ def build_report(cells: List[Dict[str, Any]]) -> Dict[str, Any]:
         "lesson": "23.22",
         "task": "A0 + A",
         "amendment": AMENDMENT,
+        "amendment_65": AMENDMENT_65,
         "superseded_basis": {
             "L89": "PHASE_23_v3.md trich spread_z=2.1232/spread_m=1.1188 tu "
                    "00zf-amendment-30.md dong 176-177, do tren Z_EDGES_LEGACY "
@@ -537,6 +681,8 @@ def build_report(cells: List[Dict[str, Any]]) -> Dict[str, Any]:
         },
         "cells": cells,
         "predictions": score_predictions(cells),
+        "M_189_live_region_control": score_M189(cells),
+        "G23_243_anchor_vs_err_neo": score_G243(cells),
         "validity": validity_block(
             aoi_generator=AOI_V7,
             z_edges=Z_EDGES_V7,

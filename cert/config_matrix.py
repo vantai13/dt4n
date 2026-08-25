@@ -164,6 +164,32 @@ def _alpha_each(alpha: float, m: int, simultaneous: bool, multiplicity: str) -> 
     raise ValueError("multiplicity phai la 'bonferroni' hoac 'sidak'")
 
 
+def conformal_min_blocks(alpha_each: float) -> int:
+    """n_eff nho nhat de `conformal_level` tra ve mot muc HUU HAN.
+
+    `L91` (amendment 23-65): KHONG duoc hard-code. Voi `alpha = 0.10` no la 9;
+    voi `alpha/3 = 0.0333` no la 29. Dung MOT con so cho ca hai la de
+    `qhat = +inf` lot qua chot chan suy bien: o co 9..28 block se qua duoc
+    `< 9`, roi `conformal_level` tra `None`, roi `_qhat` tra `+inf`, va vong
+    lap diem bat dong di tiep MOT NHIP voi mot nguong vo han.
+
+    Do duoc trong `taxonomy_audit.json` (`eefd34a`) truoc khi sua: 3/12 cell
+    co `qhat_slot1_mean = null` tai `kappa = 1`.
+
+    `cert/selective_conformal.py:277` giu `min_blocks = 9` va o DO no DUNG --
+    module do cham tren `s_margin` don le voi `alpha = 0.10`.
+    """
+    a = float(alpha_each)
+    if not (0.0 < a < 1.0):
+        raise ValueError("alpha_each phai thuoc (0,1); nhan %r" % (alpha_each,))
+    n = 1
+    while conformal_level(n, a) is None:
+        n += 1
+        if n > 100_000:                       # fail loud, khong treo im lang
+            raise ValueError("alpha_each qua nho: %r" % (alpha_each,))
+    return int(n)
+
+
 def fit_config(
     calib: pd.DataFrame,
     config: str,
@@ -245,12 +271,15 @@ def fit_config(
         seen: Dict[tuple[float, ...], int] = {}
         hist: list[Dict[tuple[Any, ...], np.ndarray]] = []
         info.update(converged=False, degenerate=False, n_iter=int(max_iter), cycle_len=0)
+        # `L91`: TINH nguong tu `a_each` tai cho dung, khong ghi hang so.
+        floor_blocks = conformal_min_blocks(a_each)
+        info["min_blocks_floor"] = int(floor_blocks)   # phai hien trong artifact
         for it in range(int(max_iter)):
             sel = _accept(calib, mcols, _q_rows(calib, keys, q, m), kappa)
             sub = calib[sel]
             nb_raw = sub.groupby(keys, sort=True)["block_id"].nunique()
             nb = {_norm(k): int(v) for k, v in nb_raw.items()}
-            if min(nb.get(k, 0) for k in cells) < 9:
+            if min(nb.get(k, 0) for k in cells) < floor_blocks:
                 info.update(converged=False, degenerate=True, n_iter=int(it), cycle_len=0)
                 break
             q_new = _qhat(sub, cols, keys, a_by)
@@ -276,6 +305,13 @@ def fit_config(
             for i, h in enumerate(hist)
         ]
 
+    # `L91`: mot `qhat` vo han la HOP LE ve toan (bao dam van giu, khoang chi
+    # vo dung) nen KHONG nem loi -- nem se chan nhung dung hop phap. Cai SAI la
+    # no di qua IM LANG. Co nay bien "im lang" thanh "khai bao", cung nguyen
+    # tac fail-loud da ap cho `pin()` o `L78`.
+    info["qhat_has_infinite"] = bool(
+        not all(np.isfinite(np.asarray(v, dtype=np.float64)).all() for v in q.values())
+    )
     info["qhat"] = {str(k): [float(x) for x in v] for k, v in q.items()}
     info["_q"] = q
     return info
