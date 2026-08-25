@@ -299,6 +299,7 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-253 | 23.22 | NOT_RUN | |
 | G23-254 | 23.22 | NOT_RUN | |
 | G23-255 | 23.22 | NOT_RUN | |
+| G23-256 | 23.22 | NOT_RUN | |
 
 ## Va cham da phat hien
 
@@ -500,6 +501,9 @@ chuyen giao C3 vs B2 tren 8 cell song, diem van hanh `kappa = 0.5` lay tu
 `M-192`. Nam du doan (`M-193`, `M-194`, `M-195`, `M-196`, `M-190`) va ba doi
 chung (`NC-1`, `NC-2`, `NC-3`). Ban thao noi bo cap den `G23-254` va gop
 `NC-2` voi `NC-3`; da tach vi hai doi chung kiem hai thu khac han.
+`G23-256` mo boi amendment 23-66b: `NC-3` duoc tach lam hai nhanh vi bat bien
+thang chi dung khi `qhat` DUOC UOC LUONG LAI, con nhanh mang nguyen thi ca hai
+phuong phap deu troi.
 
 ## Ghi chu ve pham vi ID
 
