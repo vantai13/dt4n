@@ -290,6 +290,7 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-244 | 23.22 | PASS | M-189 **8/8** cell `A=True` co `V-N - V-S > 0`. Bon cell `A=False` (`poisson@0.700`, `h2@{0.850,0.925,0.960}`) lam doi chung am. Nhan POST-HOC, KHONG dem diem -- chi la regression control, va no cho thay phep sua `L91` khong pha gi |
 | G23-245 | 23.22 | PASS | M-191 = **4** cell co `qhat_at_sample_max=true` tai `kappa=1`, trong dai ky [1,8]: `poisson@0.925` (nb=51), `poisson@0.900` (42), `poisson@0.960` (42), `h2@0.650` (58) -- deu duoi san on dinh 59. Chot chan van la `floor_blocks` (ghim boi test doc ma nguon) |
 | G23-246 | 23.22 | PASS | M-192: `min_blocks_at_final_qhat` cua V-S GIAM DON DIEU theo `kappa` o **8/8** cell `A=True` (nguong >=6/8); va nguong cat tren `poisson@0.925` = **0.5**, thuoc {0.25,0.50} da ky -- doc theo DOAN LIEN TUC tu `kappa=0`. Xem `L94`: van ban da ky mo ho, doc theo `max` ca tap cho 2.0 va se MISS |
+| G23-247 | 23.22 | PASS | `L95` do THANG tren artifact `b9d2774`, khong chay lai: **8/8** cell `A=True` tai `kappa=2` co `n_iter=0` va `qhat_slot1_mean` / `violation_given_accept` cua `selective` trung den chu so cuoi voi `none` (nguong >=8). VA `test_no_tool_writes_into_frozen_tiers` xanh voi tap ghim chin cong cu cua `L96` |
 
 ## Va cham da phat hien
 
@@ -484,7 +485,7 @@ khi amendment 23-64 chi CAN NHAC ten no.
 
 `G23-239 .. G23-244` (lesson `23.22` vong hai) mo boi amendment 23-65: sua `L91`
 (nguong dung luong cua V-S), tien dang ky `M-188`, va bon doi chung cho lan chay
-lai. KE TIEP `G23-238`. `G23-245` mo boi amendment 23-65b (`L93`); `G23-246` boi amendment 23-65c (`M-192`).
+lai. KE TIEP `G23-238`. `G23-245` mo boi amendment 23-65b (`L93`); `G23-246` boi amendment 23-65c (`M-192`); `G23-247` boi amendment 23-65d (`L95`, `L96`) -- no doc thang artifact da co, khong mo mot lan chay nao.
 
 ## Ghi chu ve pham vi ID
 
