@@ -302,7 +302,8 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-256 | 23.22 | PASS | `NC-3b` mang nguyen: giu `qhat_A` va `c` roi tha vao che do da gian x2 -> CA HAI troi, C3 **0.2510** va B2 **0.2553**, nguong > 0.05. Chan cach doc "C3 mien nhiem voi doi che do" |
 | G23-257 | 23.22 | PASS | `M-197` cham MU tren ma tran 4x4 cell CHET. Spearman(log ti le thang, `viol` C3) = **+0.9500** (12 o ngoai duong cheo) va **+0.8915** (16 o ke ca duong cheo) -- dat nguong +0.70 duoi CA HAI cach doc, nen van ban ky mo ho khong doi phan quyet. Phan tach theo dau: `viol` trung vi nhom "`qhat` qua nho" = **0.5866**, nhom "qua lon" = **0.0200**. Ba o (`h2@*` -> `poisson@0.700`) co `n_accept = 0` nen `viol` khong xac dinh: chieu an toan bao hoa o TU CHOI TOAN BO |
 | G23-258 | 23.22 | PASS | `M-198` chi bao KHONG CAN NHAN. (1) Spearman(log `median m_hat_1` tren tach TEST, log `scale qhat`) = **+0.9650** tren 12 cell, nguong >= +0.85 -- **MU**. (2) Dung ti le `m_hat` thay ti le `qhat` de du doan dau cua (`viol - alpha`): **53/56**, nguong >= 48. Menh de (2) KHONG mu (`A067` muc 6.2): bien ket qua da xem, no chi kiem phep thay the khong lam hong gi |
-| G23-259 | 23.22 | NOT_RUN | |
+| G23-259 | 23.22 | PASS | `M-199` chi phi tai hieu chuan. Duoi san hop le 29 block (`n` = 10 va 20; **160** lan lay mau tren 8 cell): C3 gan co `qhat_has_infinite`/`qhat_at_sample_max` o **100%** (nguong >= 90%), B2 tra `c` HUU HAN o **100%** va gan co o **0%**. 8/8 cell HIT rieng le. C3 BIET truoc khi no khong du du lieu; B2 khong co dai luong nao de biet |
+| G23-260 | 23.22 | DIAGNOSTIC | `L100`: tai `n = 30` block, ti le lan chay co `qhat_source = degenerate_fallback_to_none` (90-100%) LON HON ti le duoc hai co `L91`/`L93` bat (0-10%) tren **8/8** cell, nguong >= 6/8. POST-HOC, khong dem diem. Do la bang chung truong `qhat_source` (`A065d`) la co duy nhat con nhin thay o vung giao cua `L93` va `L95` |
 
 ## Va cham da phat hien
 
@@ -513,6 +514,10 @@ bai cua C3 CO DAU" (POST-HOC o tap song -> cham tren 16 o cell CHET chua xem),
 `M-198` chi bao khong can nhan, `M-199` chi phi tai hieu chuan (Task B-2). Ban
 thao noi bo cap `G23-255..257` cho ba ma nay va va cham voi `NC-3a`/`NC-3b`;
 da cap lai tu `G23-257`.
+
+`G23-260` mo boi amendment 23-67b (`L100`): co cua `L93` mu dung trong truong
+hop cua `L95`. Nhan DIAGNOSTIC vi no POST-HOC -- tim ra khi doc bang `n` cua
+Task B-2, khong tu mot dai da ky.
 
 ## Ghi chu ve pham vi ID
 
