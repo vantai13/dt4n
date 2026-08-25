@@ -22,6 +22,10 @@ import os
 import subprocess
 from typing import Any, Dict, List, Mapping, Tuple
 
+from cert.build_calib_set_v3 import AOI_V7, Z_EDGES_V7
+from cert.taxonomy_audit import SLA_MANIFEST, W_LOSS
+from measurements.validity import validity_block
+
 REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
 
 # Cay PHAI trung bit. `bootstrap` xu ly rieng vi no co khoa MOI `M_188`.
@@ -147,6 +151,16 @@ def diff(old_path: str | None, new_path: str,
         "n_frozen_violations": len(bad),
         "selective_rows_changed_by_cell": changed_vs,
         "G23_242_hit": bool(not bad),
+        # Artifact nay khong DO gi -- no la mot ham thuan cua hai artifact khac,
+        # ca hai deu ghim bang hash. Nhung no nam trong `results/LIVE/` nen phai
+        # khai truc no TIEU THU: neu truc `z` doi, phan quyet cua no thanh cu.
+        # Ghim boi `test_no_stale_axes` (`A067` muc 4).
+        "validity": validity_block(
+            aoi_generator=AOI_V7,
+            z_edges=Z_EDGES_V7,
+            sla_path=SLA_MANIFEST,
+            w_loss=W_LOSS,
+        ),
     }
 
 
