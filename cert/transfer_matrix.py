@@ -314,6 +314,25 @@ def nc3_rescale_report(base: pd.DataFrame, big: pd.DataFrame) -> Dict[str, Any]:
 # Cham du doan
 # ---------------------------------------------------------------------------
 
+def qhat_scale_by_cell() -> Dict[str, float]:
+    """`scale(cell)` -- DINH NGHIA CHOT o `A067` muc 5.1.
+
+    La `qhat_slot1_mean` cua bien the **V-M tai `kappa = 0`** trong
+    `taxonomy_audit.json`. Day la mot dai luong cua Task A0: no KHONG phu
+    thuoc mot dai luong nao cua Task B, nen dung no lam bien giai thich khong
+    phai la giai thich ket qua bang chinh no.
+    """
+    path = os.path.join(REPO, "results/LIVE/phase-23/taxonomy_audit.json")
+    with open(path, encoding="utf-8") as fh:
+        art = json.load(fh)
+    out: Dict[str, float] = {}
+    for c in art["cells"]:
+        for r in c["variant_sweep"]:
+            if r["post"] == "mondrian" and float(r["kappa"]) == 0.0:
+                out[c["cell"]] = float(r["qhat_slot1_mean"])
+    return out
+
+
 def _median(xs: Sequence[float]) -> float:
     v = np.asarray([x for x in xs if np.isfinite(x)], dtype=np.float64)
     return float(np.median(v)) if v.size else float("nan")
@@ -407,6 +426,74 @@ def score_predictions(cellwise: Mapping[str, Mapping[str, Any]],
             "M_190": m190, "NC_2": nc2}
 
 
+def _spearman(x: Sequence[float], y: Sequence[float]) -> float:
+    a, b = np.asarray(x, np.float64), np.asarray(y, np.float64)
+    ok = np.isfinite(a) & np.isfinite(b)
+    if ok.sum() < 3:
+        return float("nan")
+    ra = pd.Series(a[ok]).rank().to_numpy()
+    rb = pd.Series(b[ok]).rank().to_numpy()
+    return float(np.corrcoef(ra, rb)[0, 1])
+
+
+def score_A067(cellwise: Mapping[str, Mapping[str, Any]],
+               dead_cellwise: Mapping[str, Mapping[str, Any]],
+               median_mhat: Mapping[str, float],
+               ) -> Dict[str, Any]:
+    """`M-197` va `M-198` -- dai da ky o `A067` muc 5.3 va 6.2."""
+    scale = qhat_scale_by_cell()
+
+    def _pairs(cw: Mapping[str, Mapping[str, Any]]) -> List[Tuple[str, str]]:
+        return [tuple(k.split("->")) for k in cw
+                if k.split("->")[0] != k.split("->")[1]]
+
+    # -- M-197: cham tren 16 o cua ma tran 4x4 cell CHET (12 o ngoai duong cheo)
+    ab = _pairs(dead_cellwise)
+    lr = [float(np.log(scale[b] / scale[a])) for a, b in ab]
+    vi = [float(dead_cellwise["%s->%s" % (a, b)]["T3_viol_given_accept_C3"])
+          for a, b in ab]
+    rho = _spearman(lr, vi)
+    too_small = [v for r, v in zip(lr, vi) if r > 0.0]   # scale_B > scale_A
+    too_big = [v for r, v in zip(lr, vi) if r < 0.0]
+    m197 = {
+        "n_cells": int(len(ab)),
+        "spearman_logscale_vs_viol": rho,
+        "median_viol_qhat_too_small": _median(too_small),
+        "median_viol_qhat_too_big": _median(too_big),
+        "n_too_small": int(len(too_small)), "n_too_big": int(len(too_big)),
+        "hit": bool(np.isfinite(rho) and rho >= 0.70
+                    and _median(too_small) > _median(too_big)),
+        "label": ("POST-HOC o tap SONG; cham MU tren tap CHET. "
+                  "Cham CA HAI menh de."),
+    }
+
+    # -- M-198 (1): `m_hat` co bam thang `qhat` khong  [MU]
+    names = sorted(set(scale) & set(median_mhat))
+    rho_m = _spearman([float(np.log(median_mhat[c])) for c in names],
+                      [float(np.log(scale[c])) for c in names])
+
+    # -- M-198 (2): dung ti le `m_hat` de du doan DAU cua (viol - alpha)
+    #    ⚠️ KHONG MU -- bien ket qua da xem (`A067` muc 6.2).
+    ab_live = _pairs(cellwise)
+    n_ok = 0
+    for a, b in ab_live:
+        pred_viol_high = median_mhat[b] > median_mhat[a]
+        actual = float(cellwise["%s->%s" % (a, b)]["T3_viol_given_accept_C3"])
+        if pred_viol_high == (actual > ALPHA_FAMILY):
+            n_ok += 1
+    m198 = {
+        "n_cells_scale_corr": int(len(names)),
+        "spearman_log_median_mhat_vs_log_scale": rho_m,
+        "median_mhat_by_cell": {c: float(median_mhat[c]) for c in names},
+        "n_sign_correct": int(n_ok), "n_pairs": int(len(ab_live)),
+        "hit": bool(np.isfinite(rho_m) and rho_m >= 0.85 and n_ok >= 48),
+        "label": ("menh de (1) MU; menh de (2) KHONG MU -- bien ket qua da "
+                  "xem (`A067` muc 6.2). Chi (1) mang thong tin moi."),
+    }
+    return {"M_197": m197, "M_198": m198,
+            "qhat_scale_by_cell": {k: float(v) for k, v in scale.items()}}
+
+
 def _diag_reference() -> Dict[str, Dict[str, float]]:
     """Hang V-S @ `kappa=0.5` cua `taxonomy_audit.json` -- dap an cua `M-193`.
 
@@ -444,12 +531,22 @@ def _run_matrix(cells: Sequence[str]) -> Tuple[Dict[str, Any], Dict[str, Any]]:
         del calib
 
     cellwise: Dict[str, Any] = {}
+    # `M-198`: `median(m_hat_1)` do tren tach TEST -- tuc tren du lieu ma mot
+    # nguoi trien khai co san MA KHONG CAN NHAN. Do la ca diem cua du doan.
+    # `median` tren `calib` duoc ghi kem de lua chon tach khong giau duoc gi.
+    med_test: Dict[str, float] = {}
+    med_calib: Dict[str, float] = {}
     for b in cells:
-        _calib, test, _path = load_cell(b)
+        calib, test, _path = load_cell(b)
+        med_test[b] = float(np.median(test["m_hat_1"].to_numpy(np.float64)))
+        med_calib[b] = float(np.median(calib["m_hat_1"].to_numpy(np.float64)))
+        del calib
         for a in cells:
             cellwise["%s->%s" % (a, b)] = deploy_on_B(fits[a], test)
         del test
-    return cellwise, {"fits": fits, "parquet": paths}
+    return cellwise, {"fits": fits, "parquet": paths,
+                      "median_mhat1_test": med_test,
+                      "median_mhat1_calib": med_calib}
 
 
 def run() -> Dict[str, Any]:
@@ -461,7 +558,7 @@ def run() -> Dict[str, Any]:
 
     # `NC-1` -- doi chung AM tren 4 cell chet. Neu thiet hai o day KHONG nho
     # thi cai do duoc o cell song la HIEN VAT cua duong ong. DUNG.
-    dead_cellwise, _ = _run_matrix(dead)
+    dead_cellwise, dead_meta = _run_matrix(dead)
     dead_off_diag = [v for k, v in dead_cellwise.items()
                      if k.split("->")[0] != k.split("->")[1]]
     nc1 = {
@@ -471,6 +568,10 @@ def run() -> Dict[str, Any]:
     }
     nc1["hit"] = bool(nc1["median_drift_C3"] <= 0.05
                       and nc1["median_drift_B2"] <= 0.05)
+    # `A067` muc 5.3: 16 o nay la tap CHUA XEM ma `M-197` duoc cham tren do.
+    # Truoc `A067` chi TRUNG VI cua `T1_drift` duoc ghi, khong mot gia tri
+    # `T3` nao. Nay ghi ca -- du lieu DA TINH, chi la chua duoc luu.
+    nc1["cellwise"] = dead_cellwise
     nc1["label"] = ("neu KHONG nho -> thiet hai o cell song la HIEN VAT cua "
                     "duong ong, khong phai hieu ung chuyen giao. DUNG.")
 
@@ -501,6 +602,11 @@ def run() -> Dict[str, Any]:
         "blocks": {k: ["%s->%s" % ab for ab in v] for k, v in blocks.items()},
         "cellwise": cellwise,
         "predictions": scored,
+        "A067_predictions": score_A067(
+            cellwise, dead_cellwise,
+            {**meta["median_mhat1_test"], **dead_meta["median_mhat1_test"]}),
+        "median_mhat1_calib": {**meta["median_mhat1_calib"],
+                               **dead_meta["median_mhat1_calib"]},
         "NC_1_dead_cell_control": nc1,
         "NC_3_scale_invariance": nc3,
         "fits": {k: {kk: vv for kk, vv in v.items() if kk != "qhat"}
@@ -553,6 +659,15 @@ def main(argv: Sequence[str] | None = None) -> int:
     print("NC-3a dC3 = %.3e | NC-3b dC3 = %.4f"
           % (out["NC_3_scale_invariance"]["NC3a_delta_acceptance_C3"],
              out["NC_3_scale_invariance"]["NC3b_delta_acceptance_C3"]))
+    a = out["A067_predictions"]
+    print("M-197 (cell CHET): %s  rho = %+.4f  viol nho/lon = %.4f / %.4f"
+          % (a["M_197"]["hit"], a["M_197"]["spearman_logscale_vs_viol"],
+             a["M_197"]["median_viol_qhat_too_small"],
+             a["M_197"]["median_viol_qhat_too_big"]))
+    print("M-198: %s  rho(m_hat, scale) = %+.4f  dau dung %d/%d"
+          % (a["M_198"]["hit"],
+             a["M_198"]["spearman_log_median_mhat_vs_log_scale"],
+             a["M_198"]["n_sign_correct"], a["M_198"]["n_pairs"]))
     print("-> %s" % args.out)
     return 0
 

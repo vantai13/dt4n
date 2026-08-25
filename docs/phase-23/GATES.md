@@ -300,8 +300,8 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-254 | 23.22 | FAIL | `NC-2` doi chung duong: trung vi `T1_drift_B1` = **1.19e-05**, cua B2 = **0.2174**. Score NGAU NHIEN troi it hon ca hai phuong phap that. Doi chung nay FIRE dung nhu thiet ke: thang T1 mot minh xep mot score vo dung len dau bang, nen no KHONG duoc lam thang chinh. Day la ket qua quan trong nhat cua Task B |
 | G23-255 | 23.22 | PASS | `NC-3a` bat bien co uoc luong lai: nhan CA calib va test x2 roi hieu chuan lai -> `qhat_ratio = 2.0` chinh xac va acceptance C3 **0.46640864363804463 -> 0.46640864363804463**, lech dung bang **0.0**. B2 mang nguyen `c` -> lech **0.2553**. Kiem CO CHE truc tiep, tat dinh |
 | G23-256 | 23.22 | PASS | `NC-3b` mang nguyen: giu `qhat_A` va `c` roi tha vao che do da gian x2 -> CA HAI troi, C3 **0.2510** va B2 **0.2553**, nguong > 0.05. Chan cach doc "C3 mien nhiem voi doi che do" |
-| G23-257 | 23.22 | NOT_RUN | |
-| G23-258 | 23.22 | NOT_RUN | |
+| G23-257 | 23.22 | PASS | `M-197` cham MU tren ma tran 4x4 cell CHET. Spearman(log ti le thang, `viol` C3) = **+0.9500** (12 o ngoai duong cheo) va **+0.8915** (16 o ke ca duong cheo) -- dat nguong +0.70 duoi CA HAI cach doc, nen van ban ky mo ho khong doi phan quyet. Phan tach theo dau: `viol` trung vi nhom "`qhat` qua nho" = **0.5866**, nhom "qua lon" = **0.0200**. Ba o (`h2@*` -> `poisson@0.700`) co `n_accept = 0` nen `viol` khong xac dinh: chieu an toan bao hoa o TU CHOI TOAN BO |
+| G23-258 | 23.22 | PASS | `M-198` chi bao KHONG CAN NHAN. (1) Spearman(log `median m_hat_1` tren tach TEST, log `scale qhat`) = **+0.9650** tren 12 cell, nguong >= +0.85 -- **MU**. (2) Dung ti le `m_hat` thay ti le `qhat` de du doan dau cua (`viol - alpha`): **53/56**, nguong >= 48. Menh de (2) KHONG mu (`A067` muc 6.2): bien ket qua da xem, no chi kiem phep thay the khong lam hong gi |
 | G23-259 | 23.22 | NOT_RUN | |
 
 ## Va cham da phat hien
