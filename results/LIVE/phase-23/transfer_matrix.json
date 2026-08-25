@@ -2523,7 +2523,7 @@
  },
  "provenance": {
   "git_dirty": true,
-  "git_hash": "5f6a155c934027da6d889bcd0788f578fda5b42f",
+  "git_hash": "0861586f82ba3e72fecb91eba392841e7552fe71",
   "parquet": {
    "h2@0.650": {
     "path": "results/LIVE/phase-21R/calib_set_h2_0.650_U3_measured_v7.parquet",
@@ -2558,8 +2558,37 @@
     "sha256": "599a328bc4fc755648b871a764fde73316d26a3431b24ebfefb84aca6af8325f"
    }
   },
-  "utc": "2026-08-25T08:09:23.910785+00:00"
+  "script": "cert/transfer_matrix.py::run",
+  "utc": "2026-08-25T08:16:43.618193+00:00"
  },
  "schema": "dt4n.transfer_matrix.v1",
- "task": "B"
+ "task": "B",
+ "validity": {
+  "aoi_axis": {
+   "d_sync_s": null,
+   "generator_module": "measurements.aoi_model_v7",
+   "generator_name": "AoIModelV7",
+   "generator_source_sha256": null,
+   "label": "measured_v7_uniform",
+   "source_path": "measurements/aoi_model_v7.py",
+   "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+   "sync_period_s": null
+  },
+  "axis_role": "consumes_axis",
+  "omega": null,
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "exogenous_g114_S-B",
+   "source_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+   "source_sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606"
+  },
+  "w_loss": 5000.0,
+  "z_edges": [
+   0.1,
+   0.241,
+   0.366,
+   0.491,
+   0.641
+  ]
+ }
 }

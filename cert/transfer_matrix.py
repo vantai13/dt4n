@@ -38,8 +38,10 @@ import pandas as pd
 
 from cert import baselines as BL
 from cert import config_matrix as CM
+from cert.build_calib_set_v3 import AOI_V7, Z_EDGES_V7
 from cert.cell_matrices import ALPHA_FAMILY, git, json_clean, pin
-from cert.taxonomy_audit import calib_path, live_region_flags
+from cert.taxonomy_audit import SLA_MANIFEST, W_LOSS, calib_path, live_region_flags
+from measurements.validity import validity_block
 
 AMENDMENT = "docs/phase-23/A066-amendment-66.md"
 AMENDMENT_B = "docs/phase-23/A066b-amendment-66b.md"
@@ -503,7 +505,17 @@ def run() -> Dict[str, Any]:
         "NC_3_scale_invariance": nc3,
         "fits": {k: {kk: vv for kk, vv in v.items() if kk != "qhat"}
                  for k, v in meta["fits"].items()},
+        # Moi artifact trong `results/LIVE/` phai khai truc no TIEU THU -- ghim
+        # boi `test_no_stale_axes`. Task B doc parquet do `AOI_V7`/`Z_EDGES_V7`
+        # sinh ra, nen vai tro la CONSUMES (mac dinh).
+        "validity": validity_block(
+            aoi_generator=AOI_V7,
+            z_edges=Z_EDGES_V7,
+            sla_path=SLA_MANIFEST,
+            w_loss=W_LOSS,
+        ),
         "provenance": {
+            "script": "cert/transfer_matrix.py::run",
             "git_hash": git("git", "rev-parse", "HEAD"),
             "git_dirty": git("git", "status", "--porcelain") != "",
             "utc": datetime.now(timezone.utc).isoformat(),
