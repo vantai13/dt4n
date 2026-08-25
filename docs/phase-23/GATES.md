@@ -291,15 +291,15 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-245 | 23.22 | PASS | M-191 = **4** cell co `qhat_at_sample_max=true` tai `kappa=1`, trong dai ky [1,8]: `poisson@0.925` (nb=51), `poisson@0.900` (42), `poisson@0.960` (42), `h2@0.650` (58) -- deu duoi san on dinh 59. Chot chan van la `floor_blocks` (ghim boi test doc ma nguon) |
 | G23-246 | 23.22 | PASS | M-192: `min_blocks_at_final_qhat` cua V-S GIAM DON DIEU theo `kappa` o **8/8** cell `A=True` (nguong >=6/8); va nguong cat tren `poisson@0.925` = **0.5**, thuoc {0.25,0.50} da ky -- doc theo DOAN LIEN TUC tu `kappa=0`. Xem `L94`: van ban da ky mo ho, doc theo `max` ca tap cho 2.0 va se MISS |
 | G23-247 | 23.22 | PASS | `L95` do THANG tren artifact `b9d2774`, khong chay lai: **8/8** cell `A=True` tai `kappa=2` co `n_iter=0` va `qhat_slot1_mean` / `violation_given_accept` cua `selective` trung den chu so cuoi voi `none` (nguong >=8). VA `test_no_tool_writes_into_frozen_tiers` xanh voi tap ghim chin cong cu cua `L96` |
-| G23-248 | 23.22 | NOT_RUN | |
-| G23-249 | 23.22 | NOT_RUN | |
-| G23-250 | 23.22 | NOT_RUN | |
-| G23-251 | 23.22 | NOT_RUN | |
-| G23-252 | 23.22 | NOT_RUN | |
-| G23-253 | 23.22 | NOT_RUN | |
-| G23-254 | 23.22 | NOT_RUN | |
-| G23-255 | 23.22 | NOT_RUN | |
-| G23-256 | 23.22 | NOT_RUN | |
+| G23-248 | 23.22 | FAIL | `M-193` kiem wiring. Nhanh C3 TRUNG BIT tren 8/8 o: `max abs delta` cua ca `violation_given_accept` lan `acceptance` = **0.000e+00** so voi hang V-S @`kappa=0.5` cua `taxonomy_audit.json`. Nhanh B2 truot: lech acceptance lon nhat = **0.02061** (`h2@0.650`) so voi dai da ky 0.02 -- truot 0.0006. Dai la phan vi mau tren mot tach test huu han; KHONG noi dai sau khi xem. Wiring da duoc xac minh; cai truot la dai, khong phai duong ong |
+| G23-249 | 23.22 | FAIL | `M-194` T1 giua ho: trung vi drift B2 = **0.2174**, C3 = **0.2090**, ti so **1.04x** so voi nguong da ky >= 3x. Khong phai truot sat: ca hai phan phoi gan trung nhau (q1 0.1292/0.1293, q3 0.3398/0.3324, max 0.5291/0.5186). Du doan chinh cua Task B BI BAC BO -- khi mang nguyen `qhat_A` sang B, C3 troi ngang B2 |
+| G23-250 | 23.22 | FAIL | `M-195` T3 giua ho: **6/30** o co `abs(viol - alpha) <= 0.05`, nguong da ky >= 20/30. Dai HAI PHIA phat ca chieu bao thu: 12/30 o co `viol < 0.05`. So mot phia (chieu bao dam): 16/30 o giu `viol <= alpha`. Con so mot phia KHONG phai tieu chi da ky va chi de mo ta |
+| G23-251 | 23.22 | PASS | `M-196` T2 giua ho: trung vi `abs(err_C3 - err_B2)` tai acceptance khop = **0.00526** tren 120 diem (30 o x 4 muc), nguong <= 0.02. KET QUA AM da tien dang ky: o cung ti le chap nhan, hai phuong phap gan nhu khong khac nhau ve risk |
+| G23-252 | 23.22 | PASS | `M-190` bat doi xung: trung vi `T1_drift_C3` cua (poisson->h2) = **0.2352** > (h2->poisson) = **0.1803**. `L92`: chieu nay CUNG LA (rho cao -> rho thap), nen KHONG duoc quy cho ho tai |
+| G23-253 | 23.22 | PASS | `NC-1` doi chung am: tren 12 o ngoai duong cheo cua ma tran 4x4 cell chet, trung vi T1 = **0.0276** (C3) va **0.0277** (B2), nguong <= 0.05. Thiet hai do o cell song KHONG phai hien vat cua duong ong |
+| G23-254 | 23.22 | FAIL | `NC-2` doi chung duong: trung vi `T1_drift_B1` = **1.19e-05**, cua B2 = **0.2174**. Score NGAU NHIEN troi it hon ca hai phuong phap that. Doi chung nay FIRE dung nhu thiet ke: thang T1 mot minh xep mot score vo dung len dau bang, nen no KHONG duoc lam thang chinh. Day la ket qua quan trong nhat cua Task B |
+| G23-255 | 23.22 | PASS | `NC-3a` bat bien co uoc luong lai: nhan CA calib va test x2 roi hieu chuan lai -> `qhat_ratio = 2.0` chinh xac va acceptance C3 **0.46640864363804463 -> 0.46640864363804463**, lech dung bang **0.0**. B2 mang nguyen `c` -> lech **0.2553**. Kiem CO CHE truc tiep, tat dinh |
+| G23-256 | 23.22 | PASS | `NC-3b` mang nguyen: giu `qhat_A` va `c` roi tha vao che do da gian x2 -> CA HAI troi, C3 **0.2510** va B2 **0.2553**, nguong > 0.05. Chan cach doc "C3 mien nhiem voi doi che do" |
 
 ## Va cham da phat hien
 
