@@ -273,15 +273,15 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-214 | 23.21h | PASS | `regime` tinh lai tu shares/CI khop nhan authoritative `sla_exogenous_S-B` + `wave4` tai 12/12 cell |
 | G23-228 | 23.21h-close | PASS | Clean replay tu HEAD `6aa08c8`: artifact v3 `git_dirty=false`, hash khop HEAD; so commit `08b6879` co `cells` 3564 leaf, `metrics` 31 leaf, `live_definition_table` 60 leaf deu bit-exact, 0 mismatch. `results/RAW/phase-23/g23_228_clean_replay.json` |
 | G23-229 | 23.21h-close | PASS | p@.900 co 2/5 fold chon F6, selected-F2 = 0; ep F2b/P3 qua cung `_risk_summary` cho chenh `+0.012923831842096334`, nen selection wired va F6=F2 la suy bien tren mau. `results/RAW/phase-23/g23_229_family_selection_control.json` |
-| G23-230 | 23.22 | NOT_RUN | - |
-| G23-231 | 23.22 | NOT_RUN | - |
-| G23-232 | 23.22 | NOT_RUN | - |
-| G23-233 | 23.22 | NOT_RUN | - |
-| G23-234 | 23.22 | NOT_RUN | - |
-| G23-235 | 23.22 | NOT_RUN | - |
-| G23-236 | 23.22 | NOT_RUN | - |
-| G23-237 | 23.22 | NOT_RUN | - |
-| G23-238 | 23.22 | NOT_RUN | - |
+| G23-230 | 23.22 | PASS | 12/12 cell chay (3 MAIN + 9 ROBUSTNESS), `git_dirty=false`, `git_hash=7c231518`, `validity` hop le (aoi=`measured_v7_uniform`, sla=`exogenous_g114_S-B`), `n_boot=2000`. Artifact `results/LIVE/phase-23/taxonomy_audit.json` |
+| G23-231 | 23.22 | FAIL | M-182 3/3 (ti so block 1.0926 / 1.0929 / 1.1458 -- **H-B XAC NHAN**: 4.00x HANG nhung chi 1.09-1.15x BLOCK). Nhung M-181 chi 2/3: `h2@0.700` cho 436.4 block/o, duoi dai da ky [440,500]. Nguong doi CA HAI 3/3 -> FAIL. KHONG noi dai |
+| G23-232 | 23.22 | PASS | M-184 2/3 va M-185 2/3, dat nguong >=2/3. Ca hai cung MISS o DUNG mot cell `poisson@0.850` (spread_m=1.0286 < 1.05; M-185=1.0157 < 1.10) |
+| G23-233 | 23.22 | FAIL | M-186 **0/3**. Do duoc 1.0639 / 1.0124 / 1.0015, dai da ky [0.50, 1.00]. Du doan '4x hang mua duoc do on dinh' BI BAC BO. Kem mot canh bao ve chinh phep do -- xem `L90` |
+| G23-234 | 23.22 | FAIL | M-187 2/3 (`poisson@0.850` MISS: V-N=0.0822 KHONG vo). Tren 12 cell chi 4 cell co V-N vo. Nguong 3/3 -> FAIL. Theo amendment muc 4.2, day la BAC BO H-A o dang manh tren truc moi |
+| G23-235 | 23.22 | PASS | 3/3: `acceptance == 1.0` o ca ba bien the, va V-N === V-S TRUNG BIT (`|dviol| = 0.0e+00`, `|dqhat| = 0.0e+00`). Nhan **[SUA SAU KHI XEM]** -- tieu chi ban dau bat mot dieu SAI, da sua truoc lan chay that; KHONG dem diem |
+| G23-236 | 23.22 | PASS | 2/3, dat nguong >=2/3. V-M vo bao phu o kappa=2 tren `poisson@0.925` (0.1812) va `h2@0.700` (0.1345); KHONG vo tren `poisson@0.850` (0.0829). Ket qua Lesson 22.4 chuyen sang truc moi o 2/3 cell |
+| G23-237 | 23.22 | PASS | Cai gia cua V-S da bao cao khong lam tron: `acceptance(V-S)/acceptance(V-M)` = 0.7354 / 0.7793 / 0.8022 -- V-S nhan it hon 20-27% |
+| G23-238 | 23.22 | PASS | 9/9 cell robustness chay va bao cao. Khong cell nao duoc dung de chon ket luan chinh; chung chi dung de MO RONG mau cho M-187 (4/12 cell co V-N vo) |
 
 ## Va cham da phat hien
 

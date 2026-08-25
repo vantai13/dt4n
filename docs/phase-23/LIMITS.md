@@ -125,7 +125,9 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 
 | L72 | PARTIAL: `live_region_sweep.py --calib-template` da dong o 23.21h va duoc xoa khoi `KNOWN_DEAD`. Con `abstain_cost --calib-template`, `decision_error_v2 --boot-metrics` va ba co `--resume` (`l6_campaign.py`, `l6_campaign_fine.py`, `t5_campaign.py`) | `00zzv-amendment-59.md`; `A062-amendment-62.md`; do bang `test_cli_flags_are_wired.py` | Co con lai sua theo lesson so huu. Danh sach `KNOWN_DEAD` da ngan di mot muc; detector van khoa `getattr`, `dest` alias va forwarding lien module |
 
-So ke tiep duoc cap: **L90**.
+So ke tiep duoc cap: **L91**.
+
+| L90 | `M-186` do CI cua TRUNG BINH `qhat` TREN CAC O: taxonomy 16 o trung binh 16 so, taxonomy 4 o trung binh 4 so. Trung binh it so hon thi nhieu hon, DOC LAP voi so hang moi o. Nen ti so do duoc (1.0015 / 1.0124 / 1.0639) tron lan HAI hieu ung: do on dinh cua tung `qhat`, va so o duoc trung binh | `43-taxonomy-audit.md` muc 3.1 | Du doan `[0.50,1.00]` VAN bi bac bo (M-186 = 0/3) -- do la ket luan duoc phep rut. KHONG duoc rut ket luan "vi tuong quan noi block gan hoan toan": phep do hien tai khong tach duoc gia thuyet do khoi hien vat trung binh. Can phep do CI cua `qhat` MOT o; chua chay |
 
 | L89 | Co so thiet ke cua Lesson 23.22 trong `PHASE_23_v3.md` trich `spread_z=2.1232` / `spread_m=1.1188` tu `00zf-amendment-30.md` dong 176-177 (`M-1`/`M-2`, nhan [TAT DINH]), do tren `Z_EDGES_LEGACY = (0.055, 0.10, 0.20, 0.30, 0.5501)`. Truc do DA BI THAY THE o amendment 23-49c bang `measured_v7_uniform` / `Z_EDGES_V7 = (0.100, 0.241, 0.366, 0.491, 0.641)` | `A064-amendment-64.md` muc 1 va muc 7 | Ban ke hoach NGOAI repo khong sua duoc; anh xa sang so DO LAI song o `results/LIVE/phase-23/taxonomy_audit.json::superseded_basis` va o `cells[].spread`. Task A0 cua 23.22 ton tai chinh de do lai co so nay |
 
