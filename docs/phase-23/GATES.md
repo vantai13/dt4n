@@ -304,15 +304,15 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-258 | 23.22 | PASS | `M-198` chi bao KHONG CAN NHAN. (1) Spearman(log `median m_hat_1` tren tach TEST, log `scale qhat`) = **+0.9650** tren 12 cell, nguong >= +0.85 -- **MU**. (2) Dung ti le `m_hat` thay ti le `qhat` de du doan dau cua (`viol - alpha`): **53/56**, nguong >= 48. Menh de (2) KHONG mu (`A067` muc 6.2): bien ket qua da xem, no chi kiem phep thay the khong lam hong gi |
 | G23-259 | 23.22 | PASS | `M-199` chi phi tai hieu chuan. Duoi san hop le 29 block (`n` = 10 va 20; **160** lan lay mau tren 8 cell): C3 gan co `qhat_has_infinite`/`qhat_at_sample_max` o **100%** (nguong >= 90%), B2 tra `c` HUU HAN o **100%** va gan co o **0%**. 8/8 cell HIT rieng le. C3 BIET truoc khi no khong du du lieu; B2 khong co dai luong nao de biet |
 | G23-260 | 23.22 | DIAGNOSTIC | `L100`: tai `n = 30` block, ti le lan chay co `qhat_source = degenerate_fallback_to_none` (90-100%) LON HON ti le duoc hai co `L91`/`L93` bat (0-10%) tren **8/8** cell, nguong >= 6/8. POST-HOC, khong dem diem. Do la bang chung truong `qhat_source` (`A065d`) la co duy nhat con nhin thay o vung giao cua `L93` va `L95` |
-| G23-261 | 23.22 | NOT_RUN | - |
-| G23-262 | 23.22 | NOT_RUN | - |
-| G23-263 | 23.22 | NOT_RUN | - |
-| G23-264 | 23.22 | NOT_RUN | - |
-| G23-265 | 23.22 | NOT_RUN | - |
-| G23-266 | 23.22 | NOT_RUN | - |
-| G23-267 | 23.22 | NOT_RUN | - |
-| G23-268 | 23.22 | NOT_RUN | - |
-| G23-269 | 23.22 | NOT_RUN | - |
+| G23-261 | 23.22 | PASS | `M-200` KIEM WIRING: C3-R tai `kappa` ep bang 0.50 va `n` = 500 tai tao duong cheo `transfer_matrix.json` TUNG BIT tren **8/8** cell song -- `max abs delta acceptance` = **0.000e+00**, `max abs delta viol` = **0.000e+00**. Chay TRUOC toan bo (`A068` buoc 7). Dap an DA BIET; ma nay KHONG mang mot bit thong tin nao ve the gioi, va do la muc dich cua no (`46-recalibrate-transfer.md` muc 2) |
+| G23-262 | 23.22 | PASS | `M-201` menh de bao toan song sot o `n` HUU HAN. Tai `n` = 250, tren **60/64** o co acceptance >= 0.20: `sd(viol)` = **0.00242** (<= 0.020), `sd(acceptance)` = **0.11007** (trong [0.090, 0.180]), `mean(viol)` = **0.07413** (trong [0.05, 0.12]). Ve `sd(viol)` HA CAP: dai rong gap 8 lan gia tri do duoc, xem `L103` |
+| G23-263 | 23.22 | PASS | `M-202` gia cua `kappa` sai CO DAU va DU DOAN DUOC. Tai `n` = 500, 56 o ngoai duong cheo: Spearman(\|log(kappa_A/kappa_B)\|, \|acceptance_B - a\*\|) = **+0.9674** (>= +0.90) va do doc = **0.4776** (trong [0.40, 0.62]). Neo do doc -0.509 do tren CALIB cua A trong PILOT; lech **-6.2%** khi do tren TEST cua B sau tai hieu chuan. Nguong da duoc NANG tu +0.60 sau PILOT (`A068` muc 4.2) |
+| G23-264 | 23.22 | PASS | `M-203` bao dam duoc KHOI PHUC HOAN TOAN. Tai `n` = 250: **60/64** o thoa (`viol` <= 0.10 VA acceptance >= 0.20), nguong >= 52. Tren 60 o tren san acceptance, so o co `viol > alpha` = **0/60** -- rang buoc chat la ACCEPTANCE, khong phai bao phu. Bon o roi duoi san la dung bon o co \|log(kappa_A/kappa_B)\| lon nhat |
+| G23-265 | 23.22 | PASS | `M-204` GIA tinh bang `n`. n\*(C3-R) = **120** (trong [60, 250]), n\*(B2-R) = **30** (<= 60), ti so = **4.00** (>= 2.0). 120 TRUNG DUNG con so cua Task B-2 TRONG CUNG CELL: mang `kappa_A` tu che do khac KHONG lam tang yeu cau co mau. n\*(B2-R) = 30 la SAN CUA LUOI nen ti so la mot CAN DUOI |
+| G23-266 | 23.22 | PASS | `M-205` KET QUA AM ve `err`. Tai acceptance khop, `n` = 250, 2560 diem: trung vi \|err_C3R - err_B2R\| = **0.00549** (<= 0.02), so voi **0.00526** cua `M-196`. Dong gop cua C3 KHONG nam o risk. Trung vi GOP che mot xu the don dieu theo muc acceptance -- xem `L102` |
+| G23-267 | 23.22 | PASS | `M-206` ve DOI XUNG cua menh de bao toan. Tai `n` = 250, 8 cell B: `sd(err|accept)` cua B2-R = **0.03531** (>= 0.020), cua C3-R = **0.01500** (<= 0.025). Ma duy nhat ma chinh `A068` muc 5.7 du bao se MISS (uoc luong tho 0.013). Ly do uoc luong sai da truy duoc: he so `err/anchor` cua B2-R KHONG la hang so ma chay 2.39x va CUNG CHIEU voi anchor (Spearman +0.9286) |
+| G23-268 | 23.22 | PASS | `NC-B3-1` doi chung DUONG da FIRE, va manh hon du kien: B1-R (score NGAU NHIEN) trung `a*` o **8/8** cell voi \|delta\| = **0.0009** -- CHINH XAC HON B2-R (0.0123) -- va `err|accept` cua no bang **0.998 .. 1.006** lan anchor o **8/8**. 'Trung muc tieu acceptance' MOT MINH la mot thang do VO GIA TRI. `L99` lan thu TU, lan dau duoc ky TRUOC |
+| G23-269 | 23.22 | PASS | `NC-B3-2` B2-R/B1-R trung BIT theo truc A tren **6/6** truong, `max abs delta` = **0.0e+00** (tinh LAI trong vong lap A, khong chep). `NC-B3-3` **4/4** cell chet sap ve anchor -- nhung nguong TUYET DOI 0.02 tren dai luong <= 0.0042 khong the fail, xem `L101`. `NC-B3-4` tai `n` = 30: `qhat_source` sup ve `none` **96.1%** vs hai co cu **3.9%** (`L100` tai lap tren luoi moi). Census `n_accept = 0`: **0/3264** |
 
 ## Va cham da phat hien
 
