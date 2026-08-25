@@ -300,6 +300,9 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-254 | 23.22 | FAIL | `NC-2` doi chung duong: trung vi `T1_drift_B1` = **1.19e-05**, cua B2 = **0.2174**. Score NGAU NHIEN troi it hon ca hai phuong phap that. Doi chung nay FIRE dung nhu thiet ke: thang T1 mot minh xep mot score vo dung len dau bang, nen no KHONG duoc lam thang chinh. Day la ket qua quan trong nhat cua Task B |
 | G23-255 | 23.22 | PASS | `NC-3a` bat bien co uoc luong lai: nhan CA calib va test x2 roi hieu chuan lai -> `qhat_ratio = 2.0` chinh xac va acceptance C3 **0.46640864363804463 -> 0.46640864363804463**, lech dung bang **0.0**. B2 mang nguyen `c` -> lech **0.2553**. Kiem CO CHE truc tiep, tat dinh |
 | G23-256 | 23.22 | PASS | `NC-3b` mang nguyen: giu `qhat_A` va `c` roi tha vao che do da gian x2 -> CA HAI troi, C3 **0.2510** va B2 **0.2553**, nguong > 0.05. Chan cach doc "C3 mien nhiem voi doi che do" |
+| G23-257 | 23.22 | NOT_RUN | |
+| G23-258 | 23.22 | NOT_RUN | |
+| G23-259 | 23.22 | NOT_RUN | |
 
 ## Va cham da phat hien
 
@@ -504,6 +507,12 @@ chung (`NC-1`, `NC-2`, `NC-3`). Ban thao noi bo cap den `G23-254` va gop
 `G23-256` mo boi amendment 23-66b: `NC-3` duoc tach lam hai nhanh vi bat bien
 thang chi dung khi `qhat` DUOC UOC LUONG LAI, con nhanh mang nguyen thi ca hai
 phuong phap deu troi.
+
+`G23-257 .. G23-259` mo boi amendment 23-67: `M-197` ky lai phat hien "that
+bai cua C3 CO DAU" (POST-HOC o tap song -> cham tren 16 o cell CHET chua xem),
+`M-198` chi bao khong can nhan, `M-199` chi phi tai hieu chuan (Task B-2). Ban
+thao noi bo cap `G23-255..257` cho ba ma nay va va cham voi `NC-3a`/`NC-3b`;
+da cap lai tu `G23-257`.
 
 ## Ghi chu ve pham vi ID
 
