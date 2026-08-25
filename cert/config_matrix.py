@@ -297,6 +297,15 @@ def fit_config(
 
     elif post == "selective":
         q = _qhat(calib, cols, keys, a_by)
+        # `L95`: `q` khoi tao CHINH LA `qhat` cua thu tuc `none` -- cung mot
+        # `_qhat` tren cung `calib`, cung `keys`. Neu vong lap thoat o VONG 0
+        # thi gia tri nay duoc tra ve nguyen ven, tuc ket qua la `none` doi
+        # ten -- ma `none` la thu tuc DA DO LA VO bao dam hau chon loc
+        # (`M-187`). Mac dinh la GIA DINH XAU NHAT; chi nang len khi `q` THUC
+        # SU duoc cap nhat. Lam nguoc lai (mac dinh `fixed_point`, ha xuong
+        # khi suy bien) se khien mot nhanh `break` MOI trong tuong lai im lang
+        # tra ve nhan sai -- cung ly do `git_dirty` mac dinh `True` (`L78`).
+        info["qhat_source"] = "degenerate_fallback_to_none"
         seen: Dict[tuple[float, ...], int] = {}
         hist: list[Dict[tuple[Any, ...], np.ndarray]] = []
         info.update(converged=False, degenerate=False, n_iter=int(max_iter), cycle_len=0)
@@ -313,6 +322,12 @@ def fit_config(
             nb = {_norm(k): int(v) for k, v in nb_raw.items()}
             if min(nb.get(k, 0) for k in cells) < floor_blocks:
                 info.update(converged=False, degenerate=True, n_iter=int(it), cycle_len=0)
+                # `L95`: o `it > 0` thi `q` da la mot iterate HOP LE cua V-S --
+                # suy bien mot phan, van la `selective`. Chi `it == 0` moi tra
+                # ve gia tri khoi tao, tuc `none`, va do la truong hop duy nhat
+                # nhan `post` sai su that. Giu mac dinh cho `it == 0`.
+                if it > 0:
+                    info["qhat_source"] = "degenerate_partial"
                 break
             # ghi lai vong DA SINH RA `q` duoc tra ve
             info["min_blocks_at_final_qhat"] = int(min(nb.get(k, 0) for k in cells))
@@ -326,14 +341,21 @@ def fit_config(
             if rel < TOL:
                 q = q_new
                 info.update(converged=True, degenerate=False, n_iter=int(it) + 1, cycle_len=1)
+                info["qhat_source"] = "fixed_point"
                 break
             if sig in seen:
                 cycle = hist[seen[sig]:]
                 q = {k: np.max(np.vstack([h[k] for h in cycle]), axis=0) for k in cells}
                 info.update(converged=True, degenerate=False, n_iter=int(it) + 1, cycle_len=len(cycle))
+                info["qhat_source"] = "cycle_max"
                 break
             seen[sig] = len(hist) - 1
             q = q_new
+            # `q` DA doi -- khong con la gia tri khoi tao. Neu vong lap can
+            # `max_iter` thi day la mot iterate cua V-S, chua hoi tu: no la
+            # `selective` that, nhung goi no `fixed_point` cung la mot nhan
+            # sai su that (`L95`), nen no co ten rieng.
+            info["qhat_source"] = "iterate_not_converged"
         info["trace"] = [
             {"iter": i, "qhat_first_cell": [float(x) for x in h[cells[0]]]}
             for i, h in enumerate(hist)
@@ -380,9 +402,18 @@ def evaluate_config(
     err_acc = float(wrong[acc].mean()) if n else float("nan")
     viol_acc = float(viol[acc].mean()) if n else float("nan")
     qhat_slot1_mean = float(np.mean([float(v[0]) for v in fit["_q"].values()]))
+    # `L95`: `post` la nhan MONG MUON. Khi nhanh `selective` suy bien o vong 0,
+    # `qhat` tra ve la gia tri khoi tao -- dung bang `qhat` cua `none`, thu tuc
+    # DA DO LA VO bao dam hau chon loc (`M-187`). Hang do phai TU KHAI, khong
+    # duoc di qua im lang duoi mot cai ten khong phai cua no.
+    src = fit.get("qhat_source")
+    collapsed = src == "degenerate_fallback_to_none"
     return {
         "config": str(fit["config"]),
         "post": str(fit["post"]),
+        "qhat_source": src,
+        "procedure_actually_run": "none" if collapsed else str(fit["post"]),
+        "L95_collapsed_to_none": bool(collapsed),
         "kappa": kappa,
         "qhat_slot1_mean": qhat_slot1_mean,
         "acceptance": float(acc.mean()),

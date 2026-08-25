@@ -232,3 +232,200 @@ def test_stability_floor_does_not_gate_anything():
     assert "< floor_blocks" in src, "chot chan hop le da bien mat"
     assert "< stable_blocks" not in src, (
         "san ON DINH dang duoc dung lam CHOT CHAN -- xem A065b muc 2")
+
+
+# ---------------------------------------------------------------------------
+# `L95` -- `selective` tut ve `none` khi suy bien o vong 0  (amendment 23-65d)
+# ---------------------------------------------------------------------------
+
+# `L96`: cong cu co `--out*` mac dinh tro vao tang DA KHOA (`chmod -R a-w`,
+# amendment 23-61). Chin cai duoi day co TU TRUOC khi tang bi khoa; chung
+# duoc GHIM lam no da khai bao, khong duoc sua -- output cua chung da dong
+# bang. Danh sach nay chi duoc NGAN di, khong duoc dai them.
+KNOWN_FROZEN_TIER_WRITERS = {
+    "abstain_cost.py",                    # cert/, --out-dir SUPERSEDED/phase-23
+    "decomposition.py",                   # cert/, SUPERSEDED/phase-21R
+    "gate_report.py",                     # cert/, SUPERSEDED/phase-21R
+    "lesson23_7_calibration_2b.py",       # cert/, SUPERSEDED/phase-23
+    "lesson23_7_feasibility.py",          # cert/, SUPERSEDED/phase-23
+    "lesson23_7_range_calibration.py",    # cert/, SUPERSEDED/phase-23
+    "operational_sigma.py",               # cert/, SUPERSEDED/phase-21R
+    "threshold_families.py",              # cert/, SUPERSEDED/phase-23
+    "g23_212a_partial_nc.py",             # tools/, RAW/phase-23
+}
+
+
+def _synthetic_calib(n_blk: int = 80, per_blk: int = 5, seed: int = 0) -> pd.DataFrame:
+    """Calib nho nhat du de chay nhanh `selective` that.
+
+    Hai `z_bin`, moi `z_bin` 40 block -- tren san hop le 29 (`L91`), nen vong 0
+    KHONG suy bien khi `kappa` nho. `m_hat` duong va nho so voi `s`, nen mot
+    `kappa` lon lam tap chon rong ngay vong 0.
+    """
+    rng = np.random.default_rng(seed)
+    n = n_blk * per_blk
+    blk = np.repeat(np.arange(n_blk), per_blk)
+    df = pd.DataFrame({
+        "block_id": blk,
+        "z_bin": blk % 2,
+        "m_hat_bin": blk % 2,
+        "wrong": rng.random(n) < 0.2,
+    })
+    for j in (1, 2, 3):
+        df["s_pair_%d" % j] = rng.gamma(2.0, 1.0, size=n)
+        df["m_hat_%d" % j] = rng.gamma(2.0, 1.0, size=n)
+        df["m_true_%d" % j] = df["m_hat_%d" % j] - 0.1
+    return df
+
+
+def test_degenerate_at_iter_zero_returns_the_qhat_of_none():
+    """`L95`: suy bien o VONG 0 -> `q` chua tung duoc cap nhat.
+
+    Gia tri khoi tao cua nhanh `selective` la `_qhat` tren TOAN BO calib, tuc
+    DUNG BANG `qhat` cua thu tuc `none`. Nen hang do mang nhan `selective`
+    nhung chay `none` -- va `none` la thu tuc DA DO LA VO bao dam hau chon loc
+    (`M-187`). `qhat_source` phai KHAI BAO dieu do.
+    """
+    calib = _synthetic_calib()
+    fit_s = CM.fit_config(calib, "C3", 100.0, alpha=ALPHA_FAMILY,
+                          post_variant="selective")
+    fit_n = CM.fit_config(calib, "C3", 100.0, alpha=ALPHA_FAMILY,
+                          post_variant="none")
+
+    assert fit_s["degenerate"] is True and fit_s["n_iter"] == 0
+    assert fit_s["min_blocks_at_final_qhat"] is None
+    assert fit_s["qhat_source"] == "degenerate_fallback_to_none"
+    assert set(fit_s["_q"]) == set(fit_n["_q"])
+    for k in fit_s["_q"]:
+        assert np.array_equal(fit_s["_q"][k], fit_n["_q"][k]), k   # TRUNG BIT
+
+
+def test_qhat_source_says_fixed_point_only_when_q_was_updated():
+    """Doi chung duong: khi V-S chay THAT thi nhan phai la `fixed_point`.
+
+    Neu khong co doi chung nay, mot cai vit `qhat_source` cung hang so
+    `"degenerate_fallback_to_none"` se qua duoc test tren.
+    """
+    calib = _synthetic_calib()
+    fit = CM.fit_config(calib, "C3", 0.0, alpha=ALPHA_FAMILY,
+                        post_variant="selective")
+    assert fit["degenerate"] is False and fit["converged"] is True
+    assert fit["min_blocks_at_final_qhat"] is not None
+    assert fit["qhat_source"] == "fixed_point"
+
+
+def test_degenerate_after_iter_zero_is_still_a_real_selective():
+    """Suy bien o `it > 0` KHONG phai truong hop cua `L95`.
+
+    O do `q` da qua it nhat mot vong cap nhat tren TAP DUOC CHON, nen no la
+    mot iterate hop le cua V-S -- nhan `selective` dung su that. Chi `it == 0`
+    moi tra ve gia tri khoi tao. Hai truong hop phai co HAI ten.
+
+    De den duoc nhanh nay can `n_eff` tren san on dinh 59 (`L93`): duoi 59 thi
+    `level == 1.0` va `qhat` = max cua mau, nen tap chon chi co the NO RA qua
+    cac vong -- suy bien khi do luon xay ra o vong 0. Day la 120 block moi o.
+    """
+    calib = _synthetic_calib(n_blk=240, per_blk=3, seed=0)
+    fit = CM.fit_config(calib, "C3", 0.25, alpha=ALPHA_FAMILY,
+                        post_variant="selective")
+    assert fit["degenerate"] is True and fit["n_iter"] > 0
+    assert fit["qhat_source"] == "degenerate_partial"
+
+
+def test_evaluate_config_declares_the_procedure_that_actually_ran():
+    """Chot chan: `post` la nhan MONG MUON, `procedure_actually_run` la SU THAT.
+
+    Bang vong hai ghi `pass_coverage = false` o cac hang nay, nen khong ket
+    luan nao da cong bo bi doi. Cai sai la NHAN. Truong nay bit cho do.
+    """
+    calib = _synthetic_calib()
+    fit_deg = CM.fit_config(calib, "C3", 100.0, alpha=ALPHA_FAMILY,
+                            post_variant="selective")
+    ev_deg = CM.evaluate_config(calib, fit_deg, anchor_err=0.2, alpha=ALPHA_FAMILY)
+    assert ev_deg["post"] == "selective"                     # nhan mong muon
+    assert ev_deg["procedure_actually_run"] == "none"        # su that
+    assert ev_deg["L95_collapsed_to_none"] is True
+
+    fit_ok = CM.fit_config(calib, "C3", 0.0, alpha=ALPHA_FAMILY,
+                           post_variant="selective")
+    ev_ok = CM.evaluate_config(calib, fit_ok, anchor_err=0.2, alpha=ALPHA_FAMILY)
+    assert ev_ok["procedure_actually_run"] == "selective"
+    assert ev_ok["L95_collapsed_to_none"] is False
+
+
+def test_selective_at_degenerate_kappa_is_bit_identical_to_none():
+    """`L95` do tren ARTIFACT -- khong chay lai.
+
+    Do duoc tren `b9d2774` (`git_hash = cced37a`): 8/8 cell `A=True` tai
+    `kappa=2`, `qhat_slot1_mean` va `violation_given_accept` cua `selective`
+    trung den chu so cuoi voi `none`. Day la su that DA NAM san trong artifact;
+    truong `qhat_source` chi DAT TEN cho no, khong sinh so lieu moi.
+    """
+    import json
+
+    path = os.path.join(REPO, "results", "LIVE", "phase-23", "taxonomy_audit.json")
+    if not os.path.exists(path):
+        pytest.skip("artifact khong co tren may nay")
+    with open(path, encoding="utf-8") as fh:
+        d = json.load(fh)
+    n = 0
+    for c in d["cells"]:
+        S = {r["kappa"]: r for r in c["variant_sweep"] if r["post"] == "selective"}
+        N = {r["kappa"]: r for r in c["variant_sweep"] if r["post"] == "none"}
+        for k, r in S.items():
+            if r.get("min_blocks_at_final_qhat") is None and float(k) > 0.0:
+                assert r["n_iter"] == 0, (c["cell"], k)      # co che: vong 0
+                assert r["qhat_slot1_mean"] == N[k]["qhat_slot1_mean"], (c["cell"], k)
+                assert r["violation_given_accept"] == N[k]["violation_given_accept"]
+                n += 1
+    assert n >= 8, "chi tim thay %d truong hop suy bien, cho >= 8" % n
+
+
+def test_qhat_source_default_is_the_pessimistic_one():
+    """Mac dinh phai la gia dinh XAU NHAT.
+
+    Neu mac dinh la `fixed_point` va ta HA xuong khi suy bien, thi mot nhanh
+    `break` MOI trong tuong lai se im lang tra ve nhan SAI. Cung nguyen tac
+    voi `git_dirty` mac dinh `True` khi khong do duoc (`L78`).
+    """
+    with open(os.path.join(REPO, "cert", "config_matrix.py"), encoding="utf-8") as fh:
+        src = fh.read()
+    i_default = src.index('info["qhat_source"] = "degenerate_fallback_to_none"')
+    i_fixed = src.index('info["qhat_source"] = "fixed_point"')
+    assert i_default < i_fixed, "mac dinh phai duoc dat TRUOC khi nang len"
+
+
+def test_no_tool_writes_into_frozen_tiers():
+    """`results/RAW` va `results/SUPERSEDED` da khoa `chmod -R a-w` (23-61).
+
+    Mot `--out` mac dinh tro vao do la mot cai bay: hoac lenh hong, hoac ai do
+    `chmod` nguoc lai "cho tien". Bat duoc mot lan roi -- `A065` muc 8 khai
+    `--out` cua `g23_242_taxonomy_rerun_diff.py` vao `results/RAW/`
+    (`A065d` muc 3).
+
+    Chi soi co GHI (`--out*`). Mac dinh DOC tro vao tang khoa la HOP LE va co
+    that -- `tools/check_phase20r6_structure.py` doc `--new-b/--new-c` tu
+    `results/SUPERSEDED/`, va do dung la cach dung tang do.
+
+    Chin cong cu DA CO tu truoc khi tang bi khoa (`L96`): chung duoc GHIM,
+    khong duoc sua -- output cua chung da dong bang va doi duong dan se lam
+    mat dau vet. So sanh la BANG NHAU, nen ca hai chieu deu do:
+    them mot cong cu moi -> do; sua mot cong cu cu ma quen go khoi day -> do.
+    """
+    import glob
+    import re
+
+    pat = re.compile(
+        r"""add_argument\(\s*["']--out[\w-]*["'][^)]*?"""
+        r"""default\s*=\s*["']([^"']*results/(?:RAW|SUPERSEDED)/[^"']*)["']""",
+        re.S)
+    found = set()
+    for f in sorted(glob.glob(os.path.join(REPO, "tools", "*.py"))
+                    + glob.glob(os.path.join(REPO, "cert", "*.py"))):
+        with open(f, encoding="utf-8") as fh:
+            if pat.search(fh.read()):
+                found.add(os.path.basename(f))
+    assert found == KNOWN_FROZEN_TIER_WRITERS, (
+        "them: %s | het: %s -- xem `L96`, `A065d` muc 3"
+        % (sorted(found - KNOWN_FROZEN_TIER_WRITERS),
+           sorted(KNOWN_FROZEN_TIER_WRITERS - found)))

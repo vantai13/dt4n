@@ -33,7 +33,10 @@ BOOTSTRAP_NEW_KEYS = ("M_188",)
 # `L93`: qhat_at_sample_max, min_blocks_stable, min_blocks_at_final_qhat
 SWEEP_NEW_KEYS = ("qhat_has_infinite", "min_blocks_floor",
                   "qhat_at_sample_max", "min_blocks_stable",
-                  "min_blocks_at_final_qhat")
+                  "min_blocks_at_final_qhat",
+                  # `L95` (amendment 23-65d): NHAN, khong phai phep do.
+                  "qhat_source", "procedure_actually_run",
+                  "L95_collapsed_to_none")
 # Bien the duoc phep doi.
 MUTABLE_VARIANTS = ("selective",)
 
