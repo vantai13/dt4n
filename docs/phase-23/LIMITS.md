@@ -125,7 +125,9 @@ va kiem ke dau tien phat hien ngay hai va cham CHUA AI BIET.
 
 | L72 | PARTIAL: `live_region_sweep.py --calib-template` da dong o 23.21h va duoc xoa khoi `KNOWN_DEAD`. Con `abstain_cost --calib-template`, `decision_error_v2 --boot-metrics` va ba co `--resume` (`l6_campaign.py`, `l6_campaign_fine.py`, `t5_campaign.py`) | `00zzv-amendment-59.md`; `A062-amendment-62.md`; do bang `test_cli_flags_are_wired.py` | Co con lai sua theo lesson so huu. Danh sach `KNOWN_DEAD` da ngan di mot muc; detector van khoa `getattr`, `dest` alias va forwarding lien module |
 
-So ke tiep duoc cap: **L94**.
+So ke tiep duoc cap: **L95**.
+
+| L94 | Van ban da ky cua `M-192` (`A065c` muc 2) viet *"`kappa` LON NHAT ma no con >= 59"* -- MO HO. Doc theo DOAN LIEN TUC tu `kappa=0` cho `poisson@0.925` = **0.5** (HIT dai ky {0.25,0.50}); doc theo `max` tren ca tap cho **2.0** (MISS). Hai cach doc, hai phan quyet nguoc | `A065c-amendment-65c.md` muc 2; do 2026-08-25 | Nguyen nhan: tai `kappa=2` vong lap suy bien NGAY vong 0 nen `min_blocks = None`, va `A065c` muc 2.2 ma hoa `None` = "tren san". Tap `{kappa : tren san}` do KHONG con la mot doan. Da cham theo DOAN LIEN TUC vi cung cau van do goi dai luong nay la "dai van hanh", ma mot "dai" phai lien tuc. Bai hoc: mot du doan ve MOT NGUONG phai noi ro nguong do lay tren tap nao |
 
 | L93 | Voi `alpha_each = alpha/3` va `n_eff` trong `[29, 58]`, `conformal_level` tra ve dung `1.0`, va vi `empirical_qhat` dung `method="higher"` nen `_qhat` tra ve MAX cua mau. `qhat` do HUU HAN va bao dam VAN GIU, nhung no do MOT quan sat cuc dai quyet dinh: phuong sai lon, acceptance sup, "bao phu giu" mot cach TAM THUONG. Voi `alpha = 0.10` dai tuong ung la `[9, 18]` | `A065b-amendment-65b.md` muc 1 | Cung HINH DANG loi voi `qhat = +inf` cua `L91`: hop le ve toan, vo nghia ve van hanh, di qua IM LANG. Khai bao bang co `qhat_at_sample_max`. **KHONG nang chot chan tu 29 len 59** -- 29 la san HOP LE (toan), 59 la san ON DINH (van hanh, dat SAU khi xem du lieu = HARKing); gop hai san khac loai lam mot la mat kha nang phan biet. Ghim boi `test_stability_floor_does_not_gate_anything` (doc ma nguon) |
 

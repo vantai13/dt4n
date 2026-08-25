@@ -282,14 +282,14 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-236 | 23.22 | PASS | 2/3, dat nguong >=2/3. V-M vo bao phu o kappa=2 tren `poisson@0.925` (0.1812) va `h2@0.700` (0.1345); KHONG vo tren `poisson@0.850` (0.0829). Ket qua Lesson 22.4 chuyen sang truc moi o 2/3 cell |
 | G23-237 | 23.22 | PASS | Cai gia cua V-S da bao cao khong lam tron: `acceptance(V-S)/acceptance(V-M)` = 0.7354 / 0.7793 / 0.8022 -- V-S nhan it hon 20-27% |
 | G23-238 | 23.22 | PASS | 9/9 cell robustness chay va bao cao. Khong cell nao duoc dung de chon ket luan chinh; chung chi dung de MO RONG mau cho M-187 (4/12 cell co V-N vo) |
-| G23-239 | 23.22 | NOT_RUN | - |
-| G23-240 | 23.22 | NOT_RUN | - |
-| G23-241 | 23.22 | NOT_RUN | - |
-| G23-242 | 23.22 | NOT_RUN | - |
-| G23-243 | 23.22 | NOT_RUN | - |
-| G23-244 | 23.22 | NOT_RUN | - |
-| G23-245 | 23.22 | NOT_RUN | - |
-| G23-246 | 23.22 | NOT_RUN | - |
+| G23-239 | 23.22 | PASS | M-188 **3/3** trong dai ky [0.45,1.00]: 0.5375 / 0.5315 / 0.5406 (16 o moi cell, 0 rut thuc vo han). Nhanh doc da ky: **<= 0.70 = HANG chi phoi**. Du doan HANG = 0.500, BLOCK = 0.957 -> do duoc nam sat HANG. `H-B` DUNG o tang MUC conformal nhung SAI o tang UOC LUONG: 4x hang MUA duoc ~1.9x do on dinh |
+| G23-240 | 23.22 | PASS | 0/12 cell con `qhat_has_infinite` tai `kappa <= 1` sau khi sua `L91`. Truoc khi sua: 3/12 (`poisson@0.875`, `poisson@0.960`, `h2@0.650`) |
+| G23-241 | 23.22 | PASS | So cell V-S suy bien tai `kappa=1` bao cao khong lam tron: **6/12 TRUOC va 6/12 SAU**. Sua `L91` KHONG doi so cell suy bien -- no doi CHAT LUONG cua `qhat` o nhung cell do (het `+inf`), khong doi so luong |
+| G23-242 | 23.22 | PASS | 0 vi pham vung DONG BANG tren 12/12 cell. Chi hang V-S doi, o dung 5 cell -- va CA NAM la ROBUSTNESS (`h2@0.650`, `h2@0.925`, `h2@0.960`, `poisson@0.875`, `poisson@0.960`). Khong cell MAIN nao doi, nen `M-181..M-187` giu nguyen (da kiem: M-187 2/3 MAIN va 4/12 toan bo, truoc va sau). Ban cu nap tu git blob `1e715ff3...`, khong tu mot ban sao |
+| G23-243 | 23.22 | PASS | `max |anchor_err - err_neo| = 0.000e+00` tren 12/12 cell. `taxonomy_audit` tinh `test['wrong'].mean()` tu parquet; `live_region_sweep` tinh qua duong ong fallback/objective KHAC HAN. Hai duong doc lap, trung den bit |
+| G23-244 | 23.22 | PASS | M-189 **8/8** cell `A=True` co `V-N - V-S > 0`. Bon cell `A=False` (`poisson@0.700`, `h2@{0.850,0.925,0.960}`) lam doi chung am. Nhan POST-HOC, KHONG dem diem -- chi la regression control, va no cho thay phep sua `L91` khong pha gi |
+| G23-245 | 23.22 | PASS | M-191 = **4** cell co `qhat_at_sample_max=true` tai `kappa=1`, trong dai ky [1,8]: `poisson@0.925` (nb=51), `poisson@0.900` (42), `poisson@0.960` (42), `h2@0.650` (58) -- deu duoi san on dinh 59. Chot chan van la `floor_blocks` (ghim boi test doc ma nguon) |
+| G23-246 | 23.22 | PASS | M-192: `min_blocks_at_final_qhat` cua V-S GIAM DON DIEU theo `kappa` o **8/8** cell `A=True` (nguong >=6/8); va nguong cat tren `poisson@0.925` = **0.5**, thuoc {0.25,0.50} da ky -- doc theo DOAN LIEN TUC tu `kappa=0`. Xem `L94`: van ban da ky mo ho, doc theo `max` ca tap cho 2.0 va se MISS |
 
 ## Va cham da phat hien
 
