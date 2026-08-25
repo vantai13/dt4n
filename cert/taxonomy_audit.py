@@ -386,8 +386,13 @@ def variant_sweep(calib: pd.DataFrame, test: pd.DataFrame, anchor_err: float) ->
             ev = dict(ev)
             ev["variant"] = {"mondrian": "V-M", "none": "V-N", "selective": "V-S"}[post]
             ev["n_taxonomy_cells"] = int(len(fit["_q"]))
+            # `L91` + `L93`: hai che do hong cung hinh dang -- qhat=+inf va
+            # qhat=max mau. Ca hai KHAI BAO, khong chan.
             ev["qhat_has_infinite"] = bool(fit.get("qhat_has_infinite", False))
+            ev["qhat_at_sample_max"] = bool(fit.get("qhat_at_sample_max", False))
             ev["min_blocks_floor"] = fit.get("min_blocks_floor")
+            ev["min_blocks_stable"] = fit.get("min_blocks_stable")
+            ev["min_blocks_at_final_qhat"] = fit.get("min_blocks_at_final_qhat")
             rows.append(ev)
             if float(kappa) == float(KAPPA_OP):
                 fits[post] = fit
