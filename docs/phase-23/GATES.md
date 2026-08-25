@@ -304,6 +304,15 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-258 | 23.22 | PASS | `M-198` chi bao KHONG CAN NHAN. (1) Spearman(log `median m_hat_1` tren tach TEST, log `scale qhat`) = **+0.9650** tren 12 cell, nguong >= +0.85 -- **MU**. (2) Dung ti le `m_hat` thay ti le `qhat` de du doan dau cua (`viol - alpha`): **53/56**, nguong >= 48. Menh de (2) KHONG mu (`A067` muc 6.2): bien ket qua da xem, no chi kiem phep thay the khong lam hong gi |
 | G23-259 | 23.22 | PASS | `M-199` chi phi tai hieu chuan. Duoi san hop le 29 block (`n` = 10 va 20; **160** lan lay mau tren 8 cell): C3 gan co `qhat_has_infinite`/`qhat_at_sample_max` o **100%** (nguong >= 90%), B2 tra `c` HUU HAN o **100%** va gan co o **0%**. 8/8 cell HIT rieng le. C3 BIET truoc khi no khong du du lieu; B2 khong co dai luong nao de biet |
 | G23-260 | 23.22 | DIAGNOSTIC | `L100`: tai `n = 30` block, ti le lan chay co `qhat_source = degenerate_fallback_to_none` (90-100%) LON HON ti le duoc hai co `L91`/`L93` bat (0-10%) tren **8/8** cell, nguong >= 6/8. POST-HOC, khong dem diem. Do la bang chung truong `qhat_source` (`A065d`) la co duy nhat con nhin thay o vung giao cua `L93` va `L95` |
+| G23-261 | 23.22 | NOT_RUN | - |
+| G23-262 | 23.22 | NOT_RUN | - |
+| G23-263 | 23.22 | NOT_RUN | - |
+| G23-264 | 23.22 | NOT_RUN | - |
+| G23-265 | 23.22 | NOT_RUN | - |
+| G23-266 | 23.22 | NOT_RUN | - |
+| G23-267 | 23.22 | NOT_RUN | - |
+| G23-268 | 23.22 | NOT_RUN | - |
+| G23-269 | 23.22 | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -514,6 +523,29 @@ bai cua C3 CO DAU" (POST-HOC o tap song -> cham tren 16 o cell CHET chua xem),
 `M-198` chi bao khong can nhan, `M-199` chi phi tai hieu chuan (Task B-2). Ban
 thao noi bo cap `G23-255..257` cho ba ma nay va va cham voi `NC-3a`/`NC-3b`;
 da cap lai tu `G23-257`.
+
+`G23-261 .. G23-269` (lesson `23.22` Task B-3) mo boi amendment 23-68: tai hieu
+chuan qua che do, va menh de bao toan. KE TIEP `G23-260`. Bay ma do (`M-200 ..
+`M-206`) va ba doi chung (`NC-B3-1..4`, gop `NC-B3-2/3/4` vao `G23-269` vi ca
+ba deu la kiem CAU TRUC/AM tren cung mot lan chay). `M-200` la KIEM WIRING --
+dap an da biet tu `taxonomy_audit.json`, ha cap theo tien le `M-193`.
+Hai nguong DA DUOC DOI sau PILOT va TRUOC khi nhanh do luong ton tai
+(`A068` muc 4.2): `G23-262` ve sd(acceptance) va `G23-263` ve Spearman -- ca
+hai o dang cu deu la HIT gan nhu chac sau khi do rong cua truc A duoc do.
+
+Noi dung tung ma (nguong day du o `A068` muc 7; o day chi de tra cuu):
+
+```text
+G23-261  M-200  kiem WIRING, nguong BIT           A068 muc 5.1
+G23-262  M-201  bao toan o `n` huu han            A068 muc 5.2
+G23-263  M-202  gia cua `kappa` sai, du doan duoc A068 muc 5.3
+G23-264  M-203  bao dam duoc khoi phuc            A068 muc 5.4
+G23-265  M-204  GIA tinh bang `n`                 A068 muc 5.5
+G23-266  M-205  ket qua AM ve `err`               A068 muc 5.6
+G23-267  M-206  ve DOI XUNG cua bao toan          A068 muc 5.7
+G23-268  NC-B3-1  doi chung DUONG (PHAI FIRE)     A068 muc 6
+G23-269  NC-B3-2 + NC-B3-3 + NC-B3-4              A068 muc 6
+```
 
 `G23-260` mo boi amendment 23-67b (`L100`): co cua `L93` mu dung trong truong
 hop cua `L95`. Nhan DIAGNOSTIC vi no POST-HOC -- tim ra khi doc bang `n` cua
