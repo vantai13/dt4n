@@ -169,3 +169,66 @@ def test_main_cell_runs_and_controls_fire():
     assert out["census"]["flat_4cells"]["n_cells"] == 4
     assert out["census"]["mondrian_16cells"]["n_cells"] == 16
     assert out["controls"]["G23_235_negative_kappa0"]["acceptance_all_one"]
+
+
+# ---------------------------------------------------------------------------
+# `L93` -- che do `qhat = max mau`   (amendment 23-65b)
+# ---------------------------------------------------------------------------
+
+REPO = os.path.dirname(os.path.dirname(os.path.abspath(__file__)))
+
+
+def test_validity_floor_is_computed_not_hardcoded():
+    """`L91`: san HOP LE phai TINH tu `alpha_each`.
+
+    `9` dung cho `alpha=0.10` va SAI cho `alpha/3` (dung la 29). Mot nguong
+    suy ra tu tham so khac khong bao gio duoc hard-code.
+    """
+    from cert.simultaneous_score import alpha_bonferroni
+
+    assert CM.conformal_min_blocks(0.10) == 9
+    assert CM.conformal_min_blocks(alpha_bonferroni(0.10, 3)) == 29
+
+
+def test_stability_floor_is_above_validity_floor():
+    """`L93`: hai san KHAC LOAI -- 29 hop le, 59 on dinh. Khong duoc gop."""
+    from cert.simultaneous_score import alpha_bonferroni
+
+    assert CM.conformal_min_blocks_below_one(0.10) == 19
+    a3 = alpha_bonferroni(0.10, 3)
+    assert CM.conformal_min_blocks_below_one(a3) == 59
+    assert CM.conformal_min_blocks(a3) < CM.conformal_min_blocks_below_one(a3)
+
+
+def test_level_is_exactly_one_between_the_two_floors():
+    """Dai [29, 58]: `level == 1.0` -> `_qhat` tra ve MAX cua mau.
+
+    Day la NOI DUNG cua canh bao `L93`, khong phai mot chi tiet ky thuat.
+    """
+    from cert.conformal_v2 import conformal_level, empirical_qhat
+    from cert.simultaneous_score import alpha_bonferroni
+
+    a3 = alpha_bonferroni(0.10, 3)
+    assert conformal_level(28, a3) is None
+    for n in (29, 40, 58):
+        assert conformal_level(n, a3) == 1.0
+    assert conformal_level(59, a3) < 1.0
+
+    x = np.array([1.0, 5.0, 2.0, 9.0, 3.0])
+    assert empirical_qhat(x, 1.0) == x.max()
+
+
+def test_stability_floor_does_not_gate_anything():
+    """`min_blocks_stable` chi de KHAI BAO. Chot chan van la `floor_blocks`.
+
+    Neu ai do -- ke ca tac gia, sau nay -- thay `qhat_at_sample_max = true` va
+    phan xa nang chot chan len san ON DINH, test nay do. Ly do o
+    `A065b-amendment-65b.md` muc 2: 29 la san TOAN HOC, 59 la san VAN HANH
+    dat SAU khi xem du lieu (HARKing), va gop hai san khac loai lam mot la
+    mat kha nang phan biet "khong hop le" voi "hop le nhung bat on".
+    """
+    with open(os.path.join(REPO, "cert", "config_matrix.py"), encoding="utf-8") as fh:
+        src = fh.read()
+    assert "< floor_blocks" in src, "chot chan hop le da bien mat"
+    assert "< stable_blocks" not in src, (
+        "san ON DINH dang duoc dung lam CHOT CHAN -- xem A065b muc 2")

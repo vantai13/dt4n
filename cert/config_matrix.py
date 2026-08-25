@@ -190,6 +190,35 @@ def conformal_min_blocks(alpha_each: float) -> int:
     return int(n)
 
 
+def conformal_min_blocks_below_one(alpha_each: float) -> int:
+    """n_eff nho nhat de `conformal_level` tra ve muc < 1.0.
+
+    `L93` (amendment 23-65b). Duoi nguong nay `level == 1.0`, va vi
+    `empirical_qhat` dung `method="higher"` nen `_qhat` tra ve MAX cua mau.
+    `qhat` do HUU HAN va HOP LE -- bao dam conformal van giu -- nhung no do
+    MOT quan sat cuc dai quyet dinh: phuong sai lon va acceptance sup.
+
+        alpha = 0.10  : san huu han  9, san level<1 = 19  ->  dai  [9, 18]
+        alpha/3       : san huu han 29, san level<1 = 59  ->  dai [29, 58]
+
+    Day KHONG phai mot chot chan moi. San HOP LE van la `conformal_min_blocks`.
+    Con so nay chi de KHAI BAO -- cung nguyen tac fail-loud cua
+    `qhat_has_infinite` (`L91`) va `pin()` (`L78`): mot gia tri vo nghia ve
+    van hanh khong duoc di qua im lang.
+
+    KHONG duoc dung no lam dieu kien `break`: 29 la san TOAN HOC, 59 la san
+    VAN HANH, va gop hai san khac loai lam mot la mat kha nang phan biet
+    "khong hop le" voi "hop le nhung bat on". Ghim boi
+    `test_stability_floor_does_not_gate_anything`.
+    """
+    n = conformal_min_blocks(alpha_each)
+    while conformal_level(n, float(alpha_each)) >= 1.0:
+        n += 1
+        if n > 100_000:
+            raise ValueError("alpha_each qua nho: %r" % (alpha_each,))
+    return int(n)
+
+
 def fit_config(
     calib: pd.DataFrame,
     config: str,
@@ -273,7 +302,10 @@ def fit_config(
         info.update(converged=False, degenerate=False, n_iter=int(max_iter), cycle_len=0)
         # `L91`: TINH nguong tu `a_each` tai cho dung, khong ghi hang so.
         floor_blocks = conformal_min_blocks(a_each)
+        stable_blocks = conformal_min_blocks_below_one(a_each)   # `L93`: chi KHAI BAO
         info["min_blocks_floor"] = int(floor_blocks)   # phai hien trong artifact
+        info["min_blocks_stable"] = int(stable_blocks)
+        info["min_blocks_at_final_qhat"] = None
         for it in range(int(max_iter)):
             sel = _accept(calib, mcols, _q_rows(calib, keys, q, m), kappa)
             sub = calib[sel]
@@ -282,6 +314,8 @@ def fit_config(
             if min(nb.get(k, 0) for k in cells) < floor_blocks:
                 info.update(converged=False, degenerate=True, n_iter=int(it), cycle_len=0)
                 break
+            # ghi lai vong DA SINH RA `q` duoc tra ve
+            info["min_blocks_at_final_qhat"] = int(min(nb.get(k, 0) for k in cells))
             q_new = _qhat(sub, cols, keys, a_by)
             hist.append(q_new)
             sig = tuple(round(float(x), 12) for k in cells for x in q_new[k])
@@ -311,6 +345,13 @@ def fit_config(
     # tac fail-loud da ap cho `pin()` o `L78`.
     info["qhat_has_infinite"] = bool(
         not all(np.isfinite(np.asarray(v, dtype=np.float64)).all() for v in q.values())
+    )
+    # `L93`: `qhat` HUU HAN nhung o che do "max mau" -- hop le, nhung do MOT
+    # quan sat quyet dinh. Cung HINH DANG loi voi `+inf`: vo nghia ve van hanh,
+    # di qua im lang. KHAI BAO, khong chan.
+    _nb = info.get("min_blocks_at_final_qhat")
+    info["qhat_at_sample_max"] = bool(
+        _nb is not None and _nb < int(info.get("min_blocks_stable", 0))
     )
     info["qhat"] = {str(k): [float(x) for x in v] for k, v in q.items()}
     info["_q"] = q

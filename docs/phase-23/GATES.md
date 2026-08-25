@@ -282,6 +282,13 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-236 | 23.22 | PASS | 2/3, dat nguong >=2/3. V-M vo bao phu o kappa=2 tren `poisson@0.925` (0.1812) va `h2@0.700` (0.1345); KHONG vo tren `poisson@0.850` (0.0829). Ket qua Lesson 22.4 chuyen sang truc moi o 2/3 cell |
 | G23-237 | 23.22 | PASS | Cai gia cua V-S da bao cao khong lam tron: `acceptance(V-S)/acceptance(V-M)` = 0.7354 / 0.7793 / 0.8022 -- V-S nhan it hon 20-27% |
 | G23-238 | 23.22 | PASS | 9/9 cell robustness chay va bao cao. Khong cell nao duoc dung de chon ket luan chinh; chung chi dung de MO RONG mau cho M-187 (4/12 cell co V-N vo) |
+| G23-239 | 23.22 | NOT_RUN | - |
+| G23-240 | 23.22 | NOT_RUN | - |
+| G23-241 | 23.22 | NOT_RUN | - |
+| G23-242 | 23.22 | NOT_RUN | - |
+| G23-243 | 23.22 | NOT_RUN | - |
+| G23-244 | 23.22 | NOT_RUN | - |
+| G23-245 | 23.22 | NOT_RUN | - |
 
 ## Va cham da phat hien
 
@@ -473,6 +480,10 @@ duoc (`M-136` bi chan boi `L77`), va dai `G23-215/217/218` duoc cap bo qua no.
 Nay da dang ky NOT_RUN de khong ai tai su dung ma. Phat hien boi review doc
 lap 2026-08-24, va boi chinh `test_every_gate_id_mentioned_in_repo_is_in_the_ledger`
 khi amendment 23-64 chi CAN NHAC ten no.
+
+`G23-239 .. G23-244` (lesson `23.22` vong hai) mo boi amendment 23-65: sua `L91`
+(nguong dung luong cua V-S), tien dang ky `M-188`, va bon doi chung cho lan chay
+lai. KE TIEP `G23-238`. `G23-245` mo boi amendment 23-65b (`L93`).
 
 ## Ghi chu ve pham vi ID
 
