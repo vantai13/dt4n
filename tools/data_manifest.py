@@ -127,6 +127,8 @@ def main(argv: List[str] | None = None) -> int:
 
     if args.verify:
         return verify(args.out)
+    if not args.write:
+        raise AssertionError("phai chon --write hoac --verify")
 
     out = build()
     pathlib.Path(args.out).parent.mkdir(parents=True, exist_ok=True)

@@ -64,6 +64,14 @@ def test_results_is_tiered():
     root = os.path.join(REPO, "results")
     # So sach cua chinh kho: khong phai artifact, khong thuoc tang nao.
     BOOKKEEPING = {"MANIFEST.md", "PATH_MAP.tsv", "_intent.json"}
+    # `DATA_MANIFEST.json` (S-A4): so tong sha256 cua MOI file du lieu. No
+    # bat buoc phai o goc vi no BAO TRUM ca bon tang -- dat no vao mot tang
+    # se lam no noi doi ve pham vi cua chinh no.
+    BOOKKEEPING |= {"DATA_MANIFEST.json"}
+    # `TAG_AUDIT_<ngay>.json` (S-A1/`L114`): anh chup tag git tai mot ngay.
+    # Do la so sach ve REF CUA KHO, khong phai mot phep do; no khong co truc
+    # z/SLA nao de khai trong `validity`.
+    BOOKKEEPING |= {e for e in os.listdir(root) if e.startswith("TAG_AUDIT_")}
     # so ledger cua ma tran 23.20: ghi cong nhanh + thoi gian moi job, khong
     # phai mot ket qua (amendment 23-49c muc 5)
     BOOKKEEPING |= {e for e in os.listdir(root) if e.startswith("RUN_LEDGER_")}
