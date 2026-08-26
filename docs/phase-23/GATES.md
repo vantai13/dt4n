@@ -332,6 +332,14 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-286 | 23.22d | PASS | `M-223` `M-210` nguyen van tren LIVE-15, `n` = 500, **210** o ngoai cheo (102 cap cung ho). Ca BA ve dat: (a) do doc = **0.4661** trong [0.40, 0.62]; (b) he so ho tai = **+0.00628** (<= 0.02) va `delta R^2` = **+0.00050** (<= 0.02); (c) Spearman = **+0.9804** (>= 0.90). Do doc tai lap qua ba tap cell: 0.4776 (8 cell, `M-202`) -> 0.4873 (11 cell, `M-220`) -> 0.4661 (15 cell). **VE (b) BI STRUCK boi `G23-288`**: `NC-W-1` cho thay mot nhan NGAU NHIEN cung roi trong dai, nen (b) HIT khong mang thong tin. Chi (a) va (c) duoc trich dan |
 | G23-287 | 23.22d | FAIL | `M-224` doi chieu CUNG-RHO tren OVERLAP-4, `n` = 500, doc theo cach PHAN TANG (`L115`). Dat **1/2** `rho`, doi 2/2. Tai `rho` = 0.750: trung vi residual khac_ho **+0.04671** (n=4) vs cung_ho **+0.03681** (n=2), `|chenh|` = **0.00990** <= 0.02 DAT. Tai `rho` = 0.744: khac_ho **+0.00168** (n=4) vs cung_ho **+0.03552** (n=2), `|chenh|` = **0.03384** > 0.02 VUOT. Voi n=2 thi 'trung vi' dung bang TRUNG BINH cua hai so rat khac nhau (+0.06143 va +0.00962), va hai cap cung ho lai la hai cap co `|log(kappa_A/kappa_B)|` LON NHAT trong tang -- tuc bien ho tai VAN bi ghep voi bien don bay ngay trong OVERLAP-4. `A070b` N2 da ky truoc rang moi phat bieu cua `M-224` chi ve HAI diem tai. Xem `L120` |
 | G23-288 | 23.22d | PASS | `NC-W-1` doi chung AM da chay dung nhu ky va cho ket qua da du bao: nhan NGAU NHIEN cung ti le (seed 232301) cho he so = **-0.00261** va `delta R^2` = **+0.00009**, CA HAI roi trong dai da ky cua `M-223`(b). CHAN DOAN ngoai dai ky (200 rut tham): **100.0%** roi trong dai; `|he so|` p95 = **0.00874**, tuc dai da ky (0.02) rong gap **2.3 lan** ca duoi phan bo nhan ngau nhien. He so THAT (+0.00628) nam TRONG phan bo nhan ngau nhien (p95 = 0.00874). HE QUA DA KY: `M-223`(b) **KHONG duoc trich dan** lam bang chung. Cung hinh dang `L99`/`L101`; xem `L119` |
+| G23-289 | 23.23 | NOT_RUN | - |
+| G23-290 | 23.23 | NOT_RUN | - |
+| G23-291 | 23.23 | NOT_RUN | - |
+| G23-292 | 23.23 | NOT_RUN | - |
+| G23-293 | 23.23 | NOT_RUN | - |
+| G23-294 | 23.23 | NOT_RUN | - |
+| G23-295 | 23.23 | NOT_RUN | - |
+| G23-296 | 23.23 | NOT_RUN | - |
 
 ## Va cham da phat hien
 

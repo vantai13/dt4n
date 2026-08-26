@@ -82,6 +82,18 @@ def test_beta_constant_matches_ledger():
         % (BETA, cells[2]))
 
 
+def test_k08_matches_analytic():
+    """K08 la chan toan hoc, khong phai mot so fit tu du lieu."""
+    import math
+
+    cells = _rows()["K08"]
+    recorded = float(cells[2])
+    analytic = math.sqrt(math.pi / 2.0 - 1.0)
+    assert abs(recorded - analytic) <= 1e-15, (
+        "CONSTANTS.md K08 = %r nhung sqrt(pi/2 - 1) = %r"
+        % (recorded, analytic))
+
+
 def test_aoi_constants_match_ledger():
     """K02/K03/K04/K05 phai khop `measurements/aoi_model_v7.py`."""
     import measurements.aoi_model_v7 as A

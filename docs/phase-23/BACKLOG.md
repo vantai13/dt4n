@@ -17,7 +17,7 @@ KHAC RONG. Ra lai bang nay o dau MOI lesson.
 | L112 | 2h | (rong) | bang do nhay san song 0.040/0.050/0.055/0.070 PHAI in canh ket qua | 0 | HOAN |
 | L113 | -- | (rong) | **CL-10**: "`M-202` KHONG phai xac nhan mu" | -- | DONG (da vao CLAIMS) |
 | **L114** | 30 phut | (rong) | "tag dong lesson duoc gan HOI TO ngay 2026-08-26, khong phai tai thoi diem dong" | 0 | HOAN |
-| **S-A5** | 1 ngay | (rong) -- se do trong 23.23 (`M-232`) | -- | -- | LEN LICH 23.23 |
+| L124 | 0 (phan xu tai dau 23.23) | (rong) -- `S-A5` khong co dinh nghia va cot quyet dinh rong | "`S-A5` mo coi da bi go khoi lich 23.23; `M-232` KHONG duoc cap" | -- | DONG |
 | L115 | 4h | (rong) -- ca hai cach doc deu in trong artifact | "M-224 cham theo cach doc PHAN TANG; cach doc chat co 0 cap cung ho" | 0 | HOAN |
 | L116 | 1h may | (rong) -- khong phat bieu nao cua A070b ve `n*` | "khong co duong n* cho 4 cell W; A070b chi noi ve n=250 va n=500" | 0 | HOAN |
 | L117 | 30 phut | (rong) -- khong phat bieu khoa hoc nao phu thuoc | "lenh tai tao in trong doc dung `.venv/bin/python` khong ton tai; doc `L117` de biet trinh thong dich that" | 0 | HOAN |
