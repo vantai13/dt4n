@@ -464,6 +464,8 @@ def main(argv: Sequence[str] | None = None) -> int:
             c["generated_payload_sha256"]))
         print("-> %s" % args.wiring_out)
         return 0 if c["hit"] else 1
+    if not args.run:
+        raise AssertionError("phai chon --wiring hoac --run")
     out = run_extension(args.wiring_out, args.reference)
     _write(args.out, out)
     print_extension(out)

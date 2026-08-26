@@ -294,6 +294,8 @@ def main(argv: Sequence[str] | None = None) -> int:
               receipt["sealed_batch_sha256"])
         print("outcome chua duoc mo; chay --reveal-allowlist rieng")
         return 0
+    if not args.reveal_allowlist:
+        raise AssertionError("phai chon --build-sealed hoac --reveal-allowlist")
     out = reveal_allowlist(args.receipt, args.report)
     print_allowlist(out)
     print("-> %s" % args.report)
