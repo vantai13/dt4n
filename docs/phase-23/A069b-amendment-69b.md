@@ -21,14 +21,14 @@ truong validation/provenance. Chua chay cell thu hai; chua tao
 ```text
 1. DUNG ngay tien trinh (exit 130).
 2. Chuyen parquet/report cua lan dau sang:
-   results/PENDING/phase-23/a069-contaminated-stdout/
+   results/SMOKE/phase-23/a069-invalid-selfcal/stdout-leak/
 3. `poisson@0.740` KHONG duoc goi la mu cho cac menh de dung bat ky diagnostic
    da lo o tren. Cac dai luong transfer/tai hieu chuan M-209..M-212 chua duoc
    tinh, nhung khi bao cao phai kem nhan PARTIALLY_UNBLINDED_INPUT_DIAGNOSTICS.
 4. Sua runner: stdout builder -> DEVNULL; stderr chi giu trong tien trinh va
    chi dua ra khi build FAIL. Output cap cao van chi co allowlist A069 muc 3.
 5. Build lai `poisson@0.740` tu dau tai duong LIVE; ban bi lo giu nguyen trong
-   PENDING de bao toan audit trail, khong xoa.
+   SMOKE de bao toan audit trail, khong xoa.
 ```
 
 ## 2. Anh huong den lesson

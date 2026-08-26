@@ -17,9 +17,9 @@ def test_pilot_report_cell_allowlist_is_exact() -> None:
     }
 
 
-def test_pilot_never_overwrites_the_frozen_calibration() -> None:
-    assert P.PILOT_CALIBRATION != P.BASE_CALIBRATION
-    assert "A069" in P.PILOT_CALIBRATION
+def test_pilot_uses_a_new_exogenous_manifest() -> None:
+    assert "manifest_exogenous_S-B" in P.PILOT_MANIFEST
+    assert "20cells_A069" in P.PILOT_MANIFEST
 
 
 def test_builder_stdout_is_suppressed_before_any_pilot_outcome_is_printed(

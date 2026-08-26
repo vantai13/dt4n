@@ -1,0 +1,257 @@
+{
+ "NC1_z0": {},
+ "V22_2_max_abs_diff": 0.0,
+ "V22_3_max_abs_diff": 0.0,
+ "V22_4_calib_share_by_mhat_bin": {
+  "0": 0.24993097211273355,
+  "1": 0.2498889551378757,
+  "2": 0.2500890359705321,
+  "3": 0.25009103677885863
+ },
+ "V22_5_min": 417,
+ "V22_5_n_block_by_cross_cell": {
+  "0|0": 446,
+  "0|1": 464,
+  "0|2": 462,
+  "0|3": 417,
+  "1|0": 445,
+  "1|1": 466,
+  "1|2": 462,
+  "1|3": 417,
+  "2|0": 447,
+  "2|1": 468,
+  "2|2": 463,
+  "2|3": 419,
+  "3|0": 447,
+  "3|1": 470,
+  "3|2": 467,
+  "3|3": 419
+ },
+ "V23_sla_star_match": true,
+ "V23_sla_twin_match": true,
+ "V5_compare_20R": {},
+ "V5_reproduce_20R": {},
+ "a_star_rank_by_z_bin": {
+  "0|1": 0.8583958592464792,
+  "0|2": 0.13600288889780524,
+  "0|3": 0.005601251855715604,
+  "1|1": 0.8188748748748749,
+  "1|2": 0.1701061061061061,
+  "1|3": 0.011019019019019019,
+  "2|1": 0.7895055055055055,
+  "2|2": 0.1957877877877878,
+  "2|3": 0.014706706706706707,
+  "3|1": 0.7639862022212032,
+  "3|2": 0.21866687934919146,
+  "3|3": 0.017346918429605406
+ },
+ "a_star_rank_share": {
+  "1": 0.8076198480232517,
+  "2": 0.18020300251627072,
+  "3": 0.012177149460477541
+ },
+ "anchor_ci95": {
+  "d_sla_ci95": [
+   0.03613070036151282,
+   0.0421596176863181
+  ],
+  "err_ci95": [
+   0.1842034423804228,
+   0.20052659224137903
+  ],
+  "n_boot": 2000,
+  "seed": 21200
+ },
+ "aoi_metadata": {
+  "aoi_profile": "U3",
+  "link_order": [
+   "uA",
+   "uB",
+   "ac",
+   "ad",
+   "bc",
+   "bd",
+   "vC",
+   "vD"
+  ],
+  "offset_mean_ms": 8.125,
+  "offset_ms_max_quantisation_abs": 0.0,
+  "offset_ms_mean_nominal": 8.125,
+  "offset_ms_mean_realised": 8.125,
+  "offset_ms_nominal": [
+   20.0,
+   25.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   5.0,
+   15.0
+  ],
+  "offset_ms_realised": [
+   20.0,
+   25.0,
+   0.0,
+   0.0,
+   0.0,
+   0.0,
+   5.0,
+   15.0
+  ],
+  "offset_steps": [
+   4,
+   5,
+   0,
+   0,
+   0,
+   0,
+   1,
+   3
+  ]
+ },
+ "aoi_profile": "U3",
+ "bin_shares": [
+  0.2493559247419947,
+  0.24987618747467472,
+  0.24987618747467472,
+  0.2508917003086559
+ ],
+ "cell": "poisson@0.820",
+ "clip_fraction_max": 0.0,
+ "corr_z_s_m_hat_calib": 0.0008997749922998899,
+ "d_sync_s": 0.051,
+ "d_sync_source": "inherited_negative_control",
+ "eps_regret_ms": 2.2106837229828744,
+ "fail": [],
+ "gap_true_pct": {
+  "p10": 0.419255793094635,
+  "p25": 1.069108009338379,
+  "p5": 0.20817457139492035,
+  "p50": 2.2593908309936523,
+  "p75": 3.72385573387146,
+  "p90": 5.142665386199951
+ },
+ "mhat_bin_by_z_bin_calib_pct": {
+  "0|0": 25.033501576780797,
+  "0|1": 25.00621885557009,
+  "0|2": 24.93480232063617,
+  "0|3": 25.025477247012944,
+  "1|0": 25.032229135138166,
+  "1|1": 24.980182084604483,
+  "1|2": 24.981783532313212,
+  "1|3": 25.005805247944142,
+  "2|0": 25.018215009167555,
+  "2|1": 24.89331208916147,
+  "2|2": 25.06705525352891,
+  "2|3": 25.02141764814207,
+  "3|0": 24.888949143891605,
+  "3|1": 25.075562431714687,
+  "3|2": 25.05163765122455,
+  "3|3": 24.983850773169156
+ },
+ "mhat_bin_edges": [
+  1.0492703914642334,
+  2.272780656814575,
+  3.642932176589966
+ ],
+ "n_blocks": 1000,
+ "n_calib_blocks": 500,
+ "n_rows": 999495,
+ "n_test_blocks": 500,
+ "n_valid_rows": 199899,
+ "n_z0_dropped": 0,
+ "output": {
+  "digest_scope": "bytes-on-disk-after-flush",
+  "n_rows": 999495,
+  "parquet_bytes": 69103129,
+  "parquet_path": "results/LIVE/phase-21R/calib_set_poisson_0.820_U3_measured_v7_A069.parquet",
+  "parquet_sha256": "20e0bd4be75b0eecc849ded01aac3727c3354948253ec7a31edf2f20fdd9ac49"
+ },
+ "pair_ok_rate": 0.9878228505395225,
+ "provenance": {
+  "block_s": 5.0,
+  "d_sync_s": 0.051,
+  "dt": 0.005,
+  "git_dirty": true,
+  "git_hash": "6a243339a6a3f65ff038f9c84daa99f2b089980f",
+  "n": 200000,
+  "script": "cert/build_calib_set_v3.py",
+  "seed_split": 7000,
+  "seeds": [
+   101,
+   102,
+   103,
+   104,
+   105
+  ],
+  "sha256": {
+   "cert/build_calib_set_v3.py": "89e300754029e90aa810599f257d16df86aedbe7c797dd519060cd75c9b738b8",
+   "cert/margin_score.py": "452f5840ecf867cde9690510ed0e49065c8c29de75c39b62c1a03377bd00b328",
+   "cert/simultaneous_score.py": "5e909216a77456e3af1912402d8f9d5c6c91df08b68e057dc026e6c445764803",
+   "results/LIVE/phase-20R/sla_calibration_A069_pilot.json": "dc0a1b0b7f99efedd6080a86752e9eb1628691aaa44ebda7a4a4058003089a55",
+   "results/LIVE/phase-20R/truth_table.parquet": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e",
+   "results/SUPERSEDED/phase-20R/decision_error_constant_sigma.parquet": "cdc8263c7a69f7a4ad0e42363f3d88ce1278d828391c7315b7856db6ca8723e2",
+   "twin/cost_v2.py": "444d1d24a7d8be3789a1857ed2a5614f9e58594ba69be9d1663912ac5a26a6d8",
+   "twin/link_model_v2.py": "a11cfafae0456c41ed8798f2c3ea9d944e7b64aa25dc385ad20eadcdf08219cd"
+  },
+  "sigma_rho": 0.0096,
+  "sync_period_s": 0.5,
+  "tau": 1.0,
+  "timestamp_utc": "2026-08-26T00:03:05.977162+00:00",
+  "z_edges_primary": [
+   0.1,
+   0.241,
+   0.366,
+   0.491,
+   0.641
+  ],
+  "z_edges_secondary": [
+   0.1,
+   0.216,
+   0.316,
+   0.416,
+   0.516,
+   0.641
+  ]
+ },
+ "sigma_rho": 0.0096,
+ "split": "block",
+ "staleness_path_diagnostic": {},
+ "status": "PRIMARY",
+ "sync_period_s": 0.5,
+ "t_delay_ms": 22.10683722982874,
+ "t_loss": 0.004076671807637436,
+ "validity": {
+  "aoi_axis": {
+   "d_sync_s": null,
+   "generator_module": "measurements.aoi_model_v7",
+   "generator_name": "AoIModelV7",
+   "generator_source_sha256": null,
+   "label": "measured_v7_uniform",
+   "source_path": "measurements/aoi_model_v7.py",
+   "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+   "sync_period_s": null
+  },
+  "axis_role": "consumes_axis",
+  "omega": null,
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "UNREGISTERED",
+   "source_path": "results/LIVE/phase-20R/sla_calibration_A069_pilot.json",
+   "source_sha256": "dc0a1b0b7f99efedd6080a86752e9eb1628691aaa44ebda7a4a4058003089a55"
+  },
+  "w_loss": 2210.6837229828743,
+  "z_edges": [
+   0.1,
+   0.241,
+   0.366,
+   0.491,
+   0.641
+  ]
+ },
+ "w_loss": 2210.6837229828743,
+ "z_max_realised_s": 0.618125,
+ "z_min_realised_s": 0.11812500000000001,
+ "z_step_k_max": 110,
+ "z_step_k_min": 11
+}

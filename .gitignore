@@ -150,6 +150,9 @@ cert/*.parquet
 # (tai tao re, ~1.4 GB cho 30 file). KHONG commit. Report json THI commit --
 # no nho va mang khoi `validity` ma test_no_stale_axes.py can.
 results/LIVE/phase-21R/*.parquet
+# A069: builder report day du chua outcome nam ngoai allowlist PILOT. Giu local
+# va ghim digest trong `a069_pilot.json`; khong commit/mo truoc mot prereg moi.
+results/LIVE/phase-21R/*_A069_report.json
 # Amendment 23-49g: quy tac tren chi chan tang LIVE, nen sau khi phan tang
 # results/ (22/08) toan bo parquet ma tran 23.20 da lot vao lich su qua
 # PENDING/ va SUPERSEDED/ (38 path, 1.92 GB -- push len GitHub bi chan).

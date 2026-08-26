@@ -3,7 +3,6 @@
 from __future__ import annotations
 
 import argparse
-import copy
 import hashlib
 import json
 import os
@@ -17,12 +16,15 @@ import pandas as pd
 
 from cert import recalibrate_transfer as RT
 from cert import transfer_matrix as TM
-from measurements import decision_error_v2 as DE
+from cert.build_calib_set_v3 import AOI_V7, Z_EDGES_V7
+from cert.taxonomy_audit import W_LOSS
+from measurements.validity import validity_block
 
 RHOS = (0.740, 0.780, 0.820)
 MODES = ("poisson", "h2")
-BASE_CALIBRATION = "results/LIVE/phase-20R/sla_calibration.json"
-PILOT_CALIBRATION = "results/LIVE/phase-20R/sla_calibration_A069_pilot.json"
+PILOT_MANIFEST = (
+    "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_20cells_A069.json"
+)
 OUT_DIR = "results/LIVE/phase-21R"
 PILOT_REPORT = "results/LIVE/phase-23/a069_pilot.json"
 MAX_CELL_SECONDS = 30.0 * 60.0
@@ -53,41 +55,16 @@ def _paths(mode: str, rho: float, out_dir: str = OUT_DIR) -> tuple[str, str]:
     return stem + ".parquet", stem + "_report.json"
 
 
-def make_calibration_sidecar(
-    base_path: str = BASE_CALIBRATION,
-    out_path: str = PILOT_CALIBRATION,
-) -> Dict[str, Any]:
-    with open(base_path, "r", encoding="utf-8") as fh:
-        base = json.load(fh)
-    out = copy.deepcopy(base)
-    existing = {
-        (str(row["mode"]), round(float(row["rho_bar"]), 12))
-        for row in out["cells"]
-    }
-    extra = DE.extra_calibrated_cells(RHOS, modes=MODES)
-    for cell in extra:
-        cell = dict(cell)
-        cell["a069_original_role"] = cell.get("role")
-        # `build_calib_set_v3._load_cell` chi nap role `gate`/`pc1`. Sidecar
-        # danh dau 6 cell nay la gate CUA PILOT; calibration goc khong doi.
-        cell["role"] = "gate"
-        key = (str(cell["mode"]), round(float(cell["rho_bar"]), 12))
-        if key not in existing:
-            out["cells"].append(cell)
-            existing.add(key)
-    out["a069_pilot"] = {
-        "amendment": "23-69",
-        "base_calibration": base_path,
-        "base_sha256": _sha256(base_path),
-        "added_cells": [_cell_name(m, r) for m in MODES for r in RHOS],
-        "generator": "measurements.decision_error_v2.extra_calibrated_cells",
-        "note": "sidecar only; original calibration and SLA manifest unchanged",
-    }
-    Path(out_path).parent.mkdir(parents=True, exist_ok=True)
-    with open(out_path, "w", encoding="utf-8") as fh:
-        json.dump(out, fh, indent=2, sort_keys=True)
-        fh.write("\n")
-    return out
+def validate_manifest(path: str = PILOT_MANIFEST) -> None:
+    with open(path, "r", encoding="utf-8") as fh:
+        manifest = json.load(fh)
+    cells = manifest.get("cells", [])
+    got = {(str(c["mode"]), round(float(c["rho_bar"]), 3)) for c in cells}
+    want = {(m, r) for m in MODES for r in RHOS}
+    if not want <= got:
+        raise ValueError(f"manifest thieu cell A069: {sorted(want - got)}")
+    if {float(c["w_loss"]) for c in cells} != {W_LOSS}:
+        raise ValueError("manifest A069 khong dong nhat w_loss=5000")
 
 
 def _run_builder(mode: str, rho: float, calibration: str, out_dir: str) -> Dict[str, Any]:
@@ -152,11 +129,11 @@ def score_stop_rules(rows: Iterable[Mapping[str, Any]]) -> Dict[str, Any]:
 
 
 def run(args: argparse.Namespace) -> Dict[str, Any]:
-    make_calibration_sidecar(args.base_calibration, args.pilot_calibration)
+    validate_manifest(args.pilot_manifest)
     rows = []
     for mode in MODES:
         for rho in RHOS:
-            built = _run_builder(mode, rho, args.pilot_calibration, args.out_dir)
+            built = _run_builder(mode, rho, args.pilot_manifest, args.out_dir)
             row = _allowed_summary(mode, rho, built)
             rows.append(row)
             print(
@@ -173,11 +150,15 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
             "rho_grid": list(RHOS), "modes": list(MODES),
             "alive_err_floor": ALIVE_ERR_FLOOR,
             "max_cell_seconds": MAX_CELL_SECONDS,
-            "calibration_sidecar": args.pilot_calibration,
-            "calibration_sidecar_sha256": _sha256(args.pilot_calibration),
+            "sla_manifest": args.pilot_manifest,
+            "sla_manifest_sha256": _sha256(args.pilot_manifest),
         },
         "cells": rows,
         "stop_rules": score_stop_rules(rows),
+        "validity": validity_block(
+            aoi_generator=AOI_V7, z_edges=Z_EDGES_V7,
+            sla_path=args.pilot_manifest, w_loss=W_LOSS,
+        ),
     }
     Path(args.report).parent.mkdir(parents=True, exist_ok=True)
     with open(args.report, "w", encoding="utf-8") as fh:
@@ -190,8 +171,7 @@ def run(args: argparse.Namespace) -> Dict[str, Any]:
 
 def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
-    ap.add_argument("--base-calibration", default=BASE_CALIBRATION)
-    ap.add_argument("--pilot-calibration", default=PILOT_CALIBRATION)
+    ap.add_argument("--pilot-manifest", default=PILOT_MANIFEST)
     ap.add_argument("--out-dir", default=OUT_DIR)
     ap.add_argument("--report", default=PILOT_REPORT)
     args = ap.parse_args(argv)

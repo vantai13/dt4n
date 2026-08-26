@@ -1,0 +1,112 @@
+{
+  "allowlist": [
+    "build_seconds",
+    "builder_report_sha256",
+    "cell",
+    "err_neo",
+    "kappa_A",
+    "mode",
+    "n_calib_blocks",
+    "n_test_blocks",
+    "parquet_sha256",
+    "rho_bar"
+  ],
+  "amendment": "23-69",
+  "cells": [
+    {
+      "build_seconds": 8.997356938999928,
+      "builder_report_sha256": "335ccba2aa2d36a6010b7ce88a89a737692e231ab9a1b0710ac41d9726be3095",
+      "cell": "poisson@0.740",
+      "err_neo": 0.0014208610417913257,
+      "kappa_A": 2.275604248046875,
+      "mode": "poisson",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "e6464b16c05153da08f6661dac4b3f4654d22604ac21d3cdebac4cae26588abf",
+      "rho_bar": 0.74
+    },
+    {
+      "build_seconds": 8.69460570299998,
+      "builder_report_sha256": "4b7b4cb39f14095633eb951df1f90696d2aca5327946702ca0b5947b5ec26cbf",
+      "cell": "poisson@0.780",
+      "err_neo": 0.07507749696315967,
+      "kappa_A": 0.9990234375,
+      "mode": "poisson",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "0fd37c9da94078527d6f99b2de351b3afd60a9fd8b68b63dbe40baa901484dd6",
+      "rho_bar": 0.78
+    },
+    {
+      "build_seconds": 8.770070930999736,
+      "builder_report_sha256": "09d07674c687a40e0723a20c40e4226cb7c8b6d212fe07b5bca6a98c4a9ad201",
+      "cell": "poisson@0.820",
+      "err_neo": 0.18957087995325167,
+      "kappa_A": 0.60595703125,
+      "mode": "poisson",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "20e0bd4be75b0eecc849ded01aac3727c3354948253ec7a31edf2f20fdd9ac49",
+      "rho_bar": 0.82
+    },
+    {
+      "build_seconds": 8.746363287999884,
+      "builder_report_sha256": "e156e441c420cf8a744ba1801d3d2fdd826ab7972b20189ff16c1989eb0510d1",
+      "cell": "h2@0.740",
+      "err_neo": 0.07481934052035534,
+      "kappa_A": 0.999755859375,
+      "mode": "h2",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "c161e9ef7688430814000e3bb6088a48c134cb927b625fa5b04141dc50164e83",
+      "rho_bar": 0.74
+    },
+    {
+      "build_seconds": 9.762032499999805,
+      "builder_report_sha256": "45c5210120523d6f02eb2d0beb28aeb71c9809d4d0095190597b8557bb4ebce2",
+      "cell": "h2@0.780",
+      "err_neo": 0.0367742852168414,
+      "kappa_A": 1.1641845703125,
+      "mode": "h2",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "84cfeb8fd95089599b479202d9eb11ff871dcd09b9551b9e8ec3dacceaa36aa6",
+      "rho_bar": 0.78
+    },
+    {
+      "build_seconds": 8.618969036999715,
+      "builder_report_sha256": "8f44b622468fd6ac21192b02dd86d640346b00f3f7213d79c46bbaa034501672",
+      "cell": "h2@0.820",
+      "err_neo": 0.014740933005401273,
+      "kappa_A": 1.36627197265625,
+      "mode": "h2",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "5e33cb5b5c5fc0767d07c339d98b96656b4ed7077ff96a2c0cf0790c718b371e",
+      "rho_bar": 0.82
+    }
+  ],
+  "config": {
+    "alive_err_floor": 0.05,
+    "calibration_sidecar": "results/LIVE/phase-20R/sla_calibration_A069_pilot.json",
+    "calibration_sidecar_sha256": "dc0a1b0b7f99efedd6080a86752e9eb1628691aaa44ebda7a4a4058003089a55",
+    "max_cell_seconds": 1800.0,
+    "modes": [
+      "poisson",
+      "h2"
+    ],
+    "rho_grid": [
+      0.74,
+      0.78,
+      0.82
+    ]
+  },
+  "schema": "dt4n.a069_pilot.v1",
+  "stop_rules": {
+    "common_alive_rho": [],
+    "may_proceed_to_prereg": false,
+    "stop_low_calib_blocks": [],
+    "stop_no_common_alive_rho": true,
+    "stop_slow_cells": []
+  }
+}
