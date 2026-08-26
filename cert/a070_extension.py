@@ -16,7 +16,16 @@ import pandas as pd
 from cert import recalibrate_transfer as RT
 from cert import recalibration_cost as RC
 from cert import transfer_matrix as TM
+from cert.build_calib_set_v3 import AOI_V7, Z_EDGES_V7
 from cert.cell_matrices import git, json_clean, pin
+from measurements.validity import validity_block
+
+# Cell song moi cua A069 duoc sinh duoi manifest 20 cell; manifest S-B goc
+# KHONG chua ca 8 cell song cu, nen day la con tro DAY DU duy nhat da dang ky
+# cho tap 11 cell cua nhanh E.
+EXT_SLA_MANIFEST = (
+    "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_20cells_A069.json"
+)
 
 AMENDMENT = "docs/phase-23/A070-amendment-70.md"
 PREREG_TAG = "lesson-23-22d-a-prereg"
@@ -78,6 +87,12 @@ def run_wiring(reference_path: str = REFERENCE) -> Dict[str, Any]:
             "scope": "8 live + 4 dead cell cu; toan bo scientific payload",
         },
         "reference": pin(reference_path),
+        "validity": validity_block(
+            aoi_generator=AOI_V7,
+            z_edges=Z_EDGES_V7,
+            sla_path=RT.SLA_MANIFEST,
+            w_loss=RT.W_LOSS,
+        ),
         "provenance": {
             "script": "cert/a070_extension.py::run_wiring",
             "git_hash": git("git", "rev-parse", "HEAD"),
@@ -104,8 +119,14 @@ def load_any_cell(cell: str) -> tuple[pd.DataFrame, pd.DataFrame, str]:
             frame[~frame["is_calib"]].reset_index(drop=True), path)
 
 
-def load_all_kappa() -> Dict[str, float]:
-    old = RT.load_kappa_A()
+def load_all_kappa(live: Sequence[str]) -> Dict[str, float]:
+    """`kappa_A` cho DUNG tap cell song truyen vao.
+
+    `RT.load_kappa_A()` co CA 4 cell CHET vi `RT.run()` con cham mot ma tran
+    dead. `M-220` duoc ky tren 11 cell song va `score_m220` bao cao
+    `n_cells = len(kappa)`, nen map phai duoc CAT ve dung tap song.
+    """
+    pool = RT.load_kappa_A()
     with open(A069_PILOT, "r", encoding="utf-8") as fh:
         pilot = json.load(fh)
     by_cell = {row["cell"]: row for row in pilot["cells"]}
@@ -114,8 +135,11 @@ def load_all_kappa() -> Dict[str, float]:
         path = _new_path(cell)
         if pin(path)["sha256"] != row["parquet_sha256"]:
             raise RuntimeError(f"A069 parquet digest lech: {cell}")
-        old[cell] = float(row["kappa_A"])
-    return old
+        pool[cell] = float(row["kappa_A"])
+    missing = [c for c in live if c not in pool]
+    if missing:
+        raise RuntimeError(f"thieu kappa_A cho cell song: {missing}")
+    return {c: float(pool[c]) for c in live}
 
 
 def _draws_at_n(calib: pd.DataFrame, n: int, seed: int = RT.SEED
@@ -356,7 +380,7 @@ def run_extension(wiring_path: str = WIRING_OUT,
         reference = json.load(fh)
     old_live = tuple(reference["cells_live"])
     all_live = old_live + NEW_LIVE
-    kappa = load_all_kappa()
+    kappa = load_all_kappa(all_live)
     if set(kappa) != set(all_live):
         raise RuntimeError("kappa map khong dung 11 cell song")
 
@@ -379,6 +403,12 @@ def run_extension(wiring_path: str = WIRING_OUT,
                         "M_220": m220, "M_221": m221},
         "controls": {"NC_E_0": wiring["NC_E_0"], "NC_E_1": nc1},
         "rows_new_n250": new_rows,
+        "validity": validity_block(
+            aoi_generator=AOI_V7,
+            z_edges=Z_EDGES_V7,
+            sla_path=EXT_SLA_MANIFEST,
+            w_loss=RT.W_LOSS,
+        ),
         "provenance": {
             "script": "cert/a070_extension.py::run_extension",
             "git_hash": git("git", "rev-parse", "HEAD"),

@@ -14,7 +14,9 @@ from typing import Any, Dict, Mapping, Sequence
 
 import pandas as pd
 
+from cert.build_calib_set_v3 import AOI_V7, Z_EDGES_V7
 from cert.taxonomy_audit import W_LOSS
+from measurements.validity import validity_block
 
 RHOS = (0.744, 0.750, 0.756, 0.760, 0.764, 0.770)
 MODES = ("poisson", "h2")
@@ -247,6 +249,12 @@ def reveal_allowlist(receipt_path: str = SEALED_RECEIPT,
         },
         "cells": rows,
         "scores": score(rows),
+        "validity": validity_block(
+            aoi_generator=AOI_V7,
+            z_edges=Z_EDGES_V7,
+            sla_path=receipt["manifest"],
+            w_loss=W_LOSS,
+        ),
     }
     _write_json_atomic(report_path, out)
     return out

@@ -1,6 +1,50 @@
 import copy
+import json
 
 from cert import a070_extension as E
+
+
+def test_load_all_kappa_returns_exactly_live_cells_not_dead_ones(
+        monkeypatch, tmp_path) -> None:
+    """RT.load_kappa_A() tra ve CA 4 cell CHET vi RT.run() cham ma tran dead.
+
+    `M-220` duoc ky tren DUNG 11 cell song va `score_m220` bao cao
+    `n_cells = len(kappa)`, nen kappa map LOT cell chet se ghi mot con so
+    SAI vao artifact da ky.
+    """
+    pilot = tmp_path / "pilot.json"
+    pilot.write_text(json.dumps({"cells": [
+        {"cell": c, "kappa_A": 0.5, "parquet_sha256": "digest"}
+        for c in E.NEW_LIVE]}))
+    monkeypatch.setattr(E, "A069_PILOT", str(pilot))
+    monkeypatch.setattr(E, "pin", lambda path: {"sha256": "digest"})
+    monkeypatch.setattr(E.RT, "load_kappa_A", lambda: {
+        "h2@0.650": 1.0, "poisson@0.960": 2.0,
+        "h2@0.850": 9.0, "poisson@0.700": 9.0,
+    })
+    live = ("h2@0.650", "poisson@0.960") + E.NEW_LIVE
+    kappa = E.load_all_kappa(live)
+    assert set(kappa) == set(live)
+    assert "h2@0.850" not in kappa
+    assert "poisson@0.700" not in kappa
+    assert len(kappa) == len(live)
+
+
+def test_load_all_kappa_refuses_a_live_cell_it_has_no_kappa_for(
+        monkeypatch, tmp_path) -> None:
+    pilot = tmp_path / "pilot.json"
+    pilot.write_text(json.dumps({"cells": [
+        {"cell": c, "kappa_A": 0.5, "parquet_sha256": "digest"}
+        for c in E.NEW_LIVE]}))
+    monkeypatch.setattr(E, "A069_PILOT", str(pilot))
+    monkeypatch.setattr(E, "pin", lambda path: {"sha256": "digest"})
+    monkeypatch.setattr(E.RT, "load_kappa_A", lambda: {"h2@0.650": 1.0})
+    try:
+        E.load_all_kappa(("h2@0.650", "poisson@0.960") + E.NEW_LIVE)
+    except RuntimeError as exc:
+        assert "poisson@0.960" in str(exc)
+    else:
+        raise AssertionError("phai tu choi khi thieu kappa_A cua cell song")
 
 
 def test_new_live_cells_are_exact_and_were_blind_at_prereg() -> None:
