@@ -59,3 +59,53 @@ def test_backlog_rows_have_three_columns():
         if not cols[3]:
             bad.append((line[:60], "cot (c) canh bao de trong"))
     assert not bad, f"dong backlog thieu cot: {bad}"
+
+
+CLAIMS = DOCS / "CLAIMS.md"
+CL_ID = re.compile(r"\bCL-\d+\b")
+
+
+def _claim_ids() -> set[str]:
+    assert CLAIMS.exists(), "thieu docs/phase-23/CLAIMS.md (S-A3)"
+    return set(re.findall(r"^\| (CL-\d+) \|",
+                          CLAIMS.read_text(encoding="utf-8"), re.M))
+
+
+def test_claims_file_has_unique_ids():
+    text = CLAIMS.read_text(encoding="utf-8")
+    ids = re.findall(r"^\| (CL-\d+) \|", text, re.M)
+    dupes = {i for i in ids if ids.count(i) > 1}
+    assert ids, "CLAIMS.md khong co dong claim nao"
+    assert not dupes, f"CLAIMS.md co ID trung: {sorted(dupes)}"
+
+
+def test_backlog_claim_refs_point_at_real_claims():
+    """R2 cot (b) tra loi 'no doi PHAT BIEU nao'. Mot cau tra loi tro toi mot
+    `CL-*` khong ton tai lam ca quy tac thanh trang tri: cot quyet dinh khi do
+    khong con duoc kiem tra boi bat cu cai gi."""
+    have = _claim_ids()
+    bad: dict[str, str] = {}
+    for line in BACKLOG.read_text(encoding="utf-8").splitlines():
+        if not (line.startswith("| L") or line.startswith("| **L")):
+            continue
+        if line.startswith("| L*"):
+            continue
+        for ref in CL_ID.findall(line):
+            if ref not in have:
+                bad[ref] = line[:60]
+    assert not bad, f"BACKLOG tro toi claim khong ton tai: {bad}"
+
+
+def test_gates_and_limits_cited_by_claims_exist():
+    """Nguoc lai: moi `L*` va `G23-*` ma CLAIMS vien dan phai co that."""
+    claims = CLAIMS.read_text(encoding="utf-8")
+    limits = (DOCS / "LIMITS.md").read_text(encoding="utf-8")
+    gates = (DOCS / "GATES.md").read_text(encoding="utf-8")
+    known_l = set(re.findall(r"^\| (L\d+[a-z]?) \|", limits, re.M))
+    known_g = set(re.findall(r"^\| (G23-\d+) \|", gates, re.M))
+    missing_l = sorted({m for m in re.findall(r"`(L\d+[a-z]?)`", claims)
+                        if m not in known_l})
+    missing_g = sorted({m for m in re.findall(r"`?(G23-\d+)`?", claims)
+                        if m not in known_g})
+    assert not missing_l, f"CLAIMS vien dan L* khong co trong LIMITS.md: {missing_l}"
+    assert not missing_g, f"CLAIMS vien dan gate khong co trong GATES.md: {missing_g}"

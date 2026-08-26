@@ -21,3 +21,6 @@ KHAC RONG. Ra lai bang nay o dau MOI lesson.
 | L115 | 4h | (rong) -- ca hai cach doc deu in trong artifact | "M-224 cham theo cach doc PHAN TANG; cach doc chat co 0 cap cung ho" | 0 | HOAN |
 | L116 | 1h may | (rong) -- khong phat bieu nao cua A070b ve `n*` | "khong co duong n* cho 4 cell W; A070b chi noi ve n=250 va n=500" | 0 | HOAN |
 | L117 | 30 phut | (rong) -- khong phat bieu khoa hoc nao phu thuoc | "lenh tai tao in trong doc dung `.venv/bin/python` khong ton tai; doc `L117` de biet trinh thong dich that" | 0 | HOAN |
+| L118 | 0 | (rong) -- ve quy trinh, khong ve ket qua | "khong sua ma cham diem khi mot lan chay dang mo; xoa __pycache__ truoc moi doi chung duong" | 0 | DONG (da thanh quy tac) |
+| L119 | 1 ngay (ky lai + chay lai) | **CL-08** -- quyet dinh ve (b) co duoc trich dan khong | "M-223(b) HIT nhung NC-W-1 FIRE; ve (b) KHONG duoc trich dan" | 0 | HOAN -- can ky lai dai tu phan bo NC |
+| L120 | 3 tuan (sinh >= 2 cell moi ho moi rho) | **CL-08** -- moi mo rong phat bieu ve HO TAI | "L92 go duoc o muc MUC TAI, KHONG go o muc DON BAY; M-224 chi ve hai diem tai" | 0 | HOAN |
