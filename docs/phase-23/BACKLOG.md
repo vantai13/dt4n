@@ -24,3 +24,5 @@ KHAC RONG. Ra lai bang nay o dau MOI lesson.
 | L118 | 0 | (rong) -- ve quy trinh, khong ve ket qua | "khong sua ma cham diem khi mot lan chay dang mo; xoa __pycache__ truoc moi doi chung duong" | 0 | DONG (da thanh quy tac) |
 | L119 | 1 ngay (ky lai + chay lai) | **CL-08** -- quyet dinh ve (b) co duoc trich dan khong | "M-223(b) HIT nhung NC-W-1 FIRE; ve (b) KHONG duoc trich dan" | 0 | HOAN -- can ky lai dai tu phan bo NC |
 | L120 | 3 tuan (sinh >= 2 cell moi ho moi rho) | **CL-08** -- moi mo rong phat bieu ve HO TAI | "L92 go duoc o muc MUC TAI, KHONG go o muc DON BAY; M-224 chi ve hai diem tai" | 0 | HOAN |
+| L121 | 1h | (rong) -- khong phat bieu nao phu thuoc | "test_known_dangling_only_shrinks DO tren may tac gia; hai ve cua test dung hai nguon su that khac nhau" | 0 | HOAN |
+| L122 | 1h | (rong) -- moi lech <= 1e-15, thang phat bieu la 0.15/0.70 | "g23-17c so bang == tuyet doi tren so thuc; DO mot ULP tren may tac gia" | 0 | HOAN |
