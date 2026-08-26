@@ -18,3 +18,5 @@ KHAC RONG. Ra lai bang nay o dau MOI lesson.
 | L113 | -- | (rong) | **CL-10**: "`M-202` KHONG phai xac nhan mu" | -- | DONG (da vao CLAIMS) |
 | **L114** | 30 phut | (rong) | "tag dong lesson duoc gan HOI TO ngay 2026-08-26, khong phai tai thoi diem dong" | 0 | HOAN |
 | **S-A5** | 1 ngay | (rong) -- se do trong 23.23 (`M-232`) | -- | -- | LEN LICH 23.23 |
+| L115 | 4h | (rong) -- ca hai cach doc deu in trong artifact | "M-224 cham theo cach doc PHAN TANG; cach doc chat co 0 cap cung ho" | 0 | HOAN |
+| L116 | 1h may | (rong) -- khong phat bieu nao cua A070b ve `n*` | "khong co duong n* cho 4 cell W; A070b chi noi ve n=250 va n=500" | 0 | HOAN |
