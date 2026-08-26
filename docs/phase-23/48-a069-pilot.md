@@ -83,5 +83,41 @@ Lenh:
 
 ## 6. Lan S-B hop le
 
-Cho dien sau khi manifest 20 cell da dang ky va pilot chay lai. Den luc do
-`G23-270` van NOT_RUN, khong co phan quyet ve `L92`.
+Manifest: `sla_manifest_exogenous_S-B_20cells_A069.json`, validity
+`measured_v7_uniform` + `exogenous_g114_S-B`, `w_loss=5000`. Custody sau run:
+106 passed, 7 skipped.
+
+| cell | err_neo | song? | calib/test block | kappa_A | build giay |
+|---|---:|:--:|---:|---:|---:|
+| poisson@0.740 | 0.041289 | KHONG | 500/500 | 1.278809 | 8.81 |
+| poisson@0.780 | 0.198062 | CO | 500/500 | 0.577148 | 8.65 |
+| poisson@0.820 | 0.244416 | CO | 500/500 | 0.468994 | 8.80 |
+| h2@0.740 | 0.082076 | CO | 500/500 | 0.968750 | 8.52 |
+| h2@0.780 | 0.039396 | KHONG | 500/500 | 1.147461 | 8.70 |
+| h2@0.820 | 0.015824 | KHONG | 500/500 | 1.356934 | 8.66 |
+
+```text
+common_alive_rho          []
+stop_no_common_alive_rho  true
+stop_low_calib_blocks     []
+stop_slow_cells           []
+may_proceed_to_prereg     false
+```
+
+Phan quyet: **DUNG sau PILOT**. Khong rho nao co ca hai ho cung
+`err_neo >= 0.05`; `M-209` MISS va `G23-270` FAIL (0 cap hop le < 2). Khong
+chay M-210..M-214, khong chay sensitivity, va khong tao tag
+`lesson-23-22c-prereg`.
+
+Capacity/cost deu xanh: 500/500 block o 6/6 cell; build 8.52--8.81 giay,
+tong 52.13 giay, khong cell nao gan stop-rule 1800 giay.
+
+Artifact:
+
+```text
+manifest  results/LIVE/phase-20R/sla_manifest_exogenous_S-B_20cells_A069.json
+parquet   results/LIVE/phase-21R/*_A069.parquet       (6 file, local)
+sealed    results/LIVE/phase-21R/*_A069_report.json   (6 file, local)
+summary   results/LIVE/phase-23/a069_pilot.json
+sha256    d9b571ead17c375b3483dfa6bc7db43e358e3457d1201d499f35f9e480691376
+```

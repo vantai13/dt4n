@@ -313,7 +313,7 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-267 | 23.22 | PASS | `M-206` ve DOI XUNG cua menh de bao toan. Tai `n` = 250, 8 cell B: `sd(err|accept)` cua B2-R = **0.03531** (>= 0.020), cua C3-R = **0.01500** (<= 0.025). Ma duy nhat ma chinh `A068` muc 5.7 du bao se MISS (uoc luong tho 0.013). Ly do uoc luong sai da truy duoc: he so `err/anchor` cua B2-R KHONG la hang so ma chay 2.39x va CUNG CHIEU voi anchor (Spearman +0.9286) |
 | G23-268 | 23.22 | PASS | `NC-B3-1` doi chung DUONG da FIRE, va manh hon du kien: B1-R (score NGAU NHIEN) trung `a*` o **8/8** cell voi \|delta\| = **0.0009** -- CHINH XAC HON B2-R (0.0123) -- va `err|accept` cua no bang **0.998 .. 1.006** lan anchor o **8/8**. 'Trung muc tieu acceptance' MOT MINH la mot thang do VO GIA TRI. `L99` lan thu TU, lan dau duoc ky TRUOC |
 | G23-269 | 23.22 | PASS | `NC-B3-2` B2-R/B1-R trung BIT theo truc A tren **6/6** truong, `max abs delta` = **0.0e+00** (tinh LAI trong vong lap A, khong chep). `NC-B3-3` **4/4** cell chet sap ve anchor -- nhung nguong TUYET DOI 0.02 tren dai luong <= 0.0042 khong the fail, xem `L101`. `NC-B3-4` tai `n` = 30: `qhat_source` sup ve `none` **96.1%** vs hai co cu **3.9%** (`L100` tai lap tren luoi moi). Census `n_accept = 0`: **0/3264** |
-| G23-270 | 23.22c | NOT_RUN | - |
+| G23-270 | 23.22c | FAIL | `M-209`: tren PILOT S-B hop le, **0/3** rho co ca hai ho cung `err_neo >= 0.05`, nen so cap A->B giua ho tai cung rho = **0 < 2**. Stop-rule A069 kich hoat; `L92` KHONG go duoc bang truc nay. Capacity 500/500 block tren 6/6; custody 106 PASS/7 SKIP. `a069_pilot.json`; `48-a069-pilot.md`; xem `L107` |
 | G23-271 | 23.22c | NOT_RUN | - |
 | G23-272 | 23.22c | NOT_RUN | - |
 | G23-273 | 23.22c | NOT_RUN | - |

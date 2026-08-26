@@ -1,0 +1,140 @@
+{
+  "allowlist": [
+    "build_seconds",
+    "builder_report_sha256",
+    "cell",
+    "err_neo",
+    "kappa_A",
+    "mode",
+    "n_calib_blocks",
+    "n_test_blocks",
+    "parquet_sha256",
+    "rho_bar"
+  ],
+  "amendment": "23-69",
+  "cells": [
+    {
+      "build_seconds": 8.807149993999701,
+      "builder_report_sha256": "fe3941734f7baa3e203692b139bd30d1aeae7556b5cc0d02baf30a97a226c324",
+      "cell": "poisson@0.740",
+      "err_neo": 0.04128902114681497,
+      "kappa_A": 1.27880859375,
+      "mode": "poisson",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "f1e657a57b70dd0b0f0adc511c742debab5c030279f28d9e01ce4a0a9eaebc36",
+      "rho_bar": 0.74
+    },
+    {
+      "build_seconds": 8.647293682999589,
+      "builder_report_sha256": "aa3d415a408a88135f010bf8cda21266e952b778fce80300127469677a6655ed",
+      "cell": "poisson@0.780",
+      "err_neo": 0.19806202558750602,
+      "kappa_A": 0.5771484375,
+      "mode": "poisson",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "26ebfad907a354d66954682ffbb14289a804f0aa0ba3973e13fadf5f1c1c4088",
+      "rho_bar": 0.78
+    },
+    {
+      "build_seconds": 8.796482796999953,
+      "builder_report_sha256": "827965ed4f2589a57cca8586735add5ba13326c4aa2d412bc0869f1d67d69002",
+      "cell": "poisson@0.820",
+      "err_neo": 0.24441611616639683,
+      "kappa_A": 0.468994140625,
+      "mode": "poisson",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "133442fda662279c90e2048e18953ec34784ac0f88b3a84fc8a0462907b43dbe",
+      "rho_bar": 0.82
+    },
+    {
+      "build_seconds": 8.519053692999933,
+      "builder_report_sha256": "e9edbabe08c610d0626d3a3a953b7b2b295dac41603aa4194f4fe9cf04b04c66",
+      "cell": "h2@0.740",
+      "err_neo": 0.08207573789716568,
+      "kappa_A": 0.96875,
+      "mode": "h2",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "3f9cf602f846f268023a73490cb0d7ae55f9369f32632972c35c9e627b674994",
+      "rho_bar": 0.74
+    },
+    {
+      "build_seconds": 8.70356255300021,
+      "builder_report_sha256": "f2ceee7c3ebdd357f7781ac2125dc066dbe56ec682018eca141b563be6341c50",
+      "cell": "h2@0.780",
+      "err_neo": 0.03939587389958315,
+      "kappa_A": 1.1474609375,
+      "mode": "h2",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "8a1f218ae3d6de897b1d97334f686672e87cff3e9d8eff8d3ef50283eb23e0b5",
+      "rho_bar": 0.78
+    },
+    {
+      "build_seconds": 8.656198813000174,
+      "builder_report_sha256": "9155504054229d36e952228538693b54a28a1251cb7898a137ee96145e7092dc",
+      "cell": "h2@0.820",
+      "err_neo": 0.015823589094991566,
+      "kappa_A": 1.35693359375,
+      "mode": "h2",
+      "n_calib_blocks": 500,
+      "n_test_blocks": 500,
+      "parquet_sha256": "ab9c06fa835803f26207c7f36253cef8cc3033c45d8fa3ff3c60bf2ec60c4c0f",
+      "rho_bar": 0.82
+    }
+  ],
+  "config": {
+    "alive_err_floor": 0.05,
+    "max_cell_seconds": 1800.0,
+    "modes": [
+      "poisson",
+      "h2"
+    ],
+    "rho_grid": [
+      0.74,
+      0.78,
+      0.82
+    ],
+    "sla_manifest": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_20cells_A069.json",
+    "sla_manifest_sha256": "dc252bc0b04157978301609d40bae3013e759500d63a952d76e7d5d9e5eed595"
+  },
+  "schema": "dt4n.a069_pilot.v1",
+  "stop_rules": {
+    "common_alive_rho": [],
+    "may_proceed_to_prereg": false,
+    "stop_low_calib_blocks": [],
+    "stop_no_common_alive_rho": true,
+    "stop_slow_cells": []
+  },
+  "validity": {
+    "aoi_axis": {
+      "d_sync_s": null,
+      "generator_module": "measurements.aoi_model_v7",
+      "generator_name": "AoIModelV7",
+      "generator_source_sha256": null,
+      "label": "measured_v7_uniform",
+      "source_path": "measurements/aoi_model_v7.py",
+      "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+      "sync_period_s": null
+    },
+    "axis_role": "consumes_axis",
+    "omega": null,
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "exogenous_g114_S-B",
+      "source_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_20cells_A069.json",
+      "source_sha256": "dc252bc0b04157978301609d40bae3013e759500d63a952d76e7d5d9e5eed595"
+    },
+    "w_loss": 5000.0,
+    "z_edges": [
+      0.1,
+      0.241,
+      0.366,
+      0.491,
+      0.641
+    ]
+  }
+}
