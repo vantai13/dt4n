@@ -1,0 +1,135 @@
+{
+  "allowlist": [
+    "build_seconds",
+    "err_neo",
+    "n_calib_blocks"
+  ],
+  "amendment": "23-70/23-70a",
+  "cells": [
+    {
+      "build_seconds": 8.875753761999476,
+      "cell": "h2@0.744",
+      "err_neo": 0.0692479642663454,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 8.872334798999873,
+      "cell": "h2@0.750",
+      "err_neo": 0.05410078507575591,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 9.060051356999793,
+      "cell": "h2@0.756",
+      "err_neo": 0.04561964550517614,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 8.866538464999394,
+      "cell": "h2@0.760",
+      "err_neo": 0.04241170149110361,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 9.10186409400012,
+      "cell": "h2@0.764",
+      "err_neo": 0.04086476404701249,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 8.998869971000204,
+      "cell": "h2@0.770",
+      "err_neo": 0.040490537265582945,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 9.052232772000025,
+      "cell": "poisson@0.744",
+      "err_neo": 0.06357252495011977,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 9.612546356000166,
+      "cell": "poisson@0.750",
+      "err_neo": 0.10991660946533599,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 9.166157324999403,
+      "cell": "poisson@0.756",
+      "err_neo": 0.15438956007340449,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 9.591088576000402,
+      "cell": "poisson@0.760",
+      "err_neo": 0.17229040798724027,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 9.354466116999902,
+      "cell": "poisson@0.764",
+      "err_neo": 0.1806074481135568,
+      "n_calib_blocks": 500
+    },
+    {
+      "build_seconds": 9.27698264800074,
+      "cell": "poisson@0.770",
+      "err_neo": 0.1881920443788936,
+      "n_calib_blocks": 500
+    }
+  ],
+  "config": {
+    "alive_err_floor": 0.05,
+    "expected_calib_blocks": 500,
+    "manifest": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_32cells_A070.json",
+    "manifest_sha256": "836c48d43466f665f08b3cf3bf5676ea5560735fbe02ef39a8d1f4237c85fdfe",
+    "max_build_seconds": 60.0,
+    "modes": [
+      "poisson",
+      "h2"
+    ],
+    "rho_grid": [
+      0.744,
+      0.75,
+      0.756,
+      0.76,
+      0.764,
+      0.77
+    ]
+  },
+  "prereg_tag": "lesson-23-22d-a-prereg",
+  "schema": "dt4n.a070_window_allowlist.v1",
+  "scores": {
+    "M_215": {
+      "common_alive_rho": [
+        0.744,
+        0.75
+      ],
+      "hit": true,
+      "n_common_alive_rho": 2,
+      "stop_W": false
+    },
+    "M_216": {
+      "hit": false,
+      "lower_in_band": true,
+      "observed_interval": [
+        0.744,
+        0.75
+      ],
+      "rho_0.760_both_alive": false,
+      "upper_in_band": false
+    },
+    "M_217": {
+      "h2_0.770_dead": true,
+      "hit": false,
+      "poisson_0.744_dead": false
+    },
+    "operational_stop": {
+      "branch_valid": true,
+      "invalid_calib_blocks": [],
+      "slow_cells": []
+    }
+  },
+  "sealed_batch_sha256": "ddc11ba2cde1bfb4b5b5394d7b88403dcca7a3965e2b278e7706a0eb23f457e8"
+}
