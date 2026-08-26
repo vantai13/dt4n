@@ -1,0 +1,54 @@
+{
+ "NC_E_0": {
+  "generated_payload_sha256": "20dba29276b525106dd81b09c27249754eaebac5a41c205b4e095a990786f1af",
+  "generated_provenance_sha256": "aff330561c13278811272bd32c9461475367d88cdff66899ede46a47a714f77f",
+  "hit": true,
+  "provenance_expected_to_differ": true,
+  "reference_payload_sha256": "20dba29276b525106dd81b09c27249754eaebac5a41c205b4e095a990786f1af",
+  "reference_provenance_sha256": "cb6fa4f05556a3faad5c66a864cafdb91a2323a69f09341b4155acb43a617ad8",
+  "scientific_payload_bit_exact": true,
+  "scope": "8 live + 4 dead cell cu; toan bo scientific payload",
+  "stop_E": false
+ },
+ "amendment": "23-70",
+ "prereg_tag": "lesson-23-22d-a-prereg",
+ "provenance": {
+  "git_dirty": false,
+  "git_hash": "9bff5267a6591001808d09679a0dc2f07edb7d1d",
+  "script": "cert/a070_extension.py::run_wiring",
+  "utc": "2026-08-26T03:07:01.084534+00:00"
+ },
+ "reference": {
+  "path": "results/LIVE/phase-23/recalibrate_transfer.json",
+  "sha256": "02258c6baf1d5d7f79d3da80872be26681e875b3ba92855fdf1e08d18ba799c1"
+ },
+ "schema": "dt4n.a070_extension_wiring.v1",
+ "validity": {
+  "aoi_axis": {
+   "d_sync_s": null,
+   "generator_module": "measurements.aoi_model_v7",
+   "generator_name": "AoIModelV7",
+   "generator_source_sha256": null,
+   "label": "measured_v7_uniform",
+   "source_path": "measurements/aoi_model_v7.py",
+   "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+   "sync_period_s": null
+  },
+  "axis_role": "consumes_axis",
+  "omega": null,
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "exogenous_g114_S-B",
+   "source_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+   "source_sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606"
+  },
+  "w_loss": 5000.0,
+  "z_edges": [
+   0.1,
+   0.241,
+   0.366,
+   0.491,
+   0.641
+  ]
+ }
+}
