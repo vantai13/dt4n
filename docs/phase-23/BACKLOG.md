@@ -26,3 +26,5 @@ KHAC RONG. Ra lai bang nay o dau MOI lesson.
 | L120 | 3 tuan (sinh >= 2 cell moi ho moi rho) | **CL-08** -- moi mo rong phat bieu ve HO TAI | "L92 go duoc o muc MUC TAI, KHONG go o muc DON BAY; M-224 chi ve hai diem tai" | 0 | HOAN |
 | L121 | 1h | (rong) -- khong phat bieu nao phu thuoc | "test_known_dangling_only_shrinks DO tren may tac gia; hai ve cua test dung hai nguon su that khac nhau" | 0 | HOAN |
 | L122 | 1h | (rong) -- moi lech <= 1e-15, thang phat bieu la 0.15/0.70 | "g23-17c so bang == tuyet doi tren so thuc; DO mot ULP tren may tac gia" | 0 | HOAN |
+| L123 | 0 (da sua) | (rong) | "CAM `git push origin --all`: nhanh backup-pre-rewrite-20260823 mang 1.96 GB parquet da bi go khoi lich su" | 0 | DONG |
+| L123b | 1 ngay + amendment (rewrite lich su) | (rong) -- khong phat bieu nao phu thuoc | "267.79 MB parquet dang duoc track co chu dich o SUPERSEDED/phase-21R; go phai rewrite lich su" | 0 | HOAN |
