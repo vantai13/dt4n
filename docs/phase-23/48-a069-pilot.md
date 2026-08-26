@@ -104,10 +104,14 @@ stop_slow_cells           []
 may_proceed_to_prereg     false
 ```
 
-Phan quyet: **DUNG sau PILOT**. Khong rho nao co ca hai ho cung
-`err_neo >= 0.05`; `M-209` MISS va `G23-270` FAIL (0 cap hop le < 2). Khong
-chay M-210..M-214, khong chay sensitivity, va khong tao tag
-`lesson-23-22c-prereg`.
+Phan quyet theo stop-rule DA KY: **DUNG Lesson 23.22c sau PILOT**. Khong rho
+nao TREN LUOI BUOC 0.040 co ca hai ho cung `err_neo >= 0.05`; `M-209` MISS
+va `G23-270` FAIL (0 cap hop le < 2). `M-210..M-214` va sensitivity la
+NOT_RUN trong lesson nay; khong tao tag `lesson-23-22c-prereg`.
+
+Pham vi ket luan duoc sua sau audit: ket qua chi bac bo kha nang go `L92` O
+DO PHAN GIAI 0.040, khong bac bo toan bo truc `rho`. Stop-rule muc lesson cua
+A069 da huy oan cac du doan khong phu thuoc cua so; xem `L109` va `A070`.
 
 Capacity/cost deu xanh: 500/500 block o 6/6 cell; build 8.52--8.81 giay,
 tong 52.13 giay, khong cell nao gan stop-rule 1800 giay.
@@ -121,3 +125,41 @@ sealed    results/LIVE/phase-21R/*_A069_report.json   (6 file, local)
 summary   results/LIVE/phase-23/a069_pilot.json
 sha256    d9b571ead17c375b3483dfa6bc7db43e358e3457d1201d499f35f9e480691376
 ```
+
+## 7. Noi suy cua so bi luoi 0.040 buoc qua
+
+Ghep bon diem S-B da do gan nguong (hai diem cu .700/.850 va hai diem A069
+.740/.780), roi noi suy rieng cho tung ho tai:
+
+| diem cat `err_neo=0.05` | tuyen tinh | log-tuyen-tinh |
+|---|---:|---:|
+| poisson di len | 0.7422 | 0.7449 |
+| h2 di xuong | 0.7701 | 0.7670 |
+| cua so ca hai ho song | [0.7422, 0.7701] | [0.7449, 0.7670] |
+| be rong | 0.0279 | 0.0221 |
+
+Hai mo hinh cho cua so rong 0.022--0.028, xap xi 0.025, hep hon buoc luoi
+0.040. Hai diem A069 .740 va .780 nam dung hai ben cua so du doan. Vi vay
+`G23-270` van FAIL theo van ban da ky, nhung cau "`L92` khong go duoc bang
+truc rho" la manh hon du lieu va duoc rut lai trong `L107`.
+
+## 8. Gia thuyet co che -- CHUA do
+
+`err_neo` h2 giam theo `rho` trong khi poisson tang theo `rho`. Mot co che co
+the kiem duoc la h2 tai thap co burst hiem nhung kho doan, con tai cao gan nhu
+luon vi pham; poisson tai thap gan nhu khong vi pham, roi tien vao bien SLA khi
+tai tang. Day la GIA THUYET, chua phai ket qua. Phep do re tiep theo la ti le
+SLA tho `P(delay > t_delay)` theo `rho` cua tung ho.
+
+Phat bieu paper hien duoc du lieu chong do: trong testbed nay, family va load
+khong dieu khien doc lap trong live region o do phan giai da chay; hai duong do
+kho di nguoc chieu va cua so liveness noi suy hep hon 0.03 theo `rho`.
+
+## 9. Kiem toan allowlist, stop-rule va chi phi
+
+`kappa_A` khong duoc bat ky stop-rule A069 nao doc, nhung da bi in cung
+`err_neo`. Do do `P-3`/`M-213` da CHET vinh vien; Spearman tren 11 cell song
+= **-0.9909** chi la POST-HOC, khong dem diem (`L108`). `M-211`/`M-212` va
+`M-214` khong phu thuoc cua so nhung bi stop-rule muc lesson chan oan
+(`L109`). Chi phi thuc 8.52--8.81 giay/cell, thap hon nguong 1800 giay it
+nhat 204 lan; rang buoc moi la so lan nhin, khong phai gio may (`L110`).
