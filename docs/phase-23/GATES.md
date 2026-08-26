@@ -320,14 +320,18 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-274 | 23.22c | NOT_RUN | - |
 | G23-275 | 23.22c | NOT_RUN | - |
 | G23-276 | 23.22c | NOT_RUN | - |
-| G23-277 | 23.22d | NOT_RUN | - |
-| G23-278 | 23.22d | NOT_RUN | - |
-| G23-279 | 23.22d | NOT_RUN | - |
+| G23-277 | 23.22d | PASS | `M-215` CUA SO CHONG LAN TON TAI. Tren luoi DAY buoc 0.006 niem phong (12 cell, batch digest `ddc11ba2..457e8`), **2/6** rho co CA HAI ho `err_neo >= 0.05`: `rho` = **0.744** (poisson **0.0636**, h2 **0.0692**) va **0.750** (poisson **0.1099**, h2 **0.0541**). Nguong ky >= 2. `L92` GO DUOC tren truc rho -- phat bieu "khong go duoc bang truc rho" cua `L107` ban dau da bi bac bo bang do luong, khong bang lap luan. Capacity 500/500 block tren 12/12; build 8.87--9.61 giay/cell. `a070_window_allowlist.json` |
+| G23-278 | 23.22d | FAIL | `M-216` VI TRI cua so SAI so voi ca hai mo hinh noi suy. (a) bien duoi do duoc **0.744** thuoc [.744,.756] DAT; (b) bien tren do duoc **0.750**, NGOAI [.760,.770] MISS; (c) `rho` = **0.760** h2 `err_neo` = **0.0424** < 0.05 nen KHONG ca hai song, MISS. Doc theo dung cach da ghi TRUOC (`A070` muc 2.3): hai mo hinh noi suy bi bac bo o muc dinh vi diem; paper chi duoc bao cao interval DO TRUC TIEP. He qua nguoc voi tu-phe cua ban de xuat: luoi GOC `{0.760, 0.800}` cung se TRUOT, vi 0.760 nam NGOAI cua so -- xem `L111` |
+| G23-279 | 23.22d | FAIL | `M-217` doi chung am: h2@0.770 CHET (`err_neo` = **0.0405**) DUNG du doan; nhung poisson@0.744 **SONG** (**0.0636**) thay vi chet, nen bien duoi cua luoi W nam TRONG cua so, khong phai ngoai. Cua so KHONG bi bao boi luoi W o phia duoi. Bracket duoc CUU bang `poisson@0.740` = **0.0413** (chet) cua A069, hop le vi manifest A070 32 cell la SIEU TAP cua manifest A069 20 cell va **0/20** cell chung lech mot truong nao (kiem `L106`). Bien duoi thuc: `rho` thuoc (0.740, 0.744] |
 | G23-280 | 23.22d | NOT_RUN | - |
 | G23-281 | 23.22d | NOT_RUN | - |
 | G23-282 | 23.22d | NOT_RUN | - |
 | G23-283 | 23.22d | NOT_RUN | - |
 | G23-284 | 23.22d | NOT_RUN | - |
+| G23-285 | 23.22d | NOT_RUN | - |
+| G23-286 | 23.22d | NOT_RUN | - |
+| G23-287 | 23.22d | NOT_RUN | - |
+| G23-288 | 23.22d | NOT_RUN | - |
 
 ## Va cham da phat hien
 
