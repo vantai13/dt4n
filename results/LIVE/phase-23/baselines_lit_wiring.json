@@ -1,0 +1,73 @@
+{
+  "G23_289_wiring": {
+    "G23_289_pass": true,
+    "acceptance": 0.3954616497597544,
+    "max_abs_diff": 0.0,
+    "qhat_bit_identical": true,
+    "viol_given_accept": 0.0817211592472079
+  },
+  "amendment": "docs/phase-23/A072-amendment-72.md",
+  "cell": "poisson@0.925",
+  "config": {
+    "alpha_each": 0.03333333333333333,
+    "alpha_family": 0.1,
+    "kappa_op": 0.5,
+    "multiplicity": "bonferroni",
+    "n_margins": 3,
+    "post_variant": "selective"
+  },
+  "constants": {
+    "BISECT_ITERS": 200,
+    "K08_CV_MAX_FOLDED": 0.755510639762867,
+    "THETA_HI": 200.0,
+    "Z_BONF": 1.8339146358159146
+  },
+  "generated_utc": "2026-08-27T01:23:15.256345+00:00",
+  "provenance": {
+    "git_dirty": false,
+    "git_head": "cdb5ffb24fcfbfb6f57f30b25830cab88a480cf9",
+    "inputs": [
+      {
+        "path": "docs/phase-23/A072-amendment-72.md",
+        "sha256": "358019e30fcf1392949f545473e6eb6f09c6e76f648fa1dfd64f188ab3a3a9cf"
+      },
+      {
+        "path": "results/LIVE/phase-21R/calib_set_poisson_0.925_U3_measured_v7.parquet",
+        "sha256": "3398579bf97b479c56b64cefa9a72beab64591b5b95013e439b39cbc25040adc"
+      },
+      {
+        "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+        "sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606"
+      }
+    ]
+  },
+  "schema": "baselines_lit/v1",
+  "validity": {
+    "aoi_axis": {
+      "d_sync_s": null,
+      "generator_module": "measurements.aoi_model_v7",
+      "generator_name": "AoIModelV7",
+      "generator_source_sha256": null,
+      "label": "measured_v7_uniform",
+      "source_path": "measurements/aoi_model_v7.py",
+      "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+      "sync_period_s": null
+    },
+    "axis_role": "consumes_axis",
+    "omega": null,
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "exogenous_g114_S-B",
+      "source_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+      "source_sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606"
+    },
+    "w_loss": 5000.0,
+    "z_edges": [
+      0.1,
+      0.241,
+      0.366,
+      0.491,
+      0.641
+    ]
+  }
+}
