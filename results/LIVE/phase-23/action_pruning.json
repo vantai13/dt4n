@@ -1,0 +1,440 @@
+{
+  "G23_297_dead_action": {
+    "M_233_hit": true,
+    "P_calib_a_star": {
+      "P1": 0.6527357052249109,
+      "P2": 0.0,
+      "P3": 0.34069764184730633,
+      "P4": 0.006566652927782825
+    },
+    "P_calib_a_twin": {
+      "P1": 0.6127135362686525,
+      "P2": 0.0,
+      "P3": 0.3769022685164807,
+      "P4": 0.010384195214866805
+    },
+    "cut_indices": [
+      1
+    ],
+    "n_calib_rows": 499798,
+    "note_A074_N2": "`P_calib(a_twin = a) = 0` nghia la CHUA BAO GIO quan sat duoc, KHONG phai KHONG THE xay ra. Chan tren mot phia = 3/n_calib. PHAI in canh moi phat bieu ve tinh 'mien phi' cua viec cat.",
+    "rule_of_three_upper_bound": 6.002424979691795e-06,
+    "threshold": 0.05,
+    "tier1_candidates": [
+      "P2",
+      "P4"
+    ],
+    "tier2_cut": [
+      "P2"
+    ]
+  },
+  "G23_298_qhat_ratio": {
+    "M_234a_hit": true,
+    "analytic_half_normal_ratio": 0.921016,
+    "band": [
+      0.88,
+      0.94
+    ],
+    "denominator": {
+      "alpha_each": 0.03333333333333333,
+      "pruned": []
+    },
+    "n_shared_slots": 2,
+    "numerator": {
+      "alpha_each": 0.05,
+      "pruned": [
+        "P2"
+      ]
+    },
+    "ratio_by_zbin": {
+      "z0": [
+        0.911493574373902,
+        0.9346545808606312
+      ],
+      "z1": [
+        0.9140249734562661,
+        0.9366783926256027
+      ],
+      "z2": [
+        0.9201684938425825,
+        0.9334165500109588
+      ],
+      "z3": [
+        0.9060121229350574,
+        0.9296242144440103
+      ]
+    },
+    "ratio_mean": 0.9232591128186264
+  },
+  "G23_298_rungs": {
+    "NC_K3": {
+      "acceptance": 0.8600531922344941,
+      "alpha_each": 0.05,
+      "anchor_moved_rate_all": 0.3747832655491023,
+      "err_anchor": 0.04486318709137738,
+      "err_given_accept": 0.012255506484924353,
+      "kappa": 0.5,
+      "m": 2,
+      "min_blocks": 19,
+      "pruned": [
+        "P3"
+      ],
+      "qhat_by_zbin": {
+        "z0": [
+          21.528855249102094,
+          22.503022576115512
+        ],
+        "z1": [
+          27.053475560901404,
+          28.2269675069754
+        ],
+        "z2": [
+          31.084529554035498,
+          32.91242395375079
+        ],
+        "z3": [
+          34.260898923923975,
+          35.866650276416635
+        ]
+      },
+      "viol_given_accept": 0.07810064081383823
+    },
+    "S0_K4": {
+      "acceptance": 0.4345853587273888,
+      "alpha_each": 0.03333333333333333,
+      "anchor_moved_rate_all": 0.0,
+      "err_anchor": 0.23914692303535942,
+      "err_given_accept": 0.09350205607820926,
+      "kappa": 0.5,
+      "m": 3,
+      "min_blocks": 29,
+      "pruned": [],
+      "qhat_by_zbin": {
+        "z0": [
+          22.49363203096179,
+          23.15101408915396,
+          24.85716253049486
+        ],
+        "z1": [
+          27.95100164675185,
+          28.778123392653384,
+          31.016234385157233
+        ],
+        "z2": [
+          32.34959464811649,
+          33.2301404363036,
+          36.09486383365214
+        ],
+        "z3": [
+          35.6904330793047,
+          36.54365128676737,
+          39.38184030449945
+        ]
+      },
+      "viol_given_accept": 0.09977390047015809
+    },
+    "S1_K3": {
+      "acceptance": 0.4740933005401273,
+      "alpha_each": 0.05,
+      "anchor_moved_rate_all": 0.0,
+      "err_anchor": 0.23914091939715468,
+      "err_given_accept": 0.10379353575091915,
+      "kappa": 0.5,
+      "m": 2,
+      "min_blocks": 19,
+      "pruned": [
+        "P2"
+      ],
+      "qhat_by_zbin": {
+        "z0": [
+          20.502801060552656,
+          21.638201369996764
+        ],
+        "z1": [
+          25.54791353824841,
+          26.95584636221183
+        ],
+        "z2": [
+          29.76707778377542,
+          31.017563042434162
+        ],
+        "z3": [
+          32.33596504265245,
+          33.971863120376966
+        ]
+      },
+      "viol_given_accept": 0.10773185649822924
+    },
+    "S2_K2": {
+      "acceptance": 0.5586005119102176,
+      "alpha_each": 0.1,
+      "anchor_moved_rate_all": 0.009908003541788604,
+      "err_anchor": 0.23169040438505734,
+      "err_given_accept": 0.11954243706360096,
+      "kappa": 0.5,
+      "m": 1,
+      "min_blocks": 9,
+      "pruned": [
+        "P2",
+        "P4"
+      ],
+      "qhat_by_zbin": {
+        "z0": [
+          17.40875584987225
+        ],
+        "z1": [
+          21.742708459498132
+        ],
+        "z2": [
+          25.16401601832743
+        ],
+        "z3": [
+          27.436090845243726
+        ]
+      },
+      "viol_given_accept": 0.11829929316342506
+    }
+  },
+  "G23_299_decompose": {
+    "S1": {
+      "M_235_hit": true,
+      "S0_acceptance": 0.4345853587273888,
+      "branch_i_constraint_only": {
+        "acceptance": 0.4342851768171512,
+        "alpha_each": 0.03333333333333333,
+        "delta": -0.000300181910237618
+      },
+      "branch_ii_budget_only": {
+        "acceptance": 0.47424539270798105,
+        "alpha_each": 0.05,
+        "delta": 0.03966003398059226
+      },
+      "branch_iii_both": {
+        "acceptance": 0.4740933005401273,
+        "alpha_each": 0.05,
+        "delta": 0.039507941812738534
+      },
+      "budget_share": 1.0038496606220242,
+      "constraint_share": -0.007598014385574255,
+      "interaction_abs": 0.0001480897423838945,
+      "interaction_share": 0.0037483537635500407,
+      "pruned": [
+        "P2"
+      ],
+      "reading": "`budget_share` cao => cau 'bo hanh dong chet thu ve X% acceptance' GAY HIEU NHAM: X% do gan nhu toan bo den tu viec tu noi `alpha_each`, KHONG tu viec don khong gian hanh dong."
+    },
+    "S2": {
+      "M_235_hit": true,
+      "S0_acceptance": 0.4345853587273888,
+      "branch_i_constraint_only": {
+        "acceptance": 0.44670470305004834,
+        "alpha_each": 0.03333333333333333,
+        "delta": 0.012119344322659542
+      },
+      "branch_ii_budget_only": {
+        "acceptance": 0.5462750426758616,
+        "alpha_each": 0.1,
+        "delta": 0.11168968394847278
+      },
+      "branch_iii_both": {
+        "acceptance": 0.5586005119102176,
+        "alpha_each": 0.1,
+        "delta": 0.12401515318282885
+      },
+      "budget_share": 0.9006131999354523,
+      "constraint_share": 0.09772470550266261,
+      "interaction_abs": 0.0002061249116965258,
+      "interaction_share": 0.0016620945618850864,
+      "pruned": [
+        "P2",
+        "P4"
+      ],
+      "reading": "`budget_share` cao => cau 'bo hanh dong chet thu ve X% acceptance' GAY HIEU NHAM: X% do gan nhu toan bo den tu viec tu noi `alpha_each`, KHONG tu viec don khong gian hanh dong."
+    }
+  },
+  "G23_300_negative_control": {
+    "P_calib_a_twin": {
+      "P1": 0.6127135362686525,
+      "P2": 0.0,
+      "P3": 0.3769022685164807,
+      "P4": 0.010384195214866805
+    },
+    "anchor_moved_dead": 0.0,
+    "anchor_moved_live": 0.3747832655491023,
+    "dead_arm": {
+      "acceptance": 0.4740933005401273,
+      "alpha_each": 0.05,
+      "anchor_moved_rate_all": 0.0,
+      "err_anchor": 0.23914091939715468,
+      "err_given_accept": 0.10379353575091915,
+      "kappa": 0.5,
+      "m": 2,
+      "min_blocks": 19,
+      "pruned": [
+        "P2"
+      ],
+      "qhat_by_zbin": {
+        "z0": [
+          20.502801060552656,
+          21.638201369996764
+        ],
+        "z1": [
+          25.54791353824841,
+          26.95584636221183
+        ],
+        "z2": [
+          29.76707778377542,
+          31.017563042434162
+        ],
+        "z3": [
+          32.33596504265245,
+          33.971863120376966
+        ]
+      },
+      "viol_given_accept": 0.10773185649822924
+    },
+    "delta_acceptance_reported_not_scored": 0.38595989169436673,
+    "delta_err_given_accept": -0.0915380292659948,
+    "interpretable": true,
+    "leg_i_status": "DA BO -- `A074b` muc 4 (nhieu mo neo)",
+    "leg_ii_hit": false,
+    "leg_iii_guard_pass": true,
+    "live_arm": {
+      "acceptance": 0.8600531922344941,
+      "alpha_each": 0.05,
+      "anchor_moved_rate_all": 0.3747832655491023,
+      "err_anchor": 0.04486318709137738,
+      "err_given_accept": 0.012255506484924353,
+      "kappa": 0.5,
+      "m": 2,
+      "min_blocks": 19,
+      "pruned": [
+        "P3"
+      ],
+      "qhat_by_zbin": {
+        "z0": [
+          21.528855249102094,
+          22.503022576115512
+        ],
+        "z1": [
+          27.053475560901404,
+          28.2269675069754
+        ],
+        "z2": [
+          31.084529554035498,
+          32.91242395375079
+        ],
+        "z3": [
+          34.260898923923975,
+          35.866650276416635
+        ]
+      },
+      "viol_given_accept": 0.07810064081383823
+    },
+    "note": "neu `leg_iii_guard_pass` FALSE thi ve (ii) KHONG dien giai duoc: ta khong con biet minh dang cat mot duong 'song' hay khong."
+  },
+  "amendment": "docs/phase-23/A074-amendment-74.md",
+  "amendment_revision": "docs/phase-23/A074b-amendment-74b.md",
+  "cell": "poisson@0.925",
+  "config": {
+    "alpha_family": 0.1,
+    "aoi_profile": "U0",
+    "axis": "measured_v7",
+    "kappa_op": 0.5,
+    "multiplicity": "bonferroni",
+    "n_paths": 4,
+    "n_rows": 999495,
+    "post_variant": "selective",
+    "z_edges": [
+      0.1,
+      0.241,
+      0.366,
+      0.491,
+      0.641
+    ]
+  },
+  "generated_utc": "2026-08-27T02:26:05.566190+00:00",
+  "ladder_analytics": {
+    "NC_K3": {
+      "alpha_each": 0.05,
+      "m": 2,
+      "min_blocks": 19,
+      "pruned": [
+        "P3"
+      ]
+    },
+    "S0_K4": {
+      "alpha_each": 0.03333333333333333,
+      "m": 3,
+      "min_blocks": 29,
+      "pruned": []
+    },
+    "S1_K3": {
+      "alpha_each": 0.05,
+      "m": 2,
+      "min_blocks": 19,
+      "pruned": [
+        "P2"
+      ]
+    },
+    "S2_K2": {
+      "alpha_each": 0.1,
+      "m": 1,
+      "min_blocks": 9,
+      "pruned": [
+        "P2",
+        "P4"
+      ]
+    }
+  },
+  "provenance": {
+    "git_head": "51ed3d766cbcc7b03b1b0ae17f7c68a58b4415cb",
+    "inputs": [
+      {
+        "path": "docs/phase-23/A074-amendment-74.md",
+        "sha256": "a516fa5712dfbcb10f33909ce044ecbd031b38c70796782e773100a4dee33fc5"
+      },
+      {
+        "path": "docs/phase-23/A074b-amendment-74b.md",
+        "sha256": "99dac0739ea4d090582db2fbb1b1a01fd3152c14fbfe44a03baf863c00923e36"
+      },
+      {
+        "path": "results/LIVE/phase-20R/truth_table.parquet",
+        "sha256": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e"
+      },
+      {
+        "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+        "sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606"
+      }
+    ]
+  },
+  "schema": "action_pruning/v1",
+  "validity": {
+    "aoi_axis": {
+      "d_sync_s": null,
+      "generator_module": "measurements.aoi_model_v7",
+      "generator_name": "AoIModelV7",
+      "generator_source_sha256": null,
+      "label": "measured_v7_uniform",
+      "source_path": "measurements/aoi_model_v7.py",
+      "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+      "sync_period_s": null
+    },
+    "axis_role": "consumes_axis",
+    "omega": null,
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "exogenous_g114_S-B",
+      "source_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+      "source_sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606"
+    },
+    "w_loss": 5000.0,
+    "z_edges": [
+      0.1,
+      0.241,
+      0.366,
+      0.491,
+      0.641
+    ]
+  }
+}
