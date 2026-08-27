@@ -33,6 +33,10 @@ import time
 import datetime
 from contextlib import nullcontext
 
+# `L30` / `A076`: HUONG vat ly cua link co nguon chan ly rieng, khong duoc
+# suy tu thu tu bang chu cai cua `canonical_link_key`.
+from twin.link_direction import upstream_node
+
 
 # ---------------------------------------------------------------------------
 # PARSE HELPERS — thuần logic, TEST ĐƯỢC KHÔNG CẦN MININET
@@ -201,15 +205,48 @@ def canonical_link_key(a, b):
     return 'link-%s-%s' % (lo, hi)
 
 
-def link_side_a_intf(link):
-    """Return the interface on canonical side A of an undirected link.
+def link_side_a_intf(link, directed=True):
+    """Interface duoc doc counter cho link nay.
 
-    Convention: for link-A-B where A is alphabetically smaller,
-    rxRate/txRate are the RX/TX counters of A's interface.
+    `L30` (amendment 23-76): quy uoc CU lay "side A theo bang chu cai". Bang
+    chu cai la cong cu de DAT TEN, khong phai de mo ta HUONG DONG CHAY. Voi
+    canh sSRC-sA no cho side A = sA, nen `txRate` doc chieu sA -> sSRC, la
+    chieu KHONG CO LUU LUONG. Do duoc: `rho_uA = 0` o 98.06% mau va
+    `rho_uB = 0` o 97.96% mau, suot ca 30 run cua chien dich 23.8.
+
+    Nay: tra `twin/link_direction.UPSTREAM_OF` truoc. Chi roi ve bang chu cai
+    khi link khong nam trong ban do (vd `topology3` cu), va khi do
+    `collect_link` PHAI dan nhan `utilDirectionSource = "alphabetical_fallback"`
+    -- loi tro thanh ON AO thay vi im lang.
+
+    TEN Thing KHONG doi: `canonical_link_key` giu nguyen, nen moi artifact cu
+    van doi chieu duoc (`A076` muc 5).
     """
     a = link.intf1.node.name
     b = link.intf2.node.name
+    if directed:
+        up = upstream_node(canonical_link_key(a, b))
+        if up is not None:
+            if a == up:
+                return link.intf1
+            if b == up:
+                return link.intf2
     return link.intf1 if a <= b else link.intf2
+
+
+def link_direction_source(link):
+    """Nhan cho biet huong duoc XAC DINH hay DOAN. Nhan duoc SUY, khong KHAI.
+
+    `A075` R6: moi gia tri ma du lieu CO THE tu khai thi PHAI doc tu du lieu.
+    Nho nhan nay, mot Thing tuong lai TU MANG bang chung ve chieu do cua chinh
+    no; neu ai do them link moi ma quen vao ban do, artifact se mang
+    `"alphabetical_fallback"` va mot test quet duoc.
+    """
+    a = link.intf1.node.name
+    b = link.intf2.node.name
+    if upstream_node(canonical_link_key(a, b)) is not None:
+        return 'directed_map'
+    return 'alphabetical_fallback'
 
 
 def parse_ping(text):
@@ -522,7 +559,8 @@ class Collector:
             features['capacity'] = {'bwMbps': bw}
         if now_ts is not None:
             key = canonical_link_key(a, b)
-            counters = read_intf_counters_full(link_side_a_intf(link))
+            util_intf = link_side_a_intf(link)
+            counters = read_intf_counters_full(util_intf)
             if counters is not None:
                 prev = self._prev_link.get(key)
                 if prev is None:
@@ -554,6 +592,11 @@ class Collector:
                     'rxRate': round(rx_rate, 2),
                     'txRate': round(tx_rate, 2),
                     'lossPct': round(loss_pct, 3),
+                    # `L30` / `A075` R6: huong phai TU KHAI trong chinh Thing.
+                    # Neu khong, mot artifact sinh sau khong the biet no doc
+                    # chieu nao. Hai truong nay duoc SUY tu ban do, khong KHAI.
+                    'utilIntf': util_intf.name,
+                    'utilDirectionSource': link_direction_source(link),
                 }
         return {
             'attributes': {'type': 'link', 'endpointA': a, 'endpointB': b},

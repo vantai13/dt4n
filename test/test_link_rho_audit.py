@@ -168,6 +168,52 @@ def test_NC_24b_1_audit_is_deterministic(tmp_path):
     assert json.dumps(a1, sort_keys=True) == json.dumps(a2, sort_keys=True)
 
 
+# ---------------------------------------------------- sua goc o collector
+class _FakeIntf:
+    def __init__(self, node_name):
+        self.name = node_name + "-eth0"
+        self.node = type("N", (), {"name": node_name})()
+
+
+class _FakeLink:
+    def __init__(self, a, b):
+        self.intf1 = _FakeIntf(a)
+        self.intf2 = _FakeIntf(b)
+
+
+def test_collector_reads_the_upstream_interface():
+    """★ Sua goc cua `L30`: counter phai doc o dau THUONG NGUON."""
+    import bridge.collector as C
+    for link, (up, down) in LD.UPSTREAM_OF.items():
+        got = C.link_side_a_intf(_FakeLink(up, down)).node.name
+        assert got == up, "%s: doc o %s, phai doc o %s" % (link, got, up)
+
+
+def test_fix_changes_exactly_uA_and_uB_and_nothing_else():
+    """★ `NC-24b-2` o muc HAM: sua loi nay KHONG duoc lam hong 6 link kia.
+
+    Doi `UTIL_DIRECTION` hoac doi `canonical_link_key` se lam 6 link dang
+    dung tro thanh sai. Test nay chung minh ban sua khong lam vay.
+    """
+    import bridge.collector as C
+    changed = []
+    for link, (up, down) in LD.UPSTREAM_OF.items():
+        l = _FakeLink(up, down)
+        if (C.link_side_a_intf(l).node.name
+                != C.link_side_a_intf(l, directed=False).node.name):
+            changed.append(link)
+    assert sorted(changed) == ["uA", "uB"]
+
+
+def test_unknown_link_falls_back_with_a_loud_label():
+    """Link ngoai ban do van chay duoc, nhung PHAI tu to cao la doan."""
+    import bridge.collector as C
+    l = _FakeLink("sX", "sY")
+    assert C.link_direction_source(l) == "alphabetical_fallback"
+    assert C.link_side_a_intf(l).node.name == "sX"      # roi ve bang chu cai
+    assert C.link_direction_source(_FakeLink("sSRC", "sA")) == "directed_map"
+
+
 def test_locked_constants_are_not_command_line_flags():
     """Chong p-hacking (`A076` N5): nguong phai la HANG SO MODULE."""
     src = inspect.getsource(A.main)

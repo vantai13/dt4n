@@ -71,7 +71,10 @@ CLOSED_LESSONS = {
 # Mon no GHIM (Amendment 23-26 muc 7.3). Them mot mon no moi phai sua dong nay,
 # tuc phai co mot amendment -- no khong duoc xuat hien im lang.
 # `G23-141`/`G23-142` da duoc tra o Lesson 23.21h: Dot 4 va M-125 mo rong.
-PINNED_DEBT = {"G23-10", "G23-12a", "G23-12b"}
+# `G23-301` them boi `A076` muc 8 (Lesson 23.24b): RAW 426 MiB da co SHA256
+# nhung CHUA co DOI Zenodo. SHA256 tra loi "file toi dung CHINH LA file do";
+# DOI tra loi "file do ton tai tu ngay do". Can CA HAI, nen gate giu DEBT.
+PINNED_DEBT = {"G23-10", "G23-12a", "G23-12b", "G23-301"}
 
 # Ma gate bi dung NHAM trong mot tai lieu DA KY. Tai lieu khong duoc sua, nen
 # anh xa song o day VA o muc "Va cham da phat hien" cua GATES.md.

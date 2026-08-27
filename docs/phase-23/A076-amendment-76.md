@@ -104,12 +104,15 @@ do tren NHANH DITTO -- dung nhanh da biet la hong. No **khong** noi gi ve
 
 | ID | Dai luong | Nguon | Dai khoa | Do | KQ |
 |---|---|---|---|---|---|
-| M-236 ★ | `zero_share(uA)` trong `rho_measured_*.csv` | [CO CHE] | < 0.05 | ___ | ___ |
-| M-237 ★ | `zero_share(uB)` trong `rho_measured_*.csv` | [CO CHE] | < 0.05 | ___ | ___ |
-| M-238 | `zero_share` lon nhat trong 6 link con lai | [MO TA] | < 0.05 | ___ | ___ |
-| M-239 | `rho_csv(uA) / rho_gen(uA)`, gop 30 run | [NGOAI SUY] | 0.85 - 1.15 | ___ | ___ |
-| M-240 | so link co `verdict = CLEAN` | [CO CHE] | 8 / 8 | ___ | ___ |
-| M-241 | `corr(rho_csv, rho_gen)` tren 8 link x 10 cell | [NGOAI SUY] | >= 0.95 | ___ | ___ |
+| M-236 ★ | `zero_share(uA)` trong `rho_measured_*.csv` | [CO CHE] | < 0.05 | **0.001169** | **HIT** |
+| M-237 ★ | `zero_share(uB)` trong `rho_measured_*.csv` | [CO CHE] | < 0.05 | **0.000556** | **HIT** |
+| M-238 | `zero_share` lon nhat trong 6 link con lai | [MO TA] | < 0.05 | **0.001669** (`vD`) | **HIT** |
+| M-239 | `rho_csv(uA) / rho_gen(uA)`, gop 30 run | [NGOAI SUY] | 0.85 - 1.15 | **0.998** | **HIT** |
+| M-240 | so link co `verdict = CLEAN` | [CO CHE] | 8 / 8 | **8 / 8** | **HIT** |
+| M-241 | `corr(rho_csv, rho_gen)` tren 8 link x 10 cell | [NGOAI SUY] | >= 0.95 | **0.997219** | **HIT** |
+
+Do ngay 2026-08-27, `results/LIVE/phase-23/link_rho_audit.json`, 30 meta +
+30 CSV, 17970 mau/link. **KICH BAN `K1` duoc thi hanh.**
 
 Co so cua `M-236`/`M-237`: `mininet/run_sync_v7.py::RhoLogger.link_interfaces()`
 (dong 369) duyet `LINK_ENDPOINTS` -- mot ban do CO HUONG viet tay -- va lay
