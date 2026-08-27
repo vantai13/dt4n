@@ -355,6 +355,9 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-309 | 23.25 | PASS | `PC-25-1` DOI CHUNG DUONG FIRE: ban GOP-SAI (noi 15 run roi `corrcoef`) cho `omega_hat` = **+1.0492** >= 1.00 va `b_hat` = **+0.6103** >= 0.50, trong khi ban DUNG (Fisher-z trong tung run) cho +0.0852 / +0.1097. Chenh lech 12x chung to phep do DU NHAY de phan biet hai cach tinh. Neu khong fire thi moi so cua lesson nay mat gia tri (`L101`) |
 | G23-310 | 23.25 | PASS | `M-248` phan du KHONG co cau truc: `k=0.5` mean **-0.03192** (`|mean|/2se` = 0.42), `k=0.7071` mean **+0.01128** (0.16), ca hai < 1.0. Mo hinh mot-tham-so DU. `M-248` da phai sua dinh nghia phan du giua chung (`A077` muc 4b): ban dau thieu `b_hat` va cho verdict TRUE; ban dung cho FALSE. `Var(m)` do duoc / don vi = **0.5417 .. 0.7068** tren 6 cap duong -- DUOI 1, tuc link hoi PHAN tuong quan theo huong bien, nhat quan voi `omega_corrected` am |
 | G23-311 | 23.25 | PASS | `M-250` `SNR_dec` trung vi = **0.3752** (dai 0.1115 .. 0.9690 qua 30 o cell x cap duong), nam trong `(0.25, 1.00)`. `M-251` du bao `err(w=1)/err(w=0)` = **1.0296** (cap KE) / **1.0348** (cap CHEO). **QUYET DINH `D3`**: mo Lesson 23.26 nhung CHI tren cell `SNR_dec` cao nhat (`clean@0.960`, SNR 0.68-0.97) va ghep voi truc `swing`; ngan sach cat tu 10 xuong **6 gate**. Nguong khoa trong ma nguon truoc khi chay (`A077` muc 9) |
+| G23-312 | 23.25b | NOT_RUN | - |
+| G23-313 | 23.25b | NOT_RUN | - |
+| G23-314 | 23.25b | NOT_RUN | - |
 
 ## Va cham da phat hien
 
