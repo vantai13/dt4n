@@ -344,6 +344,12 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-298 | 23.24 | PASS | `M-234`(a) ti so `q_hat(K=3,alpha/2)/q_hat(K=4,alpha/3)` = **0.923007** tren 4 bin x 2 slot chung, trong dai [0.88, 0.94]. (b) `Delta acceptance(S1 vs S0)` = **+0.042714**, trong dai [+0.01, +0.05]. (c) [MO TA] `Delta acceptance(S2 vs S0)` = +0.127865. Huong lech du bao SAI: A074 muc 5 doan ti so nam DUOI 0.921016, do duoc **tren** (+0.22%); dai van dat. Thi hanh LAN HAI sau `A075`; phan quyet khong doi |
 | G23-299 | 23.24 | PASS | `M-235` `budget_share(S1)` = **0.994144** >= 0.90. Nhanh (i) CHI cat P2 giu nguyen alpha cua S0: `Delta acceptance` = **+0.000152**, tuc 0.36% -- khong phan biet duoc voi 0. Nhanh (ii) CHI noi `alpha_each`: **+0.042464**. Tuong tac +0.000098. Gan nhu toan bo loi ich den tu KENH NGAN SACH. S2: budget_share 0.900726, constraint_share 0.099336. Thi hanh LAN HAI sau `A075`: ban VOID cho constraint_share AM (-0.007598), day la HIEN VAT cua `w_loss` sai va DA RUT |
 | G23-300 | 23.24 | FAIL | `NC-23.24-1` ban sua (`A074b` muc 4). Ve (iii) VE CHAN DAT: `P_calib(a_twin=P2)`=0, `P_calib(a_twin=P3)`=0.391914>0.05. Ve (ii) **KHONG DAT**: `Delta err\|accept (cat P3 vs cat P2)` = **-0.093702**, dai doi >= +0.02 -- cat duong SONG lam `err\|accept` TOT len (0.013719 vs 0.107420), khong xau di. `anchor_moved_rate` 0.389900 (P3) vs 0.000000 (P2). Ve (i) da BO truoc khi chay. Kich ban **K2** (`A074` muc 6): cau K1 KHONG duoc phat bieu, `L43` KHONG dong duoc. Xem `L131`. Thi hanh LAN HAI sau `A075`; phan quyet khong doi |
+| G23-301 | 23.24b | NOT_RUN | - |
+| G23-302 | 23.24b | NOT_RUN | - |
+| G23-303 | 23.24b | NOT_RUN | - |
+| G23-304 | 23.24b | NOT_RUN | - |
+| G23-305 | 23.24b | NOT_RUN | - |
+| G23-306 | 23.24b | NOT_RUN | - |
 
 ## Va cham da phat hien
 
