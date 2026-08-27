@@ -204,16 +204,22 @@ def omega_hat(R: np.ndarray) -> dict:
 
 
 # ------------------------------------------------------------------- T3
-def goodness_of_fit(R: np.ndarray, w: float) -> dict:
+def goodness_of_fit(R: np.ndarray, w: float, b: float = 0.0) -> dict:
     """`M-248` -- phan du tach theo LOP `k`.
 
     Cau truc trong phan du = mo hinh mot-tham-so thieu. `L35`: co che chua
     biet thi KHONG duoc dieu chinh mo hinh de che.
+
+    PHAN DU PHAI KHOP MO HINH DA FIT. `omega_hat_corrected` duoc suy tu
+    `(r - b_hat)`, nen mo hinh la `r = b + w*k` va phan du la
+    `r - b - w*k`. Ban dau tien bo quen `b` va do do phan du cua ca hai lop
+    deu bi day len mot luong `b` -- lam mat dau hieu quan trong nhat, la hai
+    lop lech NGUOC CHIEU nhau.
     """
     by = defaultdict(list)
-    for a, b in S_PAIRS:
-        k = K_PAIR[(a, b)]
-        by[round(float(k), 4)].append(R[IDX[a], IDX[b]] - w * k)
+    for pa, pb in S_PAIRS:
+        k = K_PAIR[(pa, pb)]
+        by[round(float(k), 4)].append(R[IDX[pa], IDX[pb]] - b - w * k)
     out = {}
     for k, v in sorted(by.items()):
         v = np.asarray(v, dtype=float)
@@ -349,6 +355,42 @@ def sheppard(r: float) -> float:
     return float(np.arccos(np.clip(r, -1.0, 1.0)) / np.pi)
 
 
+def err_bivariate(snr: float, r: float) -> float:
+    """`P(sign(m_hat) != sign(m_true))` cho chuan hai chieu.
+
+    `X = m_true ~ N(mu, s^2)`, `Y = m_hat` cung bien, tuong quan `r`.
+    Voi `a = mu/s = SNR`:
+
+        err = 1 - Phi2(-a, -a; r) - Phi2(a, a; r)
+
+    Kiem: tai `a = 0` ta co `Phi2(0,0;r) = 1/4 + arcsin(r)/(2*pi)`, nen
+    `err = 1/2 - arcsin(r)/pi = arccos(r)/pi` -- dung cong thuc Sheppard.
+    Do la ly do `err` BAT BIEN voi thang khi `E[m] = 0` (`A077` muc 2b).
+    """
+    from scipy.stats import multivariate_normal as mvn
+    cov = [[1.0, r], [r, 1.0]]
+    lo = float(mvn.cdf([-snr, -snr], mean=[0.0, 0.0], cov=cov))
+    hi = float(mvn.cdf([snr, snr], mean=[0.0, 0.0], cov=cov))
+    return float(1.0 - lo - hi)
+
+
+def err_forecast(snr_median: float, r: float) -> dict:
+    """`M-251` -- du bao `err(w=1)/err(w=0)` tu `SNR_dec` do duoc.
+
+    `omega` KHONG vao `err` truc tiep. No vao qua `sd(m)`: o `w = 1`,
+    `Var(m)` nhan `V` (1.7071 cap KE, 1.9428 cap CHEO), nen
+    `SNR(w=1) = SNR(w=0) / sqrt(V)`. `r` khong doi.
+    """
+    out = {}
+    e0 = err_bivariate(snr_median, r)
+    for name, V in (("adjacent_1.7071", 1.70711), ("crossed_1.9428", 1.94281)):
+        e1 = err_bivariate(snr_median / np.sqrt(V), r)
+        out[name] = {"var_inflation": V, "snr_at_omega1": snr_median / np.sqrt(V),
+                     "err_at_omega0": e0, "err_at_omega1": e1,
+                     "ratio_err_omega1_over_omega0": e1 / e0 if e0 > 0 else None}
+    return out
+
+
 def snr_and_forecast(mats, cells, tau_system: float) -> dict:
     """`SNR_dec = |E[m]|/sd(m)` tren cost THAT, + du bao `err(w)` qua Sheppard."""
     cv = C.CostV2(strict_reliable=False)     # cung quy uoc `cell_matrices`
@@ -392,6 +434,8 @@ def snr_and_forecast(mats, cells, tau_system: float) -> dict:
         "tau_system_s": float(tau_system),
         "r_at_z_median": r_z,
         "err_reference_zero_mean_sheppard": sheppard(r_z),
+        "M_251_err_forecast": (err_forecast(med, r_z) if med is not None
+                               else None),
         "decision_for_lesson_23_26": decision,
         "decision_thresholds": {"D1_max": SNR_FLAT, "D2_min": SNR_STRONG},
     }
@@ -508,7 +552,7 @@ def main() -> None:
         },
         "T2_omega": est,
         "T2b_omega_by_cell": by_cell,
-        "T3_goodness_of_fit": goodness_of_fit(R, w),
+        "T3_goodness_of_fit": goodness_of_fit(R, w, est["b_hat_null_pairs"]),
         "T4_block_bootstrap": boot,
         "T5_var_margin": var_margin(R, w),
         "T6_snr_and_decision": t6,

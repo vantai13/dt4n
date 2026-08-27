@@ -52,6 +52,10 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 
 | **L136** | 2h (doc lai artifact co san, KHONG do moi) | **CL-06**, **CL-08** -- ca hai dung `viol\|accept` de chong do chu "bao dam BAO PHU" | "`CL-06`/`CL-08` trich `C3_viol_given_accept` (`recalibrate_transfer.py:572`), tuc dai luong SAU CHON LOC. Chu 'bao dam' phai gan vao `viol` BIEN. Hai phat bieu song sot ve so (khe luon duong: +0.0212/+0.0237/+0.0287) nhung PHAI doi chu hoac doi so" | 0 | HOAN |
 | **L137** | 0 (da xu ly o 23.24b) | (rong) -- `L30` thu hep pham vi, khong phat bieu nao doi | "artifact 23.8 dung `rho` TU DITTO mang nhan `PRE_L30_FIX`; ban dung `rho_measured_*.csv` thi khong. Ban sua `collector.py` CHUA chay tren Mininet that -- lan chay ke tiep phai kiem `utilDirectionSource == 'directed_map'` o ca 8 link" | -- | DONG (`A076`) |
+| **L138** | 0 (danh doi da tuyen) | (rong) -- ve dien giai `omega=1` | "`omega=1` la vat ly DA CHUAN HOA de quy trach nhiem duoc, khong phai vat ly thuan; he so `1/sqrt(d_l)` la gia cua rang buoc `G23-125`" | 0 | HOAN |
+| **L139** | 3 tuan (chay lai run >= 5 phut) | **CL-14** -- do rong CI cua `omega_hat` | "CI95 cua `omega_hat` la CAN DUOI va `n_eff` la CAN TREN: block 29.8 s chi bang 1.08 lan `tau` cua link cham nhat (27.67 s), vi run chi dai 119.8 s" | 0 | HOAN |
+| **L140** | 4h | (rong) -- lam ket luan MANH hon, khong yeu di | "`omega_hat` do o `dt=0.2 s` la CAN TREN cua tuong quan o thang ms" | 0 | HOAN |
+| **L141** | 1 tuan (do `c_a`/`c_s` cua 23.8) | **CL-14** -- neu `mode` sai thi `SNR_dec` sai va `D3` co the doi | "`SNR_dec` dung `mode='poisson'` CO DINH; `c_a`/`c_s` cua chien dich 23.8 chua duoc do" | 0 | HOAN |
 ## Canh bao nguong `A071` N3
 
 Khong dong nao dat >= 3 o lan ra lai nay. NHUNG: moi dong dang o muc 2 se

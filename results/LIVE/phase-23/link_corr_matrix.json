@@ -1,0 +1,393 @@
+{
+  "PC_25_1_pooled_wrong_control": {
+    "b_hat_null_pairs": 0.6102612817826494,
+    "fired": true,
+    "note": "Noi cac run roi `corrcoef` -> do lai chinh NUM XOAY `rho_bar` da van, khong phai tuong quan mang. Pooling artifact / ecological fallacy. `b_hat` lon la co bao truc tiep.",
+    "omega_hat": 1.049189338303328
+  },
+  "T0_wiring": {
+    "M_242_sum_k2": 4.999999999999999,
+    "M_243_var_ratio_adjacent_at_omega1": 1.7071067811865475,
+    "M_244_var_ratio_crossed_at_omega1": 1.9428090415820634,
+    "adjacent_is_homogeneous": true,
+    "crossed_is_homogeneous": true,
+    "k_classes": [
+      0.5,
+      0.7071
+    ],
+    "n_adjacent_pairs": 4,
+    "n_crossed_pairs": 2
+  },
+  "T1_corr_matrix_within_run": {
+    "R": [
+      [
+        1.0,
+        0.5986053157431429,
+        0.12826223839282608,
+        -0.01521636120201467,
+        -0.012822058459574393,
+        -0.013895399356786832,
+        0.029457191288488536,
+        0.08227356508236293
+      ],
+      [
+        0.5986053157431428,
+        1.0,
+        0.11789351905985725,
+        -0.006372352052542202,
+        0.0010240567341454796,
+        -0.014545313273608819,
+        -0.06720804387830166,
+        0.10113784413076553
+      ],
+      [
+        0.12826223839282605,
+        0.11789351905985727,
+        1.0,
+        0.035760095576411306,
+        0.012089250605306584,
+        0.01087165456795318,
+        0.04365601319416061,
+        -0.007446875450764403
+      ],
+      [
+        -0.01521636120201467,
+        -0.006372352052542202,
+        0.03576009557641131,
+        1.0,
+        0.018048704940205704,
+        -0.010606126010763448,
+        0.022426736850068477,
+        0.03273278925494481
+      ],
+      [
+        -0.012822058459574393,
+        0.0010240567341454861,
+        0.012089250605306587,
+        0.0180487049402057,
+        1.0,
+        0.031354887240395306,
+        0.03605128460978154,
+        0.056397934716215126
+      ],
+      [
+        -0.013895399356786832,
+        -0.014545313273608813,
+        0.01087165456795318,
+        -0.010606126010763455,
+        0.031354887240395306,
+        1.0,
+        0.26544457725962356,
+        0.2878337729219803
+      ],
+      [
+        0.029457191288488536,
+        -0.06720804387830166,
+        0.0436560131941606,
+        0.022426736850068477,
+        0.03605128460978154,
+        0.26544457725962356,
+        1.0,
+        0.6375736123317818
+      ],
+      [
+        0.08227356508236294,
+        0.1011378441307655,
+        -0.007446875450764403,
+        0.03273278925494479,
+        0.056397934716215126,
+        0.2878337729219803,
+        0.6375736123317819,
+        1.0
+      ]
+    ],
+    "links": [
+      "uA",
+      "uB",
+      "ac",
+      "ad",
+      "bc",
+      "bd",
+      "vC",
+      "vD"
+    ]
+  },
+  "T2_omega": {
+    "b_hat_null_pairs": 0.10970771734753312,
+    "n_null_pairs": 16,
+    "n_structured_pairs": 12,
+    "omega_hat": 0.08524823463868611,
+    "omega_hat_corrected": -0.0827549657162275,
+    "omega_hat_deattenuated": -0.09295258122385813,
+    "r_null": {
+      "ac-ad": 0.035760095576411306,
+      "ac-bc": 0.012089250605306584,
+      "ac-bd": 0.01087165456795318,
+      "ac-vD": -0.007446875450764403,
+      "ad-bc": 0.018048704940205704,
+      "ad-bd": -0.010606126010763448,
+      "ad-vC": 0.022426736850068477,
+      "bc-bd": 0.031354887240395306,
+      "bc-vD": 0.056397934716215126,
+      "bd-vC": 0.26544457725962356,
+      "uA-bc": -0.012822058459574393,
+      "uA-bd": -0.013895399356786832,
+      "uA-uB": 0.5986053157431429,
+      "uB-ac": 0.11789351905985725,
+      "uB-ad": -0.006372352052542202,
+      "vC-vD": 0.6375736123317818
+    },
+    "r_structured": {
+      "ac-vC": 0.04365601319416061,
+      "ad-vD": 0.03273278925494481,
+      "bc-vC": 0.03605128460978154,
+      "bd-vD": 0.2878337729219803,
+      "uA-ac": 0.12826223839282608,
+      "uA-ad": -0.01521636120201467,
+      "uA-vC": 0.029457191288488536,
+      "uA-vD": 0.08227356508236293,
+      "uB-bc": 0.0010240567341454796,
+      "uB-bd": -0.014545313273608819,
+      "uB-vC": -0.06720804387830166,
+      "uB-vD": 0.10113784413076553
+    },
+    "sum_k2": 4.999999999999999
+  },
+  "T2b_omega_by_cell": {
+    "clean@0.700": {
+      "b_hat": 0.0662311131938044,
+      "n_runs": 3,
+      "omega_hat": 0.08479816190836212,
+      "omega_hat_corrected": -0.016626234192956293
+    },
+    "clean@0.850": {
+      "b_hat": 0.0935036426589712,
+      "n_runs": 3,
+      "omega_hat": 0.06847604177315052,
+      "omega_hat_corrected": -0.07471271095412162
+    },
+    "clean@0.900": {
+      "b_hat": 0.13561896979473684,
+      "n_runs": 3,
+      "omega_hat": 0.11472609112937728,
+      "omega_hat_corrected": -0.09295684590754465
+    },
+    "clean@0.925": {
+      "b_hat": 0.11142657522838699,
+      "n_runs": 3,
+      "omega_hat": 0.09278598191357483,
+      "omega_hat_corrected": -0.07784942729519666
+    },
+    "clean@0.960": {
+      "b_hat": 0.13040173828768672,
+      "n_runs": 3,
+      "omega_hat": 0.06264817597362721,
+      "omega_hat_corrected": -0.1370452448162263
+    }
+  },
+  "T3_goodness_of_fit": {
+    "0.5": {
+      "abs_mean_over_2se": 0.4229954684138184,
+      "mean_resid": -0.03191509533359055,
+      "n_pairs": 4,
+      "sd_resid": 0.07545020624752383,
+      "systematic_offset_zero_spread": false
+    },
+    "0.7071": {
+      "abs_mean_over_2se": 0.15648114476640584,
+      "mean_resid": 0.011283690166298505,
+      "n_pairs": 8,
+      "sd_resid": 0.10197744712704274,
+      "systematic_offset_zero_spread": false
+    },
+    "_verdict_structured_residual": false
+  },
+  "T4_block_bootstrap": {
+    "block_len_over_tau_system": 1.076947829641304,
+    "block_len_s": 29.8,
+    "block_len_samples": 149,
+    "block_target_samples": 692,
+    "block_was_capped_by_run_length": true,
+    "ci_is_lower_bound_on_width": true,
+    "n_boot": 400,
+    "n_eff_per_pair": 392.8223442312427,
+    "note": "Neu `ci_is_lower_bound_on_width` la true thi block khong du dai de pha tu tuong quan cua link cham nhat; CI la CAN DUOI cua do rong that va `n_eff` la CAN TREN. Xem `L139`.",
+    "omega_hat_ci95": [
+      -0.031370869111128574,
+      0.047470869529704036
+    ],
+    "sd_fisher_z_mean_over_pairs": 0.050648505564613096,
+    "sd_omega_hat_analytic": 0.022650700280250253,
+    "sd_omega_hat_empirical": 0.02086633831689925,
+    "tau_system_s": 27.670792567477857
+  },
+  "T5_var_margin": {
+    "m(P1,P2)": {
+      "ratio_at_omega_1_analytic": 1.7071067811865475,
+      "ratio_measured_over_identity": 0.6940376165708041,
+      "shared_link": true,
+      "var_identity": 4.0,
+      "var_measured_matrix": 2.7761504662832164,
+      "var_structured_at_omega_hat": 3.765933610260781
+    },
+    "m(P1,P3)": {
+      "ratio_at_omega_1_analytic": 1.7071067811865475,
+      "ratio_measured_over_identity": 0.7067601340891196,
+      "shared_link": true,
+      "var_identity": 4.0,
+      "var_measured_matrix": 2.8270405363564786,
+      "var_structured_at_omega_hat": 3.765933610260781
+    },
+    "m(P1,P4)": {
+      "ratio_at_omega_1_analytic": 1.9428090415820634,
+      "ratio_measured_over_identity": 0.6505632737652477,
+      "shared_link": false,
+      "var_identity": 6.0,
+      "var_measured_matrix": 3.9033796425914864,
+      "var_structured_at_omega_hat": 5.531867220521562
+    },
+    "m(P2,P3)": {
+      "ratio_at_omega_1_analytic": 1.9428090415820634,
+      "ratio_measured_over_identity": 0.5417347870374557,
+      "shared_link": false,
+      "var_identity": 6.0,
+      "var_measured_matrix": 3.2504087222247344,
+      "var_structured_at_omega_hat": 5.531867220521562
+    },
+    "m(P2,P4)": {
+      "ratio_at_omega_1_analytic": 1.7071067811865475,
+      "ratio_measured_over_identity": 0.7012534436006631,
+      "shared_link": true,
+      "var_identity": 4.0,
+      "var_measured_matrix": 2.8050137744026524,
+      "var_structured_at_omega_hat": 3.765933610260781
+    },
+    "m(P3,P4)": {
+      "ratio_at_omega_1_analytic": 1.7071067811865475,
+      "ratio_measured_over_identity": 0.6665570229918729,
+      "shared_link": true,
+      "var_identity": 4.0,
+      "var_measured_matrix": 2.6662280919674917,
+      "var_structured_at_omega_hat": 3.765933610260781
+    }
+  },
+  "T6_snr_and_decision": {
+    "M_251_err_forecast": {
+      "adjacent_1.7071": {
+        "err_at_omega0": 0.04833604981982831,
+        "err_at_omega1": 0.04976899054095674,
+        "ratio_err_omega1_over_omega0": 1.0296453832381771,
+        "snr_at_omega1": 0.2871370421749526,
+        "var_inflation": 1.70711
+      },
+      "crossed_1.9428": {
+        "err_at_omega0": 0.04833604981982831,
+        "err_at_omega1": 0.05001907562542862,
+        "ratio_err_omega1_over_omega0": 1.0348192666110234,
+        "snr_at_omega1": 0.2691564616822199,
+        "var_inflation": 1.94281
+      }
+    },
+    "decision_for_lesson_23_26": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY",
+    "decision_thresholds": {
+      "D1_max": 0.25,
+      "D2_min": 1.0
+    },
+    "err_reference_zero_mean_sheppard": 0.05186827886423399,
+    "r_at_z_median": 0.986753161285507,
+    "rho_out_of_model_domain_share_max": 0.002921535893155259,
+    "snr_band": "(0.25,1.00)",
+    "snr_by_cell_and_pair": {
+      "clean@0.700|m(P1,P2)": 0.5469518040571631,
+      "clean@0.700|m(P1,P3)": 0.11146013473210088,
+      "clean@0.700|m(P1,P4)": 0.1579028590176969,
+      "clean@0.700|m(P2,P3)": 0.5063815771052729,
+      "clean@0.700|m(P2,P4)": 0.49050111325846685,
+      "clean@0.700|m(P3,P4)": 0.12887956639135908,
+      "clean@0.850|m(P1,P2)": 0.38272301071839804,
+      "clean@0.850|m(P1,P3)": 0.15122813864420992,
+      "clean@0.850|m(P1,P4)": 0.2319047464649052,
+      "clean@0.850|m(P2,P3)": 0.25779491758366796,
+      "clean@0.850|m(P2,P4)": 0.24920884929429818,
+      "clean@0.850|m(P3,P4)": 0.11520068624693304,
+      "clean@0.900|m(P1,P2)": 0.6490364398611332,
+      "clean@0.900|m(P1,P3)": 0.13241912516364976,
+      "clean@0.900|m(P1,P4)": 0.2989716819182935,
+      "clean@0.900|m(P2,P3)": 0.6603638730566065,
+      "clean@0.900|m(P2,P4)": 0.47462158674864446,
+      "clean@0.900|m(P3,P4)": 0.17275360265668963,
+      "clean@0.925|m(P1,P2)": 0.5019716345480619,
+      "clean@0.925|m(P1,P3)": 0.20639218160797101,
+      "clean@0.925|m(P1,P4)": 0.3727175781106185,
+      "clean@0.925|m(P2,P3)": 0.5915802481840274,
+      "clean@0.925|m(P2,P4)": 0.2580034725597733,
+      "clean@0.925|m(P3,P4)": 0.3264738691479885,
+      "clean@0.960|m(P1,P2)": 0.969045910358528,
+      "clean@0.960|m(P1,P3)": 0.377608379572037,
+      "clean@0.960|m(P1,P4)": 0.8571568400408948,
+      "clean@0.960|m(P2,P3)": 0.7837826774061885,
+      "clean@0.960|m(P2,P4)": 0.40463911026245986,
+      "clean@0.960|m(P3,P4)": 0.683147674967237
+    },
+    "snr_max": 0.969045910358528,
+    "snr_median": 0.37516297884132777,
+    "snr_min": 0.11146013473210088,
+    "tau_system_s": 27.670792567477857,
+    "z_median_s": 0.369
+  },
+  "csv_glob": "rho_measured_clean_*.csv",
+  "lesson": "23.25",
+  "locked_constants": {
+    "BLOCK_TAU_MULT": 5.0,
+    "BOOT_SEED": 23825,
+    "DT_MEASURED_S": 0.2,
+    "MIN_BLOCKS_PER_RUN": 4,
+    "MODE": "poisson",
+    "N_BOOT": 400,
+    "SNR_FLAT": 0.25,
+    "SNR_STRONG": 1.0,
+    "TAU_RATIO_WARN": 3.0,
+    "W_LOSS": 5000.0,
+    "Z_MEDIAN_S": 0.369
+  },
+  "n_runs_used": 15,
+  "prereg": "docs/phase-23/A077-amendment-77.md",
+  "provenance": {
+    "argv": {
+      "campaign": "results/RAW/phase-23/aoi_v7_campaign",
+      "csv_glob": "rho_measured_clean_*.csv",
+      "out": "results/LIVE/phase-23/link_corr_matrix.json"
+    },
+    "git_dirty": true,
+    "git_hash": "0280d16aaaadf764a721c2276c643eca3959cfff",
+    "script": "measurements/link_corr_matrix.py",
+    "timestamp_utc": "2026-08-27T09:51:04.985716+00:00"
+  },
+  "schema": "dt4n.link.corr_matrix.v1",
+  "status": "MEASUREMENT_ESTIMATE",
+  "tau_by_link_from_meta": {
+    "ac": 2.750236165619756,
+    "ad": 4.168665054187425,
+    "bc": 2.735799230367158,
+    "bd": 2.7646731008723524,
+    "uA": 20.031247662978537,
+    "uB": 27.349971784086808,
+    "vC": 20.031247662978537,
+    "vD": 27.670792567477857
+  },
+  "tau_system_s": 27.670792567477857,
+  "validity": {
+    "axis_role": "measures_axis",
+    "inputs_sha256": {
+      "results/LIVE/phase-L/link_model_v2_fit.json": "ab17908c40359572e35effdee561f8217477168ba77298831a734ab47cc9563b",
+      "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.700_rep1.csv": "602cff475aa799fd83616222b8d36ce61d4692125e5916d8d53b6f5de4e029ba"
+    },
+    "instrument": {
+      "module": "measurements.link_corr_matrix",
+      "source_path": "measurements/link_corr_matrix.py",
+      "source_sha256": "d288fe987650f8a43d4ac9d1ddcdff3b2b1c46d9a37cc8eefc89316b7b08610e"
+    },
+    "note": "Artifact DO cau truc tuong quan tai (vai tro MEASURES). Khong dung truc AoI. CO dung truc SLA qua `W_LOSS` = K06 cho phan T6.",
+    "schema": "dt4n.validity.v1"
+  }
+}

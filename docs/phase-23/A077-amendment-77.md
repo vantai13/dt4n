@@ -105,16 +105,40 @@ theo tien le `M-193`/`M-200`, KHONG tinh la phat hien.
 
 | ID | Dai luong | Nguon | Dai khoa | Do | KQ |
 |---|---|---|---|---|---|
-| M-242 | `sum_S k^2` tren 12 cap co cau truc | [TAT DINH] | = 5.0000 | ___ | ___ |
-| M-243 | `Var(m)_{w=1} / Var(m)_{w=0}`, cap KE | [TAT DINH] | = 1.7071 | ___ | ___ |
-| M-244 | nhu tren, cap CHEO (P1,P4)/(P2,P3) | [TAT DINH] | = 1.9428 | ___ | ___ |
-| M-245 ★ | `w_hat` TRONG-run, gop Fisher-z, 15 run CLEAN | [NGOAI SUY] | 0.00 - 0.15 | ___ | ___ |
-| M-246 ★ | `b_hat` = trung binh r tren 16 cap NULL | [NGOAI SUY] | -0.05 - +0.15 | ___ | ___ |
-| M-247 | `n_eff` moi cap, block bootstrap | [NGOAI SUY] | 30 - 4000 | ___ | ___ |
-| M-248 ★ | phan du fit mot-tham-so co CAU TRUC? | [CO CHE] | KHONG | ___ | ___ |
-| M-249 ★ | `w_hat` tinh theo cach GOP-SAI | [CO CHE] | >= 1.00 | ___ | ___ |
-| M-250 ★ | `SNR_dec` trung vi qua (cell x cap duong) | [MO TA] | bao cao | ___ | ___ |
-| M-251 ★ | `err(w=1)/err(w=0)` DU BAO tu M-250 | [CO CHE] | bao cao | ___ | ___ |
+| M-242 | `sum_S k^2` tren 12 cap co cau truc | [TAT DINH] | = 5.0000 | **5.0000** | **HIT** |
+| M-243 | `Var(m)_{w=1} / Var(m)_{w=0}`, cap KE | [TAT DINH] | = 1.7071 | **1.7071** | **HIT** |
+| M-244 | nhu tren, cap CHEO (P1,P4)/(P2,P3) | [TAT DINH] | = 1.9428 | **1.9428** | **HIT** |
+| M-245 ★ | `w_hat` TRONG-run, gop Fisher-z, 15 run CLEAN | [NGOAI SUY] | 0.00 - 0.15 | **+0.0852** | **HIT** |
+| M-246 ★ | `b_hat` = trung binh r tren 16 cap NULL | [NGOAI SUY] | -0.05 - +0.15 | **+0.1097** | **HIT** |
+| M-247 | `n_eff` moi cap, block bootstrap | [NGOAI SUY] | 30 - 4000 | **393** | **HIT** |
+| M-248 ★ | phan du fit mot-tham-so co CAU TRUC? | [CO CHE] | KHONG | **KHONG** | **HIT** |
+| M-249 ★ | `w_hat` tinh theo cach GOP-SAI | [CO CHE] | >= 1.00 | **+1.0492** | **HIT** |
+| M-250 ★ | `SNR_dec` trung vi qua (cell x cap duong) | [MO TA] | bao cao | **0.3752** (0.1115-0.9690) | bao cao |
+| M-251 ★ | `err(w=1)/err(w=0)` DU BAO tu M-250 | [CO CHE] | bao cao | **1.0296** ke / **1.0348** cheo | bao cao |
+
+Do ngay 2026-08-27, `results/LIVE/phase-23/link_corr_matrix.json`, 15 run
+CLEAN, 599 mau/run. **TAM du doan co cham diem deu HIT.**
+**Quyet dinh thi hanh: `D3`** -- `SNR_dec` trung vi 0.3752 nam trong
+`(0.25, 1.00)`.
+
+### 4b. MOT DINH NGHIA PHAI SUA GIUA CHUNG -- khai bao
+
+Ban chay dau tien tinh phan du cua `M-248` la `r - w*k`, THIEU `b_hat`.
+Nhung `w_hat_corrected` duoc suy tu `(r - b_hat)`, nen mo hinh da fit la
+`r = b + w*k` va phan du DUNG phai la `r - b - w*k`. Hai ket qua:
+
+```text
+phan du SAI (thieu b_hat) : k=0.5 -> +0.07779 (1.03) ; k=0.7071 -> +0.12099 (1.68)
+                            _verdict = TRUE  (co cau truc)
+phan du DUNG              : k=0.5 -> -0.03192 (0.42) ; k=0.7071 -> +0.01128 (0.16)
+                            _verdict = FALSE (khong co cau truc)
+```
+
+Ban SAI day CA HAI lop len cung mot luong `b_hat = +0.1097`, tuc lam mat dau
+hieu quan trong nhat (hai lop lech NGUOC chieu). Ban DUNG duoc dung cho
+`M-248`. Ghi ca hai o day vi sua xay ra SAU khi da nhin so lan dau -- doc gia
+co quyen kiem tra.
+
 
 Co so cua `M-245`/`M-246`: `traffic_v7.LOAD_CHANNELS` nap moi link bang MOT
 luong MOT-CHANG rieng (`uA`: hsrc->hA; `ac`: hA->hC). Byte vao `uA` KHONG chay
