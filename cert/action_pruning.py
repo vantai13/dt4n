@@ -60,7 +60,13 @@ from measurements.validity import validity_block
 
 AMENDMENT = "docs/phase-23/A074-amendment-74.md"
 AMENDMENT_B = "docs/phase-23/A074b-amendment-74b.md"
-OUTPUT = "results/PENDING/phase-23/action_pruning.json"
+# `A074` muc 1 cap `results/PENDING/...`. Ca hai truc cua artifact nay
+# (`measured_v7_uniform`, `exogenous_g114_S-B`) DA duoc duyet trong
+# `axis_registry.json`, nen `test_pending_artifacts_declare_what_they_wait_for`
+# bat promote len LIVE/ -- tang PENDING la tu don. Cung duong ma Lesson 23.23
+# da di: `A072` muc 1 cung cap PENDING, va `baselines_lit.json` duoc promote
+# o commit `6fa8365`. Xem doc 52 muc 9.
+OUTPUT = "results/LIVE/phase-23/action_pruning.json"
 
 # Truc DO -- cung truc voi `baselines_lit.json` cua 23.23. KHONG phai legacy.
 AXIS = AXIS_MEASURED

@@ -42,6 +42,8 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | L127 | 1 ngay | (rong) -- khong phat bieu nao hien phu thuoc sensitivity fallback cua B7 | "B7 thoai hoa duoi F2 static; voi sticky/wait, L_fallback thap hon co the doi h_star" | 1 | HOAN |
 | L128 | 1 ngay | **CL-01** -- metric `viol\|accept` gop khong do gia tri conditional theo bin | "NC acceptance 0.36495 khac C3 0.39546, nen khong duoc so p95 truc tiep nhu cung diem van hanh; can cham `viol\|accept` theo bin va matched acceptance" | 1 | HOAN |
 | **L129** | 0 (dinh nghia o `A074` muc 2) | (rong) -- ve quan tri, khong ve ket qua | "`A071` N3 dat nguong 3 lan bo qua nhung KHONG dinh nghia 'bo qua'; bo dem dung o 0 suot Lesson 23.23. Dinh nghia duoc khoa o `A074` muc 2 va luot 23.23 duoc dem bu" | -- | DONG (da thanh quy tac) |
+| **L130** | 2h + ra soat nguoi goi | (rong) -- khong phat bieu nao phu thuoc | "`cell_matrices.prepare()` chi chay tren truc LEGACY; tren truc DO no NEM ValueError. Moi nguoi goi tren truc do phai tu bin bang `Z_EDGES_V7`" | 0 | HOAN |
+| **L131** | 1 ngay (thiet ke lai doi chung) | (rong) -- `G23-300` da FAIL theo dai da ky; muc nay chi ghi chan doan | "`err\|accept` KHONG so sanh duoc giua hai KHONG GIAN HANH DONG khac nhau: cat P3 lam `err_anchor` sup 0.239141 -> 0.044863 vi tap nhan doi. Doi chung am cho pruning phai GHEP TAP NHAN" | 0 | HOAN |
 
 ## Canh bao nguong `A071` N3
 
