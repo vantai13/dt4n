@@ -22,6 +22,8 @@ gate PASS KHONG tu dong cho phep trich dan -- xem `CL-08` va `CL-11`.
 | CL-09 | `kappa` sai co GIA do duoc va DU DOAN DUOC theo `|log(kappa_A/kappa_B)|` | `G23-263` `M-202`: do doc 0.4776, Spearman +0.9674 (56 o). Tai lap: `G23-282` `M-220` 0.4873 / +0.9798 (110 o, 11 cell); `G23-286` `M-223`(a)(c) 0.4661 / +0.9804 (210 o, 15 cell) | `L113`: `M-202` KHONG phai xac nhan MU -- xem `CL-10`. Ba con so tren KHONG doc lap: chung dung chong tap cell |
 | CL-10 | `M-202` KHONG duoc trich dan nhu mot xac nhan MU | `L113`: noi suy `trace` da in cua PILOT du doan do doc = 0.4144 TRUOC khi chay; that = 0.4776, lech 13.2% | Muc ro ri DA DUOC DO, khong phai uoc luong. Moi phat bieu ve `M-202` phai kem con so 13.2% |
 | CL-11 | **CAM** phat bieu "ho tai KHONG them suc giai thich" | `G23-288` `NC-W-1` FIRE: nhan NGAU NHIEN cho he so -0.00261 va `delta R^2` +0.00009, ca hai TRONG dai da ky. 200 rut tham: 100% trong dai, `|he so|` p95 = 0.00874 | `L119`: dai cua `M-223`(b) rong gap 2.3 lan p95 cua doi chung am, nen ve (b) KHONG THE FAIL. `M-223`(b) HIT nhung khong mang thong tin. Ta KHONG phan biet duoc "ho tai that su vo hai" voi "phep do khong du do nhay". `M-224` MISS 1/2 `rho` (`G23-287`) cung KHONG cuu duoc ve nay |
+| CL-12 | **CAM** phat bieu "khoang khong-conformal khong giu duoc bao dam tren truc tuoi" | `G23-292` `M-227` khong fire (0/12); B8b toan cell `viol|accept=0.087444 < alpha=0.10` | Kich ban K3. Dai theo-bin cua M-226 hong-khi-ky (`A073`), va M-227 la dieu kien DU de bac bo, khong phai dieu kien CAN. Chi duoc noi folded-Gaussian steel-man khong bi bac bo tren cell nay |
+| CL-13 | **CAM** phat bieu "da quan sat C3 tu choi cap chung nhan khi mau khong du tren cell chinh" | `G23-295` `M-230` bat kha thi: 4/4 o co 500 block, san tu choi 29, tu choi 0/4 | Co che toan hoc da co tien le CL-05, nhung phep do 23.23 KHONG kiem no tren cell nao. Muon nang CL-13 phai qua L125 va xac dinh TRUOC cell co o duoi 29 block |
 
 ## Phat bieu bi CAM (de doi chieu nhanh)
 
@@ -32,6 +34,8 @@ CAM  "M-223(b) xac nhan null ve ho tai"        -- CL-11, ve (b) khong the fail
 CAM  "M-202 la xac nhan mu"                    -- CL-10, ro ri do duoc 13.2%
 CAM  "C3 tot hon B2 ve `err`"                  -- CL-07, bao toan o muc `viol`
 CAM  moi ngoai suy tu luoi `rho` tho           -- L111
+CAM  "B8b da bi chung minh vo bao dam"          -- CL-12, kich ban K3
+CAM  "M-230 da kiem duoc co che tu choi"        -- CL-13, dai bat kha thi
 ```
 
 ## Vi sao co ca `CL-08` va `CL-11`

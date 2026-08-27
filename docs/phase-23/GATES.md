@@ -332,14 +332,14 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-286 | 23.22d | PASS | `M-223` `M-210` nguyen van tren LIVE-15, `n` = 500, **210** o ngoai cheo (102 cap cung ho). Ca BA ve dat: (a) do doc = **0.4661** trong [0.40, 0.62]; (b) he so ho tai = **+0.00628** (<= 0.02) va `delta R^2` = **+0.00050** (<= 0.02); (c) Spearman = **+0.9804** (>= 0.90). Do doc tai lap qua ba tap cell: 0.4776 (8 cell, `M-202`) -> 0.4873 (11 cell, `M-220`) -> 0.4661 (15 cell). **VE (b) BI STRUCK boi `G23-288`**: `NC-W-1` cho thay mot nhan NGAU NHIEN cung roi trong dai, nen (b) HIT khong mang thong tin. Chi (a) va (c) duoc trich dan |
 | G23-287 | 23.22d | FAIL | `M-224` doi chieu CUNG-RHO tren OVERLAP-4, `n` = 500, doc theo cach PHAN TANG (`L115`). Dat **1/2** `rho`, doi 2/2. Tai `rho` = 0.750: trung vi residual khac_ho **+0.04671** (n=4) vs cung_ho **+0.03681** (n=2), `|chenh|` = **0.00990** <= 0.02 DAT. Tai `rho` = 0.744: khac_ho **+0.00168** (n=4) vs cung_ho **+0.03552** (n=2), `|chenh|` = **0.03384** > 0.02 VUOT. Voi n=2 thi 'trung vi' dung bang TRUNG BINH cua hai so rat khac nhau (+0.06143 va +0.00962), va hai cap cung ho lai la hai cap co `|log(kappa_A/kappa_B)|` LON NHAT trong tang -- tuc bien ho tai VAN bi ghep voi bien don bay ngay trong OVERLAP-4. `A070b` N2 da ky truoc rang moi phat bieu cua `M-224` chi ve HAI diem tai. Xem `L120` |
 | G23-288 | 23.22d | PASS | `NC-W-1` doi chung AM da chay dung nhu ky va cho ket qua da du bao: nhan NGAU NHIEN cung ti le (seed 232301) cho he so = **-0.00261** va `delta R^2` = **+0.00009**, CA HAI roi trong dai da ky cua `M-223`(b). CHAN DOAN ngoai dai ky (200 rut tham): **100.0%** roi trong dai; `|he so|` p95 = **0.00874**, tuc dai da ky (0.02) rong gap **2.3 lan** ca duoi phan bo nhan ngau nhien. He so THAT (+0.00628) nam TRONG phan bo nhan ngau nhien (p95 = 0.00874). HE QUA DA KY: `M-223`(b) **KHONG duoc trich dan** lam bang chung. Cung hinh dang `L99`/`L101`; xem `L119` |
-| G23-289 | 23.23 | NOT_RUN | - |
-| G23-290 | 23.23 | NOT_RUN | - |
-| G23-291 | 23.23 | NOT_RUN | - |
-| G23-292 | 23.23 | NOT_RUN | - |
-| G23-293 | 23.23 | NOT_RUN | - |
-| G23-294 | 23.23 | NOT_RUN | - |
-| G23-295 | 23.23 | NOT_RUN | - |
-| G23-296 | 23.23 | NOT_RUN | - |
+| G23-289 | 23.23 | PASS | `M-225` wiring: qhat C3 tu duong chung trung BIT voi `config_matrix.fit_config`; `max_abs_diff=0`, acceptance 0.395462, `viol|accept=0.081721` |
+| G23-290 | 23.23 | PASS | `NC-23.23-1`, 200 draw xao `z_bin`: `viol` mean 0.078239, p95 0.078444, max 0.078563; acceptance mean 0.364950. p95 duoc khoa vao A072 truoc nhanh chinh |
+| G23-291 | 23.23 | ADJUDICATED | `M-226`: dai `>=3/5 bin` HONG-KHI-KY vi truc LIVE chi co 4 bin. B8b toan cell: acceptance 0.405077, `viol|accept=0.087444 < alpha=0.10`. MO TA, khong HIT/MISS; A073 muc 1 |
+| G23-292 | 23.23 | FAIL | `M-227` khong fire: 0/12 cap `(z_bin,slot)` co `CI95_lo(CV) > K08=0.755510640`; can duoi lon nhat 0.750832. Bat doi xung: KHONG duoc suy ra Gaussian dung |
+| G23-293 | 23.23 | DIAGNOSTIC | `M-228` [MO TA]: B8a `viol|accept=0.547114` (cong thuc thieu vi tri); B8c 0.088096. Khong co dai HIT/MISS theo A072 |
+| G23-294 | 23.23 | ADJUDICATED | `M-229`: dai `>=4/5 bin` KHONG THE DAT khi chi co 4 bin. B8d toan cell: acceptance 0.388199, `viol|accept=0.076945`; lech C3 0.004776. MO TA; A073 muc 1 |
+| G23-295 | 23.23 | ADJUDICATED | `M-230` BAT KHA THI, khong phai MISS: 4/4 o co 500 block, san tu choi 29, nen C3 tu choi 0/4. `CL-13` chua duoc kiem; A073 muc 2, L125 |
+| G23-296 | 23.23 | PASS | `M-231` B7 da chay: Chow/Sun threshold `h*=0.618125 s`, acceptance 1.0, `err|accept=0.238841`; C3 acceptance 0.395462, `err|accept=0.083978` (ti so 2.844x). B7 khong co claim coverage; L127 |
 
 ## Va cham da phat hien
 

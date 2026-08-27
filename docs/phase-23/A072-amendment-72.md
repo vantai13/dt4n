@@ -156,18 +156,21 @@ Pareto a=3 (0.619) KHONG FIRE du ca hai deu khong phai chuan.
 
 ```text
 B7   NGUONG TUOI CO NGUON TRICH DAN
-     Ornee & Sun, "Sampling for Remote Estimation through Queues: Age of
-     Information and Beyond", WiOpt 2019, DOI 10.23919/WiOPT47501.2019.9144087;
-     ban mo rong "Sampling and Remote Estimation for the Ornstein-Uhlenbeck
-     Process Through Queues: Age of Information and Beyond", IEEE/ACM ToN
-     29(5), 2021, DOI 10.1109/TNET.2021.3078137.
-     Tinh chat MUON: nguong duoc SUY RA bang bisection tren muc tieu MSE
-     trung binh dai han, KHONG phai quet ra.
+     Chow (1970), "On optimum recognition error and reject tradeoff",
+     IEEE Transactions on Information Theory 16(1):41--46: hanh dong khi
+     chi phi ky vong cua hanh dong khong vuot chi phi tu choi.
+     Sun et al. (2017), "Update or Wait", IEEE Transactions on Information
+     Theory 63(11):7492--7508: ket qua cau truc biện minh cho chinh sach
+     nguong tren tuoi.
+     Tinh chat MUON: nguong duoc SUY RA tu hai loss do tren CALIB, KHONG
+     phai quet ra.
      Dieu chinh phai ghi ro trong doc 50:
-       (a) bai goc quyet dinh "khi nao LAY MAU"; ta dung cho "khi nao TIN"
-       (b) bai goc dung sai so uoc luong OU; ta dung `m_hat` cua twin
-       (c) bai goc xet ca co va khong co rang buoc ti le lay mau; ta dung
-           truong hop khong rang buoc
+       (a) Chow gia dinh biet xac suat hau nghiem; ta thay bang chi phi ky
+           vong DO DUOC theo bin tuoi tren CALIB
+       (b) Chow dat nguong tren do tin cay; ta dat tren TUOI, duoc bien minh
+           bang ket qua cau truc cua Sun et al.
+       (c) Chow dung chi phi tu choi la hang so ngoai sinh; ta dung loss cua
+           fallback F2 STATIC da do tren CALIB
      => B7 KHAC B3: B3 quet nguong AoI, B7 suy nguong.
 
 B8a  GAUSSIAN NGAY THO       q = Z_BONF * sd(s)                       [MO TA]
@@ -212,6 +215,17 @@ Dai     : dai tuyen "VO" o `G23-291`/`G23-292` phai nam NGOAI p95 cua phan
           bo nay.
 Nhan    : chan. Neu dai tuyen "VO" nam TRONG phan bo -> DUNG, ky lai dai,
           KHONG chay nhanh chinh.
+```
+
+Ket qua khoa sau khi chay DUNG 200 draw cua doi chung am, TRUOC nhanh chinh:
+
+```text
+Artifact : results/LIVE/phase-23/baselines_lit_negative.json
+p95      : 0.0784439806220752
+mean     : 0.07823859407995888
+max      : 0.07856315942521988
+
+=> break_band_lower_bound_required = 0.0784439806220752
 ```
 
 Ly do ton tai: `L99`, `L101`, `L119` -- ba lan lien tiep cung mot hinh dang.
@@ -332,6 +346,19 @@ N4  `S-A5` trong `BACKLOG.md` tung ghi "LEN LICH 23.23 (M-232)". Ma `S-A5`
     KHONG duoc dinh nghia o bat ky dau trong repo hay trong `PHASE_23_v3.md`;
     cot (b) cua dong do RONG, nen theo `A071` R2 no KHONG duoc mo.
     => GO `S-A5` khoi lich 23.23. Ghi `L124`. `M-232` KHONG duoc cap.
+
+N5  Phep dao MoM `theta = h^{-1}(r)` DIEU KIEN XAU khi `theta` nho: `h` cuc
+    phang gan 0 (`h(0) = 0.797885`, `h(0.5) = 0.801043` -- doi 0.0032 tren
+    ca doan `dtheta = 0.5`). Do duoc: tai `(mu, sigma) = (1, 3)` thi `mu_hat`
+    lech 13.8% ngay ca voi `n = 2e6`.
+
+    Dieu nay KHONG lam hong `B8b`: `q_hat` chi lech 0.054% o cung diem, vi
+    rang buoc `mu^2 + sigma^2 = m2` duoc thoa chinh xac va gan `theta = 0`
+    phan vi folded gan nhu chi phu thuoc TONG.
+
+    RANG BUOC: `doc 50` va paper KHONG duoc bao cao `mu_hat` / `sigma_hat`
+    rieng le nhu uoc luong co y nghia. Chi `q_hat` duoc trich dan.
+    `test_folded_roundtrip_on_qhat_not_on_params` ghim rang buoc nay.
 ```
 
 ## 9. Gate cau truc (khong do luong)
@@ -339,7 +366,7 @@ N4  `S-A5` trong `BACKLOG.md` tung ghi "LEN LICH 23.23 (M-232)". Ma `S-A5`
 | Test | Noi dung |
 |---|---|
 | `test_k08_matches_analytic` | `CV_MAX_FOLDED == sqrt(pi/2 - 1)` toi 1e-15 |
-| `test_folded_roundtrip` | sinh tu `(mu,sigma)` biet truoc -> fit lai, lech <= 1% o n = 2e6 |
+| `test_folded_roundtrip_on_qhat_not_on_params` | sinh tu `(mu,sigma)` biet truoc -> fit lai `q_hat`, lech <= 0.5% o n = 2e6; khong dien giai rieng `mu_hat`, `sigma_hat` |
 | `test_folded_quantile_monotone` | `folded_quantile` tang theo `p` va theo `sigma` |
 | `test_b8_neff_counts_blocks` | moi `B8*` goi `block_id.nunique()`, khong goi `len()` |
 | `test_b8_does_not_import_c3_qhat` | quet AST: `baselines_lit` khong goi `config_matrix._qhat` ngoai duong wiring |
@@ -347,16 +374,17 @@ N4  `S-A5` trong `BACKLOG.md` tung ghi "LEN LICH 23.23 (M-232)". Ma `S-A5`
 
 ## 10. Xac minh nguon B7 truoc khi ky
 
-Da doc ban WiOpt 2019 va ban mo rong IEEE/ACM ToN 2021 truoc khi ky. Ba diem
-duoc nguon ho tro:
+Hai ket qua nguon duoc muon, va ranh gioi chuyen mien duoc khoa nhu sau:
 
 ```text
-1. Bai toan goc toi uu chinh sach LAY MAU de giam MSE uoc luong tu xa.
-2. Tin hieu la OU/Gauss-Markov, truyen qua FIFO voi service time i.i.d.
-3. Nghiem co cau truc nguong; tham so nguong duoc giai bang bisection.
-   Ket qua xet ca truong hop co va khong co rang buoc toc do lay mau.
+1. Chow (1970): reject rule so chi phi ky vong cua hanh dong voi chi phi
+   tu choi co dinh.
+2. Sun et al. (2017): trong bai toan freshness, chinh sach toi uu co cau
+   truc nguong tren tuoi.
+3. Repo chi muon HINH DANG hai ket qua: chi phi quyet dinh nguong va vi tri
+   nguong tren tuoi. Khong nguon nao chung minh toi uu cho twin trong repo.
 ```
 
 Vi vay B7 duoc GIU, nhung chi voi ba canh bao chuyen mien o muc 5. Khong duoc
-viet nhu the Ornee & Sun da chung minh toi uu cho quyet dinh tin/tu choi cua
-twin trong repo nay.
+viet nhu the Chow hoac Sun et al. da chung minh toi uu cho quyet dinh
+tin/tu choi cua twin trong repo nay.

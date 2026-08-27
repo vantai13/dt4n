@@ -18,6 +18,10 @@ KHAC RONG. Ra lai bang nay o dau MOI lesson.
 | L113 | -- | (rong) | **CL-10**: "`M-202` KHONG phai xac nhan mu" | -- | DONG (da vao CLAIMS) |
 | **L114** | 30 phut | (rong) | "tag dong lesson duoc gan HOI TO ngay 2026-08-26, khong phai tai thoi diem dong" | 0 | HOAN |
 | L124 | 0 (phan xu tai dau 23.23) | (rong) -- `S-A5` khong co dinh nghia va cot quyet dinh rong | "`S-A5` mo coi da bi go khoi lich 23.23; `M-232` KHONG duoc cap" | -- | DONG |
+| L125 | 1 ngay | **CL-13** -- co che tu choi chua duoc do o cell nao co o thua | "M-230 BAT KHA THI tren cell hien tai: 500 block/o >> san 29; PHAI xac dinh truoc mot cell/che do co o duoi 29 block roi moi ky dai" | 0 | CHO |
+| L126 | 1 ngay | (rong) -- gia thuyet du duoi tang theo tuoi can mot `CL-*` truoc khi mo | "Doc lai output cho du duoi +3.71/+4.62/+4.69/+7.55% theo bin; chi la [MO TA]. Huong alpha {0.05,0.02,0.01} chua duoc phep chay" | 0 | CHO |
+| L127 | 1 ngay | (rong) -- khong phat bieu nao hien phu thuoc sensitivity fallback cua B7 | "B7 thoai hoa duoi F2 static; voi sticky/wait, L_fallback thap hon co the doi h_star" | 0 | CHO |
+| L128 | 1 ngay | **CL-01** -- metric `viol|accept` gop khong do gia tri conditional theo bin | "NC acceptance 0.36495 khac C3 0.39546, nen khong duoc so p95 truc tiep nhu cung diem van hanh; can cham `viol|accept` theo bin va matched acceptance" | 0 | CHO |
 | L115 | 4h | (rong) -- ca hai cach doc deu in trong artifact | "M-224 cham theo cach doc PHAN TANG; cach doc chat co 0 cap cung ho" | 0 | HOAN |
 | L116 | 1h may | (rong) -- khong phat bieu nao cua A070b ve `n*` | "khong co duong n* cho 4 cell W; A070b chi noi ve n=250 va n=500" | 0 | HOAN |
 | L117 | 30 phut | (rong) -- khong phat bieu khoa hoc nao phu thuoc | "lenh tai tao in trong doc dung `.venv/bin/python` khong ton tai; doc `L117` de biet trinh thong dich that" | 0 | HOAN |
