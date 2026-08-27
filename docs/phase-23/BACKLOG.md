@@ -50,6 +50,7 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | **L134b** | 1 ngay | (rong) | "chua ra soat artifact CU xem cai nao khai truc sai; R6 chi ap tu artifact moi tro di (`A071` N1 cam hoi to)" | 0 | HOAN |
 | **L135** | 1 lesson (tien dang ky dai cho `viol`) | **CL-13** -- gia cua pruning trong ho chung nhan dong thoi | "`viol\|accept` tang don dieu theo bac cat (0.1000 / 0.1074 / 0.1199) nhung KHONG dai nao duoc ky cho truc nay; moi so ve `viol` cua 23.24 la [MO TA] va khong duoc dem la `CL-*`" | 0 | HOAN |
 
+| **L136** | 2h (doc lai artifact co san, KHONG do moi) | **CL-06**, **CL-08** -- ca hai dung `viol\|accept` de chong do chu "bao dam BAO PHU" | "`CL-06`/`CL-08` trich `C3_viol_given_accept` (`recalibrate_transfer.py:572`), tuc dai luong SAU CHON LOC. Chu 'bao dam' phai gan vao `viol` BIEN. Hai phat bieu song sot ve so (khe luon duong: +0.0212/+0.0237/+0.0287) nhung PHAI doi chu hoac doi so" | 0 | HOAN |
 ## Canh bao nguong `A071` N3
 
 Khong dong nao dat >= 3 o lan ra lai nay. NHUNG: moi dong dang o muc 2 se

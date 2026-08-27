@@ -226,14 +226,65 @@ Tang DON DIEU theo bac thang cat. Co che ro: `alpha_each` noi -> `q_hat` hep
 ### Hai canh bao ve cach doc con so nay
 
 ```text
-(1) `alpha` la ngan sach mat-bao-phu CUA BANG CONFORMAL, cham TREN CALIB va
-    theo tung slot. `viol|accept` la mot dai luong CO DIEU KIEN tren viec
-    NHAN, cham tren TEST. Hai doi tuong KHAC NHAU. "viol|accept > alpha"
-    KHONG tu dong la mot bao dam bi pha.
-(2) `S0_K4` -- cau hinh KHONG cat gi -- da o 0.100037, tuc DA o dung bien
-    alpha TRUOC khi cat bat ky thu gi. Nen khong doc duoc thanh "viec cat
-    lam vo mot bao dam von dang giu".
+(1) ★ CANH BAO CHINH -- SUY LUAN SAU CHON LOC (post-selection inference).
+
+    Conformal bao dam:   P( s_new <= q_hat ) >= 1 - alpha        <- BIEN
+                         ky vong tren MOT DIEM TEST MOI, khong dieu kien gi.
+    `viol|accept` la:    P( s > q_hat | ACCEPT )                 <- CO DIEU KIEN
+                         tren mot bien co PHU THUOC DU LIEU.
+
+    Chon mot tap con dua tren chinh du lieu roi phat bieu tren tap con do
+    thi bao dam BIEN KHONG tu dong chuyen sang. Khong mot dinh ly nao cap
+    phep cho cach doc "viol|accept > alpha => mat bao dam".
+
+    Tham chieu: Barber, Candes, Ramdas, Tibshirani (2021) chung minh bao phu
+    CO DIEU KIEN chinh xac la BAT KHA THI khong phan phoi; Bates et al.
+    (2021) JACM; Jin & Candes (2023) JMLR.
+
+(2) canh bao PHU, yeu hon: `S0_K4` -- cau hinh KHONG cat gi -- da o 0.100037
+    truoc khi cat bat ky thu gi. Nhung `S0` o dung bien KHONG lam muc tang
+    +7.4% o `S1` thanh vo nghia. Giu ca hai canh bao; (1) moi la cai chan
+    duoc lap luan sai.
 ```
+
+### Dai luong DUNG: `viol` BIEN -- va bao dam KHONG VO
+
+Vi canh bao (1), dai luong dang doc la `viol` BIEN, khong dieu kien:
+
+| bac | `alpha_each` | `viol` BIEN | `viol\|accept` | khe sau chon loc | `viol` BIEN <= `alpha` |
+|---|---:|---:|---:|---:|:--:|
+| S0 K=4 | 0.033333 | 0.078852 | 0.100037 | +0.021185 | DAT |
+| S1 K=3 | 0.050000 | 0.083689 | 0.107425 | +0.023736 | DAT |
+| S2 K=2 | 0.100000 | 0.091227 | 0.119936 | +0.028709 | DAT |
+| NC K=3 | 0.050000 | 0.084411 | 0.078654 | -0.005757 | DAT |
+
+**Bao dam bao phu BIEN -- thu duy nhat conformal hua -- GIU o CA BON bac**
+(tat ca `<= alpha = 0.10`), ke ca `K = 2`. Khong co gi vo.
+
+Cai TANG len la `viol|accept`, mot dai luong sau chon loc khong duoc dinh ly
+nao chong do. Nen cau dung la:
+
+> Pruning KHONG pha bao dam. No lam **khe giua bao dam BIEN va trai nghiem
+> VAN HANH rong ra**: +0.0212 -> +0.0237 -> +0.0287 theo bac cat.
+
+### Co che cua khe -- va vi sao no MO RONG
+
+```text
+accept  <=>  m_hat_j >= kappa * q_hat_j  voi moi j    -> chon hang co BIEN
+                                                         TWIN LON
+bien twin lon  <=>  chi phi giua cac duong CACH XA nhau
+chi phi cach xa  <=>  thang chi phi LON o hang do
+thang lon  <=>  |e(a_j) - e(a_1)| cung lon theo ti le  ->  `s` lon hon
+                                                       ->  de vuot q_hat hon
+```
+
+Cong tin cay chon theo BIEN TUONG DOI, nhung vi pham duoc cham theo NGUONG
+TUYET DOI `q_hat`. Hai thang khong khop, va khe chinh la he qua. `NC_K3` doi
+dau vi `acceptance = 0.847` -- nhan gan het thi viec "chon" gan nhu khong
+chon gi.
+
+Goi y huong sua cho Phase 25: `q_hat` TUONG DOI (chuan hoa theo `y_hat_a1`
+hoac theo `m_hat`) thay vi tuyet doi. KHONG mo nhanh o day (`A071` R2).
 
 ### Cau doc duoc
 
@@ -243,9 +294,18 @@ Tang DON DIEU theo bac thang cat. Co che ro: `alpha_each` noi -> `q_hat` hep
 > ngan sach `alpha` (`99.41%`), khong o viec don khong gian hanh dong
 > (`0.36%`).
 
-**KY LUAT:** quan sat POST-HOC, khong dai nao duoc ky cho `viol`. Nhan
-`[MO TA]`, KHONG duoc dem la mot `CL-*` moi. Muon phat bieu trong paper thi
-phai tien dang ky o mot lesson sau. Ghi `L135`. (`A075` muc 7.)
+**KY LUAT:** TOAN BO muc 4b la quan sat POST-HOC, sinh sau khi nhin du lieu.
+Khong dai nao duoc ky cho `viol` trong `A074`. Nhan `[MO TA]`, KHONG duoc dem
+la mot `CL-*` moi. Muon phat bieu trong paper thi phai tien dang ky o mot
+lesson sau. Ghi `L135`. (`A075` muc 7.)
+
+He qua CAT NGANG: `CL-06` va `CL-08` dang gan chu "bao dam BAO PHU" vao
+`C3_viol_given_accept` (`cert/recalibrate_transfer.py:572`) -- dung dai luong
+ma canh bao (1) vua tuyen la khong doc duoc nhu bao dam. Hai phat bieu do
+SONG SOT ve so (khe do duoc luon DUONG o che do nhan-chon-loc, nen
+`viol|accept` la can TREN bao thu cua `viol` bien), nhung PHAI doi chu hoac
+doi so. Ghi `L136`; KHONG sua o day -- ngan sach 23.24 da het 4/4
+(`A071` R1, R2).
 
 ## 5. Quan sat GIAI TICH (khong ton gate) -- `A074` muc 7
 

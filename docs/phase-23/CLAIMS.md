@@ -36,6 +36,19 @@ CAM  "C3 tot hon B2 ve `err`"                  -- CL-07, bao toan o muc `viol`
 CAM  moi ngoai suy tu luoi `rho` tho           -- L111
 CAM  "B8b da bi chung minh vo bao dam"          -- CL-12, kich ban K3
 CAM  "M-230 da kiem duoc co che tu choi"        -- CL-13, dai bat kha thi
+CAM  doc `viol|accept` nhu mot bao dam co dinh ly  -- L135 canh bao (1)
+     Conformal bao dam BIEN: P(s <= q_hat) >= 1 - alpha, ky vong tren mot
+     diem test MOI, KHONG dieu kien gi. `viol|accept` dieu kien tren mot
+     bien co PHU THUOC DU LIEU (viec NHAN), nen khong bao dam bien nao
+     chuyen sang no -- day la suy luan SAU CHON LOC.
+     CANH BAO NOI BO: `CL-06` va `CL-08` HIEN DANG trich `viol|accept`
+     (`recalibrate_transfer.py:572`). Ca hai song sot ve SO -- khe do duoc
+     o Lesson 23.24 luon DUONG (+0.0212/+0.0237/+0.0287) nen `viol|accept`
+     la can TREN bao thu cua `viol` bien -- nhung CHU phai doi hoac SO phai
+     doi. Xem `L136`. Chua duoc sua: ngan sach 23.24 het 4/4 (`A071` R1).
+CAM  "bo mot hanh dong khong bao gio toi uu ma khong mat bao dam nao"
+                                                -- G23-300 FAIL, kich ban K2;
+                                                   L43 VAN MO
 ```
 
 ## Vi sao co ca `CL-08` va `CL-11`

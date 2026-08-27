@@ -340,23 +340,38 @@ def test_doc52_ladder_table_matches_artifact():
     doc = os.path.join(os.path.dirname(os.path.dirname(SRC)),
                        "docs", "phase-23", "52-action-pruning.md")
     with open(doc, "r", encoding="utf-8") as fh:
-        lines = [l for l in fh.read().splitlines() if l.startswith("| S0 K=4")
-                 or l.startswith("| **S1 K=3") or l.startswith("| S2 K=2")
-                 or l.startswith("| NC K=3")]
-    assert len(lines) == 4, "khong tim du 4 hang cua bang thang cat"
+        raw = [l for l in fh.read().splitlines()
+               if l.startswith(("| S0 K=4", "| **S1 K=3", "| S1 K=3",
+                                "| S2 K=2", "| NC K=3"))]
+    cells = [[c.strip().strip("*") for c in l.strip().strip("|").split("|")]
+             for l in raw]
+    keys = ("S0_K4", "S1_K3", "S2_K2", "NC_K3")
 
-    for line, key in zip(lines, ("S0_K4", "S1_K3", "S2_K2", "NC_K3")):
-        cells = [c.strip().strip("*") for c in line.strip().strip("|").split("|")]
-        acc, viol, err, anchor = (float(cells[5]), float(cells[6]),
-                                  float(cells[7]), float(cells[8]))
+    # bang THANG CAT (muc 2) -- 9 cot
+    ladder = [c for c in cells if len(c) == 9]
+    assert len(ladder) == 4, "khong tim du 4 hang cua bang thang cat"
+    for c, key in zip(ladder, keys):
         r = rungs[key]
-        assert acc == round(r["acceptance"], 6), key
-        assert viol == round(r["viol_given_accept"], 6), key
-        assert err == round(r["err_given_accept"], 6), key
-        assert anchor == round(r["err_anchor"], 6), key
-        assert int(cells[2]) == r["m"], key
-        assert int(cells[4]) == r["min_blocks"], key
-        assert float(cells[3]) == round(r["alpha_each"], 6), key
+        assert int(c[2]) == r["m"], key
+        assert float(c[3]) == round(r["alpha_each"], 6), key
+        assert int(c[4]) == r["min_blocks"], key
+        assert float(c[5]) == round(r["acceptance"], 6), key
+        assert float(c[6]) == round(r["viol_given_accept"], 6), key
+        assert float(c[7]) == round(r["err_given_accept"], 6), key
+        assert float(c[8]) == round(r["err_anchor"], 6), key
+
+    # bang VIOL BIEN (muc 4b) -- 6 cot. Day la bang chong do chu "bao dam",
+    # nen no PHAI duoc chan chat bang bang kia.
+    marg = [c for c in cells if len(c) == 6]
+    assert len(marg) == 4, "khong tim du 4 hang cua bang viol BIEN (muc 4b)"
+    alpha = 0.10
+    for c, key in zip(marg, keys):
+        r = rungs[key]
+        assert float(c[1]) == round(r["alpha_each"], 6), key
+        assert float(c[2]) == round(r["viol_marginal"], 6), key
+        assert float(c[3]) == round(r["viol_given_accept"], 6), key
+        assert float(c[4]) == round(r["post_selection_gap"], 6), key
+        assert c[5] == ("DAT" if r["viol_marginal"] <= alpha else "VUOT"), key
 
 
 def test_accept_matches_closed_path():

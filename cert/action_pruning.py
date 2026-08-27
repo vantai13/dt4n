@@ -321,7 +321,16 @@ def score_rung(base: Mapping[str, np.ndarray], prep: Mapping[str, Any],
         "kappa": float(kappa),
         "min_blocks": int(CM.conformal_min_blocks(a_each)),
         "acceptance": _m(tst, accept.astype(float)),
+        # `viol_marginal` la dai luong DUY NHAT co dinh ly chong do:
+        # conformal bao dam `P(s <= q_hat) >= 1 - alpha` lay ky vong tren mot
+        # diem test MOI, KHONG dieu kien gi. `viol_given_accept` la dai luong
+        # SAU CHON LOC (post-selection): no dieu kien tren mot bien co phu
+        # thuoc du lieu, nen khong bao dam bien nao chuyen sang no.
+        # Xem `L135` va `L136`.
+        "viol_marginal": _m(tst, viol.astype(float)),
         "viol_given_accept": _m(tst & accept, viol.astype(float)),
+        "post_selection_gap": (_m(tst & accept, viol.astype(float))
+                               - _m(tst, viol.astype(float))),
         "err_given_accept": _m(tst & accept, wrong.astype(float)),
         "err_anchor": _m(tst, wrong.astype(float)),
         "anchor_moved_rate_all": float(anchor_moved.mean()),
