@@ -151,12 +151,58 @@ H2  HIEN VAT CHUOI QUA NGAN
 
 | ID | Dai luong | Nguon | Dai khoa | Do | KQ |
 |---|---|---|---|---|---|
-| M-252 ★ | `sd` cua `r(uA,uB)` qua 15 run rieng le | [CO CHE] | H1: < 0.30 ; H2: > 0.45 | ___ | ___ |
-| M-253 ★ | so run trong 15 co `r(uA,uB) < 0` | [CO CHE] | H1: 0-1 ; H2: >= 3 | ___ | ___ |
-| M-254 ★ | `r(uA,uB)` tren `rho_offered_clean_*.csv` | [CO CHE] | H1: \|r\| < 0.15 ; H2: ~ +0.6 | ___ | ___ |
-| M-255 | `sd` cua `r(ac,ad)` qua 15 run (doi chieu NHANH) | [NGOAI SUY] | 0.05 - 0.25 | ___ | ___ |
-| M-256 ★ | `SNR_dec` trung vi khi BO 2 cap ngoai lai | [NGOAI SUY] | 0.28 - 0.42 | ___ | ___ |
-| M-257 ★ | quyet dinh `D` co DOI khi bo 2 cap ngoai lai? | [CO CHE] | KHONG doi (van `D3`) | ___ | ___ |
+| M-252 ★ | `sd` cua `r(uA,uB)` qua 15 run rieng le | [CO CHE] | H1: < 0.30 ; H2: > 0.45 | **0.2839** | **HIT (H1)** |
+| M-253 ★ | so run trong 15 co `r(uA,uB) < 0` | [CO CHE] | H1: 0-1 ; H2: >= 3 | **1 / 15** | **HIT (H1)** |
+| M-254 ★ | `r(uA,uB)` tren `rho_offered_clean_*.csv` | [CO CHE] | H1: \|r\| < 0.15 ; H2: ~ +0.6 | **+0.1725** | **MISS** (ngoai CA HAI dai) |
+| M-255 | `sd` cua `r(ac,ad)` qua 15 run (doi chieu NHANH) | [NGOAI SUY] | 0.05 - 0.25 | **0.1610** | **HIT** |
+| M-256 ★ | `SNR_dec` trung vi khi BO 2 cap ngoai lai | [NGOAI SUY] | 0.28 - 0.42 | **0.3041** | **HIT** |
+| M-257 ★ | quyet dinh `D` co DOI khi bo 2 cap ngoai lai? | [CO CHE] | KHONG doi (van `D3`) | **KHONG doi** | **HIT** |
+
+Do ngay 2026-08-27, `results/LIVE/phase-23/link_pair_stability.json` va
+`link_corr_matrix.json::T7_null_audit`. **5/6 HIT, `M-254` MISS.**
+
+So day du cua Test A / Test B:
+
+```text
+cap     r_do      sd qua run   run AM   khoang              r_offered
+uA-uB   +0.5986     0.2839      1/15    [-0.251, +0.862]     +0.1725
+vC-vD   +0.6376     0.1768      0/15    [+0.180, +0.837]     -0.1832
+ac-ad   +0.0358     0.1610      5/15    [-0.287, +0.261]     +0.0267   <- DOI CHIEU
+bc-bd   +0.0314     0.1363      6/15    [-0.251, +0.282]     -0.0070   <- DOI CHIEU
+```
+
+### 4b. ★ BA KICH BAN DA KY KHONG PHU KIN KHONG GIAN KET QUA
+
+Ket qua roi vao mot KHE HO:
+
+```text
+K1 doi (M-252 < 0.30) VA (M-254 |r| < 0.15) : 0.2839 DAT, 0.1725 HONG -> K1 KHONG dat
+K2 doi (M-252 > 0.45) HOAC (M-253 >= 3)     : 0.2839 va 1  -> K2 KHONG dat
+K3 doi  M-252 trong [0.30, 0.45]            : 0.2839       -> K3 KHONG dat
+```
+
+KHONG duoc chon dai gan nhat -- do la dien giai lai sau khi nhin so. Thay vao
+do ap XU LY BAO THU cua `K3`: bao cao CA HAI kich ban song song, va Lesson
+23.26 nhan RANG BUOC THIET KE `duration >= 15*tau_max = 415 s`.
+
+Ghi khe ho nay thanh `L145`: moi bo kich ban tuong lai PHAI phu kin khong
+gian ket qua, va co mot nhanh MAC DINH tuong minh.
+
+### 4c. Test B van MANG THONG TIN du `M-254` MISS
+
+```text
+uA-uB : do +0.5986  vs  offered +0.1725
+vC-vD : do +0.6376  vs  offered -0.1832   <- DOI DAU
+```
+
+Y DINH cua bo sinh tai KHONG chua tuong quan +0.6; no xuat hien tren duong
+DO. Nen gia thuyet "thiet ke bo sinh" (`|r_offered| > 0.40`) bi BAC BO cho ca
+hai cap. Dieu con lai la H1 (nghen endpoint) hoac H2 (chuoi ngan), va Test A
+nghieng manh ve H1 -- nhung day la doc THEO HUONG, khong phai mot dai da ky.
+
+Doi chieu quyet dinh: `ac-ad` va `bc-bd` CUNG chung host (`hA`, `hB`) nhung
+`r` chi ~ +0.03 va co 5-6/15 run AM. Nen "chung host" MOT MINH khong sinh ra
+`+0.6`; phai co them yeu to `tau` lon. Do la mot manh ghep cho `L142`.
 
 `M-252`/`M-253` la phep phan xu CHINH: neu `r(uA,uB)` on dinh qua 15 run DOC
 LAP thi do la mot HIEU UNG THAT; neu no vang loan va co ca gia tri am thi do

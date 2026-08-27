@@ -1,0 +1,309 @@
+{
+  "adjudication": {
+    "K1_met": false,
+    "K2_met": false,
+    "K3_met": false,
+    "fallback_if_gap": "xu ly nhu K3: bao cao CA HAI kich ban, va Lesson 23.26 phai keo dai run",
+    "overall": "GAP_IN_SIGNED_SCENARIOS",
+    "per_pair": {
+      "uA-uB": {
+        "n_runs_negative": 1,
+        "r_measured": 0.598605315743143,
+        "r_offered_abs": 0.17249393033259752,
+        "sd_across_runs": 0.2839440885576767,
+        "test_A": "H1",
+        "test_B": "UNCLEAR"
+      },
+      "vC-vD": {
+        "n_runs_negative": 0,
+        "r_measured": 0.6375736123317816,
+        "r_offered_abs": 0.18324189301342161,
+        "sd_across_runs": 0.17677068157706136,
+        "test_A": "H1",
+        "test_B": "UNCLEAR"
+      }
+    },
+    "scenario": "A078 muc 5 -- KHE HO",
+    "scenarios_partition_outcome_space": false,
+    "thresholds": {
+      "N_NEG_H2_MIN": 3,
+      "R_OFFERED_H1_MAX": 0.15,
+      "SD_H1_MAX": 0.3,
+      "SD_H2_MIN": 0.45
+    }
+  },
+  "cells_measured": [
+    "clean@0.700",
+    "clean@0.850",
+    "clean@0.900",
+    "clean@0.925",
+    "clean@0.960"
+  ],
+  "lesson": "23.25b",
+  "locked_constants": {
+    "N_NEG_H2_MIN": 3,
+    "R_OFFERED_DESIGN_MIN": 0.4,
+    "R_OFFERED_H1_MAX": 0.15,
+    "SD_H1_MAX": 0.3,
+    "SD_H2_MIN": 0.45
+  },
+  "n_files_measured": 15,
+  "n_files_offered": 15,
+  "prereg": "docs/phase-23/A078-amendment-78.md",
+  "provenance": {
+    "argv": {
+      "campaign": "results/RAW/phase-23/aoi_v7_campaign",
+      "out": "results/LIVE/phase-23/link_pair_stability.json"
+    },
+    "git_dirty": true,
+    "git_hash": "3fa8f00c5df305bce0f1ea36eb9068a5a7d1ff0c",
+    "script": "measurements/link_pair_stability.py",
+    "timestamp_utc": "2026-08-27T12:18:18.223548+00:00"
+  },
+  "schema": "dt4n.link.pair_stability.v1",
+  "status": "MEASUREMENT_ESTIMATE",
+  "tau_by_link_from_meta": {
+    "ac": 2.750236165619756,
+    "ad": 4.168665054187425,
+    "bc": 2.735799230367158,
+    "bd": 2.7646731008723524,
+    "uA": 20.031247662978537,
+    "uB": 27.349971784086808,
+    "vC": 20.031247662978537,
+    "vD": 27.670792567477857
+  },
+  "testA_measured_per_run": {
+    "ac-ad": {
+      "max_r": 0.2608304273073983,
+      "min_r": -0.28694553593741096,
+      "n_runs": 15,
+      "n_runs_negative": 5,
+      "r_per_run": [
+        0.0922,
+        0.0588,
+        -0.2869,
+        -0.2292,
+        0.0592,
+        -0.1273,
+        -0.072,
+        0.2256,
+        0.2608,
+        0.0048,
+        -0.0102,
+        0.0724,
+        0.2061,
+        0.0933,
+        0.1862
+      ],
+      "r_pooled_fisher": 0.03576009557641132,
+      "sd_r_across_runs": 0.160991194742449,
+      "se_of_pooled": 0.042361341631998915,
+      "t_like": 0.8445282669450905
+    },
+    "bc-bd": {
+      "max_r": 0.28213121931118096,
+      "min_r": -0.25083596219140253,
+      "n_runs": 15,
+      "n_runs_negative": 6,
+      "r_per_run": [
+        0.1891,
+        0.0296,
+        -0.0736,
+        0.1844,
+        0.084,
+        -0.2508,
+        -0.0916,
+        0.0133,
+        0.1,
+        -0.0325,
+        -0.0138,
+        -0.1223,
+        0.2821,
+        0.089,
+        0.0769
+      ],
+      "r_pooled_fisher": 0.031354887240395264,
+      "sd_r_across_runs": 0.13625257002936195,
+      "se_of_pooled": 0.03577792921653938,
+      "t_like": 0.8766624925426248
+    },
+    "uA-uB": {
+      "max_r": 0.8617083546062753,
+      "min_r": -0.25077239277347835,
+      "n_runs": 15,
+      "n_runs_negative": 1,
+      "r_per_run": [
+        0.2592,
+        0.6393,
+        0.3081,
+        0.7231,
+        0.6306,
+        -0.2508,
+        0.8617,
+        0.6956,
+        0.384,
+        0.8112,
+        0.4962,
+        0.7327,
+        0.61,
+        0.7089,
+        0.6945
+      ],
+      "r_pooled_fisher": 0.598605315743143,
+      "sd_r_across_runs": 0.2839440885576767,
+      "se_of_pooled": 0.09986963125069045,
+      "t_like": 6.918728145192168
+    },
+    "vC-vD": {
+      "max_r": 0.8369024684663876,
+      "min_r": 0.1800943461110983,
+      "n_runs": 15,
+      "n_runs_negative": 0,
+      "r_per_run": [
+        0.5503,
+        0.1801,
+        0.426,
+        0.834,
+        0.7123,
+        0.7722,
+        0.6595,
+        0.7069,
+        0.7045,
+        0.4123,
+        0.6579,
+        0.5088,
+        0.553,
+        0.6441,
+        0.8369
+      ],
+      "r_pooled_fisher": 0.6375736123317816,
+      "sd_r_across_runs": 0.17677068157706136,
+      "se_of_pooled": 0.07316234231723895,
+      "t_like": 10.30687022623744
+    }
+  },
+  "testB_offered_per_run": {
+    "ac-ad": {
+      "max_r": 0.30822113138113083,
+      "min_r": -0.2640651679379298,
+      "n_runs": 15,
+      "n_runs_negative": 7,
+      "r_per_run": [
+        0.0839,
+        0.0561,
+        -0.2641,
+        -0.2314,
+        0.0294,
+        -0.0809,
+        -0.0539,
+        0.3082,
+        0.2915,
+        0.1107,
+        -0.1792,
+        -0.0142,
+        0.2113,
+        -0.0838,
+        0.2035
+      ],
+      "r_pooled_fisher": 0.02665771197100549,
+      "sd_r_across_runs": 0.17955339552229785,
+      "se_of_pooled": 0.0473692719682208,
+      "t_like": 0.5628971731864427
+    },
+    "bc-bd": {
+      "max_r": 0.19805307917484416,
+      "min_r": -0.29013244751855705,
+      "n_runs": 15,
+      "n_runs_negative": 7,
+      "r_per_run": [
+        0.1904,
+        0.0139,
+        -0.0881,
+        0.1981,
+        0.1334,
+        -0.2901,
+        -0.1289,
+        -0.0869,
+        0.0115,
+        -0.0858,
+        -0.0377,
+        -0.2247,
+        0.1488,
+        0.0233,
+        0.1248
+      ],
+      "r_pooled_fisher": -0.006961079275480187,
+      "sd_r_across_runs": 0.14799095425773331,
+      "se_of_pooled": 0.03881127932740716,
+      "t_like": 0.17936001688652078
+    },
+    "uA-uB": {
+      "max_r": 0.710120029635687,
+      "min_r": -0.44130775716710174,
+      "n_runs": 15,
+      "n_runs_negative": 6,
+      "r_per_run": [
+        -0.2845,
+        0.0921,
+        0.3155,
+        0.1736,
+        0.0737,
+        -0.4413,
+        0.7101,
+        -0.0629,
+        0.4495,
+        0.6558,
+        -0.3855,
+        0.6051,
+        -0.0021,
+        0.4245,
+        -0.1272
+      ],
+      "r_pooled_fisher": 0.17249393033259752,
+      "sd_r_across_runs": 0.37313683713736,
+      "se_of_pooled": 0.10970876127722864,
+      "t_like": 1.5881679703229397
+    },
+    "vC-vD": {
+      "max_r": 0.3915330130025986,
+      "min_r": -0.5801805494939266,
+      "n_runs": 15,
+      "n_runs_negative": 10,
+      "r_per_run": [
+        -0.4671,
+        -0.33,
+        -0.1888,
+        0.3915,
+        0.0896,
+        0.345,
+        -0.1632,
+        -0.3944,
+        0.0431,
+        -0.5802,
+        -0.2973,
+        -0.5113,
+        -0.4723,
+        -0.193,
+        0.176
+      ],
+      "r_pooled_fisher": -0.18324189301342161,
+      "sd_r_across_runs": 0.3128819062096352,
+      "se_of_pooled": 0.08705504914453692,
+      "t_like": 2.128942230271924
+    }
+  },
+  "validity": {
+    "axis_role": "measures_axis",
+    "inputs_sha256": {
+      "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.700_rep1.csv": "602cff475aa799fd83616222b8d36ce61d4692125e5916d8d53b6f5de4e029ba",
+      "results/RAW/phase-23/aoi_v7_campaign/rho_offered_clean_rho0.700_rep1.csv": "638029b6eca2ee1dc1c9c4bc3e06d2e6b9181cafb7f6e1eeb50076e61e147e8d"
+    },
+    "instrument": {
+      "module": "measurements.link_pair_stability",
+      "source_path": "measurements/link_pair_stability.py",
+      "source_sha256": "f77bfa66630d6fe51ce20441190ce60a521db21b394e1dd200224743f827df60"
+    },
+    "note": "Artifact DO do on dinh cua tuong quan theo cap (vai tro MEASURES). Khong tieu thu truc AoI va khong tieu thu truc SLA -- no chi doc `rho` tho. Xem `A078` muc 8.",
+    "schema": "dt4n.validity.v1"
+  }
+}

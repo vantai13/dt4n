@@ -56,6 +56,10 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | **L139** | 3 tuan (chay lai run >= 5 phut) | **CL-14** -- do rong CI cua `omega_hat` | "CI95 cua `omega_hat` la CAN DUOI va `n_eff` la CAN TREN: block 29.8 s chi bang 1.08 lan `tau` cua link cham nhat (27.67 s), vi run chi dai 119.8 s" | 0 | HOAN |
 | **L140** | 4h | (rong) -- lam ket luan MANH hon, khong yeu di | "`omega_hat` do o `dt=0.2 s` la CAN TREN cua tuong quan o thang ms" | 0 | HOAN |
 | **L141** | 1 tuan (do `c_a`/`c_s` cua 23.8) | **CL-14** -- neu `mode` sai thi `SNR_dec` sai va `D3` co the doi | "`SNR_dec` dung `mode='poisson'` CO DINH; `c_a`/`c_s` cua chien dich 23.8 chua duoc do" | 0 | HOAN |
+| **L142** | 3 tuan (chay lai run >= 415 s) | **CL-14** -- do rong CI va DAU cua `omega_hat` | "`n_eff` thuc 32.5-44.9 chu khong phai 393; `\|omega\| <= 0.15` va DAU khong xac dinh duoc. Rang buoc CAU TRUC cua topology" | 0 | HOAN |
+| **L143** | 0 (da chan bang co trong artifact) | (rong) -- ve phuong phap | "KHONG bao cao CI percentile khi `block/tau < 3`; bootstrap lech VI TRI chu khong chi hep" | -- | DONG (`A078`) |
+| **L144** | 0 (da thanh quy tac) | (rong) -- ve quy trinh tien dang ky | "dai khoa phai dat SAU khi uoc luong `sd` tu thiet ke; `M-245` la du doan CONG SUAT THAP" | -- | DONG (da thanh quy tac) |
+| **L145** | 0 (da thanh quy tac) | (rong) -- ve quy trinh tien dang ky | "bo kich ban PHAI phu kin khong gian ket qua va co nhanh MAC DINH tuong minh; neu khong, ket qua roi vao khe ho va khong phan xu duoc" | -- | DONG (da thanh quy tac) |
 ## Canh bao nguong `A071` N3
 
 Khong dong nao dat >= 3 o lan ra lai nay. NHUNG: moi dong dang o muc 2 se

@@ -335,6 +335,223 @@
     "tau_system_s": 27.670792567477857,
     "z_median_s": 0.369
   },
+  "T7_null_audit": {
+    "ci_width_ratio_correct_over_bootstrap": 3.615546302772667,
+    "n_samples_per_run_median": 599,
+    "note": "Khoi MOI cua Lesson 23.25b. `T0`..`T6` KHONG doi (`NC-25b-2`). `sd_omega_hat_correct` THAY CHO `T4.sd_omega_hat_analytic`: bootstrap khoi tren chuoi 4.3*tau bi LECH VI TRI, xem `L143`.",
+    "null_homogeneity": {
+      "_mad_r": 0.04338713498256084,
+      "_median_r": 0.02023772089513709,
+      "_null_outliers": [
+        "vC-vD",
+        "uA-uB",
+        "bd-vC"
+      ],
+      "_pooled_sd_all_null": 0.21035166527820265,
+      "_spread_between_families": 0.6018363862175442,
+      "_verdict_null_set_heterogeneous": true,
+      "fast-fast": {
+        "max_r": 0.035760095576411306,
+        "mean_r": 0.016253077819918107,
+        "min_r": -0.010606126010763448,
+        "n_pairs": 6,
+        "sd_r": 0.01661039836962193
+      },
+      "slow-fast": {
+        "max_r": 0.26544457725962356,
+        "mean_r": 0.05270326032076207,
+        "min_r": -0.013895399356786832,
+        "n_pairs": 8,
+        "sd_r": 0.09730355443693854
+      },
+      "slow-slow": {
+        "max_r": 0.6375736123317818,
+        "mean_r": 0.6180894640374623,
+        "min_r": 0.5986053157431429,
+        "n_pairs": 2,
+        "sd_r": 0.027554746769115155
+      }
+    },
+    "omega_hat_outside_own_bootstrap_ci": true,
+    "omega_hat_stratified": {
+      "baseline_by_family": {
+        "fast-fast": 0.016253077819918107,
+        "slow-fast": 0.05270326032076207,
+        "slow-slow": 0.6180894640374623
+      },
+      "n_pairs_by_family": {
+        "fast-fast": 6,
+        "slow-fast": 8,
+        "slow-slow": 2
+      },
+      "note": "`omega` la TI LE PHUONG SAI, phai thuoc [0,1]. Gia tri ngoai khoang do la dau hieu NEN SAI, khong phai `omega < 0`.",
+      "omega_hat_stratified": -0.2216144833978201,
+      "outside_parameter_space": true
+    },
+    "omega_hat_weighted": {
+      "ci95_correct": [
+        -0.0658196303821787,
+        0.2299177620457707
+      ],
+      "n_eff_max": 44.85491942973651,
+      "n_eff_min": 32.471061239352736,
+      "n_pairs_fast_fast": 0,
+      "note": "MOI cap co cau truc chua it nhat mot link CHAM (do duoc: 0/12 cap la fast-fast), nen `n_eff` thuc la 32-45 chu khong phai so gop 393. Xem `L142`.",
+      "omega_hat_weighted": 0.082049065831796,
+      "per_pair": {
+        "ac-vC": {
+          "family": "slow-fast",
+          "n_eff": 44.85491942973651,
+          "sd_r": 0.15457054737283513,
+          "weight": 41.85491942973651
+        },
+        "ad-vD": {
+          "family": "slow-fast",
+          "n_eff": 32.471061239352736,
+          "sd_r": 0.1842052961378113,
+          "weight": 29.471061239352736
+        },
+        "bc-vC": {
+          "family": "slow-fast",
+          "n_eff": 44.85491942973651,
+          "sd_r": 0.15457054737283513,
+          "weight": 41.85491942973651
+        },
+        "bd-vD": {
+          "family": "slow-fast",
+          "n_eff": 32.471061239352736,
+          "sd_r": 0.1842052961378113,
+          "weight": 29.471061239352736
+        },
+        "uA-ac": {
+          "family": "slow-fast",
+          "n_eff": 44.85491942973651,
+          "sd_r": 0.15457054737283513,
+          "weight": 41.85491942973651
+        },
+        "uA-ad": {
+          "family": "slow-fast",
+          "n_eff": 44.85491942973651,
+          "sd_r": 0.15457054737283513,
+          "weight": 41.85491942973651
+        },
+        "uA-vC": {
+          "family": "slow-slow",
+          "n_eff": 44.85491942973651,
+          "sd_r": 0.15457054737283513,
+          "weight": 41.85491942973651
+        },
+        "uA-vD": {
+          "family": "slow-slow",
+          "n_eff": 32.471061239352736,
+          "sd_r": 0.1842052961378113,
+          "weight": 29.471061239352736
+        },
+        "uB-bc": {
+          "family": "slow-fast",
+          "n_eff": 32.85195345330409,
+          "sd_r": 0.18302635135907291,
+          "weight": 29.85195345330409
+        },
+        "uB-bd": {
+          "family": "slow-fast",
+          "n_eff": 32.85195345330409,
+          "sd_r": 0.18302635135907291,
+          "weight": 29.85195345330409
+        },
+        "uB-vC": {
+          "family": "slow-slow",
+          "n_eff": 32.85195345330409,
+          "sd_r": 0.18302635135907291,
+          "weight": 29.85195345330409
+        },
+        "uB-vD": {
+          "family": "slow-slow",
+          "n_eff": 32.471061239352736,
+          "sd_r": 0.1842052961378113,
+          "weight": 29.471061239352736
+        }
+      },
+      "sd_omega_hat_correct": 0.07544321235406873,
+      "sum_weight_k2": 175.69510239256633
+    },
+    "prereg": "docs/phase-23/A078-amendment-78.md",
+    "snr_sensitivity": {
+      "decision_full": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY",
+      "decision_unchanged": true,
+      "decision_without_outlier_pairs": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY",
+      "snr_by_cell_and_pair_scaled": {
+        "clean@0.700|m(P1,P2)": 0.45276566107390354,
+        "clean@0.700|m(P1,P3)": 0.0934206838847513,
+        "clean@0.700|m(P1,P4)": 0.12355069020241576,
+        "clean@0.700|m(P2,P3)": 0.3816311959396367,
+        "clean@0.700|m(P2,P4)": 0.41063577091841064,
+        "clean@0.700|m(P3,P4)": 0.10600072117695185,
+        "clean@0.850|m(P1,P2)": 0.3168173789184538,
+        "clean@0.850|m(P1,P3)": 0.12675236907542706,
+        "clean@0.850|m(P1,P4)": 0.18145327871323794,
+        "clean@0.850|m(P2,P3)": 0.19428546999481833,
+        "clean@0.850|m(P2,P4)": 0.2086316731675383,
+        "clean@0.850|m(P3,P4)": 0.0947501311819543,
+        "clean@0.900|m(P1,P2)": 0.5372711280500078,
+        "clean@0.900|m(P1,P3)": 0.11098753165822114,
+        "clean@0.900|m(P1,P4)": 0.23392963168477168,
+        "clean@0.900|m(P2,P3)": 0.49767895599711176,
+        "clean@0.900|m(P2,P4)": 0.39734181207933206,
+        "clean@0.900|m(P3,P4)": 0.14208618930264683,
+        "clean@0.925|m(P1,P2)": 0.4155311624728604,
+        "clean@0.925|m(P1,P3)": 0.17298829577611632,
+        "clean@0.925|m(P1,P4)": 0.29163192048966474,
+        "clean@0.925|m(P2,P3)": 0.44584062259793183,
+        "clean@0.925|m(P2,P4)": 0.21599432089032208,
+        "clean@0.925|m(P3,P4)": 0.2685178616292802,
+        "clean@0.960|m(P1,P2)": 0.8021743578865439,
+        "clean@0.960|m(P1,P3)": 0.31649372347360644,
+        "clean@0.960|m(P1,P4)": 0.6706801881712937,
+        "clean@0.960|m(P2,P3)": 0.5906927385573315,
+        "clean@0.960|m(P2,P4)": 0.33875416078578446,
+        "clean@0.960|m(P3,P4)": 0.561874533290951
+      },
+      "snr_median_full": 0.37516297884132777,
+      "snr_median_without_outlier_pairs": 0.3040628219816356
+    },
+    "var_margin_sensitivity": {
+      "dropped": [
+        "vC-vD",
+        "uA-uB"
+      ],
+      "m(P1,P2)": {
+        "ratio_full": 0.6940376165708041,
+        "ratio_without_dropped": 1.0128244227366952,
+        "share_explained_by_dropped": 0.9597711621414421
+      },
+      "m(P1,P3)": {
+        "ratio_full": 0.7067601340891196,
+        "ratio_without_dropped": 1.006062791960691,
+        "share_explained_by_dropped": 0.9797436080126875
+      },
+      "m(P1,P4)": {
+        "ratio_full": 0.6505632737652477,
+        "ratio_without_dropped": 1.0626229164568892,
+        "share_explained_by_dropped": 0.8480246304932315
+      },
+      "m(P2,P3)": {
+        "ratio_full": 0.5417347870374557,
+        "ratio_without_dropped": 0.9537944297290974,
+        "share_explained_by_dropped": 1.1121332095739347
+      },
+      "m(P2,P4)": {
+        "ratio_full": 0.7012534436006631,
+        "ratio_without_dropped": 1.0005561014722346,
+        "share_explained_by_dropped": 0.9981420095758948
+      },
+      "m(P3,P4)": {
+        "ratio_full": 0.6665570229918729,
+        "ratio_without_dropped": 0.9853438291577639,
+        "share_explained_by_dropped": 1.0459748350896596
+      }
+    }
+  },
   "csv_glob": "rho_measured_clean_*.csv",
   "lesson": "23.25",
   "locked_constants": {
@@ -359,9 +576,9 @@
       "out": "results/LIVE/phase-23/link_corr_matrix.json"
     },
     "git_dirty": true,
-    "git_hash": "0280d16aaaadf764a721c2276c643eca3959cfff",
+    "git_hash": "3fa8f00c5df305bce0f1ea36eb9068a5a7d1ff0c",
     "script": "measurements/link_corr_matrix.py",
-    "timestamp_utc": "2026-08-27T09:51:04.985716+00:00"
+    "timestamp_utc": "2026-08-27T12:02:31.297697+00:00"
   },
   "schema": "dt4n.link.corr_matrix.v1",
   "status": "MEASUREMENT_ESTIMATE",
@@ -385,7 +602,7 @@
     "instrument": {
       "module": "measurements.link_corr_matrix",
       "source_path": "measurements/link_corr_matrix.py",
-      "source_sha256": "d288fe987650f8a43d4ac9d1ddcdff3b2b1c46d9a37cc8eefc89316b7b08610e"
+      "source_sha256": "2dd60769f172b501e66157712ad7f8f6531492845f7fa30ecfdbe267e0dd2987"
     },
     "note": "Artifact DO cau truc tuong quan tai (vai tro MEASURES). Khong dung truc AoI. CO dung truc SLA qua `W_LOSS` = K06 cho phan T6.",
     "schema": "dt4n.validity.v1"

@@ -197,6 +197,36 @@ trong ma nguon truoc khi chay va co test cam bien thanh co dong lenh;
 `SNR_dec` tinh tu `rho` DO DUOC; va ca ba nhanh D1/D2/D3 deu dan toi mot doan
 viet duoc, nen khong nhanh nao la "that bai".
 
+## 6b. ★ DOI NHAN theo `A078` (Lesson 23.25b) -- doc TRUOC muc tren
+
+Ba muc duoi day cua doc nay DA BI SUA PHAM VI. Ban goc KHONG bi rut
+(`NT 49`); chi doi nhan.
+
+```text
+muc 3  "CI95 = [-0.0314, +0.0475]" va moi phat bieu ve DAU cua `omega_hat`
+       -> RUT. `n_eff` thuc theo cap la 32.5-44.9 (khong phai so gop 393) vi
+          MOI cap co `k>0` deu chua mot link BIEN. `sd` dung = 0.0754, CI95 =
+          +-0.1479 -- RONG GAP 3.8 LAN. Phat bieu dung: `|omega| <= 0.15`,
+          DAU khong xac dinh duoc. Xem `L142`.
+       -> Them: `omega_hat` nam NGOAI CI95 bootstrap cua chinh no (lech 3.70
+          sd) -- bootstrap LECH VI TRI. Xem `L143`.
+
+muc 5  `M-248` "phan du KHONG co cau truc" la AM TINH GIA: `goodness_of_fit`
+       CHI soi 12 cap CO CAU TRUC. Tap NULL 16 cap thi KHONG dong nhat --
+       fast-fast +0.0163, slow-fast +0.0527, slow-slow +0.6181. Xem `T7`.
+
+muc 5  `Var(m)_do/don_vi = 0.54-0.71` KHONG duoc dung lam "dinh luong `L46`":
+       85-111% cua no den tu DUNG HAI phan tu `r(uA,uB)`=+0.599 va
+       `r(vC,vD)`=+0.638, va co che cua chung (chung DIEM CUOI) NGUOC DAU voi
+       co che cua `omega` (chung DUONG). Bo hai so -> ti so ve 0.95-1.06.
+
+KHONG DOI: quyet dinh `D3` (da kiem do ben o `G23-314`: bo hai cap ngoai lai
+       thi `SNR_dec` 0.3752 -> 0.3041 va quyet dinh van la `D3`).
+KHONG DOI: ket luan DINH TINH "testbed la omega ~ 0".
+```
+
+Chi tiet: `58-close-23-25b.md`.
+
 ## 7. Ba lop rang buoc PHAI in kem moi so cua lesson nay
 
 ```text

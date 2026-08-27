@@ -60,6 +60,13 @@ SNR_FLAT = 0.25           # `A077` muc 9: nguong D1
 SNR_STRONG = 1.00         # `A077` muc 9: nguong D2
 Z_MEDIAN_S = 0.369        # trung vi AoI do duoc (Lesson 23.19/23.20)
 
+# --- Lesson 23.25b (`A078`). CHI THEM, khong doi hang so cu. --------------
+TIMESCALE_SLOW_S = 10.0   # `tau >=` nguong nay -> link CHAM.
+                          # Do duoc: loi 2.74-4.17 s ; bien 20.03-27.67 s.
+                          # Khe ho rong ~5 lan nen 10.0 nam giua va KHONG
+                          # nhay cam. HANG SO KHOA, khong phai co dong lenh.
+NULL_OUTLIER_MAD = 3.0    # cap NULL lech > 3 MAD -> ngoai lai
+
 LINKS = tuple(T7.LINK_NAMES)
 IDX = {l: i for i, l in enumerate(LINKS)}
 PATH_PAIRS = tuple(itertools.combinations(T7.PATH_NAMES, 2))
@@ -467,6 +474,201 @@ def wiring_checks() -> dict:
     }
 
 
+# ============ Lesson 23.25b -- T7: kiem toan NEN cua `omega_hat` ==========
+# `A078`. CHI THEM ham moi; `T0`..`T6` KHONG doi mot dong (`NC-25b-2`, `NT 49`).
+
+def pair_family(a: str, b: str, tau: dict) -> str:
+    """Phan loai cap theo THANG THOI GIAN.
+
+    VI SAO CAN: `tau` cua link BIEN (20-28 s) gap ~7 lan link LOI (2.7-4.2 s).
+    Hai qua trinh AR(1) cham hon cho `r` mau kem chinh xac hon NHIEU trong
+    cung mot do dai chuoi. Gop chung vao MOT `b_hat` la tron mot phan phoi
+    LUONG CUC roi bao cao trung binh cua no.
+    """
+    slow_a = float(tau[a]) >= TIMESCALE_SLOW_S
+    slow_b = float(tau[b]) >= TIMESCALE_SLOW_S
+    if slow_a and slow_b:
+        return "slow-slow"
+    if not slow_a and not slow_b:
+        return "fast-fast"
+    return "slow-fast"
+
+
+def neff_pair(a, b, tau, n_samples, n_runs, dt=DT_MEASURED_S) -> float:
+    """`n_eff` cua MOT cap, bi chi phoi boi link CHAM HON.
+
+    ★ Tren butterfly, MOI cap co cau truc deu chua it nhat mot link BIEN:
+    `k_lm > 0` doi hai link chung duong, ma moi link LOI thuoc DUNG MOT
+    duong nen hai link loi khong bao gio chung duong. Do duoc: 0/12 cap la
+    nhanh-nhanh. Nen `n_eff` thuc la 32-45, KHONG phai so gop 393 (`L142`).
+    """
+    tau_max = max(float(tau[a]), float(tau[b]))
+    return max(2.0, n_runs * n_samples * dt / (2.0 * tau_max))
+
+
+def null_homogeneity(R: np.ndarray, tau: dict) -> dict:
+    """★ Lo hong cua `M-248`: `goodness_of_fit` CHI soi 12 cap CO CAU TRUC.
+
+    Cau truc lon nhat trong du lieu nam o 16 cap NULL, va `b_hat` la mot VO
+    HUONG nen no hut het cau truc do roi nem di phuong sai.
+    """
+    groups = defaultdict(list)
+    for a, b in NULL_PAIRS:
+        groups[pair_family(a, b, tau)].append(float(R[IDX[a], IDX[b]]))
+
+    out: dict = {}
+    for fam, v in sorted(groups.items()):
+        arr = np.asarray(v, dtype=float)
+        out[fam] = {"n_pairs": int(arr.size), "mean_r": float(arr.mean()),
+                    "sd_r": float(arr.std(ddof=1)) if arr.size > 1 else None,
+                    "min_r": float(arr.min()), "max_r": float(arr.max())}
+
+    means = [c["mean_r"] for c in out.values()]
+    vals = np.array([R[IDX[a], IDX[b]] for a, b in NULL_PAIRS], dtype=float)
+    pooled_sd = float(vals.std(ddof=1))
+    spread = float(max(means) - min(means)) if len(means) > 1 else 0.0
+
+    med = float(np.median(vals))
+    mad = float(np.median(np.abs(vals - med)) * 1.4826)
+    outl = [(a, b) for a, b in NULL_PAIRS
+            if mad > 0 and abs(R[IDX[a], IDX[b]] - med) > NULL_OUTLIER_MAD * mad]
+    outl.sort(key=lambda p: -abs(R[IDX[p[0]], IDX[p[1]]]))
+
+    out["_spread_between_families"] = spread
+    out["_pooled_sd_all_null"] = pooled_sd
+    out["_median_r"] = med
+    out["_mad_r"] = mad
+    out["_null_outliers"] = ["%s-%s" % p for p in outl]
+    out["_verdict_null_set_heterogeneous"] = bool(
+        spread > 2.0 * pooled_sd / np.sqrt(len(NULL_PAIRS)))
+    return out
+
+
+def omega_hat_stratified(R: np.ndarray, tau: dict) -> dict:
+    """Nen RIENG cho tung ho thang do, thay vi mot `b_hat` duy nhat.
+
+    CANH BAO DIEN GIAI: neu ho `slow-slow` chi co 2 cap va ca hai la ngoai
+    lai thi nen cua ho do KHONG dang tin, va uoc luong se bi keo ra ngoai
+    `[0,1]`. Mot ket qua NGOAI KHONG GIAN THAM SO la bang chung NEN SAI,
+    khong phai bang chung `omega < 0`.
+    """
+    groups = defaultdict(list)
+    for a, b in NULL_PAIRS:
+        groups[pair_family(a, b, tau)].append(float(R[IDX[a], IDX[b]]))
+    base = {fam: float(np.mean(v)) for fam, v in groups.items()}
+
+    num = den = 0.0
+    for a, b in S_PAIRS:
+        k = K_PAIR[(a, b)]
+        num += (R[IDX[a], IDX[b]] - base.get(pair_family(a, b, tau), 0.0)) * k
+        den += k * k
+    w = float(num / den) if den > 0 else None
+    return {"baseline_by_family": base,
+            "n_pairs_by_family": {f: len(v) for f, v in groups.items()},
+            "omega_hat_stratified": w,
+            "outside_parameter_space": bool(w is not None
+                                            and not (0.0 <= w <= 1.0)),
+            "note": ("`omega` la TI LE PHUONG SAI, phai thuoc [0,1]. Gia tri "
+                     "ngoai khoang do la dau hieu NEN SAI, khong phai "
+                     "`omega < 0`.")}
+
+
+def omega_hat_weighted(R, tau, n_samples, n_runs) -> dict:
+    """★ Binh phuong toi thieu CO TRONG SO + `sd` DUNG.
+
+    Trong so `w = n_eff - 3 = 1/Var(z)` (Fisher z). Voi WLS toi uu,
+    `Var(w_hat) = 1 / sum(w * k^2)`.
+
+    So `sd` nay THAY CHO `T4.sd_omega_hat_analytic`: bootstrap khoi tren
+    chuoi chi dai `4.3*tau` bi LECH VI TRI chu khong chi hep -- do duoc,
+    `omega_hat` nam NGOAI CI95 cua chinh no (`L143`).
+    """
+    num = den = info = 0.0
+    per = {}
+    for a, b in S_PAIRS:
+        k = K_PAIR[(a, b)]
+        ne = neff_pair(a, b, tau, n_samples, n_runs)
+        wt = max(0.0, ne - 3.0)
+        num += wt * float(R[IDX[a], IDX[b]]) * k
+        den += wt * k * k
+        info += wt * k * k
+        per["%s-%s" % (a, b)] = {"n_eff": float(ne), "weight": float(wt),
+                                 "sd_r": float(1.0 / np.sqrt(max(ne - 3.0, 1.0))),
+                                 "family": pair_family(a, b, tau)}
+    w = float(num / den) if den > 0 else None
+    sd = float(1.0 / np.sqrt(info)) if info > 0 else None
+    return {"omega_hat_weighted": w,
+            "sd_omega_hat_correct": sd,
+            "ci95_correct": ([w - 1.96 * sd, w + 1.96 * sd]
+                             if (w is not None and sd) else None),
+            "sum_weight_k2": float(info),
+            "n_eff_min": min(v["n_eff"] for v in per.values()),
+            "n_eff_max": max(v["n_eff"] for v in per.values()),
+            "n_pairs_fast_fast": sum(1 for v in per.values()
+                                     if v["family"] == "fast-fast"),
+            "per_pair": per,
+            "note": ("MOI cap co cau truc chua it nhat mot link CHAM (do duoc: "
+                     "0/12 cap la fast-fast), nen `n_eff` thuc la 32-45 chu "
+                     "khong phai so gop 393. Xem `L142`.")}
+
+
+def snr_sensitivity(t6: dict, sens: dict) -> dict:
+    """`M-256`/`M-257` -- `SNR_dec` va quyet dinh `D` co ben vung khong?
+
+    `SNR = |E[m]| / sd(m)`. Bo hai cap ngoai lai lam `Var(m)` doi tu
+    `ratio_full` sang `ratio_without_dropped`, nen
+    `sd(m)` nhan `sqrt(without/full)` va `SNR` nhan `sqrt(full/without)`.
+    `E[m]` KHONG doi (no khong phu thuoc ma tran tuong quan).
+    """
+    scaled = {}
+    for key, v in t6["snr_by_cell_and_pair"].items():
+        pair = key.split("|", 1)[1]          # "m(P1,P3)"
+        s2 = sens.get(pair)
+        if s2 is None:
+            continue
+        f, w = s2["ratio_full"], s2["ratio_without_dropped"]
+        scaled[key] = float(v * np.sqrt(f / w)) if w > 0 else None
+    vals = [x for x in scaled.values() if x is not None and np.isfinite(x)]
+    med = float(np.median(vals)) if vals else None
+    if med is None:
+        dec = "UNDECIDED"
+    elif med <= SNR_FLAT:
+        dec = "D1_DO_NOT_OPEN_23_26_AS_MININET_CAMPAIGN"
+    elif med >= SNR_STRONG:
+        dec = "D2_OPEN_23_26_FULL"
+    else:
+        dec = "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY"
+    return {"snr_median_without_outlier_pairs": med,
+            "snr_median_full": t6["snr_median"],
+            "decision_without_outlier_pairs": dec,
+            "decision_full": t6["decision_for_lesson_23_26"],
+            "decision_unchanged": bool(dec == t6["decision_for_lesson_23_26"]),
+            "snr_by_cell_and_pair_scaled": scaled}
+
+
+def var_margin_sensitivity(R: np.ndarray, drop_pairs) -> dict:
+    """★ `Var(m)` co ben vung khi bo cac cap NULL ngoai lai khong?
+
+    Bai hoc `K4`: khong bao gio bao cao so GOP khi mot phan tu chi phoi.
+    """
+    R0 = R.copy()
+    for a, b in drop_pairs:
+        R0[IDX[a], IDX[b]] = R0[IDX[b], IDX[a]] = 0.0
+    out: dict = {"dropped": ["%s-%s" % (a, b) for a, b in drop_pairs]}
+    for pi, pj in PATH_PAIRS:
+        v = margin_vector(pi, pj)
+        base = float(v @ v)
+        full = float(v @ R @ v) / base
+        drop = float(v @ R0 @ v) / base
+        denom = (1.0 - full) + (drop - 1.0)
+        out["m(%s,%s)" % (pi, pj)] = {
+            "ratio_full": full,
+            "ratio_without_dropped": drop,
+            "share_explained_by_dropped": (float((1.0 - full) / denom)
+                                           if abs(denom) > 1e-12 else None)}
+    return out
+
+
 def _provenance(script: str, argv_extra: dict) -> dict:
     def git(*a):
         try:
@@ -575,6 +777,32 @@ def main() -> None:
                   "Khong dung truc AoI. CO dung truc SLA qua `W_LOSS` = K06 "
                   "cho phan T6."),
         ),
+    }
+
+    # ---- Lesson 23.25b (`A078`): khoi MOI, `T0`..`T6` KHONG doi -------
+    n_samp = int(np.median([X.shape[0] for X in mats]))
+    homo = null_homogeneity(R, tau_by_link)
+    wls = omega_hat_weighted(R, tau_by_link, n_samp, n_runs)
+    drop = [tuple(x.split("-")) for x in homo["_null_outliers"][:2]]
+    report["T7_null_audit"] = {
+        "prereg": "docs/phase-23/A078-amendment-78.md",
+        "n_samples_per_run_median": n_samp,
+        "null_homogeneity": homo,
+        "omega_hat_stratified": omega_hat_stratified(R, tau_by_link),
+        "omega_hat_weighted": wls,
+        "var_margin_sensitivity": var_margin_sensitivity(R, drop),
+        "snr_sensitivity": snr_sensitivity(
+            t6, var_margin_sensitivity(R, drop)),
+        "omega_hat_outside_own_bootstrap_ci": bool(
+            not (boot["omega_hat_ci95"][0] <= est["omega_hat"]
+                 <= boot["omega_hat_ci95"][1])),
+        "ci_width_ratio_correct_over_bootstrap": (
+            float(wls["sd_omega_hat_correct"] / boot["sd_omega_hat_empirical"])
+            if boot.get("sd_omega_hat_empirical") else None),
+        "note": ("Khoi MOI cua Lesson 23.25b. `T0`..`T6` KHONG doi "
+                 "(`NC-25b-2`). `sd_omega_hat_correct` THAY CHO "
+                 "`T4.sd_omega_hat_analytic`: bootstrap khoi tren chuoi "
+                 "4.3*tau bi LECH VI TRI, xem `L143`."),
     }
 
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
