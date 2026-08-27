@@ -340,6 +340,10 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-294 | 23.23 | ADJUDICATED | `M-229`: dai `>=4/5 bin` KHONG THE DAT khi chi co 4 bin. B8d toan cell: acceptance 0.388199, `viol|accept=0.076945`; lech C3 0.004776. MO TA; A073 muc 1 |
 | G23-295 | 23.23 | ADJUDICATED | `M-230` BAT KHA THI, khong phai MISS: 4/4 o co 500 block, san tu choi 29, nen C3 tu choi 0/4. `CL-13` chua duoc kiem; A073 muc 2, L125 |
 | G23-296 | 23.23 | PASS | `M-231` B7 da chay: Chow/Sun threshold `h*=0.618125 s`, acceptance 1.0, `err|accept=0.238841`; C3 acceptance 0.395462, `err|accept=0.083978` (ti so 2.844x). B7 khong co claim coverage; L127 |
+| G23-297 | 23.24 | NOT_RUN | - |
+| G23-298 | 23.24 | NOT_RUN | - |
+| G23-299 | 23.24 | NOT_RUN | - |
+| G23-300 | 23.24 | NOT_RUN | - |
 
 ## Va cham da phat hien
 
