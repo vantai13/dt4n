@@ -350,6 +350,11 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-304 | 23.24b | PASS | `M-239` `rho_csv(uA)/rho_gen(uA)` = **0.998** trong [0.85, 1.15] HIT. `M-241` `corr(rho_csv, rho_gen)` tren 80 cap (8 link x 10 cell) = **0.997219** >= 0.95 HIT. Dong thuan 8/8 link trong dai. Link bien 0.998-0.999, link loi 0.982-0.988 -- chenh lech nho, chua duoc dien giai (`L138` khong mo, `M-239` da HIT) |
 | G23-305 | 23.24b | PASS | `NC-24b-2`: sua `bridge/collector.py` KHONG lam doi mot artifact offline nao. `pytest test/ -q` = **1684 passed** (1 fail la `L121` da biet, khong lien quan), `git status --porcelain results/LIVE/` rong ngoai artifact moi cua chinh lesson nay. Co so: duong chung nhan offline dung `aoi_model_v7` + `sla_calib_v2`, KHONG goi `collector.py`. Ban sua doi DUNG `uA`/`uB`, sau link kia BIT khong doi |
 | G23-306 | 23.24b | PASS | `PC-24b-1` DOI CHUNG DUONG: cho kiem toan an mot CSV gia lap co uA/uB = 0 o 98% mau -> ket luan **`CSV_BROKEN`** va liet ke DUNG `['uA','uB']`; dong thuan sup ve <0.05 o link hong va giu ~1.0 o link lanh. Da chung minh nhac cu PHAN BIET duoc: cung ma do do tren CSV sach cho `CSV_CLEAN`. Mot kiem toan luon bao "sach" thi vo dung (`L101`) |
+| G23-307 | 23.25 | NOT_RUN | - |
+| G23-308 | 23.25 | NOT_RUN | - |
+| G23-309 | 23.25 | NOT_RUN | - |
+| G23-310 | 23.25 | NOT_RUN | - |
+| G23-311 | 23.25 | NOT_RUN | - |
 
 ## Va cham da phat hien
 
