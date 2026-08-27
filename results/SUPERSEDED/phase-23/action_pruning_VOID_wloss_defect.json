@@ -2,16 +2,16 @@
   "G23_297_dead_action": {
     "M_233_hit": true,
     "P_calib_a_star": {
-      "P1": 0.6340321489881913,
+      "P1": 0.6527357052249109,
       "P2": 0.0,
-      "P3": 0.35832276239600797,
-      "P4": 0.007645088615800783
+      "P3": 0.34069764184730633,
+      "P4": 0.006566652927782825
     },
     "P_calib_a_twin": {
-      "P1": 0.5961008247331923,
+      "P1": 0.6127135362686525,
       "P2": 0.0,
-      "P3": 0.3919143333906898,
-      "P4": 0.011984841876117952
+      "P3": 0.3769022685164807,
+      "P4": 0.010384195214866805
     },
     "cut_indices": [
       1
@@ -48,31 +48,31 @@
     },
     "ratio_by_zbin": {
       "z0": [
-        0.9092310061420567,
-        0.9386731618049174
+        0.911493574373902,
+        0.9346545808606312
       ],
       "z1": [
-        0.9107674101411921,
-        0.9390662322960588
+        0.9140249734562661,
+        0.9366783926256027
       ],
       "z2": [
-        0.9194585791584565,
-        0.9334094918588676
+        0.9201684938425825,
+        0.9334165500109588
       ],
       "z3": [
-        0.9055502633322862,
-        0.9278988421376633
+        0.9060121229350574,
+        0.9296242144440103
       ]
     },
-    "ratio_mean": 0.9230068733589373
+    "ratio_mean": 0.9232591128186264
   },
   "G23_298_rungs": {
     "NC_K3": {
-      "acceptance": 0.8466490693360176,
+      "acceptance": 0.8600531922344941,
       "alpha_each": 0.05,
-      "anchor_moved_rate_all": 0.3898998994492219,
-      "err_anchor": 0.05015239234976396,
-      "err_given_accept": 0.013718834797242997,
+      "anchor_moved_rate_all": 0.3747832655491023,
+      "err_anchor": 0.04486318709137738,
+      "err_given_accept": 0.012255506484924353,
       "kappa": 0.5,
       "m": 2,
       "min_blocks": 19,
@@ -81,64 +81,64 @@
       ],
       "qhat_by_zbin": {
         "z0": [
-          32.739232584185174,
-          34.35615769106775
+          21.528855249102094,
+          22.503022576115512
         ],
         "z1": [
-          41.1202316746666,
-          43.160463835885054
+          27.053475560901404,
+          28.2269675069754
         ],
         "z2": [
-          47.34646230281945,
-          50.080916115359216
+          31.084529554035498,
+          32.91242395375079
         ],
         "z3": [
-          52.17193775610869,
-          54.69972636227138
+          34.260898923923975,
+          35.866650276416635
         ]
       },
-      "viol_given_accept": 0.07865402252120227
+      "viol_given_accept": 0.07810064081383823
     },
     "S0_K4": {
-      "acceptance": 0.4263823877269625,
+      "acceptance": 0.4345853587273888,
       "alpha_each": 0.03333333333333333,
       "anchor_moved_rate_all": 0.0,
-      "err_anchor": 0.2445161768031427,
-      "err_given_accept": 0.09619735100581052,
+      "err_anchor": 0.23914692303535942,
+      "err_given_accept": 0.09350205607820926,
       "kappa": 0.5,
       "m": 3,
       "min_blocks": 29,
       "pruned": [],
       "qhat_by_zbin": {
         "z0": [
-          34.18735137436673,
-          35.28638628044965,
-          37.97076607998878
+          22.49363203096179,
+          23.15101408915396,
+          24.85716253049486
         ],
         "z1": [
-          42.48458719817194,
-          44.00603257058154,
-          47.56026851119046
+          27.95100164675185,
+          28.778123392653384,
+          31.016234385157233
         ],
         "z2": [
-          49.09791027650755,
-          51.07535628669615,
-          55.233802952739836
+          32.34959464811649,
+          33.2301404363036,
+          36.09486383365214
         ],
         "z3": [
-          54.27055248128053,
-          55.907105858774,
-          60.17289832779446
+          35.6904330793047,
+          36.54365128676737,
+          39.38184030449945
         ]
       },
-      "viol_given_accept": 0.10003660906215092
+      "viol_given_accept": 0.09977390047015809
     },
     "S1_K3": {
-      "acceptance": 0.4690962723410387,
+      "acceptance": 0.4740933005401273,
       "alpha_each": 0.05,
       "anchor_moved_rate_all": 0.0,
-      "err_anchor": 0.2445021683139983,
-      "err_given_accept": 0.10742045852068632,
+      "err_anchor": 0.23914091939715468,
+      "err_given_accept": 0.10379353575091915,
       "kappa": 0.5,
       "m": 2,
       "min_blocks": 19,
@@ -147,30 +147,30 @@
       ],
       "qhat_by_zbin": {
         "z0": [
-          31.084199887447483,
-          33.12238377853933
+          20.502801060552656,
+          21.638201369996764
         ],
         "z1": [
-          38.6935774533967,
-          41.324579204353654
+          25.54791353824841,
+          26.95584636221183
         ],
         "z2": [
-          45.143494822487014,
-          47.67422235807567
+          29.76707778377542,
+          31.017563042434162
         ],
         "z3": [
-          49.14471309061224,
-          51.876138793624165
+          32.33596504265245,
+          33.971863120376966
         ]
       },
-      "viol_given_accept": 0.10742472462308986
+      "viol_given_accept": 0.10773185649822924
     },
     "S2_K2": {
-      "acceptance": 0.5542478742117724,
+      "acceptance": 0.5586005119102176,
       "alpha_each": 0.1,
-      "anchor_moved_rate_all": 0.011808963526580923,
-      "err_anchor": 0.23562478862190486,
-      "err_given_accept": 0.12376334146940308,
+      "anchor_moved_rate_all": 0.009908003541788604,
+      "err_anchor": 0.23169040438505734,
+      "err_given_accept": 0.11954243706360096,
       "kappa": 0.5,
       "m": 1,
       "min_blocks": 9,
@@ -180,44 +180,44 @@
       ],
       "qhat_by_zbin": {
         "z0": [
-          26.487957416381676
+          17.40875584987225
         ],
         "z1": [
-          33.107043086607774
+          21.742708459498132
         ],
         "z2": [
-          38.290005221402936
+          25.16401601832743
         ],
         "z3": [
-          41.7790371747202
+          27.436090845243726
         ]
       },
-      "viol_given_accept": 0.11993601871777466
+      "viol_given_accept": 0.11829929316342506
     }
   },
   "G23_299_decompose": {
     "S1": {
       "M_235_hit": true,
-      "S0_acceptance": 0.4263823877269625,
+      "S0_acceptance": 0.4345853587273888,
       "branch_i_constraint_only": {
-        "acceptance": 0.42653447989481624,
+        "acceptance": 0.4342851768171512,
         "alpha_each": 0.03333333333333333,
-        "delta": 0.00015209216785372348
+        "delta": -0.000300181910237618
       },
       "branch_ii_budget_only": {
-        "acceptance": 0.468846120749174,
+        "acceptance": 0.47424539270798105,
         "alpha_each": 0.05,
-        "delta": 0.04246373302221146
+        "delta": 0.03966003398059226
       },
       "branch_iii_both": {
-        "acceptance": 0.4690962723410387,
+        "acceptance": 0.4740933005401273,
         "alpha_each": 0.05,
-        "delta": 0.04271388461407616
+        "delta": 0.039507941812738534
       },
-      "budget_share": 0.9941435532233877,
-      "constraint_share": 0.0035607196401800044,
-      "interaction_abs": 9.805942401097667e-05,
-      "interaction_share": 0.002295727136432392,
+      "budget_share": 1.0038496606220242,
+      "constraint_share": -0.007598014385574255,
+      "interaction_abs": 0.0001480897423838945,
+      "interaction_share": 0.0037483537635500407,
       "pruned": [
         "P2"
       ],
@@ -225,26 +225,26 @@
     },
     "S2": {
       "M_235_hit": true,
-      "S0_acceptance": 0.4263823877269625,
+      "S0_acceptance": 0.4345853587273888,
       "branch_i_constraint_only": {
-        "acceptance": 0.439084084955483,
+        "acceptance": 0.44670470305004834,
         "alpha_each": 0.03333333333333333,
-        "delta": 0.012701697228520492
+        "delta": 0.012119344322659542
       },
       "branch_ii_budget_only": {
-        "acceptance": 0.5415541818341916,
+        "acceptance": 0.5462750426758616,
         "alpha_each": 0.1,
-        "delta": 0.11517179410722905
+        "delta": 0.11168968394847278
       },
       "branch_iii_both": {
-        "acceptance": 0.5542478742117724,
+        "acceptance": 0.5586005119102176,
         "alpha_each": 0.1,
-        "delta": 0.12786548648480983
+        "delta": 0.12401515318282885
       },
-      "budget_share": 0.9007262027733437,
-      "constraint_share": 0.09933640091401387,
-      "interaction_abs": -8.004850939713481e-06,
-      "interaction_share": -6.260368735752976e-05,
+      "budget_share": 0.9006131999354523,
+      "constraint_share": 0.09772470550266261,
+      "interaction_abs": 0.0002061249116965258,
+      "interaction_share": 0.0016620945618850864,
       "pruned": [
         "P2",
         "P4"
@@ -254,19 +254,19 @@
   },
   "G23_300_negative_control": {
     "P_calib_a_twin": {
-      "P1": 0.5961008247331923,
+      "P1": 0.6127135362686525,
       "P2": 0.0,
-      "P3": 0.3919143333906898,
-      "P4": 0.011984841876117952
+      "P3": 0.3769022685164807,
+      "P4": 0.010384195214866805
     },
     "anchor_moved_dead": 0.0,
-    "anchor_moved_live": 0.3898998994492219,
+    "anchor_moved_live": 0.3747832655491023,
     "dead_arm": {
-      "acceptance": 0.4690962723410387,
+      "acceptance": 0.4740933005401273,
       "alpha_each": 0.05,
       "anchor_moved_rate_all": 0.0,
-      "err_anchor": 0.2445021683139983,
-      "err_given_accept": 0.10742045852068632,
+      "err_anchor": 0.23914091939715468,
+      "err_given_accept": 0.10379353575091915,
       "kappa": 0.5,
       "m": 2,
       "min_blocks": 19,
@@ -275,36 +275,36 @@
       ],
       "qhat_by_zbin": {
         "z0": [
-          31.084199887447483,
-          33.12238377853933
+          20.502801060552656,
+          21.638201369996764
         ],
         "z1": [
-          38.6935774533967,
-          41.324579204353654
+          25.54791353824841,
+          26.95584636221183
         ],
         "z2": [
-          45.143494822487014,
-          47.67422235807567
+          29.76707778377542,
+          31.017563042434162
         ],
         "z3": [
-          49.14471309061224,
-          51.876138793624165
+          32.33596504265245,
+          33.971863120376966
         ]
       },
-      "viol_given_accept": 0.10742472462308986
+      "viol_given_accept": 0.10773185649822924
     },
-    "delta_acceptance_reported_not_scored": 0.3775527969949789,
-    "delta_err_given_accept": -0.09370162372344333,
+    "delta_acceptance_reported_not_scored": 0.38595989169436673,
+    "delta_err_given_accept": -0.0915380292659948,
     "interpretable": true,
     "leg_i_status": "DA BO -- `A074b` muc 4 (nhieu mo neo)",
     "leg_ii_hit": false,
     "leg_iii_guard_pass": true,
     "live_arm": {
-      "acceptance": 0.8466490693360176,
+      "acceptance": 0.8600531922344941,
       "alpha_each": 0.05,
-      "anchor_moved_rate_all": 0.3898998994492219,
-      "err_anchor": 0.05015239234976396,
-      "err_given_accept": 0.013718834797242997,
+      "anchor_moved_rate_all": 0.3747832655491023,
+      "err_anchor": 0.04486318709137738,
+      "err_given_accept": 0.012255506484924353,
       "kappa": 0.5,
       "m": 2,
       "min_blocks": 19,
@@ -313,25 +313,33 @@
       ],
       "qhat_by_zbin": {
         "z0": [
-          32.739232584185174,
-          34.35615769106775
+          21.528855249102094,
+          22.503022576115512
         ],
         "z1": [
-          41.1202316746666,
-          43.160463835885054
+          27.053475560901404,
+          28.2269675069754
         ],
         "z2": [
-          47.34646230281945,
-          50.080916115359216
+          31.084529554035498,
+          32.91242395375079
         ],
         "z3": [
-          52.17193775610869,
-          54.69972636227138
+          34.260898923923975,
+          35.866650276416635
         ]
       },
-      "viol_given_accept": 0.07865402252120227
+      "viol_given_accept": 0.07810064081383823
     },
     "note": "neu `leg_iii_guard_pass` FALSE thi ve (ii) KHONG dien giai duoc: ta khong con biet minh dang cat mot duong 'song' hay khong."
+  },
+  "VOID": {
+    "amendment": "docs/phase-23/A075-amendment-75.md",
+    "false_declaration": "khoi `validity` cua chinh file nay khai `sla_axis = exogenous_g114_S-B` va `w_loss = 5000.0` trong khi du lieu dung nguon khac. Xem `A075` muc 4 (R6).",
+    "note": "Gate G23-297..300 GIU NGUYEN ID va DAI. Day la lan thi hanh THU NHAT, bi VOID; lan thi hanh THU HAI la ban song. Khong phai 4 gate moi.",
+    "reason": "chay voi w_loss = 3222.244681647411 (sla_calibration.json, self_calibrated, DEPRECATED, S14) thay vi 5000.0 cua truc SLA ngoai sinh da duyet. `action_pruning.py` khong truyen `calibration_path` va `w_loss_override` nen roi ve mac dinh cua `cell_matrices.cell_matrices()`.",
+    "status": "VOID -- KHONG duoc trich dan",
+    "superseded_by": "results/LIVE/phase-23/action_pruning.json"
   },
   "amendment": "docs/phase-23/A074-amendment-74.md",
   "amendment_revision": "docs/phase-23/A074b-amendment-74b.md",
@@ -345,9 +353,6 @@
     "n_paths": 4,
     "n_rows": 999495,
     "post_variant": "selective",
-    "sla_calibration_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
-    "w_loss_source": "override",
-    "w_loss_used": 5000.0,
     "z_edges": [
       0.1,
       0.241,
@@ -356,7 +361,7 @@
       0.641
     ]
   },
-  "generated_utc": "2026-08-27T04:20:32.000844+00:00",
+  "generated_utc": "2026-08-27T02:26:05.566190+00:00",
   "ladder_analytics": {
     "NC_K3": {
       "alpha_each": 0.05,
@@ -391,7 +396,7 @@
     }
   },
   "provenance": {
-    "git_head": "744412c67aaf3895a43077d46ef86d9d4e68ba63",
+    "git_head": "51ed3d766cbcc7b03b1b0ae17f7c68a58b4415cb",
     "inputs": [
       {
         "path": "docs/phase-23/A074-amendment-74.md",

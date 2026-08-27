@@ -6,6 +6,7 @@ Khong test nao o day CHAM DIEM. Chung ep ma nguon khop voi tien dang ky.
 from __future__ import annotations
 
 import ast
+import json
 import os
 
 import numpy as np
@@ -16,8 +17,9 @@ from cert import cell_matrices as CMX
 from cert import config_matrix as CM
 from cert import simultaneous_score as SS
 from cert.build_calib_set_v2 import Z_EDGES_PRIMARY, assign_bin
-from cert.build_calib_set_v3 import AXIS_MEASURED, Z_EDGES_V7
+from cert.build_calib_set_v3 import AXIS_MEASURED, Z_EDGES_V7, _load_cell
 from cert.cell_matrices import DEAD_ACTION_THRESHOLD, LADDER
+from cert.taxonomy_audit import SLA_MANIFEST, W_LOSS
 from cert.transfer_matrix import KAPPA_OP
 
 SRC = os.path.join(os.path.dirname(os.path.abspath(AP.__file__)), "action_pruning.py")
@@ -259,6 +261,69 @@ def test_kappa_and_family_match_live_config():
 # ---------------------------------------------------------------------------
 # Cai chan quan trong nhat: `q_hat` cua module khop DUONG DA DONG
 # ---------------------------------------------------------------------------
+
+def test_action_pruning_uses_live_sla_axis():
+    """Chan `L132`. `cell_matrices` mac dinh ve truc SLA DEPRECATED.
+
+    `cell_matrices()` co `calibration_path = SLA_CALIB` (self_calibrated,
+    `S14`) va `w_loss_override = None`. Khong truyen tuong minh thi Lesson
+    23.24 chay voi `w_loss = 3222.244682` thay vi `5000.0`, va vi chi phi la
+    `delay + w_loss * loss` thi ca thang `q_hat` co lai 0.6445 lan.
+    """
+    body = _body_src("build_base")
+    assert "calibration_path=SLA_MANIFEST" in body
+    assert "w_loss_override=resolve_w_loss()" in body
+
+    # hai nguon PHAI lech nhau -- neu khong, test nay tam thuong
+    dep = float(_load_cell(AP.MODE, AP.RHO_BAR,
+                           calibration_path=CMX.SLA_CALIB)["w_loss"])
+    live = float(_load_cell(AP.MODE, AP.RHO_BAR,
+                            calibration_path=SLA_MANIFEST)["w_loss"])
+    assert dep != live, "hai truc SLA trung nhau -> cai chan nay khong phan biet"
+    assert live == 5000.0 == float(W_LOSS)
+    assert AP.resolve_w_loss() == live
+
+    # va ban build LIVE ma chuoi chung nhan dung cung khai dung so do
+    with open("results/LIVE/phase-21R/"
+              "calib_set_poisson_0.925_U3_measured_v7_report.json",
+              "r", encoding="utf-8") as fh:
+        assert float(json.load(fh)["w_loss"]) == 5000.0
+
+
+def test_validity_reads_wloss_from_data_not_from_argument():
+    """Chan `L134` / `A075` R6. `validity` phai DOC, khong duoc NHAN.
+
+    `config.w_loss_used` di qua `resolve_w_loss()` (doc tu manifest bang
+    `_load_cell`), con `validity.w_loss` di qua tham so `W_LOSS`. Hai duong
+    DOC LAP phai chi ve cung mot so; do la thu duy nhat bat duoc lech truc.
+    """
+    if not os.path.exists(AP.OUTPUT):
+        pytest.skip("chua chay `python -m cert.action_pruning --run`")
+    with open(AP.OUTPUT, "r", encoding="utf-8") as fh:
+        art = json.load(fh)
+    assert art["config"]["w_loss_used"] == art["validity"]["w_loss"] == 5000.0
+    assert art["config"]["w_loss_source"] == "override"
+    assert art["config"]["sla_calibration_path"] == SLA_MANIFEST
+    assert art["validity"]["sla_axis"]["source_path"] == SLA_MANIFEST
+
+
+def test_void_artifact_is_demoted_and_labelled():
+    """`A075` muc 2: ban chay dau tien phai nam o SUPERSEDED va mang nhan VOID.
+
+    Khong dua vao ten file: doc khoi `VOID` ben trong.
+    """
+    void = ("results/SUPERSEDED/phase-23/"
+            "action_pruning_VOID_wloss_defect.json")
+    assert os.path.exists(void), "ban VOID phai duoc giu lai de truy vet"
+    assert not os.path.exists("results/PENDING/phase-23/action_pruning.json")
+    with open(void, "r", encoding="utf-8") as fh:
+        d = json.load(fh)
+    assert d["VOID"]["status"].startswith("VOID")
+    assert d["config"]["w_loss_used"] if "w_loss_used" in d["config"] else True
+    # ban VOID that su chay tren truc sai -- neu khong thi no khong phai VOID
+    assert d["validity"]["w_loss"] == 5000.0          # LOI KHAI
+    assert "3222.244681647411" in d["VOID"]["reason"]  # so THAT
+
 
 def test_accept_matches_closed_path():
     """`qhat_by_zbin` + nguong `kappa` phai khop BIT voi `fit_and_accept`.

@@ -41,7 +41,7 @@ from cert import cell_matrices as CMX
 from cert import config_matrix as CM
 from cert import simultaneous_score as SS
 from cert.build_calib_set_v2 import assign_bin, split_by_block
-from cert.build_calib_set_v3 import AOI_V7, AXIS_MEASURED, Z_EDGES_V7
+from cert.build_calib_set_v3 import AOI_V7, AXIS_MEASURED, Z_EDGES_V7, _load_cell
 from cert.cell_matrices import (
     ALPHA_FAMILY,
     DEAD_ACTION_THRESHOLD,
@@ -128,11 +128,43 @@ def ladder_analytics() -> Dict[str, Any]:
 # 2. Dung du lieu -- truc DO, tu bin (KHONG dung `cell_matrices.prepare`)
 # ---------------------------------------------------------------------------
 
+def resolve_w_loss() -> float:
+    """DOC `w_loss` tu manifest SLA, KHONG nhan lam loi khai (`A075` R6).
+
+    `L132`: ban dau tien cua module nay khong truyen `calibration_path` va
+    `w_loss_override`, nen `cell_matrices` roi ve mac dinh `SLA_CALIB`
+    (`sla_calibration.json`, self_calibrated, DEPRECATED, `S14`) voi
+    `w_loss = 3222.244682` thay vi `5000.0`. Chi phi la
+    `delay + w_loss * loss` (`decision_error_v2.py:204`), nen ca thang chi phi
+    -- va do do `s`, `q_hat`, `m_hat` -- bi co lai 1/1.5517 = 0.6445 lan.
+
+    Ham nay doc so tu CHINH file manifest bang `_load_cell`, tuc cung nguon
+    ma `cell_matrices` dung. `W_LOSS` (hang so cua `taxonomy_audit`) duoc
+    dung lam DUONG DOI CHIEU DOC LAP: hai duong phai chi ve cung mot so,
+    neu khong thi nem. Mot khoi `validity` chi chep lai loi khai thi khong
+    the phat hien lech (`L134`).
+    """
+    from_manifest = float(_load_cell(MODE, RHO_BAR,
+                                     calibration_path=SLA_MANIFEST)["w_loss"])
+    if from_manifest != float(W_LOSS):
+        raise ValueError(
+            "w_loss doc tu %s la %r nhung hang so W_LOSS la %r -- hai nguon "
+            "lech nhau, khong duoc doan xem cai nao dung"
+            % (SLA_MANIFEST, from_manifest, float(W_LOSS))
+        )
+    return from_manifest
+
+
 def build_base() -> Dict[str, np.ndarray]:
-    """Ma tran `(n, 4)` day du tren truc DO."""
+    """Ma tran `(n, 4)` day du tren truc DO va truc SLA NGOAI SINH.
+
+    CA HAI tham so duoi day phai TUONG MINH. Mac dinh cua `cell_matrices` la
+    truc SLA self_calibrated da DEPRECATED -- xem `L132` / `A075`.
+    """
     tt = TruthTable(TRUTH_TABLE)
     return CMX.cell_matrices(
-        tt, mode=MODE, rho_bar=RHO_BAR, axis=AXIS, aoi_profile=AOI_PROFILE
+        tt, mode=MODE, rho_bar=RHO_BAR, axis=AXIS, aoi_profile=AOI_PROFILE,
+        calibration_path=SLA_MANIFEST, w_loss_override=resolve_w_loss(),
     )
 
 
@@ -462,6 +494,11 @@ def main() -> None:
             "aoi_profile": AOI_PROFILE,
             "z_edges": [float(x) for x in Z_EDGES_V7],
             "n_rows": int(len(base["z_s"])),
+            # `A075` R6 -- doc tu nguon, khong khai. Test doi so nay khop
+            # `validity.w_loss`, tuc hai duong doc lap cung chi mot so.
+            "w_loss_used": resolve_w_loss(),
+            "w_loss_source": "override",
+            "sla_calibration_path": SLA_MANIFEST,
         },
         "ladder_analytics": ladder_analytics(),
         "provenance": {

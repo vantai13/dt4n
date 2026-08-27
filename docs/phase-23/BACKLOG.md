@@ -43,7 +43,12 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | L128 | 1 ngay | **CL-01** -- metric `viol\|accept` gop khong do gia tri conditional theo bin | "NC acceptance 0.36495 khac C3 0.39546, nen khong duoc so p95 truc tiep nhu cung diem van hanh; can cham `viol\|accept` theo bin va matched acceptance" | 1 | HOAN |
 | **L129** | 0 (dinh nghia o `A074` muc 2) | (rong) -- ve quan tri, khong ve ket qua | "`A071` N3 dat nguong 3 lan bo qua nhung KHONG dinh nghia 'bo qua'; bo dem dung o 0 suot Lesson 23.23. Dinh nghia duoc khoa o `A074` muc 2 va luot 23.23 duoc dem bu" | -- | DONG (da thanh quy tac) |
 | **L130** | 2h + ra soat nguoi goi | (rong) -- khong phat bieu nao phu thuoc | "`cell_matrices.prepare()` chi chay tren truc LEGACY; tren truc DO no NEM ValueError. Moi nguoi goi tren truc do phai tu bin bang `Z_EDGES_V7`" | 0 | HOAN |
-| **L131** | 1 ngay (thiet ke lai doi chung) | (rong) -- `G23-300` da FAIL theo dai da ky; muc nay chi ghi chan doan | "`err\|accept` KHONG so sanh duoc giua hai KHONG GIAN HANH DONG khac nhau: cat P3 lam `err_anchor` sup 0.239141 -> 0.044863 vi tap nhan doi. Doi chung am cho pruning phai GHEP TAP NHAN" | 0 | HOAN |
+| **L131** | 1 ngay (thiet ke lai doi chung) | (rong) -- `G23-300` da FAIL theo dai da ky; muc nay chi ghi chan doan | "`err\|accept` KHONG so sanh duoc giua hai KHONG GIAN HANH DONG khac nhau: cat P3 lam `err_anchor` sup 0.244502 -> 0.050152 vi tap nhan doi. Doi chung am cho pruning phai GHEP TAP NHAN" | 0 | HOAN |
+| **L132** | 0 (da sua trong `A075`) | (rong) -- bon phan quyet gate khong doi | "`cell_matrices` mac dinh ve truc SLA DEPRECATED (`w_loss` 3222.24 thay vi 5000); moi nguoi goi PHAI truyen `calibration_path` va `w_loss_override` tuong minh" | -- | DONG (`A075`; chan boi test) |
+| **L133** | 3 tuan (them nhanh rho-shift o tang day) | (rong) -- pham vi da tuyen, khong phai no | "ket luan pruning cua 23.24 do tren ho so AoI DONG NHAT `U0`; chuoi chung nhan chinh chay tren `U3`. CHUA kiem tren `U3`" | 0 | HOAN |
+| **L134** | 0 (quy tac R6 da khoa) | (rong) -- ve quan tri, khong ve ket qua | "`validity_block` nhan loi khai lam tham so nen khong the phat hien lech truc; moi artifact MOI phai in hai duong doc lap cho `w_loss` va co test doi chung" | -- | DONG (da thanh quy tac R6) |
+| **L134b** | 1 ngay | (rong) | "chua ra soat artifact CU xem cai nao khai truc sai; R6 chi ap tu artifact moi tro di (`A071` N1 cam hoi to)" | 0 | HOAN |
+| **L135** | 1 lesson (tien dang ky dai cho `viol`) | **CL-13** -- gia cua pruning trong ho chung nhan dong thoi | "`viol\|accept` tang don dieu theo bac cat (0.1000 / 0.1074 / 0.1199) nhung KHONG dai nao duoc ky cho truc nay; moi so ve `viol` cua 23.24 la [MO TA] va khong duoc dem la `CL-*`" | 0 | HOAN |
 
 ## Canh bao nguong `A071` N3
 
