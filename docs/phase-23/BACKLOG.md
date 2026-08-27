@@ -68,6 +68,11 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | **L151** | 0 (equivalence da may kiem) | (rong) -- dien giai artifact | "M3 la M1 bo hai cap, khong dung t dummy lam bang chung host" | -- | DONG (`G23-322`) |
 | **L152** | cua so 1.0 s trong 23.26 | **CL-14** -- D3/D2 | "Core/margin nugget fit invalid; SNR corrected UNDECIDED, D3 measured dang treo" | 0 | HOAN (R4) |
 | **L153** | 0 (may kiem da them) | (rong) -- quan tri scenario | "Nhanh default phai tu kiem admissibility va tu to cao neu omega ngoai [0,1]" | -- | DONG (`G23-326`) |
+| **L154** | 0 (T5b da them) | **CL-14** -- covariance margin dung don vi | "T5 cu chi la correlation geometry; trich paper phai dung T5b 0.8803--0.9577 va moc 1.3892/1.7191" | -- | DONG (`G23-328`) |
+| **L155** | split-half + tx_packets o 23.26 | **CL-14** -- attenuation/SNR | "Residual lag-0 cross-correlated: uA-uB/vC-vD vuot tran 1.380x/1.927x; noise khong doc lap" | 0 | HOAN (R4) |
+| **L156** | sua generator/process map o 23.26 | **CL-14** -- co che host | "M-273 dose-response MISS (+0.657/+0.600); khong noi nhan qua host load" | 0 | HOAN (R2/R6) |
+| **L157** | logger 0.1 s + tx_packets va ha tai neu R7 fire | **CL-14** -- censoring | "M-274 MISS 0.6992 nhung p(>0.99)=0.474--0.504; TX counter co tran" | 0 | HOAN (R4/R7) |
+| **L158** | do lai sau R1--R7 | **CL-14** -- D1/D2/D3 | "D3 measured chi pilot; corrected UNDECIDED, khong co can duoi vo dieu kien" | 0 | HOAN (23.26) |
 ## Canh bao nguong `A071` N3
 
 Khong dong nao dat >= 3 o lan ra lai nay. NHUNG: moi dong dang o muc 2 se
