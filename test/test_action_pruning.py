@@ -325,6 +325,40 @@ def test_void_artifact_is_demoted_and_labelled():
     assert "3222.244681647411" in d["VOID"]["reason"]  # so THAT
 
 
+def test_doc52_ladder_table_matches_artifact():
+    """Bang thang cat trong doc 52 phai khop artifact TUNG CHU SO.
+
+    Bang do duoc CHEP TAY. Lan dau chep, ba o bi sai (S0 `err|acc` va
+    `err_anchor`, S2 `err|acc` va `err_anchor`) -- khong test nao bat duoc,
+    va doc la thu nguoi doc tin. Day la cai chan do: hai duong doc lap (doc
+    va artifact) phai chi ve cung mot so, cung tinh than `A075` R6.
+    """
+    if not os.path.exists(AP.OUTPUT):
+        pytest.skip("chua chay `python -m cert.action_pruning --run`")
+    with open(AP.OUTPUT, "r", encoding="utf-8") as fh:
+        rungs = json.load(fh)["G23_298_rungs"]
+    doc = os.path.join(os.path.dirname(os.path.dirname(SRC)),
+                       "docs", "phase-23", "52-action-pruning.md")
+    with open(doc, "r", encoding="utf-8") as fh:
+        lines = [l for l in fh.read().splitlines() if l.startswith("| S0 K=4")
+                 or l.startswith("| **S1 K=3") or l.startswith("| S2 K=2")
+                 or l.startswith("| NC K=3")]
+    assert len(lines) == 4, "khong tim du 4 hang cua bang thang cat"
+
+    for line, key in zip(lines, ("S0_K4", "S1_K3", "S2_K2", "NC_K3")):
+        cells = [c.strip().strip("*") for c in line.strip().strip("|").split("|")]
+        acc, viol, err, anchor = (float(cells[5]), float(cells[6]),
+                                  float(cells[7]), float(cells[8]))
+        r = rungs[key]
+        assert acc == round(r["acceptance"], 6), key
+        assert viol == round(r["viol_given_accept"], 6), key
+        assert err == round(r["err_given_accept"], 6), key
+        assert anchor == round(r["err_anchor"], 6), key
+        assert int(cells[2]) == r["m"], key
+        assert int(cells[4]) == r["min_blocks"], key
+        assert float(cells[3]) == round(r["alpha_each"], 6), key
+
+
 def test_accept_matches_closed_path():
     """`qhat_by_zbin` + nguong `kappa` phai khop BIT voi `fit_and_accept`.
 
