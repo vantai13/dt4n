@@ -53,13 +53,21 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | **L136** | 2h (doc lai artifact co san, KHONG do moi) | **CL-06**, **CL-08** -- ca hai dung `viol\|accept` de chong do chu "bao dam BAO PHU" | "`CL-06`/`CL-08` trich `C3_viol_given_accept` (`recalibrate_transfer.py:572`), tuc dai luong SAU CHON LOC. Chu 'bao dam' phai gan vao `viol` BIEN. Hai phat bieu song sot ve so (khe luon duong: +0.0212/+0.0237/+0.0287) nhung PHAI doi chu hoac doi so" | 0 | HOAN |
 | **L137** | 0 (da xu ly o 23.24b) | (rong) -- `L30` thu hep pham vi, khong phat bieu nao doi | "artifact 23.8 dung `rho` TU DITTO mang nhan `PRE_L30_FIX`; ban dung `rho_measured_*.csv` thi khong. Ban sua `collector.py` CHUA chay tren Mininet that -- lan chay ke tiep phai kiem `utilDirectionSource == 'directed_map'` o ca 8 link" | -- | DONG (`A076`) |
 | **L138** | 0 (danh doi da tuyen) | (rong) -- ve dien giai `omega=1` | "`omega=1` la vat ly DA CHUAN HOA de quy trach nhiem duoc, khong phai vat ly thuan; he so `1/sqrt(d_l)` la gia cua rang buoc `G23-125`" | 0 | HOAN |
-| **L139** | 3 tuan (chay lai run >= 5 phut) | **CL-14** -- do rong CI cua `omega_hat` | "CI95 cua `omega_hat` la CAN DUOI va `n_eff` la CAN TREN: block 29.8 s chi bang 1.08 lan `tau` cua link cham nhat (27.67 s), vi run chi dai 119.8 s" | 0 | HOAN |
-| **L140** | 4h | (rong) -- lam ket luan MANH hon, khong yeu di | "`omega_hat` do o `dt=0.2 s` la CAN TREN cua tuong quan o thang ms" | 0 | HOAN |
+| **L139** | 0 (bo bootstrap khoi cho omega) | **CL-14** -- do rong CI cua `omega_hat` | "CI bootstrap cu van vo hieu; T8 thay bang Bartlett ACF do duoc. Khong chay lai 3 tuan de cuu mot estimator da bo" | -- | DONG (`A079`; model misspec con o L148) |
+| **L140** | gan 0 trong 23.26 (ghi them cua so 1.0 s) | **CL-14** -- attenuation cua omega/SNR | "RUT chieu can tren: edge lambda=0.506--0.694 tai dt=0.2 s; core fit invalid. Can 0.2/1.0 s de co correction hop le" | 0 | HOAN (R4 Lesson 23.26) |
 | **L141** | 1 tuan (do `c_a`/`c_s` cua 23.8) | **CL-14** -- neu `mode` sai thi `SNR_dec` sai va `D3` co the doi | "`SNR_dec` dung `mode='poisson'` CO DINH; `c_a`/`c_s` cua chien dich 23.8 chua duoc do" | 0 | HOAN |
-| **L142** | 3 tuan (chay lai run >= 415 s) | **CL-14** -- do rong CI va DAU cua `omega_hat` | "`n_eff` thuc 32.5-44.9 chu khong phai 393; `\|omega\| <= 0.15` va DAU khong xac dinh duoc. Rang buoc CAU TRUC cua topology" | 0 | HOAN |
+| **L142** | 0 (rut max-tau; Bartlett da do) | **CL-14** -- do rong CI va DAU cua `omega_hat` | "RUT LAI `n_eff=32.5-44.9`: Bartlett do duoc 660-1785; min slow-slow=832.6. Bo rang buoc 415 s; 120 s du cho truc omega, khong cho moi metric" | -- | DONG (`A079`; `G23-316`) |
 | **L143** | 0 (da chan bang co trong artifact) | (rong) -- ve phuong phap | "KHONG bao cao CI percentile khi `block/tau < 3`; bootstrap lech VI TRI chu khong chi hep" | -- | DONG (`A078`) |
 | **L144** | 0 (da thanh quy tac) | (rong) -- ve quy trinh tien dang ky | "dai khoa phai dat SAU khi uoc luong `sd` tu thiet ke; `M-245` la du doan CONG SUAT THAP" | -- | DONG (da thanh quy tac) |
 | **L145** | 0 (da thanh quy tac) | (rong) -- ve quy trinh tien dang ky | "bo kich ban PHAI phu kin khong gian ket qua va co nhanh MAC DINH tuong minh; neu khong, ket qua roi vao khe ho va khong phan xu duoc" | -- | DONG (da thanh quy tac) |
+| **L146** | chi sua bang thiet ke 23.26 | **CL-14** -- tinh nhan dang | "Trong 12 cap k>0, shared-host trung khit lop k=0.7071 (8/8) va vang o k=0.5 (0/4). Lesson 23.25 la doi chung am, khong do path-coupling" | 0 | HOAN (rang buoc R1-R3 cua 23.26) |
+| **L147** | 0 (da do bang probe) | (rong) -- artifact dung cu | "uA-uB/vC-vD co r_shortfall +0.902/+0.961: +0.6 den tu shared endpoint contention, khong tu offered/RNG" | -- | DONG (`G23-319`) |
+| **L148** | thiet ke moi, khong them covariate post-hoc | **CL-14** -- CI vat ly cua omega | "M1 chi2/dof=46.48, M3=9.41: ca hai thieu bien. SE WLS la SE co dieu kien tren model sai, khong la CI vat ly" | 0 | HOAN (23.26 path-level) |
+| **L149** | 0 (da noi suy dung z) | **CL-14** -- muc err tham chieu | "ACF margin tai 0.369s cho r=0.851-0.881, err zero-mean=0.1566-0.1758; thay dien giai T6 ~0.052" | -- | DONG (`A080`; `G23-321`) |
+| **L150** | 0 (scale-S da in) | **CL-14** -- uncertainty | "Moi WLS in formal va scaled; scaled khong sua model misspec" | -- | DONG (`G23-321`) |
+| **L151** | 0 (equivalence da may kiem) | (rong) -- dien giai artifact | "M3 la M1 bo hai cap, khong dung t dummy lam bang chung host" | -- | DONG (`G23-322`) |
+| **L152** | cua so 1.0 s trong 23.26 | **CL-14** -- D3/D2 | "Core/margin nugget fit invalid; SNR corrected UNDECIDED, D3 measured dang treo" | 0 | HOAN (R4) |
+| **L153** | 0 (may kiem da them) | (rong) -- quan tri scenario | "Nhanh default phai tu kiem admissibility va tu to cao neu omega ngoai [0,1]" | -- | DONG (`G23-326`) |
 ## Canh bao nguong `A071` N3
 
 Khong dong nao dat >= 3 o lan ra lai nay. NHUNG: moi dong dang o muc 2 se

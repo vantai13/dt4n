@@ -293,3 +293,88 @@ def test_decision_thresholds_are_module_constants():
     assert A.SNR_FLAT == 0.25 and A.SNR_STRONG == 1.00
     src = inspect.getsource(A.snr_and_forecast)
     assert "SNR_FLAT" in src and "SNR_STRONG" in src
+
+
+# ------------------------------------------- Lesson 23.25c / A079 / T8
+def test_G23_315_k_and_shared_host_are_collinear_in_structured_pairs():
+    audit = A.collinearity_audit()
+    assert audit["k_and_host_perfectly_collinear_within_structured"] is True
+    assert len(audit["all_28_pairs"]) == 28
+    assert audit["by_k_class"]["0.7071"]["n_shared_host"] == 8
+    assert audit["by_k_class"]["0.5"]["n_shared_host"] == 0
+
+
+def test_bartlett_neff_is_measured_from_both_acfs():
+    rng = np.random.default_rng(7901)
+    mats = []
+    phi = np.array([np.exp(-A.DT_MEASURED_S / 20.0),
+                    np.exp(-A.DT_MEASURED_S / 3.0)])
+    innovation = np.sqrt(1.0 - phi * phi)
+    for _ in range(8):
+        X = np.zeros((599, 2))
+        X[0] = rng.standard_normal(2)
+        for i in range(1, len(X)):
+            X[i] = phi * X[i - 1] + innovation * rng.standard_normal(2)
+        mats.append(X)
+    neff = A.neff_bartlett_empirical(mats, 0, 1)
+    assert 20.0 < neff <= 8 * 599
+    # Chan hoi quy ve cong thuc max(tau) cu (xap xi 24 mau cho 8 run).
+    assert neff > 4.0 * (8 * 599 * A.DT_MEASURED_S / (2.0 * 20.0))
+
+
+def test_PC_25c_1_joint_wls_recovers_known_half():
+    neff = {pair: 300.0 for pair in A.K_PAIR}
+    fit = A.fit_joint_wls(A.structured_matrix(0.5), neff)
+    assert 0.45 <= fit["coef"]["omega"] <= 0.55
+
+
+def test_NC_25c_2_identity_and_joint_wls_sd():
+    neff = {pair: 300.0 for pair in A.K_PAIR}
+    controls = A._control_checks(neff)
+    nc = controls["NC_25c_2_identity"]
+    assert nc["passed"] is True
+    assert nc["omega_hat"] == pytest.approx(0.0, abs=1e-12)
+    assert nc["relative_error_sd"] < 0.05
+
+
+def test_t0_t7_canonical_block_excludes_t8():
+    report = {"T0_wiring": {"x": 1}, "T2b_omega_by_cell": {"x": 2},
+              "T7_null_audit": {"x": 3}, "T8_identifiability": {"x": 4},
+              "provenance": {"x": 5}}
+    assert A._t0_t7_block(report) == {
+        "T0_wiring": {"x": 1}, "T2b_omega_by_cell": {"x": 2},
+        "T7_null_audit": {"x": 3}}
+
+
+def test_wls_reports_overdispersion_scaled_uncertainty():
+    neff = {pair: 300.0 for pair in A.K_PAIR}
+    R = A.structured_matrix(0.2)
+    R[A.IDX["uA"], A.IDX["uB"]] = 0.8
+    R[A.IDX["uB"], A.IDX["uA"]] = 0.8
+    fit = A.fit_joint_wls(R, neff)
+    assert fit["scale_factor_S"] == pytest.approx(
+        np.sqrt(fit["chi2_over_dof"]))
+    assert fit["sd_scaled"]["omega"] == pytest.approx(
+        fit["sd"]["omega"] * fit["scale_factor_S"])
+    assert abs(fit["t_scaled"]["omega"]) <= abs(fit["t"]["omega"])
+
+
+def test_M3_is_algebraically_M1_without_two_dummy_points():
+    neff = {pair: 100.0 + i for i, pair in enumerate(A.K_PAIR)}
+    rng = np.random.default_rng(801)
+    R = np.eye(len(A.LINKS))
+    for a, b in A.K_PAIR:
+        R[A.IDX[a], A.IDX[b]] = R[A.IDX[b], A.IDX[a]] = rng.uniform(-0.2, 0.4)
+    cov = ("host_x_slow", lambda a, b: (a, b) in
+           (("uA", "uB"), ("vC", "vD")))
+    m3 = A.fit_joint_wls(R, neff, [cov])
+    keep = [p for p in A.K_PAIR if p not in (("uA", "uB"), ("vC", "vD"))]
+    drop = A.fit_joint_wls(R, neff, pairs=keep)
+    assert m3["coef"]["intercept_b"] == pytest.approx(
+        drop["coef"]["intercept_b"], abs=1e-12)
+    assert m3["coef"]["omega"] == pytest.approx(drop["coef"]["omega"], abs=1e-12)
+
+
+def test_default_branch_admissibility_rejects_negative_omega():
+    with pytest.raises(AssertionError, match="ngoai"):
+        A.assert_scenarios_are_exhaustive({"coef": {"omega": -0.1}})

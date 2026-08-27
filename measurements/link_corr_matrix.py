@@ -34,6 +34,7 @@ from __future__ import annotations
 import argparse
 import csv
 import glob
+import hashlib
 import itertools
 import json
 import os
@@ -669,6 +670,460 @@ def var_margin_sensitivity(R: np.ndarray, drop_pairs) -> dict:
     return out
 
 
+# ===== Lesson 23.25c (`A079`): T8 -- kiem toan NHAN DANG ================
+# CHI THEM. `T0`..`T7` khong doi (`NC-25c-1`).
+
+LOAD_CHANNELS = {
+    "uA": ("hsrc", "hA"), "uB": ("hsrc", "hB"),
+    "ac": ("hA", "hC"), "ad": ("hA", "hD"),
+    "bc": ("hB", "hC"), "bd": ("hB", "hD"),
+    "vC": ("hC", "hdst"), "vD": ("hD", "hdst"),
+}
+BARTLETT_MAX_LAG_FRAC = 0.25
+
+
+def shares_host(a: str, b: str) -> bool:
+    return bool(set(LOAD_CHANNELS[a]) & set(LOAD_CHANNELS[b]))
+
+
+def collinearity_audit() -> dict:
+    """Kiem toan confound giua he so topology `k` va endpoint chung."""
+    by = defaultdict(lambda: {"n": 0, "n_shared_host": 0, "pairs": []})
+    all_pairs = []
+    for a, b in itertools.combinations(LINKS, 2):
+        k = round(float(K_PAIR[(a, b)]), 4)
+        shared = shares_host(a, b)
+        by[k]["n"] += 1
+        by[k]["n_shared_host"] += int(shared)
+        by[k]["pairs"].append("%s-%s" % (a, b))
+        all_pairs.append({"pair": "%s-%s" % (a, b), "k": float(K_PAIR[(a, b)]),
+                          "shared_host": shared,
+                          "hosts": sorted(set(LOAD_CHANNELS[a])
+                                          & set(LOAD_CHANNELS[b]))})
+    for cell in by.values():
+        cell["share"] = cell["n_shared_host"] / cell["n"]
+    structured = {k: v for k, v in by.items() if k > 0}
+    perfect = (all(v["share"] in (0.0, 1.0) for v in structured.values())
+               and len({v["share"] for v in structured.values()}) > 1)
+    return {
+        "all_28_pairs": all_pairs,
+        "by_k_class": {str(k): v for k, v in sorted(by.items())},
+        "k_and_host_perfectly_collinear_within_structured": bool(perfect),
+        "verdict": ("Lesson 23.25 la doi chung am/noise-floor calibration; "
+                    "omega_hat khong duoc doc la tuong quan theo duong do "
+                    "duoc tren generator mot-hop." if perfect
+                    else "Khong co cong tuyen hoan hao trong tap co cau truc."),
+    }
+
+
+def neff_bartlett_empirical(mats, ia: int, ib: int,
+                            max_lag_frac: float = BARTLETT_MAX_LAG_FRAC) -> float:
+    """Do `n_eff` cua tuong quan cheo tu tong Bartlett cua ACF thuc nghiem.
+
+    Dung cua so tam giac kieu Newey-West de khong cong don nhieu ACF mau o
+    lag xa. Khong gia dinh AR(1), va khong dung `tau_pred_s`.
+    """
+    total_n = 0.0
+    weighted_sum = 0.0
+    for X in mats:
+        n = int(X.shape[0])
+        if n < 40:
+            continue
+        lag_max = max(1, int(max_lag_frac * n))
+        xa = np.asarray(X[:, ia], dtype=float) - float(np.mean(X[:, ia]))
+        xb = np.asarray(X[:, ib], dtype=float) - float(np.mean(X[:, ib]))
+        va, vb = float(xa @ xa), float(xb @ xb)
+        if va <= 0.0 or vb <= 0.0:
+            continue
+        bartlett_sum = 1.0
+        for lag in range(1, lag_max + 1):
+            ra = float((xa[:-lag] @ xa[lag:]) / va)
+            rb = float((xb[:-lag] @ xb[lag:]) / vb)
+            taper = 1.0 - lag / (lag_max + 1.0)
+            bartlett_sum += 2.0 * taper * ra * rb
+        total_n += n
+        weighted_sum += n * max(bartlett_sum, 1.0)
+    if total_n == 0.0:
+        return 2.0
+    mean_sum = weighted_sum / total_n
+    return max(2.0, total_n / mean_sum)
+
+
+def bartlett_neff_all_pairs(mats, tau: dict) -> tuple[dict, dict]:
+    values, detail = {}, {}
+    for a, b in itertools.combinations(LINKS, 2):
+        ne = neff_bartlett_empirical(mats, IDX[a], IDX[b])
+        values[(a, b)] = ne
+        detail["%s-%s" % (a, b)] = {
+            "n_eff": float(ne), "family": pair_family(a, b, tau),
+            "k": float(K_PAIR[(a, b)]), "shared_host": shares_host(a, b),
+        }
+    return values, detail
+
+
+def fit_joint_wls(R: np.ndarray, neff: dict, extra_covariates=None,
+                  pairs=None, include_k: bool = True) -> dict:
+    """Fit WLS Fisher-z; bao cao ca SE hinh thuc va quasi-WLS scaled."""
+    extras = list(extra_covariates or [])
+    coef_names = ["intercept_b"]
+    if include_k:
+        coef_names.append("omega")
+    coef_names += [name for name, _ in extras]
+    names, y, weights, rows = [], [], [], []
+    selected = list(pairs or itertools.combinations(LINKS, 2))
+    for a, b in selected:
+        names.append("%s-%s" % (a, b))
+        y.append(float(fisher_z(R[IDX[a], IDX[b]])))
+        weights.append(max(float(neff[(a, b)]) - 3.0, 1.0))
+        row = [1.0]
+        if include_k:
+            row.append(float(K_PAIR[(a, b)]))
+        row += [float(fn(a, b)) for _name, fn in extras]
+        rows.append(row)
+    X = np.asarray(rows, dtype=float)
+    yv = np.asarray(y, dtype=float)
+    wv = np.asarray(weights, dtype=float)
+    normal = X.T @ (wv[:, None] * X)
+    rhs = X.T @ (wv * yv)
+    coef = np.linalg.solve(normal, rhs)
+    cov = np.linalg.inv(normal)
+    sd = np.sqrt(np.diag(cov))
+    resid = yv - X @ coef
+    chi2 = float(np.sum(wv * resid * resid))
+    dof = len(yv) - X.shape[1]
+    chi2_over_dof = chi2 / dof
+    scale = float(np.sqrt(max(1.0, chi2_over_dof)))
+    sd_scaled = sd * scale
+    return {
+        "coef_names": coef_names,
+        "coef": {name: float(value) for name, value in zip(coef_names, coef)},
+        "sd": {name: float(value) for name, value in zip(coef_names, sd)},
+        "t": {name: float(value / err)
+              for name, value, err in zip(coef_names, coef, sd)},
+        "ci95": {name: [float(value - 1.96 * err), float(value + 1.96 * err)]
+                 for name, value, err in zip(coef_names, coef, sd)},
+        "scale_factor_S": scale,
+        "sd_scaled": {name: float(value)
+                      for name, value in zip(coef_names, sd_scaled)},
+        "t_scaled": {name: float(value / err)
+                     for name, value, err in zip(coef_names, coef, sd_scaled)},
+        "ci95_scaled": {
+            name: [float(value - 1.96 * err), float(value + 1.96 * err)]
+            for name, value, err in zip(coef_names, coef, sd_scaled)},
+        "chi2": chi2, "dof": int(dof), "chi2_over_dof": chi2_over_dof,
+        "normal_matrix": normal.tolist(),
+        "pair_residuals_fisher_z": {name: float(value)
+                                    for name, value in zip(names, resid)},
+        "pair_chi2_contributions": {
+            name: float(weight * value * value)
+            for name, weight, value in zip(names, wv, resid)},
+        "n_pairs": len(names),
+        "note": ("chi2/dof >> 1: mo hinh thieu cau truc hoac n_eff qua lon; "
+                 "chi2/dof << 1: n_eff co the bi uoc luong thap. `sd_scaled` "
+                 "la quasi-WLS overdispersion diagnostic, KHONG sua model "
+                 "misspecification."),
+    }
+
+
+def margin_acf_at_lag(mats, z_s: float = Z_MEDIAN_S,
+                      dt: float = DT_MEASURED_S) -> dict:
+    """Do ACF margin va noi suy log chinh xac tai `z` giua lag 1/2."""
+    from measurements.acf_nugget import FIT_LAGS, acf, fit_nugget
+
+    lag_float = z_s / dt
+    lag_lo = max(1, int(np.floor(lag_float)))
+    lag_hi = max(lag_lo + 1, int(np.ceil(lag_float)))
+    frac = lag_float - lag_lo
+    cv = C.CostV2(strict_reliable=False)
+    series = defaultdict(list)
+    for X in mats:
+        Xc = np.clip(X, C.RHO_MIN, C.RHO_MAX)
+        _delay, _loss, cost = cv.tables_batch(Xc, MODE, W_LOSS)
+        for pi, pj in PATH_PAIRS:
+            m = (cost[:, T7.PATH_NAMES.index(pi)]
+                 - cost[:, T7.PATH_NAMES.index(pj)])
+            series["m(%s,%s)" % (pi, pj)].append(m)
+    out = {}
+    for name, vectors in sorted(series.items()):
+        a_lo_runs = [float(acf(v, (lag_lo,))[0]) for v in vectors]
+        a_hi_runs = [float(acf(v, (lag_hi,))[0]) for v in vectors]
+        a_lo, a_hi = float(np.mean(a_lo_runs)), float(np.mean(a_hi_runs))
+        r_z = (float(np.exp(np.log(a_lo) + frac * (np.log(a_hi) - np.log(a_lo))))
+               if a_lo > 0.0 and a_hi > 0.0 else None)
+        fit_curve = np.mean([acf(v, FIT_LAGS) for v in vectors], axis=0)
+        nugget = fit_nugget(fit_curve, FIT_LAGS)
+        out[name] = {
+            "acf_lag_lo": a_lo, "acf_lag_hi": a_hi,
+            "r_margin_at_requested_z": r_z,
+            "err_zero_mean_sheppard": (sheppard(r_z) if r_z is not None else None),
+            "margin_nugget_fit": nugget,
+            "acf_lag_lo_per_run": a_lo_runs,
+            "acf_lag_hi_per_run": a_hi_runs,
+        }
+    return {"z_requested_s": float(z_s), "lag_float": float(lag_float),
+            "lag_lo": lag_lo, "lag_hi": lag_hi,
+            "interpolation": "log-linear", "by_path_pair": out,
+            "supersedes": ("T6.err_reference_zero_mean_sheppard; T6 dung "
+                           "tau_system=max(tau_pred), khong do ACF margin.")}
+
+
+def sensitivity_ladder(R: np.ndarray, neff: dict) -> dict:
+    levels = [
+        ("L0_all_28", ()),
+        ("L1_drop_endpoint_2", (("uA", "uB"), ("vC", "vD"))),
+        ("L2_drop_endpoint_plus_bd_4",
+         (("uA", "uB"), ("vC", "vD"), ("bd", "vC"), ("bd", "vD"))),
+    ]
+    all_pairs = list(itertools.combinations(LINKS, 2))
+    out = {}
+    for name, dropped in levels:
+        keep = [p for p in all_pairs if p not in dropped]
+        out[name] = {"dropped": ["%s-%s" % p for p in dropped],
+                     "fit": fit_joint_wls(R, neff, pairs=keep)}
+    return out
+
+
+def assert_scenarios_are_exhaustive(outcome: dict) -> None:
+    """L145 nang cap: nhanh mac dinh phai tu kiem tinh admissible."""
+    omega = outcome["coef"].get("omega")
+    if omega is None or not (0.0 <= omega <= 1.0):
+        raise AssertionError("default branch tra omega ngoai [0,1]: %r" % omega)
+
+
+def _snr_corrected_for_margin_nugget(t6: dict, margin_acf: dict) -> dict:
+    corrected = {}
+    for key, value in t6["snr_by_cell_and_pair"].items():
+        pair = key.split("|", 1)[1]
+        fit = margin_acf["by_path_pair"][pair]["margin_nugget_fit"]
+        sf = fit.get("signal_fraction")
+        corrected[key] = (float(value / np.sqrt(sf))
+                          if sf is not None and sf > 0.0 else None)
+    vals = [v for v in corrected.values() if v is not None and np.isfinite(v)]
+    med = float(np.median(vals)) if vals else None
+    if med is None:
+        decision = "UNDECIDED"
+    elif med <= SNR_FLAT:
+        decision = "D1_DO_NOT_OPEN_23_26_AS_MININET_CAMPAIGN"
+    elif med >= SNR_STRONG:
+        decision = "D2_OPEN_23_26_FULL"
+    else:
+        decision = "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY"
+    return {"snr_by_cell_and_pair_corrected": corrected,
+            "snr_median_measured": t6["snr_median"],
+            "snr_median_corrected": med,
+            "decision_measured": t6["decision_for_lesson_23_26"],
+            "decision_corrected": decision,
+            "decision_changed": (None if decision == "UNDECIDED" else
+                                 decision != t6["decision_for_lesson_23_26"]),
+            "method": "divide SNR by sqrt(signal_fraction_margin)"}
+
+
+def _deattenuate_matrix(R: np.ndarray, nugget: dict | None) -> dict | None:
+    if not nugget:
+        return None
+    signal, projected = {}, []
+    for link in LINKS:
+        row = nugget["per_link"][link]
+        value = row.get("signal_fraction")
+        # Nhanh DEFAULT: fit loi co slope am nhung intercept >1 duoc chieu
+        # len bien vat ly `lambda=0`. Day la diagnostic hau nghiem, khong
+        # bien fit thanh hop le va khong doi phan xu DEFAULT.
+        if value is None and row.get("slope_per_s", 0.0) < 0.0 \
+                and row.get("signal_fraction_raw", 0.0) > 1.0:
+            value = 1.0
+            projected.append(link)
+        signal[link] = value
+    if any(v is None or v <= 0.0 for v in signal.values()):
+        return {"valid": False, "reason": "missing_signal_fraction_even_after_projection"}
+    Rd = np.eye(len(LINKS))
+    clipped = []
+    for a, b in itertools.combinations(LINKS, 2):
+        value = float(R[IDX[a], IDX[b]] / np.sqrt(signal[a] * signal[b]))
+        if abs(value) >= 0.999999:
+            clipped.append("%s-%s" % (a, b))
+        value = float(np.clip(value, -0.999999, 0.999999))
+        Rd[IDX[a], IDX[b]] = Rd[IDX[b], IDX[a]] = value
+    return {"valid": True, "signal_fraction_by_link": signal,
+            "boundary_projected_lambda_zero_links": projected,
+            "clipped_pairs": clipped,
+            "R_deattenuated": Rd.tolist(),
+            "omega_raw_through_origin": omega_hat(R)["omega_hat"],
+            "omega_deattenuated_through_origin": omega_hat(Rd)["omega_hat"],
+            "warning": ("DIAGNOSTIC POST-HOC: fit invalid co intercept>1 "
+                        "duoc project ve lambda=0; deattenuation cung phong "
+                        "dai shortfall confound, clip cap |r|>=1, va co the "
+                        "lam ma tran khong PSD. Khong la headline/can tin cay.")}
+
+
+def _control_checks(neff: dict) -> dict:
+    pc = fit_joint_wls(structured_matrix(0.5), neff)
+    nc = fit_joint_wls(np.eye(len(LINKS)), neff)
+    # Voi intercept, nghiem dung la can bac hai phan tu [omega,omega] cua
+    # `(X'WX)^-1`; `1/sqrt(sum(w*k^2))` chi dung cho fit qua goc.
+    analytic_sd = float(np.sqrt(np.linalg.inv(
+        np.asarray(nc["normal_matrix"], dtype=float))[1, 1]))
+    pc_omega = pc["coef"]["omega"]
+    nc_omega = nc["coef"]["omega"]
+    nc_sd = nc["sd"]["omega"]
+    return {
+        "PC_25c_1_known_omega_0_5": {
+            "omega_hat": pc_omega, "expected_range": [0.45, 0.55],
+            "fired": bool(0.45 <= pc_omega <= 0.55),
+        },
+        "NC_25c_2_identity": {
+            "omega_hat": nc_omega, "sd_reported": nc_sd,
+            "sd_from_inverse_normal_matrix": analytic_sd,
+            "relative_error_sd": abs(nc_sd - analytic_sd) / analytic_sd,
+            "passed": bool(abs(nc_omega) < 1e-12
+                           and abs(nc_sd - analytic_sd) / analytic_sd < 0.05),
+            "note": ("Gate dung cho WLS co intercept; cong thuc qua goc "
+                     "1/sqrt(sum(w*k^2)) khong ap dung."),
+        },
+    }
+
+
+def _t0_t7_block(report: dict) -> dict:
+    return {k: v for k, v in report.items()
+            if re.match(r"^T[0-7](?:_|b_)", k)}
+
+
+def _canonical_hash(value) -> str:
+    raw = json.dumps(value, sort_keys=True, separators=(",", ":"),
+                     ensure_ascii=True).encode("utf-8")
+    return hashlib.sha256(raw).hexdigest()
+
+
+def t8_identifiability(mats, R: np.ndarray, tau: dict, t6: dict,
+                       host_probe: dict | None = None,
+                       nugget: dict | None = None) -> dict:
+    neff, detail = bartlett_neff_all_pairs(mats, tau)
+    slow = {l: float(tau[l]) >= TIMESCALE_SLOW_S for l in LINKS}
+    cov_host = ("shared_host", lambda a, b: shares_host(a, b))
+    cov_host_slow = ("host_x_slow", lambda a, b:
+                     shares_host(a, b) and slow[a] and slow[b])
+    m1 = fit_joint_wls(R, neff)
+    m2 = fit_joint_wls(R, neff, [cov_host])
+    m3 = fit_joint_wls(R, neff, [cov_host_slow])
+    controls = _control_checks(neff)
+    ladder = sensitivity_ladder(R, neff)
+    m1_drop2 = ladder["L1_drop_endpoint_2"]["fit"]
+    equivalence = {
+        "M3_is_M1_drop_two_pairs": bool(
+            abs(m3["coef"]["intercept_b"] - m1_drop2["coef"]["intercept_b"])
+            < 1e-10
+            and abs(m3["coef"]["omega"] - m1_drop2["coef"]["omega"]) < 1e-10),
+        "delta_intercept": float(m3["coef"]["intercept_b"]
+                                 - m1_drop2["coef"]["intercept_b"]),
+        "delta_omega": float(m3["coef"]["omega"]
+                             - m1_drop2["coef"]["omega"]),
+        "dummy_nonzero_pairs": ["uA-uB", "vC-vD"],
+        "interpretation": ("M3 la sensitivity analysis tuong duong bo hai "
+                           "cap, khong la bang chung co che doc lap."),
+    }
+
+    posthoc = None
+    if host_probe:
+        pair_rows = host_probe.get("pairs", {})
+
+        def value(field):
+            return lambda a, b: pair_rows["%s-%s" % (a, b)][field]
+
+        short = ("r_shortfall", value("r_shortfall"))
+        offered = ("r_offered", value("r_offered"))
+        m4 = fit_joint_wls(R, neff, [short])
+        m5 = fit_joint_wls(R, neff, [short], include_k=False)
+        m6 = fit_joint_wls(R, neff, [short, offered], include_k=False)
+        measured_values = np.asarray([pair_rows["%s-%s" % p]["r_measured"]
+                                      for p in itertools.combinations(LINKS, 2)])
+        short_values = np.asarray([pair_rows["%s-%s" % p]["r_shortfall"]
+                                   for p in itertools.combinations(LINKS, 2)])
+        offered_values = np.asarray([pair_rows["%s-%s" % p]["r_offered"]
+                                     for p in itertools.combinations(LINKS, 2)])
+        posthoc = {
+            "label": "DIAGNOSTIC_POST_HOC_NOT_HEADLINE",
+            "M4_b_omega_shortfall": m4,
+            "M5_b_shortfall": m5,
+            "M6_b_shortfall_offered": m6,
+            "corr_r_measured_r_shortfall": float(np.corrcoef(
+                measured_values, short_values)[0, 1]),
+            "corr_r_measured_r_offered": float(np.corrcoef(
+                measured_values, offered_values)[0, 1]),
+        }
+
+    slow_slow = [v["n_eff"] for v in detail.values()
+                 if v["family"] == "slow-slow"]
+    min_ss = min(slow_slow) if slow_slow else None
+    if min_ss is None:
+        duration = None
+    elif min_ss >= 60.0:
+        duration = 120
+    elif min_ss >= 20.0:
+        duration = 240
+    else:
+        duration = 415
+
+    r_short = None
+    r_measured = None
+    if host_probe:
+        pair = host_probe.get("pairs", {}).get("uA-uB", {})
+        r_short = pair.get("r_shortfall")
+        r_measured = pair.get("r_measured")
+    m264_hit = 0.4 <= m3["chi2_over_dof"] <= 2.5
+    if r_short is not None and r_short >= 0.30 and m264_hit:
+        scenario = "K1_HOST_CONTENTION_CONFIRMED"
+    elif (r_short is not None and r_short < 0.30
+          and r_measured is not None and r_measured >= 0.40):
+        scenario = "K2_SWITCH_OR_INSTRUMENT_ARTIFACT"
+    elif r_short is None:
+        scenario = "INCOMPLETE_HOST_PROBE_MISSING"
+    else:
+        scenario = "K3_DEFAULT_USE_M1"
+
+    margin_acf = margin_acf_at_lag(mats)
+    default_point_ok = 0.0 <= m1["coef"]["omega"] <= 1.0
+    default_ci_zero = (m1["ci95_scaled"]["omega"][0] <= 0.0
+                       <= m1["ci95_scaled"]["omega"][1])
+    if scenario == "K3_DEFAULT_USE_M1" and not default_point_ok:
+        scenario = "K3_DEFAULT_INADMISSIBLE_DISCLOSED"
+
+    return {
+        "prereg": "docs/phase-23/A079-amendment-79.md",
+        "uncertainty_and_nugget_amendment": "docs/phase-23/A080-amendment-80.md",
+        "collinearity": collinearity_audit(),
+        "neff_bartlett_empirical": detail,
+        "bartlett_max_lag_fraction": BARTLETT_MAX_LAG_FRAC,
+        "M1_b_omega": m1,
+        "M2_plus_host": m2,
+        "M3_plus_host_slow": m3,
+        "M3_equivalence_to_M1_drop_two": equivalence,
+        "sensitivity_ladder": ladder,
+        "posthoc_continuous_diagnostics": posthoc,
+        "controls": controls,
+        "margin_acf_measured": margin_acf,
+        "snr_deattenuation_from_margin_nugget":
+            _snr_corrected_for_margin_nugget(t6, margin_acf),
+        "link_correlation_deattenuation": _deattenuate_matrix(R, nugget),
+        "duration_decision_for_23_26": {
+            "min_n_eff_slow_slow": min_ss,
+            "recommended_run_duration_s": duration,
+            "rule": ">=60: 120s; [20,60): 240s; <20: 415s",
+        },
+        "scenario_adjudication": {
+            "scenario": scenario, "r_shortfall_uA_uB": r_short,
+            "r_measured_uA_uB": r_measured,
+            "M264_M3_chi2_over_dof_hit": bool(m264_hit),
+            "point_estimate_in_parameter_space": bool(default_point_ok),
+            "scaled_ci_contains_zero": bool(default_ci_zero),
+            "default_branch_admissible": bool(default_point_ok),
+            "admissibility_verdict": (
+                "PASS" if default_point_ok
+                else "DEFAULT_BRANCH_INADMISSIBLE_DISCLOSED"),
+        },
+        "note": ("T8 thay thanh sai so cu cua T4/T7 bang n_eff Bartlett do "
+                 "tu ACF va WLS chung. T0..T7 duoc giu de bao toan lich su."),
+    }
+
+
 def _provenance(script: str, argv_extra: dict) -> dict:
     def git(*a):
         try:
@@ -687,9 +1142,31 @@ def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--campaign", required=True)
     ap.add_argument("--out", required=True)
+    ap.add_argument("--baseline-artifact", default=None,
+                    help="artifact 23.25b de kiem NC-25c-1 cho T0..T7")
+    ap.add_argument("--host-probe", default=None,
+                    help="artifact host_confound_probe.json cho G23-319")
+    ap.add_argument("--nugget", default=None,
+                    help="artifact acf_nugget.json cho G23-323..325")
     ap.add_argument("--csv-glob", default="rho_measured_clean_*.csv",
                     help="mac dinh CHI dung CLEAN: PROD khong tai lap (`L31`)")
     a = ap.parse_args()
+
+    baseline_report = None
+    baseline_path = a.baseline_artifact
+    if baseline_path and os.path.isfile(baseline_path):
+        with open(baseline_path, encoding="utf-8") as fh:
+            baseline_report = json.load(fh)
+
+    host_probe = None
+    if a.host_probe and os.path.isfile(a.host_probe):
+        with open(a.host_probe, encoding="utf-8") as fh:
+            host_probe = json.load(fh)
+
+    nugget = None
+    if a.nugget and os.path.isfile(a.nugget):
+        with open(a.nugget, encoding="utf-8") as fh:
+            nugget = json.load(fh)
 
     paths = sorted(glob.glob(os.path.join(a.campaign, "**", a.csv_glob),
                              recursive=True))
@@ -805,6 +1282,32 @@ def main() -> None:
                  "4.3*tau bi LECH VI TRI, xem `L143`."),
     }
 
+    # ---- Lesson 23.25c (`A079`): khoi MOI, `T0`..`T7` KHONG doi -------
+    report["T8_identifiability"] = t8_identifiability(
+        mats, R, tau_by_link, t6, host_probe=host_probe, nugget=nugget)
+    current_block = _t0_t7_block(report)
+    current_hash = _canonical_hash(current_block)
+    if baseline_report is None:
+        nc_25c_1 = {
+            "baseline_artifact": baseline_path,
+            "current_t0_t7_sha256": current_hash,
+            "passed": None,
+            "note": "Khong co baseline artifact de so sanh.",
+        }
+    else:
+        baseline_block = _t0_t7_block(baseline_report)
+        baseline_hash = _canonical_hash(baseline_block)
+        nc_25c_1 = {
+            "baseline_artifact": baseline_path,
+            "baseline_t0_t7_sha256": baseline_hash,
+            "current_t0_t7_sha256": current_hash,
+            "baseline_keys": sorted(baseline_block),
+            "current_keys": sorted(current_block),
+            "canonical_diff_count": int(baseline_block != current_block),
+            "passed": bool(baseline_block == current_block),
+        }
+    report["T8_identifiability"]["NC_25c_1_t0_t7_unchanged"] = nc_25c_1
+
     os.makedirs(os.path.dirname(a.out), exist_ok=True)
     with open(a.out, "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2, sort_keys=True)
@@ -821,6 +1324,19 @@ def main() -> None:
              boot["ci_is_lower_bound_on_width"]))
     print("[link_corr] SNR_dec median=%.4f -> %s"
           % (t6["snr_median"], t6["decision_for_lesson_23_26"]))
+    t8 = report["T8_identifiability"]
+    m1, m3 = t8["M1_b_omega"], t8["M3_plus_host_slow"]
+    print("[link_corr:T8] M1 omega=%+.4f +- %.4f chi2/dof=%.3f"
+          % (m1["coef"]["omega"], m1["sd_scaled"]["omega"],
+             m1["chi2_over_dof"]))
+    print("[link_corr:T8] M3 omega=%+.4f +- %.4f host_x_slow=%+.4f "
+          "chi2/dof=%.3f"
+          % (m3["coef"]["omega"], m3["sd_scaled"]["omega"],
+             m3["coef"]["host_x_slow"], m3["chi2_over_dof"]))
+    print("[link_corr:T8] scenario=%s duration_23_26=%ss NC_T0_T7=%s"
+          % (t8["scenario_adjudication"]["scenario"],
+             t8["duration_decision_for_23_26"]["recommended_run_duration_s"],
+             nc_25c_1["passed"]))
 
 
 if __name__ == "__main__":
