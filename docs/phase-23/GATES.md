@@ -383,6 +383,10 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-337 | 23.25g | ADJUDICATED | T13 hoan tat nhung hai du doan deu MISS: M-279 R_den=**0.6592** [IQR 0.631,0.706] duoi [0.80,1.10]; M-280 R_num=**0.9226** [0.732,1.157] duoi [1.00,1.25]. `R_num` khong bi mot mau so gan 0 chi phoi: min `abs(E[m]_offered)`=0.02772, ratio-of-medians=0.8979, lech 2.7%. M-282 khong dung chieu: R_den noisy2=0.6602 > noisy1=0.6577. Do G23-338 FAIL, chua quy R_den cho residual compression |
 | G23-338 | 23.25g | FAIL | M-281 max `abs(lag)`=**3 mau=0.6 s** >1. Median=1, p90=2; **47/120** link-run vuot 1, 0 cham bien quet. Cau truc theo link: uA/uB median -2, vD +2, trong khi core ad/bc/bd <=1; median r tai lag tot nhat cua edge=0.975--0.981. Verdict da ky `TIME_MISALIGNMENT_SUSPECTED`; can can mốc clock tung generator truoc khi dien giai measured-vs-offered |
 | G23-339 | 23.25g | ADJUDICATED | **[POST-HOC DECISION ROBUSTNESS]** Thu hang measured/offered co Spearman **+0.9000**, p=0.0374, n=5; chi dao vi 0.700/0.900. Argmax trung `clean@0.960`; SNR_offered(0.960)=**0.4646 >0.25**. Cho phep CHON cell 0.960 cho thiet ke 23.26; khong xac nhan do lon SNR, khong doi G23-334 FAIL va khong goi la bang chung tien dang ky |
+| G23-340 | 23.25-closeout | NOT_RUN | - |
+| G23-341 | 23.25-closeout | NOT_RUN | - |
+| G23-342 | 23.25-closeout | NOT_RUN | - |
+| G23-343 | 23.25-closeout | NOT_RUN | - |
 
 ## Va cham da phat hien
 
