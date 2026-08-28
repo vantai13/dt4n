@@ -76,6 +76,7 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | **L159** | thiet ke >=4 muc dose o 23.26 | **CL-14** -- co che host | "Dose hien chi 2 cum; separation mo ta khong du cap thanh dose-response" | 0 | HOAN (R6) |
 | **L160** | 0 (K09 da do va p da tinh lai) | **CL-14** -- censoring | "Nguong 0.99 thoi phong p; dung 1.004363 cho p=0.0004--0.0361, rut phat bieu 49%" | -- | DONG (`G23-335`) |
 | **L161** | calibration transfer/CI hoac OWD | **CL-14** -- D3/T12 | "M-276 MISS R=1.134 o cell sach; T12 khong tach duoc censoring khoi instrument variance" | 0 | HOAN (truoc 23.26) |
+| **L162** | logger/process common clock + aggregate lai offline | **CL-14** -- measured/offered decomposition | "T13 max lag=0.6s, 47/120 >1 mau; R_num/R_den chua duoc quy co che" | 0 | HOAN (truoc dien giai tri so; khong chan G23-339 chon cell) |
 ## Canh bao nguong `A071` N3
 
 Khong dong nao dat >= 3 o lan ra lai nay. NHUNG: moi dong dang o muc 2 se
