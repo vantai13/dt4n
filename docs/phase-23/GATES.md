@@ -383,10 +383,10 @@ khong ton tai va khong duoc bia ra sau nay -- neu can ma moi, dung tu 74.
 | G23-337 | 23.25g | ADJUDICATED | T13 hoan tat nhung hai du doan deu MISS: M-279 R_den=**0.6592** [IQR 0.631,0.706] duoi [0.80,1.10]; M-280 R_num=**0.9226** [0.732,1.157] duoi [1.00,1.25]. `R_num` khong bi mot mau so gan 0 chi phoi: min `abs(E[m]_offered)`=0.02772, ratio-of-medians=0.8979, lech 2.7%. M-282 khong dung chieu: R_den noisy2=0.6602 > noisy1=0.6577. Do G23-338 FAIL, chua quy R_den cho residual compression |
 | G23-338 | 23.25g | FAIL | M-281 max `abs(lag)`=**3 mau=0.6 s** >1. Median=1, p90=2; **47/120** link-run vuot 1, 0 cham bien quet. Cau truc theo link: uA/uB median -2, vD +2, trong khi core ad/bc/bd <=1; median r tai lag tot nhat cua edge=0.975--0.981. Verdict da ky `TIME_MISALIGNMENT_SUSPECTED`; can can mốc clock tung generator truoc khi dien giai measured-vs-offered |
 | G23-339 | 23.25g | ADJUDICATED | **[POST-HOC DECISION ROBUSTNESS]** Thu hang measured/offered co Spearman **+0.9000**, p=0.0374, n=5; chi dao vi 0.700/0.900. Argmax trung `clean@0.960`; SNR_offered(0.960)=**0.4646 >0.25**. Cho phep CHON cell 0.960 cho thiet ke 23.26; khong xac nhan do lon SNR, khong doi G23-334 FAIL va khong goi la bang chung tien dang ky |
-| G23-340 | 23.25-closeout | NOT_RUN | - |
-| G23-341 | 23.25-closeout | NOT_RUN | - |
-| G23-342 | 23.25-closeout | NOT_RUN | - |
-| G23-343 | 23.25-closeout | NOT_RUN | - |
+| G23-340 | 23.25-closeout | ADJUDICATED | **[POST-HOC CONFIRMATION]** T14 clean contrast omega=**-0.01728**; leave-one-link **[-0.13815,+0.14274]**, range=0.28089, sign flip=TRUE, noise floor abs=0.14274. M-283/284/285 HIT; verdict `NOT_IDENTIFIABLE_SIGN_UNDETERMINED`. Jackknife sd=0.20796 chi descriptive, khong la SE. Round-trip va host-confound controls PASS |
+| G23-341 | 23.25-closeout | PASS | T15 median-null theo 3 lat=**+0.04317/+0.01191/-0.00847**; first-minus-later=**+0.04145** trong M-286 [-0.05,+0.05] va duoi warning 0.10. Nhanh W-A `STATIONARY_NO_TRIM_NEEDED`; khong tao trimmed artifact. Dien giai hep: khong co common-null warmup lon; omega slice +0.258/-0.162/-0.080 cho thay khong duoc nang thanh stationarity toan bo. PC ramp/NC stationary PASS |
+| G23-342 | 23.25-closeout | ADJUDICATED | **[POST-HOC CONFIRMATION]** T16 strict paired-null song sot **3/12**; mean excess/k no-host=**-0.03258**, shared-host=+0.02464; M-287/288 HIT, verdict `NULLS_CANCEL_STRUCTURE`. Ba cap song sot la uA-ac, uA-vD, bd-vD; bd-vD +0.28783 chi hon null bd-vC +0.26544 mot luong 0.02239 |
+| G23-343 | 23.25-closeout | ADJUDICATED | **[POST-HOC CONDITIONAL SENSITIVITY]** Headline dung T5b target-cov (L154): omega 0->1 tang err median **+2.0946%**, worst **+17.0588%** tai clean@0.960/m(P1,P4); M-289/290 HIT. Ban unit-variance cu cho +3.1121%/+21.9744% va chi la lich su. NC sua r: muc err x3.383, ratio delta **0.000726<0.01** PASS. Bound co dieu kien tren pilot SNR T6; khong xac nhan magnitude SNR/D3 corrected |
 
 ## Va cham da phat hien
 

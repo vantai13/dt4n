@@ -77,6 +77,11 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | **L160** | 0 (K09 da do va p da tinh lai) | **CL-14** -- censoring | "Nguong 0.99 thoi phong p; dung 1.004363 cho p=0.0004--0.0361, rut phat bieu 49%" | -- | DONG (`G23-335`) |
 | **L161** | calibration transfer/CI hoac OWD | **CL-14** -- D3/T12 | "M-276 MISS R=1.134 o cell sach; T12 khong tach duoc censoring khoi instrument variance" | 0 | HOAN (truoc 23.26) |
 | **L162** | logger/process common clock + aggregate lai offline | **CL-14** -- measured/offered decomposition | "T13 max lag=0.6s, 47/120 >1 mau; R_num/R_den chua duoc quy co che" | 0 | HOAN (truoc dien giai tri so; khong chan G23-339 chon cell) |
+| **L163** | 0 trong code moi; sua plan khi file duoc import | **CL-14** -- dinh nghia omega | "23.26 phai dung variance-share sqrt(omega), khong amplitude-share" | -- | DONG contract (`A084`; round-trip test) |
+
+`A084`: L139..L162 DONG trong PHAM VI Lesson 23.25. Debt generator/path-level
+con vat ly duoc CHUYEN sang 23.26/Phase 24; khong tang bo dem bo qua va khong
+duoc mo lai thanh 23.25h.
 ## Canh bao nguong `A071` N3
 
 Khong dong nao dat >= 3 o lan ra lai nay. NHUNG: moi dong dang o muc 2 se
