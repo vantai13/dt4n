@@ -94,6 +94,24 @@ def test_k08_matches_analytic():
         % (recorded, analytic))
 
 
+def test_k09_matches_t12_artifact_and_locked_safety():
+    """K09 la so do duoc: ledger, artifact va he so T12 phai noi voi nhau."""
+    import json
+    import measurements.snr_censoring_artifact as S
+
+    rows = _rows()
+    recorded = float(rows["K09"][2])
+    artifact = os.path.join(
+        os.path.dirname(DOCS), "..", "results", "LIVE", "phase-23",
+        "snr_censoring_artifact.json")
+    artifact = os.path.abspath(artifact)
+    with open(artifact, encoding="utf-8") as fh:
+        report = json.load(fh)
+    ceiling = report["G23_335_hard_ceiling"]
+    assert recorded == ceiling["hard_ceiling_measured"]
+    assert ceiling["censoring_threshold"] == recorded * S.CEILING_SAFETY
+
+
 def test_aoi_constants_match_ledger():
     """K02/K03/K04/K05 phai khop `measurements/aoi_model_v7.py`."""
     import measurements.aoi_model_v7 as A

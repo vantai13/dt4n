@@ -73,6 +73,9 @@ Luot 23.23 duoc dem bu -- xem `A074` muc 2 va `L129`.
 | **L156** | sua generator/process map o 23.26 | **CL-14** -- co che host | "M-273 dose-response MISS (+0.657/+0.600); khong noi nhan qua host load" | 0 | HOAN (R2/R6) |
 | **L157** | logger 0.1 s + tx_packets va ha tai neu R7 fire | **CL-14** -- censoring | "M-274 MISS 0.6992 nhung p(>0.99)=0.474--0.504; TX counter co tran" | 0 | HOAN (R4/R7) |
 | **L158** | do lai sau R1--R7 | **CL-14** -- D1/D2/D3 | "D3 measured chi pilot; corrected UNDECIDED, khong co can duoi vo dieu kien" | 0 | HOAN (23.26) |
+| **L159** | thiet ke >=4 muc dose o 23.26 | **CL-14** -- co che host | "Dose hien chi 2 cum; separation mo ta khong du cap thanh dose-response" | 0 | HOAN (R6) |
+| **L160** | 0 (K09 da do va p da tinh lai) | **CL-14** -- censoring | "Nguong 0.99 thoi phong p; dung 1.004363 cho p=0.0004--0.0361, rut phat bieu 49%" | -- | DONG (`G23-335`) |
+| **L161** | calibration transfer/CI hoac OWD | **CL-14** -- D3/T12 | "M-276 MISS R=1.134 o cell sach; T12 khong tach duoc censoring khoi instrument variance" | 0 | HOAN (truoc 23.26) |
 ## Canh bao nguong `A071` N3
 
 Khong dong nao dat >= 3 o lan ra lai nay. NHUNG: moi dong dang o muc 2 se

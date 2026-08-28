@@ -1,5 +1,9 @@
 # LESSON 23.25 -- KET LUAN CUOI
 
+> **SUPERSEDED VE T11 boi `62-close-23-25f.md` / G23-335.** Nguong 0.99
+> khong phai tran van hanh; phat bieu "49% censored" o trang nay da bi rut.
+> Ket luan omega/doi chung am khong doi.
+
 Amendment : `A081-amendment-81.md`
 
 Artifact  : `results/LIVE/phase-23/lesson_23_25_final_audit.json`
