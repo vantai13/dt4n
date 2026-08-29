@@ -1,0 +1,140 @@
+{
+  "schema": "dt4n.phase_g.g1_censoring_retro_audit.v1",
+  "status": "RETROSPECTIVE_POST_HOC_DIAGNOSTIC",
+  "model": "Y=min(X,K09), X Gaussian with observed offered mean and sd",
+  "free_fitted_parameters": 0,
+  "input": {
+    "measured_path": "results/RAW/phase-D/cellA_long/rho_measured_rep1.csv",
+    "offered_path": "results/RAW/phase-D/cellA_long/rho_offered_rep1.csv",
+    "sha256": {
+      "measured": "defae89140c9ff5052fc73442778e8a9586d8226debaa04bd3acea185e0f88e6",
+      "offered": "0e017696b453f6d4e213f20ae9d5493fd45680cc60eac23a6ae5241771e18eef"
+    },
+    "n_aggregated": 7524
+  },
+  "constants": {
+    "K09": 1.0094102536,
+    "g0_rho_max": 0.995,
+    "g0_z": 2.58
+  },
+  "per_link": {
+    "uA": {
+      "class": "edge",
+      "rho_offered_mean": 0.8596077881077885,
+      "sd_offered": 0.028356780540666475,
+      "sd_measured": 0.028641272746042955,
+      "sd_measured_over_offered": 1.0100325989041137,
+      "empirical_censor_fraction": 0.0,
+      "gaussian_censor_fraction": 6.362113036395556e-08,
+      "hard_clip_predicted_sd": 0.02835677879195737,
+      "hard_clip_match_fraction": 1.0100326611909205,
+      "g0_sigma_max": 0.05247760150860911,
+      "offered_sd_over_g0_sigma_max": 0.5403596910962948
+    },
+    "uB": {
+      "class": "edge",
+      "rho_offered_mean": 0.8778496367062069,
+      "sd_offered": 0.026281947239970144,
+      "sd_measured": 0.02778685501452679,
+      "sd_measured_over_offered": 1.057260132242711,
+      "empirical_censor_fraction": 0.0,
+      "gaussian_censor_fraction": 2.782379174837146e-07,
+      "hard_clip_predicted_sd": 0.026281940173583956,
+      "hard_clip_match_fraction": 1.0572604165066712,
+      "g0_sigma_max": 0.045407117555733775,
+      "offered_sd_over_g0_sigma_max": 0.5788067742399868
+    },
+    "ac": {
+      "class": "core",
+      "rho_offered_mean": 0.9770242470412015,
+      "sd_offered": 0.1048147721549184,
+      "sd_measured": 0.06974840218495529,
+      "sd_measured_over_offered": 0.6654443906233533,
+      "empirical_censor_fraction": 0.36735778841042,
+      "gaussian_censor_fraction": 0.37866714286128067,
+      "hard_clip_predicted_sd": 0.0719042877951123,
+      "hard_clip_match_fraction": 0.9700172871985033,
+      "g0_sigma_max": 0.006967346108061432,
+      "offered_sd_over_g0_sigma_max": 15.043715430419699
+    },
+    "ad": {
+      "class": "core",
+      "rho_offered_mean": 0.9911539110248537,
+      "sd_offered": 0.10440329286672995,
+      "sd_measured": 0.05835360746064245,
+      "sd_measured_over_offered": 0.5589249712183926,
+      "empirical_censor_fraction": 0.4069643806485912,
+      "gaussian_censor_fraction": 0.43059338017629,
+      "hard_clip_predicted_sd": 0.06709524736899267,
+      "hard_clip_match_fraction": 0.869712978919725,
+      "g0_sigma_max": 0.0014907321609094056,
+      "offered_sd_over_g0_sigma_max": 70.03491009615021
+    },
+    "bc": {
+      "class": "core",
+      "rho_offered_mean": 0.9627280107141147,
+      "sd_offered": 0.0999433010485475,
+      "sd_measured": 0.07039375866711188,
+      "sd_measured_over_offered": 0.7043369383298445,
+      "empirical_censor_fraction": 0.3119351408825093,
+      "gaussian_censor_fraction": 0.3202187234751872,
+      "hard_clip_predicted_sd": 0.07339110521884773,
+      "hard_clip_match_fraction": 0.9591592667422306,
+      "g0_sigma_max": 0.012508522979025294,
+      "offered_sd_over_g0_sigma_max": 7.990016184655514
+    },
+    "bd": {
+      "class": "core",
+      "rho_offered_mean": 0.976848300845295,
+      "sd_offered": 0.09909969837542522,
+      "sd_measured": 0.06834509782550938,
+      "sd_measured_over_offered": 0.6896599984249561,
+      "empirical_censor_fraction": 0.37732589048378523,
+      "gaussian_censor_fraction": 0.371237446069957,
+      "hard_clip_predicted_sd": 0.06859481284144896,
+      "hard_clip_match_fraction": 0.9963595641478492,
+      "g0_sigma_max": 0.007035542308025212,
+      "offered_sd_over_g0_sigma_max": 14.08558061862345
+    },
+    "vC": {
+      "class": "edge",
+      "rho_offered_mean": 0.860279995042597,
+      "sd_offered": 0.02977916507592541,
+      "sd_measured": 0.02981007043772974,
+      "sd_measured_over_offered": 1.0010378182774946,
+      "empirical_censor_fraction": 0.0,
+      "gaussian_censor_fraction": 2.751750085572269e-07,
+      "hard_clip_predicted_sd": 0.029779157157183694,
+      "hard_clip_match_fraction": 1.0010380844690423,
+      "g0_sigma_max": 0.05221705618503992,
+      "offered_sd_over_g0_sigma_max": 0.5702957472439261
+    },
+    "vD": {
+      "class": "edge",
+      "rho_offered_mean": 0.8827585753723419,
+      "sd_offered": 0.026745175108917794,
+      "sd_measured": 0.028067273814537313,
+      "sd_measured_over_offered": 1.0494331669258237,
+      "empirical_censor_fraction": 0.0,
+      "gaussian_censor_fraction": 1.0925983677800843e-06,
+      "hard_clip_predicted_sd": 0.026745146968174337,
+      "hard_clip_match_fraction": 1.0494342711197757,
+      "g0_sigma_max": 0.04350442815025506,
+      "offered_sd_over_g0_sigma_max": 0.6147690303282607
+    }
+  },
+  "summary": {
+    "core_gaussian_censor_fraction_min": 0.3202187234751872,
+    "core_gaussian_censor_fraction_max": 0.43059338017629,
+    "core_hard_clip_match_fraction_min": 0.869712978919725,
+    "core_hard_clip_match_fraction_max": 0.9963595641478492,
+    "all_edge_empirical_censor_fraction_zero": true,
+    "additive_nugget_model_valid_on_core": false
+  },
+  "interpretation_scope": "Post-hoc mechanism diagnostic. It supports the censoring exclusion and G.0 retrodiction but is not an independent confirmatory test.",
+  "provenance": {
+    "git_hash": "a67994e626de2bb1795065b2238252d0eddcec4c",
+    "timestamp_utc": "2026-08-29T15:30:51.788305+00:00",
+    "script": "tools/g1_censoring_retro_audit.py"
+  }
+}

@@ -196,6 +196,19 @@ So ke tiep duoc cap: **L129**.
 | L162 | T13 tim lech clock co cau truc giua measured va offered: 47/120 link-run co `abs(lag)>1`, max 0.6 s; uA/uB median -0.4 s, vD +0.4 s. Moi generator offered co time origin rieng, RhoLogger co origin chung. T13 R_num=0.9226 va R_den=0.6592 vi the chua co dien giai co che | `A083`; `G23-337/338`; `snr_decomposition.json` | Can ghi common monotonic start/absolute timestamp hoac offset tung process, aggregate theo cua so TX roi chay lai decomposition. G23-339 chi cho phep chon cell theo thu hang bien; do lon SNR va D2/D3 corrected van UNDECIDED |
 | L163 | Ban ke hoach 23.26 ngoai workspace dung pha tron BIEN DO `omega*path+(1-omega)*link`, cho `r(omega)` phi tuyen; A077 khoa pha tron PHUONG SAI voi `sqrt(omega)` va `1/sqrt(d_l)`, cho `r=omega*k` | `A084`; `23-26-omega-definition-correction.md`; `G23-340` | Moi generator 23.26 phai dung variance-share va qua round-trip `omega_contrast` tai 0/.25/.5/1. Khong import plan amplitude-share vao code |
 
+## Phase G retrospective addendum (namespace `G-L*`)
+
+These identifiers belong to the Phase G ledger and deliberately do not reuse
+the Phase 23 `L*` namespace.
+
+| ma | han che hoi to | bang chung | tac dong len Phase 23 |
+|---|---|---|---|
+| G-L20 | Gate K09/R7 dat tren `rho_measured` la sai bien vi bien do da chiu tran TX. Gate moi la `p(rho_offered > K09) < 0.05`, chay truoc moi phan tich tuong quan | `docs/phase-G/11-amendment-G-A003.md`; `g_a003_split_calibration.json` | Gia tri K09 khong doi; `CONSTANTS.md` da dinh chinh bien ap dung cho gate tuong lai. Cac gate lich su giu nguyen provenance nhung khong duoc tai su dung |
+| G-L21 | `cellA_long` core co censoring Gaussian-implied 32.0--43.1%; hard clip khong tham so tai tao SD measured 87.0--99.6%. Mo hinh `rho_measured=rho_true+epsilon` khong ap dung cho core | `g1_censoring_retro_audit.json`; `docs/phase-G/12-g-a003-split-results.md` | Moi ket luan tuong quan Phase 20--23 dinh den core trong cau hinh tai/sigma tuong tu phai mang nhan `CENSORED` cho den khi ledger offered qua R7'. `sf_hat>1` la canh bao sai lop mo hinh |
+| G-L22 | Rang buoc G.0 `sigma_max=(rho_max-rho_bar)/2.58` tien doan nguoc dung cau hinh core khong kha thi; rieng `ac` vuot 15.04x | `g1_censoring_retro_audit.json`; `g0_feasibility_v2.json` | La positive control hoi to cho lop kha thi, khong phai confirmatory new-data claim |
+| G-L23 | `rho_eps` full-run la 0.6704 cung phia va 0.0891 khac phia (7.52x), nhung duoc nhan ra sau khi xem du lieu | `g1_4_physical_reanalysis.json`; `G-A003` H6b | Chi duoc trinh bay post-hoc. H6b `same>=0.50 AND cross<=0.25` chi duoc kiem confirmatory tren du lieu G1-B moi |
+| G-L24 | Dien giai “18/18 reduced-model PASS” bi rut: 15/18 cap chua core bi censoring va control co dynamic range thap | `docs/phase-G/12-g-a003-split-results.md` | Khong dung bang 18/18 trong paper hay closeout. Thay bang 6 cap edge-edge full-run voi nhan diagnostic; split 50/50 hien `INSUFFICIENT_POWER_PRE_OUTCOME` |
+
 ### A084 -- dong PHAM VI 23.25, khong xoa debt thiet ke moi
 
 `G23-340..343` dong moi cau hoi T14--T17 trong Lesson 23.25. L139..L162

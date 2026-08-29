@@ -1,0 +1,110 @@
+{
+  "schema": "dt4n.phase_g.g_a003_split_sample.v1",
+  "status": "PREREGISTERED_HELD_OUT_SPLIT_SAMPLE",
+  "preregistration_tag": "phase-G-g-a003-prereg",
+  "preregistration_commit": "a67994e626de2bb1795065b2238252d0eddcec4c",
+  "held_out_correlations_read": false,
+  "calibration_artifact": "results/SMOKE/phase-G/g_a003_split_calibration.json",
+  "split": {
+    "rule": "first contiguous half calibration; second contiguous half test",
+    "n_total": 7524,
+    "split_index": 3762,
+    "n_calibration": 3762,
+    "n_test": 3762,
+    "calibration_duration_s": 752.4000000000001,
+    "test_duration_s": 752.4000000000001
+  },
+  "locked_constants": {
+    "dt_target_s": 0.2,
+    "offered_samples_per_bin": 20,
+    "n_fit_lags": 8,
+    "K09": 1.0094102536,
+    "censoring_fraction_max_strict": 0.05,
+    "T_over_tau_min": 50.0,
+    "pair_error_max": 0.1,
+    "median_error_max_strict": 0.02,
+    "dynamic_range_multiplier": 2.0,
+    "dynamic_range_min": 0.2
+  },
+  "pairs": {
+    "uA-uB": {
+      "first": "uA",
+      "second": "uB",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 33.556348203276656,
+      "eligible_before_dynamic_range": false,
+      "held_out_outcome_status": "NOT_EVALUATED_TEMPORAL_POWER_GATE"
+    },
+    "uA-vC": {
+      "first": "uA",
+      "second": "vC",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 21.101226164733223,
+      "eligible_before_dynamic_range": false,
+      "held_out_outcome_status": "NOT_EVALUATED_TEMPORAL_POWER_GATE"
+    },
+    "uA-vD": {
+      "first": "uA",
+      "second": "vD",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 22.210803492561595,
+      "eligible_before_dynamic_range": false,
+      "held_out_outcome_status": "NOT_EVALUATED_TEMPORAL_POWER_GATE"
+    },
+    "uB-vC": {
+      "first": "uB",
+      "second": "vC",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 21.101226164733223,
+      "eligible_before_dynamic_range": false,
+      "held_out_outcome_status": "NOT_EVALUATED_TEMPORAL_POWER_GATE"
+    },
+    "uB-vD": {
+      "first": "uB",
+      "second": "vD",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 22.210803492561595,
+      "eligible_before_dynamic_range": false,
+      "held_out_outcome_status": "NOT_EVALUATED_TEMPORAL_POWER_GATE"
+    },
+    "vC-vD": {
+      "first": "vC",
+      "second": "vD",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 21.101226164733223,
+      "eligible_before_dynamic_range": false,
+      "held_out_outcome_status": "NOT_EVALUATED_TEMPORAL_POWER_GATE"
+    }
+  },
+  "dynamic_range_gate": {
+    "status": "NOT_EVALUATED_TEMPORAL_POWER_GATE",
+    "max_abs_r_offered": null,
+    "gate_pass": null
+  },
+  "summary": {
+    "edge_pairs_total": 6,
+    "edge_pairs_eligible_before_dynamic_range": 0,
+    "edge_pairs_accuracy_pass": 0,
+    "median_absolute_error": null,
+    "verdict": "INSUFFICIENT_POWER_PRE_OUTCOME",
+    "G1_closed": false
+  },
+  "interpretation_scope": "H6b thresholds were formed from the full historical cellA run. They are not tested confirmatorily here; they remain locked for fresh G1-B data.",
+  "provenance": {
+    "git_hash": "a67994e626de2bb1795065b2238252d0eddcec4c",
+    "timestamp_utc": "2026-08-29T15:28:46.039006+00:00",
+    "script": "tools/g_a003_split_sample.py --stage test"
+  }
+}
