@@ -249,3 +249,17 @@ Hai failure còn lại              L121 KNOWN_DANGLING parquet tồn tại sẵ
 Ba failure do artifact D mới đã được sửa hết; rerun chỉ còn hai debt ngoài
 phạm vi D.2/D.3. Không sửa/xóa parquet hoặc historical report để làm test xanh
 giả vì hai hành động đó cần adjudication riêng.
+
+Audit cuối sau commit và cài hook:
+
+```text
+tools/check_d0_d1.sh              PASS 20 / FAIL 1 / BLOCKED 4
+FAIL                              D0-1a: backup tarball không hiện diện trong
+                                  filesystem của workspace hiện tại
+BLOCKED                           backup ngoài máy, DOI, whitelist, 8 parquet
+git push origin main              FAIL: thiếu GitHub credential
+git push phase-D-cellC-start      FAIL: thiếu GitHub credential
+```
+
+Tag custody `phase-D-cleanup-start` đã xác nhận có trên origin; branch mới và
+tag prereg vẫn chỉ tồn tại local trong phiên này.
