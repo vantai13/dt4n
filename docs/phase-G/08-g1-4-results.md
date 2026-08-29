@@ -40,6 +40,16 @@ individual offered values are `+0.6585`, `-0.3889`, and `+0.6064`.  This is a
 finite-realization/low-effective-sample warning, not a population-level
 coupling estimate.  The `vC-vD` mismatch remains large in all three reps.
 
+**G-A004 correction (2026-08-29):** dispersion of `r_offered` across repeated
+realizations is a marginal-power concern and is not by itself the right reason
+to void a paired comparison of `r_true_hat-r_offered` on the same realization.
+Phase-23 remains `INSUFFICIENT_POWER`, but because at `T/tau≈4.7` the eight-lag
+estimates of `sf` and `phi` themselves are unstable and the two-band system
+amplifies that input error.  Observed paired errors there are `0.10–0.49`, far
+above the paired-model extrapolation from the longer split.  The historical
+paragraph above is retained as provenance, not as the current paired-power
+rationale.
+
 ## Failure anatomy
 
 - `cellA_long`: 3/8 link fits returned inadmissible `sf>1` (`ac=1.027`,

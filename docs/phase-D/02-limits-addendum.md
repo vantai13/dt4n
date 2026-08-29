@@ -54,6 +54,24 @@ Hệ quả bắt buộc kèm theo, từ `D-L26`: khi đổi cấu hình **một 
 kiểm lại **mọi** ngưỡng đang gắn vào nhánh đó, không chỉ ngưỡng của control
 đang sửa.
 
+**NT 56 — power của đối chứng phải được chứng minh trước khi đọc phép so.**
+
+> Trước khi so một ước lượng với đối chứng, phải chứng minh độ bất định của
+> **thống kê so sánh** nhỏ hơn ngưỡng phán quyết. Một đối chứng hoặc phép so
+> nhiễu hơn ngưỡng là `INSUFFICIENT_POWER` và không được đọc theo cả hai chiều.
+
+**NT 57 — gate phải đặt trên chính thống kê mà phán quyết đọc.**
+
+> Trước khi ký, viết công thức của thống kê phán quyết và kiểm gate ràng buộc
+> đúng công thức đó, không dùng một proxy chỉ nghe có vẻ tương đương. Với phép
+> kiểm ghép cặp G-A004, thống kê là
+> `abs(r_true_hat-r_offered)` trên cùng hiện thực, không phải độ chính xác biên
+> duyên của riêng `r_offered`.
+
+Định danh NT54--NT55 thuộc master plan ngoài workspace và không được tái dựng
+từ trí nhớ tại đây. NT56 được chép lại từ chỉ dẫn Phase G trước; NT57 được ký
+bởi `docs/phase-G/13-amendment-G-A004.md`.
+
 ## Đính chính quan trọng so với bản hướng dẫn đầu vào
 
 Giả thuyết H3 “`r≈+0.6` chỉ do thiếu mẫu” là một giả thuyết hợp lý ở thời

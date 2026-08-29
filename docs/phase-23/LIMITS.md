@@ -208,6 +208,8 @@ the Phase 23 `L*` namespace.
 | G-L22 | Rang buoc G.0 `sigma_max=(rho_max-rho_bar)/2.58` tien doan nguoc dung cau hinh core khong kha thi; rieng `ac` vuot 15.04x | `g1_censoring_retro_audit.json`; `g0_feasibility_v2.json` | La positive control hoi to cho lop kha thi, khong phai confirmatory new-data claim |
 | G-L23 | `rho_eps` full-run la 0.6704 cung phia va 0.0891 khac phia (7.52x), nhung duoc nhan ra sau khi xem du lieu | `g1_4_physical_reanalysis.json`; `G-A003` H6b | Chi duoc trinh bay post-hoc. H6b `same>=0.50 AND cross<=0.25` chi duoc kiem confirmatory tren du lieu G1-B moi |
 | G-L24 | Dien giai “18/18 reduced-model PASS” bi rut: 15/18 cap chua core bi censoring va control co dynamic range thap | `docs/phase-G/12-g-a003-split-results.md` | Khong dung bang 18/18 trong paper hay closeout. Thay bang 6 cap edge-edge full-run voi nhan diagnostic; split 50/50 hien `INSUFFICIENT_POWER_PRE_OUTCOME` |
+| G-L25 | Gate `T_test/tau>=50` la proxy cho precision BIEN DUYEN nhung G-A003 doc sai so GHEP CAP `abs(r_true_hat-r_offered)` tren cung hien thuc; common-realization variation triet tieu trong hieu | `docs/phase-G/13-amendment-G-A004.md`; `g_a004_paired_power.json` | Thay proxy bang direct paired-power calculation. Hai nguong accuracy va split khong doi; chi duoc mo held-out neu power artifact PASS |
+| G-L26 | `T/tau>=50` van la gate dung cho dai luong BIEN DUYEN, vi du uoc luong `r` cua population khi khong co paired same-realization reference | `G-A004`; NT57 | Khong xoa gate toan cuc. Gan nhan ro `marginal` hay `paired` cho moi phan quyet va dat gate len dung thong ke |
 
 ### A084 -- dong PHAM VI 23.25, khong xoa debt thiet ke moi
 
