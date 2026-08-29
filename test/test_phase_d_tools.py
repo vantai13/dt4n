@@ -5,6 +5,7 @@ import numpy as np
 import pytest
 
 from tools.phase_d_factorial_audit import build_artifact
+from tools.phase_d_pc_c2_prime import acf_prefix
 from tools.phase_d_scaling_test import autocorrelation_fft, fisher_ci, tau_integral
 from tools.summarize_infra import summarize
 from tools.trust_gate_bench import run_benchmark
@@ -22,6 +23,16 @@ def test_fft_acf_starts_at_one():
     acf = autocorrelation_fft(np.arange(32, dtype=float), 4)
     assert acf.shape == (5,)
     assert acf[0] == 1.0
+
+
+def test_pc_c2_prime_fft_matches_direct_acf():
+    values = np.random.default_rng(19).normal(size=257)
+    centered = values - values.mean()
+    direct = np.array([
+        1.0 if lag == 0 else centered[:-lag] @ centered[lag:] / (centered @ centered)
+        for lag in range(33)
+    ])
+    assert acf_prefix(values, 32) == pytest.approx(direct, abs=1e-12)
 
 
 def test_fisher_ci_requires_effective_samples():

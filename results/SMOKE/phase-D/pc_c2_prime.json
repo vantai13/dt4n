@@ -1,0 +1,615 @@
+{
+  "schema": "dt4n.phase_d.pc_c2_prime.v1",
+  "status": "SIGNED_REANALYSIS",
+  "preregistration": "docs/phase-D/A001-amendment-pc-c2.md",
+  "signed_tag": "phase-D-pc-c2-prime-start",
+  "no_new_mininet": true,
+  "locked_constants": {
+    "offered_nlag": "min(n//4, 3000)",
+    "tau_ratio_min": 5.0,
+    "signal_fraction_C_min": 0.75,
+    "nugget_fit_lags": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10,
+      15,
+      20
+    ],
+    "nugget_acf_fit_min": 0.02,
+    "measured_dt_s": 0.2
+  },
+  "PC_C2_prime": {
+    "cell_A": {
+      "per_run": [
+        {
+          "rep": 1,
+          "path": "results/RAW/phase-23/aoi_v7_campaign/rho_offered_clean_rho0.925_rep1.csv",
+          "dt_s": 0.00999999999999801,
+          "n_samples": 12000,
+          "edge": {
+            "uA": {
+              "tau_s": 13.057998660267032,
+              "cut_lag": 3000,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 29.99999999999403
+            },
+            "uB": {
+              "tau_s": 11.745993445055916,
+              "cut_lag": 2574,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 25.73999999999488
+            },
+            "vC": {
+              "tau_s": 8.712682440171838,
+              "cut_lag": 2264,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 22.639999999995496
+            },
+            "vD": {
+              "tau_s": 12.447392630543833,
+              "cut_lag": 2578,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 25.77999999999487
+            }
+          }
+        },
+        {
+          "rep": 2,
+          "path": "results/RAW/phase-23/aoi_v7_campaign/rho_offered_clean_rho0.925_rep2.csv",
+          "dt_s": 0.00999999999999801,
+          "n_samples": 12000,
+          "edge": {
+            "uA": {
+              "tau_s": 9.351239233730627,
+              "cut_lag": 1847,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 18.469999999996325
+            },
+            "uB": {
+              "tau_s": 13.98033137195042,
+              "cut_lag": 2610,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 26.099999999994807
+            },
+            "vC": {
+              "tau_s": 10.928803297912259,
+              "cut_lag": 2692,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 26.919999999994644
+            },
+            "vD": {
+              "tau_s": 7.551798665821254,
+              "cut_lag": 2395,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 23.949999999995235
+            }
+          }
+        },
+        {
+          "rep": 3,
+          "path": "results/RAW/phase-23/aoi_v7_campaign/rho_offered_clean_rho0.925_rep3.csv",
+          "dt_s": 0.010000000000001563,
+          "n_samples": 12000,
+          "edge": {
+            "uA": {
+              "tau_s": 7.859765944222156,
+              "cut_lag": 1675,
+              "nlag": 3000,
+              "max_lag_s": 30.00000000000469,
+              "cut_s": 16.75000000000262
+            },
+            "uB": {
+              "tau_s": 16.105125352767168,
+              "cut_lag": 3000,
+              "nlag": 3000,
+              "max_lag_s": 30.00000000000469,
+              "cut_s": 30.00000000000469
+            },
+            "vC": {
+              "tau_s": 17.20751057392982,
+              "cut_lag": 3000,
+              "nlag": 3000,
+              "max_lag_s": 30.00000000000469,
+              "cut_s": 30.00000000000469
+            },
+            "vD": {
+              "tau_s": 6.595900166029841,
+              "cut_lag": 2795,
+              "nlag": 3000,
+              "max_lag_s": 30.00000000000469,
+              "cut_s": 27.95000000000437
+            }
+          }
+        }
+      ],
+      "median_tau_s": {
+        "uA": 9.351239233730627,
+        "uB": 13.98033137195042,
+        "vC": 10.928803297912259,
+        "vD": 7.551798665821254
+      }
+    },
+    "cell_C": {
+      "per_run": [
+        {
+          "rep": 1,
+          "path": "results/RAW/phase-D/cellC/rho_offered_rep1.csv",
+          "dt_s": 0.00999999999999801,
+          "n_samples": 24000,
+          "edge": {
+            "uA": {
+              "tau_s": 1.9453157881562504,
+              "cut_lag": 781,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 7.809999999998446
+            },
+            "uB": {
+              "tau_s": 5.413714294498014,
+              "cut_lag": 2691,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 26.909999999994646
+            },
+            "vC": {
+              "tau_s": 2.6999352015023272,
+              "cut_lag": 946,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 9.459999999998118
+            },
+            "vD": {
+              "tau_s": 2.6238847120842688,
+              "cut_lag": 806,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 8.059999999998396
+            }
+          }
+        },
+        {
+          "rep": 2,
+          "path": "results/RAW/phase-D/cellC/rho_offered_rep2.csv",
+          "dt_s": 0.00999999999999801,
+          "n_samples": 24000,
+          "edge": {
+            "uA": {
+              "tau_s": 1.2908068076951669,
+              "cut_lag": 312,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 3.1199999999993793
+            },
+            "uB": {
+              "tau_s": 1.725144730084804,
+              "cut_lag": 459,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 4.589999999999087
+            },
+            "vC": {
+              "tau_s": 2.806885476480662,
+              "cut_lag": 1119,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 11.189999999997774
+            },
+            "vD": {
+              "tau_s": 3.6905660106046687,
+              "cut_lag": 3000,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 29.99999999999403
+            }
+          }
+        },
+        {
+          "rep": 3,
+          "path": "results/RAW/phase-D/cellC/rho_offered_rep3.csv",
+          "dt_s": 0.00999999999999801,
+          "n_samples": 24000,
+          "edge": {
+            "uA": {
+              "tau_s": 1.8922987535966163,
+              "cut_lag": 765,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 7.649999999998478
+            },
+            "uB": {
+              "tau_s": 1.9567497396129603,
+              "cut_lag": 438,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 4.379999999999129
+            },
+            "vC": {
+              "tau_s": 2.5809718053954165,
+              "cut_lag": 687,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 6.869999999998633
+            },
+            "vD": {
+              "tau_s": 2.5813072476353707,
+              "cut_lag": 1111,
+              "nlag": 3000,
+              "max_lag_s": 29.99999999999403,
+              "cut_s": 11.10999999999779
+            }
+          }
+        }
+      ],
+      "median_tau_s": {
+        "uA": 1.8922987535966163,
+        "uB": 1.9567497396129603,
+        "vC": 2.6999352015023272,
+        "vD": 2.6238847120842688
+      }
+    },
+    "ratio_A_over_C": {
+      "uA": 4.941735133502098,
+      "uB": 7.1446701072338925,
+      "vC": 4.047802070150104,
+      "vD": 2.8780985044966108
+    },
+    "median_ratio_A_over_C": 4.494768601826101,
+    "pass": false
+  },
+  "PC_C2_prime_b": {
+    "cell_A_rho0.925": {
+      "paths": [
+        "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.925_rep1.csv",
+        "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.925_rep2.csv",
+        "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.925_rep3.csv"
+      ],
+      "per_link": {
+        "uA": {
+          "valid": true,
+          "reason": "ok",
+          "n_fit_lags": 10,
+          "fit_lags_used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            15,
+            20
+          ],
+          "slope_per_s": -0.059652828534922,
+          "log_intercept": -1.0750379585958,
+          "signal_fraction_raw": 0.3412848003633299,
+          "signal_fraction": 0.3412848003633299,
+          "lambda_nugget": 0.65871519963667,
+          "tau_measured_s": 16.76366443235092,
+          "acf_fit_values": {
+            "1": 0.3361403214772778,
+            "2": 0.3300291932375152,
+            "3": 0.3325929073767802,
+            "4": 0.32292675952003247,
+            "5": 0.3191249130043079,
+            "6": 0.31964706696305084,
+            "8": 0.31015728827437306,
+            "10": 0.3093198834231172,
+            "15": 0.28576242465667284,
+            "20": 0.26609153649134404
+          }
+        },
+        "uB": {
+          "valid": true,
+          "reason": "ok",
+          "n_fit_lags": 10,
+          "fit_lags_used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            15,
+            20
+          ],
+          "slope_per_s": -0.06902873320257441,
+          "log_intercept": -0.9285196884660734,
+          "signal_fraction_raw": 0.3951382052903679,
+          "signal_fraction": 0.3951382052903679,
+          "lambda_nugget": 0.6048617947096321,
+          "tau_measured_s": 14.486721016092835,
+          "acf_fit_values": {
+            "1": 0.4996348063156031,
+            "2": 0.3623544195767163,
+            "3": 0.359009471471521,
+            "4": 0.3520284925728085,
+            "5": 0.3554980898651922,
+            "6": 0.3460998178478749,
+            "8": 0.3437230281204178,
+            "10": 0.33508452919207116,
+            "15": 0.32728717648383965,
+            "20": 0.3147773045733954
+          }
+        },
+        "vC": {
+          "valid": true,
+          "reason": "ok",
+          "n_fit_lags": 10,
+          "fit_lags_used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            15,
+            20
+          ],
+          "slope_per_s": -0.06716413376950596,
+          "log_intercept": -0.8694911424733883,
+          "signal_fraction_raw": 0.4191647901467762,
+          "signal_fraction": 0.4191647901467762,
+          "lambda_nugget": 0.5808352098532238,
+          "tau_measured_s": 14.888898938707413,
+          "acf_fit_values": {
+            "1": 0.4154926862049985,
+            "2": 0.4018983650735097,
+            "3": 0.3973017212531131,
+            "4": 0.39427148143329255,
+            "5": 0.3906139954644885,
+            "6": 0.3921910580323426,
+            "8": 0.38088503126932666,
+            "10": 0.3735815061164374,
+            "15": 0.34626889806899164,
+            "20": 0.31384331303217533
+          }
+        },
+        "vD": {
+          "valid": true,
+          "reason": "ok",
+          "n_fit_lags": 10,
+          "fit_lags_used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            15,
+            20
+          ],
+          "slope_per_s": -0.18575524629421855,
+          "log_intercept": -1.5018245319608783,
+          "signal_fraction_raw": 0.22272342320491248,
+          "signal_fraction": 0.22272342320491248,
+          "lambda_nugget": 0.7772765767950875,
+          "tau_measured_s": 5.3834280320465115,
+          "acf_fit_values": {
+            "1": 0.4202852177697601,
+            "2": 0.16994252803213514,
+            "3": 0.16626706280488168,
+            "4": 0.16230731111421046,
+            "5": 0.16335005086494364,
+            "6": 0.16357995070479492,
+            "8": 0.15788748284021525,
+            "10": 0.15146642779479486,
+            "15": 0.13511812476913884,
+            "20": 0.11547519674587974
+          }
+        }
+      },
+      "all_edge_fits_valid": true,
+      "median_edge_signal_fraction": 0.3682115028268489
+    },
+    "cell_C": {
+      "paths": [
+        "results/RAW/phase-D/cellC/rho_measured_rep1.csv",
+        "results/RAW/phase-D/cellC/rho_measured_rep2.csv",
+        "results/RAW/phase-D/cellC/rho_measured_rep3.csv"
+      ],
+      "per_link": {
+        "uA": {
+          "valid": false,
+          "reason": "nonnegative_slope_or_signal_outside_0_1",
+          "n_fit_lags": 10,
+          "fit_lags_used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            15,
+            20
+          ],
+          "slope_per_s": -0.7186991318947525,
+          "log_intercept": 0.17155409991270398,
+          "signal_fraction_raw": 1.1871483656179926,
+          "signal_fraction": null,
+          "lambda_nugget": null,
+          "tau_measured_s": 1.3914028216002376,
+          "acf_fit_values": {
+            "1": 0.8935437506558613,
+            "2": 0.8200116148818036,
+            "3": 0.7499972323507266,
+            "4": 0.6787877478223686,
+            "5": 0.6119488057774812,
+            "6": 0.5481412338448017,
+            "8": 0.420191136675919,
+            "10": 0.30167246376822127,
+            "15": 0.14499216228579992,
+            "20": 0.05806377474056366
+          }
+        },
+        "uB": {
+          "valid": false,
+          "reason": "nonnegative_slope_or_signal_outside_0_1",
+          "n_fit_lags": 10,
+          "fit_lags_used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            15,
+            20
+          ],
+          "slope_per_s": -0.5388616187958986,
+          "log_intercept": 0.16581988666999334,
+          "signal_fraction_raw": 1.1803604839188335,
+          "signal_fraction": null,
+          "lambda_nugget": null,
+          "tau_measured_s": 1.855764012724692,
+          "acf_fit_values": {
+            "1": 0.9225497132629848,
+            "2": 0.872023955139355,
+            "3": 0.8224615025318909,
+            "4": 0.773306949557803,
+            "5": 0.723709795796732,
+            "6": 0.6696377459797533,
+            "8": 0.5618095740505767,
+            "10": 0.45788345913348955,
+            "15": 0.23967729268953056,
+            "20": 0.11809216534562521
+          }
+        },
+        "vC": {
+          "valid": true,
+          "reason": "ok",
+          "n_fit_lags": 10,
+          "fit_lags_used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            15,
+            20
+          ],
+          "slope_per_s": -0.40056901674314155,
+          "log_intercept": -0.0275031671014404,
+          "signal_fraction_raw": 0.9728716013655248,
+          "signal_fraction": 0.9728716013655248,
+          "lambda_nugget": 0.027128398634475248,
+          "tau_measured_s": 2.4964486972322026,
+          "acf_fit_values": {
+            "1": 0.90750717503752,
+            "2": 0.8403708343419026,
+            "3": 0.7765310813149245,
+            "4": 0.7161305465059379,
+            "5": 0.6598261179087602,
+            "6": 0.6070364180041777,
+            "8": 0.5048176135573689,
+            "10": 0.4014840859974256,
+            "15": 0.28006008235438445,
+            "20": 0.20975106021507237
+          }
+        },
+        "vD": {
+          "valid": false,
+          "reason": "nonnegative_slope_or_signal_outside_0_1",
+          "n_fit_lags": 10,
+          "fit_lags_used": [
+            1,
+            2,
+            3,
+            4,
+            5,
+            6,
+            8,
+            10,
+            15,
+            20
+          ],
+          "slope_per_s": -0.3969134706843342,
+          "log_intercept": 0.004002557994031743,
+          "signal_fraction_raw": 1.0040105789271259,
+          "signal_fraction": null,
+          "lambda_nugget": null,
+          "tau_measured_s": 2.519440819874066,
+          "acf_fit_values": {
+            "1": 0.8858902885562285,
+            "2": 0.8315221913028975,
+            "3": 0.786285329181433,
+            "4": 0.74015769287357,
+            "5": 0.6940736121192369,
+            "6": 0.6468025554416545,
+            "8": 0.5528145859503022,
+            "10": 0.4629440601721329,
+            "15": 0.2888842605349943,
+            "20": 0.20560375292811284
+          }
+        }
+      },
+      "all_edge_fits_valid": false,
+      "median_edge_signal_fraction": 0.9728716013655248
+    },
+    "A080_15_run_reference": {
+      "median_edge_signal_fraction": 0.3695699846466972,
+      "all_fits_valid": false,
+      "branch": "DEFAULT_MIXED_OR_INVALID"
+    },
+    "pass": false
+  },
+  "adjudication": {
+    "label": "GENERATOR_CONTROL_FAIL_CELL_C_REMAINS_INVALID",
+    "original_cell_C_verdict_preserved": "INVALID_RUN",
+    "frozen_cell_C_pooled_fisher_r": {
+      "uA-uB": 0.048619,
+      "vC-vD": -0.088245,
+      "ac-ad": 0.091956,
+      "bc-bd": 0.023738,
+      "uA-vC": 0.001788
+    },
+    "may_read_frozen_outcomes_under_A001": false
+  },
+  "provenance": {
+    "git_hash": "19351dfec13106666a01ec8f00a4b8c88c5c34ca",
+    "timestamp_utc": "2026-08-29T02:56:15.505389+00:00",
+    "script": "tools/phase_d_pc_c2_prime.py",
+    "inputs_sha256": {
+      "results/RAW/phase-23/aoi_v7_campaign/rho_offered_clean_rho0.925_rep1.csv": "b8b4d280ca6d0225c1fff49b411b2630e88a5bc863a3719eec225cf98f3522a6",
+      "results/RAW/phase-23/aoi_v7_campaign/rho_offered_clean_rho0.925_rep2.csv": "82921d8af85f03be2491e9cd677a9471fed78faace1e0206c0233ce6b955ae6f",
+      "results/RAW/phase-23/aoi_v7_campaign/rho_offered_clean_rho0.925_rep3.csv": "ddffcde2977f80f39d8e8216266c81d788423c737c5b4ef7b1d7f2592ceb803b",
+      "results/RAW/phase-D/cellC/rho_offered_rep1.csv": "c89aaf951b39540023aa0b012137af8b9741aae99e64ddae18a1659f49632fe9",
+      "results/RAW/phase-D/cellC/rho_offered_rep2.csv": "393dd16cffbdd5991a455fe272ae838c1a9d2e22fc7abe99bf2f745457592237",
+      "results/RAW/phase-D/cellC/rho_offered_rep3.csv": "42bdfeda7958adf0565ea6efe6486337c4e879d4e725897ea4e6175613535d0e",
+      "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.925_rep1.csv": "db1e4367714113920a217c484f987a3229a372038fc56119acb83f91d012409a",
+      "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.925_rep2.csv": "6e8832237ad881803e1c1984ad15cf5a4ac8f24cbd3229af0dfac372a4ce959e",
+      "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.925_rep3.csv": "450c83dbdc0d01364acf856b1690defd4fc61339289fc60f0b67a94702601439",
+      "results/RAW/phase-D/cellC/rho_measured_rep1.csv": "bbe0c2eb4eb930a73fb1c4627e20ae363c38e04775239fef978b5cc78a71dd3b",
+      "results/RAW/phase-D/cellC/rho_measured_rep2.csv": "0dd5d9e4c6ddbe3f25fa2c51a110bcb3411d06dec85e38204337993ef33f79c6",
+      "results/RAW/phase-D/cellC/rho_measured_rep3.csv": "6873ad76be5f85b11eab5b9d90763d6630ff4e7d3190d70a9e0a0991315bc778",
+      "results/LIVE/phase-23/acf_nugget.json": "d2b8762445c948fab25a1c07928346df6e515600c8c8737822e70c6c118f756a",
+      "results/SMOKE/phase-D/cellC_analysis.json": "097a881f7fdbe2241a0d96537bca8dbde78b864a8faa64b09c4ad7338ae6dab9"
+    }
+  }
+}
