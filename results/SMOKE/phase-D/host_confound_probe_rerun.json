@@ -1,0 +1,287 @@
+{
+  "adjudication": {
+    "focus_pair": "uA-uB",
+    "note": "Phan xu K1/K2/K3 cuoi cung con can chi2/dof M3 trong link_corr_matrix.json::T8_identifiability.",
+    "r_measured": 0.5986053157431429,
+    "r_offered": 0.17360749964995228,
+    "r_shortfall": 0.9020337189611705,
+    "thresholds": {
+      "generator_abs_r_offered_min": 0.4,
+      "host_r_shortfall_min": 0.3,
+      "large_r_measured_min": 0.4
+    },
+    "verdict": "HOST_SHORTFALL_SUPPORTED"
+  },
+  "lesson": "23.25c",
+  "n_runs": 15,
+  "offered_column_index": 2,
+  "pairs": {
+    "ac-ad": {
+      "hosts": [
+        "hA"
+      ],
+      "r_measured": 0.035760095576411306,
+      "r_offered": 0.026869909223326882,
+      "r_shortfall": 0.005963859199458204,
+      "shared_host": true
+    },
+    "ac-bc": {
+      "hosts": [
+        "hC"
+      ],
+      "r_measured": 0.012089250605306584,
+      "r_offered": 0.019763545553681924,
+      "r_shortfall": 0.030008579692093397,
+      "shared_host": true
+    },
+    "ac-bd": {
+      "hosts": [],
+      "r_measured": 0.01087165456795318,
+      "r_offered": -0.017271441634405724,
+      "r_shortfall": 0.01608181337240162,
+      "shared_host": false
+    },
+    "ac-vC": {
+      "hosts": [
+        "hC"
+      ],
+      "r_measured": 0.04365601319416061,
+      "r_offered": 0.048679785548755856,
+      "r_shortfall": 0.04884613290861577,
+      "shared_host": true
+    },
+    "ac-vD": {
+      "hosts": [],
+      "r_measured": -0.007446875450764403,
+      "r_offered": -0.03641023961295512,
+      "r_shortfall": 0.044128782675420516,
+      "shared_host": false
+    },
+    "ad-bc": {
+      "hosts": [],
+      "r_measured": 0.018048704940205704,
+      "r_offered": -0.00040465725677032055,
+      "r_shortfall": -0.00824625126140462,
+      "shared_host": false
+    },
+    "ad-bd": {
+      "hosts": [
+        "hD"
+      ],
+      "r_measured": -0.010606126010763448,
+      "r_offered": -0.04763314316426586,
+      "r_shortfall": 0.006856786014834842,
+      "shared_host": true
+    },
+    "ad-vC": {
+      "hosts": [],
+      "r_measured": 0.022426736850068477,
+      "r_offered": 0.03230896385411299,
+      "r_shortfall": 0.04800370256683894,
+      "shared_host": false
+    },
+    "ad-vD": {
+      "hosts": [
+        "hD"
+      ],
+      "r_measured": 0.03273278925494481,
+      "r_offered": 0.0602001426187714,
+      "r_shortfall": 0.04920146341846011,
+      "shared_host": true
+    },
+    "bc-bd": {
+      "hosts": [
+        "hB"
+      ],
+      "r_measured": 0.031354887240395306,
+      "r_offered": -0.007629684353678377,
+      "r_shortfall": 0.1752775755433051,
+      "shared_host": true
+    },
+    "bc-vC": {
+      "hosts": [
+        "hC"
+      ],
+      "r_measured": 0.03605128460978154,
+      "r_offered": -0.051852268142092414,
+      "r_shortfall": 0.2936995463633855,
+      "shared_host": true
+    },
+    "bc-vD": {
+      "hosts": [],
+      "r_measured": 0.056397934716215126,
+      "r_offered": -0.016842357658079534,
+      "r_shortfall": 0.28621447090566204,
+      "shared_host": false
+    },
+    "bd-vC": {
+      "hosts": [],
+      "r_measured": 0.26544457725962356,
+      "r_offered": 0.04127357146844082,
+      "r_shortfall": 0.6017116945553642,
+      "shared_host": false
+    },
+    "bd-vD": {
+      "hosts": [
+        "hD"
+      ],
+      "r_measured": 0.2878337729219803,
+      "r_offered": 0.05725303594559896,
+      "r_shortfall": 0.5851205516006006,
+      "shared_host": true
+    },
+    "uA-ac": {
+      "hosts": [
+        "hA"
+      ],
+      "r_measured": 0.12826223839282608,
+      "r_offered": 0.11485353881357457,
+      "r_shortfall": 0.14776993078798212,
+      "shared_host": true
+    },
+    "uA-ad": {
+      "hosts": [
+        "hA"
+      ],
+      "r_measured": -0.01521636120201467,
+      "r_offered": -0.03022534877257067,
+      "r_shortfall": 0.016966745608097928,
+      "shared_host": true
+    },
+    "uA-bc": {
+      "hosts": [],
+      "r_measured": -0.012822058459574393,
+      "r_offered": -0.044955241316203404,
+      "r_shortfall": 0.015397347509946648,
+      "shared_host": false
+    },
+    "uA-bd": {
+      "hosts": [],
+      "r_measured": -0.013895399356786832,
+      "r_offered": -0.044449478365477295,
+      "r_shortfall": 0.050466782616956286,
+      "shared_host": false
+    },
+    "uA-uB": {
+      "hosts": [
+        "hsrc"
+      ],
+      "r_measured": 0.5986053157431429,
+      "r_offered": 0.17360749964995228,
+      "r_shortfall": 0.9020337189611705,
+      "shared_host": true
+    },
+    "uA-vC": {
+      "hosts": [],
+      "r_measured": 0.029457191288488536,
+      "r_offered": -0.048516633271623685,
+      "r_shortfall": 0.07148199862176612,
+      "shared_host": false
+    },
+    "uA-vD": {
+      "hosts": [],
+      "r_measured": 0.08227356508236293,
+      "r_offered": 0.14271550622164764,
+      "r_shortfall": 0.06802984282715663,
+      "shared_host": false
+    },
+    "uB-ac": {
+      "hosts": [],
+      "r_measured": 0.11789351905985725,
+      "r_offered": 0.07741240248395621,
+      "r_shortfall": 0.14625020576983738,
+      "shared_host": false
+    },
+    "uB-ad": {
+      "hosts": [],
+      "r_measured": -0.006372352052542202,
+      "r_offered": -0.0328362646049772,
+      "r_shortfall": 0.010004404177974338,
+      "shared_host": false
+    },
+    "uB-bc": {
+      "hosts": [
+        "hB"
+      ],
+      "r_measured": 0.0010240567341454796,
+      "r_offered": -0.013755179184680022,
+      "r_shortfall": 0.03386972485722131,
+      "shared_host": true
+    },
+    "uB-bd": {
+      "hosts": [
+        "hB"
+      ],
+      "r_measured": -0.014545313273608819,
+      "r_offered": -0.07774958992035523,
+      "r_shortfall": 0.06460212038827427,
+      "shared_host": true
+    },
+    "uB-vC": {
+      "hosts": [],
+      "r_measured": -0.06720804387830166,
+      "r_offered": -0.31347178066107523,
+      "r_shortfall": 0.10392060841033546,
+      "shared_host": false
+    },
+    "uB-vD": {
+      "hosts": [],
+      "r_measured": 0.10113784413076553,
+      "r_offered": 0.14557723350471022,
+      "r_shortfall": 0.10313485977237664,
+      "shared_host": false
+    },
+    "vC-vD": {
+      "hosts": [
+        "hdst"
+      ],
+      "r_measured": 0.6375736123317818,
+      "r_offered": -0.18403485229349736,
+      "r_shortfall": 0.9612362654676465,
+      "shared_host": true
+    }
+  },
+  "prereg": "docs/phase-23/A079-amendment-79.md",
+  "provenance": {
+    "argv": {
+      "campaign": "results/RAW/phase-23/aoi_v7_campaign",
+      "out": "results/PENDING/phase-D/host_confound_probe_rerun.json"
+    },
+    "git_dirty": true,
+    "git_hash": "481cace307bc4641765c97f04c0c08254d79ba42",
+    "script": "measurements/host_confound_probe.py",
+    "timestamp_utc": "2026-08-28T14:21:00.074471+00:00"
+  },
+  "run_names": [
+    "clean_rho0.700_rep1",
+    "clean_rho0.700_rep2",
+    "clean_rho0.700_rep3",
+    "clean_rho0.850_rep1",
+    "clean_rho0.850_rep2",
+    "clean_rho0.850_rep3",
+    "clean_rho0.900_rep1",
+    "clean_rho0.900_rep2",
+    "clean_rho0.900_rep3",
+    "clean_rho0.925_rep1",
+    "clean_rho0.925_rep2",
+    "clean_rho0.925_rep3",
+    "clean_rho0.960_rep1",
+    "clean_rho0.960_rep2",
+    "clean_rho0.960_rep3"
+  ],
+  "schema": "dt4n.host_confound_probe.v1",
+  "status": "MEASUREMENT_ESTIMATE",
+  "validity": {
+    "axis_role": "measures_axis",
+    "inputs_sha256": {
+      "results/RAW/phase-23/aoi_v7_campaign/rho_measured_clean_rho0.700_rep1.csv": "602cff475aa799fd83616222b8d36ce61d4692125e5916d8d53b6f5de4e029ba"
+    },
+    "instrument": {
+      "module": "measurements.host_confound_probe",
+      "source_path": "measurements/host_confound_probe.py",
+      "source_sha256": "d72cff4f170858ed491fb81816774725618306fb16201d0b293dc15abc289739"
+    },
+    "note": "Do offered/measured/shortfall tren cung 15 run CLEAN; khong do Mininet moi, khong dung AoI/SLA.",
+    "schema": "dt4n.validity.v1"
+  }
+}

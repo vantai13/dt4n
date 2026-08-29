@@ -17,3 +17,24 @@ if git diff --cached --name-only | grep -q '^docs/phase-23/'; then
         exit 1
     }
 fi
+
+# Phase D': newly added large files must not enter Git without an explicit
+# RAW/DERIVED/CITED custody decision. Existing tracked artifacts are not
+# blocked here because this guard only inspects diff-filter=A.
+MAXBYTES=$((5 * 1024 * 1024))
+BIG=$(
+    git diff --cached --name-only --diff-filter=A | while IFS= read -r f; do
+        if [ -f "$f" ]; then
+            size=$(wc -c < "$f")
+            if [ "$size" -gt "$MAXBYTES" ]; then
+                echo "$f ($((size / 1024 / 1024)) MiB)"
+            fi
+        fi
+    done
+)
+if [ -n "$BIG" ]; then
+    echo "Chan commit: co file moi lon hon 5 MiB."
+    echo "$BIG"
+    echo "DERIVED: ignore + ghi SHA256/lenh tai tao; RAW: luu archive + manifest."
+    exit 1
+fi

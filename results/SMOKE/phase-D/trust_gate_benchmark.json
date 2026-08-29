@@ -1,0 +1,18 @@
+{
+  "accepted": true,
+  "gate_p99_le_10ms": true,
+  "implementation": "cert.usefulness_v2._thresholds + scalar comparison",
+  "input": {
+    "kappa": 1.0,
+    "m_hat": 8.0,
+    "z_bin": 2
+  },
+  "max_ms": 0.862302,
+  "mean_ms": 0.138116,
+  "n": 5000,
+  "p50_ms": 0.13114,
+  "p95_ms": 0.166973,
+  "p99_ms": 0.222126,
+  "schema": "dt4n.trust_gate_benchmark.v1",
+  "warmup": 200
+}

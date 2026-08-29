@@ -64,8 +64,13 @@ LOAD_MEAN = {
     "vC": 0.80,
     "vD": 0.83,
 }
-LOAD_SIGMA_TARGET = 0.010
-LOAD_TAU_TARGET_STEPS = 8.0
+# Historical Phase-20 design targets, not achieved generator parameters.
+# The flow-level generator in mininet/flow_engine.py couples its measured
+# variability and time scale through sigma^2*tau = rho*Sbar/C.  Consequently
+# this pair must not be reused as an independently realizable operating point.
+# Phase D' keeps the constants only as provenance for the old experiment.
+LOAD_SIGMA_TARGET = 0.010  # DEPRECATED design target; do not use for new runs
+LOAD_TAU_TARGET_STEPS = 8.0  # DEPRECATED design target; do not use for new runs
 
 W_LOSS_DEFAULT = 2500.0
 EPS = 1e-9
