@@ -11,6 +11,8 @@
 | D-L7 | Con số 817–875 là số luồng ảo warm-start, không phải số socket | đóng; khớp metadata và `rho^2/sigma^2` |
 | D-L8 | `results/DATA_MANIFEST.json::doi` còn `null`; chưa có Version DOI | mở, cần thao tác tài khoản ngoài |
 | D-L9 | Backup 6.5 GiB mới chỉ nằm trên cùng máy | mở, cần sao chép ra phương tiện/tài khoản khác |
+| D-L10 | Run cũ 120 s ngắn hơn `5*tau_pred` của uB/vD (140–151 s theo max campaign); không có vùng hậu burn-in theo estimator generator dù measured-ACF T8 cho n_eff lớn | mở; không tráo hai estimator. Cell C dùng 240 s; cấu hình A muốn đóng riêng cần run dài |
+| D-L11 | Cell C đổi đồng thời sigma, lifetime, tau và N_bar; dù H4 thắng cũng chỉ xác nhận endpoint × configuration bundle, không nhận dạng riêng N_bar hay heap cost | mở có chủ đích; tách trục cần generator mới hoặc intervention khác |
 
 ## Đính chính quan trọng so với bản hướng dẫn đầu vào
 
@@ -26,6 +28,7 @@ bc-bd  measured +0.0314
 ```
 
 Shortfall endpoint trong `host_confound_probe.json` là `+0.9020` và
-`+0.9612` cho hai cặp biên. Vì vậy hiện tượng được giữ là bằng chứng shared
-endpoint contention của generator một-hop; nó không được diễn giải thành
-path coupling vật lý.
+`+0.9612` cho hai cặp biên. Factorial audit bổ sung cho thấy endpoint là điều
+kiện chưa đủ: cặp chung host với hai `N_bar` nhỏ có mean r=+0.0171. Hiện tượng
+được giữ như ứng viên tương tác endpoint × low-sigma/high-N bundle; nó không
+được diễn giải thành path coupling vật lý trước cell C.

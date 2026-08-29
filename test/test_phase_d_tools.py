@@ -1,7 +1,10 @@
 import json
+from pathlib import Path
 
 import numpy as np
+import pytest
 
+from tools.phase_d_factorial_audit import build_artifact
 from tools.phase_d_scaling_test import autocorrelation_fft, fisher_ci, tau_integral
 from tools.summarize_infra import summarize
 from tools.trust_gate_bench import run_benchmark
@@ -49,3 +52,26 @@ def test_trust_gate_microbenchmark_smoke():
     assert result["accepted"] is True
     assert result["n"] == 10
     assert result["p99_ms"] >= 0
+
+
+def test_factorial_audit_uses_all_pairs_and_locks_cells():
+    artifact = build_artifact(
+        source=Path("results/LIVE/phase-23/link_corr_matrix.json"),
+        campaign=Path("results/RAW/phase-23/aoi_v7_campaign"),
+        design_meta=Path(
+            "results/RAW/phase-23/aoi_v7_campaign/meta_clean_rho0.925_rep3.json"
+        ),
+    )
+    assert artifact["n_pairs_analyzed"] == 28
+    assert {key: value["n"] for key, value in artifact["cells"].items()} == {
+        "nlow2_shared1": 2,
+        "nlow2_shared0": 4,
+        "nlow1_shared1": 8,
+        "nlow1_shared0": 8,
+        "nlow0_shared1": 4,
+        "nlow0_shared0": 2,
+    }
+    assert artifact["cells"]["nlow2_shared1"]["mean_r"] == pytest.approx(0.618089464, abs=1e-6)
+    assert artifact["cells"]["nlow2_shared0"]["mean_r"] == pytest.approx(0.036415139, abs=1e-6)
+    assert artifact["cells"]["nlow0_shared1"]["mean_r"] == pytest.approx(0.017149527, abs=1e-6)
+    assert artifact["verdict"]["H4_endpoint_x_load_interaction"]["descriptively_supported"] is True

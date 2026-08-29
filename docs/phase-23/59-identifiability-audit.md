@@ -108,6 +108,14 @@ qua goc, nen khong duoc dung lam doi chung cho WLS chung.
 
 ## 3. Host confound probe -- phan xu co che `+0.6`
 
+> **DINH CHINH PHASE D' (2026-08-29).** Shortfall probe xac nhan thanh phan
+> sinh ra giua offered va measured tai endpoint, nhung **shared endpoint mot
+> minh KHONG du** de giai thich `+0.6`. Audit du 28 cap cho mean r=+0.0171 o
+> bon cap chung host ma ca hai channel co `N_bar` nho, va +0.0364 o bon cap
+> ca hai low-sigma/high-N ma khong chung host. Gia thuyet hien tai la H4
+> endpoint x configuration-bundle interaction (post-hoc); phan quyet xac nhan
+> cho cell C nam o `docs/phase-D/00-preregistration.md`.
+
 Probe doc dung cot `rho_offered` (cot 2, khong phai timestamp cot 1), gop
 10 ms -> 200 ms, tinh trong tung run roi gop Fisher-z.
 
@@ -120,9 +128,10 @@ Probe doc dung cot `rho_offered` (cot 2, khong phai timestamp cot 1), gop
 
 Generator/RNG khong sinh `+0.6`: offered cua hai cap bien khong cung dau va
 khong gan +0.6. Phan dat duoc (`measured/offered`) cua hai tien trinh cung
-endpoint lai tut cung luc rat manh. Probe do do xac nhan **shared endpoint
-contention**; ket hop `~750` flow dong thoi o link bien giai thich vi sao hA/hB
-khong co cung do lon.
+endpoint lai tut cung luc rat manh. Probe xac nhan **thanh phan endpoint trong
+mot tuong tac**, khong xac nhan H1 endpoint-only. `~750` virtual flow dong thoi
+o link bien la marker cua configuration bundle; chua duoc goi la co che nhan
+qua cho toi khi cell C duoc chay theo prereg Phase D'.
 
 Day dong `G23-312` o muc co che. Nhung phan quyet tong cua A079 van la K3 vi
 K1 doi ca M-265 HIT VA M-264 HIT; M-265 vuot cao dai (+0.902 > +0.85) va

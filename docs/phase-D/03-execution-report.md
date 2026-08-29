@@ -81,6 +81,24 @@ Full suite loại đúng L121     1796 passed, 46 skipped, 14 deselected
 Pre-commit file >5 MiB       PASS: file thử 6 MiB bị chặn, exit 1
 ```
 
+### 7. Audit factorial 28 cặp (bổ sung 2026-08-29)
+
+```text
+ô (2 low-sigma, shared)       n=2  mean r=+0.6181
+ô (2 low-sigma, no-shared)    n=4  mean r=+0.0364
+ô (1 low-sigma, shared)       n=8  mean r=+0.0625
+ô (1 low-sigma, no-shared)    n=8  mean r=+0.0527
+ô (0 low-sigma, shared)       n=4  mean r=+0.0171
+ô (0 low-sigma, no-shared)    n=2  mean r=+0.0145
+ratio ô phát hiện / ô kế      9.893x
+nhãn                          POST_HOC_REANALYSIS_NOT_CONFIRMATORY
+```
+
+H1/H2/H3 bị bác ở mức mô tả hậu kiểm; H4 endpoint × configuration bundle là
+ứng viên. Cell C đã được soạn prereg nhưng chưa ký/chạy. Duration được sửa từ
+120 s thành 240 s vì `tau_pred(ad)=4.2769 s` và gate tính sau burn-in cần
+`T >= 55*tau_max = 235.2 s`.
+
 ## Artifact đầu ra
 
 | Nội dung | File |
@@ -91,6 +109,7 @@ Pre-commit file >5 MiB       PASS: file thử 6 MiB bị chặn, exit 1
 | correlation rerun | `results/SMOKE/phase-D/link_pair_stability_rerun.json` |
 | host confound rerun | `results/SMOKE/phase-D/host_confound_probe_rerun.json` |
 | scaling audit | `results/SMOKE/phase-D/scaling_test_existing_120s.json` |
+| factorial audit 28 cặp | `results/SMOKE/phase-D/factorial_endpoint_x_load.json` |
 | 8 SHA256 parquet | `docs/phase-D/parquet-sha256-before-delete.txt` |
 
 ## Gate chưa thể PASS trong phiên này
@@ -100,6 +119,7 @@ Pre-commit file >5 MiB       PASS: file thử 6 MiB bị chặn, exit 1
 - Tag `v9-pre-cleanup`: không tạo vì HEAD hiện tại đã là Lesson 23.25 closeout,
   gắn tên v9 vào commit này sẽ sai provenance.
 - Xoá/untrack/rewrite lịch sử: bị chặn đúng quy trình vì NC tái tạo FAIL.
-- Lưới Mininet D.4′ mới: không chạy vì thiết kế mới nhất trong repo đã thay
-  bằng yêu cầu path-level Phase 23.26; chạy lưới generator một-hop cũ không
-  giải quyết identifiability đã được closeout xác nhận.
+- Cell C generator một-hop: chưa chạy trong phiên 2026-08-28. Audit factorial
+  ngày 2026-08-29 đã làm sống lại cell này cho câu hỏi cơ chế endpoint ×
+  configuration bundle (không phải câu hỏi path-omega). Prereg nằm ở
+  `docs/phase-D/00-preregistration.md`; chỉ được chạy sau commit + tag ký.
