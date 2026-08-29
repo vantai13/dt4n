@@ -300,3 +300,9 @@ may_read_frozen_outcomes_under_A001 = false
 Kết quả nằm ở `results/SMOKE/phase-D/pc_c2_prime.json`; diễn giải đầy đủ tại
 `docs/phase-D/05-pc-c2-prime-readjudication.md`. Không hạ threshold 5×, không
 bỏ vD và không đảo phán quyết cũ.
+
+Sau A3, `git push origin main` và push tag
+`phase-D-pc-c2-prime-start` được thử lại nhưng checkout hiện tại vẫn không có
+GitHub credential (`could not read Username`). Remote được xác nhận dừng ở
+`c766af2`; ba commit A001 và tag mới đang chờ người dùng push từ môi trường có
+credential.
