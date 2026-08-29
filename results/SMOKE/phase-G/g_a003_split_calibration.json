@@ -1,0 +1,327 @@
+{
+  "schema": "dt4n.phase_g.g_a003_split_calibration.v1",
+  "status": "CALIBRATION_HALF_ONLY_PRE_PREREG",
+  "held_out_correlations_read": false,
+  "input": {
+    "measured_path": "results/RAW/phase-D/cellA_long/rho_measured_rep1.csv",
+    "offered_path": "results/RAW/phase-D/cellA_long/rho_offered_rep1.csv",
+    "sha256": {
+      "measured": "defae89140c9ff5052fc73442778e8a9586d8226debaa04bd3acea185e0f88e6",
+      "offered": "0e017696b453f6d4e213f20ae9d5493fd45680cc60eac23a6ae5241771e18eef"
+    }
+  },
+  "split": {
+    "rule": "first contiguous half calibration; second contiguous half test",
+    "n_total": 7524,
+    "split_index": 3762,
+    "n_calibration": 3762,
+    "n_test": 3762,
+    "calibration_duration_s": 752.4000000000001,
+    "test_duration_s": 752.4000000000001
+  },
+  "locked_constants": {
+    "dt_target_s": 0.2,
+    "offered_samples_per_bin": 20,
+    "n_fit_lags": 8,
+    "K09": 1.0094102536,
+    "censoring_fraction_max_strict": 0.05,
+    "T_over_tau_min": 50.0,
+    "pair_error_max": 0.1,
+    "median_error_max_strict": 0.02,
+    "dynamic_range_multiplier": 2.0,
+    "dynamic_range_min": 0.2
+  },
+  "per_link": {
+    "uA": {
+      "class": "edge",
+      "offered_censor_fraction": 0.0,
+      "censoring_gate_pass": true,
+      "measured_calibration": {
+        "sf": 0.9762815241159777,
+        "v": 1.4169129016486179e-05,
+        "sigma_true": 0.024149921499985096,
+        "tau_from_fit_s": 22.42198690519402,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": true,
+        "reason": ""
+      },
+      "offered_calibration": {
+        "sf": 1.0037428908502009,
+        "v": -2.457098326997117e-06,
+        "sigma_true": 0.0256695897619698,
+        "tau_from_fit_s": 21.745597165879648,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "test_T_over_tau_measured": 33.556348203276656,
+      "test_T_over_tau_offered": 34.600107518802375,
+      "temporal_power_gate_pass": false
+    },
+    "uB": {
+      "class": "edge",
+      "offered_censor_fraction": 0.0,
+      "censoring_gate_pass": true,
+      "measured_calibration": {
+        "sf": 0.9365677884861318,
+        "v": 2.702482082026652e-05,
+        "sigma_true": 0.01997542800673743,
+        "tau_from_fit_s": 20.981322376668135,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": true,
+        "reason": ""
+      },
+      "offered_calibration": {
+        "sf": 1.003119865322732,
+        "v": -1.187558363407307e-06,
+        "sigma_true": 0.019540513548697708,
+        "tau_from_fit_s": 19.30596160447195,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "test_T_over_tau_measured": 35.86046610849903,
+      "test_T_over_tau_offered": 38.97241771296786,
+      "temporal_power_gate_pass": false
+    },
+    "ac": {
+      "class": "core",
+      "offered_censor_fraction": 0.3277511961722488,
+      "censoring_gate_pass": false,
+      "measured_calibration": {
+        "sf": 1.015536846283544,
+        "v": -7.985464877757767e-05,
+        "sigma_true": 0.07224644970849803,
+        "tau_from_fit_s": 3.647888438669211,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "offered_calibration": {
+        "sf": 1.0277868146355256,
+        "v": -0.0002964986835356439,
+        "sigma_true": 0.10472334933752472,
+        "tau_from_fit_s": 3.9839762465462,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "test_T_over_tau_measured": 206.25630762833407,
+      "test_T_over_tau_offered": 188.85654768957843,
+      "temporal_power_gate_pass": true
+    },
+    "ad": {
+      "class": "core",
+      "offered_censor_fraction": 0.48617756512493354,
+      "censoring_gate_pass": false,
+      "measured_calibration": {
+        "sf": 0.9982598947404989,
+        "v": 4.955468514888159e-06,
+        "sigma_true": 0.05331831456203727,
+        "tau_from_fit_s": 4.495104622754428,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": true,
+        "reason": ""
+      },
+      "offered_calibration": {
+        "sf": 1.0156042147841637,
+        "v": -0.00016748103638791832,
+        "sigma_true": 0.104405675442329,
+        "tau_from_fit_s": 6.526870063046405,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "test_T_over_tau_measured": 167.38208854835466,
+      "test_T_over_tau_offered": 115.27730638609016,
+      "temporal_power_gate_pass": true
+    },
+    "bc": {
+      "class": "core",
+      "offered_censor_fraction": 0.33014354066985646,
+      "censoring_gate_pass": false,
+      "measured_calibration": {
+        "sf": 1.028736810213936,
+        "v": -0.0001251523312646973,
+        "sigma_true": 0.0669348557859637,
+        "tau_from_fit_s": 2.7511897855842418,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "offered_calibration": {
+        "sf": 1.0459540840418053,
+        "v": -0.0004602256873631651,
+        "sigma_true": 0.10234807540963364,
+        "tau_from_fit_s": 3.1791990932455207,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "test_T_over_tau_measured": 273.4816783423833,
+      "test_T_over_tau_offered": 236.66337902477954,
+      "temporal_power_gate_pass": true
+    },
+    "bd": {
+      "class": "core",
+      "offered_censor_fraction": 0.3822434875066454,
+      "censoring_gate_pass": false,
+      "measured_calibration": {
+        "sf": 1.0106570070346823,
+        "v": -4.4631667820717664e-05,
+        "sigma_true": 0.06505876689131514,
+        "tau_from_fit_s": 3.09509235821345,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "offered_calibration": {
+        "sf": 1.036012152799968,
+        "v": -0.00033645548603228407,
+        "sigma_true": 0.09838336890331383,
+        "tau_from_fit_s": 3.5109485828523828,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "test_T_over_tau_measured": 243.094522851105,
+      "test_T_over_tau_offered": 214.30105917094673,
+      "temporal_power_gate_pass": true
+    },
+    "vC": {
+      "class": "edge",
+      "offered_censor_fraction": 0.0,
+      "censoring_gate_pass": true,
+      "measured_calibration": {
+        "sf": 0.8401664963367682,
+        "v": 0.0001633658098822924,
+        "sigma_true": 0.029304165253438385,
+        "tau_from_fit_s": 35.65669568802105,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": true,
+        "reason": ""
+      },
+      "offered_calibration": {
+        "sf": 1.0026119496607722,
+        "v": -2.4483955338825456e-06,
+        "sigma_true": 0.030656659215539513,
+        "tau_from_fit_s": 32.314041789446534,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "test_T_over_tau_measured": 21.101226164733223,
+      "test_T_over_tau_offered": 23.28399538821315,
+      "temporal_power_gate_pass": false
+    },
+    "vD": {
+      "class": "edge",
+      "offered_censor_fraction": 0.0,
+      "censoring_gate_pass": true,
+      "measured_calibration": {
+        "sf": 0.763386228682409,
+        "v": 0.00021553401117096902,
+        "sigma_true": 0.026369995604175304,
+        "tau_from_fit_s": 23.927143474833247,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": true,
+        "reason": ""
+      },
+      "offered_calibration": {
+        "sf": 1.0023231573522782,
+        "v": -1.6944800098202168e-06,
+        "sigma_true": 0.02703851238616956,
+        "tau_from_fit_s": 33.87540663497289,
+        "n_lags_used": 8,
+        "acf_noise_floor": 0.03260773253630123,
+        "ok": false,
+        "reason": "sf outside (0,1]"
+      },
+      "test_T_over_tau_measured": 31.44545861863453,
+      "test_T_over_tau_offered": 22.210803492561595,
+      "temporal_power_gate_pass": false
+    }
+  },
+  "pairs": {
+    "uA-uB": {
+      "first": "uA",
+      "second": "uB",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 33.556348203276656,
+      "eligible_before_dynamic_range": false
+    },
+    "uA-vC": {
+      "first": "uA",
+      "second": "vC",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 21.101226164733223,
+      "eligible_before_dynamic_range": false
+    },
+    "uA-vD": {
+      "first": "uA",
+      "second": "vD",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 22.210803492561595,
+      "eligible_before_dynamic_range": false
+    },
+    "uB-vC": {
+      "first": "uB",
+      "second": "vC",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 21.101226164733223,
+      "eligible_before_dynamic_range": false
+    },
+    "uB-vD": {
+      "first": "uB",
+      "second": "vD",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 22.210803492561595,
+      "eligible_before_dynamic_range": false
+    },
+    "vC-vD": {
+      "first": "vC",
+      "second": "vD",
+      "censoring_gate_pass": true,
+      "calibration_estimator_gate_pass": true,
+      "temporal_power_gate_pass": false,
+      "minimum_test_T_over_tau": 21.101226164733223,
+      "eligible_before_dynamic_range": false
+    }
+  },
+  "summary": {
+    "edge_pairs_total": 6,
+    "edge_pairs_censoring_pass": 6,
+    "edge_pairs_temporal_power_pass": 0,
+    "edge_pairs_eligible_before_dynamic_range": 0
+  },
+  "provenance": {
+    "git_hash": "7c602154e433e221cacb77d183d21b8a9dd78942",
+    "timestamp_utc": "2026-08-29T15:28:30.080269+00:00",
+    "script": "tools/g_a003_split_sample.py --stage calibrate"
+  }
+}
