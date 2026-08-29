@@ -1,0 +1,373 @@
+{
+  "schema": "dt4n.phase_d.cell_analysis.v1",
+  "status": "INVALID_RUN",
+  "cell": "cellC",
+  "signed_estimator_tag": "phase-D-cellC-start",
+  "runs": [
+    {
+      "rep": 1,
+      "seed": 11,
+      "trace": "results/RAW/phase-D/cellC/rho_measured_rep1.csv",
+      "meta": "results/RAW/phase-D/cellC/meta_rep1.json",
+      "dt_s": 0.2,
+      "duration_observed_s": 239.8,
+      "missing_or_incomplete_rows": 0,
+      "tau_by_link_s": {
+        "uA": 1.849667,
+        "uB": 5.239603,
+        "ac": 3.25135,
+        "ad": 4.117865,
+        "bc": 1.731171,
+        "bd": 2.145814,
+        "vC": 2.709651,
+        "vD": 2.308485
+      },
+      "edge_warm_start_active": {
+        "uA": 74,
+        "uB": 77,
+        "vC": 74,
+        "vD": 79
+      },
+      "edge_warm_start_expected": {
+        "uA": 74,
+        "uB": 77,
+        "vC": 74,
+        "vD": 79
+      },
+      "PC_C1_warm_start": true,
+      "PC_C3_metadata": true,
+      "pairs": {
+        "uA-uB": {
+          "r": -0.004029,
+          "tau_pair_s": 5.239603,
+          "burn_samples": 131,
+          "burn_s": 26.2,
+          "samples_after_burn": 1068,
+          "n_eff": 20.383,
+          "n_eff_pass": false,
+          "burn_pass": true
+        },
+        "vC-vD": {
+          "r": -0.111348,
+          "tau_pair_s": 2.709651,
+          "burn_samples": 68,
+          "burn_s": 13.6,
+          "samples_after_burn": 1131,
+          "n_eff": 41.74,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "ac-ad": {
+          "r": 0.159518,
+          "tau_pair_s": 4.117865,
+          "burn_samples": 103,
+          "burn_s": 20.6,
+          "samples_after_burn": 1096,
+          "n_eff": 26.616,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "bc-bd": {
+          "r": 0.095474,
+          "tau_pair_s": 2.145814,
+          "burn_samples": 54,
+          "burn_s": 10.8,
+          "samples_after_burn": 1145,
+          "n_eff": 53.36,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "uA-vC": {
+          "r": 0.036177,
+          "tau_pair_s": 2.709651,
+          "burn_samples": 68,
+          "burn_s": 13.6,
+          "samples_after_burn": 1131,
+          "n_eff": 41.74,
+          "n_eff_pass": true,
+          "burn_pass": true
+        }
+      }
+    },
+    {
+      "rep": 2,
+      "seed": 12,
+      "trace": "results/RAW/phase-D/cellC/rho_measured_rep2.csv",
+      "meta": "results/RAW/phase-D/cellC/meta_rep2.json",
+      "dt_s": 0.2,
+      "duration_observed_s": 239.800009,
+      "missing_or_incomplete_rows": 0,
+      "tau_by_link_s": {
+        "uA": 1.212554,
+        "uB": 1.948127,
+        "ac": 1.771458,
+        "ad": 2.230222,
+        "bc": 4.540861,
+        "bd": 3.405401,
+        "vC": 2.642866,
+        "vD": 3.138153
+      },
+      "edge_warm_start_active": {
+        "uA": 74,
+        "uB": 77,
+        "vC": 74,
+        "vD": 79
+      },
+      "edge_warm_start_expected": {
+        "uA": 74,
+        "uB": 77,
+        "vC": 74,
+        "vD": 79
+      },
+      "PC_C1_warm_start": true,
+      "PC_C3_metadata": true,
+      "pairs": {
+        "uA-uB": {
+          "r": -0.006056,
+          "tau_pair_s": 1.948127,
+          "burn_samples": 49,
+          "burn_s": 9.8,
+          "samples_after_burn": 1150,
+          "n_eff": 59.031,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "vC-vD": {
+          "r": -0.09174,
+          "tau_pair_s": 3.138153,
+          "burn_samples": 79,
+          "burn_s": 15.8,
+          "samples_after_burn": 1120,
+          "n_eff": 35.69,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "ac-ad": {
+          "r": 0.123088,
+          "tau_pair_s": 2.230222,
+          "burn_samples": 56,
+          "burn_s": 11.2,
+          "samples_after_burn": 1143,
+          "n_eff": 51.251,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "bc-bd": {
+          "r": -0.019337,
+          "tau_pair_s": 4.540861,
+          "burn_samples": 114,
+          "burn_s": 22.8,
+          "samples_after_burn": 1085,
+          "n_eff": 23.894,
+          "n_eff_pass": false,
+          "burn_pass": true
+        },
+        "uA-vC": {
+          "r": 0.020382,
+          "tau_pair_s": 2.642866,
+          "burn_samples": 67,
+          "burn_s": 13.4,
+          "samples_after_burn": 1132,
+          "n_eff": 42.832,
+          "n_eff_pass": true,
+          "burn_pass": true
+        }
+      }
+    },
+    {
+      "rep": 3,
+      "seed": 13,
+      "trace": "results/RAW/phase-D/cellC/rho_measured_rep3.csv",
+      "meta": "results/RAW/phase-D/cellC/meta_rep3.json",
+      "dt_s": 0.2,
+      "duration_observed_s": 239.799999,
+      "missing_or_incomplete_rows": 0,
+      "tau_by_link_s": {
+        "uA": 1.95898,
+        "uB": 1.853628,
+        "ac": 1.958386,
+        "ad": 9.196749,
+        "bc": 2.026055,
+        "bd": 1.811543,
+        "vC": 2.486162,
+        "vD": 2.366867
+      },
+      "edge_warm_start_active": {
+        "uA": 74,
+        "uB": 77,
+        "vC": 74,
+        "vD": 79
+      },
+      "edge_warm_start_expected": {
+        "uA": 74,
+        "uB": 77,
+        "vC": 74,
+        "vD": 79
+      },
+      "PC_C1_warm_start": true,
+      "PC_C3_metadata": true,
+      "pairs": {
+        "uA-uB": {
+          "r": 0.154804,
+          "tau_pair_s": 1.95898,
+          "burn_samples": 49,
+          "burn_s": 9.8,
+          "samples_after_burn": 1150,
+          "n_eff": 58.704,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "vC-vD": {
+          "r": -0.061537,
+          "tau_pair_s": 2.486162,
+          "burn_samples": 63,
+          "burn_s": 12.6,
+          "samples_after_burn": 1136,
+          "n_eff": 45.693,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "ac-ad": {
+          "r": -0.007956,
+          "tau_pair_s": 9.196749,
+          "burn_samples": 230,
+          "burn_s": 46.0,
+          "samples_after_burn": 969,
+          "n_eff": 10.536,
+          "n_eff_pass": false,
+          "burn_pass": true
+        },
+        "bc-bd": {
+          "r": -0.005199,
+          "tau_pair_s": 2.026055,
+          "burn_samples": 51,
+          "burn_s": 10.2,
+          "samples_after_burn": 1148,
+          "n_eff": 56.662,
+          "n_eff_pass": true,
+          "burn_pass": true
+        },
+        "uA-vC": {
+          "r": -0.051171,
+          "tau_pair_s": 2.486162,
+          "burn_samples": 63,
+          "burn_s": 12.6,
+          "samples_after_burn": 1136,
+          "n_eff": 45.693,
+          "n_eff_pass": true,
+          "burn_pass": true
+        }
+      }
+    }
+  ],
+  "pooled_fisher_r": {
+    "uA-uB": 0.048619,
+    "vC-vD": -0.088245,
+    "ac-ad": 0.091956,
+    "bc-bd": 0.023738,
+    "uA-vC": 0.001788
+  },
+  "controls": {
+    "NC_C1_ac_ad": true,
+    "NC_C1_bc_bd": true,
+    "NC_C2_uA_vC": true
+  },
+  "PC_C2_tau_reduction": {
+    "baseline_edge_tau_s": {
+      "uA": 2.07044,
+      "uB": 3.012317,
+      "vC": 2.435472,
+      "vD": 2.548316
+    },
+    "cell_edge_tau_s": {
+      "uA": 1.849667,
+      "uB": 1.948127,
+      "vC": 2.642866,
+      "vD": 2.366867
+    },
+    "reduction_ratio": {
+      "uA": 1.119,
+      "uB": 1.546,
+      "vC": 0.922,
+      "vD": 1.077
+    },
+    "required_median_ratio": 5.0,
+    "pass": false
+  },
+  "validity": {
+    "all_pairs_all_reps_n_eff_ge_25": false,
+    "all_burn_ge_5tau": true,
+    "controls_pass": true,
+    "metadata_and_warm_start_pass": true,
+    "infra_all_four_flags_false": true,
+    "counter_and_completeness_clean": true,
+    "overall": false
+  },
+  "infra_summaries": [
+    {
+      "clock_jump_ms_max": 0.187335,
+      "clock_skew_ms_p95": 0.308542,
+      "cpu_max": 100.0,
+      "cpu_max_core_p95": 33.3,
+      "cpu_p50": 4.662,
+      "cpu_p95": 14.379,
+      "ctx_per_s": 25405.92,
+      "flag_clock_jump": false,
+      "flag_cpu_saturated": false,
+      "flag_packet_drops": false,
+      "flag_swapping": false,
+      "interval_s": 0.1,
+      "load_1m_max": 2.666,
+      "net_drops": 0,
+      "samples": 2439,
+      "schema": "dt4n.infra_summary.v1",
+      "source": "results/PENDING/phase-D/infra_cellC_s11.jsonl",
+      "swap_max_pct": 0.0
+    },
+    {
+      "clock_jump_ms_max": 0.210037,
+      "clock_skew_ms_p95": 0.318248,
+      "cpu_max": 100.0,
+      "cpu_max_core_p95": 90.9,
+      "cpu_p50": 4.775,
+      "cpu_p95": 19.804,
+      "ctx_per_s": 25766.899,
+      "flag_clock_jump": false,
+      "flag_cpu_saturated": false,
+      "flag_packet_drops": false,
+      "flag_swapping": false,
+      "interval_s": 0.1,
+      "load_1m_max": 0.432,
+      "net_drops": 0,
+      "samples": 2438,
+      "schema": "dt4n.infra_summary.v1",
+      "source": "results/PENDING/phase-D/infra_cellC_s12.jsonl",
+      "swap_max_pct": 0.0
+    },
+    {
+      "clock_jump_ms_max": 0.172754,
+      "clock_skew_ms_p95": 0.309764,
+      "cpu_max": 100.0,
+      "cpu_max_core_p95": 30.8,
+      "cpu_p50": 4.775,
+      "cpu_p95": 13.642,
+      "ctx_per_s": 25985.778,
+      "flag_clock_jump": false,
+      "flag_cpu_saturated": false,
+      "flag_packet_drops": false,
+      "flag_swapping": false,
+      "interval_s": 0.1,
+      "load_1m_max": 1.138,
+      "net_drops": 0,
+      "samples": 2437,
+      "schema": "dt4n.infra_summary.v1",
+      "source": "results/PENDING/phase-D/infra_cellC_s13.jsonl",
+      "swap_max_pct": 0.0
+    }
+  ],
+  "provenance": {
+    "git_hash": "adfb722367ba80947d947b50168d8b15a1d8a0a7",
+    "timestamp_utc": "2026-08-29T02:17:52.386959+00:00",
+    "script": "tools/phase_d_cell_analysis.py"
+  }
+}

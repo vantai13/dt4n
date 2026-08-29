@@ -1,0 +1,242 @@
+{
+  "schema": "dt4n.phase_d.family_sensitivity.v1",
+  "status": "SENSITIVITY_ANALYSIS",
+  "note": "Sweep MODE, not scalar c_a; Amendment 7 shows c_a is not sufficient.",
+  "load_bearing_source": "link_corr_matrix.json::T6_snr_and_decision",
+  "modes_full_grid": [
+    "cbr",
+    "poisson",
+    "h2"
+  ],
+  "modes_spot_only": {
+    "onoff": "only onoff|6|13 exists"
+  },
+  "theory_prior": {
+    "palm_khintchine": "N_bar in [95,875] superposed flows implies approximately Poisson",
+    "kingman_factor": {
+      "cbr": 0.4,
+      "poisson": 0.9,
+      "h2": 2.4
+    },
+    "c_s_pareto_2.5": 0.894
+  },
+  "PC_D3_1": {
+    "rho": 0.9,
+    "delays_ms": {
+      "cbr": 0.138878,
+      "poisson": 5.724837,
+      "h2": 11.041078
+    },
+    "expect": "cbr < poisson < h2",
+    "pass": true
+  },
+  "NC_D3_1": {
+    "mode": "poisson",
+    "bit_exact_full_30_values_median_and_decision": true
+  },
+  "claims": {
+    "above_D1_boundary": {
+      "values": {
+        "cbr": 0.009234,
+        "poisson": 0.125163,
+        "h2": 0.542666
+      },
+      "sign_stable": true,
+      "verdict": "ROBUST"
+    },
+    "below_D2_boundary": {
+      "values": {
+        "cbr": 0.740766,
+        "poisson": 0.624837,
+        "h2": 0.207334
+      },
+      "sign_stable": true,
+      "verdict": "ROBUST"
+    },
+    "clean_0.960_is_highest_cell": {
+      "values": {
+        "cbr": -6.580883,
+        "poisson": 0.346669,
+        "h2": 0.328697
+      },
+      "sign_stable": false,
+      "verdict": "FRAGILE_SIGN_CHANGE"
+    }
+  },
+  "sweep": {
+    "cbr": {
+      "snr_by_cell_and_pair": {
+        "clean@0.700|m(P1,P2)": 6.716594798245729,
+        "clean@0.700|m(P1,P3)": 2288.7024230614766,
+        "clean@0.700|m(P1,P4)": 1116.3070071137565,
+        "clean@0.700|m(P2,P3)": 1.7567238774724363,
+        "clean@0.700|m(P2,P4)": 1.766235768880655,
+        "clean@0.700|m(P3,P4)": 6.829932739329588,
+        "clean@0.850|m(P1,P2)": 0.28505416429150865,
+        "clean@0.850|m(P1,P3)": 0.21939596234601946,
+        "clean@0.850|m(P1,P4)": 0.1793063494471063,
+        "clean@0.850|m(P2,P3)": 0.14918205171665397,
+        "clean@0.850|m(P2,P4)": 0.17421384364205306,
+        "clean@0.850|m(P3,P4)": 0.06720584590391641,
+        "clean@0.900|m(P1,P2)": 0.35912177506219595,
+        "clean@0.900|m(P1,P3)": 0.06232284846988801,
+        "clean@0.900|m(P1,P4)": 0.0991880977234365,
+        "clean@0.900|m(P2,P3)": 0.3351923842227415,
+        "clean@0.900|m(P2,P4)": 0.293751284405138,
+        "clean@0.900|m(P3,P4)": 0.050471959432726525,
+        "clean@0.925|m(P1,P2)": 0.32883348382083805,
+        "clean@0.925|m(P1,P3)": 0.08040041777760253,
+        "clean@0.925|m(P1,P4)": 0.10630861608749805,
+        "clean@0.925|m(P2,P3)": 0.3059699130902293,
+        "clean@0.925|m(P2,P4)": 0.2520154083120825,
+        "clean@0.925|m(P3,P4)": 0.08115921683833058,
+        "clean@0.960|m(P1,P2)": 0.3330133824373243,
+        "clean@0.960|m(P1,P3)": 0.07620028418153486,
+        "clean@0.960|m(P1,P4)": 0.11830860865666308,
+        "clean@0.960|m(P2,P3)": 0.2839712966182873,
+        "clean@0.960|m(P2,P4)": 0.2664532945786858,
+        "clean@0.960|m(P3,P4)": 0.04601570393298496
+      },
+      "snr_median": 0.25923435144538415,
+      "snr_min": 0.04601570393298496,
+      "snr_max": 2288.7024230614766,
+      "snr_cell_median": {
+        "clean@0.700": 6.7732637687876585,
+        "clean@0.850": 0.1767600965445797,
+        "clean@0.900": 0.19646969106428724,
+        "clean@0.925": 0.17916201219979028,
+        "clean@0.960": 0.19238095161767443
+      },
+      "selected_highest_cell": "clean@0.700",
+      "decision": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY",
+      "signed_claim_margins": {
+        "above_D1_boundary": 0.009234351445384148,
+        "below_D2_boundary": 0.7407656485546159,
+        "clean_0.960_is_highest_cell": -6.580882817169984
+      }
+    },
+    "poisson": {
+      "snr_by_cell_and_pair": {
+        "clean@0.700|m(P1,P2)": 0.5469518040571631,
+        "clean@0.700|m(P1,P3)": 0.11146013473210088,
+        "clean@0.700|m(P1,P4)": 0.1579028590176969,
+        "clean@0.700|m(P2,P3)": 0.5063815771052729,
+        "clean@0.700|m(P2,P4)": 0.49050111325846685,
+        "clean@0.700|m(P3,P4)": 0.12887956639135908,
+        "clean@0.850|m(P1,P2)": 0.38272301071839804,
+        "clean@0.850|m(P1,P3)": 0.15122813864420992,
+        "clean@0.850|m(P1,P4)": 0.2319047464649052,
+        "clean@0.850|m(P2,P3)": 0.25779491758366796,
+        "clean@0.850|m(P2,P4)": 0.24920884929429818,
+        "clean@0.850|m(P3,P4)": 0.11520068624693304,
+        "clean@0.900|m(P1,P2)": 0.6490364398611332,
+        "clean@0.900|m(P1,P3)": 0.13241912516364976,
+        "clean@0.900|m(P1,P4)": 0.2989716819182935,
+        "clean@0.900|m(P2,P3)": 0.6603638730566065,
+        "clean@0.900|m(P2,P4)": 0.47462158674864446,
+        "clean@0.900|m(P3,P4)": 0.17275360265668963,
+        "clean@0.925|m(P1,P2)": 0.5019716345480619,
+        "clean@0.925|m(P1,P3)": 0.20639218160797101,
+        "clean@0.925|m(P1,P4)": 0.3727175781106185,
+        "clean@0.925|m(P2,P3)": 0.5915802481840274,
+        "clean@0.925|m(P2,P4)": 0.2580034725597733,
+        "clean@0.925|m(P3,P4)": 0.3264738691479885,
+        "clean@0.960|m(P1,P2)": 0.969045910358528,
+        "clean@0.960|m(P1,P3)": 0.377608379572037,
+        "clean@0.960|m(P1,P4)": 0.8571568400408948,
+        "clean@0.960|m(P2,P3)": 0.7837826774061885,
+        "clean@0.960|m(P2,P4)": 0.40463911026245986,
+        "clean@0.960|m(P3,P4)": 0.683147674967237
+      },
+      "snr_median": 0.37516297884132777,
+      "snr_min": 0.11146013473210088,
+      "snr_max": 0.969045910358528,
+      "snr_cell_median": {
+        "clean@0.700": 0.3242019861380819,
+        "clean@0.850": 0.24055679787960169,
+        "clean@0.900": 0.386796634333469,
+        "clean@0.925": 0.34959572362930347,
+        "clean@0.960": 0.7334651761867128
+      },
+      "selected_highest_cell": "clean@0.960",
+      "decision": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY",
+      "signed_claim_margins": {
+        "above_D1_boundary": 0.12516297884132777,
+        "below_D2_boundary": 0.6248370211586722,
+        "clean_0.960_is_highest_cell": 0.3466685418532438
+      }
+    },
+    "h2": {
+      "snr_by_cell_and_pair": {
+        "clean@0.700|m(P1,P2)": 0.922744947099126,
+        "clean@0.700|m(P1,P3)": 0.21241212483922564,
+        "clean@0.700|m(P1,P4)": 0.5098928156485253,
+        "clean@0.700|m(P2,P3)": 0.7790317843973881,
+        "clean@0.700|m(P2,P4)": 0.5290030765437675,
+        "clean@0.700|m(P3,P4)": 0.3189922931082787,
+        "clean@0.850|m(P1,P2)": 1.0036525176355877,
+        "clean@0.850|m(P1,P3)": 0.5155308938153713,
+        "clean@0.850|m(P1,P4)": 1.055475406267515,
+        "clean@0.850|m(P2,P3)": 0.5327168216039516,
+        "clean@0.850|m(P2,P4)": 0.11056788001973487,
+        "clean@0.850|m(P3,P4)": 0.5533283478014294,
+        "clean@0.900|m(P1,P2)": 1.5013526523583565,
+        "clean@0.900|m(P1,P3)": 0.5591298113871397,
+        "clean@0.900|m(P1,P4)": 1.3303933147244404,
+        "clean@0.900|m(P2,P3)": 0.8762343719556352,
+        "clean@0.900|m(P2,P4)": 0.1941862520944765,
+        "clean@0.900|m(P3,P4)": 0.7282229295168793,
+        "clean@0.925|m(P1,P2)": 1.4272790228186132,
+        "clean@0.925|m(P1,P3)": 0.5829562007492345,
+        "clean@0.925|m(P1,P4)": 1.5006555922693154,
+        "clean@0.925|m(P2,P3)": 0.806299351140475,
+        "clean@0.925|m(P2,P4)": 0.09883180266417246,
+        "clean@0.925|m(P3,P4)": 0.8666489661517943,
+        "clean@0.960|m(P1,P2)": 2.0712539106947054,
+        "clean@0.960|m(P1,P3)": 0.9091045213927598,
+        "clean@0.960|m(P1,P4)": 1.9492062478286087,
+        "clean@0.960|m(P2,P3)": 1.1090083359979426,
+        "clean@0.960|m(P2,P4)": 0.5557209472893613,
+        "clean@0.960|m(P3,P4)": 1.2213329912940796
+      },
+      "snr_median": 0.7926655677689316,
+      "snr_min": 0.09883180266417246,
+      "snr_max": 2.0712539106947054,
+      "snr_cell_median": {
+        "clean@0.700": 0.5194479460961464,
+        "clean@0.850": 0.5430225847026905,
+        "clean@0.900": 0.8022286507362573,
+        "clean@0.925": 0.8364741586461346,
+        "clean@0.960": 1.165170663646011
+      },
+      "selected_highest_cell": "clean@0.960",
+      "decision": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY",
+      "signed_claim_margins": {
+        "above_D1_boundary": 0.5426655677689316,
+        "below_D2_boundary": 0.2073344322310684,
+        "clean_0.960_is_highest_cell": 0.32869650499987646
+      }
+    }
+  },
+  "decisions": {
+    "cbr": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY",
+    "poisson": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY",
+    "h2": "D3_OPEN_23_26_REDUCED_HIGHEST_SNR_CELL_ONLY"
+  },
+  "spot_check": {
+    "onoff": {
+      "delay_at_0.90_ms": 6.630987
+    }
+  },
+  "verdict": {
+    "all_load_bearing_claims_robust": false,
+    "L141": "REMAINS_OPEN",
+    "limitation": "Three full-grid families do not prove invariance over every possible family; onoff is only a 6 Mbps/queue-13 spot check."
+  },
+  "provenance": {
+    "fit_path": "results/LIVE/phase-L/link_model_v2_fit.json",
+    "git_hash": "adfb722367ba80947d947b50168d8b15a1d8a0a7",
+    "timestamp_utc": "2026-08-29T02:19:07.910379+00:00",
+    "script": "tools/phase_d_family_sensitivity.py"
+  }
+}

@@ -1,4 +1,4 @@
-# Phase D′ — báo cáo thực thi 2026-08-28
+# Phase D′ — báo cáo thực thi 2026-08-28/29
 
 ## Kết quả chính
 
@@ -143,10 +143,88 @@ H1/H2/H3 bị bác ở mức mô tả hậu kiểm; H4 endpoint × configuration
 - Version DOI/Zenodo: cần tài khoản và hành động publish bên ngoài; manifest
   hiện vẫn có `doi: null`.
 - Tag `v9-pre-cleanup` không dùng vì sai ngữ nghĩa. Tag thay thế
-  `phase-D-cleanup-start` đã tạo cục bộ tại `fbde6a4`; push remote còn chờ
-  GitHub credential.
+  `phase-D-cleanup-start` đã tạo cục bộ tại `fbde6a4`. Kiểm lại 2026-08-29:
+  tag này đã có trên origin; chỉ tag prereg mới còn chờ credential.
 - Xoá/untrack/rewrite lịch sử: bị chặn đúng quy trình vì NC tái tạo FAIL.
 - Cell C generator một-hop: chưa chạy trong phiên 2026-08-28. Audit factorial
   ngày 2026-08-29 đã làm sống lại cell này cho câu hỏi cơ chế endpoint ×
   configuration bundle (không phải câu hỏi path-omega). Prereg nằm ở
   `docs/phase-D/00-preregistration.md`; chỉ được chạy sau commit + tag ký.
+
+## Bổ sung D.2/D.3 ngày 2026-08-29
+
+### D2-1 — factorial trên `rho_offered`
+
+Chạy `tools/phase_d_factorial_offered.py` trên đủ 15 CLEAN trace, bỏ
+`5*tau_max` riêng từng run. Ô `(2 low-σ, chung host)` trên offered là
+`r=+0.0048`, so với measured reference `+0.6181`. Theo partition đã cho
+(`|r|<0.15`), H6 shared measurement noise được ủng hộ ở mức hậu kiểm.
+
+### D2-2/D2-3 — khóa preregistration
+
+Prereg Cell C/C′, tool offered và artifact offered được commit tại
+`adfb7223`; annotated tag `phase-D-cellC-start` có tag-object SHA
+`785555793d76d050494bcddfd8dfb909364915b0` và trỏ tới commit
+`adfb722367ba80947d947b50168d8b15a1d8a0a7`. Push bị chặn vì môi trường
+không có GitHub credential.
+
+### D2-4 — Cell C
+
+Chạy đủ ba rep 240 s, seed 11/12/13 với infra monitor 100 ms. PC-C1 và PC-C3
+đạt; ba negative control đạt; counter/metadata/infra sạch. Cả ba infra summary
+có bốn cờ false, CPU p95 lần lượt 14.379%, 19.804%, 13.642%.
+
+Validity gate trả `INVALID_RUN` trước khi diễn giải outcome:
+
+```text
+PC-C2 median ACF-tau reduction edge   khoảng 1.1×, yêu cầu >=5×  FAIL
+n_eff failures                         uA-uB rep1 20.383
+                                       bc-bd rep2 23.894
+                                       ac-ad rep3 10.536
+```
+
+Vì chỉ dẫn yêu cầu dừng khi PC-C2 fail, không chạy Cell C′, không chạy run
+dài trong vòng này và không dùng pooled r Cell C để phán H4/H6. Trace thô
+được giữ dưới `results/RAW/phase-D/cellC/`; artifact validity là
+`results/SMOKE/phase-D/cellC_analysis.json`.
+
+### D3 — sensitivity theo traffic family
+
+Khẳng định chịu lực thật là `T6_snr_and_decision`, không dùng hai placeholder
+trong hướng dẫn. NC poisson tái tạo bit-exact đủ 30 giá trị + median + quyết
+định; PC tại rho=0.90 đạt:
+
+```text
+cbr 0.138878 ms < poisson 5.724837 ms < h2 11.041078 ms
+```
+
+Quyết định D3 giữ nguyên trên cả ba mode, nhưng cell được chọn đổi:
+
+```text
+cbr       SNR median 0.259234   highest cell clean@0.700
+poisson   SNR median 0.375163   highest cell clean@0.960
+h2        SNR median 0.792666   highest cell clean@0.960
+```
+
+Do đó L141 **VẪN MỞ** cho khẳng định “highest-SNR cell”; kết luận budget band
+D3 thì robust. On/off chỉ spot-check được tại key `onoff|6|13`, delay rho=0.90
+là 6.630987 ms; không được mở rộng thành mọi traffic family.
+
+### D-9 — hệ quả định lượng cho Phase 24
+
+Trust-gate p99 là 0.222126 ms. Chu kỳ sync/control hiện hành là 500 ms, nên
+gate chiếm `0.222126/500 = 0.0444%` ngân sách, thấp hơn ngưỡng an toàn 5%.
+Nếu gate nằm trên critical path, đóng góp trực tiếp tối đa quan sát vào AoI z
+là 0.222126 ms mỗi quyết định. Trạng thái D-9: PASS; chưa cần nhánh tối ưu.
+Giới hạn D-L17: đây là một lần đo local, CPU p95 15.5%, chưa đo dưới tải.
+
+## Năm mục BLOCKED, không phải SKIPPED
+
+1. Bản backup trên thiết bị/đám mây thứ hai: cần người dùng cấp đích/tài khoản.
+2. Upload hai gói archive lên Zenodo và publish Version DOI: cần tài khoản.
+3. Ghi Version DOI/`ARCHIVE_DOI` vào manifest/constants: phụ thuộc mục 2.
+4. Push branch `main`: thiếu GitHub credential.
+5. Push annotated tag prereg `phase-D-cellC-start`: thiếu GitHub credential.
+
+Các mục trên là **BLOCKED, không phải SKIPPED**. Gate D′ vẫn FAIL cho tới khi
+có DOI và các validity debt được phân xử.

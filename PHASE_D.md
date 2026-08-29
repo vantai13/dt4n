@@ -1,8 +1,9 @@
 # PHASE D′ — custody, identifiability và instrumentation trước Phase 23.26
 
-Trạng thái tại `50f80cf`: **đang ở Lesson D.2**. Phase này không được coi là
-đóng cho tới khi `docs/phase-D/03-gate-decision.md` tồn tại và phân xử từng
-validity gate. Outcome của một giả thuyết không phải validity gate.
+Trạng thái ngày 2026-08-29: `03-gate-decision.md` đã được tạo và Phase D′
+**FAIL** vì DOI còn BLOCKED, Cell C `INVALID_RUN`, và L141 chỉ đóng được nhánh
+decision band chứ không đóng highest-cell selection. Outcome của một giả
+thuyết không phải validity gate.
 
 ## D.0 — custody dữ liệu
 
@@ -68,11 +69,10 @@ tăng theo `N_bar`; heap lớn hơn chỉ làm đổi kích thước state và c
 operation. Cell C cũng đổi đồng thời `sigma`, lifetime, `tau` và `N_bar`, nên
 không được diễn giải riêng là “`N_bar` gây ra r”.
 
-### D.2.3 Cell C — test xác nhận đã soạn nhưng chưa được ký
+### D.2.3 Cell C — đã ký/chạy, validity fail
 
-Nguồn duy nhất của thiết kế là `docs/phase-D/00-preregistration.md`. Không
-được chạy cell C trước khi file đó, tool factorial và artifact được commit,
-sau đó tag `phase-D-cellC-start` trỏ đúng commit đã ký.
+Nguồn duy nhất của thiết kế là `docs/phase-D/00-preregistration.md`. File,
+tool offered và artifact được commit/tag tại `adfb7223` trước raw run đầu.
 
 Cell C giữ `core_sigma=0.10`, đổi duy nhất `edge_sigma: 0.03 -> 0.10` tại
 `rho_bar=0.925`. Dự đoán từ meta đã có:
@@ -90,16 +90,19 @@ không đủ cho gate bảo thủ `n_eff>=25`:
 T_min = 5*tau_max + 2*25*tau_max = 55*4.2769 = 235.2 s
 ```
 
-Khóa `duration=240 s`, 3 rep, seed 11/12/13. Tổng thời gian đo khoảng 12 phút,
-chưa kể setup. Outcome chính là Fisher-pooled within-run `r(uA,uB)` sau burn.
+Đã chạy `duration=240 s`, 3 rep, seed 11/12/13. Infra, metadata, warm-start,
+counter và negative controls đạt, nhưng PC-C2 chỉ cho ACF-tau reduction khoảng
+1.1× và ba pair-rep có `n_eff<25`; artifact trả `INVALID_RUN`. Theo stop rule,
+Cell C′ và run dài không chạy, pooled r không được diễn giải.
 
 ## D.3 — instrumentation và độ nhạy
 
 - Infra monitor + 4 cờ: đã chạy.
 - Trust gate: p99 0.222126 ms, PASS ngưỡng 10 ms.
 - Scaling audit offered 120 s: đã chạy; không thay thế measured trace dài.
-- Độ nhạy `c_a`/L141: chưa chạy; cần NC poisson bit-exact và PC
-  `cbr < poisson < h2` trước khi đóng phase.
+- Độ nhạy theo MODE đã chạy: NC poisson bit-exact, PC `cbr < poisson < h2`
+  đạt. D3 band robust nhưng highest cell đổi dưới cbr, nên L141 vẫn mở cho
+  cell selection.
 
 ## Điều kiện tạo `03-gate-decision.md`
 

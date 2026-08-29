@@ -17,6 +17,9 @@
 | D-L13 | Giả thuyết “tổng tải namespace càng cao thì r càng cao” có thứ tự ngược: hA ≈16.675 Mbps với `r(ac,ad)=+0.0358`; hB ≈16.995 với `r(bc,bd)=+0.0314`; hsrc chỉ ≈12.125 với `r(uA,uB)=+0.5986` | bác ở mức mô tả; không loại mọi hiệu ứng endpoint/runtime |
 | D-L14 | `lambda=rho*C/mean_size` không phụ thuộc sigma (uA ≈25.1, ac ≈21.5 arrival/s); độ sâu heap chỉ đổi chi phí operation theo `O(log N)`, với `log2(817)/log2(96)=1.47×`, không phải 9.9× | cơ chế heap chưa nhận dạng; số học bác diễn giải “11× operation rate” hoặc “9.9× do log-heap” |
 | D-L15 | Theo median `tau_pred`, `5*tau_uB=136.7 s` và `5*tau_vD=138.4 s`, lớn hơn run 120 s; budget `55*tau` cho cấu hình A là khoảng 1504–1522 s (tới 1663 s nếu dùng max campaign) | mở; T8 measured-ACF n_eff lớn không thay thế gate burn-in này |
+| D-L16 | `c_a` không phải thống kê đủ cho traffic family; full-grid chỉ có cbr/poisson/h2, onoff chỉ có key `6|13`. Sensitivity T6 giữ D3 band nhưng đổi highest cell dưới cbr (`clean@0.700` thay vì `clean@0.960`) | L141 vẫn mở cho cell selection; không mở rộng ba họ thành mọi họ khả dĩ |
+| D-L17 | Trust-gate p99 0.222126 ms được đo một lần trên máy local, CPU p95 15.5%, chưa đo dưới tải. So với sync/control 500 ms là 0.0444%, nhưng con số này chưa phải tail bound production | D-9 PASS local; giữ phép đo under-load cho Phase 24 |
+| D-L18 | Cell C đủ 3×240 s nhưng validity fail: ACF-tau edge measured chỉ giảm median khoảng 1.1× thay vì PC-C2 ≥5×; ba pair-rep có n_eff 20.383, 23.894, 10.536 <25. Điều này lộ mâu thuẫn giữa giả định `tau~sigma^-2` của generator và time scale của `rho_measured` dùng làm outcome | Cell C `INVALID_RUN`; dừng trước C′, không diễn giải pooled r; Lesson D.2 đóng unresolved theo ngân sách một vòng |
 
 ## Đính chính quan trọng so với bản hướng dẫn đầu vào
 

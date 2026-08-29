@@ -172,3 +172,8 @@ results/**/phase-21R/*_legacy_sawtooth_51ms.parquet
 # compact manifest, per-run metadata, estimates, and figure are tracked.
 results/**/phase-23/aoi_v7_campaign/flows_*/
 results/**/phase-23/aoi_v7_campaign/rho_*.csv
+
+# Phase D confirmatory runs: raw traces and per-run infra are local custody
+# payloads. Commit only compact adjudication artifacts from results/SMOKE.
+results/RAW/phase-D/
+results/PENDING/phase-D/
