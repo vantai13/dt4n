@@ -101,6 +101,21 @@ PC-C2′ đã ký trên offered vẫn MISS: ratio edge 4.942/7.145/4.048/2.878,
 median 4.495 <5; PC-C2′b cũng không có đủ 4 fit hợp lệ. Theo partition A001,
 Cell C vẫn `INVALID_RUN`; xem `05-pc-c2-prime-readjudication.md`.
 
+Amendment D-A002 chẩn đoán MISS đó là **bias estimator**, không phải generator:
+nhánh baseline Cell A chỉ có `T/tau = 4.1` so với sàn `50` của chính dự án, và
+một generator hoàn hảo dưới estimator PC-C2′ cũng chỉ trả `3.635`, tức ngưỡng
+`5.0` bất khả thi ngay từ lúc ký. PC-C2″ thu thêm đúng một run 1505 s
+(`cellA_long`, seed 41, `T/tau = 68.6`) và control generator **ĐẠT**: ratio edge
+8.361/11.211/7.012/6.804, median **7.687 ≥ 5.0**, cả bốn edge đều vượt. S19
+không bị bác. Nhưng PC-C2″b FAIL vì một lỗi đặc tả ngưỡng của chính PC-C2″
+(D-L26), nên **Cell C vẫn `INVALID_RUN`** và outcome đóng băng vẫn chưa được
+đọc. Ngân sách hết, không có vòng 3. Xem
+`06-pc-c2-second-readjudication.md`.
+
+Phát hiện hậu kiểm lớn nhất của vòng này: nugget `0.3696` của phase-23 không do
+trace ngắn và không do generator — nó đi kèm bundle instrumentation
+`ditto + AoI probe + cycle trace + reconcile_every=1`. Xem D-L25.
+
 ## D.3 — instrumentation và độ nhạy
 
 - Infra monitor + 4 cờ: đã chạy.

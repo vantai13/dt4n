@@ -66,6 +66,43 @@ sai loại đại lượng; control mới MISS magnitude đã ký, có thể do 
 120 s/censoring ACF nhưng không được sửa hậu nghiệm. Xem
 `05-pc-c2-prime-readjudication.md`, D-L18 và D-L19.
 
+### Amendment D-A002 — nhánh baseline đủ dài, control generator ĐẠT
+
+Giữ nguyên hai phán quyết trên. A002 chẩn đoán PC-C2′ MISS là bias estimator
+chứ không phải generator, rồi ký PC-C2″ tại tag `phase-D-pc-c2-second-start`
+(commit `124c99f6`) trước khi thu `cellA_long` — 1 run 1505 s, seed 41,
+`core 0.10 / edge 0.03`, `T/tau = 68.6`.
+
+```text
+PC-C2''a offered ratio tung edge  8.361 / 11.211 / 7.012 / 6.804
+median ratio                      7.687 >= 5.0                    PASS
+                                  (ca 4 edge deu vuot, min 6.80)
+PC-C2''b sf_A                     1.000 (cham tran)  nguong <=0.50 FAIL
+PC-C2''b sf_C                     0.9468             nguong >=0.75 dat
+PC-C2''b fit hop le cell C        2/4 edge (A001: 1/4)             FAIL
+nhan                              REANALYSIS_INVALID_OR_INCOMPLETE
+```
+
+Hai hệ quả tách bạch:
+
+1. **Control generator ĐẠT.** `4.495` của A001 là artifact đo. Mô phỏng một
+   generator hoàn hảo dưới chính estimator PC-C2′ chỉ trả `3.635`, tức ngưỡng
+   `5.0` là bất khả thi về mặt xây dựng ở A001; dưới PC-C2″ nó trả `10.006`.
+   S19 (`tau ~ 1/sigma^2`) **không** bị bác. Đóng D-L18/D-L19/D-L21, và đóng
+   duration debt D-L10/D-L15 cho cấu hình A.
+2. **Cell C vẫn `INVALID_RUN`.** PC-C2″b FAIL, nên `may_read_frozen_outcomes`
+   vẫn `false` và `r` đóng băng của Cell C chưa từng được đọc. Nguyên nhân
+   FAIL là lỗi đặc tả của chính PC-C2″ (D-L26), không phải dữ liệu. Ngân sách
+   hết; không có vòng 3.
+
+Phát hiện hậu kiểm quan trọng nhất của vòng này: nugget `0.3696` của phase-23
+**không** do trace ngắn và **không** do generator — cắt chính `cellA_long`
+thành cửa sổ 120 s vẫn cho `sf = 0.9405` trong khi phase-23 cùng `T = 120 s`
+cho `0.3682`. Nugget đi kèm bundle instrumentation `ditto + AoI probe + cycle
+trace + reconcile_every=1`. Điều này ủng hộ H6 mạnh hơn và định vị nguồn nhiễu
+ở đường đo, nhưng bác dạng định lượng `sf = sigma^2/(sigma^2+v)`. Xem D-L25 và
+`06-pc-c2-second-readjudication.md` mục 6. H6 vẫn là **hậu kiểm**.
+
 ## D.3 / L141
 
 PC `cbr < poisson < h2` đạt và NC poisson tái tạo bit-exact. Đọc theo hai lớp:
@@ -111,11 +148,18 @@ mỗi quyết định. Chưa có phép đo dưới tải (D-L17).
 
 ```text
 D.0 custody/DOI                 FAIL/BLOCKED (DOI còn null)
-D.2 confirmatory validity       FAIL (A001 PC-C2′ MISS; n_eff debt cũ)
-D.3 family sensitivity          PARTIAL (band đóng; selection có điều kiện)
+D.2 confirmatory validity       FAIL (Cell C INVALID_RUN; n_eff debt cũ;
+                                A002 PC-C2''b MISS -- nhung generator
+                                control PC-C2''a nay PASS 7.687)
+D.3 family sensitivity          PARTIAL (band đóng; selection có điều kiện,
+                                dùng được trên {poisson,h2} theo theory prior)
 D-9 trust-gate latency          PASS
 OVERALL PHASE D′                FAIL
 ```
+
+So với bản trước A002, `D.2` vẫn FAIL nhưng **lý do đã đổi**: không còn nghi
+ngờ generator không nhận `sigma`; phần còn nợ là outcome validity của Cell C
+và một lỗi đặc tả ngưỡng của chính PC-C2″.
 
 Năm mục ngoài máy là **BLOCKED, không phải SKIPPED**; xem
 `04-execution-report.md`. Không được tuyên bố Gate D′ PASS trước khi Version
