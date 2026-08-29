@@ -1,0 +1,65 @@
+{
+  "schema": "dt4n.phase_g.g0_estimator_bias.v1",
+  "status": "SYNTHETIC_DIAGNOSTIC_NO_EXPERIMENTAL_DATA",
+  "principle": "NT 53: test thresholds against synthetic ground truth before signing",
+  "gate_tolerance": 0.2,
+  "n_replicates": 200,
+  "seed": 20260901,
+  "rows": [
+    {
+      "T_over_tau": 55,
+      "n_samples": 1100,
+      "single_median": 0.88629120606428,
+      "single_p05": 0.568046022802954,
+      "single_p95": 1.8567762303546618,
+      "median8_median": 0.8677869617098848,
+      "median8_p05": 0.7318840245964653,
+      "median8_p95": 1.137713340518805,
+      "P_pass_gate_20pct": 0.715
+    },
+    {
+      "T_over_tau": 100,
+      "n_samples": 2000,
+      "single_median": 0.9191509410974659,
+      "single_p05": 0.639827861561631,
+      "single_p95": 1.7162859724560715,
+      "median8_median": 0.952920296817709,
+      "median8_p05": 0.7615402501062526,
+      "median8_p95": 1.169803984772181,
+      "P_pass_gate_20pct": 0.875
+    },
+    {
+      "T_over_tau": 200,
+      "n_samples": 4000,
+      "single_median": 0.9457771351848667,
+      "single_p05": 0.7096543442754693,
+      "single_p95": 1.5944861562231167,
+      "median8_median": 0.9710202155186144,
+      "median8_p05": 0.8232340807942492,
+      "median8_p95": 1.1446507967651172,
+      "P_pass_gate_20pct": 0.96
+    },
+    {
+      "T_over_tau": 400,
+      "n_samples": 8000,
+      "single_median": 1.009685012171768,
+      "single_p05": 0.788043613451377,
+      "single_p95": 1.584410465992143,
+      "median8_median": 0.9850579296812728,
+      "median8_p05": 0.9086028665823326,
+      "median8_p95": 1.1169576815410407,
+      "P_pass_gate_20pct": 0.995
+    },
+    {
+      "T_over_tau": 800,
+      "n_samples": 16000,
+      "single_median": 0.9931307955670312,
+      "single_p05": 0.8461297621044565,
+      "single_p95": 1.332247498162283,
+      "median8_median": 1.001882751705331,
+      "median8_p05": 0.9173862328716234,
+      "median8_p95": 1.1040842750699613,
+      "P_pass_gate_20pct": 1.0
+    }
+  ]
+}
