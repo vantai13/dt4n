@@ -1,0 +1,142 @@
+{
+  "schema": "dt4n.phase_g.g1a_estimator_validation.v1",
+  "status": "SYNTHETIC_DIAGNOSTIC_NO_EXPERIMENTAL_DATA",
+  "constants": {
+    "seed": 20260902,
+    "dt_s": 0.2,
+    "tau_s": 3.0,
+    "sigma": 0.03,
+    "n_samples": 30000,
+    "n_seed": 16,
+    "sf_grid": [
+      0.3,
+      0.5,
+      0.7,
+      0.85,
+      0.95
+    ],
+    "rho_eps_true": 1.0,
+    "r_true": 0.0,
+    "n_fit_lags": 8
+  },
+  "gates": {
+    "sf_bias_tolerance_relative": 0.15,
+    "rho_eps_tolerance_absolute": 0.1,
+    "sf_all_pass": true,
+    "rho_eps_raw_all_pass": false,
+    "G1-0_overall_pass": false
+  },
+  "rows": [
+    {
+      "sf_true": 0.3,
+      "v_true": 0.0021,
+      "sf_hat_median": 0.29766232671094695,
+      "sf_hat_p05": 0.2822590047320765,
+      "sf_hat_p95": 0.3036254253711029,
+      "sf_bias_ratio": 0.9922077557031566,
+      "nugget_estimator_ok_fraction": 1.0,
+      "rho_eps_true": 1.0,
+      "rho_eps_hat_median": 0.9730542952930001,
+      "rho_eps_hat_p05": 0.9725292569912857,
+      "rho_eps_hat_p95": 0.9734653845214916,
+      "signal_leakage_ratio_median": 0.024790191253721852,
+      "signal_leakage_valid_fraction": 1.0,
+      "signal_leakage_ratio_true": 0.027639863557878095,
+      "raw_diff_corr_theory": 0.9731035506328221,
+      "gates": {
+        "G1-0_sf": true,
+        "G1-0_rho_eps_raw": true
+      }
+    },
+    {
+      "sf_true": 0.5,
+      "v_true": 0.0009,
+      "sf_hat_median": 0.4978690411806456,
+      "sf_hat_p05": 0.48935474880008817,
+      "sf_hat_p95": 0.5132909963569499,
+      "sf_bias_ratio": 0.9957380823612912,
+      "nugget_estimator_ok_fraction": 1.0,
+      "rho_eps_true": 1.0,
+      "rho_eps_hat_median": 0.9394685447982103,
+      "rho_eps_hat_p05": 0.9384491596955808,
+      "rho_eps_hat_p95": 0.940589325004481,
+      "signal_leakage_ratio_median": 0.056652265567304905,
+      "signal_leakage_valid_fraction": 1.0,
+      "signal_leakage_ratio_true": 0.06449301496838222,
+      "raw_diff_corr_theory": 0.9394143370961454,
+      "gates": {
+        "G1-0_sf": true,
+        "G1-0_rho_eps_raw": true
+      }
+    },
+    {
+      "sf_true": 0.7,
+      "v_true": 0.0003857142857142857,
+      "sf_hat_median": 0.6960228044047713,
+      "sf_hat_p05": 0.6869323539412846,
+      "sf_hat_p95": 0.7086175176156388,
+      "sf_bias_ratio": 0.9943182920068162,
+      "nugget_estimator_ok_fraction": 1.0,
+      "rho_eps_true": 1.0,
+      "rho_eps_hat_median": 0.8686157535195215,
+      "rho_eps_hat_p05": 0.8671223496295641,
+      "rho_eps_hat_p95": 0.8709013163849649,
+      "signal_leakage_ratio_median": 0.12083806583833306,
+      "signal_leakage_valid_fraction": 1.0,
+      "signal_leakage_ratio_true": 0.15048370159289182,
+      "raw_diff_corr_theory": 0.8691996232675518,
+      "gates": {
+        "G1-0_sf": true,
+        "G1-0_rho_eps_raw": false
+      }
+    },
+    {
+      "sf_true": 0.85,
+      "v_true": 0.00015882352941176475,
+      "sf_hat_median": 0.8531416364967764,
+      "sf_hat_p05": 0.8443834803414743,
+      "sf_hat_p95": 0.8576208183336856,
+      "sf_bias_ratio": 1.003696042937384,
+      "nugget_estimator_ok_fraction": 1.0,
+      "rho_eps_true": 1.0,
+      "rho_eps_hat_median": 0.732504221064743,
+      "rho_eps_hat_p05": 0.727665499835891,
+      "rho_eps_hat_p95": 0.7360892573849137,
+      "signal_leakage_ratio_median": 0.25671970151322737,
+      "signal_leakage_valid_fraction": 0.0,
+      "signal_leakage_ratio_true": 0.36546041815416586,
+      "raw_diff_corr_theory": 0.7323537077345702,
+      "gates": {
+        "G1-0_sf": true,
+        "G1-0_rho_eps_raw": false
+      }
+    },
+    {
+      "sf_true": 0.95,
+      "v_true": 4.736842105263153e-05,
+      "sf_hat_median": 0.9501838026437845,
+      "sf_hat_p05": 0.9438458130626178,
+      "sf_hat_p95": 0.9538658135563121,
+      "sf_bias_ratio": 1.0001934764671416,
+      "nugget_estimator_ok_fraction": 1.0,
+      "rho_eps_true": 1.0,
+      "rho_eps_hat_median": 0.4494477369646343,
+      "rho_eps_hat_p05": 0.4427912396814782,
+      "rho_eps_hat_p95": 0.45572514233874006,
+      "signal_leakage_ratio_median": 0.5159254073363906,
+      "signal_leakage_valid_fraction": 0.0,
+      "signal_leakage_ratio_true": 1.2253672843992611,
+      "raw_diff_corr_theory": 0.44936402499057615,
+      "gates": {
+        "G1-0_sf": true,
+        "G1-0_rho_eps_raw": false
+      }
+    }
+  ],
+  "provenance": {
+    "git_hash": "6c43ac44960036bc0166cec86e1e4bcd7f0eae6d",
+    "prereg_tag": "phase-G-g1a-prereg",
+    "timestamp_utc": "2026-08-29T14:03:03.482227+00:00",
+    "script": "tools/g1a_estimator_validation.py"
+  }
+}
