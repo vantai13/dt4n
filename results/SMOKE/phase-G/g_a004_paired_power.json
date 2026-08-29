@@ -1,0 +1,129 @@
+{
+  "schema": "dt4n.phase_g.g_a004_paired_power.v1",
+  "status": "PREREGISTERED_SYNTHETIC_POWER_GATE",
+  "held_out_correlations_read": false,
+  "preregistration_tag": "phase-G-g-a004-prereg",
+  "preregistration_commit": "5248218d1268b299772356b1d35910d2f780c22f",
+  "calibration_artifact": "results/SMOKE/phase-G/g_a003_split_calibration.json",
+  "calibration_sha256": "46a8cc8d49b9d1d6f182eaf10ba5ecea0a717931ef4f9d3daa68d9051fa80fd1",
+  "locked_design": {
+    "seed": 20260830,
+    "repetitions": 2000,
+    "batch_size": 100,
+    "n_test": 3762,
+    "dt_s": 0.2,
+    "r_true": 0.0,
+    "rho_eps_same_side": 0.65,
+    "rho_eps_cross_side": 0.1,
+    "pair_error_max": 0.1,
+    "median_error_max_strict": 0.02,
+    "all_pairs_success_probability_min": 0.95,
+    "median_success_probability_min": 0.9,
+    "decision_uses_wilson_95pct_lower_bound": true,
+    "sf_by_link": {
+      "uA": 0.9762815241159777,
+      "uB": 0.9365677884861318,
+      "vC": 0.8401664963367682,
+      "vD": 0.763386228682409
+    },
+    "tau_s_by_link": {
+      "uA": 22.42198690519402,
+      "uB": 20.981322376668135,
+      "vC": 35.65669568802105,
+      "vD": 23.927143474833247
+    },
+    "phi_by_link": {
+      "uA": 0.9911198474322813,
+      "uB": 0.99051300059762,
+      "vC": 0.994406656620155,
+      "vD": 0.9916761290996814
+    },
+    "nugget_covariance": [
+      [
+        1.0,
+        0.65,
+        0.1,
+        0.1
+      ],
+      [
+        0.65,
+        1.0,
+        0.1,
+        0.1
+      ],
+      [
+        0.1,
+        0.1,
+        1.0,
+        0.65
+      ],
+      [
+        0.1,
+        0.1,
+        0.65,
+        1.0
+      ]
+    ]
+  },
+  "per_pair": {
+    "uA-uB": {
+      "median_absolute_error": 0.004753954696561945,
+      "p95_absolute_error": 0.014775144104894437,
+      "max_absolute_error": 0.029990412119035414,
+      "probability_error_at_most_pair_gate": 1.0
+    },
+    "uA-vC": {
+      "median_absolute_error": 0.005740000244582523,
+      "p95_absolute_error": 0.018418150253400618,
+      "max_absolute_error": 0.045736784480366416,
+      "probability_error_at_most_pair_gate": 1.0
+    },
+    "uA-vD": {
+      "median_absolute_error": 0.007072067119584439,
+      "p95_absolute_error": 0.02166208920451388,
+      "max_absolute_error": 0.052239107559331255,
+      "probability_error_at_most_pair_gate": 1.0
+    },
+    "uB-vC": {
+      "median_absolute_error": 0.006441511666401202,
+      "p95_absolute_error": 0.019906293698354376,
+      "max_absolute_error": 0.049742565431346406,
+      "probability_error_at_most_pair_gate": 1.0
+    },
+    "uB-vD": {
+      "median_absolute_error": 0.007918041635577862,
+      "p95_absolute_error": 0.023797823933450042,
+      "max_absolute_error": 0.05184280520411693,
+      "probability_error_at_most_pair_gate": 1.0
+    },
+    "vC-vD": {
+      "median_absolute_error": 0.020603082944423028,
+      "p95_absolute_error": 0.06762583153133722,
+      "max_absolute_error": 0.17760728861985536,
+      "probability_error_at_most_pair_gate": 0.9905
+    }
+  },
+  "six_pair_median_error": {
+    "median": 0.0073656115461552,
+    "p90": 0.012713201437820669,
+    "p95": 0.014503327944905577,
+    "max": 0.022284097980438237
+  },
+  "gates": {
+    "all_pairs_success_count": 1981,
+    "all_pairs_success_probability": 0.9905,
+    "all_pairs_success_probability_wilson_lower": 0.9852096168457007,
+    "all_pairs_power_gate_pass": true,
+    "median_success_count": 1995,
+    "median_success_probability": 0.9975,
+    "median_success_probability_wilson_lower": 0.9941608466835672,
+    "median_power_gate_pass": true,
+    "overall_pass": true
+  },
+  "limitations": "This proves feasibility under the locked additive-white-nugget and exponential-ACF model only. It does not promise physical-data PASS; a physical FAIL is evidence against the estimator/model combination.",
+  "provenance": {
+    "git_hash": "5248218d1268b299772356b1d35910d2f780c22f",
+    "timestamp_utc": "2026-08-29T15:46:32.424834+00:00",
+    "script": "tools/g_a004_paired_power.py --stage power"
+  }
+}
