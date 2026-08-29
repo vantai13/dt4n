@@ -106,6 +106,80 @@ def estimate_rho_eps(
     }
 
 
+def raw_diff_bias_prediction(sf: float, phi: float) -> float:
+    """Predict raw difference correlation for ``r_true=0, rho_eps=1``."""
+    leakage = (1.0 - phi) * sf / (1.0 - sf)
+    return float(1.0 / (1.0 + leakage))
+
+
+def estimate_two_band(
+    x_l: np.ndarray,
+    x_m: np.ndarray,
+    sf_l: float,
+    sf_m: float,
+    phi: float,
+) -> dict[str, object]:
+    """Separate true correlation and common-mode nugget using two bands.
+
+    Level and first-difference correlations weight the slow signal and white
+    nugget differently.  The resulting two-by-two system identifies
+    ``r_true`` and ``rho_eps`` when it is sufficiently well conditioned.
+    """
+    if not (0.0 < sf_l < 1.0 and 0.0 < sf_m < 1.0):
+        return {"valid": False, "reason": "sf must lie strictly inside (0,1)"}
+    if not 0.0 < phi < 1.0:
+        return {"valid": False, "reason": "phi must lie strictly inside (0,1)"}
+
+    def w_of(signal_fraction: float) -> float:
+        numerator = signal_fraction * (1.0 - phi)
+        return float(numerator / (numerator + 1.0 - signal_fraction))
+
+    w_l = w_of(sf_l)
+    w_m = w_of(sf_m)
+    matrix = np.array(
+        [
+            [
+                np.sqrt(sf_l * sf_m),
+                np.sqrt((1.0 - sf_l) * (1.0 - sf_m)),
+            ],
+            [
+                np.sqrt(w_l * w_m),
+                np.sqrt((1.0 - w_l) * (1.0 - w_m)),
+            ],
+        ]
+    )
+    observations = np.array(
+        [
+            float(np.corrcoef(x_l, x_m)[0, 1]),
+            float(np.corrcoef(np.diff(x_l), np.diff(x_m))[0, 1]),
+        ]
+    )
+
+    condition = float(np.linalg.cond(matrix))
+    if not np.isfinite(condition) or condition > 10.0:
+        return {
+            "valid": False,
+            "cond_A": condition,
+            "reason": "near-degenerate system; increase tau/dt or change dt",
+        }
+
+    r_true, rho_eps = np.linalg.solve(matrix, observations)
+    return {
+        "r_true_hat": float(r_true),
+        "rho_eps_hat": float(rho_eps),
+        "r_level": float(observations[0]),
+        "r_diff": float(observations[1]),
+        "w_l": w_l,
+        "w_m": w_m,
+        "cond_A": condition,
+        "in_physical_range": bool(abs(r_true) <= 1.0 and abs(rho_eps) <= 1.0),
+        "lambda_leakage_l": float((1.0 - phi) * sf_l / (1.0 - sf_l)),
+        "lambda_leakage_m": float((1.0 - phi) * sf_m / (1.0 - sf_m)),
+        "valid": True,
+        "reason": "",
+    }
+
+
 def correct_r(
     r_measured: float, sf_l: float, sf_m: float, rho_eps: float
 ) -> float:
