@@ -1,5 +1,10 @@
 # Phase G.0 result — packet-level sigma/tau round trip
 
+> **Superseded by G-A001.** The execution receipt below remains immutable, but
+> the original scientific interpretation is withdrawn: because `dt=tau/10`,
+> `phi=exp(-0.1)` and `n=2000` were constant, so the tau axis was degenerate.
+> See `01a-g0-amendment-G-A001.md` and the v2 artifact.
+
 Run date: 2026-08-29 UTC.  The first round trip ran after annotated tag
 `phase-G-g0-prereg` at commit `4156a56067320c80fae6e1be4b83550e5e668efd`.
 The artifact records that preregistration commit as its provenance hash.
@@ -21,7 +26,9 @@ Observed round-trip resource use: elapsed `0:00.37`, maximum RSS `36,668 KiB`.
 
 ## Result
 
-Overall verdict: **PASS** on the preregistered feasible grid.
+Historical automated verdict: **PASS** on the preregistered grid.  This is now
+classified as a code-execution receipt, not evidence that the tau axis was
+independently exercised.
 
 - Feasibility: 12/20 cells included; 8 excluded before the round trip.
 - All G0-1 through G0-5 per-cell gates passed in all 12 included cells.

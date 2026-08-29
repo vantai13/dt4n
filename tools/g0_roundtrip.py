@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""G.0 step 4: round-trip sigma and tau on the preregistered feasible grid."""
+"""G-A001 step 4: non-degenerate round trip on declared fixed-dt grids."""
 from __future__ import annotations
 
 import json
@@ -18,12 +18,11 @@ N_SEED = 16
 T_RUN_FACTOR = 200
 SEED0 = 20260901
 
-FEASIBILITY = Path("results/SMOKE/phase-G/g0_feasibility.json")
-OUT = Path("results/SMOKE/phase-G/g0_roundtrip.json")
+FEASIBILITY = Path("results/SMOKE/phase-G/g0_feasibility_v2.json")
+OUT = Path("results/SMOKE/phase-G/g0_roundtrip_v2.json")
 
 
-def one_cell(sigma: float, tau: float, seed: int) -> dict[str, float]:
-    dt = tau / 10.0
+def one_cell(sigma: float, tau: float, dt: float, seed: int) -> dict[str, float]:
     cfg = ModulatorConfig(
         cap_bps=C_BPS,
         rho_bar=RHO_BAR,
@@ -80,23 +79,33 @@ def main() -> None:
     for planned in feasibility["cells"]:
         sigma = float(planned["sigma"])
         tau = float(planned["tau_s"])
+        dt = float(planned["dt_s"])
+        amplitude = float(planned["amplitude_fraction"])
         if not planned["feasible"]:
             skipped.append(
-                {"sigma": sigma, "tau_s": tau, "reason": planned["reason"]}
+                {
+                    "dt_s": dt,
+                    "amplitude_fraction": amplitude,
+                    "sigma": sigma,
+                    "tau_s": tau,
+                    "reason": planned["reason"],
+                }
             )
             continue
 
         replicates = [
-            one_cell(sigma, tau, SEED0 + 1000 * seed_index)
+            one_cell(sigma, tau, dt, SEED0 + 1000 * seed_index)
             for seed_index in range(N_SEED)
         ]
         sigma_offered = aggregate(replicates, "sigma_hat_offered")
         tau_offered = aggregate(replicates, "tau_hat_offered")
         sf_empirical = aggregate(replicates, "sf_empirical")
         cell = {
+            "amplitude_fraction": amplitude,
             "sigma": sigma,
             "tau_s": tau,
-            "dt_s": tau / 10.0,
+            "dt_s": dt,
+            "tau_over_dt": tau / dt,
             "n_seed": N_SEED,
             "T_over_tau": T_RUN_FACTOR,
             "sigma_hat_offered": sigma_offered,
@@ -123,12 +132,18 @@ def main() -> None:
         cells.append(cell)
 
     tau_independence = []
-    for tau in sorted({float(row["tau_s"]) for row in feasibility["cells"]}):
-        ratios = [row["tau_ratio"] for row in cells if row["tau_s"] == tau]
+    design_pairs = sorted({(row["dt_s"], row["tau_s"]) for row in cells})
+    for dt, tau in design_pairs:
+        ratios = [
+            row["tau_ratio"]
+            for row in cells
+            if row["dt_s"] == dt and row["tau_s"] == tau
+        ]
         evaluable = len(ratios) >= 2
         spread = float(max(ratios) - min(ratios)) if evaluable else None
         tau_independence.append(
             {
+                "dt_s": dt,
                 "tau_s": tau,
                 "spread": spread,
                 "n_sigma": len(ratios),
@@ -137,10 +152,38 @@ def main() -> None:
             }
         )
 
+    tau_axis_non_degeneracy = []
+    design_amplitudes = sorted(
+        {(row["dt_s"], row["amplitude_fraction"]) for row in cells}
+    )
+    for dt, amplitude in design_amplitudes:
+        selected = [
+            row
+            for row in cells
+            if row["dt_s"] == dt and row["amplitude_fraction"] == amplitude
+        ]
+        ratios = [row["tau_ratio"] for row in selected]
+        evaluable = len(ratios) >= 2
+        spread = float(max(ratios) - min(ratios)) if evaluable else None
+        tau_axis_non_degeneracy.append(
+            {
+                "dt_s": dt,
+                "amplitude_fraction": amplitude,
+                "spread": spread,
+                "n_tau": len(ratios),
+                "evaluable": evaluable,
+                "pass": bool(evaluable and spread >= 0.02),
+            }
+        )
+
     cell_gates_pass = all(all(row["gates"].values()) for row in cells)
     independence_evaluable = [row for row in tau_independence if row["evaluable"]]
+    nondegeneracy_evaluable = [
+        row for row in tau_axis_non_degeneracy if row["evaluable"]
+    ]
     artifact = {
-        "schema": "dt4n.phase_g.g0_roundtrip.v1",
+        "schema": "dt4n.phase_g.g0_roundtrip.v2",
+        "amendment": "G-A001",
         "status": "SYNTHETIC_DRY_RUN_NO_NETWORK",
         "T_over_tau": T_RUN_FACTOR,
         "n_seed": N_SEED,
@@ -148,6 +191,7 @@ def main() -> None:
         "cells": cells,
         "skipped_infeasible": skipped,
         "tau_independence_of_sigma": tau_independence,
+        "tau_axis_non_degeneracy": tau_axis_non_degeneracy,
         "gate_summary": {
             "cell_gates_pass": cell_gates_pass,
             "G0-1b_pass_on_evaluable_tau": bool(
@@ -157,6 +201,14 @@ def main() -> None:
             "G0-1b_coverage": (
                 f"{len(independence_evaluable)}/{len(tau_independence)} tau levels"
             ),
+            "G0-1c_pass_on_evaluable_axes": bool(
+                nondegeneracy_evaluable
+                and all(row["pass"] for row in nondegeneracy_evaluable)
+            ),
+            "G0-1c_coverage": (
+                f"{len(nondegeneracy_evaluable)}/{len(tau_axis_non_degeneracy)} "
+                "fixed-(dt,a) axes"
+            ),
         },
         "provenance": {
             "git_hash": subprocess.run(
@@ -165,7 +217,7 @@ def main() -> None:
                 capture_output=True,
                 text=True,
             ).stdout.strip(),
-            "prereg_tag": "phase-G-g0-prereg",
+            "prereg_tag": "phase-G-g0-amendment-v2-prereg",
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
             "script": "tools/g0_roundtrip.py",
         },
@@ -173,13 +225,16 @@ def main() -> None:
     artifact["gate_summary"]["overall_pass"] = bool(
         artifact["gate_summary"]["cell_gates_pass"]
         and artifact["gate_summary"]["G0-1b_pass_on_evaluable_tau"]
+        and artifact["gate_summary"]["G0-1c_pass_on_evaluable_axes"]
     )
     OUT.parent.mkdir(parents=True, exist_ok=True)
     OUT.write_text(json.dumps(artifact, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "%7s %7s | %9s %9s | %9s %8s %8s | %s"
+        "%5s %5s %7s %7s | %9s %9s | %9s %8s %8s | %s"
         % (
+            "dt",
+            "a",
             "sigma",
             "tau",
             "sig_hat/s",
@@ -192,8 +247,10 @@ def main() -> None:
     )
     for cell in cells:
         print(
-            "%7.2f %7.1f | %9.3f %9.3f | %9.3f %8.4f %8.3f | %s"
+            "%5.2f %5.2f %7.4f %7.1f | %9.3f %9.3f | %9.3f %8.4f %8.3f | %s"
             % (
+                cell["dt_s"],
+                cell["amplitude_fraction"],
                 cell["sigma"],
                 cell["tau_s"],
                 cell["sigma_ratio"],
@@ -213,14 +270,29 @@ def main() -> None:
         )
         spread = "n/a" if row["spread"] is None else f"{row['spread']:.4f}"
         print(
-            "  tau=%5.1f  spread=%s  n_sigma=%d  %s"
-            % (row["tau_s"], spread, row["n_sigma"], verdict)
+            "  dt=%.2f tau=%5.1f  spread=%s  n_sigma=%d  %s"
+            % (row["dt_s"], row["tau_s"], spread, row["n_sigma"], verdict)
+        )
+    print("\nG0-1c: tau-ratio spread across tau at fixed (dt,a) (>= 0.02)")
+    for row in tau_axis_non_degeneracy:
+        verdict = (
+            "NOT_EVALUABLE"
+            if not row["evaluable"]
+            else ("PASS" if row["pass"] else "FAIL")
+        )
+        spread = "n/a" if row["spread"] is None else f"{row['spread']:.4f}"
+        print(
+            "  dt=%.2f a=%.2f  spread=%s  n_tau=%d  %s"
+            % (row["dt_s"], row["amplitude_fraction"], spread, row["n_tau"], verdict)
         )
     print("\nskipped infeasible cells:")
     for row in skipped:
         print(
-            "  sigma=%.2f tau=%4.1f  %s"
-            % (row["sigma"], row["tau_s"], row["reason"])
+            "  dt=%.2f a=%.2f sigma=%.4f tau=%4.1f  %s"
+            % (
+                row["dt_s"], row["amplitude_fraction"], row["sigma"],
+                row["tau_s"], row["reason"]
+            )
         )
     print("\noverall: %s" % ("PASS" if artifact["gate_summary"]["overall_pass"] else "FAIL"))
     print("artifact: %s" % OUT)

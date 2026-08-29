@@ -1,5 +1,5 @@
 #!/usr/bin/env python3
-"""G.0 step 2: test the signed estimator against synthetic ground truth."""
+"""G-A001 step 2: calibrate the estimator at every deployed tau/dt ratio."""
 from __future__ import annotations
 
 import json
@@ -7,10 +7,13 @@ from pathlib import Path
 
 import numpy as np
 
-OUT = Path("results/SMOKE/phase-G/g0_estimator_bias.json")
-N_REP = 200
+FEASIBILITY = Path("results/SMOKE/phase-G/g0_feasibility_v2.json")
+OUT = Path("results/SMOKE/phase-G/g0_estimator_bias_v2.json")
+N_REP = 32
+N_SEED = 16
 SEED = 2026_09_01
 GATE_TOL = 0.20
+T_OVER_TAU = 200
 
 
 def acf_prefix(values: np.ndarray, nlag: int) -> np.ndarray:
@@ -51,20 +54,31 @@ def ar1(
 
 
 def main() -> None:
+    if not FEASIBILITY.exists():
+        raise SystemExit(f"missing {FEASIBILITY}; run g0_feasibility first")
+    feasibility = json.loads(FEASIBILITY.read_text(encoding="utf-8"))
+    tau_over_dt_grid = sorted(
+        {
+            float(row["tau_over_dt"])
+            for row in feasibility["cells"]
+            if row["feasible"]
+        }
+    )
     rng = np.random.default_rng(SEED)
-    tau, dt = 1.0, 0.05
     rows = []
-    for t_over_tau in (55, 100, 200, 400, 800):
-        n = int(t_over_tau * tau / dt)
+    for tau_over_dt in tau_over_dt_grid:
+        tau = 1.0
+        dt = tau / tau_over_dt
+        n = int(T_OVER_TAU * tau_over_dt)
         singles = np.array(
             [tau_int(ar1(n, tau, dt, rng), dt)[0] / tau for _ in range(N_REP)]
         )
-        median8 = np.array(
+        median16 = np.array(
             [
                 np.median(
                     [
                         tau_int(ar1(n, tau, dt, rng), dt)[0] / tau
-                        for _ in range(8)
+                        for _ in range(N_SEED)
                     ]
                 )
                 for _ in range(N_REP)
@@ -72,26 +86,30 @@ def main() -> None:
         )
         rows.append(
             {
-                "T_over_tau": t_over_tau,
+                "T_over_tau": T_OVER_TAU,
+                "tau_over_dt": tau_over_dt,
                 "n_samples": n,
                 "single_median": float(np.median(singles)),
                 "single_p05": float(np.percentile(singles, 5)),
                 "single_p95": float(np.percentile(singles, 95)),
-                "median8_median": float(np.median(median8)),
-                "median8_p05": float(np.percentile(median8, 5)),
-                "median8_p95": float(np.percentile(median8, 95)),
+                "median16_median": float(np.median(median16)),
+                "median16_p05": float(np.percentile(median16, 5)),
+                "median16_p95": float(np.percentile(median16, 95)),
                 "P_pass_gate_20pct": float(
-                    np.mean(np.abs(median8 - 1.0) <= GATE_TOL)
+                    np.mean(np.abs(median16 - 1.0) <= GATE_TOL)
                 ),
             }
         )
 
     artifact = {
-        "schema": "dt4n.phase_g.g0_estimator_bias.v1",
+        "schema": "dt4n.phase_g.g0_estimator_bias.v2",
+        "amendment": "G-A001",
         "status": "SYNTHETIC_DIAGNOSTIC_NO_EXPERIMENTAL_DATA",
         "principle": "NT 53: test thresholds against synthetic ground truth before signing",
         "gate_tolerance": GATE_TOL,
         "n_replicates": N_REP,
+        "n_seed_per_median": N_SEED,
+        "T_over_tau": T_OVER_TAU,
         "seed": SEED,
         "rows": rows,
     }
@@ -99,26 +117,27 @@ def main() -> None:
     OUT.write_text(json.dumps(artifact, indent=2) + "\n", encoding="utf-8")
 
     print(
-        "%9s %8s | %-24s | %-24s | %s"
-        % ("T/tau", "n", "1 run: med/p05/p95", "median-8: med/p05/p95", "P(pass 20%)")
+        "%9s %8s %8s | %-24s | %-24s | %s"
+        % ("T/tau", "tau/dt", "n", "1 run: med/p05/p95", "median-16: med/p05/p95", "P(pass 20%)")
     )
     for row in rows:
         print(
-            "%9d %8d | %6.3f %6.3f %6.3f    | %6.3f %6.3f %6.3f    | %.3f"
+            "%9d %8.0f %8d | %6.3f %6.3f %6.3f    | %6.3f %6.3f %6.3f    | %.3f"
             % (
                 row["T_over_tau"],
+                row["tau_over_dt"],
                 row["n_samples"],
                 row["single_median"],
                 row["single_p05"],
                 row["single_p95"],
-                row["median8_median"],
-                row["median8_p05"],
-                row["median8_p95"],
+                row["median16_median"],
+                row["median16_p05"],
+                row["median16_p95"],
                 row["P_pass_gate_20pct"],
             )
         )
     print("\nartifact: %s" % OUT)
-    print("choose the smallest T/tau with P(pass) >= 0.95")
+    print("all deployed tau/dt configurations must have P(pass) >= 0.95")
 
 
 if __name__ == "__main__":
