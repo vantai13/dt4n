@@ -118,6 +118,7 @@ def estimate_two_band(
     sf_l: float,
     sf_m: float,
     phi: float,
+    phi_m: float | None = None,
 ) -> dict[str, object]:
     """Separate true correlation and common-mode nugget using two bands.
 
@@ -127,15 +128,23 @@ def estimate_two_band(
     """
     if not (0.0 < sf_l < 1.0 and 0.0 < sf_m < 1.0):
         return {"valid": False, "reason": "sf must lie strictly inside (0,1)"}
-    if not 0.0 < phi < 1.0:
-        return {"valid": False, "reason": "phi must lie strictly inside (0,1)"}
+    phi_l = float(phi)
+    phi_m = phi_l if phi_m is None else float(phi_m)
+    if not (0.0 < phi_l < 1.0 and 0.0 < phi_m < 1.0):
+        return {"valid": False, "reason": "both phi values must lie inside (0,1)"}
 
-    def w_of(signal_fraction: float) -> float:
-        numerator = signal_fraction * (1.0 - phi)
+    def w_of(signal_fraction: float, phi_value: float) -> float:
+        numerator = signal_fraction * (1.0 - phi_value)
         return float(numerator / (numerator + 1.0 - signal_fraction))
 
-    w_l = w_of(sf_l)
-    w_m = w_of(sf_m)
+    w_l = w_of(sf_l, phi_l)
+    w_m = w_of(sf_m, phi_m)
+    # For unequal AR(1) memory, Corr(diff(signal_l), diff(signal_m)) is
+    # q*r_true rather than r_true.  q=1 exactly when phi_l=phi_m.
+    q_signal = float(
+        (2.0 - phi_l - phi_m)
+        / (2.0 * np.sqrt((1.0 - phi_l) * (1.0 - phi_m)))
+    )
     matrix = np.array(
         [
             [
@@ -143,7 +152,7 @@ def estimate_two_band(
                 np.sqrt((1.0 - sf_l) * (1.0 - sf_m)),
             ],
             [
-                np.sqrt(w_l * w_m),
+                q_signal * np.sqrt(w_l * w_m),
                 np.sqrt((1.0 - w_l) * (1.0 - w_m)),
             ],
         ]
@@ -171,10 +180,13 @@ def estimate_two_band(
         "r_diff": float(observations[1]),
         "w_l": w_l,
         "w_m": w_m,
+        "phi_l": phi_l,
+        "phi_m": phi_m,
+        "q_signal": q_signal,
         "cond_A": condition,
         "in_physical_range": bool(abs(r_true) <= 1.0 and abs(rho_eps) <= 1.0),
-        "lambda_leakage_l": float((1.0 - phi) * sf_l / (1.0 - sf_l)),
-        "lambda_leakage_m": float((1.0 - phi) * sf_m / (1.0 - sf_m)),
+        "lambda_leakage_l": float((1.0 - phi_l) * sf_l / (1.0 - sf_l)),
+        "lambda_leakage_m": float((1.0 - phi_m) * sf_m / (1.0 - sf_m)),
         "valid": True,
         "reason": "",
     }
