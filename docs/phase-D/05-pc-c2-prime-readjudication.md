@@ -91,6 +91,17 @@ Vì poisson và h2 đồng ý, `clean@0.960` robust trên tập prior-supported
 `{poisson,h2}`. Tuy nhiên không tuyên bố cbr “xác suất bằng 0” hay chỉ tồn tại
 khi N=1; các điều kiện định lý và independence chưa được đo trực tiếp.
 
+Phát biểu dùng được trong luận văn (được phép vì `theory_prior` đã ghi
+trước sweep, trong `tools/phase_d_family_sensitivity.py` và
+`results/SMOKE/phase-D/family_sensitivity.json`, không phải hậu kiểm):
+Palm–Khintchine cho một lý do **tiên nghiệm** để hạ trọng số cbr — chồng chập
+`N_bar` in `[95,875]` luồng gần độc lập hội tụ về Poisson, trong khi cbr
+(`c_a = 0`) là chế độ tất định chỉ giữ được khi số nguồn chồng chập rất nhỏ.
+Vì vậy trên dải **vật lý khả dĩ** `{poisson, h2}`, kết luận highest-cell
+`clean@0.960` là ROBUST; L141 chỉ còn MỞ cho các khẳng định dựa trên
+cell-selection mà **không** loại được cbr bằng lý lẽ độc lập, và cho onoff vì
+onoff chỉ có key `6|13`.
+
 L141 vì vậy **đóng một phần**:
 
 - đóng claim decision band;

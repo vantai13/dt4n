@@ -79,10 +79,16 @@ highest cell, poisson+h2        ROBUST CÓ ĐIỀU KIỆN — clean@0.960
 L141                            ĐÓNG MỘT PHẦN
 ```
 
-Palm–Khintchine là theory prior đã ghi trước sweep và ưu tiên Poisson cho
-nhiều flow độc lập chồng chập. Điều này cho phép dùng kết quả `{poisson,h2}`
-có điều kiện, nhưng không cho phép tuyên bố cbr bất khả thi nếu independence
-chưa đo; onoff cũng thiếu full grid.
+Palm–Khintchine là theory prior đã ghi trước sweep
+(`results/SMOKE/phase-D/family_sensitivity.json::theory_prior`) và ưu tiên
+Poisson cho nhiều flow độc lập chồng chập: chồng chập `N_bar` in `[95,875]`
+luồng gần độc lập hội tụ về Poisson, còn cbr (`c_a=0`) là chế độ tất định chỉ
+giữ được khi số nguồn chồng chập rất nhỏ. Đây là lý do **tiên nghiệm** để hạ
+trọng số cbr, nên trên dải vật lý khả dĩ `{poisson,h2}` kết luận highest-cell
+`clean@0.960` là ROBUST và dùng được. Nó **không** cho phép tuyên bố cbr bất
+khả thi khi independence chưa đo trực tiếp; L141 vì vậy chỉ còn mở cho các
+khẳng định cell-selection không loại được cbr bằng lý lẽ độc lập, và cho onoff
+vì onoff chỉ có key `6|13`.
 
 ## D-9 và hệ quả Phase 24
 
