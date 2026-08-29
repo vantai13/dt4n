@@ -1,0 +1,1213 @@
+{
+  "schema": "dt4n.phase_g.g0_roundtrip.v2",
+  "amendment": "G-A001",
+  "status": "SYNTHETIC_DRY_RUN_NO_NETWORK",
+  "T_over_tau": 200,
+  "n_seed": 16,
+  "seed0": 20260901,
+  "cells": [
+    {
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 0.5,
+      "dt_s": 0.05,
+      "tau_over_dt": 10.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.04083906750933071,
+        "p05": 0.0378609296904053,
+        "p95": 0.04316685913203616
+      },
+      "sigma_hat_measured": {
+        "median": 0.041453118741699116,
+        "p05": 0.038762947923685676,
+        "p95": 0.04373774623837349
+      },
+      "tau_hat_offered": {
+        "median": 0.4654256412417941,
+        "p05": 0.36395622987740195,
+        "p95": 0.6204825497191593
+      },
+      "tau_hat_measured": {
+        "median": 0.45217202466137557,
+        "p05": 0.3547529559593286,
+        "p95": 0.6007195746388818
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 5.006259809252234,
+        "p05": 5.006259809252234,
+        "p95": 5.006259809252234
+      },
+      "sf_theory": 0.9616308975433459,
+      "sf_empirical": {
+        "median": 0.966048584176441,
+        "p05": 0.9418574254721779,
+        "p95": 0.978581037590288
+      },
+      "sigma_ratio": 1.0092413235064488,
+      "tau_ratio": 0.9308512824835882,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 1.0,
+      "dt_s": 0.05,
+      "tau_over_dt": 20.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.04024783710331463,
+        "p05": 0.037631229763492,
+        "p95": 0.042976617716063224
+      },
+      "sigma_hat_measured": {
+        "median": 0.041084307458659076,
+        "p05": 0.03858577627981598,
+        "p95": 0.04371132886538993
+      },
+      "tau_hat_offered": {
+        "median": 0.9285335759283129,
+        "p05": 0.7747782540797571,
+        "p95": 1.2215740239768718
+      },
+      "tau_hat_measured": {
+        "median": 0.8970835602702683,
+        "p05": 0.7448682092107515,
+        "p95": 1.1762343636902808
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.00125
+      },
+      "sigma_headroom": {
+        "median": 5.006259809252234,
+        "p05": 5.006259809252234,
+        "p95": 5.006259809252234
+      },
+      "sf_theory": 0.9616308975433459,
+      "sf_empirical": {
+        "median": 0.9625421070262883,
+        "p05": 0.9511355161089659,
+        "p95": 0.9671802272085004
+      },
+      "sigma_ratio": 0.994630457150879,
+      "tau_ratio": 0.9285335759283129,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 3.0,
+      "dt_s": 0.05,
+      "tau_over_dt": 60.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.04004776342959733,
+        "p05": 0.03701090450688511,
+        "p95": 0.04245870161418812
+      },
+      "sigma_hat_measured": {
+        "median": 0.04090535856770499,
+        "p05": 0.03795353615112051,
+        "p95": 0.043204898860747534
+      },
+      "tau_hat_offered": {
+        "median": 2.9921952199121815,
+        "p05": 2.0813021735195463,
+        "p95": 5.211604385564353
+      },
+      "tau_hat_measured": {
+        "median": 2.8332585801880548,
+        "p05": 1.9703727275675447,
+        "p95": 3.741688840046503
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0016041666666666667
+      },
+      "sigma_headroom": {
+        "median": 5.006259809252234,
+        "p05": 5.006259809252234,
+        "p95": 5.006259809252234
+      },
+      "sf_theory": 0.9616308975433459,
+      "sf_empirical": {
+        "median": 0.9589874777576015,
+        "p05": 0.950942061399695,
+        "p95": 0.9676320640337044
+      },
+      "sigma_ratio": 0.9896861077429228,
+      "tau_ratio": 0.9973984066373939,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 10.0,
+      "dt_s": 0.05,
+      "tau_over_dt": 200.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.03964810926320701,
+        "p05": 0.036528381225483936,
+        "p95": 0.0421579728527542
+      },
+      "sigma_hat_measured": {
+        "median": 0.040508963966470746,
+        "p05": 0.03729817649110921,
+        "p95": 0.04288770434056698
+      },
+      "tau_hat_offered": {
+        "median": 9.260409746364587,
+        "p05": 7.9873629980626575,
+        "p95": 11.667962306113992
+      },
+      "tau_hat_measured": {
+        "median": 8.94746606040136,
+        "p05": 7.708672979044553,
+        "p95": 11.199749872435738
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0007312499999999999
+      },
+      "sigma_headroom": {
+        "median": 5.006259809252234,
+        "p05": 5.006259809252234,
+        "p95": 5.006259809252234
+      },
+      "sf_theory": 0.9616308975433459,
+      "sf_empirical": {
+        "median": 0.959953419480883,
+        "p05": 0.9516023258685943,
+        "p95": 0.9664805862550744
+      },
+      "sigma_ratio": 0.9798095967344265,
+      "tau_ratio": 0.9260409746364587,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 30.0,
+      "dt_s": 0.05,
+      "tau_over_dt": 600.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.03931007662123562,
+        "p05": 0.03572336027888009,
+        "p95": 0.04216560876958702
+      },
+      "sigma_hat_measured": {
+        "median": 0.04010233446528019,
+        "p05": 0.03674092855730602,
+        "p95": 0.04294780661248748
+      },
+      "tau_hat_offered": {
+        "median": 26.186460314808976,
+        "p05": 18.92815471033795,
+        "p95": 40.70524504268714
+      },
+      "tau_hat_measured": {
+        "median": 25.196848521891788,
+        "p05": 18.009760463114993,
+        "p95": 39.66414217150341
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.00069375
+      },
+      "sigma_headroom": {
+        "median": 5.006259809252234,
+        "p05": 5.006259809252234,
+        "p95": 5.006259809252234
+      },
+      "sf_theory": 0.9616308975433459,
+      "sf_empirical": {
+        "median": 0.9591448141745864,
+        "p05": 0.945204363530055,
+        "p95": 0.9639032247783821
+      },
+      "sigma_ratio": 0.9714559165018001,
+      "tau_ratio": 0.8728820104936326,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 3.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 15.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.010064656970340733,
+        "p05": 0.009481538229011703,
+        "p95": 0.010744101810040615
+      },
+      "sigma_hat_measured": {
+        "median": 0.010250519204912246,
+        "p05": 0.009685959564401636,
+        "p95": 0.010944387656502332
+      },
+      "tau_hat_offered": {
+        "median": 3.0188624574363363,
+        "p05": 2.4370554371214848,
+        "p95": 3.908688115755793
+      },
+      "tau_hat_measured": {
+        "median": 2.8891174856902717,
+        "p05": 2.3263542313542342,
+        "p95": 3.741605969953609
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 5.006259809252234,
+        "p05": 5.006259809252234,
+        "p95": 5.006259809252234
+      },
+      "sf_theory": 0.9616308975433459,
+      "sf_empirical": {
+        "median": 0.9639478706877735,
+        "p05": 0.9480382016196808,
+        "p95": 0.9751367725752358
+      },
+      "sigma_ratio": 0.9948971258037969,
+      "tau_ratio": 1.006287485812112,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 10.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 50.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.010054028961242415,
+        "p05": 0.009303966031467235,
+        "p95": 0.010690921249577271
+      },
+      "sigma_hat_measured": {
+        "median": 0.01027373664783526,
+        "p05": 0.009532295630365731,
+        "p95": 0.01089831031024721
+      },
+      "tau_hat_offered": {
+        "median": 9.217986840296293,
+        "p05": 6.662934273005452,
+        "p95": 11.460599840953964
+      },
+      "tau_hat_measured": {
+        "median": 8.86548484171254,
+        "p05": 6.398106421027217,
+        "p95": 11.04642880579653
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 5.006259809252234,
+        "p05": 5.006259809252234,
+        "p95": 5.006259809252234
+      },
+      "sf_theory": 0.9616308975433459,
+      "sf_empirical": {
+        "median": 0.9599858305577489,
+        "p05": 0.951413002128713,
+        "p95": 0.9677185421942603
+      },
+      "sigma_ratio": 0.9938465409963769,
+      "tau_ratio": 0.9217986840296293,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 30.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 150.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.009885352788420631,
+        "p05": 0.009190906569390263,
+        "p95": 0.010528613913371584
+      },
+      "sigma_hat_measured": {
+        "median": 0.010098323339539833,
+        "p05": 0.009386174688644933,
+        "p95": 0.010713427785716512
+      },
+      "tau_hat_offered": {
+        "median": 26.95122857684176,
+        "p05": 21.566933367674626,
+        "p95": 36.98951074894317
+      },
+      "tau_hat_measured": {
+        "median": 25.878045124447628,
+        "p05": 20.5542331866672,
+        "p95": 35.55448533044468
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 5.006259809252234,
+        "p05": 5.006259809252234,
+        "p95": 5.006259809252234
+      },
+      "sf_theory": 0.9616308975433459,
+      "sf_empirical": {
+        "median": 0.9625952137747462,
+        "p05": 0.9524053735034691,
+        "p95": 0.968951418235134
+      },
+      "sigma_ratio": 0.9771728043726143,
+      "tau_ratio": 0.8983742858947253,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 3.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 15.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.020129313940681463,
+        "p05": 0.018963076458023406,
+        "p95": 0.02148820362008123
+      },
+      "sigma_hat_measured": {
+        "median": 0.020209552725137317,
+        "p05": 0.019067351565938688,
+        "p95": 0.02159018591349407
+      },
+      "tau_hat_offered": {
+        "median": 3.0188624574363345,
+        "p05": 2.4370554371214856,
+        "p95": 3.908688115755794
+      },
+      "tau_hat_measured": {
+        "median": 2.97899169081958,
+        "p05": 2.392458093370582,
+        "p95": 3.8682935979932354
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 10.012519618504468,
+        "p05": 10.012519618504468,
+        "p95": 10.012519618504468
+      },
+      "sf_theory": 0.9901235103534666,
+      "sf_empirical": {
+        "median": 0.9887486959041243,
+        "p05": 0.9837133981400817,
+        "p95": 0.9969436127300301
+      },
+      "sigma_ratio": 0.9948971258037967,
+      "tau_ratio": 1.0062874858121116,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 10.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 50.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.02010805792248483,
+        "p05": 0.018607932062934474,
+        "p95": 0.021381842499154542
+      },
+      "sigma_hat_measured": {
+        "median": 0.02020469150307238,
+        "p05": 0.018724037214383694,
+        "p95": 0.021497744534121774
+      },
+      "tau_hat_offered": {
+        "median": 9.217986840296295,
+        "p05": 6.66293427300545,
+        "p95": 11.460599840953961
+      },
+      "tau_hat_measured": {
+        "median": 9.132960520693057,
+        "p05": 6.6069116111173365,
+        "p95": 11.382149229762692
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 10.012519618504468,
+        "p05": 10.012519618504468,
+        "p95": 10.012519618504468
+      },
+      "sf_theory": 0.9901235103534666,
+      "sf_empirical": {
+        "median": 0.9895572623026132,
+        "p05": 0.9858695522201312,
+        "p95": 0.9922815273819635
+      },
+      "sigma_ratio": 0.9938465409963769,
+      "tau_ratio": 0.9217986840296295,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 30.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 150.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.019770705576841262,
+        "p05": 0.01838181313878053,
+        "p95": 0.02105722782674317
+      },
+      "sigma_hat_measured": {
+        "median": 0.019869743033774572,
+        "p05": 0.018494730112636838,
+        "p95": 0.021155855870425684
+      },
+      "tau_hat_offered": {
+        "median": 26.951228576841757,
+        "p05": 21.566933367674626,
+        "p95": 36.98951074894316
+      },
+      "tau_hat_measured": {
+        "median": 26.72759173679537,
+        "p05": 21.320824185587895,
+        "p95": 36.57760843638967
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 10.012519618504468,
+        "p05": 10.012519618504468,
+        "p95": 10.012519618504468
+      },
+      "sf_theory": 0.9901235103534666,
+      "sf_empirical": {
+        "median": 0.9899299313819168,
+        "p05": 0.9874870186486835,
+        "p95": 0.9909558224828855
+      },
+      "sigma_ratio": 0.9771728043726143,
+      "tau_ratio": 0.8983742858947252,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 3.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 15.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.03019397091102219,
+        "p05": 0.028444614687035102,
+        "p95": 0.03223230543012184
+      },
+      "sigma_hat_measured": {
+        "median": 0.030234143374882252,
+        "p05": 0.028535779527750393,
+        "p95": 0.03228469619074745
+      },
+      "tau_hat_offered": {
+        "median": 3.018862457436336,
+        "p05": 2.437055437121486,
+        "p95": 3.908688115755793
+      },
+      "tau_hat_measured": {
+        "median": 3.0214660123001833,
+        "p05": 2.4184941970230076,
+        "p95": 3.8887433872675783
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 15.018779427756701,
+        "p05": 15.018779427756701,
+        "p95": 15.018779427756701
+      },
+      "sf_theory": 0.9955862309658919,
+      "sf_empirical": {
+        "median": 0.9951493849578632,
+        "p05": 0.9906274652360041,
+        "p95": 0.9992410280505699
+      },
+      "sigma_ratio": 0.9948971258037967,
+      "tau_ratio": 1.006287485812112,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 10.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 50.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.03016208688372724,
+        "p05": 0.027911898094401706,
+        "p95": 0.0320727637487318
+      },
+      "sigma_hat_measured": {
+        "median": 0.030239186123921024,
+        "p05": 0.027971109197554807,
+        "p95": 0.032137552435980946
+      },
+      "tau_hat_offered": {
+        "median": 9.217986840296295,
+        "p05": 6.662934273005449,
+        "p95": 11.460599840953961
+      },
+      "tau_hat_measured": {
+        "median": 9.185343334413748,
+        "p05": 6.639539467205488,
+        "p95": 11.438571605082558
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 15.018779427756701,
+        "p05": 15.018779427756701,
+        "p95": 15.018779427756701
+      },
+      "sf_theory": 0.9955862309658919,
+      "sf_empirical": {
+        "median": 0.9955513016791697,
+        "p05": 0.9924762168329414,
+        "p95": 0.9971780495789967
+      },
+      "sigma_ratio": 0.9938465409963769,
+      "tau_ratio": 0.9217986840296295,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 30.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 150.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.02965605836526189,
+        "p05": 0.027572719708170792,
+        "p95": 0.03158584174011475
+      },
+      "sigma_hat_measured": {
+        "median": 0.0297289989597134,
+        "p05": 0.02765443044309879,
+        "p95": 0.031649125410696914
+      },
+      "tau_hat_offered": {
+        "median": 26.951228576841768,
+        "p05": 21.566933367674626,
+        "p95": 36.98951074894319
+      },
+      "tau_hat_measured": {
+        "median": 26.830407587744798,
+        "p05": 21.436668986021207,
+        "p95": 36.83799038974571
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 15.018779427756701,
+        "p05": 15.018779427756701,
+        "p95": 15.018779427756701
+      },
+      "sf_theory": 0.9955862309658919,
+      "sf_empirical": {
+        "median": 0.9954059348395103,
+        "p05": 0.9942623884983406,
+        "p95": 0.9960707698175697
+      },
+      "sigma_ratio": 0.9771728043726144,
+      "tau_ratio": 0.8983742858947256,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 3.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 15.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.04025862788136293,
+        "p05": 0.03792615291604681,
+        "p95": 0.04297640724016246
+      },
+      "sigma_hat_measured": {
+        "median": 0.0403201178710524,
+        "p05": 0.03798956641653732,
+        "p95": 0.04302329336443876
+      },
+      "tau_hat_offered": {
+        "median": 3.0188624574363354,
+        "p05": 2.437055437121486,
+        "p95": 3.9086881157557913
+      },
+      "tau_hat_measured": {
+        "median": 3.016554903283228,
+        "p05": 2.4339723871879753,
+        "p95": 3.897427492981787
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0
+      },
+      "sigma_headroom": {
+        "median": 20.025039237008937,
+        "p05": 20.025039237008937,
+        "p95": 20.025039237008937
+      },
+      "sf_theory": 0.9975124514023894,
+      "sf_empirical": {
+        "median": 0.9971766016326384,
+        "p05": 0.9958485966560336,
+        "p95": 0.9985350419348772
+      },
+      "sigma_ratio": 0.9948971258037969,
+      "tau_ratio": 1.0062874858121118,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 10.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 50.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.040209617914948946,
+        "p05": 0.03721586412586895,
+        "p95": 0.042763684998309084
+      },
+      "sigma_hat_measured": {
+        "median": 0.04026680281079058,
+        "p05": 0.037277480119461394,
+        "p95": 0.04282240053640483
+      },
+      "tau_hat_offered": {
+        "median": 9.217986840296295,
+        "p05": 6.666085441960288,
+        "p95": 11.459917539345827
+      },
+      "tau_hat_measured": {
+        "median": 9.17607647270652,
+        "p05": 6.6424717070683945,
+        "p95": 11.444065146526047
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.0015
+      },
+      "sigma_headroom": {
+        "median": 20.025039237008937,
+        "p05": 20.025039237008937,
+        "p95": 20.025039237008937
+      },
+      "sf_theory": 0.9975124514023894,
+      "sf_empirical": {
+        "median": 0.9972027127305914,
+        "p05": 0.995731651850098,
+        "p95": 0.9988963097324355
+      },
+      "sigma_ratio": 0.9936859599671294,
+      "tau_ratio": 0.9217986840296295,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    },
+    {
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 30.0,
+      "dt_s": 0.2,
+      "tau_over_dt": 150.0,
+      "n_seed": 16,
+      "T_over_tau": 200,
+      "sigma_hat_offered": {
+        "median": 0.039540517185647515,
+        "p05": 0.03676362627756106,
+        "p95": 0.04211056277917246
+      },
+      "sigma_hat_measured": {
+        "median": 0.03960080358285741,
+        "p05": 0.03682445857720753,
+        "p95": 0.04217715758260139
+      },
+      "tau_hat_offered": {
+        "median": 26.95122857684176,
+        "p05": 21.566603995337886,
+        "p95": 36.98990905800116
+      },
+      "tau_hat_measured": {
+        "median": 26.860773589456116,
+        "p05": 21.491405365888752,
+        "p95": 36.8769881682646
+      },
+      "clip_fraction": {
+        "median": 0.0,
+        "p05": 0.0,
+        "p95": 0.000475
+      },
+      "sigma_headroom": {
+        "median": 20.025039237008937,
+        "p05": 20.025039237008937,
+        "p95": 20.025039237008937
+      },
+      "sf_theory": 0.9975124514023894,
+      "sf_empirical": {
+        "median": 0.9969898041379763,
+        "p05": 0.9964727260355245,
+        "p95": 0.9980735757851098
+      },
+      "sigma_ratio": 0.9771507120591055,
+      "tau_ratio": 0.8983742858947253,
+      "gates": {
+        "G0-1_tau": true,
+        "G0-2_sigma": true,
+        "G0-3_clip": true,
+        "G0-4_headroom": true,
+        "G0-5_signal_fraction": true
+      }
+    }
+  ],
+  "skipped_infeasible": [
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 0.5,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 1.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 3.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 10.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 30.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 0.5,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 1.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 3.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 10.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 30.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 0.5,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 1.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 3.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 10.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 30.0,
+      "reason": "headroom"
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 0.5,
+      "reason": "tau_resolution"
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.2,
+      "sigma": 0.010116279069767439,
+      "tau_s": 1.0,
+      "reason": "tau_resolution"
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 0.5,
+      "reason": "tau_resolution"
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.4,
+      "sigma": 0.020232558139534878,
+      "tau_s": 1.0,
+      "reason": "tau_resolution"
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 0.5,
+      "reason": "tau_resolution"
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.6,
+      "sigma": 0.03034883720930231,
+      "tau_s": 1.0,
+      "reason": "tau_resolution"
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 0.5,
+      "reason": "tau_resolution"
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.8,
+      "sigma": 0.040465116279069756,
+      "tau_s": 1.0,
+      "reason": "tau_resolution"
+    }
+  ],
+  "tau_independence_of_sigma": [
+    {
+      "dt_s": 0.05,
+      "tau_s": 0.5,
+      "spread": null,
+      "n_sigma": 1,
+      "evaluable": false,
+      "pass": false
+    },
+    {
+      "dt_s": 0.05,
+      "tau_s": 1.0,
+      "spread": null,
+      "n_sigma": 1,
+      "evaluable": false,
+      "pass": false
+    },
+    {
+      "dt_s": 0.05,
+      "tau_s": 3.0,
+      "spread": null,
+      "n_sigma": 1,
+      "evaluable": false,
+      "pass": false
+    },
+    {
+      "dt_s": 0.05,
+      "tau_s": 10.0,
+      "spread": null,
+      "n_sigma": 1,
+      "evaluable": false,
+      "pass": false
+    },
+    {
+      "dt_s": 0.05,
+      "tau_s": 30.0,
+      "spread": null,
+      "n_sigma": 1,
+      "evaluable": false,
+      "pass": false
+    },
+    {
+      "dt_s": 0.2,
+      "tau_s": 3.0,
+      "spread": 4.440892098500626e-16,
+      "n_sigma": 4,
+      "evaluable": true,
+      "pass": true
+    },
+    {
+      "dt_s": 0.2,
+      "tau_s": 10.0,
+      "spread": 2.220446049250313e-16,
+      "n_sigma": 4,
+      "evaluable": true,
+      "pass": true
+    },
+    {
+      "dt_s": 0.2,
+      "tau_s": 30.0,
+      "spread": 3.3306690738754696e-16,
+      "n_sigma": 4,
+      "evaluable": true,
+      "pass": true
+    }
+  ],
+  "tau_axis_non_degeneracy": [
+    {
+      "dt_s": 0.05,
+      "amplitude_fraction": 0.8,
+      "spread": 0.12451639614376131,
+      "n_tau": 5,
+      "evaluable": true,
+      "pass": true
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.2,
+      "spread": 0.10791319991738668,
+      "n_tau": 3,
+      "evaluable": true,
+      "pass": true
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.4,
+      "spread": 0.10791319991738635,
+      "n_tau": 3,
+      "evaluable": true,
+      "pass": true
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.6,
+      "spread": 0.10791319991738646,
+      "n_tau": 3,
+      "evaluable": true,
+      "pass": true
+    },
+    {
+      "dt_s": 0.2,
+      "amplitude_fraction": 0.8,
+      "spread": 0.10791319991738646,
+      "n_tau": 3,
+      "evaluable": true,
+      "pass": true
+    }
+  ],
+  "gate_summary": {
+    "cell_gates_pass": true,
+    "G0-1b_pass_on_evaluable_tau": true,
+    "G0-1b_coverage": "3/8 tau levels",
+    "G0-1c_pass_on_evaluable_axes": true,
+    "G0-1c_coverage": "5/5 fixed-(dt,a) axes",
+    "overall_pass": true
+  },
+  "provenance": {
+    "git_hash": "35843ccd5fdeb53842cb2f703eb706e072fc5521",
+    "prereg_tag": "phase-G-g0-amendment-v2-prereg",
+    "timestamp_utc": "2026-08-29T14:00:01.695649+00:00",
+    "script": "tools/g0_roundtrip.py"
+  }
+}
