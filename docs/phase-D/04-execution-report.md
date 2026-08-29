@@ -188,6 +188,11 @@ dài trong vòng này và không dùng pooled r Cell C để phán H4/H6. Trace 
 được giữ dưới `results/RAW/phase-D/cellC/`; artifact validity là
 `results/SMOKE/phase-D/cellC_analysis.json`.
 
+Ba infra summary chẩn đoán được xếp đúng tầng SMOKE tại
+`results/SMOKE/phase-D/infra_cellC_s{11,12,13}_summary.json`; JSONL lấy mẫu
+đầy đủ vẫn ở local dưới `results/PENDING/phase-D/` và đã được hấp thụ vào
+artifact validity.
+
 ### D3 — sensitivity theo traffic family
 
 Khẳng định chịu lực thật là `T6_snr_and_decision`, không dùng hai placeholder
@@ -228,3 +233,19 @@ Giới hạn D-L17: đây là một lần đo local, CPU p95 15.5%, chưa đo d�
 
 Các mục trên là **BLOCKED, không phải SKIPPED**. Gate D′ vẫn FAIL cho tới khi
 có DOI và các validity debt được phân xử.
+
+## Kiểm thử cuối
+
+```text
+Targeted D/ledger                 82 passed, 1 skipped
+Full suite lần đầu               1798 passed, 48 skipped, 13 deselected,
+                                  5 failed
+Sau khi chuyển 3 infra summary
+PENDING -> SMOKE                  99 passed, 6 skipped, 2 failed
+Hai failure còn lại              L121 KNOWN_DANGLING parquet tồn tại sẵn;
+                                  g23-17c historical-number drift tồn tại sẵn
+```
+
+Ba failure do artifact D mới đã được sửa hết; rerun chỉ còn hai debt ngoài
+phạm vi D.2/D.3. Không sửa/xóa parquet hoặc historical report để làm test xanh
+giả vì hai hành động đó cần adjudication riêng.
