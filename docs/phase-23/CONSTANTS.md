@@ -43,8 +43,9 @@ Hang so mac cung mot benh, chi khac ten benh: khong phai va cham ma la MO COI
 | K08 | `CV_MAX_FOLDED` -- he so bien dong cuc dai cua ho folded normal | 0.755510639762867 | KHONG fit. Dan giai tich: `sup_theta CV = sqrt(pi/2 - 1)`, dat tai `theta = 0` (half-normal) | `A072-amendment-72.md` muc 4 | `cert/baselines_lit.py`, `M-227` | 0 (hang so toan hoc, khong phai uoc luong) |
 | K09 | `RHO_MEASURED_HARD_CEILING` -- tran van hanh cua TX counter | 1.0094102536 | median p99 cua 49 link-run co p99 >1.0 tren 15 run CLEAN; nguong censoring la `K09 * 0.995 = 1.0043632023` | `A082`; `snr_censoring_artifact.json::G23_335_hard_ceiling` | moi gate censoring cua `rho_measured`; thay nguong tam 0.99 | MAD cua 49 p99 = 0.00003562; q2.5--q97.5 = [1.00208, 1.01064]. Co che framing/accounting overhead la GIA THUYET, khong phai fit co che |
 | K10 | `TRUST_GATE_P99_MS` -- latency mot quyet dinh scalar | 0.222126 ms | microbenchmark `N=5000`, warm-up 200; pandas age-bin lookup + `cert.usefulness_v2._thresholds` + scalar compare | `results/SMOKE/phase-D/trust_gate_benchmark.json`; `tools/trust_gate_bench.py` | gate ngan sach D.6′ (`p99 <= 10 ms`) | mot lan do tren may cuc bo; infra kem theo: CPU p95 15.479%, 4 co canh bao deu false |
+| K11 | `ARCHIVE_TAG` -- moc bat bien truoc custody action | `phase-D-cleanup-start` | annotated tag tai commit `fbde6a4`; tao truoc moi thao tac untrack/rewrite | `git show phase-D-cleanup-start`; `docs/phase-D/00-reproduction-audit.md` | phan giai provenance Phase 20--23 va goi Zenodo D.0 | -- (dinh danh bat bien, khong phai uoc luong); remote push phai duoc checker D.0 xac nhan |
 
-So ke tiep duoc cap: **K11**.
+So ke tiep duoc cap: **K12**.
 
 ## K01 -- `beta` chua bao gio co dong nguon goc
 

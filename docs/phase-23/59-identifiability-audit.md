@@ -108,13 +108,30 @@ qua goc, nen khong duoc dung lam doi chung cho WLS chung.
 
 ## 3. Host confound probe -- phan xu co che `+0.6`
 
-> **DINH CHINH PHASE D' (2026-08-29).** Shortfall probe xac nhan thanh phan
-> sinh ra giua offered va measured tai endpoint, nhung **shared endpoint mot
-> minh KHONG du** de giai thich `+0.6`. Audit du 28 cap cho mean r=+0.0171 o
-> bon cap chung host ma ca hai channel co `N_bar` nho, va +0.0364 o bon cap
-> ca hai low-sigma/high-N ma khong chung host. Gia thuyet hien tai la H4
-> endpoint x configuration-bundle interaction (post-hoc); phan quyet xac nhan
-> cho cell C nam o `docs/phase-D/00-preregistration.md`.
+> **DINH CHINH / RUT LAI -- Phase D' (2026-08-29), S20.** Moi dien giai
+> "~900 socket/namespace gay CPU bao hoa" cua phan co che cu la **SAI**.
+> `mininet/flow_engine.py` chi tao mot UDP sender socket tai `FlowEngine` va
+> mot receiver socket trong tien trinh sink; tat ca flow cua sender la state
+> ao trong `heapq`, duoc gop thanh `rate_sum_bps` truoc `sendto`.
+>
+> ```text
+> flow_engine.py:99   self.sock = socket.socket(...)  # mot sender/engine
+> flow_engine.py:209  self.sock.sendto(...)           # gui tai rate tong
+> flow_engine.py:245  sock = socket.socket(...)       # mot sink receiver
+> ```
+>
+> Metadata `rho_bar=0.925, rep3` xac nhan `warm_start_active`/`n_concurrent`
+> la so flow ao: ac 96, uA 817, uB 856, vD 875, khop
+> `N_bar=rho_target^2/sigma_target^2`. Day khong phai socket count.
+>
+> **Rut co che khong rut hien tuong.** `r(uA,uB)=+0.5986` va
+> `r(vC,vD)=+0.6376` van ton tai trong artifact. Shortfall probe xac nhan
+> thanh phan sinh ra giua offered va measured tai endpoint, nhung shared
+> endpoint mot minh KHONG du: audit du 28 cap cho mean r=+0.0171 o bon cap
+> chung host ma ca hai channel co `N_bar` nho, va +0.0364 o bon cap ca hai
+> low-sigma/high-N ma khong chung host. Gia thuyet hien tai la H4 endpoint x
+> configuration-bundle interaction (post-hoc); cell C xac nhan nam o
+> `docs/phase-D/00-preregistration.md`.
 
 Probe doc dung cot `rho_offered` (cot 2, khong phai timestamp cot 1), gop
 10 ms -> 200 ms, tinh trong tung run roi gop Fisher-z.

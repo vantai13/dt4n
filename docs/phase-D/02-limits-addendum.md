@@ -13,6 +13,10 @@
 | D-L9 | Backup 6.5 GiB mới chỉ nằm trên cùng máy | mở, cần sao chép ra phương tiện/tài khoản khác |
 | D-L10 | Run cũ 120 s ngắn hơn `5*tau_pred` của uB/vD (140–151 s theo max campaign); không có vùng hậu burn-in theo estimator generator dù measured-ACF T8 cho n_eff lớn | mở; không tráo hai estimator. Cell C dùng 240 s; cấu hình A muốn đóng riêng cần run dài |
 | D-L11 | Cell C đổi đồng thời sigma, lifetime, tau và N_bar; dù H4 thắng cũng chỉ xác nhận endpoint × configuration bundle, không nhận dạng riêng N_bar hay heap cost | mở có chủ đích; tách trục cần generator mới hoặc intervention khác |
+| D-L12 | Giả thuyết “access link host chung bị bão hòa” bị bác về tải danh định: access link là 1000 Mbps (`run_sync_v7.py:89`), trong khi tổng tải lớn nhất qua một host chỉ ≈17.0 Mbps (<1.7%) | đóng bằng code + metadata `rho_bar=0.925, rep3` |
+| D-L13 | Giả thuyết “tổng tải namespace càng cao thì r càng cao” có thứ tự ngược: hA ≈16.675 Mbps với `r(ac,ad)=+0.0358`; hB ≈16.995 với `r(bc,bd)=+0.0314`; hsrc chỉ ≈12.125 với `r(uA,uB)=+0.5986` | bác ở mức mô tả; không loại mọi hiệu ứng endpoint/runtime |
+| D-L14 | `lambda=rho*C/mean_size` không phụ thuộc sigma (uA ≈25.1, ac ≈21.5 arrival/s); độ sâu heap chỉ đổi chi phí operation theo `O(log N)`, với `log2(817)/log2(96)=1.47×`, không phải 9.9× | cơ chế heap chưa nhận dạng; số học bác diễn giải “11× operation rate” hoặc “9.9× do log-heap” |
+| D-L15 | Theo median `tau_pred`, `5*tau_uB=136.7 s` và `5*tau_vD=138.4 s`, lớn hơn run 120 s; budget `55*tau` cho cấu hình A là khoảng 1504–1522 s (tới 1663 s nếu dùng max campaign) | mở; T8 measured-ACF n_eff lớn không thay thế gate burn-in này |
 
 ## Đính chính quan trọng so với bản hướng dẫn đầu vào
 

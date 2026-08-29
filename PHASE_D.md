@@ -6,13 +6,17 @@ validity gate. Outcome của một giả thuyết không phải validity gate.
 
 ## D.0 — custody dữ liệu
 
-- Backup cục bộ 6.5 GiB và SHA256: đã có; bản sao khác thiết bị còn thiếu.
+- Backup cục bộ 6.5 GiB đã kiểm lại SHA256: PASS; bản sao khác thiết bị còn
+  thiếu vì chưa có mount point/tài khoản cloud được cấp.
 - Positive control tái tạo parquet: FAIL có kiểm soát; tám parquet không được
   xoá/untrack trước khi có archive ngoài repo và Version DOI.
-- `results/DATA_MANIFEST.json::doi`: còn `null`.
+- Hai gói Zenodo đã chuẩn bị tại `/tmp/dt4n-archive` bằng
+  `tools/prepare_d0_archive.sh`; `results/DATA_MANIFEST.json::doi` còn `null`
+  cho tới khi người dùng đăng nhập và publish Version DOI.
 - Hook chặn file mới trên 5 MiB: đã cài và đã fire trên file thử 6 MiB.
-- Tag bất biến trước custody action: chưa tạo. Tên dự kiến
-  `phase-D-cleanup-start`, không dùng tên `v9-pre-cleanup` sai ngữ nghĩa.
+- Tag bất biến `phase-D-cleanup-start` đã tạo cục bộ tại `fbde6a4`, trước mọi
+  custody action. Push tag còn bị chặn vì môi trường không có GitHub
+  credential; `tools/check_d0_d1.sh` kiểm cả local và remote.
 
 ## D.1 — state, limits và đính chính
 

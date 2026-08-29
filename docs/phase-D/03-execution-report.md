@@ -21,6 +21,20 @@ pandas.equals        False
 verdict              FAIL -- không xoá 8 parquet
 ```
 
+### 2b. Gói custody chờ upload
+
+Chạy `tools/prepare_d0_archive.sh /tmp/dt4n-archive`; script kiểm lại đủ tám
+SHA256 trước khi đóng gói và tạo checksum dùng tên file tương đối:
+
+```text
+dt4n-phase21R-parquet.tar.gz  239 MiB  sha256 138913388ba5d7d156496be84ec85a850c0ba4ced063ae001507154975710eee
+dt4n-raw-measurements.tar.gz  105 MiB  sha256 0c3ccd202b434134f74306fde22e238916bb374d341a258680d013cbbadee930
+SHA256SUMS                    /tmp/dt4n-archive/SHA256SUMS
+```
+
+Đây mới là staging cục bộ, chưa phải archive bất biến. Không ghi DOI giả và
+không untrack parquet trước khi người dùng publish Zenodo Version DOI.
+
 ### 3. Trust-gate latency và hạ tầng
 
 ```text
@@ -81,6 +95,16 @@ Full suite loại đúng L121     1796 passed, 46 skipped, 14 deselected
 Pre-commit file >5 MiB       PASS: file thử 6 MiB bị chặn, exit 1
 ```
 
+Rerun đóng sổ D.0/D.1 ngày 2026-08-29:
+
+```text
+D.0/D.1 + Phase-D targeted   79 passed, 1 skipped
+Full suite (loại L121 cũ)    1797 passed, 46 skipped, 14 deselected, 1 failed
+failure ngoài D.0/D.1        test_no_doc_claims_a_missing_tag
+nguyên nhân                  prereg D.2 nhắc tag tương lai phase-D-cellC-start
+phán quyết                   không tạo tag trước khi prereg D.2 được ký
+```
+
 ### 7. Audit factorial 28 cặp (bổ sung 2026-08-29)
 
 ```text
@@ -111,13 +135,16 @@ H1/H2/H3 bị bác ở mức mô tả hậu kiểm; H4 endpoint × configuration
 | scaling audit | `results/SMOKE/phase-D/scaling_test_existing_120s.json` |
 | factorial audit 28 cặp | `results/SMOKE/phase-D/factorial_endpoint_x_load.json` |
 | 8 SHA256 parquet | `docs/phase-D/parquet-sha256-before-delete.txt` |
+| script chuẩn bị gói Zenodo | `tools/prepare_d0_archive.sh` |
+| checker D.0/D.1 | `tools/check_d0_d1.sh` |
 
 ## Gate chưa thể PASS trong phiên này
 
 - Version DOI/Zenodo: cần tài khoản và hành động publish bên ngoài; manifest
   hiện vẫn có `doi: null`.
-- Tag `v9-pre-cleanup`: không tạo vì HEAD hiện tại đã là Lesson 23.25 closeout,
-  gắn tên v9 vào commit này sẽ sai provenance.
+- Tag `v9-pre-cleanup` không dùng vì sai ngữ nghĩa. Tag thay thế
+  `phase-D-cleanup-start` đã tạo cục bộ tại `fbde6a4`; push remote còn chờ
+  GitHub credential.
 - Xoá/untrack/rewrite lịch sử: bị chặn đúng quy trình vì NC tái tạo FAIL.
 - Cell C generator một-hop: chưa chạy trong phiên 2026-08-28. Audit factorial
   ngày 2026-08-29 đã làm sống lại cell này cho câu hỏi cơ chế endpoint ×
