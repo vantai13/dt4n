@@ -1,11 +1,20 @@
-# Phase G1-A result — estimator validation
+# Phase G1-A historical raw-estimator receipt — reclassified by G-A002
 
 Run date: 2026-08-29 UTC.  The first run followed tag `phase-G-g1a-prereg`
 at commit `6c43ac44`.  No experimental data was read.
 
-## Verdict
+## Amended verdict
 
-**G1-0 FAIL.  Do not apply the supplied estimators to Phase D or Mininet data.**
+The original automated verdict was G1-0 FAIL under the original preregistration.
+G-A002 preserves that receipt but separates three findings:
+
+- G1-0a: signal-fraction estimator PASS 5/5.
+- G1-0b: `MODEL_VALIDATED`; raw attenuation theory predicted all five points
+  with maximum error `0.000584`.
+- Raw first-difference correlation:
+  `INSUFFICIENT_BY_DESIGN` as a direct `rho_epsilon` estimator.  It remains a
+  positive control for the error model and is replaced by the two-band
+  estimator validated in `06-g1a-G-A002-results.md`.
 
 The signal-fraction estimator passed all five locked cells.  The raw
 first-difference correlation did not recover `rho_epsilon=1` once residual
@@ -24,10 +33,10 @@ attenuation theory was only `0.000584`.  Thus the synthetic generator behaves
 as designed: the raw statistic estimates the *mixture after high-pass
 attenuation*, not `rho_epsilon` itself when signal leakage is non-negligible.
 
-The preregistered leakage validity threshold `<0.20` is also too loose for the
-locked `abs(rho_hat-1)<=0.10` gate.  In the equal-variance, `r_true=0` control,
-`rho_hat=1/(1+leakage)`; guaranteeing `rho_hat>=0.90` requires true leakage at
-most `1/9 = 0.111`.  The `sf=0.70` cell demonstrates the mismatch.
+Tightening leakage to `1/9` is not a viable repair: it implies approximately
+`sf<=0.63` at this `tau/dt`, while the intended operating gate requires
+`sf>=0.85`.  The viable regions do not intersect.  G-A002 instead solves the
+level and difference equations jointly.
 
 ## Resource use and artifact
 
@@ -36,6 +45,7 @@ most `1/9 = 0.111`.  The `sf=0.70` cell demonstrates the mismatch.
 - Artifact: `results/SMOKE/phase-G/g1a_estimator_validation.json`.
 - SHA256: `fd33dc8145060132719f289141a1c6e2d1d6fa0d42a4aac5b08bf7f6d161f15c`.
 
-G1-B and G1-C remain unopened.  In addition to this estimator failure,
-`results/DATA_MANIFEST.json::doi` remains null, so any branch that creates new
-RAW Mininet data is custody-blocked.
+At the time of this historical run G1-B and G1-C remained unopened.  G-A002
+subsequently closed synthetic G1-0, but `results/DATA_MANIFEST.json::doi`
+remains null, so any branch that creates new RAW Mininet data is still
+custody-blocked.
