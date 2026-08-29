@@ -112,6 +112,15 @@ không bị bác. Nhưng PC-C2″b FAIL vì một lỗi đặc tả ngưỡng c�
 đọc. Ngân sách hết, không có vòng 3. Xem
 `06-pc-c2-second-readjudication.md`.
 
+PC-C3 sau đó đọc `r` trên chính `cellA_long` (ký tại tag `phase-D-pc-c3-start`,
+trước khi tính bất kỳ tương quan nào). Đây là thí nghiệm đổi **đúng một biến**
+mà Cell C không bao giờ là được: `sigma_edge=0.03` nên `N_bar=817` và endpoint
+`hsrc` chung nguyên vẹn, chỉ bundle telemetry đổi. Kết quả:
+`uA-uB: +0.5986 → +0.1755`, `vC-vD: +0.6376 → −0.0166`, ô then chốt giai thừa
+`+0.6181 → +0.0795`. **H4 bị bác ở mức confirmatory, −5.33σ gộp**, với cả 8 mục
+validity gate PASS (`n_eff` 40.8/40.9). H6 và H0 không tách được với nhau
+(D-L29). Xem `07-pc-c3-adjudication.md`.
+
 Phát hiện hậu kiểm lớn nhất của vòng này: nugget `0.3696` của phase-23 không do
 trace ngắn và không do generator — nó đi kèm bundle instrumentation
 `ditto + AoI probe + cycle trace + reconcile_every=1`. Xem D-L25.

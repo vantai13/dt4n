@@ -39,9 +39,11 @@ không được dùng để chọn H4 hay H6.
 - H1: bị bác ở mức hậu kiểm bởi các cặp core cùng host có r gần 0.
 - H2: bị bác ở mức hậu kiểm bởi các cặp low-σ khác host có r gần 0.
 - H3: bị chống ở mức hậu kiểm, nhưng duration debt chưa đóng xác nhận.
-- H4: chưa phân xử xác nhận; Cell C invalid và C′ không chạy.
-- H6: được ủng hộ mạnh bởi offered key cell `+0.0048` so với measured
-  `+0.6181`, nhưng nhãn vẫn là hậu kiểm, không confirmatory.
+- H4: **BỊ BÁC ở mức confirmatory bởi PC-C3** (−5.33σ gộp trên `cellA_long`,
+  nơi `N_bar=817` và endpoint chung được giữ nguyên vẹn). Phán xử này KHÔNG
+  đến từ Cell C — Cell C vẫn invalid và C′ không chạy.
+- H6: ứng viên sống sót cùng H0; PC-C3 không có công suất tách hai cái
+  (D-L29). Vẫn chưa confirmatory với tư cách một cơ chế.
 - H0: không được giữ/loại bằng Cell C invalid.
 
 Lesson D.2 đóng theo ngân sách một vòng với nhãn
@@ -103,6 +105,51 @@ trace + reconcile_every=1`. Điều này ủng hộ H6 mạnh hơn và định v
 ở đường đo, nhưng bác dạng định lượng `sf = sigma^2/(sigma^2+v)`. Xem D-L25 và
 `06-pc-c2-second-readjudication.md` mục 6. H6 vẫn là **hậu kiểm**.
 
+### PC-C3 — thí nghiệm phân biệt thật sự, và H4 bị bác
+
+> **Trùng tên, phải phân biệt:** `PC-C3` trong bảng validity Cell C ở trên là
+> đối chứng *metadata* (`σ`/duration/seed) của prereg `00-preregistration.md`.
+> `PC-C3` dưới đây là phép phân tích thứ cấp của `00c-prereg-pc-c3.md`. Trong
+> tài liệu mới, đối chứng metadata được gọi là `PC-C3m`.
+
+`cellA_long` giữ `sigma_edge=0.03` nên `N_bar=817` và endpoint `hsrc` chung
+**nguyên vẹn** so với campaign phase-23; chỉ bundle telemetry đổi. Đó là thí
+nghiệm đổi đúng một biến mà Cell C không bao giờ là được — vì `sigma` của Cell
+C điều khiển đồng thời `N_bar` (biến H4) và nugget (biến H6).
+
+Ký tại tag `phase-D-pc-c3-start` (commit `7f486a28`), trước khi bất kỳ hệ số
+tương quan nào được tính trên `cellA_long`; khẳng định đó được kiểm bằng audit
+code/artifact, ghi ở `00c-prereg-pc-c3.md` mục 0.
+
+```text
+                 phase-23 (bundle BAT)   cellA_long (bundle TAT)
+uA-uB                 +0.5986                  +0.1755    n_eff 40.81
+vC-vD                 +0.6376                  -0.0166    n_eff 40.90
+o then chot 2x2       +0.6181                  +0.0795
+ti so o then chot/ke tiep  9.893x                4.341x
+
+vs du doan diem H4 (r=0.60):  uA-uB -3.17s   vC-vD -4.37s   gop -5.33s   BAC
+vs H6 (0.13) va H0 (0):       khong ban nhan nao bac
+nhan tu dong:                 PRIMARY_REPLICATES_DISAGREE  (band H6 / band H0)
+```
+
+Cả 8 mục validity gate PASS — **lần đầu tiên trong Phase D′** một phép đo
+correlation đi trọn vẹn qua gate: `n_eff` 40.8/40.9 ≥ 25, burn-in 87 s ≥ 5τ,
+NC-C1/NC-C2/NC-C3 đạt, infra 4 cờ false, 0 dòng rơi.
+
+Phán quyết giả thuyết được cập nhật:
+
+- **H4 (endpoint × N_bar): BỊ BÁC ở mức confirmatory**, −5.33σ gộp. Đây là
+  phán xử confirmatory đầu tiên của Lesson D.2.
+- **H6 và H0: không phân xử được với nhau.** PC-C3 được ký với đúng phạm vi
+  đó; thiếu công suất là điều đã ghi trước (D-L29), không phải phát hiện sau.
+- Nhãn `PRIMARY_REPLICATES_DISAGREE` là artifact vạch band: hai bản nhân nhất
+  quán với nhau ở `0.84σ`, và **cả hai** đều thuộc tập bác H4. Lỗ hổng đặc tả
+  của chính PC-C3, ghi `D-L30`, không sửa nhãn hậu nghiệm.
+- Cell C **không đổi**: `INVALID_RUN`, outcome đóng băng chưa từng được đọc.
+
+Xem `07-pc-c3-adjudication.md`.
+
 ## D.3 / L141
 
 PC `cbr < poisson < h2` đạt và NC poisson tái tạo bit-exact. Đọc theo hai lớp:
@@ -148,18 +195,23 @@ mỗi quyết định. Chưa có phép đo dưới tải (D-L17).
 
 ```text
 D.0 custody/DOI                 FAIL/BLOCKED (DOI còn null)
-D.2 confirmatory validity       FAIL (Cell C INVALID_RUN; n_eff debt cũ;
-                                A002 PC-C2''b MISS -- nhung generator
-                                control PC-C2''a nay PASS 7.687)
+D.2 confirmatory validity       PARTIAL (Cell C van INVALID_RUN va
+                                A002 PC-C2''b MISS; NHUNG PC-C3 di tron
+                                validity gate va BAC H4 confirmatory)
 D.3 family sensitivity          PARTIAL (band đóng; selection có điều kiện,
                                 dùng được trên {poisson,h2} theo theory prior)
 D-9 trust-gate latency          PASS
 OVERALL PHASE D′                FAIL
 ```
 
-So với bản trước A002, `D.2` vẫn FAIL nhưng **lý do đã đổi**: không còn nghi
-ngờ generator không nhận `sigma`; phần còn nợ là outcome validity của Cell C
-và một lỗi đặc tả ngưỡng của chính PC-C2″.
+So với bản trước A002, `D.2` đổi từ FAIL sang PARTIAL: không còn nghi ngờ
+generator không nhận `sigma` (PC-C2″a PASS), và Lesson D.2 nay **có** một phán
+xử confirmatory — H4 bị bác bởi PC-C3, đi trọn validity gate. Phần còn nợ là
+outcome validity của Cell C, lỗi đặc tả ngưỡng của PC-C2″, và việc tách H6
+khỏi H0 (D-L29) cùng tách bốn yếu tố của bundle (D-L28) — cả hai thuộc Phase G.
+
+`OVERALL PHASE D′` vẫn **FAIL** vì D.0 custody/DOI còn BLOCKED. Kết quả khoa
+học không đổi được gate custody.
 
 Năm mục ngoài máy là **BLOCKED, không phải SKIPPED**; xem
 `04-execution-report.md`. Không được tuyên bố Gate D′ PASS trước khi Version

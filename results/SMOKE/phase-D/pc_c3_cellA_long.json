@@ -1,0 +1,1275 @@
+{
+  "schema": "dt4n.phase_d.pc_c3.v1",
+  "status": "CONFIRMATORY_SECONDARY_ANALYSIS",
+  "preregistration": "docs/phase-D/00c-prereg-pc-c3.md",
+  "signed_tag": "phase-D-pc-c3-start",
+  "no_correlation_computed_before_signing": true,
+  "no_new_mininet": true,
+  "design_contrast": {
+    "note": "sigma_edge, N_bar and the shared hsrc endpoint are held fixed against the phase-23 campaign; only the telemetry bundle changed",
+    "edge_sigma": 0.03,
+    "edge_N_bar": {
+      "uA": 817,
+      "uB": 856,
+      "vC": 817,
+      "vD": 875
+    },
+    "ditto": false,
+    "reconcile_every": 30,
+    "aoi_probe": null,
+    "sf_phase23": 0.3682115028268489,
+    "sf_cellA_long": 0.8637732961574023,
+    "phase23_reference_r": {
+      "uA-uB": 0.5986,
+      "vC-vD": 0.6376
+    }
+  },
+  "locked_constants": {
+    "nlag": "min(n//4, 50000)",
+    "burn_tau_mult": 5.0,
+    "n_eff_min": 25.0,
+    "bands": [
+      [
+        null,
+        -0.1,
+        "UNRESOLVED_OUT_OF_BAND"
+      ],
+      [
+        -0.1,
+        0.0,
+        "H0"
+      ],
+      [
+        0.0,
+        0.1,
+        "H6_H0_NOT_SEPARATED"
+      ],
+      [
+        0.1,
+        0.25,
+        "H6"
+      ],
+      [
+        0.25,
+        0.45,
+        "UNRESOLVED_GAP"
+      ],
+      [
+        0.45,
+        0.75,
+        "H4"
+      ],
+      [
+        0.75,
+        null,
+        "UNRESOLVED_OUT_OF_BAND"
+      ]
+    ],
+    "point_predictions": {
+      "H4": 0.6,
+      "H6": 0.13,
+      "H0": 0.0
+    },
+    "nc_band": [
+      -0.1,
+      0.15
+    ],
+    "nc_c3_abs_max": 0.15
+  },
+  "measured": {
+    "path": "results/RAW/phase-D/cellA_long/rho_measured_rep1.csv",
+    "dt_s": 0.20000000000004547,
+    "duration_s": 1504.7999869999999,
+    "n_samples": 7524,
+    "dropped_rows": 0,
+    "tau_by_link_s": {
+      "uA": 13.441044119098358,
+      "uB": 17.369514411758466,
+      "ac": 2.6406455614243693,
+      "ad": 6.755100143074324,
+      "bc": 2.4752993277527557,
+      "bd": 3.6301248597574327,
+      "vC": 17.33462453822717,
+      "vD": 15.240065957192627
+    },
+    "pairs": {
+      "uA-uB": {
+        "r": 0.17551897229512456,
+        "tau_pair_s": 17.369514411758466,
+        "burn_s": 87.00000000001978,
+        "samples_after_burn": 7089,
+        "n_eff": 40.812884960105336,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16262229782890944,
+        "ci95": [
+          -0.14044393125711072,
+          0.4590360338499527
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hsrc"
+        ],
+        "n_low_sigma": 2
+      },
+      "uA-ac": {
+        "r": -0.022958178232782445,
+        "tau_pair_s": 13.441044119098358,
+        "burn_s": 67.40000000001532,
+        "samples_after_burn": 7187,
+        "n_eff": 53.470547907717425,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.14076056139826157,
+        "ci95": [
+          -0.2902578802480123,
+          0.24766474646981296
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hA"
+        ],
+        "n_low_sigma": 1
+      },
+      "uA-ad": {
+        "r": -0.0307442435838552,
+        "tau_pair_s": 13.441044119098358,
+        "burn_s": 67.40000000001532,
+        "samples_after_burn": 7187,
+        "n_eff": 53.470547907717425,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.14076056139826157,
+        "ci95": [
+          -0.29737690848828285,
+          0.24033695883846423
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hA"
+        ],
+        "n_low_sigma": 1
+      },
+      "uA-bc": {
+        "r": 0.008693311804719802,
+        "tau_pair_s": 13.441044119098358,
+        "burn_s": 67.40000000001532,
+        "samples_after_burn": 7187,
+        "n_eff": 53.470547907717425,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.14076056139826157,
+        "ci95": [
+          -0.2610101524594222,
+          0.2771378818950611
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "uA-bd": {
+        "r": -0.04955978403533591,
+        "tau_pair_s": 13.441044119098358,
+        "burn_s": 67.40000000001532,
+        "samples_after_burn": 7187,
+        "n_eff": 53.470547907717425,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.14076056139826157,
+        "ci95": [
+          -0.3144589818988893,
+          0.22250040356784337
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "uA-vC": {
+        "r": -0.03595436370677401,
+        "tau_pair_s": 17.33462453822717,
+        "burn_s": 86.80000000001974,
+        "samples_after_burn": 7090,
+        "n_eff": 40.90079897239587,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16243358044899914,
+        "ci95": [
+          -0.340213396851652,
+          0.2751194250405945
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 2
+      },
+      "uA-vD": {
+        "r": 0.04008655654854993,
+        "tau_pair_s": 15.240065957192627,
+        "burn_s": 76.40000000001737,
+        "samples_after_burn": 7142,
+        "n_eff": 46.86331381413221,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.15099038083939273,
+        "ci95": [
+          -0.25038888106145,
+          0.32394086446548487
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 2
+      },
+      "uB-ac": {
+        "r": -0.023701744656454984,
+        "tau_pair_s": 17.369514411758466,
+        "burn_s": 87.00000000001978,
+        "samples_after_burn": 7089,
+        "n_eff": 40.812884960105336,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16262229782890944,
+        "ci95": [
+          -0.3296540123247468,
+          0.2867556815994332
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "uB-ad": {
+        "r": -0.025516969655315865,
+        "tau_pair_s": 17.369514411758466,
+        "burn_s": 87.00000000001978,
+        "samples_after_burn": 7089,
+        "n_eff": 40.812884960105336,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16262229782890944,
+        "ci95": [
+          -0.33127198396977026,
+          0.285087843555805
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "uB-bc": {
+        "r": -0.01610309672929174,
+        "tau_pair_s": 17.369514411758466,
+        "burn_s": 87.00000000001978,
+        "samples_after_burn": 7089,
+        "n_eff": 40.812884960105336,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16262229782890944,
+        "ci95": [
+          -0.32286151570567,
+          0.29371699021843506
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hB"
+        ],
+        "n_low_sigma": 1
+      },
+      "uB-bd": {
+        "r": 0.06436361984148116,
+        "tau_pair_s": 17.369514411758466,
+        "burn_s": 87.00000000001978,
+        "samples_after_burn": 7089,
+        "n_eff": 40.812884960105336,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16262229782890944,
+        "ci95": [
+          -0.24893874724454731,
+          0.36547161874228207
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hB"
+        ],
+        "n_low_sigma": 1
+      },
+      "uB-vC": {
+        "r": 0.05071873782791991,
+        "tau_pair_s": 17.369514411758466,
+        "burn_s": 87.00000000001978,
+        "samples_after_burn": 7089,
+        "n_eff": 40.812884960105336,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16262229782890944,
+        "ci95": [
+          -0.2617363559973749,
+          0.3535509160513387
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 2
+      },
+      "uB-vD": {
+        "r": 0.01836254524451712,
+        "tau_pair_s": 17.369514411758466,
+        "burn_s": 87.00000000001978,
+        "samples_after_burn": 7089,
+        "n_eff": 40.812884960105336,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16262229782890944,
+        "ci95": [
+          -0.29165048111292513,
+          0.3248845627176714
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 2
+      },
+      "ac-ad": {
+        "r": -0.04885833094950265,
+        "tau_pair_s": 6.755100143074324,
+        "burn_s": 33.800000000007685,
+        "samples_after_burn": 7355,
+        "n_eff": 108.88069427868787,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.09718329277895783,
+        "ci95": [
+          -0.23490345256682993,
+          0.14064005954447958
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hA"
+        ],
+        "n_low_sigma": 0
+      },
+      "ac-bc": {
+        "r": -0.018214461963198272,
+        "tau_pair_s": 2.6406455614243693,
+        "burn_s": 13.400000000003047,
+        "samples_after_burn": 7457,
+        "n_eff": 282.39306493589635,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.05982630614761254,
+        "ci95": [
+          -0.13465113063331724,
+          0.09871836088932023
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hC"
+        ],
+        "n_low_sigma": 0
+      },
+      "ac-bd": {
+        "r": 0.017396377902818037,
+        "tau_pair_s": 3.6301248597574327,
+        "burn_s": 18.200000000004138,
+        "samples_after_burn": 7433,
+        "n_eff": 204.75879541776027,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.07040179979229723,
+        "ci95": [
+          -0.12000574760765138,
+          0.15414456730718396
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 0
+      },
+      "ac-vC": {
+        "r": 0.008997541290253484,
+        "tau_pair_s": 17.33462453822717,
+        "burn_s": 86.80000000001974,
+        "samples_after_burn": 7090,
+        "n_eff": 40.90079897239587,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16243358044899914,
+        "ci95": [
+          -0.29986038298138257,
+          0.31614820733626575
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hC"
+        ],
+        "n_low_sigma": 1
+      },
+      "ac-vD": {
+        "r": -0.0760531526556191,
+        "tau_pair_s": 15.240065957192627,
+        "burn_s": 76.40000000001737,
+        "samples_after_burn": 7142,
+        "n_eff": 46.86331381413221,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.15099038083939273,
+        "ci95": [
+          -0.3558586416766809,
+          0.21626586541950119
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "ad-bc": {
+        "r": -0.03334682496125741,
+        "tau_pair_s": 6.755100143074324,
+        "burn_s": 33.800000000007685,
+        "samples_after_burn": 7355,
+        "n_eff": 108.88069427868787,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.09718329277895783,
+        "ci95": [
+          -0.22017017755801113,
+          0.15583636129508105
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 0
+      },
+      "ad-bd": {
+        "r": 0.0027692749003993683,
+        "tau_pair_s": 6.755100143074324,
+        "burn_s": 33.800000000007685,
+        "samples_after_burn": 7355,
+        "n_eff": 108.88069427868787,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.09718329277895783,
+        "ci95": [
+          -0.1855325735193209,
+          0.19087494280951625
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hD"
+        ],
+        "n_low_sigma": 0
+      },
+      "ad-vC": {
+        "r": -0.018926606429555754,
+        "tau_pair_s": 17.33462453822717,
+        "burn_s": 86.80000000001974,
+        "samples_after_burn": 7090,
+        "n_eff": 40.90079897239587,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16243358044899914,
+        "ci95": [
+          -0.3250584132113171,
+          0.29079556949386576
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "ad-vD": {
+        "r": -0.11891343991745408,
+        "tau_pair_s": 15.240065957192627,
+        "burn_s": 76.40000000001737,
+        "samples_after_burn": 7142,
+        "n_eff": 46.86331381413221,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.15099038083939273,
+        "ci95": [
+          -0.39306033519444095,
+          0.17464804803087342
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hD"
+        ],
+        "n_low_sigma": 1
+      },
+      "bc-bd": {
+        "r": -0.0009227100412615092,
+        "tau_pair_s": 3.6301248597574327,
+        "burn_s": 18.200000000004138,
+        "samples_after_burn": 7433,
+        "n_eff": 204.75879541776027,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.07040179979229723,
+        "ci95": [
+          -0.13802112131282016,
+          0.1362103965064646
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hB"
+        ],
+        "n_low_sigma": 0
+      },
+      "bc-vC": {
+        "r": -0.03156272171550018,
+        "tau_pair_s": 17.33462453822717,
+        "burn_s": 86.80000000001974,
+        "samples_after_burn": 7090,
+        "n_eff": 40.90079897239587,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16243358044899914,
+        "ci95": [
+          -0.3363198302973152,
+          0.2791783626237403
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hC"
+        ],
+        "n_low_sigma": 1
+      },
+      "bc-vD": {
+        "r": 0.00838797021102328,
+        "tau_pair_s": 15.240065957192627,
+        "burn_s": 76.40000000001737,
+        "samples_after_burn": 7142,
+        "n_eff": 46.86331381413221,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.15099038083939273,
+        "ci95": [
+          -0.2798760137726713,
+          0.29526455029214194
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "bd-vC": {
+        "r": 0.028264691723422372,
+        "tau_pair_s": 17.33462453822717,
+        "burn_s": 86.80000000001974,
+        "samples_after_burn": 7090,
+        "n_eff": 40.90079897239587,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16243358044899914,
+        "ci95": [
+          -0.2822192552626996,
+          0.3333889783446134
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "bd-vD": {
+        "r": -0.015454641506282446,
+        "tau_pair_s": 15.240065957192627,
+        "burn_s": 76.40000000001737,
+        "samples_after_burn": 7142,
+        "n_eff": 46.86331381413221,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.15099038083939273,
+        "ci95": [
+          -0.3017025424887081,
+          0.2733491240307062
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hD"
+        ],
+        "n_low_sigma": 1
+      },
+      "vC-vD": {
+        "r": -0.01659354400508629,
+        "tau_pair_s": 17.33462453822717,
+        "burn_s": 86.80000000001974,
+        "samples_after_burn": 7090,
+        "n_eff": 40.90079897239587,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16243358044899914,
+        "ci95": [
+          -0.32296962899855075,
+          0.29293056538613826
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hdst"
+        ],
+        "n_low_sigma": 2
+      }
+    },
+    "factorial_cells": {
+      "nlow2_shared1": {
+        "n": 2,
+        "mean_r": 0.07946271414501914,
+        "fisher_pooled_r": 0.08020752030012512,
+        "min_r": -0.01659354400508629,
+        "max_r": 0.17551897229512456,
+        "pairs": [
+          "uA-uB",
+          "vC-vD"
+        ]
+      },
+      "nlow2_shared0": {
+        "n": 4,
+        "mean_r": 0.01830336897855324,
+        "fisher_pooled_r": 0.01831422318718871,
+        "min_r": -0.03595436370677401,
+        "max_r": 0.05071873782791991,
+        "pairs": [
+          "uA-vC",
+          "uA-vD",
+          "uB-vC",
+          "uB-vD"
+        ]
+      },
+      "nlow1_shared1": {
+        "n": 8,
+        "mean_r": -0.02029689506917893,
+        "fisher_pooled_r": -0.020356931371696578,
+        "min_r": -0.11891343991745408,
+        "max_r": 0.06436361984148116,
+        "pairs": [
+          "uA-ac",
+          "uA-ad",
+          "uB-bc",
+          "uB-bd",
+          "ac-vC",
+          "ad-vD",
+          "bc-vC",
+          "bd-vD"
+        ]
+      },
+      "nlow1_shared0": {
+        "n": 8,
+        "mean_r": -0.01855153546163952,
+        "fisher_pooled_r": -0.01857340846172165,
+        "min_r": -0.0760531526556191,
+        "max_r": 0.028264691723422372,
+        "pairs": [
+          "uA-bc",
+          "uA-bd",
+          "uB-ac",
+          "uB-ad",
+          "ac-vD",
+          "ad-vC",
+          "bc-vD",
+          "bd-vC"
+        ]
+      },
+      "nlow0_shared1": {
+        "n": 4,
+        "mean_r": -0.016306557013390767,
+        "fisher_pooled_r": -0.016315344330948205,
+        "min_r": -0.04885833094950265,
+        "max_r": 0.0027692749003993683,
+        "pairs": [
+          "ac-ad",
+          "ac-bc",
+          "ad-bd",
+          "bc-bd"
+        ]
+      },
+      "nlow0_shared0": {
+        "n": 2,
+        "mean_r": -0.007975223529219687,
+        "fisher_pooled_r": -0.007980360959459054,
+        "min_r": -0.03334682496125741,
+        "max_r": 0.017396377902818037,
+        "pairs": [
+          "ac-bd",
+          "ad-bc"
+        ]
+      }
+    }
+  },
+  "offered_control": {
+    "path": "results/RAW/phase-D/cellA_long/rho_offered_rep1.csv",
+    "dt_s": 0.009999999999990905,
+    "duration_s": 1504.996322,
+    "n_samples": 150500,
+    "dropped_rows": 0,
+    "pairs": {
+      "uA-uB": {
+        "r": 0.09637134778953196,
+        "tau_pair_s": 21.93722234965359,
+        "burn_s": 109.68999999990024,
+        "samples_after_burn": 139531,
+        "n_eff": 31.802255995780907,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1863317002899491,
+        "ci95": [
+          -0.2622583825346427,
+          0.4316109870622181
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hsrc"
+        ],
+        "n_low_sigma": 2
+      },
+      "uA-ac": {
+        "r": -0.02503068132764525,
+        "tau_pair_s": 15.821467442024677,
+        "burn_s": 79.10999999992805,
+        "samples_after_burn": 142589,
+        "n_eff": 45.061759512036794,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1541900261210549,
+        "ci95": [
+          -0.31604114863458416,
+          0.27028475078490144
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hA"
+        ],
+        "n_low_sigma": 1
+      },
+      "uA-ad": {
+        "r": -0.041974829810756856,
+        "tau_pair_s": 15.821467442024677,
+        "burn_s": 79.10999999992805,
+        "samples_after_burn": 142589,
+        "n_eff": 45.061759512036794,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1541900261210549,
+        "ci95": [
+          -0.3312275135191468,
+          0.2544895039103659
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hA"
+        ],
+        "n_low_sigma": 1
+      },
+      "uA-bc": {
+        "r": 0.02509052788966588,
+        "tau_pair_s": 15.821467442024677,
+        "burn_s": 79.10999999992805,
+        "samples_after_burn": 142589,
+        "n_eff": 45.061759512036794,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1541900261210549,
+        "ci95": [
+          -0.27022924048422237,
+          0.3160950504344526
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "uA-bd": {
+        "r": -0.06029515251423653,
+        "tau_pair_s": 15.821467442024677,
+        "burn_s": 79.10999999992805,
+        "samples_after_burn": 142589,
+        "n_eff": 45.061759512036794,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1541900261210549,
+        "ci95": [
+          -0.34748039153422106,
+          0.2372315551888013
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "uA-vC": {
+        "r": -0.049742305405692626,
+        "tau_pair_s": 18.932136549289492,
+        "burn_s": 94.6699999999139,
+        "samples_after_burn": 141033,
+        "n_eff": 37.24688754299669,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.17087929601846438,
+        "ci95": [
+          -0.36678274661740007,
+          0.2776499108076816
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 2
+      },
+      "uA-vD": {
+        "r": 0.04950677207816182,
+        "tau_pair_s": 17.85207963688388,
+        "burn_s": 89.26999999991881,
+        "samples_after_burn": 141573,
+        "n_eff": 39.651579838213166,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16517855036232637,
+        "ci95": [
+          -0.267525566937919,
+          0.3568672096023669
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 2
+      },
+      "uB-ac": {
+        "r": 0.013921718366774727,
+        "tau_pair_s": 21.93722234965359,
+        "burn_s": 109.68999999990024,
+        "samples_after_burn": 139531,
+        "n_eff": 31.802255995780907,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1863317002899491,
+        "ci95": [
+          -0.3375109399263417,
+          0.3619482445819254
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "uB-ad": {
+        "r": -0.029979827282483478,
+        "tau_pair_s": 21.93722234965359,
+        "burn_s": 109.68999999990024,
+        "samples_after_burn": 139531,
+        "n_eff": 31.802255995780907,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1863317002899491,
+        "ci95": [
+          -0.3758277586727644,
+          0.3231985247305973
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "uB-bc": {
+        "r": -0.01689122693940619,
+        "tau_pair_s": 21.93722234965359,
+        "burn_s": 109.68999999990024,
+        "samples_after_burn": 139531,
+        "n_eff": 31.802255995780907,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1863317002899491,
+        "ci95": [
+          -0.36452656324112276,
+          0.33487643894572366
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hB"
+        ],
+        "n_low_sigma": 1
+      },
+      "uB-bd": {
+        "r": 0.05371761764065273,
+        "tau_pair_s": 21.93722234965359,
+        "burn_s": 109.68999999990024,
+        "samples_after_burn": 139531,
+        "n_eff": 31.802255995780907,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1863317002899491,
+        "ci95": [
+          -0.30174114216281406,
+          0.39606471922360537
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hB"
+        ],
+        "n_low_sigma": 1
+      },
+      "uB-vC": {
+        "r": 0.051194920139172095,
+        "tau_pair_s": 21.93722234965359,
+        "burn_s": 109.68999999990024,
+        "samples_after_burn": 139531,
+        "n_eff": 31.802255995780907,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1863317002899491,
+        "ci95": [
+          -0.30403872340112076,
+          0.3939297458854978
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 2
+      },
+      "uB-vD": {
+        "r": 0.012930285280702425,
+        "tau_pair_s": 21.93722234965359,
+        "burn_s": 109.68999999990024,
+        "samples_after_burn": 139531,
+        "n_eff": 31.802255995780907,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.1863317002899491,
+        "ci95": [
+          -0.3383892994649786,
+          0.3610862312020397
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 2
+      },
+      "ac-ad": {
+        "r": -0.029859561337292947,
+        "tau_pair_s": 9.877673421580738,
+        "burn_s": 49.38999999995508,
+        "samples_after_burn": 145561,
+        "n_eff": 73.68163837143251,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.11894513844368562,
+        "ci95": [
+          -0.25709623892724204,
+          0.2005060537827984
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hA"
+        ],
+        "n_low_sigma": 0
+      },
+      "ac-bc": {
+        "r": -0.04940080137761605,
+        "tau_pair_s": 3.2636898303961823,
+        "burn_s": 16.319999999985157,
+        "samples_after_burn": 148868,
+        "n_eff": 228.06645229202172,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.06665682406282175,
+        "ci95": [
+          -0.17816416122252965,
+          0.08102590982907931
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hC"
+        ],
+        "n_low_sigma": 0
+      },
+      "ac-bd": {
+        "r": 0.01075573252529154,
+        "tau_pair_s": 3.5952157234571973,
+        "burn_s": 17.979999999983647,
+        "samples_after_burn": 148702,
+        "n_eff": 206.8048813173978,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.07004751118130778,
+        "ci95": [
+          -0.12586343699166672,
+          0.1469745252444493
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 0
+      },
+      "ac-vC": {
+        "r": -0.011328029254990865,
+        "tau_pair_s": 18.932136549289492,
+        "burn_s": 94.6699999999139,
+        "samples_after_burn": 141033,
+        "n_eff": 37.24688754299669,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.17087929601846438,
+        "ci95": [
+          -0.3330419167075221,
+          0.3127482785886385
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hC"
+        ],
+        "n_low_sigma": 1
+      },
+      "ac-vD": {
+        "r": -0.11442748846726736,
+        "tau_pair_s": 17.85207963688388,
+        "burn_s": 89.26999999991881,
+        "samples_after_burn": 141573,
+        "n_eff": 39.651579838213166,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16517855036232637,
+        "ci95": [
+          -0.4125454556516641,
+          0.20583019917196627
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "ad-bc": {
+        "r": -0.07997059212944699,
+        "tau_pair_s": 9.877673421580738,
+        "burn_s": 49.38999999995508,
+        "samples_after_burn": 145561,
+        "n_eff": 73.68163837143251,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.11894513844368562,
+        "ci95": [
+          -0.30340893341956515,
+          0.1518039884178032
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 0
+      },
+      "ad-bd": {
+        "r": 0.01685921467484989,
+        "tau_pair_s": 9.877673421580738,
+        "burn_s": 49.38999999995508,
+        "samples_after_burn": 145561,
+        "n_eff": 73.68163837143251,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.11894513844368562,
+        "ci95": [
+          -0.21295756319380157,
+          0.24490832370496335
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hD"
+        ],
+        "n_low_sigma": 0
+      },
+      "ad-vC": {
+        "r": -0.017784005109085347,
+        "tau_pair_s": 18.932136549289492,
+        "burn_s": 94.6699999999139,
+        "samples_after_burn": 141033,
+        "n_eff": 37.24688754299669,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.17087929601846438,
+        "ci95": [
+          -0.33877065229846975,
+          0.3069108089136854
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "ad-vD": {
+        "r": -0.08501368073949955,
+        "tau_pair_s": 17.85207963688388,
+        "burn_s": 89.26999999991881,
+        "samples_after_burn": 141573,
+        "n_eff": 39.651579838213166,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16517855036232637,
+        "ci95": [
+          -0.3875921543301953,
+          0.2341017191642841
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hD"
+        ],
+        "n_low_sigma": 1
+      },
+      "bc-bd": {
+        "r": 0.009359301368583787,
+        "tau_pair_s": 3.5952157234571973,
+        "burn_s": 17.979999999983647,
+        "samples_after_burn": 148702,
+        "n_eff": 206.8048813173978,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.07004751118130778,
+        "ci95": [
+          -0.12723764324396597,
+          0.1456078410340032
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hB"
+        ],
+        "n_low_sigma": 0
+      },
+      "bc-vC": {
+        "r": -0.01443887966555499,
+        "tau_pair_s": 18.932136549289492,
+        "burn_s": 94.6699999999139,
+        "samples_after_burn": 141033,
+        "n_eff": 37.24688754299669,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.17087929601846438,
+        "ci95": [
+          -0.33580531017306553,
+          0.30993851184297194
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hC"
+        ],
+        "n_low_sigma": 1
+      },
+      "bc-vD": {
+        "r": 0.003808210086741916,
+        "tau_pair_s": 17.85207963688388,
+        "burn_s": 89.26999999991881,
+        "samples_after_burn": 141573,
+        "n_eff": 39.651579838213166,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16517855036232637,
+        "ci95": [
+          -0.3094488554069236,
+          0.31631964453764533
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "bd-vC": {
+        "r": 0.029788429619619666,
+        "tau_pair_s": 18.932136549289492,
+        "burn_s": 94.6699999999139,
+        "samples_after_burn": 141033,
+        "n_eff": 37.24688754299669,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.17087929601846438,
+        "ci95": [
+          -0.2959911160224656,
+          0.3493599282154022
+        ],
+        "shared_host": false,
+        "shared_host_names": [],
+        "n_low_sigma": 1
+      },
+      "bd-vD": {
+        "r": -0.03267391877990267,
+        "tau_pair_s": 17.85207963688388,
+        "burn_s": 89.26999999991881,
+        "samples_after_burn": 141573,
+        "n_eff": 39.651579838213166,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.16517855036232637,
+        "ci95": [
+          -0.34206523070036354,
+          0.2831087267574059
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hD"
+        ],
+        "n_low_sigma": 1
+      },
+      "vC-vD": {
+        "r": -0.05144783216669757,
+        "tau_pair_s": 18.932136549289492,
+        "burn_s": 94.6699999999139,
+        "samples_after_burn": 141033,
+        "n_eff": 37.24688754299669,
+        "n_eff_pass": true,
+        "diagnostic_only": false,
+        "fisher_se_z": 0.17087929601846438,
+        "ci95": [
+          -0.36826168922199415,
+          0.27607107411018716
+        ],
+        "shared_host": true,
+        "shared_host_names": [
+          "hdst"
+        ],
+        "n_low_sigma": 2
+      }
+    }
+  },
+  "controls": {
+    "infra_all_flags_false": true,
+    "NC_C1": {
+      "values": {
+        "ac-ad": -0.04885833094950265,
+        "bc-bd": -0.0009227100412615092
+      },
+      "band": [
+        -0.1,
+        0.15
+      ],
+      "pass": true
+    },
+    "NC_C2": {
+      "values": {
+        "uA-vC": -0.03595436370677401
+      },
+      "band": [
+        -0.1,
+        0.15
+      ],
+      "pass": true
+    },
+    "NC_C3_offered": {
+      "values": {
+        "uA-uB": 0.09637134778953196,
+        "vC-vD": -0.05144783216669757,
+        "ac-ad": -0.029859561337292947,
+        "bc-bd": 0.009359301368583787,
+        "uA-vC": -0.049742305405692626
+      },
+      "abs_max": 0.15,
+      "pass": true
+    },
+    "all_pass": true
+  },
+  "adjudication": {
+    "per_primary": {
+      "uA-uB": {
+        "r": 0.17551897229512456,
+        "ci95": [
+          -0.14044393125711072,
+          0.4590360338499527
+        ],
+        "n_eff": 40.812884960105336,
+        "diagnostic_only": false,
+        "band": "H6"
+      },
+      "vC-vD": {
+        "r": -0.01659354400508629,
+        "ci95": [
+          -0.32296962899855075,
+          0.29293056538613826
+        ],
+        "n_eff": 40.90079897239587,
+        "diagnostic_only": false,
+        "band": "H0"
+      }
+    },
+    "verdict": "PRIMARY_REPLICATES_DISAGREE",
+    "raw_verdict_before_controls": "PRIMARY_REPLICATES_DISAGREE",
+    "H4_survives": false,
+    "H4_refuted": false,
+    "cell_C_status_unchanged": "INVALID_RUN",
+    "note": "PC-C3 has power to confirm or refute H4; it has NO power to separate H6 from H0 (D-L29)."
+  },
+  "provenance": {
+    "git_hash": "7f486a2847ef093b3a414e44004df382d3d3c1f2",
+    "timestamp_utc": "2026-08-29T04:30:13.388583+00:00",
+    "script": "tools/phase_d_pc_c3.py",
+    "inputs_sha256": {
+      "results/RAW/phase-D/cellA_long/rho_measured_rep1.csv": "defae89140c9ff5052fc73442778e8a9586d8226debaa04bd3acea185e0f88e6",
+      "results/RAW/phase-D/cellA_long/rho_offered_rep1.csv": "0e017696b453f6d4e213f20ae9d5493fd45680cc60eac23a6ae5241771e18eef",
+      "results/RAW/phase-D/cellA_long/meta_rep1.json": "bfd58da736aa22a452c3dcfb78728369aac5806b61a267d827089c762982cfce"
+    }
+  }
+}

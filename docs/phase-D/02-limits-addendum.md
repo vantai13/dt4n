@@ -26,8 +26,33 @@
 | D-L22 | Ngưỡng `>=5.0` của PC-C2/PC-C2′ được ký từ dự đoán lý thuyết 11.11× mà **không ký kèm bias của estimator ở từng nhánh**. Với nhánh A lệch ~3× và nhánh C không lệch, một thí nghiệm hoàn hảo cũng chỉ cho ~4.5: ngưỡng đã không thể đạt được ngay từ lúc ký | quy tắc phương pháp: ký ngưỡng trên đại lượng ước lượng phải kèm phép kiểm `T >= 50*tau` cho MỌI nhánh; áp dụng từ PC-C2″ trở đi |
 | D-L23 | `signal_fraction` là ACF ngoại suy về lag `0+`, miền vật lý `[0,1]`; `sf=1` nghĩa là hết nugget. Rule A080 coi `exp(intercept) > 1` là fit invalid nên **không thể kiểm định** một estimator chạm trần: `vD=1.0040` chính là `sf=1.000 ± noise`. Đây là lỗi đặc tả rule, không phải lỗi dữ liệu | không override A001; PC-C2″b ký rule mới `sf=min(1,exp(intercept))` + `at_ceiling`, invalid chỉ khi `intercept > 3*se(intercept)` |
 | D-L24 | `FIT_LAGS=(1..20)` cố định phủ `0.007*tau..0.14*tau` ở Cell A nhưng `0.08*tau..1.5*tau` ở Cell C — cùng một estimator chạy ở hai chế độ khác nhau trên hai nhánh của cùng một control | PC-C2″b chuẩn hóa fit lag theo `tau` của chính cell (~`0.2*tau..2*tau`), tuple khóa cứng trước khi chạy |
-| D-L25 | Nugget của `rho_measured` KHÔNG do trace ngắn và KHÔNG do generator. Cùng `sigma_edge=0.03` và cùng estimator A080: phase-23 (ditto bật, `reconcile_every=1`, AoI probe, cycle trace) cho `sf=0.3682`; `cellA_long` (ditto tắt) cho `sf=0.8638`. Đối chứng quyết định: cắt chính `cellA_long` thành cửa sổ 120/240/400/750 s cho `sf=0.938..0.943`, gần như không phụ thuộc T — nên `0.3682` không đến từ `T=120 s`. Bốn yếu tố instrumentation đổi đồng thời nên chưa tách được yếu tố nào | mở; ủng hộ H6 và định vị nguồn nhiễu ở đường đo/đồng bộ. Bác dạng `sf=sigma^2/(sigma^2+v)`: với ditto tắt `sf` chỉ đi `0.864→1.092` khi `sigma` đi `0.03→0.10`. Phase G phải chạy 2×2 `{ditto on/off}×{sigma 0.03/0.10}` |
+| D-L25 | Nugget của `rho_measured` KHÔNG do trace ngắn và KHÔNG do generator. Cùng `sigma_edge=0.03` và cùng estimator A080: phase-23 (ditto bật, `reconcile_every=1`, AoI probe, cycle trace) cho `sf=0.3682`; `cellA_long` (ditto tắt) cho `sf=0.8638`. Đối chứng quyết định: cắt chính `cellA_long` thành cửa sổ 120/240/400/750 s cho `sf=0.938..0.943`, gần như không phụ thuộc T — nên `0.3682` không đến từ `T=120 s`. Bốn yếu tố instrumentation đổi đồng thời nên chưa tách được yếu tố nào | mở; ủng hộ H6 và định vị nguồn nhiễu ở đường đo/đồng bộ. **Đính chính phát biểu:** dạng `sf=sigma^2/(sigma^2+v)` KHÔNG bị bác mà là **underdetermined** ở `ditto=off` — hiệu chuẩn `v_off` từ điểm `sigma=0.03` cho `v_off=1.42e-4` và dự đoán `sf(0.10)=0.986`, không mâu thuẫn với quan sát `≈1` chạm trần; ở `ditto=off` cả hai `sigma` đều sát trần nên dữ liệu không đủ độ phân giải để kiểm dạng hàm. Cái thật sự bị bác là `v` như **hằng số vật lý**: `v_on=1.54e-3` vs `v_off=1.42e-4`, tỉ số **10.9×** ⟹ `sf(sigma, config) = sigma^2/(sigma^2 + v(config))`. Phase G chạy 2×2 `{ditto on/off}×{sigma 0.03/0.10}` để khớp hai tham số `v_on`, `v_off` |
 | D-L26 | Prereg PC-C2″ đổi cấu hình nhánh A (`ditto` bật→tắt, bỏ probe/cycle trace) để contrast `A↔C` chỉ còn một biến `sigma`, nhưng vẫn giữ ngưỡng `sf_A <= 0.50` thừa kế từ reference A080 đo ở cấu hình cũ. Đổi cấu hình một nhánh mà không ký lại dự đoán của nhánh đó là **cùng lớp lỗi với D-L22**, lần này do chính PC-C2″ gây ra; PC-C2″b FAIL vì `sf_A = 1.000` | ghi nhận, không hạ ngưỡng hậu nghiệm. Quy tắc bổ sung: mỗi lần đổi cấu hình một nhánh phải kiểm lại MỌI ngưỡng đang gắn vào nhánh đó, không chỉ ngưỡng của control đang sửa |
+| D-L27 | `cellA_long` chỉ có `n_runs = 1` (seed 41). `n_eff` trong-run 40.8/40.9 cho CI Fisher hợp lệ nhưng KHÔNG thay thế replicate độc lập; không có phương sai liên-run | mở; Phase G cần ≥3 seed mỗi ô |
+| D-L28 | Bundle telemetry đổi BỐN yếu tố cùng lúc (`ditto`, `aoi_probe`, `cycle_trace`, `reconcile_every 1→30`). PC-C3 tách `{bundle}` khỏi `{sigma}` và bác H4, nhưng KHÔNG tách được bốn yếu tố với nhau | mở có chủ đích; cần lưới 2×2 `{ditto on/off}×{sigma}` ở Phase G |
+| D-L29 | PC-C3 có công suất tách H4 (`\|dz\|=0.562` vs nửa-CI `0.319`) nhưng KHÔNG có công suất tách H6 khỏi H0 (`\|dz\|=0.131`). Ghi trước khi ký, không phát hiện sau | đóng về mặt ghi nhận; phân xử H6/H0 cần đo trực tiếp `counter_read_dt`/common-mode ở Phase G |
+| D-L30 | Partition ký trước của PC-C3 không lường tình huống “hai bản nhân bất đồng NHƯNG cùng bác H4”: `uA-uB→H6`, `vC-vD→H0` cho nhãn `PRIMARY_REPLICATES_DISAGREE`, che mất việc cả hai đều bác H4 ở 3.17σ/4.37σ. Hai bản nhân thực ra nhất quán với nhau (0.84σ); bất đồng chỉ là artifact vạch band | lỗ hổng đặc tả của chính PC-C3; KHÔNG sửa nhãn hậu nghiệm. Quy tắc: partition trên nhãn phải kèm partition trên **tập giả thuyết bị bác** |
+
+## Nguyên tắc phương pháp mở bởi Phase D′
+
+**NT 53 — positive control cho chính ESTIMATOR, tách khỏi positive control cho hệ thống.**
+(Được đề xuất trong chỉ thị đầu vào là “NT 58”; đánh lại số theo slot trống kế
+tiếp — NT cao nhất đang tồn tại trong repo là `NT 52`.)
+
+> Mọi ngưỡng ký trước trên một **đại lượng ước lượng** phải được kiểm bằng
+> cách cho một **ground truth tổng hợp** đi qua **đúng estimator đó**, ở
+> **đúng cấu hình của từng nhánh**, TRƯỚC KHI ký.
+
+Cơ sở thực nghiệm trong chính Phase D′: `tools/phase_d_estimator_bias_sim.py`
+cho một generator hoàn hảo (tỉ số thật `11.098`) đi qua estimator PC-C2′ và
+nhận về `3.635` — ngưỡng `5.0` **bất khả thi về mặt xây dựng**; qua estimator
+PC-C2″ nhận về `10.006`. Chi phí của phép kiểm: một script AR(1) ~30 dòng.
+Cái nó chặn: một FAIL không thể tránh (`D-L22`), một stop-rule kích hoạt sai,
+và một vòng amendment.
+
+Hệ quả bắt buộc kèm theo, từ `D-L26`: khi đổi cấu hình **một nhánh**, phải
+kiểm lại **mọi** ngưỡng đang gắn vào nhánh đó, không chỉ ngưỡng của control
+đang sửa.
 
 ## Đính chính quan trọng so với bản hướng dẫn đầu vào
 
