@@ -1,0 +1,83 @@
+{
+  "schema": "dt4n.phase_d.estimator_bias_sim.v1",
+  "status": "SYNTHETIC_DIAGNOSTIC_NO_EXPERIMENTAL_DATA",
+  "diagnosis": "docs/phase-D/A002-amendment-pc-c2-prime.md",
+  "question": "Given a generator that obeys tau ~ 1/sigma^2 EXACTLY, what ratio does each signed estimator return?",
+  "locked_constants": {
+    "dt_s": 0.01,
+    "tau_true_A_s": 29.3,
+    "tau_true_C_s": 2.64,
+    "n_replicates": 64,
+    "seed": 20260829,
+    "process": "AR(1), exponential ACF, integral time scale = tau_true"
+  },
+  "branches": {
+    "PC_C2_prime_cell_A": {
+      "estimator": "PC-C2'",
+      "n_samples": 12000,
+      "duration_s": 120.0,
+      "tau_true_s": 29.3,
+      "T_over_tau_true": 4.09556313993174,
+      "nlag_cap": 3000,
+      "max_lag_s": 30.0,
+      "tau_hat_median_s": 8.700243188796133,
+      "tau_hat_p05_s": 4.711666679859748,
+      "tau_hat_p95_s": 16.893412030041553,
+      "bias_factor": 0.29693662760396355,
+      "cut_at_ceiling_fraction": 0.3125
+    },
+    "PC_C2_prime_cell_C": {
+      "estimator": "PC-C2'",
+      "n_samples": 24000,
+      "duration_s": 240.0,
+      "tau_true_s": 2.64,
+      "T_over_tau_true": 90.9090909090909,
+      "nlag_cap": 3000,
+      "max_lag_s": 30.0,
+      "tau_hat_median_s": 2.393557289125395,
+      "tau_hat_p05_s": 1.5756038460579207,
+      "tau_hat_p95_s": 4.502990737555636,
+      "bias_factor": 0.9066504883050739,
+      "cut_at_ceiling_fraction": 0.015625
+    },
+    "PC_C2_second_cell_A_long": {
+      "estimator": "PC-C2''",
+      "n_samples": 150500,
+      "duration_s": 1505.0,
+      "tau_true_s": 29.3,
+      "T_over_tau_true": 51.365187713310576,
+      "nlag_cap": 50000,
+      "max_lag_s": 376.25,
+      "tau_hat_median_s": 24.203265747115502,
+      "tau_hat_p05_s": 16.44675242739019,
+      "tau_hat_p95_s": 59.52337978331918,
+      "bias_factor": 0.8260500254988226,
+      "cut_at_ceiling_fraction": 0.015625
+    },
+    "PC_C2_second_cell_C": {
+      "estimator": "PC-C2''",
+      "n_samples": 24000,
+      "duration_s": 240.0,
+      "tau_true_s": 2.64,
+      "T_over_tau_true": 90.9090909090909,
+      "nlag_cap": 50000,
+      "max_lag_s": 60.0,
+      "tau_hat_median_s": 2.41880838300822,
+      "tau_hat_p05_s": 1.8311138725927905,
+      "tau_hat_p95_s": 5.238949086356876,
+      "bias_factor": 0.9162152965940227,
+      "cut_at_ceiling_fraction": 0.0
+    }
+  },
+  "ratio_true": 11.098484848484848,
+  "ratio_under_PC_C2_prime": 3.634858972594384,
+  "ratio_under_PC_C2_second": 10.006276610061365,
+  "threshold": 5.0,
+  "perfect_generator_could_pass_PC_C2_prime": false,
+  "perfect_generator_could_pass_PC_C2_second": true,
+  "provenance": {
+    "git_hash": "124c99f6abdd4702d44e70f83928cb80584752bd",
+    "timestamp_utc": "2026-08-29T03:40:12.578098+00:00",
+    "script": "tools/phase_d_estimator_bias_sim.py"
+  }
+}

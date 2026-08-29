@@ -119,6 +119,48 @@ Bài học phương pháp: khi ký ngưỡng trên một **đại lượng ướ
 kèm **bias của estimator ở từng nhánh**. Phép kiểm rẻ đã bị bỏ qua: “nhánh
 baseline có `T >= 50*tau` không?”. Nếu không thì ngưỡng vô nghĩa. [D-L22]
 
+### 1.7 Kiểm chứng chẩn đoán bằng một generator HOÀN HẢO tổng hợp
+
+Đại số ở 1.1–1.4 là xấp xỉ. Phép kiểm trực tiếp: cho **chính** estimator đã ký
+ăn một quá trình AR(1) có `tau` biết trước, đúng độ dài và đúng trần lag của
+từng nhánh, với tỉ số thật đúng bằng `11.098` theo lý thuyết. Câu hỏi không
+phải “generator có tuân `tau ~ 1/sigma^2` không” mà là **“nếu nó tuân tuyệt
+đối thì estimator trả về bao nhiêu”**.
+
+`tools/phase_d_estimator_bias_sim.py`, 64 replicate, seed khóa, không đọc một
+byte dữ liệu thực nào:
+
+```text
+branch                        tau_true   tau_hat_median   bias   cut-at-ceiling
+PC-C2'  cell A   T=120 s  cap 3000       29.300    8.700   0.297      31%
+PC-C2'  cell C   T=240 s  cap 3000        2.640    2.394   0.907       2%
+PC-C2'' cellA_long T=1505 s cap 50000    29.300   24.203   0.826       2%
+PC-C2'' cell C   T=240 s  cap 50000       2.640    2.419   0.916       0%
+
+ti so THAT                                        11.098
+ti so mot generator HOAN HAO tra ve duoi PC-C2'    3.635   nguong 5.0 -> KHONG DAT NOI
+ti so mot generator HOAN HAO tra ve duoi PC-C2''  10.006   nguong 5.0 -> DAT
+```
+
+Kết luận định lượng, không còn là suy luận:
+
+- Ngưỡng `>= 5.0` dưới estimator PC-C2′ là **bất khả thi về mặt xây dựng**.
+  Một generator hoàn hảo chỉ cho 3.635.
+- Quan sát thực `4.495` **cao hơn** 3.635, tức dữ liệu thực **không** kém hơn
+  một generator hoàn hảo dưới cùng estimator. `4.495 < 5.0` do đó không phải
+  bằng chứng chống generator.
+- Dưới estimator PC-C2″ (`T = 1505 s`, cap 50000), cùng generator hoàn hảo cho
+  `10.006`, vượt ngưỡng thoải mái. Dự đoán ký trước `10.9` từ đại số nằm cùng
+  vùng; sai lệch còn lại là phần AR(1) không mô tả hết đuôi ACF thật.
+- Đây chính là phép kiểm rẻ đã bị bỏ qua trước khi ký ngưỡng `5.0`. [D-L22]
+
+Ghi nhận thời điểm để giữ dấu vết: mục 1.7 và tool của nó được viết **sau**
+tag `phase-D-pc-c2-second-start` và **trong lúc** `cellA_long` đang chạy. Nó
+không đọc dữ liệu `cellA_long`, không đổi ngưỡng `5.0`, không đổi dự đoán ký
+trước `10.9`, và không đổi bất kỳ hằng số nào trong
+`00b-prereg-pc-c2-second.md`. Artifact:
+`results/SMOKE/phase-D/estimator_bias_sim.json`.
+
 ## 2. Nhánh 2 — `intercept > 1` là ước lượng CHẠM TRẦN, không phải fit hỏng
 
 ### 2.1 Con số
