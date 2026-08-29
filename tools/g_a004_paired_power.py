@@ -354,6 +354,24 @@ def run_test() -> dict[str, object]:
     else:
         verdict = "FAIL"
 
+    if verdict == "PASS":
+        interpretation_scope = (
+            "The held-out split passes the paired reconstruction gates on "
+            "historical cellA data. H6b remains post-hoc and reserved for fresh G1-B data."
+        )
+    elif verdict == "FAIL":
+        interpretation_scope = (
+            "The held-out split rejects accuracy certification for the locked "
+            "estimator/model combination. This result alone does not identify "
+            "estimator defect, measurement-model misspecification, or a rare realization. "
+            "H6b remains post-hoc and reserved for fresh G1-B data."
+        )
+    else:
+        interpretation_scope = (
+            "Held-out outcomes were read but the locked dynamic-range gate failed, "
+            "so accuracy is not adjudicated. H6b remains post-hoc."
+        )
+
     artifact = {
         "schema": "dt4n.phase_g.g_a004_split_sample.v1",
         "status": "PREREGISTERED_HELD_OUT_SPLIT_SAMPLE",
@@ -384,10 +402,7 @@ def run_test() -> dict[str, object]:
             "verdict": verdict,
             "G1_closed": verdict == "PASS",
         },
-        "interpretation_scope": (
-            "This held-out split validates paired reconstruction on historical "
-            "cellA data. H6b remains post-hoc and reserved for fresh G1-B data."
-        ),
+        "interpretation_scope": interpretation_scope,
         "provenance": {
             "git_hash": git_hash(),
             "timestamp_utc": datetime.now(timezone.utc).isoformat(),
