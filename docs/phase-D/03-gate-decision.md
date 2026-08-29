@@ -47,17 +47,42 @@ không được dùng để chọn H4 hay H6.
 Lesson D.2 đóng theo ngân sách một vòng với nhãn
 `CLOSED_UNRESOLVED_INVALID_VALIDITY`; mở giới hạn D-L18, không ép kết luận.
 
-## D.3 / L141
+### Amendment D-A001 — kiểm toán lại chính control PC-C2
 
-PC `cbr < poisson < h2` đạt và NC poisson tái tạo bit-exact. D3 budget band
-không đổi trên `{cbr,poisson,h2}`, nhưng highest-SNR cell đổi từ
-`clean@0.960` sang `clean@0.700` dưới cbr. Vì vậy:
+Giữ nguyên phán quyết trên. Amendment/tag mới khóa PC-C2′ trước tái phân tích
+dữ liệu cũ, chuyển tau control sang `rho_offered` và dùng `nlag=n//4`.
 
 ```text
-T6 decision band D3             ROBUST
-highest-SNR cell selection      FRAGILE
-L141                            REMAINS_OPEN
+PC-C2′ offered ratio từng edge  4.942 / 7.145 / 4.048 / 2.878
+median ratio                    4.495 < 5.0                  FAIL
+PC-C2′b Cell A signal fraction  0.3682 (A080 reference 0.3696)
+PC-C2′b Cell C                  1/4 edge fit hợp lệ          FAIL
+nhãn                            GENERATOR_CONTROL_FAIL_CELL_C_REMAINS_INVALID
 ```
+
+Do đó Cell C **không** được tái phân xử thành VALID và A001 không cho phép đọc
+r đóng băng như outcome confirmatory. Audit vẫn chứng minh PC-C2 measured cũ
+sai loại đại lượng; control mới MISS magnitude đã ký, có thể do finite trace
+120 s/censoring ACF nhưng không được sửa hậu nghiệm. Xem
+`05-pc-c2-prime-readjudication.md`, D-L18 và D-L19.
+
+## D.3 / L141
+
+PC `cbr < poisson < h2` đạt và NC poisson tái tạo bit-exact. Đọc theo hai lớp:
+D3 budget band không đổi trên `{cbr,poisson,h2}`; highest-SNR cell đổi từ
+`clean@0.960` sang `clean@0.700` chỉ dưới cbr. Vì vậy:
+
+```text
+T6 decision band D3             ROBUST — ĐÓNG
+highest cell, full grid         FRAGILE
+highest cell, poisson+h2        ROBUST CÓ ĐIỀU KIỆN — clean@0.960
+L141                            ĐÓNG MỘT PHẦN
+```
+
+Palm–Khintchine là theory prior đã ghi trước sweep và ưu tiên Poisson cho
+nhiều flow độc lập chồng chập. Điều này cho phép dùng kết quả `{poisson,h2}`
+có điều kiện, nhưng không cho phép tuyên bố cbr bất khả thi nếu independence
+chưa đo; onoff cũng thiếu full grid.
 
 ## D-9 và hệ quả Phase 24
 
@@ -80,8 +105,8 @@ mỗi quyết định. Chưa có phép đo dưới tải (D-L17).
 
 ```text
 D.0 custody/DOI                 FAIL/BLOCKED (DOI còn null)
-D.2 confirmatory validity       FAIL (PC-C2 và n_eff)
-D.3 family sensitivity          PARTIAL (D3 robust, cell selection fragile)
+D.2 confirmatory validity       FAIL (A001 PC-C2′ MISS; n_eff debt cũ)
+D.3 family sensitivity          PARTIAL (band đóng; selection có điều kiện)
 D-9 trust-gate latency          PASS
 OVERALL PHASE D′                FAIL
 ```

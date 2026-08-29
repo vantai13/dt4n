@@ -95,14 +95,20 @@ counter và negative controls đạt, nhưng PC-C2 chỉ cho ACF-tau reduction k
 1.1× và ba pair-rep có `n_eff<25`; artifact trả `INVALID_RUN`. Theo stop rule,
 Cell C′ và run dài không chạy, pooled r không được diễn giải.
 
+Amendment D-A001 sau đó kiểm toán control cũ và xác nhận nó sai loại đại
+lượng (tau generator bị đánh giá trên trace measured có nugget). Tuy nhiên
+PC-C2′ đã ký trên offered vẫn MISS: ratio edge 4.942/7.145/4.048/2.878,
+median 4.495 <5; PC-C2′b cũng không có đủ 4 fit hợp lệ. Theo partition A001,
+Cell C vẫn `INVALID_RUN`; xem `05-pc-c2-prime-readjudication.md`.
+
 ## D.3 — instrumentation và độ nhạy
 
 - Infra monitor + 4 cờ: đã chạy.
 - Trust gate: p99 0.222126 ms, PASS ngưỡng 10 ms.
 - Scaling audit offered 120 s: đã chạy; không thay thế measured trace dài.
 - Độ nhạy theo MODE đã chạy: NC poisson bit-exact, PC `cbr < poisson < h2`
-  đạt. D3 band robust nhưng highest cell đổi dưới cbr, nên L141 vẫn mở cho
-  cell selection.
+  đạt. D3 band robust trên full grid; highest cell robust có điều kiện trên
+  prior-supported `{poisson,h2}` nhưng đổi dưới cbr. L141 đóng một phần.
 
 ## Điều kiện tạo `03-gate-decision.md`
 

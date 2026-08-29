@@ -263,3 +263,40 @@ git push phase-D-cellC-start      FAIL: thiếu GitHub credential
 
 Tag custody `phase-D-cleanup-start` đã xác nhận có trên origin; branch mới và
 tag prereg vẫn chỉ tồn tại local trong phiên này.
+
+## Bổ sung Amendment D-A001 — 2026-08-29
+
+Người dùng xác nhận sau phiên trước rằng push đã thành công và remote ở
+`c766af2`. Trước tái phân tích, amendment PC-C2′ được commit/tag riêng:
+
+```text
+commit prereg A001               19351dfe
+annotated tag                    phase-D-pc-c2-prime-start
+tag object                       d648f4871a8a7dd48f724b391fb4cc3095d06d56
+commit thật tag trỏ tới          19351dfec13106666a01ec8f00a4b8c88c5c34ca
+Mininet mới                      0 giây
+```
+
+PC-C2′ chạy trên ba offered trace Cell A rho=0.925 và ba trace Cell C:
+
+```text
+edge             uA       uB       vC       vD       median
+tau A/C ratio    4.942    7.145    4.048    2.878    4.495
+gate             median >=5.0                           FAIL
+```
+
+PC-C2′b tái dùng estimator nugget A080. Cell A rho=0.925 cho median signal
+fraction 0.3682, khớp reference 15-run 0.3696. Cell C chỉ vC fit hợp lệ
+(`sf=0.9729`); uA/uB/vD có raw intercept 1.187/1.180/1.004 >1 nên rule signed
+không cho project về biên.
+
+Phán quyết tự động:
+
+```text
+GENERATOR_CONTROL_FAIL_CELL_C_REMAINS_INVALID
+may_read_frozen_outcomes_under_A001 = false
+```
+
+Kết quả nằm ở `results/SMOKE/phase-D/pc_c2_prime.json`; diễn giải đầy đủ tại
+`docs/phase-D/05-pc-c2-prime-readjudication.md`. Không hạ threshold 5×, không
+bỏ vD và không đảo phán quyết cũ.
