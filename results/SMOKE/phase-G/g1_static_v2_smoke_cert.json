@@ -1,0 +1,120 @@
+{
+  "schema": "dt4n.phase_g.g1_static_nc.v2",
+  "status": "NEGATIVE_CONTROL_DIRECT_MEASUREMENT",
+  "estimators_used": "NONE (sample variance/correlation and mechanism-matched diagnostics)",
+  "constants": {
+    "BURN_S": 20.0,
+    "DRIFT_WINDOWS_S": [
+      25.0,
+      50.0,
+      100.0,
+      200.0
+    ],
+    "sigma_grid": [
+      0.01,
+      0.02,
+      0.03,
+      0.05,
+      0.1
+    ],
+    "threshold_sf": 0.85
+  },
+  "provenance": {
+    "git_hash": "9c8ca857d00ebdd1c3ce0dc72b33ba574b513215",
+    "timestamp_utc": "2026-08-30T07:42:04.258678+00:00",
+    "script": "tools/g1_static_nc.py",
+    "campaign": "results/RAW/phase-G/g1-static-v2-smoke",
+    "prereg_tag": "phase-G-g1-static-nc-v2-prereg"
+  },
+  "certificate": {
+    "A": {
+      "status": "INVALID",
+      "n_reps": 1,
+      "n_valid_reps": 0,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": true,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "failed_validity": [
+        "G1S2-1_independent_grid_flat_all_links",
+        "G1S2-3_infrastructure_clean"
+      ]
+    },
+    "B": {
+      "status": "INVALID",
+      "n_reps": 1,
+      "n_valid_reps": 0,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": true,
+        "reconcile_every": 30,
+        "measurement_mode": "prod"
+      },
+      "failed_validity": [
+        "G1S2-1_independent_grid_flat_all_links",
+        "G1S2-3_infrastructure_clean"
+      ]
+    },
+    "C": {
+      "status": "INVALID",
+      "n_reps": 1,
+      "n_valid_reps": 0,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": false,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "failed_validity": [
+        "G1S2-1_independent_grid_flat_all_links",
+        "G1S2-3_infrastructure_clean"
+      ]
+    },
+    "D": {
+      "status": "INVALID",
+      "n_reps": 1,
+      "n_valid_reps": 0,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": null
+      },
+      "failed_validity": [
+        "G1S2-1_independent_grid_flat_all_links"
+      ]
+    },
+    "E": {
+      "status": "INVALID",
+      "n_reps": 1,
+      "n_valid_reps": 0,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": true,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "failed_validity": [
+        "G1S2-1_independent_grid_flat_all_links"
+      ]
+    },
+    "F": {
+      "status": "INVALID",
+      "n_reps": 1,
+      "n_valid_reps": 0,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": "prod"
+      },
+      "failed_validity": [
+        "G1S2-1_independent_grid_flat_all_links"
+      ]
+    }
+  },
+  "expires_when": "any generator, sampler, telemetry, dt, topology, or 30-day age change",
+  "detail_artifact": "results/SMOKE/phase-G/g1_static_v2_smoke_detail.json"
+}
