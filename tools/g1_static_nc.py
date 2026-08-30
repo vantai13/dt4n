@@ -178,6 +178,10 @@ def analyse_cell(run_dir: Path, cell: str, rep: int) -> dict[str, object]:
     burn = int(round(BURN_S / measured_dt))
     wide_tx, wide_rx = load_measured(measured_csv, "rho").iloc[burn:], load_measured(measured_csv, "rho_rx").iloc[burn:]
     grid = measurement_grid(measured_csv)
+    # Row ``burn`` measures the interval ending at grid[burn], whose left
+    # endpoint is grid[burn-1]. Startup coverage before burn is irrelevant and
+    # may precede the last child process opening its ledger by a few ms.
+    analysis_grid = grid[max(0, burn - 1):]
     if len(wide_tx) < 30:
         raise ValueError("%s has insufficient post-burn samples" % run_dir)
     per_link = {}
@@ -186,8 +190,8 @@ def analyse_cell(run_dir: Path, cell: str, rep: int) -> dict[str, object]:
         values = wide_tx[link].to_numpy(dtype=float)
         direct = nugget_direct(values, float(profile["rate_pps"]) * measured_dt, float(meta["pace_tick_s"]), float(profile["rate_pps"]))
         direct["drift"] = drift_curve(values, measured_dt, DRIFT_WINDOWS_S)
-        bits, dts, stall = load_static_ledger_on_grid(flow_log_dir, link, grid)
-        offered = (bits / (float(profile["cap_mbps"]) * 1e6 * dts))[burn:]
+        bits, dts, stall = load_static_ledger_on_grid(flow_log_dir, link, analysis_grid)
+        offered = bits / (float(profile["cap_mbps"]) * 1e6 * dts)
         v_offered = float(np.var(offered, ddof=1))
         direct["v_offered"] = v_offered
         direct["offered_share"] = float(v_offered / direct["v_total"]) if direct["v_total"] > 0 else float("nan")

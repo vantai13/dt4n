@@ -100,6 +100,20 @@ def test_static_ledger_coalesces_duplicate_observation_times(tmp_path):
     assert stall["duplicate_ts_frac"] == pytest.approx(0.25)
 
 
+def test_ledger_requires_only_the_supplied_post_burn_grid(tmp_path):
+    pd.DataFrame(
+        {
+            "monotonic_s": [20.0, 20.2, 20.4],
+            "cum_bytes": [0, 1400, 2800],
+            "lag_s": [0.0, 0.0, 0.0],
+        }
+    ).to_csv(tmp_path / "rho_offered_uA.csv", index=False)
+    bits, _, _ = load_static_ledger_on_grid(
+        tmp_path, "uA", np.asarray([20.1, 20.3])
+    )
+    assert bits.tolist() == pytest.approx([1400 * 8])
+
+
 def test_deterministic_count_residual_is_not_misclassified_as_slow():
     rate_pps = 497.3
     dt_s = 0.2
