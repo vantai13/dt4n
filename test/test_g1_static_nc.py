@@ -15,6 +15,7 @@ from tools.g1_static_nc import (
     nugget_direct,
     pair_table,
 )
+from tools.g1_static_nc_v3 import path_residual, rho_path_pairs
 
 
 def test_locked_static_geometry_matches_lesson_reference():
@@ -49,7 +50,7 @@ def test_static_profile_declares_zero_true_sigma():
 def test_measured_schema_is_backward_compatible_and_adds_rx_diagnostics():
     old = {"sample_index", "timestamp_s", "link", "rho", "throughput_mbps", "tx_bytes_delta", "dt_s"}
     assert old <= set(MEASURED_CSV_FIELDS)
-    assert {"rx_bytes_delta", "rho_rx", "read_duration_us", "sampler_id", "monotonic_s"} <= set(MEASURED_CSV_FIELDS)
+    assert {"rx_bytes_delta", "rho_rx", "read_duration_us", "sampler_id", "monotonic_s", "sample_t_mono"} <= set(MEASURED_CSV_FIELDS)
 
 
 def test_dual_sampler_paths_preserve_primary_name():
@@ -123,3 +124,47 @@ def test_deterministic_count_residual_is_not_misclassified_as_slow():
     result = nugget_direct(rho, rate_pps * dt_s, 0.002, rate_pps)
     assert result["acf1"] < 0.0
     assert result["g1s_2a_no_slow_component"] is True
+
+
+def test_v3_paired_residual_recovers_wire_bytes_and_background(tmp_path):
+    n_rows = 180
+    dt_s = 0.2
+    endpoint_t = 100.2 + np.arange(n_rows) * dt_s
+    counts = 100 + (np.arange(n_rows) % 7 == 0).astype(int)
+    cumulative = np.concatenate(([0], np.cumsum(counts)))
+    ledger_t = np.concatenate(([100.0], endpoint_t))
+    pd.DataFrame(
+        {
+            "t_mono": ledger_t,
+            "cum_packets": cumulative,
+            "lag_s": np.zeros(len(ledger_t)),
+        }
+    ).to_csv(tmp_path / "ledger.csv", index=False)
+    residual = np.zeros(n_rows)
+    measured_bytes = 1442.0 * counts + 25.0 + residual
+    measured = pd.DataFrame(
+        {
+            "monotonic_s": endpoint_t,
+            "tx_bytes_delta": measured_bytes,
+            "dt_s": np.full(n_rows, dt_s),
+            "rho": measured_bytes * 8.0 / (8e6 * dt_s),
+        }
+    )
+    result, fitted_residual = path_residual(
+        measured, tmp_path / "ledger.csv", 8e6, 500.0, 0.002
+    )
+    assert result["bytes_per_packet_fitted"] == pytest.approx(1442.0, abs=1e-8)
+    assert result["background_bytes_per_window"] == pytest.approx(25.0, abs=1e-8)
+    assert result["v_pack_rho_units"] == pytest.approx((1442 / 200000) ** 2 / 6)
+    assert result["v_pack_relative_units"] == pytest.approx(
+        1 / (6 * result["mean_packets_per_window"] ** 2)
+    )
+    assert len(fitted_residual) == result["n_windows"]
+
+
+def test_v3_rho_path_uses_residuals_not_raw_packet_counts():
+    base = np.linspace(-1.0, 1.0, 100)
+    residuals = {link: base.copy() for link in LINKS}
+    rows = rho_path_pairs(residuals)
+    assert len(rows) == math.comb(len(LINKS), 2)
+    assert all(row["rho_path"] == pytest.approx(1.0) for row in rows)

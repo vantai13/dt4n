@@ -90,6 +90,8 @@ class StaticEmitter:
         self.n_catchup = 0
         self.n_send_errors = 0
         self.max_backlog = 0
+        self.t0_monotonic = 0.0
+        self.max_ledger_gap_s = 0.0
 
     def run(self, duration_s: float) -> int:
         if duration_s <= 0.0:
@@ -103,6 +105,7 @@ class StaticEmitter:
         addr = self.addr
         gap = self.cfg.gap_s
         t0 = time.monotonic()
+        self.t0_monotonic = t0
         t_end = t0 + float(duration_s)
         t_next_log = t0
         rows = 0
@@ -114,6 +117,7 @@ class StaticEmitter:
                     "sample_index",
                     "timestamp_s",
                     "monotonic_s",
+                    "t_mono",
                     "cum_packets",
                     "cum_bytes",
                     "lag_s",
@@ -121,29 +125,12 @@ class StaticEmitter:
             )
             writer.writeheader()
             sample_index = 0
+            last_log_t = None
 
             while True:
                 now = time.monotonic()
                 if now >= t_end:
                     break
-
-                if now >= t_next_log:
-                    due_packets = int((now - t0) / gap)
-                    lag = max(0, due_packets - self.n_packets) * gap
-                    writer.writerow(
-                        {
-                            "sample_index": sample_index,
-                            "timestamp_s": "%.6f" % (now - t0),
-                            "monotonic_s": "%.9f" % now,
-                            "cum_packets": self.n_packets,
-                            "cum_bytes": self.n_packets * self.cfg.payload_bytes,
-                            "lag_s": "%.6f" % lag,
-                        }
-                    )
-                    sample_index += 1
-                    rows += 1
-                    missed = int((now - t_next_log) / self.log_dt_s)
-                    t_next_log += (missed + 1) * self.log_dt_s
 
                 due = int((now - t0) / gap) - self.n_packets
                 if due > 0:
@@ -158,6 +145,35 @@ class StaticEmitter:
                             self.n_send_errors += 1
                         finally:
                             self.n_packets += 1
+
+                # V3 records the cumulative state after the due batch.  Both
+                # this timestamp and the counter sampler use CLOCK_MONOTONIC,
+                # so a staircase lookup has a measured (not interpolated)
+                # alignment uncertainty.
+                now = time.monotonic()
+                if now >= t_next_log:
+                    due_packets = int((now - t0) / gap)
+                    lag = max(0, due_packets - self.n_packets) * gap
+                    writer.writerow(
+                        {
+                            "sample_index": sample_index,
+                            "timestamp_s": "%.6f" % (now - t0),
+                            "monotonic_s": "%.9f" % now,
+                            "t_mono": "%.9f" % now,
+                            "cum_packets": self.n_packets,
+                            "cum_bytes": self.n_packets * self.cfg.payload_bytes,
+                            "lag_s": "%.6f" % lag,
+                        }
+                    )
+                    if last_log_t is not None:
+                        self.max_ledger_gap_s = max(
+                            self.max_ledger_gap_s, now - last_log_t
+                        )
+                    last_log_t = now
+                    sample_index += 1
+                    rows += 1
+                    missed = int((now - t_next_log) / self.log_dt_s)
+                    t_next_log += (missed + 1) * self.log_dt_s
 
                 next_packet = t0 + (self.n_packets + 1) * gap
                 target = min(next_packet, t_next_log, t_end)
@@ -225,6 +241,12 @@ def main() -> None:
             "gap_s": cfg.gap_s,
             "payload_bytes": cfg.payload_bytes,
             "pace_tick_s": emitter.pace_tick_s,
+            "t0_monotonic": emitter.t0_monotonic,
+            "ledger_tick_s": emitter.log_dt_s,
+            "align_error_pkts_design": cfg.rate_pps * emitter.log_dt_s,
+            "max_ledger_gap_s": emitter.max_ledger_gap_s,
+            "align_error_pkts_observed_max": cfg.rate_pps
+            * emitter.max_ledger_gap_s,
             "sigma_true": 0.0,
             "sigma_quant_floor_at_0p2s": cfg.sigma_quant_floor(0.20),
             "n_pkt_per_window_0p2s": cfg.n_pkt_per_window(0.20),
