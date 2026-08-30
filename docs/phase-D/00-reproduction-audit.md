@@ -24,7 +24,7 @@ $ sha256sum -c /home/vantai/dt4n-FULL-BACKUP-20260828.sha256
 | Bản | Vị trí | Phương tiện | SHA256 |
 |---|---|---|---|
 | 1 | `/home/vantai/dt4n-FULL-BACKUP-20260828.tar.gz` | ổ trong máy | PASS |
-| 2 | chưa được cung cấp | ổ ngoài hoặc cloud | **BLOCKED — cần người dùng chọn đích/tài khoản** |
+| 2 | server khác do người dùng quản lý; đường dẫn không công bố | server ngoài máy | **USER_ATTESTED; checksum chưa kiểm được trong workspace** |
 
 ## Đối chứng tái tạo parquet
 
@@ -65,8 +65,11 @@ SHA256 của cả tám file nằm ở `parquet-sha256-before-delete.txt`.
 - Annotated tag cục bộ `phase-D-cleanup-start` trỏ tới `fbde6a4`, trước mọi
   custody action. Kiểm tra remote bằng `tools/check_d0_d1.sh`.
 - `results/DATA_MANIFEST.json::doi` vẫn là `null`: chưa có Zenodo Version DOI.
+- Ngày 2026-08-30 người dùng xác nhận backup trên server khác và yêu cầu mở
+  gate. K12 mở riêng Phase G local work; không cho phép gọi đó là public
+  archive và không cho phép untrack/delete/rewrite historical data.
 - Có thể chuẩn bị đúng hai gói upload bằng `tools/prepare_d0_archive.sh DIR`.
 - Cho tới khi Version DOI được ghi vào manifest, `ARCHIVE_TAG` K11 được push
-  và một khóa `ARCHIVE_DOI` mới (K12) được cấp,
+  và một khóa `ARCHIVE_DOI` tương lai được cấp,
   whitelist parquet được giữ và cả tám file vẫn tracked. Không chạy
   `git rm --cached`, không rewrite lịch sử.

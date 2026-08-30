@@ -29,6 +29,21 @@ ROOTS = ("results",)
 CHUNK = 1 << 20
 
 
+def _preserved_custody() -> Dict[str, Any]:
+    """Keep externally supplied custody metadata across manifest rescans."""
+    path = pathlib.Path(MANIFEST)
+    if not path.exists():
+        return {"doi": None, "custody": {}}
+    try:
+        current = json.loads(path.read_text(encoding="utf-8"))
+    except (OSError, json.JSONDecodeError):
+        return {"doi": None, "custody": {}}
+    return {
+        "doi": current.get("doi"),
+        "custody": current.get("custody", {}),
+    }
+
+
 def _sha256(path: pathlib.Path) -> str:
     h = hashlib.sha256()
     with path.open("rb") as f:
@@ -79,6 +94,7 @@ def scan() -> List[Dict[str, Any]]:
 
 def build() -> Dict[str, Any]:
     rows = scan()
+    preserved = _preserved_custody()
     by_tier: Dict[str, Dict[str, int]] = {}
     for r in rows:
         t = by_tier.setdefault(r["tier"], {"n": 0, "bytes": 0})
@@ -94,7 +110,8 @@ def build() -> Dict[str, Any]:
         "n_files": len(rows),
         "total_bytes": sum(r["bytes"] for r in rows),
         "by_tier": by_tier,
-        "doi": None,          # DIEN sau khi nap Zenodo
+        "doi": preserved["doi"],
+        "custody": preserved["custody"],
         "files": rows,
     }
 

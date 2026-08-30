@@ -44,8 +44,9 @@ Hang so mac cung mot benh, chi khac ten benh: khong phai va cham ma la MO COI
 | K09 | `RHO_MEASURED_HARD_CEILING` -- tran van hanh cua TX counter | 1.0094102536 | median p99 cua 49 link-run co p99 >1.0 tren 15 run CLEAN; nguong canh bao lich su la `K09 * 0.995 = 1.0043632023` | `A082`; `snr_censoring_artifact.json::G23_335_hard_ceiling`; `G-A003`; `G-L20` | Gia tri K09 giu nguyen. Gate censoring TUONG LAI phai dat tren bien chua bi cat: `p(rho_offered > K09) < 0.05`; khong dung `rho_measured` de quyet dinh censoring | MAD cua 49 p99 = 0.00003562; q2.5--q97.5 = [1.00208, 1.01064]. Co che framing/accounting overhead la GIA THUYET, khong phai fit co che |
 | K10 | `TRUST_GATE_P99_MS` -- latency mot quyet dinh scalar | 0.222126 ms | microbenchmark `N=5000`, warm-up 200; pandas age-bin lookup + `cert.usefulness_v2._thresholds` + scalar compare | `results/SMOKE/phase-D/trust_gate_benchmark.json`; `tools/trust_gate_bench.py` | gate ngan sach D.6′ (`p99 <= 10 ms`) | mot lan do tren may cuc bo; infra kem theo: CPU p95 15.479%, 4 co canh bao deu false |
 | K11 | `ARCHIVE_TAG` -- moc bat bien truoc custody action | `phase-D-cleanup-start` | annotated tag tai commit `fbde6a4`; tao truoc moi thao tac untrack/rewrite | `git show phase-D-cleanup-start`; `docs/phase-D/00-reproduction-audit.md` | phan giai provenance Phase 20--23 va goi Zenodo D.0 | -- (dinh danh bat bien, khong phai uoc luong); remote push phai duoc checker D.0 xac nhan |
+| K12 | `PHASE_G_LOCAL_CUSTODY_WAIVER` | `OPEN_BY_USER_CUSTODY_WAIVER` | nguoi dung xac nhan backup nam tren server khac va yeu cau mo gate ngay 2026-08-30; duong dan/checksum remote khong duoc cap cho workspace | `results/DATA_MANIFEST.json::custody`; `docs/phase-D/05-offsite-backup-custody-waiver.md`; `tools/check_phase_g_custody.py` | chi mo Phase G internal experiment/local RAW capture; khong phai DOI, khong cho cleanup historical data | -- (user attestation, chua independently verify remote bytes) |
 
-So ke tiep duoc cap: **K12**.
+So ke tiep duoc cap: **K13**.
 
 ## K01 -- `beta` chua bao gio co dong nguon goc
 

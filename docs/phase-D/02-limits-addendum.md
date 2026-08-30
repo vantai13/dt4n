@@ -9,7 +9,7 @@
 | D-L5 | Suy `n_eff` chỉ từ `tau_pred_s` của generator mâu thuẫn với ACF đo trực tiếp trên `rho_measured` | đóng theo phép đo mới: ưu tiên ACF của chính đại lượng phân tích |
 | D-L6 | Cơ chế “~900 socket” không tồn tại; `FlowEngine` có một UDP sender socket mỗi process, sink có một receiver socket | đóng bằng đọc code |
 | D-L7 | Con số 817–875 là số luồng ảo warm-start, không phải số socket | đóng; khớp metadata và `rho^2/sigma^2` |
-| D-L8 | `results/DATA_MANIFEST.json::doi` còn `null`; chưa có Version DOI | mở, cần thao tác tài khoản ngoài |
+| D-L8 | `results/DATA_MANIFEST.json::doi` còn `null`; chưa có Version DOI. K12 chỉ là waiver dựa trên backup server khác do người dùng xác nhận | public archival vẫn mở; Phase G local work được mở, nhưng không cleanup lịch sử hay tuyên bố DOI |
 | D-L9 | Backup 6.5 GiB mới chỉ nằm trên cùng máy | mở, cần sao chép ra phương tiện/tài khoản khác |
 | D-L10 | Run cũ 120 s ngắn hơn `5*tau_pred` của uB/vD (140–151 s theo max campaign); không có vùng hậu burn-in theo estimator generator dù measured-ACF T8 cho n_eff lớn | mở; không tráo hai estimator. Cell C dùng 240 s; cấu hình A muốn đóng riêng cần run dài |
 | D-L11 | Cell C đổi đồng thời sigma, lifetime, tau và N_bar; dù H4 thắng cũng chỉ xác nhận endpoint × configuration bundle, không nhận dạng riêng N_bar hay heap cost | mở có chủ đích; tách trục cần generator mới hoặc intervention khác |

@@ -62,6 +62,29 @@ def test_manifest_exists_and_is_wellformed():
     assert all(len(r["sha256"]) == 64 for r in d["files"])
 
 
+def test_phase_g_local_waiver_is_explicit_and_not_a_fake_doi():
+    d = json.loads(MANIFEST.read_text(encoding="utf-8"))
+    gate = d["custody"]["phase_g_local_gate"]
+    backup = d["custody"]["offsite_backup"]
+
+    assert d["doi"] is None
+    assert backup["status"] == "USER_ATTESTED_PRESENT"
+    assert gate["status"] == "OPEN_BY_USER_CUSTODY_WAIVER"
+    assert gate["public_doi_equivalent"] is False
+    assert gate["allows_historical_data_cleanup"] is False
+    assert gate["allows_claim_of_public_archival"] is False
+
+
+def test_manifest_builder_preserves_external_custody_metadata():
+    from tools import data_manifest
+
+    preserved = data_manifest._preserved_custody()
+    assert preserved["doi"] is None
+    assert preserved["custody"]["phase_g_local_gate"]["status"] == (
+        "OPEN_BY_USER_CUSTODY_WAIVER"
+    )
+
+
 def test_path_map_is_loadable():
     """Neu bang anh xa rong thi test duoi PASS RONG: no se khong con dich
     duoc gi va moi duong dan cu se tinh la 'khop truc tiep hoac khong co'."""

@@ -60,11 +60,12 @@ NT59 instead.
 
 ## DOI boundary
 
-The user states that data have been backed up and authorizes opening existing
-outcomes. No public Version DOI was found in the repository, attachments, or
-public Zenodo search; `results/DATA_MANIFEST.json::doi` therefore remains
-`null`. Backup authorization permits this reclassification, but it cannot be
-represented as a Zenodo DOI and does not open the new-data G.3/G.4 gates.
+The user states that data have been backed up on another server and explicitly
+authorizes opening the local gate. K12 records this as a restricted custody
+waiver. No public Version DOI was found; `results/DATA_MANIFEST.json::doi`
+therefore remains `null`. The waiver opens Phase G internal work but cannot be
+represented as a Zenodo DOI, cannot justify historical cleanup, and cannot be
+used to claim public archival custody.
 
 ## Reproduction
 

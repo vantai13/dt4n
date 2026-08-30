@@ -7,13 +7,16 @@ thuyết không phải validity gate.
 
 ## D.0 — custody dữ liệu
 
-- Backup cục bộ 6.5 GiB đã kiểm lại SHA256: PASS; bản sao khác thiết bị còn
-  thiếu vì chưa có mount point/tài khoản cloud được cấp.
+- Backup cục bộ 6.5 GiB đã kiểm lại SHA256: PASS. Ngày 2026-08-30 người dùng
+  xác nhận thêm bản sao trên server khác; vị trí/checksum ngoài máy không có
+  trong workspace nên được ghi là user-attested, không phải independently verified.
 - Positive control tái tạo parquet: FAIL có kiểm soát; tám parquet không được
   xoá/untrack trước khi có archive ngoài repo và Version DOI.
 - Hai gói Zenodo đã chuẩn bị tại `/tmp/dt4n-archive` bằng
   `tools/prepare_d0_archive.sh`; `results/DATA_MANIFEST.json::doi` còn `null`
   cho tới khi người dùng đăng nhập và publish Version DOI.
+- Waiver K12 mở Phase G local work dựa trên backup ngoài máy được người dùng
+  xác nhận. Nó không mở quyền cleanup dữ liệu lịch sử và không phải DOI.
 - Hook chặn file mới trên 5 MiB: đã cài và đã fire trên file thử 6 MiB.
 - Tag bất biến `phase-D-cleanup-start` đã tạo cục bộ tại `fbde6a4`, trước mọi
   custody action. Push tag còn bị chặn vì môi trường không có GitHub

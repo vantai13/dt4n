@@ -32,6 +32,22 @@
   }
  },
  "doi": null,
+ "custody": {
+  "offsite_backup": {
+   "status": "USER_ATTESTED_PRESENT",
+   "location_class": "user-managed remote server",
+   "exact_location_disclosed": false,
+   "checksum_verified_in_workspace": false,
+   "attested_utc": "2026-08-30T02:06:40+00:00"
+  },
+  "phase_g_local_gate": {
+   "status": "OPEN_BY_USER_CUSTODY_WAIVER",
+   "scope": "Phase G internal experiments and local RAW capture",
+   "public_doi_equivalent": false,
+   "allows_historical_data_cleanup": false,
+   "allows_claim_of_public_archival": false
+  }
+ },
  "files": [
   {
    "path": "results/LIVE/phase-20R/decision_error_by_age_by_regime_slaB.parquet",
