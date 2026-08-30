@@ -1,0 +1,5732 @@
+{
+  "schema": "dt4n.phase_g.g1_static_nc.v1",
+  "status": "NEGATIVE_CONTROL_DIRECT_MEASUREMENT",
+  "estimators_used": "NONE (sample variance and correlation only)",
+  "constants": {
+    "DT_MEASURED_S": 0.2,
+    "BURN_S": 20.0,
+    "DRIFT_WINDOWS_S": [
+      25.0,
+      50.0,
+      100.0,
+      200.0
+    ],
+    "sigma_grid": [
+      0.01,
+      0.02,
+      0.03,
+      0.05,
+      0.1
+    ],
+    "threshold_sf": 0.85
+  },
+  "provenance": {
+    "git_hash": "803039ad3b17fd1ee27e7d466a774ec6573e67d0",
+    "timestamp_utc": "2026-08-30T02:37:23.355525+00:00",
+    "script": "tools/g1_static_nc.py",
+    "campaign": "results/RAW/phase-G/g1-static-smoke",
+    "prereg_tag": "phase-G-g1-static-nc-prereg"
+  },
+  "cells": [
+    {
+      "cell": "A",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-smoke/A/rep1",
+      "engine": "static",
+      "n_samples_after_burn": 199,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": true,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "mean": 0.8059560776381911,
+          "v_total": 0.005268748303241597,
+          "v_white": 0.0010787256390639433,
+          "white_ratio": 0.2047404007514,
+          "sd_total": 0.07258614401689621,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.0507851012833042e-06,
+          "offered_share": 0.0001994373313746661,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 804.2607727544315,
+          "emitter": {
+            "max_lag_s": 0.00807708632419235,
+            "n_catchup": 45,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "uB": {
+          "mean": 0.83254476919598,
+          "v_total": 0.00030747295318150344,
+          "v_white": 0.00016834685746115106,
+          "white_ratio": 0.5475176132379186,
+          "sd_total": 0.017534906705811225,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 9.287860294974364e-07,
+          "offered_share": 0.0030207080651714025,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0033283523856927166,
+          "v_quant_floor": 1.1077929603346399e-05,
+          "v_above_quant_floor_ratio": 27.75545288612618,
+          "emitter": {
+            "max_lag_s": 0.007388622649159515,
+            "n_catchup": 10,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26020,
+            "n_send_errors": 0
+          }
+        },
+        "ac": {
+          "mean": 0.9367861526130652,
+          "v_total": 2.0014737120261824e-05,
+          "v_white": 3.2290922883578034e-05,
+          "white_ratio": 1.6133573321274588,
+          "sd_total": 0.004473783311724186,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.0773427257128825e-06,
+          "offered_share": 0.05382747318835578,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029623983026039074,
+          "v_quant_floor": 8.775803703270512e-06,
+          "v_above_quant_floor_ratio": 2.280672836016473,
+          "emitter": {
+            "max_lag_s": 0.015967700062901713,
+            "n_catchup": 24,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29234,
+            "n_send_errors": 0
+          }
+        },
+        "ad": {
+          "mean": 0.9470824145226131,
+          "v_total": 4.3812899314256195e-05,
+          "v_white": 6.436232249300373e-05,
+          "white_ratio": 1.4690267820751364,
+          "sd_total": 0.006619131311150746,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 5.464619323669512e-06,
+          "offered_share": 0.1247262657619052,
+          "nc_valid_1_generator_flat": false,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.004395271217321784,
+          "v_quant_floor": 1.9318409073817315e-05,
+          "v_above_quant_floor_ratio": 2.267935167271969,
+          "emitter": {
+            "max_lag_s": 0.005266031038445362,
+            "n_catchup": 5,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 19704,
+            "n_send_errors": 0
+          }
+        },
+        "bc": {
+          "mean": 0.931620046884422,
+          "v_total": 1.2068067192999336e-05,
+          "v_white": 1.69335100797157e-05,
+          "white_ratio": 1.4031667050659777,
+          "sd_total": 0.0034739123755499843,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.2905320834251584e-06,
+          "offered_share": 0.10693776085153005,
+          "nc_valid_1_generator_flat": false,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029787741915071903,
+          "v_quant_floor": 8.873095683989316e-06,
+          "v_above_quant_floor_ratio": 1.3600740511313376,
+          "emitter": {
+            "max_lag_s": 0.003440188868808036,
+            "n_catchup": 2,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29074,
+            "n_send_errors": 0
+          }
+        },
+        "bd": {
+          "mean": 0.9419101354773869,
+          "v_total": 1.0877692382512775e-05,
+          "v_white": 1.6213768842720682e-05,
+          "white_ratio": 1.490552248819456,
+          "sd_total": 0.003298134682288274,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.9925061270169215e-06,
+          "offered_share": 0.18317360492930648,
+          "nc_valid_1_generator_flat": false,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.002946201483016133,
+          "v_quant_floor": 8.680103178526461e-06,
+          "v_above_quant_floor_ratio": 1.2531754702435896,
+          "emitter": {
+            "max_lag_s": 0.006576099631274701,
+            "n_catchup": 9,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29395,
+            "n_send_errors": 0
+          }
+        },
+        "vC": {
+          "mean": 0.8132048285929651,
+          "v_total": 1.015156250476873e-05,
+          "v_white": 1.4810073376703008e-05,
+          "white_ratio": 1.4588959453035852,
+          "sd_total": 0.0031861516763595434,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.7228523707543185e-06,
+          "offered_share": 0.169713023974881,
+          "nc_valid_1_generator_flat": false,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 1.5496097051603321,
+          "emitter": {
+            "max_lag_s": 0.0022329437897496973,
+            "n_catchup": 1,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "vD": {
+          "mean": 0.8440870761306531,
+          "v_total": 1.4452576173377386e-05,
+          "v_white": 1.894748539483528e-05,
+          "white_ratio": 1.3110109344891618,
+          "sd_total": 0.003801654399518371,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 8.42881777844287e-07,
+          "offered_share": 0.05832052138890862,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0032877379575573574,
+          "v_quant_floor": 1.0809220877563424e-05,
+          "v_above_quant_floor_ratio": 1.3370599358716437,
+          "emitter": {
+            "max_lag_s": 0.002445670465931471,
+            "n_catchup": 1,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26342,
+            "n_send_errors": 0
+          }
+        }
+      },
+      "pairs_tx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.7737948512201184,
+          "rho_eps_diff": 0.2672159012438092,
+          "band_agreement": 0.5065789499763091,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": -0.03829905906708641,
+          "rho_eps_diff": -0.02128876429506266,
+          "band_agreement": 0.01701029477202375,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.015127795672300767,
+          "rho_eps_diff": -0.00011222506882904876,
+          "band_agreement": 0.015240020741129815,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.03269117265687902,
+          "rho_eps_diff": -0.0810209158992028,
+          "band_agreement": 0.048329743242323774,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": -0.014985956196704439,
+          "rho_eps_diff": -0.08265065220224418,
+          "band_agreement": 0.06766469600553975,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": -0.08652770993196865,
+          "rho_eps_diff": -0.051668969809638636,
+          "band_agreement": 0.03485874012233001,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.06712570495810125,
+          "rho_eps_diff": -0.10826975481219879,
+          "band_agreement": 0.041144049854097545,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": -0.016891706470345647,
+          "rho_eps_diff": 0.011257895953960543,
+          "band_agreement": 0.02814960242430619,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": -0.03592022969853565,
+          "rho_eps_diff": -0.07615158438105459,
+          "band_agreement": 0.040231354682518934,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": 0.06774237824452657,
+          "rho_eps_diff": 0.133988630823393,
+          "band_agreement": 0.06624625257886642,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": 0.05496527500723489,
+          "rho_eps_diff": 0.08207421511727739,
+          "band_agreement": 0.0271089401100425,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": -0.14296031677855336,
+          "rho_eps_diff": -0.11345695880133162,
+          "band_agreement": 0.029503357977221742,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": 0.021590398444038993,
+          "rho_eps_diff": 0.0647782752805433,
+          "band_agreement": 0.043187876836504296,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.06117097417916386,
+          "rho_eps_diff": 0.04670704382892698,
+          "band_agreement": 0.014463930350236881,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": 0.16998863194836686,
+          "rho_eps_diff": 0.18164595535260422,
+          "band_agreement": 0.011657323404237363,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": 0.10407179885059853,
+          "rho_eps_diff": 0.09591766863020317,
+          "band_agreement": 0.008154130220395364,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": 0.13759863269887246,
+          "rho_eps_diff": 0.15797914869380858,
+          "band_agreement": 0.02038051599493612,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": 0.0002792670691663207,
+          "rho_eps_diff": -0.015638259833312,
+          "band_agreement": 0.015917526902478323,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": -0.058586438392167546,
+          "rho_eps_diff": -0.08699555729064222,
+          "band_agreement": 0.028409118898474674,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": 0.1256157689347156,
+          "rho_eps_diff": 0.15361852380931082,
+          "band_agreement": 0.02800275487459522,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": 0.10501890380765146,
+          "rho_eps_diff": 0.10034880735435538,
+          "band_agreement": 0.00467009645329608,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": 0.17766813388578626,
+          "rho_eps_diff": 0.2085259378604824,
+          "band_agreement": 0.030857803974696146,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": 0.12699341878979234,
+          "rho_eps_diff": 0.06834218827196913,
+          "band_agreement": 0.058651230517823214,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": 0.11735485639084245,
+          "rho_eps_diff": 0.10529199763240958,
+          "band_agreement": 0.012062858758432868,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": 0.11873211440660285,
+          "rho_eps_diff": 0.10077358766791542,
+          "band_agreement": 0.017958526738687433,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": 0.2026404378264741,
+          "rho_eps_diff": 0.24284194277992946,
+          "band_agreement": 0.04020150495345537,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": 0.08897989901656442,
+          "rho_eps_diff": 0.0950247643815138,
+          "band_agreement": 0.006044865364949387,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": -0.11978476688271031,
+          "rho_eps_diff": -0.14496905544041108,
+          "band_agreement": 0.025184288557700774,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "pairs_rx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.7737948512201184,
+          "rho_eps_diff": 0.2672159012438092,
+          "band_agreement": 0.5065789499763091,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": -0.03829905906708641,
+          "rho_eps_diff": -0.02128876429506266,
+          "band_agreement": 0.01701029477202375,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.015127795672300767,
+          "rho_eps_diff": -0.00011222506882904876,
+          "band_agreement": 0.015240020741129815,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.03269117265687902,
+          "rho_eps_diff": -0.0810209158992028,
+          "band_agreement": 0.048329743242323774,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": -0.014985956196704439,
+          "rho_eps_diff": -0.08265065220224418,
+          "band_agreement": 0.06766469600553975,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": -0.08652770993196865,
+          "rho_eps_diff": -0.051668969809638636,
+          "band_agreement": 0.03485874012233001,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.06712570495810125,
+          "rho_eps_diff": -0.10826975481219879,
+          "band_agreement": 0.041144049854097545,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": -0.016891706470345647,
+          "rho_eps_diff": 0.011257895953960543,
+          "band_agreement": 0.02814960242430619,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": -0.03592022969853565,
+          "rho_eps_diff": -0.07615158438105459,
+          "band_agreement": 0.040231354682518934,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": 0.06774237824452657,
+          "rho_eps_diff": 0.133988630823393,
+          "band_agreement": 0.06624625257886642,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": 0.05496527500723489,
+          "rho_eps_diff": 0.08207421511727739,
+          "band_agreement": 0.0271089401100425,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": -0.14296031677855336,
+          "rho_eps_diff": -0.11345695880133162,
+          "band_agreement": 0.029503357977221742,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": 0.021590398444038993,
+          "rho_eps_diff": 0.0647782752805433,
+          "band_agreement": 0.043187876836504296,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.06117097417916386,
+          "rho_eps_diff": 0.04670704382892698,
+          "band_agreement": 0.014463930350236881,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": 0.16998863194836686,
+          "rho_eps_diff": 0.18164595535260422,
+          "band_agreement": 0.011657323404237363,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": 0.10407179885059853,
+          "rho_eps_diff": 0.09591766863020317,
+          "band_agreement": 0.008154130220395364,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": 0.13759863269887246,
+          "rho_eps_diff": 0.15797914869380858,
+          "band_agreement": 0.02038051599493612,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": 0.0002792670691663207,
+          "rho_eps_diff": -0.015638259833312,
+          "band_agreement": 0.015917526902478323,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": -0.058586438392167546,
+          "rho_eps_diff": -0.08699555729064222,
+          "band_agreement": 0.028409118898474674,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": 0.1256157689347156,
+          "rho_eps_diff": 0.15361852380931082,
+          "band_agreement": 0.02800275487459522,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": 0.10501890380765146,
+          "rho_eps_diff": 0.10034880735435538,
+          "band_agreement": 0.00467009645329608,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": 0.17766813388578626,
+          "rho_eps_diff": 0.2085259378604824,
+          "band_agreement": 0.030857803974696146,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": 0.12699341878979234,
+          "rho_eps_diff": 0.06834218827196913,
+          "band_agreement": 0.058651230517823214,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": 0.11735485639084245,
+          "rho_eps_diff": 0.10529199763240958,
+          "band_agreement": 0.012062858758432868,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": 0.11873211440660285,
+          "rho_eps_diff": 0.10077358766791542,
+          "band_agreement": 0.017958526738687433,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": 0.2026404378264741,
+          "rho_eps_diff": 0.24284194277992946,
+          "band_agreement": 0.04020150495345537,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": 0.08897989901656442,
+          "rho_eps_diff": 0.0950247643815138,
+          "band_agreement": 0.006044865364949387,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": -0.11978476688271031,
+          "rho_eps_diff": -0.14496905544041108,
+          "band_agreement": 0.025184288557700774,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "discrimination_tx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.12699341878979234,
+          "median_out": 0.021590398444038993,
+          "separation": 0.10540302034575334,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.1256157689347156,
+          "median_out": 0.05496527500723489,
+          "separation": 0.07065049392748071,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": 0.11484378389265706,
+          "median_out": 0.01835909705816988,
+          "separation": 0.09648468683448719,
+          "fully_separated": false
+        }
+      },
+      "discrimination_rx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.12699341878979234,
+          "median_out": 0.021590398444038993,
+          "separation": 0.10540302034575334,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.1256157689347156,
+          "median_out": 0.05496527500723489,
+          "separation": 0.07065049392748071,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": 0.11484378389265706,
+          "median_out": 0.01835909705816988,
+          "separation": 0.09648468683448719,
+          "fully_separated": false
+        }
+      },
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-smoke/A/rep1/infra.jsonl",
+        "samples": 698,
+        "interval_s": 0.1,
+        "cpu_p50": 86.944,
+        "cpu_p95": 95.46,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 100.0,
+        "ctx_per_s": 51282.521,
+        "load_1m_max": 10.535,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.585201,
+        "clock_jump_ms_max": 1.612249,
+        "flag_cpu_saturated": true,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "nc_valid_3_checks": {
+        "cpu_p95_lt_80": false,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-prereg",
+        "tag_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9",
+        "run_git_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9"
+      },
+      "read_duration_us": {
+        "p50": 257.2,
+        "p95": 1067.9049999999818,
+        "p99": 2157.1950000000575,
+        "max": 2900.5,
+        "implied_rate_error_p95": 0.0053395249999999075
+      },
+      "validity": {
+        "G1S-0_engine_static": true,
+        "G1S-1_generator_flat_all_links": false,
+        "G1S-2_white_all_links": false,
+        "G1S-3_infrastructure_clean": false,
+        "G1S-4_preregistered_before_run": true,
+        "G1S-5_read_error_lt_0p005": false
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured": "1d35b5c1d0ca20720fec5f9ecae3a2dd72ed69180d209678acbbca55ed1e5e59",
+        "meta": "c6c96e2c3ad049cf389e9563e7f0b46510ea0fd08cb8f952aeaa54890c120f06",
+        "infra": "bc2c3f96f2ad0fb4ee0c1955089453cc1925570dfa65d6aa664dee69f83ab986"
+      }
+    },
+    {
+      "cell": "B",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-smoke/B/rep1",
+      "engine": "static",
+      "n_samples_after_burn": 199,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": true,
+        "reconcile_every": 30,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "mean": 0.8087128620603015,
+          "v_total": 0.003360359832390475,
+          "v_white": 0.0013893842876554568,
+          "white_ratio": 0.41346294949225243,
+          "sd_total": 0.05796861075090962,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 3.821280177946922e-07,
+          "offered_share": 0.0001137163984973764,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 512.9502189103506,
+          "emitter": {
+            "max_lag_s": 0.004267010555849993,
+            "n_catchup": 8,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "uB": {
+          "mean": 0.8298916911557788,
+          "v_total": 0.003037942621501934,
+          "v_white": 0.001551211109058559,
+          "white_ratio": 0.5106123789433695,
+          "sd_total": 0.05511753461015772,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.977913267606669e-06,
+          "offered_share": 0.0006510699884874075,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0033283523856927166,
+          "v_quant_floor": 1.1077929603346399e-05,
+          "v_above_quant_floor_ratio": 274.2337900923507,
+          "emitter": {
+            "max_lag_s": 0.006046213624358643,
+            "n_catchup": 10,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26020,
+            "n_send_errors": 0
+          }
+        },
+        "ac": {
+          "mean": 0.93571696,
+          "v_total": 0.00025747176675803445,
+          "v_white": 0.00015434047771945486,
+          "white_ratio": 0.5994462214744508,
+          "sd_total": 0.016045926796481234,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 5.814578701329013e-07,
+          "offered_share": 0.002258336428317365,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029623983026039074,
+          "v_quant_floor": 8.775803703270512e-06,
+          "v_above_quant_floor_ratio": 29.338824734887982,
+          "emitter": {
+            "max_lag_s": 0.006201903168403078,
+            "n_catchup": 13,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29234,
+            "n_send_errors": 0
+          }
+        },
+        "ad": {
+          "mean": 0.9470847063316583,
+          "v_total": 4.124765998432943e-05,
+          "v_white": 5.896695943060051e-05,
+          "white_ratio": 1.4295831436984037,
+          "sd_total": 0.0064224341167760865,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 7.757411872143488e-07,
+          "offered_share": 0.018806913834846967,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.004395271217321784,
+          "v_quant_floor": 1.9318409073817315e-05,
+          "v_above_quant_floor_ratio": 2.13514786992648,
+          "emitter": {
+            "max_lag_s": 0.004129540487156191,
+            "n_catchup": 1,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 19704,
+            "n_send_errors": 0
+          }
+        },
+        "bc": {
+          "mean": 0.9316213088442211,
+          "v_total": 1.5251876999922382e-05,
+          "v_white": 2.3329303327208145e-05,
+          "white_ratio": 1.5296021156823432,
+          "sd_total": 0.0039053651557725538,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.0107733937104598e-06,
+          "offered_share": 0.06627206564251754,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029787741915071903,
+          "v_quant_floor": 8.873095683989316e-06,
+          "v_above_quant_floor_ratio": 1.7188901757751796,
+          "emitter": {
+            "max_lag_s": 0.00332856414388516,
+            "n_catchup": 4,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29074,
+            "n_send_errors": 0
+          }
+        },
+        "bd": {
+          "mean": 0.9419630438693466,
+          "v_total": 1.338925176360063e-05,
+          "v_white": 1.98956751074064e-05,
+          "white_ratio": 1.4859437598666876,
+          "sd_total": 0.003659132651818,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 8.853682938091883e-07,
+          "offered_share": 0.06612530031111279,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.002946201483016133,
+          "v_quant_floor": 8.680103178526461e-06,
+          "v_above_quant_floor_ratio": 1.542522189911756,
+          "emitter": {
+            "max_lag_s": 0.0011481934006951633,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29395,
+            "n_send_errors": 0
+          }
+        },
+        "vC": {
+          "mean": 0.8132057634170856,
+          "v_total": 8.544542956561003e-06,
+          "v_white": 1.1727332021379702e-05,
+          "white_ratio": 1.3724937753838276,
+          "sd_total": 0.0029231050197625476,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 4.0683622385607584e-07,
+          "offered_share": 0.04761357347307652,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 1.3043023362587212,
+          "emitter": {
+            "max_lag_s": 0.0016538077461518697,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "vD": {
+          "mean": 0.8440853260301506,
+          "v_total": 1.626196727233013e-05,
+          "v_white": 2.203185939706587e-05,
+          "white_ratio": 1.3548089863981745,
+          "sd_total": 0.0040326129584092405,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 7.305195623724575e-07,
+          "offered_share": 0.044921967320364894,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0032877379575573574,
+          "v_quant_floor": 1.0809220877563424e-05,
+          "v_above_quant_floor_ratio": 1.5044532308600436,
+          "emitter": {
+            "max_lag_s": 0.0010062646606456838,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26342,
+            "n_send_errors": 0
+          }
+        }
+      },
+      "pairs_tx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9914503647398006,
+          "rho_eps_diff": 0.983829668820397,
+          "band_agreement": 0.0076206959194036195,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.9545030512845443,
+          "rho_eps_diff": 0.8846821958319975,
+          "band_agreement": 0.06982085545254679,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.01456119745983342,
+          "rho_eps_diff": -0.01482246513213846,
+          "band_agreement": 0.02938366259197188,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.012234209223559923,
+          "rho_eps_diff": -0.0031943326532791125,
+          "band_agreement": 0.009039876570280811,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": -0.005470124919770383,
+          "rho_eps_diff": -0.010435007032083395,
+          "band_agreement": 0.004964882112313012,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": -0.08190737181763956,
+          "rho_eps_diff": -0.06978109791321575,
+          "band_agreement": 0.012126273904423807,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.020597937857818938,
+          "rho_eps_diff": -0.003649798326880979,
+          "band_agreement": 0.016948139530937958,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.9635629296372371,
+          "rho_eps_diff": 0.902331603810583,
+          "band_agreement": 0.06123132582665414,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": 0.001063680172786137,
+          "rho_eps_diff": -0.035534544207414975,
+          "band_agreement": 0.03659822438020111,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": -0.014279124782381641,
+          "rho_eps_diff": -0.006926638434129206,
+          "band_agreement": 0.007352486348252435,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": -0.006735907593121735,
+          "rho_eps_diff": -0.01612450441461582,
+          "band_agreement": 0.009388596821494084,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": -0.06788947495686888,
+          "rho_eps_diff": -0.04067606746196372,
+          "band_agreement": 0.02721340749490516,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": -0.019763149279798005,
+          "rho_eps_diff": 0.004399073356030078,
+          "band_agreement": 0.02416222263582808,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.013220261830389927,
+          "rho_eps_diff": -0.005532475196628114,
+          "band_agreement": 0.018752737027018043,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": -0.04089980908013809,
+          "rho_eps_diff": -0.05324967680270103,
+          "band_agreement": 0.01234986772256294,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": -0.016134423490848787,
+          "rho_eps_diff": -0.01730402441031996,
+          "band_agreement": 0.0011696009194711726,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": -0.0582127719098883,
+          "rho_eps_diff": -0.03381436912704597,
+          "band_agreement": 0.024398402782842332,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": 0.009261020157203918,
+          "rho_eps_diff": 0.06025054614620611,
+          "band_agreement": 0.05098952598900219,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": 0.19603156076017908,
+          "rho_eps_diff": 0.19926824773968976,
+          "band_agreement": 0.0032366869795106834,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": -0.0667500013238753,
+          "rho_eps_diff": -0.060474188914254844,
+          "band_agreement": 0.006275812409620461,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": -0.10257870829831305,
+          "rho_eps_diff": -0.13751891169535022,
+          "band_agreement": 0.03494020339703717,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": -0.06128533247555469,
+          "rho_eps_diff": -0.05938221456413409,
+          "band_agreement": 0.0019031179114206015,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": -0.14083798760430996,
+          "rho_eps_diff": -0.16897006158871897,
+          "band_agreement": 0.028132073984409006,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": -0.020112410234723776,
+          "rho_eps_diff": -0.030966847423641714,
+          "band_agreement": 0.010854437188917938,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": -0.056058516395222774,
+          "rho_eps_diff": -0.07284866800178369,
+          "band_agreement": 0.016790151606560916,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": -0.04300369790522455,
+          "rho_eps_diff": -0.04104310012643732,
+          "band_agreement": 0.0019605977787872306,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": -0.020657253607177278,
+          "rho_eps_diff": 0.037669924290009434,
+          "band_agreement": 0.05832717789718671,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": -0.11870856831949797,
+          "rho_eps_diff": -0.11191441591342971,
+          "band_agreement": 0.00679415240606826,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "pairs_rx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9914499967367493,
+          "rho_eps_diff": 0.9839838626078886,
+          "band_agreement": 0.0074661341288606575,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.9545030512845443,
+          "rho_eps_diff": 0.8846821958319975,
+          "band_agreement": 0.06982085545254679,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.01456119745983342,
+          "rho_eps_diff": -0.01482246513213846,
+          "band_agreement": 0.02938366259197188,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.012234209223559923,
+          "rho_eps_diff": -0.0031943326532791125,
+          "band_agreement": 0.009039876570280811,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": -0.005470124919770383,
+          "rho_eps_diff": -0.010435007032083395,
+          "band_agreement": 0.004964882112313012,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": -0.08399916515574735,
+          "rho_eps_diff": -0.07259016018997883,
+          "band_agreement": 0.011409004965768521,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.020597937857818938,
+          "rho_eps_diff": -0.003649798326880979,
+          "band_agreement": 0.016948139530937958,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.9630556407346418,
+          "rho_eps_diff": 0.9004572606988275,
+          "band_agreement": 0.0625983800358143,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": 0.0011297838399672963,
+          "rho_eps_diff": -0.03586485504428498,
+          "band_agreement": 0.03699463888425228,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": -0.014172926287083236,
+          "rho_eps_diff": -0.005627516791969673,
+          "band_agreement": 0.008545409495113563,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": -0.006621540581154927,
+          "rho_eps_diff": -0.01470329601305217,
+          "band_agreement": 0.008081755431897243,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": -0.06968351685363193,
+          "rho_eps_diff": -0.04344693277923262,
+          "band_agreement": 0.026236584074399313,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": -0.01966967407597239,
+          "rho_eps_diff": 0.003083952524574383,
+          "band_agreement": 0.02275362660054677,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.013220261830389927,
+          "rho_eps_diff": -0.005532475196628114,
+          "band_agreement": 0.018752737027018043,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": -0.04089980908013809,
+          "rho_eps_diff": -0.05324967680270103,
+          "band_agreement": 0.01234986772256294,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": -0.016134423490848787,
+          "rho_eps_diff": -0.01730402441031996,
+          "band_agreement": 0.0011696009194711726,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": -0.05485132598389468,
+          "rho_eps_diff": -0.025242784161938966,
+          "band_agreement": 0.029608541821955714,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": 0.009261020157203918,
+          "rho_eps_diff": 0.06025054614620611,
+          "band_agreement": 0.05098952598900219,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": 0.19603156076017908,
+          "rho_eps_diff": 0.19926824773968976,
+          "band_agreement": 0.0032366869795106834,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": -0.0667500013238753,
+          "rho_eps_diff": -0.060474188914254844,
+          "band_agreement": 0.006275812409620461,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": -0.0840540121126617,
+          "rho_eps_diff": -0.12230527198989977,
+          "band_agreement": 0.03825125987723807,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": -0.06128533247555469,
+          "rho_eps_diff": -0.05938221456413409,
+          "band_agreement": 0.0019031179114206015,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": -0.14083798760430996,
+          "rho_eps_diff": -0.16897006158871897,
+          "band_agreement": 0.028132073984409006,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": 0.028404413622120817,
+          "rho_eps_diff": 0.02522632779842258,
+          "band_agreement": 0.0031780858236982353,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": -0.056058516395222774,
+          "rho_eps_diff": -0.07284866800178369,
+          "band_agreement": 0.016790151606560916,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": -0.05823760656473216,
+          "rho_eps_diff": -0.06320232966009665,
+          "band_agreement": 0.004964723095364484,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": -0.020657253607177278,
+          "rho_eps_diff": 0.037669924290009434,
+          "band_agreement": 0.05832717789718671,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": -0.1324649948285242,
+          "rho_eps_diff": -0.12146026452315555,
+          "band_agreement": 0.011004730305368651,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "discrimination_tx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.013220261830389927,
+          "median_out": -0.020112410234723776,
+          "separation": 0.0333326720651137,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": -0.0667500013238753,
+          "median_out": -0.016134423490848787,
+          "separation": -0.05061557783302652,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": -0.02851711628549344,
+          "median_out": -0.01993777975726089,
+          "separation": -0.008579336528232551,
+          "fully_separated": false
+        }
+      },
+      "discrimination_rx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.013220261830389927,
+          "median_out": -0.01966967407597239,
+          "separation": 0.032889935906362314,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": -0.0667500013238753,
+          "median_out": -0.014172926287083236,
+          "separation": -0.05257707503679207,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": -0.02851711628549344,
+          "median_out": -0.016921300181527814,
+          "separation": -0.011595816103965626,
+          "fully_separated": false
+        }
+      },
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-smoke/B/rep1/infra.jsonl",
+        "samples": 699,
+        "interval_s": 0.1,
+        "cpu_p50": 81.1,
+        "cpu_p95": 90.559,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 100.0,
+        "ctx_per_s": 48331.989,
+        "load_1m_max": 11.192,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.397035,
+        "clock_jump_ms_max": 1.860471,
+        "flag_cpu_saturated": true,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "nc_valid_3_checks": {
+        "cpu_p95_lt_80": false,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-prereg",
+        "tag_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9",
+        "run_git_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9"
+      },
+      "read_duration_us": {
+        "p50": 255.0,
+        "p95": 476.8799999999988,
+        "p99": 966.9300000000374,
+        "max": 1782.6,
+        "implied_rate_error_p95": 0.0023843999999999936
+      },
+      "validity": {
+        "G1S-0_engine_static": true,
+        "G1S-1_generator_flat_all_links": true,
+        "G1S-2_white_all_links": false,
+        "G1S-3_infrastructure_clean": false,
+        "G1S-4_preregistered_before_run": true,
+        "G1S-5_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured": "d6e639ebfaf0ade3f8c96a904751eb78a01e904df5dff5a734d52a5eb0eaeecf",
+        "meta": "3696da01f2c85a7e9e3d1ada0c2c545f426ab32f1eb90e9f5d0007d34b9465ad",
+        "infra": "a20808514e2dd7abac50353887786bb2938f47a8e0a3cb70063575713dbe33bb"
+      }
+    },
+    {
+      "cell": "C",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-smoke/C/rep1",
+      "engine": "static",
+      "n_samples_after_burn": 199,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": false,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "mean": 0.8089783321608042,
+          "v_total": 0.003334107020730601,
+          "v_white": 0.0015909906001469521,
+          "white_ratio": 0.47718642210780604,
+          "sd_total": 0.05774172685961688,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.5413446682684391e-06,
+          "offered_share": 0.0004622960986809251,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 508.9427952534725,
+          "emitter": {
+            "max_lag_s": 0.004685733179030649,
+            "n_catchup": 14,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "uB": {
+          "mean": 0.830478351557789,
+          "v_total": 0.002272245880379522,
+          "v_white": 0.0011895814114522472,
+          "white_ratio": 0.5235267106100143,
+          "sd_total": 0.04766808030935924,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 4.952678730510656e-08,
+          "offered_share": 2.179640316779201e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0033283523856927166,
+          "v_quant_floor": 1.1077929603346399e-05,
+          "v_above_quant_floor_ratio": 205.11467049701474,
+          "emitter": {
+            "max_lag_s": 0.004861660298956849,
+            "n_catchup": 11,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26020,
+            "n_send_errors": 0
+          }
+        },
+        "ac": {
+          "mean": 0.935273210603015,
+          "v_total": 0.00047164016665480655,
+          "v_white": 0.0002468996644226177,
+          "white_ratio": 0.523491597786928,
+          "sd_total": 0.021717278067354726,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 3.7966108835790556e-08,
+          "offered_share": 8.049803964974415e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029623983026039074,
+          "v_quant_floor": 8.775803703270512e-06,
+          "v_above_quant_floor_ratio": 53.743244790108356,
+          "emitter": {
+            "max_lag_s": 0.005709693276003236,
+            "n_catchup": 14,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29234,
+            "n_send_errors": 0
+          }
+        },
+        "ad": {
+          "mean": 0.9471139281407036,
+          "v_total": 4.5368337968305126e-05,
+          "v_white": 6.741230471122526e-05,
+          "white_ratio": 1.4858887878661173,
+          "sd_total": 0.006735602272128687,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 5.745875082773721e-07,
+          "offered_share": 0.012664945069814679,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.004395271217321784,
+          "v_quant_floor": 1.9318409073817315e-05,
+          "v_above_quant_floor_ratio": 2.348451044542476,
+          "emitter": {
+            "max_lag_s": 0.001034672691275773,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 19704,
+            "n_send_errors": 0
+          }
+        },
+        "bc": {
+          "mean": 0.9316535481407034,
+          "v_total": 1.76433848385485e-05,
+          "v_white": 2.687195310466021e-05,
+          "white_ratio": 1.5230610991349283,
+          "sd_total": 0.004200402937641638,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.886889221012508e-07,
+          "offered_share": 0.010694598787472462,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029787741915071903,
+          "v_quant_floor": 8.873095683989316e-06,
+          "v_above_quant_floor_ratio": 1.9884136796117688,
+          "emitter": {
+            "max_lag_s": 0.002205981119914213,
+            "n_catchup": 1,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29074,
+            "n_send_errors": 0
+          }
+        },
+        "bd": {
+          "mean": 0.9418958966331659,
+          "v_total": 1.1620350124089115e-05,
+          "v_white": 1.6100367321142997e-05,
+          "white_ratio": 1.3855320321000273,
+          "sd_total": 0.0034088634651580157,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 4.797455882191734e-08,
+          "offered_share": 0.004128495123607812,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.002946201483016133,
+          "v_quant_floor": 8.680103178526461e-06,
+          "v_above_quant_floor_ratio": 1.338734100861436,
+          "emitter": {
+            "max_lag_s": 0.003081650934291247,
+            "n_catchup": 2,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29395,
+            "n_send_errors": 0
+          }
+        },
+        "vC": {
+          "mean": 0.81316280040201,
+          "v_total": 8.676220930029159e-06,
+          "v_white": 1.1397857610502961e-05,
+          "white_ratio": 1.3136891859281707,
+          "sd_total": 0.0029455425527445973,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.365927382303316e-08,
+          "offered_share": 0.0015743344865455442,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 1.3244026376208262,
+          "emitter": {
+            "max_lag_s": 0.0006214277682374814,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "vD": {
+          "mean": 0.8441159544723619,
+          "v_total": 1.585027556574203e-05,
+          "v_white": 2.1469128131839923e-05,
+          "white_ratio": 1.3544955759786403,
+          "sd_total": 0.003981240455654749,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.1132079388720043e-07,
+          "offered_share": 0.007023271830541764,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0032877379575573574,
+          "v_quant_floor": 1.0809220877563424e-05,
+          "v_above_quant_floor_ratio": 1.4663661465778968,
+          "emitter": {
+            "max_lag_s": 0.0012887774919363437,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26342,
+            "n_send_errors": 0
+          }
+        }
+      },
+      "pairs_tx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9942363822259017,
+          "rho_eps_diff": 0.9861170693334217,
+          "band_agreement": 0.008119312892480024,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.980488368109397,
+          "rho_eps_diff": 0.9382981784127421,
+          "band_agreement": 0.04219018969665489,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.07025604841395434,
+          "rho_eps_diff": 0.05501841471934149,
+          "band_agreement": 0.015237633694612854,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.06616799105204449,
+          "rho_eps_diff": -0.056953502468942804,
+          "band_agreement": 0.009214488583101685,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": 0.13082304671953598,
+          "rho_eps_diff": 0.04193857048444776,
+          "band_agreement": 0.08888447623508822,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": 0.062065657651567616,
+          "rho_eps_diff": 0.010318225806856774,
+          "band_agreement": 0.05174743184471084,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.08861757315072707,
+          "rho_eps_diff": -0.06683306113732243,
+          "band_agreement": 0.021784512013404644,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.9735892698868391,
+          "rho_eps_diff": 0.9197475871232753,
+          "band_agreement": 0.053841682763563825,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": 0.08358625507445322,
+          "rho_eps_diff": 0.07343272728879999,
+          "band_agreement": 0.010153527785653232,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": -0.07287612204764753,
+          "rho_eps_diff": -0.061480360676220876,
+          "band_agreement": 0.01139576137142665,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": 0.1265784684334846,
+          "rho_eps_diff": 0.03475141827578486,
+          "band_agreement": 0.09182705015769975,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": 0.0600049751962447,
+          "rho_eps_diff": 0.008804868291188817,
+          "band_agreement": 0.05120010690505589,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": -0.08708891037126384,
+          "rho_eps_diff": -0.05844306446962998,
+          "band_agreement": 0.028645845901633868,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.07068023922222641,
+          "rho_eps_diff": 0.0606601606190352,
+          "band_agreement": 0.010020078603191207,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": -0.0696078948830007,
+          "rho_eps_diff": -0.06633500894523371,
+          "band_agreement": 0.003272885937766992,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": 0.15199704384864815,
+          "rho_eps_diff": 0.09043439456553998,
+          "band_agreement": 0.06156264928310817,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": 0.06043040523661015,
+          "rho_eps_diff": 0.004616149124217399,
+          "band_agreement": 0.05581425611239275,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": -0.07034079221054584,
+          "rho_eps_diff": -0.03372089345891382,
+          "band_agreement": 0.036619898751632025,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": 0.15615163428487697,
+          "rho_eps_diff": 0.18434013588114917,
+          "band_agreement": 0.028188501596272203,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": 0.10373377750152646,
+          "rho_eps_diff": 0.0959321707385222,
+          "band_agreement": 0.00780160676300426,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": 0.04077501166363702,
+          "rho_eps_diff": 0.045216483938865494,
+          "band_agreement": 0.004441472275228474,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": 0.10431026763550726,
+          "rho_eps_diff": 0.11297972599993764,
+          "band_agreement": 0.00866945836443038,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": 0.13796416019280144,
+          "rho_eps_diff": 0.16855322332129793,
+          "band_agreement": 0.03058906312849649,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": -0.008865609818376665,
+          "rho_eps_diff": 0.02910164210612414,
+          "band_agreement": 0.0379672519245008,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": 0.04983854046553909,
+          "rho_eps_diff": 0.09886756584005972,
+          "band_agreement": 0.049029025374520634,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": 0.17662018761408457,
+          "rho_eps_diff": 0.14532993929745724,
+          "band_agreement": 0.03129024831662733,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": 0.020134758022745555,
+          "rho_eps_diff": 0.05326987288378837,
+          "band_agreement": 0.033135114861042814,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": 0.12957407765408013,
+          "rho_eps_diff": 0.1845497955468024,
+          "band_agreement": 0.054975717892722265,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "pairs_rx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9942363822259017,
+          "rho_eps_diff": 0.9861170693334217,
+          "band_agreement": 0.008119312892480024,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.980488368109397,
+          "rho_eps_diff": 0.9382981784127421,
+          "band_agreement": 0.04219018969665489,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.07025604841395434,
+          "rho_eps_diff": 0.05501841471934149,
+          "band_agreement": 0.015237633694612854,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.06616799105204449,
+          "rho_eps_diff": -0.056953502468942804,
+          "band_agreement": 0.009214488583101685,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": 0.13082304671953598,
+          "rho_eps_diff": 0.04193857048444776,
+          "band_agreement": 0.08888447623508822,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": 0.062065657651567616,
+          "rho_eps_diff": 0.010318225806856774,
+          "band_agreement": 0.05174743184471084,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.08861757315072707,
+          "rho_eps_diff": -0.06683306113732243,
+          "band_agreement": 0.021784512013404644,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.9735892698868391,
+          "rho_eps_diff": 0.9197475871232753,
+          "band_agreement": 0.053841682763563825,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": 0.08358625507445322,
+          "rho_eps_diff": 0.07343272728879999,
+          "band_agreement": 0.010153527785653232,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": -0.07287612204764753,
+          "rho_eps_diff": -0.061480360676220876,
+          "band_agreement": 0.01139576137142665,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": 0.1265784684334846,
+          "rho_eps_diff": 0.03475141827578486,
+          "band_agreement": 0.09182705015769975,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": 0.0600049751962447,
+          "rho_eps_diff": 0.008804868291188817,
+          "band_agreement": 0.05120010690505589,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": -0.08708891037126384,
+          "rho_eps_diff": -0.05844306446962998,
+          "band_agreement": 0.028645845901633868,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.07068023922222641,
+          "rho_eps_diff": 0.0606601606190352,
+          "band_agreement": 0.010020078603191207,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": -0.0696078948830007,
+          "rho_eps_diff": -0.06633500894523371,
+          "band_agreement": 0.003272885937766992,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": 0.15199704384864815,
+          "rho_eps_diff": 0.09043439456553998,
+          "band_agreement": 0.06156264928310817,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": 0.06043040523661015,
+          "rho_eps_diff": 0.004616149124217399,
+          "band_agreement": 0.05581425611239275,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": -0.07034079221054584,
+          "rho_eps_diff": -0.03372089345891382,
+          "band_agreement": 0.036619898751632025,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": 0.15615163428487697,
+          "rho_eps_diff": 0.18434013588114917,
+          "band_agreement": 0.028188501596272203,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": 0.10373377750152646,
+          "rho_eps_diff": 0.0959321707385222,
+          "band_agreement": 0.00780160676300426,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": 0.04077501166363702,
+          "rho_eps_diff": 0.045216483938865494,
+          "band_agreement": 0.004441472275228474,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": 0.10431026763550726,
+          "rho_eps_diff": 0.11297972599993764,
+          "band_agreement": 0.00866945836443038,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": 0.13796416019280144,
+          "rho_eps_diff": 0.16855322332129793,
+          "band_agreement": 0.03058906312849649,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": -0.008865609818376665,
+          "rho_eps_diff": 0.02910164210612414,
+          "band_agreement": 0.0379672519245008,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": 0.04983854046553909,
+          "rho_eps_diff": 0.09886756584005972,
+          "band_agreement": 0.049029025374520634,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": 0.17662018761408457,
+          "rho_eps_diff": 0.14532993929745724,
+          "band_agreement": 0.03129024831662733,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": 0.020134758022745555,
+          "rho_eps_diff": 0.05326987288378837,
+          "band_agreement": 0.033135114861042814,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": 0.12957407765408013,
+          "rho_eps_diff": 0.1845497955468024,
+          "band_agreement": 0.054975717892722265,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "discrimination_tx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.13796416019280144,
+          "median_out": 0.062065657651567616,
+          "separation": 0.07589850254123383,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.10373377750152646,
+          "median_out": 0.07025604841395434,
+          "separation": 0.033477729087572114,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": 0.1337691189234408,
+          "median_out": 0.06021769021642742,
+          "separation": 0.07355142870701337,
+          "fully_separated": false
+        }
+      },
+      "discrimination_rx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.13796416019280144,
+          "median_out": 0.062065657651567616,
+          "separation": 0.07589850254123383,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.10373377750152646,
+          "median_out": 0.07025604841395434,
+          "separation": 0.033477729087572114,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": 0.1337691189234408,
+          "median_out": 0.06021769021642742,
+          "separation": 0.07355142870701337,
+          "fully_separated": false
+        }
+      },
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-smoke/C/rep1/infra.jsonl",
+        "samples": 699,
+        "interval_s": 0.1,
+        "cpu_p50": 78.1,
+        "cpu_p95": 86.836,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 100.0,
+        "ctx_per_s": 34301.702,
+        "load_1m_max": 10.15,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.434094,
+        "clock_jump_ms_max": 1.977318,
+        "flag_cpu_saturated": true,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "nc_valid_3_checks": {
+        "cpu_p95_lt_80": false,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-prereg",
+        "tag_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9",
+        "run_git_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9"
+      },
+      "read_duration_us": {
+        "p50": 268.7,
+        "p95": 764.6899999999731,
+        "p99": 1484.689000000028,
+        "max": 1811.6,
+        "implied_rate_error_p95": 0.003823449999999865
+      },
+      "validity": {
+        "G1S-0_engine_static": true,
+        "G1S-1_generator_flat_all_links": true,
+        "G1S-2_white_all_links": false,
+        "G1S-3_infrastructure_clean": false,
+        "G1S-4_preregistered_before_run": true,
+        "G1S-5_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured": "7a57a88ff7c0ad26f10e1826f7e6f8d144402bcd3686d417511bb2d4ac6d4570",
+        "meta": "f60154c911253fa5d45a2a38863408ddea1aa47355aa3c030653ce390ec9c466",
+        "infra": "cf90b7a59ec95be2080cbb526d5bf69436ec7cdc5986a219d4a9e3ef4d261ca2"
+      }
+    },
+    {
+      "cell": "D",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-smoke/D/rep1",
+      "engine": "static",
+      "n_samples_after_burn": 199,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": null
+      },
+      "per_link": {
+        "uA": {
+          "mean": 0.8084648992964824,
+          "v_total": 0.0034086078087075776,
+          "v_white": 0.001235749443534074,
+          "white_ratio": 0.36253787847849417,
+          "sd_total": 0.05838328364101815,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 2.803078616711147e-10,
+          "offered_share": 8.223529294131302e-08,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 520.315147444279,
+          "emitter": {
+            "max_lag_s": 0.007030808646049991,
+            "n_catchup": 15,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "uB": {
+          "mean": 0.8320173619597989,
+          "v_total": 0.000644429096483227,
+          "v_white": 0.00032594250231515883,
+          "white_ratio": 0.5057848940929103,
+          "sd_total": 0.025385608058173966,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 2.3755484988597452e-09,
+          "offered_share": 3.68628373830972e-06,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0033283523856927166,
+          "v_quant_floor": 1.1077929603346399e-05,
+          "v_above_quant_floor_ratio": 58.172340821570046,
+          "emitter": {
+            "max_lag_s": 0.006692833049783076,
+            "n_catchup": 7,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26020,
+            "n_send_errors": 0
+          }
+        },
+        "ac": {
+          "mean": 0.9367471140703518,
+          "v_total": 2.2166948959297e-05,
+          "v_white": 3.9539101099466535e-05,
+          "white_ratio": 1.7836961312117565,
+          "sd_total": 0.004708178942998769,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 2.1456154964398147e-08,
+          "offered_share": 0.0009679345138474395,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029623983026039074,
+          "v_quant_floor": 8.775803703270512e-06,
+          "v_above_quant_floor_ratio": 2.5259166805469864,
+          "emitter": {
+            "max_lag_s": 0.005380566628446104,
+            "n_catchup": 8,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29234,
+            "n_send_errors": 0
+          }
+        },
+        "ad": {
+          "mean": 0.9470896437185928,
+          "v_total": 4.275299896292754e-05,
+          "v_white": 6.289701166000101e-05,
+          "white_ratio": 1.4711719221040136,
+          "sd_total": 0.006538577747716053,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 2.832576928047997e-08,
+          "offered_share": 0.0006625446159938892,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.004395271217321784,
+          "v_quant_floor": 1.9318409073817315e-05,
+          "v_above_quant_floor_ratio": 2.2130703827403506,
+          "emitter": {
+            "max_lag_s": 0.0026645657071640017,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 19704,
+            "n_send_errors": 0
+          }
+        },
+        "bc": {
+          "mean": 0.9316289630150756,
+          "v_total": 9.98752850059389e-06,
+          "v_white": 1.2649832402145683e-05,
+          "white_ratio": 1.2665628339777437,
+          "sd_total": 0.003160305127767553,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 5.145797482504069e-10,
+          "offered_share": 5.1522230772088246e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029787741915071903,
+          "v_quant_floor": 8.873095683989316e-06,
+          "v_above_quant_floor_ratio": 1.1255968442463058,
+          "emitter": {
+            "max_lag_s": 0.0026199372150585987,
+            "n_catchup": 3,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29074,
+            "n_send_errors": 0
+          }
+        },
+        "bd": {
+          "mean": 0.9419189263819095,
+          "v_total": 3.818132875946436e-06,
+          "v_white": 5.513543264732538e-06,
+          "white_ratio": 1.4440417460237929,
+          "sd_total": 0.001954004318302914,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 3.730796319185559e-10,
+          "offered_share": 9.771258466903857e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.002946201483016133,
+          "v_quant_floor": 8.680103178526461e-06,
+          "v_above_quant_floor_ratio": 0.4398718307164875,
+          "emitter": {
+            "max_lag_s": 0.0018107504720319412,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29395,
+            "n_send_errors": 0
+          }
+        },
+        "vC": {
+          "mean": 0.8131736251758797,
+          "v_total": 8.730599260312987e-06,
+          "v_white": 1.1462406470638477e-05,
+          "white_ratio": 1.3129003094602645,
+          "sd_total": 0.0029547587482420604,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.4184139803987584e-10,
+          "offered_share": 1.6246467603277774e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 1.3327033487988986,
+          "emitter": {
+            "max_lag_s": 0.0012583898987941211,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "vD": {
+          "mean": 0.8440942875879397,
+          "v_total": 1.61926088556911e-05,
+          "v_white": 2.1580807193391114e-05,
+          "white_ratio": 1.3327566537127995,
+          "sd_total": 0.004024004082464517,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 3.256006565961879e-09,
+          "offered_share": 0.00020107980097459796,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0032877379575573574,
+          "v_quant_floor": 1.0809220877563424e-05,
+          "v_above_quant_floor_ratio": 1.4980366336395172,
+          "emitter": {
+            "max_lag_s": 0.0008641202493890887,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26342,
+            "n_send_errors": 0
+          }
+        }
+      },
+      "pairs_tx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9777248791829001,
+          "rho_eps_diff": 0.9525670649376218,
+          "band_agreement": 0.025157814245278298,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.07673930742421149,
+          "rho_eps_diff": 0.02372369029098002,
+          "band_agreement": 0.05301561713323147,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": -0.05306573596246104,
+          "rho_eps_diff": -0.010937431389236703,
+          "band_agreement": 0.042128304573224334,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": 0.018411845978450747,
+          "rho_eps_diff": -0.09044890918047625,
+          "band_agreement": 0.108860755158927,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": -0.0017502198070809814,
+          "rho_eps_diff": 0.010399364578610988,
+          "band_agreement": 0.01214958438569197,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": -0.028613639222839625,
+          "rho_eps_diff": -0.09362407504133721,
+          "band_agreement": 0.06501043581849758,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.04416144236695571,
+          "rho_eps_diff": -0.03619431284030021,
+          "band_agreement": 0.0079671295266555,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.06677311411350854,
+          "rho_eps_diff": 0.011443500170665354,
+          "band_agreement": 0.05532961394284319,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": -0.056036396449533524,
+          "rho_eps_diff": -0.007648097492639807,
+          "band_agreement": 0.04838829895689371,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": 0.014078775006356486,
+          "rho_eps_diff": -0.08508689699130184,
+          "band_agreement": 0.09916567199765833,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": 0.003020862762414274,
+          "rho_eps_diff": 0.01797845212280725,
+          "band_agreement": 0.014957589360392976,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": -0.037506569339171375,
+          "rho_eps_diff": -0.09517554282412057,
+          "band_agreement": 0.05766897348494919,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": -0.0270654988976758,
+          "rho_eps_diff": -0.014519054268099636,
+          "band_agreement": 0.012546444629576162,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.07709656379257797,
+          "rho_eps_diff": 0.0937229804386893,
+          "band_agreement": 0.016626416646111336,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": -0.04079381045849624,
+          "rho_eps_diff": -0.03921195882313889,
+          "band_agreement": 0.0015818516353573522,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": 0.1558607006321601,
+          "rho_eps_diff": 0.11776146630473139,
+          "band_agreement": 0.038099234327428705,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": 0.031137087059424185,
+          "rho_eps_diff": -0.03224647461655258,
+          "band_agreement": 0.06338356167597677,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": -0.020118490518091732,
+          "rho_eps_diff": -0.03285411322800808,
+          "band_agreement": 0.01273562270991635,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": 0.05174968164805149,
+          "rho_eps_diff": 0.08071061035516786,
+          "band_agreement": 0.028960928707116362,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": 0.12992906449428182,
+          "rho_eps_diff": 0.13402262348401647,
+          "band_agreement": 0.0040935589897346525,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": -0.14524800001778326,
+          "rho_eps_diff": -0.1783286023713148,
+          "band_agreement": 0.033080602353531524,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": -0.005042424964640125,
+          "rho_eps_diff": 0.03981260974873276,
+          "band_agreement": 0.04485503471337289,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": 0.024426087472852614,
+          "rho_eps_diff": 0.09399107107765803,
+          "band_agreement": 0.06956498360480541,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": -0.010765406214654877,
+          "rho_eps_diff": -0.01237122076342194,
+          "band_agreement": 0.0016058145487670636,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": -0.00994731578421888,
+          "rho_eps_diff": -0.050218874227579764,
+          "band_agreement": 0.04027155844336088,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": -0.03358013279702924,
+          "rho_eps_diff": -0.0975595130993572,
+          "band_agreement": 0.06397938030232797,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": -0.06359161540919156,
+          "rho_eps_diff": -0.0774817213504272,
+          "band_agreement": 0.013890105941235645,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": 0.07343028936209235,
+          "rho_eps_diff": 0.07586112448471884,
+          "band_agreement": 0.0024308351226264846,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "pairs_rx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9777248791829001,
+          "rho_eps_diff": 0.9525670649376218,
+          "band_agreement": 0.025157814245278298,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.07672990813873384,
+          "rho_eps_diff": 0.023932294469785623,
+          "band_agreement": 0.05279761366894822,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": -0.05306573596246104,
+          "rho_eps_diff": -0.010937431389236703,
+          "band_agreement": 0.042128304573224334,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": 0.018411845978450747,
+          "rho_eps_diff": -0.09044890918047625,
+          "band_agreement": 0.108860755158927,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": -0.0017502198070809814,
+          "rho_eps_diff": 0.010399364578610988,
+          "band_agreement": 0.01214958438569197,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": -0.028613639222839625,
+          "rho_eps_diff": -0.09362407504133721,
+          "band_agreement": 0.06501043581849758,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.04416144236695571,
+          "rho_eps_diff": -0.03619431284030021,
+          "band_agreement": 0.0079671295266555,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.06692681987406174,
+          "rho_eps_diff": 0.009854757131253411,
+          "band_agreement": 0.05707206274280833,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": -0.056036396449533524,
+          "rho_eps_diff": -0.007648097492639807,
+          "band_agreement": 0.04838829895689371,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": 0.014078775006356486,
+          "rho_eps_diff": -0.08508689699130184,
+          "band_agreement": 0.09916567199765833,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": 0.003020862762414274,
+          "rho_eps_diff": 0.01797845212280725,
+          "band_agreement": 0.014957589360392976,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": -0.037506569339171375,
+          "rho_eps_diff": -0.09517554282412057,
+          "band_agreement": 0.05766897348494919,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": -0.0270654988976758,
+          "rho_eps_diff": -0.014519054268099636,
+          "band_agreement": 0.012546444629576162,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.07811151669350747,
+          "rho_eps_diff": 0.09485108990318795,
+          "band_agreement": 0.01673957320968049,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": -0.03844122901999249,
+          "rho_eps_diff": -0.04683546445238995,
+          "band_agreement": 0.008394235432397465,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": 0.15935878893297445,
+          "rho_eps_diff": 0.12183639430651669,
+          "band_agreement": 0.03752239462645776,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": 0.00808822318777838,
+          "rho_eps_diff": -0.05440224533016661,
+          "band_agreement": 0.06249046851794499,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": -0.018453992772302363,
+          "rho_eps_diff": -0.038884082148167756,
+          "band_agreement": 0.020430089375865393,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": 0.05174968164805149,
+          "rho_eps_diff": 0.08071061035516786,
+          "band_agreement": 0.028960928707116362,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": 0.12992906449428182,
+          "rho_eps_diff": 0.13402262348401647,
+          "band_agreement": 0.0040935589897346525,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": -0.14524800001778326,
+          "rho_eps_diff": -0.1783286023713148,
+          "band_agreement": 0.033080602353531524,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": -0.005042424964640125,
+          "rho_eps_diff": 0.03981260974873276,
+          "band_agreement": 0.04485503471337289,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": 0.024426087472852614,
+          "rho_eps_diff": 0.09399107107765803,
+          "band_agreement": 0.06956498360480541,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": -0.010765406214654877,
+          "rho_eps_diff": -0.01237122076342194,
+          "band_agreement": 0.0016058145487670636,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": -0.00994731578421888,
+          "rho_eps_diff": -0.050218874227579764,
+          "band_agreement": 0.04027155844336088,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": -0.03358013279702924,
+          "rho_eps_diff": -0.0975595130993572,
+          "band_agreement": 0.06397938030232797,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": -0.06359161540919156,
+          "rho_eps_diff": -0.0774817213504272,
+          "band_agreement": 0.013890105941235645,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": 0.07343028936209235,
+          "rho_eps_diff": 0.07586112448471884,
+          "band_agreement": 0.0024308351226264846,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "discrimination_tx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.07709656379257797,
+          "median_out": -0.00994731578421888,
+          "separation": 0.08704387957679685,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.07343028936209235,
+          "median_out": -0.005042424964640125,
+          "separation": 0.07847271432673247,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": 0.07526342657733516,
+          "median_out": -0.015441948366373304,
+          "separation": 0.09070537494370846,
+          "fully_separated": false
+        }
+      },
+      "discrimination_rx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.07811151669350747,
+          "median_out": -0.00994731578421888,
+          "separation": 0.08805883247772635,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.07343028936209235,
+          "median_out": -0.005042424964640125,
+          "separation": 0.07847271432673247,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": 0.0757709030277999,
+          "median_out": -0.01460969949347862,
+          "separation": 0.09038060252127852,
+          "fully_separated": false
+        }
+      },
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-smoke/D/rep1/infra.jsonl",
+        "samples": 699,
+        "interval_s": 0.1,
+        "cpu_p50": 71.588,
+        "cpu_p95": 77.062,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 88.9,
+        "ctx_per_s": 19942.06,
+        "load_1m_max": 7.655,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.350037,
+        "clock_jump_ms_max": 0.744778,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "nc_valid_3_checks": {
+        "cpu_p95_lt_80": true,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-prereg",
+        "tag_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9",
+        "run_git_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9"
+      },
+      "read_duration_us": {
+        "p50": 267.6,
+        "p95": 304.19,
+        "p99": 318.6890000000003,
+        "max": 327.9,
+        "implied_rate_error_p95": 0.0015209499999999999
+      },
+      "validity": {
+        "G1S-0_engine_static": true,
+        "G1S-1_generator_flat_all_links": true,
+        "G1S-2_white_all_links": false,
+        "G1S-3_infrastructure_clean": true,
+        "G1S-4_preregistered_before_run": true,
+        "G1S-5_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured": "7c9072a7326ee972e2c68b54ce6cec18f4283415c706aca65c7ffffc90e2ea04",
+        "meta": "3f6d1229f4270eea757c98b6b63872c3b640064c8b01521cbe730e3ef16e8e54",
+        "infra": "3031859b3e8854354f380f8e302a85d08e7ccc68604d1c46b1e334b19b4b2810"
+      }
+    },
+    {
+      "cell": "E",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-smoke/E/rep1",
+      "engine": "static",
+      "n_samples_after_burn": 199,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": true,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "mean": 0.8075409746231156,
+          "v_total": 0.0037971191353848625,
+          "v_white": 0.0008952201383465041,
+          "white_ratio": 0.23576298410130547,
+          "sd_total": 0.061620768701671214,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 4.5328765787307446e-08,
+          "offered_share": 1.1937672791168056e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 579.6203945036382,
+          "emitter": {
+            "max_lag_s": 0.008208214270780445,
+            "n_catchup": 23,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "uB": {
+          "mean": 0.8315993223618091,
+          "v_total": 0.0009883450169041919,
+          "v_white": 0.0005183634062871086,
+          "white_ratio": 0.524476167149389,
+          "sd_total": 0.03143795503693254,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.6128349959642884e-07,
+          "offered_share": 0.0001631854229423037,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0033283523856927166,
+          "v_quant_floor": 1.1077929603346399e-05,
+          "v_above_quant_floor_ratio": 89.21748488143801,
+          "emitter": {
+            "max_lag_s": 0.006962678073250572,
+            "n_catchup": 12,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26020,
+            "n_send_errors": 0
+          }
+        },
+        "ac": {
+          "mean": 0.9349356035678391,
+          "v_total": 0.0007054625759257655,
+          "v_white": 0.00038752529086193854,
+          "white_ratio": 0.5493208344232807,
+          "sd_total": 0.02656054547492889,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 4.713186006651904e-08,
+          "offered_share": 6.680986585953021e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029623983026039074,
+          "v_quant_floor": 8.775803703270512e-06,
+          "v_above_quant_floor_ratio": 80.38723287108827,
+          "emitter": {
+            "max_lag_s": 0.01116479021129635,
+            "n_catchup": 16,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29234,
+            "n_send_errors": 0
+          }
+        },
+        "ad": {
+          "mean": 0.9470404945226132,
+          "v_total": 4.1655920928941064e-05,
+          "v_white": 6.1230936939375e-05,
+          "white_ratio": 1.4699215759465758,
+          "sd_total": 0.006454139828741013,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.739460173966984e-07,
+          "offered_share": 0.004175781341947162,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.004395271217321784,
+          "v_quant_floor": 1.9318409073817315e-05,
+          "v_above_quant_floor_ratio": 2.156281129039673,
+          "emitter": {
+            "max_lag_s": 0.007159277059145097,
+            "n_catchup": 6,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 19704,
+            "n_send_errors": 0
+          }
+        },
+        "bc": {
+          "mean": 0.9315994017085426,
+          "v_total": 1.047513120338901e-05,
+          "v_white": 1.3827155038576273e-05,
+          "white_ratio": 1.319998267334617,
+          "sd_total": 0.0032365307357398927,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 5.950117302203112e-07,
+          "offered_share": 0.05680231766718183,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029787741915071903,
+          "v_quant_floor": 8.873095683989316e-06,
+          "v_above_quant_floor_ratio": 1.1805497851545115,
+          "emitter": {
+            "max_lag_s": 0.010217481262770889,
+            "n_catchup": 4,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29074,
+            "n_send_errors": 0
+          }
+        },
+        "bd": {
+          "mean": 0.9419404041206031,
+          "v_total": 8.434855144508191e-06,
+          "v_white": 1.1728789987769062e-05,
+          "white_ratio": 1.3905146901551122,
+          "sd_total": 0.002904282208138216,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.15041911063661e-09,
+          "offered_share": 0.0001363887216706538,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.002946201483016133,
+          "v_quant_floor": 8.680103178526461e-06,
+          "v_above_quant_floor_ratio": 0.9717459540544421,
+          "emitter": {
+            "max_lag_s": 0.009506448631327657,
+            "n_catchup": 16,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29395,
+            "n_send_errors": 0
+          }
+        },
+        "vC": {
+          "mean": 0.8131922077889446,
+          "v_total": 8.413199702999131e-06,
+          "v_white": 1.1904939703588714e-05,
+          "white_ratio": 1.415031156260899,
+          "sd_total": 0.0029005516204679295,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.0135922681140421e-07,
+          "offered_share": 0.012047643035891772,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 1.2842531290227708,
+          "emitter": {
+            "max_lag_s": 0.0023010249351500534,
+            "n_catchup": 1,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "vD": {
+          "mean": 0.8441143205025124,
+          "v_total": 1.5658056833830053e-05,
+          "v_white": 2.110234934998987e-05,
+          "white_ratio": 1.3476991157930363,
+          "sd_total": 0.0039570262614531705,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.304415381552707e-06,
+          "offered_share": 0.08330633841706649,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0032877379575573574,
+          "v_quant_floor": 1.0809220877563424e-05,
+          "v_above_quant_floor_ratio": 1.4485832985734708,
+          "emitter": {
+            "max_lag_s": 0.004876956361840712,
+            "n_catchup": 2,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26342,
+            "n_send_errors": 0
+          }
+        }
+      },
+      "pairs_tx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9233564976277119,
+          "rho_eps_diff": 0.8240774430668325,
+          "band_agreement": 0.09927905456087938,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.9158722602514586,
+          "rho_eps_diff": 0.7968882504523307,
+          "band_agreement": 0.11898400979912793,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.07690157497559891,
+          "rho_eps_diff": 0.07264106898276902,
+          "band_agreement": 0.0042605059928298855,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.02624488346082229,
+          "rho_eps_diff": -0.07433584855680755,
+          "band_agreement": 0.04809096509598526,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": 0.0007934588920324552,
+          "rho_eps_diff": 0.01587236675034417,
+          "band_agreement": 0.015078907858311716,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": -0.0625755494672157,
+          "rho_eps_diff": -0.078951704963374,
+          "band_agreement": 0.0163761554961583,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.038943688936840325,
+          "rho_eps_diff": 0.00924980869541183,
+          "band_agreement": 0.048193497632252155,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.9797293817460786,
+          "rho_eps_diff": 0.9411412335428687,
+          "band_agreement": 0.03858814820320988,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": 0.10190610929339629,
+          "rho_eps_diff": 0.08635396268599363,
+          "band_agreement": 0.015552146607402659,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": -0.03191767864060038,
+          "rho_eps_diff": -0.011668364828597606,
+          "band_agreement": 0.020249313812002775,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": -0.002883886653911381,
+          "rho_eps_diff": -0.010169536570724957,
+          "band_agreement": 0.0072856499168135755,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": -0.04576723158904059,
+          "rho_eps_diff": -0.012253289258641055,
+          "band_agreement": 0.03351394233039954,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": -0.0414402164378414,
+          "rho_eps_diff": -0.009069037017578914,
+          "band_agreement": 0.032371179420262484,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.1338161877016258,
+          "rho_eps_diff": 0.13856649874657942,
+          "band_agreement": 0.004750311044953631,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": 0.008905790748755192,
+          "rho_eps_diff": 0.06118829068228018,
+          "band_agreement": 0.05228249993352499,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": -0.003682139336253004,
+          "rho_eps_diff": -0.011099361817516439,
+          "band_agreement": 0.007417222481263435,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": -0.02816392918645788,
+          "rho_eps_diff": 0.005181494490721373,
+          "band_agreement": 0.033345423677179256,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": -0.021332215112524942,
+          "rho_eps_diff": 0.027860708360555438,
+          "band_agreement": 0.04919292347308038,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": 0.009939954758165212,
+          "rho_eps_diff": 0.01303817529762638,
+          "band_agreement": 0.003098220539461167,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": 0.07106300765187322,
+          "rho_eps_diff": 0.0644322144946284,
+          "band_agreement": 0.006630793157244824,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": 0.09755004727689287,
+          "rho_eps_diff": 0.09366141995354109,
+          "band_agreement": 0.0038886273233517815,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": 0.021587508067538237,
+          "rho_eps_diff": 0.0016344605031894082,
+          "band_agreement": 0.01995304756434883,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": -0.08790026051533555,
+          "rho_eps_diff": -0.10580701599709438,
+          "band_agreement": 0.017906755481758838,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": 0.08430704945287547,
+          "rho_eps_diff": 0.0939300073290012,
+          "band_agreement": 0.009622957876125729,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": -0.08746420163303958,
+          "rho_eps_diff": -0.10105327326706191,
+          "band_agreement": 0.013589071634022329,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": -0.005806146852873501,
+          "rho_eps_diff": -0.04116146298390838,
+          "band_agreement": 0.03535531613103488,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": 0.14068338711181064,
+          "rho_eps_diff": 0.23049039744013017,
+          "band_agreement": 0.08980701032831953,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": 0.0008840525771826049,
+          "rho_eps_diff": 0.030404819188754904,
+          "band_agreement": 0.0295207666115723,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "pairs_rx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9233564976277119,
+          "rho_eps_diff": 0.8240774430668325,
+          "band_agreement": 0.09927905456087938,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.9158722602514586,
+          "rho_eps_diff": 0.7968882504523307,
+          "band_agreement": 0.11898400979912793,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.07690157497559891,
+          "rho_eps_diff": 0.07264106898276902,
+          "band_agreement": 0.0042605059928298855,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.02624488346082229,
+          "rho_eps_diff": -0.07433584855680755,
+          "band_agreement": 0.04809096509598526,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": 0.0007934588920324552,
+          "rho_eps_diff": 0.01587236675034417,
+          "band_agreement": 0.015078907858311716,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": -0.0625755494672157,
+          "rho_eps_diff": -0.078951704963374,
+          "band_agreement": 0.0163761554961583,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": -0.038943688936840325,
+          "rho_eps_diff": 0.00924980869541183,
+          "band_agreement": 0.048193497632252155,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.9797293817460786,
+          "rho_eps_diff": 0.9411412335428687,
+          "band_agreement": 0.03858814820320988,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": 0.10190610929339629,
+          "rho_eps_diff": 0.08635396268599363,
+          "band_agreement": 0.015552146607402659,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": -0.03191767864060038,
+          "rho_eps_diff": -0.011668364828597606,
+          "band_agreement": 0.020249313812002775,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": -0.002883886653911381,
+          "rho_eps_diff": -0.010169536570724957,
+          "band_agreement": 0.0072856499168135755,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": -0.04576723158904059,
+          "rho_eps_diff": -0.012253289258641055,
+          "band_agreement": 0.03351394233039954,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": -0.0414402164378414,
+          "rho_eps_diff": -0.009069037017578914,
+          "band_agreement": 0.032371179420262484,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.1338161877016258,
+          "rho_eps_diff": 0.13856649874657942,
+          "band_agreement": 0.004750311044953631,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": 0.008905790748755192,
+          "rho_eps_diff": 0.06118829068228018,
+          "band_agreement": 0.05228249993352499,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": -0.003682139336253004,
+          "rho_eps_diff": -0.011099361817516439,
+          "band_agreement": 0.007417222481263435,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": -0.02816392918645788,
+          "rho_eps_diff": 0.005181494490721373,
+          "band_agreement": 0.033345423677179256,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": -0.021332215112524942,
+          "rho_eps_diff": 0.027860708360555438,
+          "band_agreement": 0.04919292347308038,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": 0.009939954758165212,
+          "rho_eps_diff": 0.01303817529762638,
+          "band_agreement": 0.003098220539461167,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": 0.07106300765187322,
+          "rho_eps_diff": 0.0644322144946284,
+          "band_agreement": 0.006630793157244824,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": 0.09755004727689287,
+          "rho_eps_diff": 0.09366141995354109,
+          "band_agreement": 0.0038886273233517815,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": 0.021587508067538237,
+          "rho_eps_diff": 0.0016344605031894082,
+          "band_agreement": 0.01995304756434883,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": -0.08790026051533555,
+          "rho_eps_diff": -0.10580701599709438,
+          "band_agreement": 0.017906755481758838,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": 0.08430704945287547,
+          "rho_eps_diff": 0.0939300073290012,
+          "band_agreement": 0.009622957876125729,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": -0.08746420163303958,
+          "rho_eps_diff": -0.10105327326706191,
+          "band_agreement": 0.013589071634022329,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": -0.005806146852873501,
+          "rho_eps_diff": -0.04116146298390838,
+          "band_agreement": 0.03535531613103488,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": 0.14068338711181064,
+          "rho_eps_diff": 0.23049039744013017,
+          "band_agreement": 0.08980701032831953,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": 0.0008840525771826049,
+          "rho_eps_diff": 0.030404819188754904,
+          "band_agreement": 0.0295207666115723,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "discrimination_tx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.1338161877016258,
+          "median_out": 0.0007934588920324552,
+          "separation": 0.13302272880959334,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.008905790748755192,
+          "median_out": -0.002883886653911381,
+          "separation": 0.011789677402666572,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": 0.009422872753460203,
+          "median_out": -0.004345016753392441,
+          "separation": 0.013767889506852643,
+          "fully_separated": false
+        }
+      },
+      "discrimination_rx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.1338161877016258,
+          "median_out": 0.0007934588920324552,
+          "separation": 0.13302272880959334,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.008905790748755192,
+          "median_out": -0.002883886653911381,
+          "separation": 0.011789677402666572,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": 0.009422872753460203,
+          "median_out": -0.004345016753392441,
+          "separation": 0.013767889506852643,
+          "fully_separated": false
+        }
+      },
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-smoke/E/rep1/infra.jsonl",
+        "samples": 699,
+        "interval_s": 0.1,
+        "cpu_p50": 76.537,
+        "cpu_p95": 83.669,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 90.9,
+        "ctx_per_s": 39710.873,
+        "load_1m_max": 7.105,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.353378,
+        "clock_jump_ms_max": 1.229033,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "nc_valid_3_checks": {
+        "cpu_p95_lt_80": false,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-prereg",
+        "tag_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9",
+        "run_git_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9"
+      },
+      "read_duration_us": {
+        "p50": 258.6,
+        "p95": 330.69499999999874,
+        "p99": 919.3770000000343,
+        "max": 1858.8,
+        "implied_rate_error_p95": 0.0016534749999999937
+      },
+      "validity": {
+        "G1S-0_engine_static": true,
+        "G1S-1_generator_flat_all_links": true,
+        "G1S-2_white_all_links": false,
+        "G1S-3_infrastructure_clean": false,
+        "G1S-4_preregistered_before_run": true,
+        "G1S-5_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured": "12d568f2e7153da6950139b46375a5e1a59ae204918732a1da5b13b82887c960",
+        "meta": "2c5829879ec39811199e0d90789e76fbea3f5a8d2923a23d6fd1192994a8d59f",
+        "infra": "02f824b994fa2567d0deb2bb4f52d3605b39cd559ad7e8d6edab3339a0aad335"
+      }
+    },
+    {
+      "cell": "F",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-smoke/F/rep1",
+      "engine": "static",
+      "n_samples_after_burn": 199,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "mean": 0.8087178370854271,
+          "v_total": 0.0033590040403393994,
+          "v_white": 0.0013988403425105689,
+          "white_ratio": 0.4164449716973927,
+          "sd_total": 0.057956915379783626,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 5.3728610089932955e-08,
+          "offered_share": 1.5995399066118457e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 512.7432607677456,
+          "emitter": {
+            "max_lag_s": 0.008596860324360023,
+            "n_catchup": 25,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "uB": {
+          "mean": 0.8288240693467336,
+          "v_total": 0.0036318026772571544,
+          "v_white": 0.001233749307452377,
+          "white_ratio": 0.3397071419045655,
+          "sd_total": 0.060264439574737226,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 7.074557655449899e-08,
+          "offered_share": 1.947946594056926e-05,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0033283523856927166,
+          "v_quant_floor": 1.1077929603346399e-05,
+          "v_above_quant_floor_ratio": 327.84128508634564,
+          "emitter": {
+            "max_lag_s": 0.006103847274971486,
+            "n_catchup": 11,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26020,
+            "n_send_errors": 0
+          }
+        },
+        "ac": {
+          "mean": 0.9363596725628142,
+          "v_total": 5.238517451214137e-05,
+          "v_white": 4.903218461654e-05,
+          "white_ratio": 0.9359935339181843,
+          "sd_total": 0.00723776032430899,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 2.810030845264857e-08,
+          "offered_share": 0.000536417196551206,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": true,
+          "sigma_quant_floor": 0.0029623983026039074,
+          "v_quant_floor": 8.775803703270512e-06,
+          "v_above_quant_floor_ratio": 5.969273730748876,
+          "emitter": {
+            "max_lag_s": 0.0034206375948997447,
+            "n_catchup": 6,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29234,
+            "n_send_errors": 0
+          }
+        },
+        "ad": {
+          "mean": 0.9450581616080402,
+          "v_total": 0.0008387040646284155,
+          "v_white": 0.0004430084154486897,
+          "white_ratio": 0.5282058763420479,
+          "sd_total": 0.028960387853556372,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 8.669180041359057e-07,
+          "offered_share": 0.001033639922229291,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.004395271217321784,
+          "v_quant_floor": 1.9318409073817315e-05,
+          "v_above_quant_floor_ratio": 43.41475850437035,
+          "emitter": {
+            "max_lag_s": 0.0033198341361639905,
+            "n_catchup": 2,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 19704,
+            "n_send_errors": 0
+          }
+        },
+        "bc": {
+          "mean": 0.9316255711055278,
+          "v_total": 1.360801042390587e-05,
+          "v_white": 1.9826306347020833e-05,
+          "white_ratio": 1.4569584920504597,
+          "sd_total": 0.0036889036886188654,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 3.621493807417636e-07,
+          "offered_share": 0.026612955859113524,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0029787741915071903,
+          "v_quant_floor": 8.873095683989316e-06,
+          "v_above_quant_floor_ratio": 1.533626020562392,
+          "emitter": {
+            "max_lag_s": 0.005074978476841352,
+            "n_catchup": 7,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29074,
+            "n_send_errors": 0
+          }
+        },
+        "bd": {
+          "mean": 0.94191775,
+          "v_total": 9.046999777272715e-06,
+          "v_white": 1.3762021891195155e-05,
+          "white_ratio": 1.5211696949266222,
+          "sd_total": 0.0030078230960734237,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 3.7574969886526207e-08,
+          "offered_share": 0.004153307263355925,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.002946201483016133,
+          "v_quant_floor": 8.680103178526461e-06,
+          "v_above_quant_floor_ratio": 1.0422686909591021,
+          "emitter": {
+            "max_lag_s": 0.0022893008426763117,
+            "n_catchup": 2,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 29395,
+            "n_send_errors": 0
+          }
+        },
+        "vC": {
+          "mean": 0.8131744234170855,
+          "v_total": 7.532481890525647e-06,
+          "v_white": 1.0362655447089673e-05,
+          "white_ratio": 1.3757292214832693,
+          "sd_total": 0.002744536735138673,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 1.3518198230425664e-09,
+          "offered_share": 0.0001794653930390307,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0025595008767114505,
+          "v_quant_floor": 6.551044737886684e-06,
+          "v_above_quant_floor_ratio": 1.1498138376254727,
+          "emitter": {
+            "max_lag_s": 0.0012563954160214053,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 33836,
+            "n_send_errors": 0
+          }
+        },
+        "vD": {
+          "mean": 0.8440955523115576,
+          "v_total": 1.5929549722311796e-05,
+          "v_white": 2.121555298665834e-05,
+          "white_ratio": 1.3318363266064375,
+          "sd_total": 0.0039911840000571,
+          "n": 199,
+          "drift": {
+            "25.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 1
+            },
+            "50.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "100.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            },
+            "200.0": {
+              "status": "NOT_IDENTIFIABLE",
+              "n_windows": 0
+            }
+          },
+          "v_offered": 3.058335140667239e-07,
+          "offered_share": 0.019199131136667144,
+          "nc_valid_1_generator_flat": true,
+          "nc_valid_2_white": false,
+          "sigma_quant_floor": 0.0032877379575573574,
+          "v_quant_floor": 1.0809220877563424e-05,
+          "v_above_quant_floor_ratio": 1.4737000846542585,
+          "emitter": {
+            "max_lag_s": 0.0022298648400465026,
+            "n_catchup": 0,
+            "packet_shortfall_ratio": 0.0,
+            "packets_sent": 26342,
+            "n_send_errors": 0
+          }
+        }
+      },
+      "pairs_tx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9912006260659095,
+          "rho_eps_diff": 0.9755620452071261,
+          "band_agreement": 0.015638580858783446,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.7913573397741904,
+          "rho_eps_diff": 0.5656158803394559,
+          "band_agreement": 0.22574145943473456,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.9735457298190427,
+          "rho_eps_diff": 0.9305698851022884,
+          "band_agreement": 0.04297584471675431,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.026911050824350764,
+          "rho_eps_diff": 0.009501684790073885,
+          "band_agreement": 0.03641273561442465,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": -0.010920266343280792,
+          "rho_eps_diff": 0.025916051099170993,
+          "band_agreement": 0.036836317442451784,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": 0.1159899995759258,
+          "rho_eps_diff": 0.09647625736380426,
+          "band_agreement": 0.019513742212121543,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": 0.12493818143495418,
+          "rho_eps_diff": 0.1098991463027766,
+          "band_agreement": 0.01503903513217758,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.7818540390566182,
+          "rho_eps_diff": 0.5519896275677086,
+          "band_agreement": 0.22986441148890957,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": 0.9617597948712289,
+          "rho_eps_diff": 0.910192524329898,
+          "band_agreement": 0.05156727054133092,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": -0.036073848691634054,
+          "rho_eps_diff": -0.0007869684244681276,
+          "band_agreement": 0.03528688026716593,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": -0.01813900060426329,
+          "rho_eps_diff": 0.009177821842298511,
+          "band_agreement": 0.027316822446561802,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": 0.13394385569818795,
+          "rho_eps_diff": 0.13978072241630812,
+          "band_agreement": 0.0058368667181201705,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": 0.10766805036012272,
+          "rho_eps_diff": 0.08774590198470147,
+          "band_agreement": 0.01992214837542125,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.7970612164563711,
+          "rho_eps_diff": 0.5828658330572382,
+          "band_agreement": 0.2141953833991329,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": -0.07303356144994462,
+          "rho_eps_diff": -0.10588696972323355,
+          "band_agreement": 0.032853408273288934,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": -0.01157852484699583,
+          "rho_eps_diff": -0.010797468056155208,
+          "band_agreement": 0.0007810567908406209,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": 0.08138517356401881,
+          "rho_eps_diff": 0.05503433463541739,
+          "band_agreement": 0.02635083892860142,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": 0.09274815222756412,
+          "rho_eps_diff": 0.04323951079004197,
+          "band_agreement": 0.04950864143752215,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": -0.04909255646343685,
+          "rho_eps_diff": -0.02657722483291238,
+          "band_agreement": 0.022515331630524466,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": -0.01556156516557985,
+          "rho_eps_diff": 0.01321230679271165,
+          "band_agreement": 0.0287738719582915,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": 0.15225428307429498,
+          "rho_eps_diff": 0.13736547717597652,
+          "band_agreement": 0.014888805898318452,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": 0.13703838364341003,
+          "rho_eps_diff": 0.1092600804005139,
+          "band_agreement": 0.027778303242896138,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": -0.17742458812148854,
+          "rho_eps_diff": -0.18926412293803105,
+          "band_agreement": 0.011839534816542513,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": -0.14751778081842895,
+          "rho_eps_diff": -0.1538427551413629,
+          "band_agreement": 0.006324974322933941,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": -0.009649379880496797,
+          "rho_eps_diff": -0.015203962595557211,
+          "band_agreement": 0.005554582715060414,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": -0.037998832912348825,
+          "rho_eps_diff": -0.047790569132088,
+          "band_agreement": 0.009791736219739174,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": 0.028039939376617033,
+          "rho_eps_diff": 0.020640531483224946,
+          "band_agreement": 0.007399407893392086,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": 0.09950242523120988,
+          "rho_eps_diff": 0.0856733752374153,
+          "band_agreement": 0.01382904999379457,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "pairs_rx": [
+        {
+          "pair": "uA-uB",
+          "rho_eps_level": 0.9912006260659095,
+          "rho_eps_diff": 0.9755620452071261,
+          "band_agreement": 0.015638580858783446,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_eps_level": 0.7913573397741904,
+          "rho_eps_diff": 0.5656158803394559,
+          "band_agreement": 0.22574145943473456,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_eps_level": 0.9735457298190427,
+          "rho_eps_diff": 0.9305698851022884,
+          "band_agreement": 0.04297584471675431,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_eps_level": -0.026911050824350764,
+          "rho_eps_diff": 0.009501684790073885,
+          "band_agreement": 0.03641273561442465,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_eps_level": -0.010920266343280792,
+          "rho_eps_diff": 0.025916051099170993,
+          "band_agreement": 0.036836317442451784,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_eps_level": 0.1159899995759258,
+          "rho_eps_diff": 0.09647625736380426,
+          "band_agreement": 0.019513742212121543,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_eps_level": 0.12493818143495418,
+          "rho_eps_diff": 0.1098991463027766,
+          "band_agreement": 0.01503903513217758,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_eps_level": 0.7818540390566182,
+          "rho_eps_diff": 0.5519896275677086,
+          "band_agreement": 0.22986441148890957,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_eps_level": 0.9617597948712289,
+          "rho_eps_diff": 0.910192524329898,
+          "band_agreement": 0.05156727054133092,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_eps_level": -0.036073848691634054,
+          "rho_eps_diff": -0.0007869684244681276,
+          "band_agreement": 0.03528688026716593,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_eps_level": -0.01813900060426329,
+          "rho_eps_diff": 0.009177821842298511,
+          "band_agreement": 0.027316822446561802,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_eps_level": 0.13394385569818795,
+          "rho_eps_diff": 0.13978072241630812,
+          "band_agreement": 0.0058368667181201705,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_eps_level": 0.10766805036012272,
+          "rho_eps_diff": 0.08774590198470147,
+          "band_agreement": 0.01992214837542125,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_eps_level": 0.7970612164563711,
+          "rho_eps_diff": 0.5828658330572382,
+          "band_agreement": 0.2141953833991329,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_eps_level": -0.07303356144994462,
+          "rho_eps_diff": -0.10588696972323355,
+          "band_agreement": 0.032853408273288934,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_eps_level": -0.01157852484699583,
+          "rho_eps_diff": -0.010797468056155208,
+          "band_agreement": 0.0007810567908406209,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_eps_level": 0.08138517356401881,
+          "rho_eps_diff": 0.05503433463541739,
+          "band_agreement": 0.02635083892860142,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_eps_level": 0.09274815222756412,
+          "rho_eps_diff": 0.04323951079004197,
+          "band_agreement": 0.04950864143752215,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_eps_level": -0.04909255646343685,
+          "rho_eps_diff": -0.02657722483291238,
+          "band_agreement": 0.022515331630524466,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_eps_level": -0.01556156516557985,
+          "rho_eps_diff": 0.01321230679271165,
+          "band_agreement": 0.0287738719582915,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_eps_level": 0.15225428307429498,
+          "rho_eps_diff": 0.13736547717597652,
+          "band_agreement": 0.014888805898318452,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_eps_level": 0.13703838364341003,
+          "rho_eps_diff": 0.1092600804005139,
+          "band_agreement": 0.027778303242896138,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_eps_level": -0.17742458812148854,
+          "rho_eps_diff": -0.18926412293803105,
+          "band_agreement": 0.011839534816542513,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_eps_level": -0.14751778081842895,
+          "rho_eps_diff": -0.1538427551413629,
+          "band_agreement": 0.006324974322933941,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_eps_level": -0.009649379880496797,
+          "rho_eps_diff": -0.015203962595557211,
+          "band_agreement": 0.005554582715060414,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_eps_level": -0.037998832912348825,
+          "rho_eps_diff": -0.047790569132088,
+          "band_agreement": 0.009791736219739174,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_eps_level": 0.028039939376617033,
+          "rho_eps_diff": 0.020640531483224946,
+          "band_agreement": 0.007399407893392086,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_eps_level": 0.09950242523120988,
+          "rho_eps_diff": 0.0856733752374153,
+          "band_agreement": 0.01382904999379457,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "discrimination_tx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.7970612164563711,
+          "median_out": 0.08138517356401881,
+          "separation": 0.7156760428923523,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": -0.01556156516557985,
+          "median_out": 0.09274815222756412,
+          "separation": -0.10830971739314398,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": -0.01357004500628784,
+          "median_out": 0.10020810129384342,
+          "separation": -0.11377814630013125,
+          "fully_separated": false
+        }
+      },
+      "discrimination_rx": {
+        "same_tx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": 0.7970612164563711,
+          "median_out": 0.08138517356401881,
+          "separation": 0.7156760428923523,
+          "fully_separated": false
+        },
+        "same_rx_node": {
+          "n_in": 3,
+          "n_out": 25,
+          "median_in": -0.01556156516557985,
+          "median_out": 0.09274815222756412,
+          "separation": -0.10830971739314398,
+          "fully_separated": false
+        },
+        "same_telemetry_side": {
+          "n_in": 8,
+          "n_out": 20,
+          "median_in": -0.01357004500628784,
+          "median_out": 0.10020810129384342,
+          "separation": -0.11377814630013125,
+          "fully_separated": false
+        }
+      },
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-smoke/F/rep1/infra.jsonl",
+        "samples": 699,
+        "interval_s": 0.1,
+        "cpu_p50": 75.162,
+        "cpu_p95": 86.347,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 100.0,
+        "ctx_per_s": 31627.139,
+        "load_1m_max": 10.133,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.379816,
+        "clock_jump_ms_max": 1.613232,
+        "flag_cpu_saturated": true,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "nc_valid_3_checks": {
+        "cpu_p95_lt_80": false,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-prereg",
+        "tag_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9",
+        "run_git_hash": "8e9aa9b94483d8d1f8d79a800c1645bd256c61b9"
+      },
+      "read_duration_us": {
+        "p50": 258.6,
+        "p95": 327.1199999999997,
+        "p99": 951.208000000038,
+        "max": 2005.8,
+        "implied_rate_error_p95": 0.0016355999999999983
+      },
+      "validity": {
+        "G1S-0_engine_static": true,
+        "G1S-1_generator_flat_all_links": true,
+        "G1S-2_white_all_links": false,
+        "G1S-3_infrastructure_clean": false,
+        "G1S-4_preregistered_before_run": true,
+        "G1S-5_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured": "cf1f5554d15643bf29ab4188b81fea1b34b05a2d65f5e76ae11e6ba5c2a7e0ec",
+        "meta": "91c26cd072b01bc965a44323510fee33d6ecd0c7315b27ac52465bcafd58a66f",
+        "infra": "65ec36a805e10a1d7930b94e23a9506df04e3fc50c72a569b3613c02afa30969"
+      }
+    }
+  ]
+}
