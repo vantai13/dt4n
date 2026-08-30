@@ -77,6 +77,7 @@ class StaticGenerator:
         repo_root: str,
         log_dt_s: float,
         log_dir: str,
+        pace_tick_s: float,
     ) -> None:
         self.net = net
         self.link = link
@@ -86,6 +87,7 @@ class StaticGenerator:
         self.repo_root = repo_root
         self.log_dt_s = float(log_dt_s)
         self.log_dir = log_dir
+        self.pace_tick_s = float(pace_tick_s)
         self.port = LOAD_PORTS[link]
         self.src_name, self.dst_name = LOAD_CHANNELS[link]
         self.rho_log_path = os.path.join(log_dir, "rho_offered_%s.csv" % link)
@@ -125,11 +127,12 @@ class StaticGenerator:
         run_cmd = (
             "%s -m mininet.static_emitter run --cap-mbps %.9f --rho-target %.9f "
             "--payload-bytes %d --dst-ip %s --dst-port %d --duration %.3f "
-            "--log-dt %.6f --ledger %s --summary-out %s"
+            "--log-dt %.6f --pace-tick %.6f --ledger %s --summary-out %s"
             % (
                 shlex.quote(self.python_bin), self.cfg.cap_mbps, self.cfg.rho_target,
                 self.cfg.payload_bytes, shlex.quote(dst.IP()), self.port, self.duration_s,
-                self.log_dt_s, shlex.quote(self.rho_log_path), shlex.quote(self.run_summary_path),
+                self.log_dt_s, self.pace_tick_s, shlex.quote(self.rho_log_path),
+                shlex.quote(self.run_summary_path),
             )
         )
         self.pid = self._background(src, run_cmd, os.path.join(self.log_dir, "static_%s.log" % self.link))
@@ -159,6 +162,7 @@ def start_all_static(
     repo_root: Optional[str] = None,
     log_dt_s: float = 0.010,
     log_dir: str = "results/RAW/phase-G/g1-static/flow_logs",
+    pace_tick_s: float = 0.002,
 ) -> Iterable[StaticGenerator]:
     profile = static_profile(link_caps, rho_targets, payload_bytes)
     print_static_profile(profile)
@@ -166,7 +170,10 @@ def start_all_static(
     py = python_bin or sys.executable
     root = repo_root or os.getcwd()
     for link in T7.LINK_NAMES:
-        generator = StaticGenerator(net, link, profile[link], duration_s, py, root, log_dt_s, log_dir)
+        generator = StaticGenerator(
+            net, link, profile[link], duration_s, py, root, log_dt_s,
+            log_dir, pace_tick_s
+        )
         generator.start()
         generators.append(generator)
     return generators

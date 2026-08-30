@@ -96,10 +96,13 @@ ACCESS_BW_MBPS = 1000.0
 ACCESS_DELAY_MS = 0.1
 V7_SPEC = "ditto/topology_v7_spec.json"
 TRAFFIC_RHO_CEILING = 0.995
+STATIC_DURATION_GUARD_S = 2.0
 
 MEASURED_CSV_FIELDS = (
     "sample_index",
+    "sampler_id",
     "timestamp_s",
+    "monotonic_s",
     "link",
     "rho",
     "throughput_mbps",
@@ -356,7 +359,12 @@ def _parse_proc_stats(text: str, ifnames: Iterable[str]) -> Dict[str, Dict[str, 
 
 
 class RhoLogger(threading.Thread):
-    """Sample both endpoint counters and write a long CSV trace."""
+    """Run independently timed counter samplers.
+
+    Sampler 0 retains the historical output path. Additional samplers use a
+    ``_sN`` suffix and are phase-offset by ``dt/n``. Each performs its own
+    `/proc/net/dev` read and keeps its own counter baseline.
+    """
 
     def __init__(
         self,
@@ -365,6 +373,7 @@ class RhoLogger(threading.Thread):
         dt_s: float,
         duration_s: float,
         stop_event: Optional[threading.Event] = None,
+        n_samplers: int = 1,
     ) -> None:
         super().__init__(daemon=True)
         self.net = net
@@ -372,7 +381,12 @@ class RhoLogger(threading.Thread):
         self.dt_s = float(dt_s)
         self.duration_s = float(duration_s)
         self.stop_event = stop_event or threading.Event()
+        self.n_samplers = int(n_samplers)
+        if self.n_samplers < 1:
+            raise ValueError("n_samplers must be at least one")
         self.samples_written = 0
+        self.samples_written_by_sampler: Dict[str, int] = {}
+        self.sampler_paths: Dict[str, str] = {}
         self.error: Optional[BaseException] = None
 
     def link_interfaces(self) -> Dict[str, Tuple[str, str, float]]:
@@ -385,21 +399,52 @@ class RhoLogger(threading.Thread):
         return out
 
     def run(self) -> None:
-        try:
-            self._run()
-        except BaseException as exc:  # pragma: no cover - surfaced by runner.
-            self.error = exc
+        anchor = time.monotonic() + 0.050
+        errors = []
+        workers = []
+        for sampler_id in range(self.n_samplers):
+            out_path = self._sampler_path(sampler_id)
+            self.sampler_paths[str(sampler_id)] = out_path
+            worker = threading.Thread(
+                target=self._run_sampler_guarded,
+                args=(sampler_id, sampler_id * self.dt_s / self.n_samplers, anchor, out_path, errors),
+                daemon=True,
+                name="rho-sampler-%d" % sampler_id,
+            )
+            worker.start()
+            workers.append(worker)
+        for worker in workers:
+            worker.join()
+        self.samples_written = sum(self.samples_written_by_sampler.values())
+        if errors:
+            self.error = errors[0]
 
-    def _run(self) -> None:
+    def _sampler_path(self, sampler_id: int) -> str:
+        if sampler_id == 0:
+            return self.out_path
+        root, extension = os.path.splitext(self.out_path)
+        return "%s_s%d%s" % (root, sampler_id, extension or ".csv")
+
+    def _run_sampler_guarded(self, sampler_id, phase_s, anchor, out_path, errors) -> None:
+        try:
+            self._run_sampler(sampler_id, phase_s, anchor, out_path)
+        except BaseException as exc:  # pragma: no cover - surfaced by runner.
+            errors.append(exc)
+
+    def _run_sampler(self, sampler_id: int, phase_s: float, anchor: float, out_path: str) -> None:
         if self.dt_s <= 0:
             raise ValueError("dt_s must be positive")
-        ensure_parent(self.out_path)
+        ensure_parent(out_path)
         link_ifaces = self.link_interfaces()
         ifnames = []
         for tx_name, rx_name, _bw in link_ifaces.values():
             ifnames.extend((tx_name, rx_name))
 
-        start = time.monotonic()
+        first_read = anchor + phase_s
+        self.stop_event.wait(max(0.0, first_read - time.monotonic()))
+        if self.stop_event.is_set():
+            self.samples_written_by_sampler[str(sampler_id)] = 0
+            return
         t_before = time.monotonic()
         prev = _parse_proc_stats(_proc_net_dev(), ifnames)
         t_after = time.monotonic()
@@ -408,24 +453,24 @@ class RhoLogger(threading.Thread):
         if missing:
             raise RuntimeError("interfaces missing from /proc/net/dev: %s" % missing)
 
-        with open(self.out_path, "w", newline="", encoding="utf-8") as f:
+        with open(out_path, "w", newline="", encoding="utf-8") as f:
             writer = csv.DictWriter(f, fieldnames=MEASURED_CSV_FIELDS)
             writer.writeheader()
-            deadline = start + self.duration_s
+            deadline = anchor + self.duration_s
             sample_index = 0
-            next_t = start
+            next_t = first_read
 
             while not self.stop_event.is_set():
                 next_t += self.dt_s
                 now = time.monotonic()
                 if now >= deadline:
-                    return
+                    break
                 self.stop_event.wait(max(0.0, next_t - now))
                 if self.stop_event.is_set():
-                    return
+                    break
 
                 if time.monotonic() >= deadline:
-                    return
+                    break
                 t_before = time.monotonic()
                 stats = _parse_proc_stats(_proc_net_dev(), ifnames)
                 t_after = time.monotonic()
@@ -449,7 +494,9 @@ class RhoLogger(threading.Thread):
                     writer.writerow(
                         {
                             "sample_index": sample_index,
-                            "timestamp_s": "%.6f" % (sample_t - start),
+                            "sampler_id": sampler_id,
+                            "timestamp_s": "%.6f" % (sample_t - anchor),
+                            "monotonic_s": "%.9f" % sample_t,
                             "link": link,
                             "rho": "%.8f" % (throughput_mbps / bw_mbps),
                             "throughput_mbps": "%.8f" % throughput_mbps,
@@ -461,10 +508,10 @@ class RhoLogger(threading.Thread):
                         }
                     )
                 f.flush()
-                self.samples_written += 1
                 sample_index += 1
                 prev = stats
                 prev_t = sample_t
+        self.samples_written_by_sampler[str(sampler_id)] = sample_index
 
 
 def write_metadata(path: str, data: object) -> None:
@@ -681,6 +728,8 @@ def parse_args():
     p.add_argument("--kappa", type=float, default=2.5)
     p.add_argument("--size-min-kb", type=float, default=20.0)
     p.add_argument("--payload-bytes", type=int, default=1400)
+    p.add_argument("--pace-tick", type=float, default=0.002)
+    p.add_argument("--rho-samplers", type=int, default=1)
     p.add_argument("--python-bin", default=sys.executable)
     p.add_argument("--ping", action="store_true")
     p.add_argument("--quick-check", action="store_true")
@@ -777,12 +826,13 @@ def main() -> None:
                     net,
                     link_caps=link_caps,
                     rho_targets=rho_targets,
-                    duration_s=args.duration,
+                    duration_s=args.duration + STATIC_DURATION_GUARD_S,
                     payload_bytes=args.payload_bytes,
                     python_bin=args.python_bin,
                     repo_root=os.getcwd(),
                     log_dt_s=args.log_dt,
                     log_dir=args.flow_log_dir,
+                    pace_tick_s=args.pace_tick,
                 ))
 
         if args.aoi_probe_out:
@@ -798,6 +848,7 @@ def main() -> None:
             dt_s=args.measured_window,
             duration_s=args.duration,
             stop_event=stop_event,
+            n_samplers=args.rho_samplers,
         )
         logger.start()
         logger.join()
@@ -840,6 +891,11 @@ def main() -> None:
                 "kappa": float(args.kappa),
                 "size_min_kb": float(args.size_min_kb),
                 "payload_bytes": int(args.payload_bytes),
+                "pace_tick_s": float(args.pace_tick),
+                "rho_samplers": int(args.rho_samplers),
+                "static_duration_guard_s": (
+                    STATIC_DURATION_GUARD_S if args.traffic == "static" else 0.0
+                ),
                 "rho_targets": rho_targets,
                 "profile": {link: cfg.as_dict() for link, cfg in profile.items()},
                 "flow_engine": summaries,
@@ -847,6 +903,8 @@ def main() -> None:
                 "measured_out": args.measured_out,
                 "offered_rows": int(offered_rows),
                 "measured_samples_written": logger.samples_written if logger else 0,
+                "measured_samples_by_sampler": logger.samples_written_by_sampler if logger else {},
+                "measured_sampler_paths": logger.sampler_paths if logger else {},
                 "quick_check_ok": quick_ok,
                 "ditto": bool(args.ditto),
                 "measurement_mode": args.measurement_mode,

@@ -1,0 +1,40 @@
+{
+  "schema": "dt4n.phase_g.g1_static_v2_cost_gate.v1",
+  "timestamp_utc": "2026-08-30T07:32:59.940460+00:00",
+  "duration_s": 30.0,
+  "pace_tick_s": 0.002,
+  "n_emitters": 8,
+  "cpu_p95_threshold": 25.0,
+  "infra": {
+    "schema": "dt4n.infra_summary.v1",
+    "source": "results/RAW/phase-G/g1-static-v2-cost/infra.jsonl",
+    "samples": 300,
+    "interval_s": 0.1,
+    "cpu_p50": 6.637,
+    "cpu_p95": 14.094,
+    "cpu_max": 100.0,
+    "cpu_max_core_p95": 30.8,
+    "ctx_per_s": 16837.033,
+    "load_1m_max": 0.328,
+    "swap_max_pct": 0.0,
+    "net_drops": 0,
+    "clock_skew_ms_p95": 0.292158,
+    "clock_jump_ms_max": 0.100237,
+    "flag_cpu_saturated": false,
+    "flag_swapping": false,
+    "flag_packet_drops": false,
+    "flag_clock_jump": false
+  },
+  "emitter_exit_codes": [
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0,
+    0
+  ],
+  "pass": true,
+  "raw_dir": "results/RAW/phase-G/g1-static-v2-cost"
+}

@@ -7,25 +7,32 @@ PY="${PY:-/home/ubuntu/miniforge3/envs/sdn_rl/bin/python}"
 DURATION="${DURATION:-300}"
 RHO_BAR="${RHO_BAR:-0.857}"
 REPS="${REPS:-3}"
+MEASURED_WINDOW="${MEASURED_WINDOW:-0.200}"
+PACE_TICK="${PACE_TICK:-0.002}"
 
 if [ "$DURATION" = "300" ] && [ "$REPS" = "3" ]; then
-  ROOT="${ROOT:-results/RAW/phase-G/g1-static}"
-  CERT_OUT="${CERT_OUT:-results/LIVE/phase-G/measurement_path_cert.json}"
-  DETAIL_OUT="${DETAIL_OUT:-results/SMOKE/phase-G/g1_static_nc_detail.json}"
+  ROOT="${ROOT:-results/RAW/phase-G/g1-static-v2}"
+  CERT_OUT="${CERT_OUT:-results/LIVE/phase-G/measurement_path_cert_v2.json}"
+  DETAIL_OUT="${DETAIL_OUT:-results/SMOKE/phase-G/g1_static_nc_v2_detail.json}"
 else
-  ROOT="${ROOT:-results/RAW/phase-G/g1-static-smoke}"
-  CERT_OUT="${CERT_OUT:-results/SMOKE/phase-G/g1_static_smoke_cert.json}"
-  DETAIL_OUT="${DETAIL_OUT:-results/SMOKE/phase-G/g1_static_smoke_detail.json}"
+  ROOT="${ROOT:-results/RAW/phase-G/g1-static-v2-smoke}"
+  CERT_OUT="${CERT_OUT:-results/SMOKE/phase-G/g1_static_v2_smoke_cert.json}"
+  DETAIL_OUT="${DETAIL_OUT:-results/SMOKE/phase-G/g1_static_v2_smoke_detail.json}"
 fi
 
 "$PY" -m tools.check_phase_g_custody
-git rev-parse -q --verify 'refs/tags/phase-G-g1-static-nc-prereg' >/dev/null || {
+git rev-parse -q --verify 'refs/tags/phase-G-g1-static-nc-v2-prereg' >/dev/null || {
   echo '[G1S-4] BLOCKED: preregistration tag does not exist' >&2
   exit 1
 }
+"$PY" -c 'import json; d=json.load(open("results/SMOKE/phase-G/g1_static_v2_cost_gate.json")); assert d["pass"] and d["infra"]["cpu_p95"] < 25.0'
+
+if [ "$DURATION" = "300" ] && [ "$REPS" = "3" ]; then
+  "$PY" -c 'import json; d=json.load(open("results/SMOKE/phase-G/g1_static_v2_smoke_cert.json")); assert all(x["status"] == "VALID" for x in d["certificate"].values())'
+fi
 
 run_cell () {
-  local name="$1" ditto="$2" aoi="$3" recon="$4" rep="$5"
+  local name="$1" ditto="$2" aoi="$3" recon="$4" rep="$5" window="${6:-$MEASURED_WINDOW}"
   local out="$ROOT/$name/rep$rep"
   if [ -f "$out/run_complete.json" ]; then
     echo "=== SKIP complete $name rep$rep ==="
@@ -36,7 +43,8 @@ run_cell () {
 
   local flags=(
     --traffic static --duration "$DURATION" --rho-bar "$RHO_BAR"
-    --measured-window 0.200 --log-dt 0.010
+    --measured-window "$window" --log-dt 0.010
+    --pace-tick "$PACE_TICK" --rho-samplers 2
     --measured-out "$out/rho_measured.csv"
     --meta-out "$out/rho_trace_meta.json"
     --flow-log-dir "$out/flow_logs"
@@ -71,6 +79,12 @@ for rep in $(seq 1 "$REPS"); do
   run_cell E off on  1  "$rep"
   run_cell F on  off 30 "$rep"
 done
+
+if [ "$DURATION" = "300" ] && [ "$REPS" = "3" ]; then
+  run_cell D_dt_0p1 off off 30 1 0.100
+  run_cell D_dt_0p2 off off 30 1 0.200
+  run_cell D_dt_0p5 off off 30 1 0.500
+fi
 
 "$PY" -m tools.g1_static_nc \
   --campaign "$ROOT" \
