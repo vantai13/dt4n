@@ -31,6 +31,12 @@ from mininet.traffic_v7 import (
     stop_traffic_for_v7_hosts,
     traffic_profile,
 )
+from mininet.traffic_static import (
+    print_static_profile,
+    start_all_static,
+    static_profile,
+    stop_static_for_v7_hosts,
+)
 from bridge.bootstrap import bootstrap_all, entities_from_spec
 from bridge.differ import DEFAULT_TOL
 from bridge import pusher as PUSH
@@ -99,6 +105,9 @@ MEASURED_CSV_FIELDS = (
     "throughput_mbps",
     "tx_bytes_delta",
     "dt_s",
+    "rx_bytes_delta",
+    "rho_rx",
+    "read_duration_us",
 )
 
 
@@ -347,7 +356,7 @@ def _parse_proc_stats(text: str, ifnames: Iterable[str]) -> Dict[str, Dict[str, 
 
 
 class RhoLogger(threading.Thread):
-    """Sample upstream switch TX counters and write a long CSV trace."""
+    """Sample both endpoint counters and write a long CSV trace."""
 
     def __init__(
         self,
@@ -366,12 +375,13 @@ class RhoLogger(threading.Thread):
         self.samples_written = 0
         self.error: Optional[BaseException] = None
 
-    def link_interfaces(self) -> Dict[str, Tuple[str, float]]:
+    def link_interfaces(self) -> Dict[str, Tuple[str, str, float]]:
         out = {}
         for link_name, (upstream, downstream) in LINK_ENDPOINTS.items():
-            intf = link_intf_for_node(self.net, upstream, downstream, upstream)
+            tx = link_intf_for_node(self.net, upstream, downstream, upstream)
+            rx = link_intf_for_node(self.net, upstream, downstream, downstream)
             bw_mbps = float(T7.LINKS[link_name][0])
-            out[link_name] = (intf.name, bw_mbps)
+            out[link_name] = (tx.name, rx.name, bw_mbps)
         return out
 
     def run(self) -> None:
@@ -385,11 +395,15 @@ class RhoLogger(threading.Thread):
             raise ValueError("dt_s must be positive")
         ensure_parent(self.out_path)
         link_ifaces = self.link_interfaces()
-        ifnames = [item[0] for item in link_ifaces.values()]
+        ifnames = []
+        for tx_name, rx_name, _bw in link_ifaces.values():
+            ifnames.extend((tx_name, rx_name))
 
         start = time.monotonic()
-        prev_t = start
+        t_before = time.monotonic()
         prev = _parse_proc_stats(_proc_net_dev(), ifnames)
+        t_after = time.monotonic()
+        prev_t = 0.5 * (t_before + t_after)
         missing = sorted(set(ifnames) - set(prev))
         if missing:
             raise RuntimeError("interfaces missing from /proc/net/dev: %s" % missing)
@@ -410,35 +424,47 @@ class RhoLogger(threading.Thread):
                 if self.stop_event.is_set():
                     return
 
-                now = time.monotonic()
-                if now >= deadline:
+                if time.monotonic() >= deadline:
                     return
+                t_before = time.monotonic()
                 stats = _parse_proc_stats(_proc_net_dev(), ifnames)
-                dt = max(now - prev_t, 1e-9)
+                t_after = time.monotonic()
+                sample_t = 0.5 * (t_before + t_after)
+                read_us = (t_after - t_before) * 1e6
+                dt = max(sample_t - prev_t, 1e-9)
                 for link in T7.LINK_NAMES:
-                    ifname, bw_mbps = link_ifaces[link]
-                    cur = stats.get(ifname)
-                    old = prev.get(ifname)
-                    if cur is None or old is None:
+                    tx_name, rx_name, bw_mbps = link_ifaces[link]
+                    cur_tx, old_tx = stats.get(tx_name), prev.get(tx_name)
+                    cur_rx, old_rx = stats.get(rx_name), prev.get(rx_name)
+                    if cur_tx is None or old_tx is None:
                         continue
-                    tx_delta = max(0, cur["tx_bytes"] - old["tx_bytes"])
+                    tx_delta = max(0, cur_tx["tx_bytes"] - old_tx["tx_bytes"])
+                    rx_delta = (
+                        max(0, cur_rx["rx_bytes"] - old_rx["rx_bytes"])
+                        if cur_rx is not None and old_rx is not None
+                        else 0
+                    )
                     throughput_mbps = tx_delta * 8.0 / dt / 1e6
+                    throughput_rx_mbps = rx_delta * 8.0 / dt / 1e6
                     writer.writerow(
                         {
                             "sample_index": sample_index,
-                            "timestamp_s": "%.6f" % (now - start),
+                            "timestamp_s": "%.6f" % (sample_t - start),
                             "link": link,
                             "rho": "%.8f" % (throughput_mbps / bw_mbps),
                             "throughput_mbps": "%.8f" % throughput_mbps,
                             "tx_bytes_delta": tx_delta,
                             "dt_s": "%.8f" % dt,
+                            "rx_bytes_delta": rx_delta,
+                            "rho_rx": "%.8f" % (throughput_rx_mbps / bw_mbps),
+                            "read_duration_us": "%.1f" % read_us,
                         }
                     )
                 f.flush()
                 self.samples_written += 1
                 sample_index += 1
                 prev = stats
-                prev_t = now
+                prev_t = sample_t
 
 
 def write_metadata(path: str, data: object) -> None:
@@ -627,7 +653,7 @@ def parse_args():
     p = argparse.ArgumentParser(
         description="Run Phase 20 v7 Mininet traffic and log rho(t)."
     )
-    p.add_argument("--traffic", choices=["none", "v7"], default="v7")
+    p.add_argument("--traffic", choices=["none", "v7", "static"], default="v7")
     p.add_argument(
         "--log-rho",
         "--log-dt",
@@ -680,16 +706,22 @@ def main() -> None:
 
     link_caps = link_caps_from_topology()
     rho_targets = feasible_traffic_rho_targets(float(args.rho_bar))
-    profile = traffic_profile(
-        link_caps=link_caps,
-        rho_targets=rho_targets,
-        sigma_target=args.core_sigma,
-        edge_sigma_target=args.edge_sigma,
-        kappa=args.kappa,
-        size_min_kb=args.size_min_kb,
-    )
+    if args.traffic == "static":
+        profile = static_profile(link_caps, rho_targets, args.payload_bytes)
+    else:
+        profile = traffic_profile(
+            link_caps=link_caps,
+            rho_targets=rho_targets,
+            sigma_target=args.core_sigma,
+            edge_sigma_target=args.edge_sigma,
+            kappa=args.kappa,
+            size_min_kb=args.size_min_kb,
+        )
     if args.dry_run:
-        print_profile(profile)
+        if args.traffic == "static":
+            print_static_profile(profile)
+        else:
+            print_profile(profile)
         return
 
     stop_event = threading.Event()
@@ -712,7 +744,11 @@ def main() -> None:
             # Let the first full sync replace bootstrap tSource=0 before probing.
             time.sleep(max(0.1, min(1.0, args.sync_period * 2.0)))
         elif args.aoi_probe_out:
-            raise ValueError("--aoi-probe-out requires --ditto")
+            # Probe-only cells intentionally query Ditto without running sync.
+            # Ensure the entities exist, but do not start the sync agent.
+            with open(args.policy, encoding="utf-8") as handle:
+                policy = json.load(handle)
+            bootstrap_all(entities_from_spec(V7_SPEC), policy, mode="create")
 
         if args.traffic == "v7":
             info("*** Starting flow-level v7 load\n")
@@ -733,6 +769,20 @@ def main() -> None:
                     log_dir=args.flow_log_dir,
                     payload_bytes=args.payload_bytes,
                     stop_event=stop_event,
+                ))
+        elif args.traffic == "static":
+            info("*** Starting NC-G1-static CBR load (sigma_true = 0)\n")
+            with net_lock:
+                gens = list(start_all_static(
+                    net,
+                    link_caps=link_caps,
+                    rho_targets=rho_targets,
+                    duration_s=args.duration,
+                    payload_bytes=args.payload_bytes,
+                    python_bin=args.python_bin,
+                    repo_root=os.getcwd(),
+                    log_dt_s=args.log_dt,
+                    log_dir=args.flow_log_dir,
                 ))
 
         if args.aoi_probe_out:
@@ -759,17 +809,27 @@ def main() -> None:
         summaries = {}
         if gens:
             wait_for_generator_summaries(gens)
-            info("*** Aggregating offered rho -> %s\n" % offered_out)
-            offered_rows = aggregate_offered_logs(gens, offered_out, dt_s=args.log_dt)
+            if args.traffic == "v7":
+                info("*** Aggregating offered rho -> %s\n" % offered_out)
+                offered_rows = aggregate_offered_logs(gens, offered_out, dt_s=args.log_dt)
+            else:
+                info("*** Static cumulative ledgers retained at %s\n" % args.flow_log_dir)
             summaries = {gen.link: gen.summary() for gen in gens}
 
         quick_ok = None
-        if args.quick_check and gens:
+        if args.quick_check and gens and args.traffic == "v7":
             quick_ok = quick_check_offered(offered_out)
 
         write_metadata(
             args.meta_out,
             {
+                "engine": args.traffic,
+                "git_hash": subprocess.run(
+                    ["git", "rev-parse", "HEAD"],
+                    capture_output=True,
+                    text=True,
+                    check=False,
+                ).stdout.strip(),
                 "duration_s": float(args.duration),
                 "offered_dt_s": float(args.log_dt),
                 "measured_window_s": float(args.measured_window),
@@ -816,7 +876,10 @@ def main() -> None:
         try:
             stop_traffic_for_v7_hosts(net)
         finally:
-            net.stop()
+            try:
+                stop_static_for_v7_hosts(net)
+            finally:
+                net.stop()
 
 
 if __name__ == "__main__":
