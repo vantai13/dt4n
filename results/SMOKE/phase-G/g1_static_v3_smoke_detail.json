@@ -1,0 +1,5578 @@
+{
+  "schema": "dt4n.phase_g.g1_static_nc.v3",
+  "status": "NEGATIVE_CONTROL_PAIRED_RESIDUAL",
+  "constants": {
+    "burn_s": 20.0,
+    "expected_wire_bytes": 1442.0,
+    "sigma_grid": [
+      0.01,
+      0.02,
+      0.03,
+      0.05,
+      0.1
+    ],
+    "threshold_sf": 0.85
+  },
+  "provenance": {
+    "git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+    "timestamp_utc": "2026-08-30T08:45:51.231970+00:00",
+    "script": "tools/g1_static_nc_v3.py",
+    "campaign": "results/RAW/phase-G/g1-static-v3-smoke",
+    "prereg_tag": "phase-G-g1-static-nc-v3-prereg"
+  },
+  "cells": [
+    {
+      "cell": "A",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/A/rep1",
+      "engine": "static",
+      "measured_window_s": 0.2,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": true,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78172588832487,
+          "bytes_per_packet_fitted": -109.02512808004728,
+          "background_bytes_per_window": 174935.32129788082,
+          "residual_sd_pkts": 5.569681602514388,
+          "acf1_residual": -0.2805329252921051,
+          "v_path": 9.223744277088998e-06,
+          "v_pack_rho_units": 4.9526794605890335e-08,
+          "v_pack_relative_units": 1.3103016173126906e-05,
+          "path_to_pack_ratio": 186.23745692583137,
+          "v_measured": 8.80420771401719e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006789036999180098,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 3.828531936323348,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0053198226725775805,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.006789036999180098,
+            "align_error_pkts_observed_max": 3.828531936323348
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 86.73096446700508,
+          "bytes_per_packet_fitted": 275.21779935275606,
+          "background_bytes_per_window": 101203.82071197366,
+          "residual_sd_pkts": 2.3045820746138292,
+          "acf1_residual": -0.39204730068167537,
+          "v_path": 1.7887533054400608e-05,
+          "v_pack_rho_units": 5.610706087384315e-07,
+          "v_pack_relative_units": 2.215646126210648e-05,
+          "path_to_pack_ratio": 31.88107303396406,
+          "v_measured": 1.8487673923952096e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007515473999774258,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 3.259165822937818,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.006917850525015442,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.007515473999774258,
+            "align_error_pkts_observed_max": 3.2591658229378186
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.44670050761421,
+          "bytes_per_packet_fitted": 612.1175979983423,
+          "background_bytes_per_window": 80869.65721434433,
+          "residual_sd_pkts": 1.2119483394934827,
+          "acf1_residual": -0.5857503307233679,
+          "v_path": 2.445801307564886e-05,
+          "v_pack_rho_units": 2.7754551520159398e-06,
+          "v_pack_relative_units": 1.755150944713377e-05,
+          "path_to_pack_ratio": 8.812253030961026,
+          "v_measured": 2.6847257482267606e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006610448999708751,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 3.220823231375951,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.006157229246838923,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.006610448999708751,
+            "align_error_pkts_observed_max": 3.220823231375951
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 65.6751269035533,
+          "bytes_per_packet_fitted": -381.07117367169786,
+          "background_bytes_per_window": 119738.46114195145,
+          "residual_sd_pkts": 1.6953792860979031,
+          "acf1_residual": -0.4777290120274551,
+          "v_path": 4.176693999017532e-05,
+          "v_pack_rho_units": 2.420244247644441e-06,
+          "v_pack_relative_units": 3.8640871096841885e-05,
+          "path_to_pack_ratio": 17.25732435097241,
+          "v_measured": 4.262301987825304e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005080425000414834,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 1.6683752813862287,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.003045133224578575,
+            "max_backlog": 1,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.005080425000414834,
+            "align_error_pkts_observed_max": 1.6683752813862287
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 96.90862944162437,
+          "bytes_per_packet_fitted": 287.51176655166364,
+          "background_bytes_per_window": 111887.5475368637,
+          "residual_sd_pkts": 1.690127398941321,
+          "acf1_residual": -0.25746196376523606,
+          "v_path": 1.0500301201066483e-05,
+          "v_pack_rho_units": 6.123161715300235e-07,
+          "v_pack_relative_units": 1.7746954941674468e-05,
+          "path_to_pack_ratio": 17.1484956453606,
+          "v_measured": 9.365134710789259e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007167256999309757,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 3.4729199763619687,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.008255021190344573,
+            "max_backlog": 4,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.007167256999309757,
+            "align_error_pkts_observed_max": 3.4729199763619687
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.98477157360406,
+          "bytes_per_packet_fitted": 332.31976047904516,
+          "background_bytes_per_window": 108732.47544910143,
+          "residual_sd_pkts": 1.2421494826435813,
+          "acf1_residual": -0.4770329939432534,
+          "v_path": 7.57605871672342e-06,
+          "v_pack_rho_units": 8.180442863521798e-07,
+          "v_pack_relative_units": 1.735927489704452e-05,
+          "path_to_pack_ratio": 9.26118407416126,
+          "v_measured": 6.339816104847275e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007300751000002492,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 3.5767161372333636,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.00612356478950246,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.007300751000002492,
+            "align_error_pkts_observed_max": 3.5767161372333636
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": 700.6301075268975,
+          "background_bytes_per_window": 83617.09462365422,
+          "residual_sd_pkts": 0.7676641464707521,
+          "acf1_residual": -0.4107902600168039,
+          "v_path": 7.234301747490242e-06,
+          "v_pack_rho_units": 2.0453357149582466e-06,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 3.5369752234722616,
+          "v_measured": 8.914319638178764e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005130586999257503,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 2.8932845970812844,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0035465484483850535,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.005130586999257503,
+            "align_error_pkts_observed_max": 2.8932845970812844
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 87.80203045685279,
+          "bytes_per_packet_fitted": -59.777176586320145,
+          "background_bytes_per_window": 131859.4407279877,
+          "residual_sd_pkts": 10.227206222626462,
+          "acf1_residual": -0.3428141196434902,
+          "v_path": 1.6616320692603534e-05,
+          "v_pack_rho_units": 2.6468862642511068e-08,
+          "v_pack_relative_units": 2.1619200591784852e-05,
+          "path_to_pack_ratio": 627.7685942544589,
+          "v_measured": 1.5481719210700072e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005160900000191759,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 2.2657272590127566,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.004555623347569656,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.005160900000191759,
+            "align_error_pkts_observed_max": 2.2657272590127575
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": -0.026104586704204177,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": -0.002842946127282052,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": 0.22176842546591263,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": 0.06879350916123515,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": 0.08397288613864794,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": 0.7772901048099206,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": 0.24469682378117769,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": 0.11850882372861374,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": 0.015059782970794893,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": -0.008168955868523552,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": -0.10526690745030703,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": 0.07345092925827824,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": -0.06540717954092842,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": 0.08129912299210627,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": -0.06293608473344968,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": 0.1983500293926499,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": 0.05826679128084676,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": 0.06389997792995651,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": 0.12385663637325851,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": 0.05471927028919177,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": 0.19648202694167125,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": 0.16977470075816428,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": 0.21117887634256297,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": 0.1396473470340088,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": 0.07294494411620343,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": 0.1485057607878857,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": 0.11660537706192911,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": 0.25834171214401674,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": -0.026104586704204177,
+      "rho_path_uA_uB_outcome": "CLEAN_PATH",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/A/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 25.694,
+        "cpu_p95": 52.54,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 100.0,
+        "ctx_per_s": 73161.4,
+        "load_1m_max": 1.474,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.371251,
+        "clock_jump_ms_max": 1.380808,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": false,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 239.75,
+        "p95": 373.63999999999976,
+        "p99": 1245.3880000000004,
+        "max": 1539.8,
+        "implied_rate_error_p95": 0.0018681999999999987
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": true,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": false,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "63ed27094f57da7730d445ab78e6d4db63f544a81af3b20e651968f442b6d5d2",
+        "rho_measured_s1": "4cf0dcbd0f343beb19e690f67c340b06f751aa9941f2a09b8d098b1d0eed5589",
+        "meta": "b6aab01dfb19fc8757e27ed68578a88f747b621ad6dc08b6e83e5b3849e7c049",
+        "infra": "cf74e642836bb59d7718a2ea3e96ffc4f1c5198b2114514b6b6e46bfeb0543a6"
+      }
+    },
+    {
+      "cell": "B",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/B/rep1",
+      "engine": "static",
+      "measured_window_s": 0.2,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": true,
+        "reconcile_every": 30,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78172588832487,
+          "bytes_per_packet_fitted": -349.46511627904835,
+          "background_bytes_per_window": 202052.5581395325,
+          "residual_sd_pkts": 1.7466071565309915,
+          "acf1_residual": -0.26263552247930255,
+          "v_path": 9.313432744927026e-06,
+          "v_pack_rho_units": 5.088776629149616e-07,
+          "v_pack_relative_units": 1.3103016173126906e-05,
+          "path_to_pack_ratio": 18.30190912994228,
+          "v_measured": 8.772099173217004e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006843984999250097,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 3.8595186835056796,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.007093096896770107,
+            "max_backlog": 4,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.006843984999250097,
+            "align_error_pkts_observed_max": 3.8595186835056796
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 86.73096446700508,
+          "bytes_per_packet_fitted": 139.73584905660815,
+          "background_bytes_per_window": 112946.98113207509,
+          "residual_sd_pkts": 4.6798159559687,
+          "acf1_residual": -0.4125410851737918,
+          "v_path": 1.9012919073131453e-05,
+          "v_pack_rho_units": 1.446434845921326e-07,
+          "v_pack_relative_units": 2.215646126210648e-05,
+          "path_to_pack_ratio": 131.44677153446838,
+          "v_measured": 1.8415171102140884e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006326747000457544,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 2.7436616233234186,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.0046119003500102946,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.006326747000457544,
+            "align_error_pkts_observed_max": 2.743661623323419
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.44162436548223,
+          "bytes_per_packet_fitted": -289.44295302013506,
+          "background_bytes_per_window": 168722.64429530207,
+          "residual_sd_pkts": 2.34508454878991,
+          "acf1_residual": -0.6108379624877279,
+          "v_path": 2.0475234649786573e-05,
+          "v_pack_rho_units": 6.205962691058403e-07,
+          "v_pack_relative_units": 1.7553338157970707e-05,
+          "path_to_pack_ratio": 32.99284199579131,
+          "v_measured": 2.1153584502821465e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006047144000149274,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 2.946362929358445,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": false,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.004104819497892615,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.006047144000149274,
+            "align_error_pkts_observed_max": 2.946362929358445
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 65.68020304568527,
+          "bytes_per_packet_fitted": 455.90878938640213,
+          "background_bytes_per_window": 64759.70646766154,
+          "residual_sd_pkts": 1.4807562159517045,
+          "acf1_residual": -0.48755291910716597,
+          "v_path": 4.558860864235194e-05,
+          "v_pack_rho_units": 3.4643490883022593e-06,
+          "v_pack_relative_units": 3.86348985521471e-05,
+          "path_to_pack_ratio": 13.159357639877198,
+          "v_measured": 4.84684664733339e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006486075999418972,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 2.129981029094909,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.00609026644915715,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.006486075999418972,
+            "align_error_pkts_observed_max": 2.129981029094909
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 96.91370558375634,
+          "bytes_per_packet_fitted": -50.587581699331366,
+          "background_bytes_per_window": 144645.58431372384,
+          "residual_sd_pkts": 10.048926006329442,
+          "acf1_residual": -0.3451792415902883,
+          "v_path": 1.149184538454194e-05,
+          "v_pack_rho_units": 1.895706229197781e-08,
+          "v_pack_relative_units": 1.774509589179316e-05,
+          "path_to_pack_ratio": 606.2039153294877,
+          "v_measured": 1.0390909161291455e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005522274000213656,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 2.675837589210671,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.0041275105951722865,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.005522274000213656,
+            "align_error_pkts_observed_max": 2.675837589210671
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.97969543147208,
+          "bytes_per_packet_fitted": -3.013654618406285,
+          "background_bytes_per_window": 141582.70843372814,
+          "residual_sd_pkts": 136.39981733440442,
+          "acf1_residual": -0.5869027301959859,
+          "v_path": 7.51339115403099e-06,
+          "v_pack_rho_units": 6.727754820815327e-11,
+          "v_pack_relative_units": 1.7361073645834557e-05,
+          "path_to_pack_ratio": 111677.54108376459,
+          "v_measured": 8.146690366641063e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004786178000358632,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 2.344799882854269,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.004082376526334973,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.004786178000358632,
+            "align_error_pkts_observed_max": 2.344799882854269
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78172588832487,
+          "bytes_per_packet_fitted": -47.072392923572416,
+          "background_bytes_per_window": 167940.50977652753,
+          "residual_sd_pkts": 13.75110288153439,
+          "acf1_residual": -0.3774758648046251,
+          "v_path": 1.0477453045694167e-05,
+          "v_pack_rho_units": 9.232903124600278e-09,
+          "v_pack_relative_units": 1.3103016173126906e-05,
+          "path_to_pack_ratio": 1134.7950806261458,
+          "v_measured": 9.026382661570943e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007413221000206249,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 4.180527128330596,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.007093096896770107,
+            "max_backlog": 4,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.007413221000206249,
+            "align_error_pkts_observed_max": 4.180527128330596
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 87.79695431472081,
+          "bytes_per_packet_fitted": -158.66072439157858,
+          "background_bytes_per_window": 140541.16694962812,
+          "residual_sd_pkts": 3.942847878358401,
+          "acf1_residual": -0.4192326574073632,
+          "v_path": 1.7401669039427973e-05,
+          "v_pack_rho_units": 1.8647562231464848e-07,
+          "v_pack_relative_units": 2.162170057161472e-05,
+          "path_to_pack_ratio": 93.31873423146632,
+          "v_measured": 1.6691380999182507e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004267723000339174,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 1.8736066064881889,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.004555623347569656,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.004267723000339174,
+            "align_error_pkts_observed_max": 1.8736066064881893
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": 0.09527640120840503,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": 0.1322735765518186,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": 0.018498127328565237,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": 0.08352531372091195,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": 0.015581279165356798,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": 0.042814729322330713,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": 0.03204742832119131,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": 0.09396272151726798,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": -0.06522741620917889,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": 0.2832892336405767,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": -0.05197391720861784,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": 0.08884998144719865,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": -0.057695846971102326,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": 0.21863819906968662,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": 0.14577817013979494,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": 0.11298265046813721,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": 0.31452448514629916,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": 0.15870137694551859,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": 0.07319778978437856,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": -0.14773462229638806,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": 0.19486356368961377,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": 0.012581074816701667,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": 0.03643578704821229,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": 0.16539105662606343,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": 0.1979244865558024,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": 0.1277801709616507,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": 0.047565056569310045,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": 0.16613781338418915,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": 0.09527640120840503,
+      "rho_path_uA_uB_outcome": "CLEAN_PATH",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/B/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 16.613,
+        "cpu_p95": 41.099,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 80.0,
+        "ctx_per_s": 68485.6,
+        "load_1m_max": 1.995,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.361918,
+        "clock_jump_ms_max": 0.91719,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": false,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 254.2,
+        "p95": 328.7349999999994,
+        "p99": 1069.552000000004,
+        "max": 1277.4,
+        "implied_rate_error_p95": 0.0016436749999999968
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": false,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": false,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "e806a92e1efd2a53bfad3c78e01ccedbf03a0f56f2ae27f040d883582a6859d8",
+        "rho_measured_s1": "b746b7c40adf21ed7f2dcb3dcf412da49be2e13ee33e6a92d2521bf42590906a",
+        "meta": "a47f6a0a7e7887c6e4082d7d0f127ef2ef90284f6f0035bb61cd501c11e744fa",
+        "infra": "6b7c24b9ff368b3b01da967b185bb5e1e3b56f8e06c66463608c7d722d888aad"
+      }
+    },
+    {
+      "cell": "C",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/C/rep1",
+      "engine": "static",
+      "measured_window_s": 0.2,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": false,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": -532.5961761297935,
+          "background_bytes_per_window": 222708.74333719708,
+          "residual_sd_pkts": 1.2855984489424153,
+          "acf1_residual": -0.34875950842814185,
+          "v_path": 1.1718559234411297e-05,
+          "v_pack_rho_units": 1.1819122906354403e-06,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 9.914914437611069,
+          "v_measured": 1.3274909225784012e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.00788594700043177,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 4.447110826314916,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.007093096896770107,
+            "max_backlog": 4,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.00788594700043177,
+            "align_error_pkts_observed_max": 4.447110826314916
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 86.73604060913705,
+          "bytes_per_packet_fitted": -337.7323607426906,
+          "background_bytes_per_window": 154360.32917771747,
+          "residual_sd_pkts": 1.8450727088300796,
+          "acf1_residual": -0.2908738810033145,
+          "v_path": 1.7258249823108536e-05,
+          "v_pack_rho_units": 8.449129868032675e-07,
+          "v_pack_relative_units": 2.215386796744745e-05,
+          "path_to_pack_ratio": 20.426067645622553,
+          "v_measured": 1.8361395544880645e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.0067038650004178635,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 2.9072028845562103,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.006917850525015442,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.0067038650004178635,
+            "align_error_pkts_observed_max": 2.907202884556211
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.44670050761421,
+          "bytes_per_packet_fitted": -986.3359049207966,
+          "background_bytes_per_window": 236634.0323186016,
+          "residual_sd_pkts": 0.552792420736839,
+          "acf1_residual": -0.4660387912365557,
+          "v_path": 1.3210276231061883e-05,
+          "v_pack_rho_units": 7.206366067278296e-06,
+          "v_pack_relative_units": 1.755150944713377e-05,
+          "path_to_pack_ratio": 1.833139769438766,
+          "v_measured": 2.3506873630411853e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006459755999458139,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 3.1474007579502734,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.004104819497892615,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.006459755999458139,
+            "align_error_pkts_observed_max": 3.1474007579502734
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 65.68020304568527,
+          "bytes_per_packet_fitted": 430.2752902155769,
+          "background_bytes_per_window": 66450.9950248763,
+          "residual_sd_pkts": 1.6774511469542943,
+          "acf1_residual": -0.488706277261449,
+          "v_path": 5.2097348773270064e-05,
+          "v_pack_rho_units": 3.0856166162366588e-06,
+          "v_pack_relative_units": 3.86348985521471e-05,
+          "path_to_pack_ratio": 16.88393447816277,
+          "v_measured": 5.5969833422516335e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005681001000084507,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 1.86560014984918,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.00609026644915715,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.005681001000084507,
+            "align_error_pkts_observed_max": 1.86560014984918
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 96.90862944162437,
+          "bytes_per_packet_fitted": 27.830540037324976,
+          "background_bytes_per_window": 137045.93482308323,
+          "residual_sd_pkts": 16.704313738918223,
+          "acf1_residual": -0.17364834085026848,
+          "v_path": 9.604855529498747e-06,
+          "v_pack_rho_units": 5.737330938463413e-09,
+          "v_pack_relative_units": 1.7746954941674468e-05,
+          "path_to_pack_ratio": 1674.0982231140297,
+          "v_measured": 9.88157729779046e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005308978999892133,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 2.5724847350370186,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.0041275105951722865,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.005308978999892133,
+            "align_error_pkts_observed_max": 2.5724847350370186
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.98477157360406,
+          "bytes_per_packet_fitted": -797.6496756255153,
+          "background_bytes_per_window": 219444.9527340069,
+          "residual_sd_pkts": 0.3781436670783403,
+          "acf1_residual": -0.33654065389042276,
+          "v_path": 4.044545751535047e-06,
+          "v_pack_rho_units": 4.712930331582634e-06,
+          "v_pack_relative_units": 1.735927489704452e-05,
+          "path_to_pack_ratio": 0.858180678893435,
+          "v_measured": 5.552103570662533e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.0048770379999041324,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 2.389313170131605,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.004082376526334973,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.0048770379999041324,
+            "align_error_pkts_observed_max": 2.389313170131605
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": 702.8295423403903,
+          "background_bytes_per_window": 83369.02740476592,
+          "residual_sd_pkts": 0.7205030684429528,
+          "acf1_residual": -0.4240066143748657,
+          "v_path": 6.411174934423972e-06,
+          "v_pack_rho_units": 2.0582075977028374e-06,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 3.1149311379374343,
+          "v_measured": 8.810057137975551e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004587626000102318,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 2.587093376486272,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0035465484483850535,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.004587626000102318,
+            "align_error_pkts_observed_max": 2.587093376486272
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 87.80203045685279,
+          "bytes_per_packet_fitted": -238.47406955460684,
+          "background_bytes_per_window": 147557.0658938377,
+          "residual_sd_pkts": 2.584340216212914,
+          "acf1_residual": -0.36698126298758427,
+          "v_path": 1.6881223800974135e-05,
+          "v_pack_rho_units": 4.212587745397605e-07,
+          "v_pack_relative_units": 2.1619200591784852e-05,
+          "path_to_pack_ratio": 40.07328706545625,
+          "v_measured": 1.754939769807068e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005072877999737102,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 2.2270840289917255,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.004555623347569656,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.005072877999737102,
+            "align_error_pkts_observed_max": 2.227084028991726
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": 0.07153552357911927,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": -0.08916273788357469,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": -0.057310888131331957,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": -0.019586558447207643,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": -0.037530436195169214,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": -0.09191817490249668,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": -0.010568961195404607,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": -0.017934128438944957,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": -0.15701258571244658,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": 0.08702883706680438,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": 0.1724583910101596,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": -0.009506802298016237,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": -0.043350120315133765,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": 0.1387185202829752,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": 0.14907351995037055,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": 0.1279820514630087,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": -0.011504710340602863,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": -0.05712319459197577,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": -0.020583694742616503,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": 0.03962366617872712,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": 0.11568897958783582,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": -0.022027345974291124,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": -0.19706348434403023,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": 0.1144210418200821,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": 0.0063149684446920816,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": 0.1257693812279725,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": 0.10008343809480026,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": 0.0828980576771656,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": 0.07153552357911927,
+      "rho_path_uA_uB_outcome": "CLEAN_PATH",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/C/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 11.95,
+        "cpu_p95": 40.292,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 100.0,
+        "ctx_per_s": 49396.071,
+        "load_1m_max": 1.458,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.341882,
+        "clock_jump_ms_max": 0.244905,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": false,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 222.5,
+        "p95": 305.58999999999816,
+        "p99": 368.63100000000105,
+        "max": 879.2,
+        "implied_rate_error_p95": 0.0015279499999999908
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": true,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": false,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "bb702695c7d361f3b9ee62a8ee34ea5f545704594b900959f9b1bb3b4a06973b",
+        "rho_measured_s1": "80de395911c398128bdbd5febdc349f826e851fcb47f38a84c25b58c7fce89f6",
+        "meta": "d3376d2df6b227db65190ed16d9bcd20c51bc78025743ba87f1885ab4f851dcd",
+        "infra": "8e81a378e45070696bd26ce8a4ac571aeb8c6d19d435ec862acc977227661e69"
+      }
+    },
+    {
+      "cell": "D",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/D/rep1",
+      "engine": "static",
+      "measured_window_s": 0.2,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": null
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": 131.23655913978436,
+          "background_bytes_per_window": 147837.17204301085,
+          "residual_sd_pkts": 4.4945510437393175,
+          "acf1_residual": -0.3112708521205506,
+          "v_path": 8.698570156725815e-06,
+          "v_pack_rho_units": 7.176266873344896e-08,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 121.21302496476648,
+          "v_measured": 8.684759700236579e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006680313999822829,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 3.767219930614374,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0053198226725775805,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.006680313999822829,
+            "align_error_pkts_observed_max": 3.767219930614374
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 86.73604060913705,
+          "bytes_per_packet_fitted": -413.08355437668564,
+          "background_bytes_per_window": 160895.9933687026,
+          "residual_sd_pkts": 1.5682951402946161,
+          "acf1_residual": -0.27621638448369545,
+          "v_path": 1.8653138109292495e-05,
+          "v_pack_rho_units": 1.263985798146129e-06,
+          "v_pack_relative_units": 2.215386796744745e-05,
+          "path_to_pack_ratio": 14.75739532568388,
+          "v_measured": 2.0095019151446074e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006338137000057031,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 2.7486010186854464,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.0046119003500102946,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.006338137000057031,
+            "align_error_pkts_observed_max": 2.7486010186854464
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.44670050761421,
+          "bytes_per_packet_fitted": 1205.8696830692234,
+          "background_bytes_per_window": 23010.475604670617,
+          "residual_sd_pkts": 0.369334300653013,
+          "acf1_residual": -0.5213755725493644,
+          "v_path": 8.815383025294007e-06,
+          "v_pack_rho_units": 1.0771275574780705e-05,
+          "v_pack_relative_units": 1.755150944713377e-05,
+          "path_to_pack_ratio": 0.8184158843669248,
+          "v_measured": 2.4878556254409567e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007993105999958061,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 3.8944981644438514,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.006157229246838923,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.007993105999958061,
+            "align_error_pkts_observed_max": 3.8944981644438514
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 65.68020304568527,
+          "bytes_per_packet_fitted": -676.910447761207,
+          "background_bytes_per_window": 139171.1791044784,
+          "residual_sd_pkts": 0.8791147213660038,
+          "acf1_residual": -0.5259313136161567,
+          "v_path": 3.541258045380113e-05,
+          "v_pack_rho_units": 7.63679858349872e-06,
+          "v_pack_relative_units": 3.86348985521471e-05,
+          "path_to_pack_ratio": 4.637097609241546,
+          "v_measured": 4.546746758453367e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.0056256090001625125,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 1.8474098127319396,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.00609026644915715,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.0056256090001625125,
+            "align_error_pkts_observed_max": 1.8474098127319396
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 96.90862944162437,
+          "bytes_per_packet_fitted": -49.948561946893186,
+          "background_bytes_per_window": 144583.4009955744,
+          "residual_sd_pkts": 8.83486413761975,
+          "acf1_residual": -0.12351695743711656,
+          "v_path": 8.654852088579402e-06,
+          "v_pack_rho_units": 1.8480442338245107e-08,
+          "v_pack_relative_units": 1.7746954941674468e-05,
+          "path_to_pack_ratio": 468.32494212913207,
+          "v_measured": 8.690495784662298e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.0066857649999292335,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 3.2396113084478526,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.006191265892758429,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.0066857649999292335,
+            "align_error_pkts_observed_max": 3.2396113084478526
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.97969543147208,
+          "bytes_per_packet_fitted": -9.706984667806775,
+          "background_bytes_per_window": 142238.1635434415,
+          "residual_sd_pkts": 29.68302099002224,
+          "acf1_residual": -0.2588612425248076,
+          "v_path": 3.6902949987992505e-06,
+          "v_pack_rho_units": 6.979672917906135e-10,
+          "v_pack_relative_units": 1.7361073645834557e-05,
+          "path_to_pack_ratio": 5287.203343486071,
+          "v_measured": 3.65611106751566e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.01575145200058614,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 7.7168051006443,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.014288317842172406,
+            "max_backlog": 7,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.01575145200058614,
+            "align_error_pkts_observed_max": 7.7168051006443
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78172588832487,
+          "bytes_per_packet_fitted": -609.3932346722764,
+          "background_bytes_per_window": 231367.34460887633,
+          "residual_sd_pkts": 1.0303679505464969,
+          "acf1_residual": -0.42064365266608966,
+          "v_path": 9.856596653327897e-06,
+          "v_pack_rho_units": 1.547334353013233e-06,
+          "v_pack_relative_units": 1.3103016173126906e-05,
+          "path_to_pack_ratio": 6.370049649665861,
+          "v_measured": 1.1429559931515877e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006507389000034891,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 3.669702582519676,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0053198226725775805,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.006507389000034891,
+            "align_error_pkts_observed_max": 3.669702582519676
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 87.80203045685279,
+          "bytes_per_packet_fitted": -289.47096689435267,
+          "background_bytes_per_window": 152034.3416973176,
+          "residual_sd_pkts": 1.8685527635735772,
+          "acf1_residual": -0.23965175609017103,
+          "v_path": 1.3002753239679667e-05,
+          "v_pack_rho_units": 6.206923708612259e-07,
+          "v_pack_relative_units": 2.1619200591784852e-05,
+          "path_to_pack_ratio": 20.94878856274329,
+          "v_measured": 1.4499327387295462e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004053804999784916,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 1.7796927842805739,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.002277811673784828,
+            "max_backlog": 1,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.004053804999784916,
+            "align_error_pkts_observed_max": 1.7796927842805743
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": -0.09306715843429593,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": 0.2773076061083805,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": 0.026082069183555743,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": 0.05023952113596237,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": 0.04619812720799434,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": 0.5520669132295584,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": -0.2259470375404533,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": -0.03289353028768952,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": -0.05094362395434297,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": 0.1723099181097959,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": 0.12938624205041804,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": -0.09545863600144229,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": 0.1457141254963275,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": -0.16214310532443812,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": 0.03776749338421178,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": -0.016846005358450142,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": 0.18796680018796486,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": -0.03206710477535994,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": 0.1591428416324237,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": -0.09639164663223661,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": -0.22036610214227192,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": -0.00071216295603998,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": 0.12941000382278747,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": 0.05018275301956496,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": -0.007054443560571993,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": -0.01164532592055025,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": -0.09203152993020683,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": -0.14573092017096292,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": -0.09306715843429593,
+      "rho_path_uA_uB_outcome": "CLEAN_PATH",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/D/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 4.55,
+        "cpu_p95": 19.212,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 44.4,
+        "ctx_per_s": 28639.529,
+        "load_1m_max": 2.967,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.313382,
+        "clock_jump_ms_max": 0.162891,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": true,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 223.1,
+        "p95": 275.85499999999985,
+        "p99": 298.9720000000001,
+        "max": 328.3,
+        "implied_rate_error_p95": 0.001379274999999999
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": true,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": true,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "0eb1bec96275419760623402395c533225c23b88bb063f18da0a8ae8fb3cc6e9",
+        "rho_measured_s1": "11ce9c68187596d30e7dcc44c944e793da1d8edf9643b7ca1b4512954cb35a14",
+        "meta": "3e1fc833bd55aa5d3219ef3176af14839c7a91953b597fc064016dc7e545f73e",
+        "infra": "dd29ff91f6e89c8b83a06eea819b5a2eccc58eeeba4487bf5155c33d344c8e57"
+      }
+    },
+    {
+      "cell": "D_dt_0p2",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/D_dt_0p2/rep1",
+      "engine": "static",
+      "measured_window_s": 0.2,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": null
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": -120.88670694862434,
+          "background_bytes_per_window": 176273.34894259644,
+          "residual_sd_pkts": 5.164365805678566,
+          "acf1_residual": -0.27517817445454634,
+          "v_path": 9.744268215708014e-06,
+          "v_pack_rho_units": 6.088996397821341e-08,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 160.03077648714884,
+          "v_measured": 9.774206410971924e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.0067383069999777945,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 3.7999238403446207,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.007093096896770107,
+            "max_backlog": 4,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.0067383069999777945,
+            "align_error_pkts_observed_max": 3.7999238403446207
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 86.73096446700508,
+          "bytes_per_packet_fitted": -493.02856394129657,
+          "background_bytes_per_window": 167827.24895178166,
+          "residual_sd_pkts": 1.257661465570561,
+          "acf1_residual": -0.6262123103944883,
+          "v_path": 1.7088488286809863e-05,
+          "v_pack_rho_units": 1.8005710294632548e-06,
+          "v_pack_relative_units": 2.215646126210648e-05,
+          "path_to_pack_ratio": 9.49059382117455,
+          "v_measured": 1.9124892947772804e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.015476102999855357,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 6.711377881276559,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": false,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.01614165122503603,
+            "max_backlog": 7,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.015476102999855357,
+            "align_error_pkts_observed_max": 6.71137788127656
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.44670050761421,
+          "bytes_per_packet_fitted": 1146.6382402001634,
+          "background_bytes_per_window": 28782.384278565758,
+          "residual_sd_pkts": 0.37964849543913154,
+          "acf1_residual": -0.5350025743776803,
+          "v_path": 8.422400253262691e-06,
+          "v_pack_rho_units": 9.73910254398543e-06,
+          "v_pack_relative_units": 1.755150944713377e-05,
+          "path_to_pack_ratio": 0.8648025026149978,
+          "v_measured": 2.268672921322473e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.008299317000819428,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 4.043694006559966,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.00820963899578523,
+            "max_backlog": 4,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.008299317000819428,
+            "align_error_pkts_observed_max": 4.043694006559966
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 65.68020304568527,
+          "bytes_per_packet_fitted": -442.9933665008474,
+          "background_bytes_per_window": 123807.45771144386,
+          "residual_sd_pkts": 1.4460699683133715,
+          "acf1_residual": -0.45012727813210834,
+          "v_path": 4.103620806921564e-05,
+          "v_pack_rho_units": 3.270717691667541e-06,
+          "v_pack_relative_units": 3.86348985521471e-05,
+          "path_to_pack_ratio": 12.546545418383012,
+          "v_measured": 4.541681888523314e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006071727000744431,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 1.9939117775658945,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.00609026644915715,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.006071727000744431,
+            "align_error_pkts_observed_max": 1.9939117775658945
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 96.90862944162437,
+          "bytes_per_packet_fitted": 127.94227188082071,
+          "background_bytes_per_window": 127351.20856610795,
+          "residual_sd_pkts": 3.3595759643817416,
+          "acf1_residual": -0.08994587781642699,
+          "v_path": 8.2113402723398e-06,
+          "v_pack_rho_units": 1.2125348017657437e-07,
+          "v_pack_relative_units": 1.7746954941674468e-05,
+          "path_to_pack_ratio": 67.72045025332143,
+          "v_measured": 8.290131083338677e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.00911053300023923,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 4.4145413028837766,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.008255021190344573,
+            "max_backlog": 4,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.00911053300023923,
+            "align_error_pkts_observed_max": 4.4145413028837766
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.98477157360406,
+          "bytes_per_packet_fitted": -886.2602459016607,
+          "background_bytes_per_window": 228134.40368852633,
+          "residual_sd_pkts": 0.2621162683842839,
+          "acf1_residual": -0.08145219917849855,
+          "v_path": 2.398578774553282e-06,
+          "v_pack_rho_units": 5.8181998389595605e-06,
+          "v_pack_relative_units": 1.735927489704452e-05,
+          "path_to_pack_ratio": 0.41225444999190813,
+          "v_measured": 3.223048101638166e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004038420999677328,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 1.9784657165383481,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.004082376526334973,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.004038420999677328,
+            "align_error_pkts_observed_max": 1.9784657165383481
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": -348.14305289117584,
+          "background_bytes_per_window": 201904.86544258412,
+          "residual_sd_pkts": 1.6448437343844489,
+          "acf1_residual": -0.43741876396489365,
+          "v_path": 8.198061848583814e-06,
+          "v_pack_rho_units": 5.050147809947061e-07,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 16.233310701196586,
+          "v_measured": 8.740075761741677e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004461436999918078,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 2.5159317938823733,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0035465484483850535,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.004461436999918078,
+            "align_error_pkts_observed_max": 2.5159317938823733
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 87.80203045685279,
+          "bytes_per_packet_fitted": -302.0610191496405,
+          "background_bytes_per_window": 153140.12917883918,
+          "residual_sd_pkts": 1.908928730381728,
+          "acf1_residual": -0.39702806518062533,
+          "v_path": 1.4776977823163482e-05,
+          "v_pack_rho_units": 6.758580059696641e-07,
+          "v_pack_relative_units": 2.1619200591784852e-05,
+          "path_to_pack_ratio": 21.86402719601245,
+          "v_measured": 1.542550331349093e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.00404552899999544,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 1.7760594725872836,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.002277811673784828,
+            "max_backlog": 1,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.00404552899999544,
+            "align_error_pkts_observed_max": 1.776059472587284
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": -0.004325758786876709,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": -0.17570549525131027,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": -0.048149004787487584,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": 0.051228967942390034,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": 0.03471579790925251,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": 0.5530959034641945,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": -0.034135290157460176,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": -0.21016972443996568,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": -0.04596984473260382,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": -0.03055210310773184,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": -0.054112399779899664,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": 0.0307888717191037,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": -0.07266577976039779,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": 0.008588757842992059,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": -0.06733148415093176,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": 0.024657080750494408,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": -0.292672370649589,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": -0.016502167054976143,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": 0.05117913479731746,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": -0.024740904679277646,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": -0.020380218169656808,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": -0.021531432820321297,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": -0.07702456192708852,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": -0.06059753906728725,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": 0.11581505871832225,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": 0.04788372860273119,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": -0.09265274600580105,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": 0.043928295942319597,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": -0.004325758786876709,
+      "rho_path_uA_uB_outcome": "CLEAN_PATH",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/D_dt_0p2/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 8.0,
+        "cpu_p95": 18.769,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 40.0,
+        "ctx_per_s": 29584.257,
+        "load_1m_max": 3.794,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.321183,
+        "clock_jump_ms_max": 0.199477,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": true,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 236.95,
+        "p95": 286.48499999999996,
+        "p99": 308.7800000000003,
+        "max": 361.5,
+        "implied_rate_error_p95": 0.0014324249999999998
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": false,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": true,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "b6fecc67dc26f7d3925a9c078474e91b4ae21d1b32099c13ed53ea8bbc6f9aac",
+        "rho_measured_s1": "c7aaf9797cc599cc168b0284526a7cd00dc73db744b9aefe9db849d59aff7854",
+        "meta": "bd9fe78c84c3366f5b8a6de2737d56adce743ba55a00249ad5395b74490d4c8d",
+        "infra": "337315bbcfd0ac76aecba2ed82f5b9be2c786294eb580837a17eb6ea2cfe3d22"
+      }
+    },
+    {
+      "cell": "D_dt_0p5",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/D_dt_0p5/rep1",
+      "engine": "static",
+      "measured_window_s": 0.5,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": null
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 77,
+          "mean_packets_per_window": 281.961038961039,
+          "bytes_per_packet_fitted": -57.51351351330957,
+          "background_bytes_per_window": 422805.2972972399,
+          "residual_sd_pkts": 6.356306065268829,
+          "acf1_residual": -0.22982734304930816,
+          "v_path": 5.345980492863974e-07,
+          "v_pack_rho_units": 2.2052061797792305e-09,
+          "v_pack_relative_units": 2.0963825945629094e-06,
+          "path_to_pack_ratio": 242.4254267870397,
+          "v_measured": 5.292243407578257e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.010973678000482323,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 6.188370558129138,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.010639645345155161,
+            "max_backlog": 6,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.010973678000482323,
+            "align_error_pkts_observed_max": 6.188370558129138
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 77,
+          "mean_packets_per_window": 216.83116883116884,
+          "bytes_per_packet_fitted": -291.8125000000177,
+          "background_bytes_per_window": 375945.5000000037,
+          "residual_sd_pkts": 1.8177850865178926,
+          "acf1_residual": -0.19336391039316697,
+          "v_path": 2.0010009836051824e-06,
+          "v_pack_rho_units": 1.0092404708030813e-07,
+          "v_pack_relative_units": 3.544910932800437e-06,
+          "path_to_pack_ratio": 19.82680086157196,
+          "v_measured": 2.062971815037996e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005139373999554664,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 2.2287445996283033,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.0046119003500102946,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.005139373999554664,
+            "align_error_pkts_observed_max": 2.2287445996283037
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 77,
+          "mean_packets_per_window": 243.62337662337663,
+          "bytes_per_packet_fitted": -906.0775862069155,
+          "background_bytes_per_window": 572029.6810344872,
+          "residual_sd_pkts": 0.6124265607801427,
+          "acf1_residual": -0.3765151372603476,
+          "v_path": 2.1896593312695106e-06,
+          "v_pack_rho_units": 9.730107749829218e-07,
+          "v_pack_relative_units": 2.808088772979472e-06,
+          "path_to_pack_ratio": 2.2503957690581005,
+          "v_measured": 3.5766639842095883e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.00830063200010045,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 4.044334716477514,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.006157229246838923,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.00830063200010045,
+            "align_error_pkts_observed_max": 4.044334716477514
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 77,
+          "mean_packets_per_window": 164.19480519480518,
+          "bytes_per_packet_fitted": -350.0000000000599,
+          "background_bytes_per_window": 294238.00000000984,
+          "residual_sd_pkts": 1.5921518044521332,
+          "acf1_residual": -0.39344453406682856,
+          "v_path": 4.968422720064924e-06,
+          "v_pack_rho_units": 3.2666716370976997e-07,
+          "v_pack_relative_units": 6.18201314362517e-06,
+          "path_to_pack_ratio": 15.209434164246636,
+          "v_measured": 5.258414838627483e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005573575999733293,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 1.8303225470552726,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.00609026644915715,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.005573575999733293,
+            "align_error_pkts_observed_max": 1.8303225470552726
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 77,
+          "mean_packets_per_window": 242.27272727272728,
+          "bytes_per_packet_fitted": 754.0833333333226,
+          "background_bytes_per_window": 166683.0833333361,
+          "residual_sd_pkts": 0.7442507987552127,
+          "acf1_residual": -0.4587469066039229,
+          "v_path": 2.2398257048603447e-06,
+          "v_pack_rho_units": 6.73946712691699e-07,
+          "v_pack_relative_units": 2.839485748010893e-06,
+          "path_to_pack_ratio": 3.323446294314023,
+          "v_measured": 3.065280201650398e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007072295000398299,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 3.426905800639426,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.006191265892758429,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.007072295000398299,
+            "align_error_pkts_observed_max": 3.426905800639426
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 77,
+          "mean_packets_per_window": 244.94805194805195,
+          "bytes_per_packet_fitted": 303.15753424651666,
+          "background_bytes_per_window": 278959.0616438499,
+          "residual_sd_pkts": 1.295691985126829,
+          "acf1_residual": -0.16437787399286977,
+          "v_path": 1.097145979564502e-06,
+          "v_pack_rho_units": 1.0892400641024111e-07,
+          "v_pack_relative_units": 2.777798696771168e-06,
+          "path_to_pack_ratio": 10.072581937835768,
+          "v_measured": 1.1428534677674334e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007401764999485749,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 3.626203977873063,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.00612356478950246,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.007401764999485749,
+            "align_error_pkts_observed_max": 3.626203977873063
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 77,
+          "mean_packets_per_window": 281.97402597402595,
+          "bytes_per_packet_fitted": -37.52000000004869,
+          "background_bytes_per_window": 417187.1200000136,
+          "residual_sd_pkts": 6.158697817271502,
+          "acf1_residual": -0.027073195276925265,
+          "v_path": 2.135832670474026e-07,
+          "v_pack_rho_units": 9.385016946537352e-10,
+          "v_pack_relative_units": 2.096189490812218e-06,
+          "path_to_pack_ratio": 227.57898921664193,
+          "v_measured": 2.1489671533095962e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004051568000249972,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 2.2847949544266806,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0035465484483850535,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.004051568000249972,
+            "align_error_pkts_observed_max": 2.2847949544266806
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 77,
+          "mean_packets_per_window": 219.5194805194805,
+          "bytes_per_packet_fitted": -846.6310810810148,
+          "background_bytes_per_window": 502381.2878378236,
+          "residual_sd_pkts": 0.7483402302128546,
+          "acf1_residual": -0.8737658974042279,
+          "v_path": 2.8543733816455946e-06,
+          "v_pack_rho_units": 8.495232925424398e-07,
+          "v_pack_relative_units": 3.4586181564302415e-06,
+          "path_to_pack_ratio": 3.3599707114599195,
+          "v_measured": 4.12763484228303e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.00558612499935407,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 2.4524086269485674,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": false,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.004555623347569656,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.00558612499935407,
+            "align_error_pkts_observed_max": 2.452408626948568
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": -0.08858025519952573,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": 0.1513295685782678,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": -0.0018751928681805178,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": -0.0745065793711337,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": -0.21380007631028303,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": 0.29758347943762237,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": 0.0467789270791496,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": -0.015623629256029992,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": 0.032222499812539926,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": -0.005053717634307727,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": 0.04332409897876589,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": -0.08379991062760136,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": 0.2679229652089797,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": 0.012371215593537484,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": -0.14335077528805365,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": 0.02849155712438996,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": 0.15475982684063078,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": 0.02373614421185154,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": -0.09359188184467462,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": 0.2505477455629027,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": 0.05519629354168481,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": 0.012887271487023686,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": -0.031719311016257946,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": 0.17107981331395772,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": 0.010391488623422169,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": -0.024014938153814325,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": 0.12891052023340285,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": 0.11569310736729788,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": -0.08858025519952573,
+      "rho_path_uA_uB_outcome": "CLEAN_PATH",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/D_dt_0p5/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 4.662,
+        "cpu_p95": 17.336,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 40.0,
+        "ctx_per_s": 28800.957,
+        "load_1m_max": 1.587,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.314762,
+        "clock_jump_ms_max": 0.182882,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": true,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 221.35000000000002,
+        "p95": 272.47999999999996,
+        "p99": 299.9,
+        "max": 330.0,
+        "implied_rate_error_p95": 0.0005449599999999999
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": false,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": true,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "1275850f511b6fe00136d639286bb7240bdb4c3278e6be043d51b3c3f0333259",
+        "rho_measured_s1": "d205d3fe674624bdb93c032b762936137c6d0cd0b7dfef98eecfcf90c8930cc2",
+        "meta": "5bc1830a356731362287404d538dbbff93ecdfa420557b881f514f5ddabc73ad",
+        "infra": "1297923de86bedc2a06b93f593eae770b647f16d0c72f097ad3d4be093f2d0e9"
+      }
+    },
+    {
+      "cell": "D_dt_1p0",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/D_dt_1p0/rep1",
+      "engine": "static",
+      "measured_window_s": 1.0,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": null
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 37,
+          "mean_packets_per_window": 563.9459459459459,
+          "bytes_per_packet_fitted": -121.60000000005095,
+          "background_bytes_per_window": 881748.8000000293,
+          "residual_sd_pkts": 3.2795968314177495,
+          "acf1_residual": -0.09995908789896517,
+          "v_path": 1.590472284910881e-07,
+          "v_pack_rho_units": 2.464431459652558e-09,
+          "v_pack_relative_units": 5.240512867197761e-07,
+          "path_to_pack_ratio": 64.53708739520432,
+          "v_measured": 1.5580723396741723e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.010220742999990762,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 5.763768998923362,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.010639645345155161,
+            "max_backlog": 6,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.010220742999990762,
+            "align_error_pkts_observed_max": 5.763768998923362
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 37,
+          "mean_packets_per_window": 433.64864864864865,
+          "bytes_per_packet_fitted": -441.53846153845467,
+          "background_bytes_per_window": 816797.6923076893,
+          "residual_sd_pkts": 1.5022751380014223,
+          "acf1_residual": -0.5419202536191704,
+          "v_path": 7.822001157637325e-07,
+          "v_pack_rho_units": 5.776491620201104e-08,
+          "v_pack_relative_units": 8.862836852944528e-07,
+          "path_to_pack_ratio": 13.541093230851097,
+          "v_measured": 8.563599096280655e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006261731999984477,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 2.715467171778982,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.006917850525015442,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.006261731999984477,
+            "align_error_pkts_observed_max": 2.7154671717789824
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 37,
+          "mean_packets_per_window": 487.2432432432432,
+          "bytes_per_packet_fitted": -465.9999999999911,
+          "background_bytes_per_window": 929661.9999999953,
+          "residual_sd_pkts": 1.281613223600253,
+          "acf1_residual": -0.121547356108649,
+          "v_path": 6.341126908130847e-07,
+          "v_pack_rho_units": 6.434264365620215e-08,
+          "v_pack_relative_units": 7.020323077380785e-07,
+          "path_to_pack_ratio": 9.855247698576044,
+          "v_measured": 7.129540334774748e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005671754999639234,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 2.7634613422349372,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.004104819497892615,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.005671754999639234,
+            "align_error_pkts_observed_max": 2.7634613422349372
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 37,
+          "mean_packets_per_window": 328.35135135135135,
+          "bytes_per_packet_fitted": 1114.6321243523175,
+          "background_bytes_per_window": 107532.54922280274,
+          "residual_sd_pkts": 0.3364559134207839,
+          "acf1_residual": -0.431373769961039,
+          "v_path": 5.625856624071637e-07,
+          "v_pack_rho_units": 8.282714593007164e-07,
+          "v_pack_relative_units": 1.5458634666330836e-06,
+          "path_to_pack_ratio": 0.6792285984140237,
+          "v_measured": 1.9813254854091665e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004825354999411502,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 1.584612114985313,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.00609026644915715,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.004825354999411502,
+            "align_error_pkts_observed_max": 1.584612114985313
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 37,
+          "mean_packets_per_window": 484.56756756756755,
+          "bytes_per_packet_fitted": -695.3333333333821,
+          "background_bytes_per_window": 1035645.3333333565,
+          "residual_sd_pkts": 0.9225726741149709,
+          "acf1_residual": -0.7199806569281562,
+          "v_path": 7.315799127104651e-07,
+          "v_pack_rho_units": 1.432561140046139e-07,
+          "v_pack_relative_units": 7.098066491561462e-07,
+          "path_to_pack_ratio": 5.106797135980547,
+          "v_measured": 9.339027371845315e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007574176999696647,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 3.670094515835152,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": false,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.006191265892758429,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.007574176999696647,
+            "align_error_pkts_observed_max": 3.670094515835152
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 37,
+          "mean_packets_per_window": 489.9189189189189,
+          "bytes_per_packet_fitted": -82.76470588309674,
+          "background_bytes_per_window": 747051.941176835,
+          "residual_sd_pkts": 5.727475436308711,
+          "acf1_residual": -0.07217376311452903,
+          "v_path": 3.994766044203594e-07,
+          "v_pack_rho_units": 2.0296325517785282e-09,
+          "v_pack_relative_units": 6.943849960771611e-07,
+          "path_to_pack_ratio": 196.82213121301473,
+          "v_measured": 4.0993509436787104e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.008038052000301832,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 3.937927796933585,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.00612356478950246,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.008038052000301832,
+            "align_error_pkts_observed_max": 3.937927796933585
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 37,
+          "mean_packets_per_window": 563.918918918919,
+          "bytes_per_packet_fitted": -123.11764705886631,
+          "background_bytes_per_window": 882603.2352941418,
+          "residual_sd_pkts": 4.257493775504509,
+          "acf1_residual": -0.3073385175143632,
+          "v_path": 2.7475824493399553e-07,
+          "v_pack_rho_units": 2.5263307495881167e-09,
+          "v_pack_relative_units": 5.241015204935466e-07,
+          "path_to_pack_ratio": 108.75782792050924,
+          "v_measured": 2.751969144366395e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004045665000376175,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 2.2814660841407073,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0035465484483850535,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.004045665000376175,
+            "align_error_pkts_observed_max": 2.2814660841407073
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 37,
+          "mean_packets_per_window": 439.02702702702703,
+          "bytes_per_packet_fitted": -1.944444444461527,
+          "background_bytes_per_window": 633893.5555555633,
+          "residual_sd_pkts": 174.89688390438104,
+          "acf1_residual": -0.4994628903036945,
+          "v_path": 2.0559715777461811e-07,
+          "v_pack_rho_units": 1.1202582372971726e-12,
+          "v_pack_relative_units": 8.647015473198139e-07,
+          "path_to_pack_ratio": 183526.5753284339,
+          "v_measured": 2.0854045549113627e-07,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004014978999293817,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 1.762647476743544,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.004555623347569656,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.004014978999293817,
+            "align_error_pkts_observed_max": 1.7626474767435445
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": 0.1877234594238455,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": 0.15087208798615506,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": 0.12378307950711562,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": -0.09691669318561201,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": -0.05681512282991825,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": -0.05001855480262468,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": 0.0017939136419817404,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": -0.2519572221243884,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": -0.10701611525083773,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": -0.3173560158668878,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": 0.019968023787951407,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": 0.14604632469933826,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": -0.07291305410401504,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": 0.2647616511442977,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": -0.009669708075740916,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": -0.07253533812665125,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": -0.24707365150927654,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": -0.00420699589905499,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": -0.014804072486387492,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": 0.003507392673439576,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": 0.09543072300317192,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": -0.1002646269984258,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": -0.3804502786605695,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": -0.17206836558727848,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": 0.3882061654697655,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": 0.22351328635164844,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": -0.019537842544105,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": 0.000944919686444717,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": 0.1877234594238455,
+      "rho_path_uA_uB_outcome": "INCONCLUSIVE",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/D_dt_1p0/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 4.775,
+        "cpu_p95": 17.479,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 36.4,
+        "ctx_per_s": 29353.143,
+        "load_1m_max": 0.727,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.320831,
+        "clock_jump_ms_max": 0.419676,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": true,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 222.0,
+        "p95": 266.9499999999997,
+        "p99": 283.2,
+        "max": 285.1,
+        "implied_rate_error_p95": 0.0002669499999999997
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": false,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": true,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "6a2b11c2ad3772da835f1226e069f970a9cda1fd9d227d667e6fad248920a6a8",
+        "rho_measured_s1": "006bd8c1024ce692f6f854645064a087366b25d906c4c8d761d1636b8916b781",
+        "meta": "693b342297b5744e499634f342e26f3e6738e91adfbe195439b5cc6b7780773c",
+        "infra": "f51bbaca4dcb6d4c72221b2e29d6f8e792d51da9194a55397ac735ef1b9d8710"
+      }
+    },
+    {
+      "cell": "E",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/E/rep1",
+      "engine": "static",
+      "measured_window_s": 0.2,
+      "telemetry_config": {
+        "ditto": false,
+        "aoi_probe": true,
+        "reconcile_every": 1,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": 64.78880341327712,
+          "background_bytes_per_window": 155331.6019135046,
+          "residual_sd_pkts": 11.111281984406329,
+          "acf1_residual": -0.43628584442438106,
+          "v_path": 1.2956245325315991e-05,
+          "v_pack_rho_units": 1.748995575938733e-08,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 740.7820524852972,
+          "v_measured": 1.1484316232520322e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006189089999679709,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 3.490204681962236,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0053198226725775805,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.006189089999679709,
+            "align_error_pkts_observed_max": 3.490204681962236
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 86.73096446700508,
+          "bytes_per_packet_fitted": 413.37010781270726,
+          "background_bytes_per_window": 89214.41795894473,
+          "residual_sd_pkts": 1.5161334143047338,
+          "acf1_residual": -0.4254979474343775,
+          "v_path": 1.7462229335892148e-05,
+          "v_pack_rho_units": 1.265739701118775e-06,
+          "v_pack_relative_units": 2.215646126210648e-05,
+          "path_to_pack_ratio": 13.796066695591088,
+          "v_measured": 1.846350303522077e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.0070290949997797725,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 3.0482423583866383,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.006917850525015442,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.0070290949997797725,
+            "align_error_pkts_observed_max": 3.0482423583866387
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.44670050761421,
+          "bytes_per_packet_fitted": 263.8924833491889,
+          "background_bytes_per_window": 114803.04567078994,
+          "residual_sd_pkts": 2.6514667698495065,
+          "acf1_residual": -0.7203013851320461,
+          "v_path": 2.1757721228714438e-05,
+          "v_pack_rho_units": 5.158462838380132e-07,
+          "v_pack_relative_units": 1.755150944713377e-05,
+          "path_to_pack_ratio": 42.17869142495719,
+          "v_measured": 2.218354040123746e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006842547999440285,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 3.3339093243701456,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": false,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.006157229246838923,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.006842547999440285,
+            "align_error_pkts_observed_max": 3.3339093243701456
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 65.68020304568527,
+          "bytes_per_packet_fitted": 130.69154228854634,
+          "background_bytes_per_window": 86127.71641791122,
+          "residual_sd_pkts": 5.2556396310749305,
+          "acf1_residual": -0.4800325714803518,
+          "v_path": 4.718743833739785e-05,
+          "v_pack_rho_units": 2.8467134311631993e-07,
+          "v_pack_relative_units": 3.86348985521471e-05,
+          "path_to_pack_ratio": 165.76111181699284,
+          "v_measured": 4.72193050226129e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.007197793999694113,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 2.3637041366852634,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.00609026644915715,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.007197793999694113,
+            "align_error_pkts_observed_max": 2.3637041366852634
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 96.91370558375634,
+          "bytes_per_packet_fitted": 33.172993960369304,
+          "background_bytes_per_window": 136535.3563416682,
+          "residual_sd_pkts": 14.41103534267209,
+          "acf1_residual": -0.165820000922383,
+          "v_path": 1.01634175519467e-05,
+          "v_pack_rho_units": 8.151463822187732e-09,
+          "v_pack_relative_units": 1.774509589179316e-05,
+          "path_to_pack_ratio": 1246.821156745193,
+          "v_measured": 1.0052960834272193e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.009571649999998044,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 4.637977191963338,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.008255021190344573,
+            "max_backlog": 4,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.009571649999998044,
+            "align_error_pkts_observed_max": 4.637977191963338
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.97969543147208,
+          "bytes_per_packet_fitted": -40.30763052208444,
+          "background_bytes_per_window": 145243.7253012046,
+          "residual_sd_pkts": 9.188067851273415,
+          "acf1_residual": -0.22817329448977813,
+          "v_path": 6.102029208904785e-06,
+          "v_pack_rho_units": 1.203485339101076e-08,
+          "v_pack_relative_units": 1.7361073645834557e-05,
+          "path_to_pack_ratio": 507.0297917764912,
+          "v_measured": 5.841470798420713e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004815553999833355,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 2.3591914997397874,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.004082376526334973,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.004815553999833355,
+            "align_error_pkts_observed_max": 2.3591914997397874
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": 524.4172043010831,
+          "background_bytes_per_window": 103491.9397849454,
+          "residual_sd_pkts": 1.0869057674758447,
+          "acf1_residual": -0.38488045734728654,
+          "v_path": 8.127708696385053e-06,
+          "v_pack_rho_units": 1.1458892753511545e-06,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 7.09292675236387,
+          "v_measured": 8.520830744073879e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006749356000000262,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 3.806154687143005,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0053198226725775805,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.006749356000000262,
+            "align_error_pkts_observed_max": 3.806154687143005
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 87.80710659898477,
+          "bytes_per_packet_fitted": -146.13294289898988,
+          "background_bytes_per_window": 139442.39414348584,
+          "residual_sd_pkts": 5.0308176749512405,
+          "acf1_residual": -0.41858681025615224,
+          "v_path": 2.4027148199857167e-05,
+          "v_pack_rho_units": 1.581839903866851e-07,
+          "v_pack_relative_units": 2.1616701045515094e-05,
+          "path_to_pack_ratio": 151.89367862779378,
+          "v_measured": 2.1684424732943556e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005306641000061063,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 2.329710160473236,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.004555623347569656,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.005306641000061063,
+            "align_error_pkts_observed_max": 2.3297101604732364
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": 0.05751382811896153,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": 0.09997591244574412,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": -0.004785012811899415,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": 0.0384650779276042,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": 0.10374899069051312,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": 0.042871700631581,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": 0.09093985873292426,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": 0.051676593179154955,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": -0.1413511588576167,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": -0.17285947816813252,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": -0.024857846338853785,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": 0.10163549934740405,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": -0.003473214956662451,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": -0.04522139603963706,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": 0.15180024996562325,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": -0.00924334423333306,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": 0.08700881459132705,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": 0.14766958489293067,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": -0.05342215479746103,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": 0.059245225883256515,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": 0.06035700035403773,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": 0.10373094083426976,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": 0.11103578305677306,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": 0.2004898176588932,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": 0.0775091012671363,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": 0.11746349171749354,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": -0.019984957633074712,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": 0.10555464614622712,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": 0.05751382811896153,
+      "rho_path_uA_uB_outcome": "CLEAN_PATH",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/E/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 12.412,
+        "cpu_p95": 29.088,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 75.14,
+        "ctx_per_s": 55114.743,
+        "load_1m_max": 2.905,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.322489,
+        "clock_jump_ms_max": 0.503469,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": true,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 240.6,
+        "p95": 325.62499999999756,
+        "p99": 1166.2210000000007,
+        "max": 1268.0,
+        "implied_rate_error_p95": 0.0016281249999999874
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": false,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": true,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "47756dc55698ad8fafef734a8d3450a0e067f0e766b0b6c28d3dd49d84771172",
+        "rho_measured_s1": "ad927380260017f7139f3d53f8185d7eea8ff7ff42eb4773d454b70678c0b316",
+        "meta": "31ab22119ed1962d26a7def4c5e8044cfb3fde23af3d479ae827352ae4eda136",
+        "infra": "4f58024f70f8db7b1459f3c9842f3d94682aa879077b5497be7879f7bb0d9a65"
+      }
+    },
+    {
+      "cell": "F",
+      "rep": 1,
+      "run_dir": "results/RAW/phase-G/g1-static-v3-smoke/F/rep1",
+      "engine": "static",
+      "measured_window_s": 0.2,
+      "telemetry_config": {
+        "ditto": true,
+        "aoi_probe": false,
+        "reconcile_every": 30,
+        "measurement_mode": "prod"
+      },
+      "per_link": {
+        "uA": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": -389.83225806453487,
+          "background_bytes_per_window": 206607.21290322786,
+          "residual_sd_pkts": 1.510351492216803,
+          "acf1_residual": -0.16823177067103642,
+          "v_path": 8.66700603538428e-06,
+          "v_pack_rho_units": 6.332036618983473e-07,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 13.687548820233538,
+          "v_measured": 8.494848600499532e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.010027251999417786,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 5.654653895385959,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.008866371120962634,
+            "max_backlog": 5,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.010027251999417786,
+            "align_error_pkts_observed_max": 5.654653895385959
+          }
+        },
+        "uB": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 86.73604060913705,
+          "bytes_per_packet_fitted": -170.98895292988624,
+          "background_bytes_per_window": 139897.6661863602,
+          "residual_sd_pkts": 3.819458114920724,
+          "acf1_residual": -0.31570976333652984,
+          "v_path": 1.8957574510267327e-05,
+          "v_pack_rho_units": 2.165715723952641e-07,
+          "v_pack_relative_units": 2.215386796744745e-05,
+          "path_to_pack_ratio": 87.53491652019737,
+          "v_measured": 1.9245504576076647e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.006751336999514024,
+            "align_error_pkts_design": 0.8673214285714285,
+            "align_error_pkts_observed_max": 2.927789625592822,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002306,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.586443244540938e-05,
+            "max_lag_s": 0.0046119003500102946,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 26886,
+            "max_ledger_gap_s": 0.006751336999514024,
+            "align_error_pkts_observed_max": 2.9277896255928226
+          }
+        },
+        "ac": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.44670050761421,
+          "bytes_per_packet_fitted": -309.87654133049637,
+          "background_bytes_per_window": 170714.9439792973,
+          "residual_sd_pkts": 2.2461997561711904,
+          "acf1_residual": -0.7565073079145358,
+          "v_path": 2.1531268169753213e-05,
+          "v_pack_rho_units": 7.112835157660913e-07,
+          "v_pack_relative_units": 1.755150944713377e-05,
+          "path_to_pack_ratio": 30.27100683833908,
+          "v_measured": 2.2310605636071782e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.008419785000114643,
+            "align_error_pkts_design": 0.9744642857142857,
+            "align_error_pkts_observed_max": 4.102389888002286,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002052,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": false,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.3004900482838089e-05,
+            "max_lag_s": 0.006157229246838923,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30208,
+            "max_ledger_gap_s": 0.008419785000114643,
+            "align_error_pkts_observed_max": 4.102389888002286
+          }
+        },
+        "ad": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 65.68020304568527,
+          "bytes_per_packet_fitted": 634.9203980099419,
+          "background_bytes_per_window": 53009.50746268704,
+          "residual_sd_pkts": 0.9525978728651348,
+          "acf1_residual": -0.48975955062193116,
+          "v_path": 3.657780676420279e-05,
+          "v_pack_rho_units": 6.718718132737324e-06,
+          "v_pack_relative_units": 3.86348985521471e-05,
+          "path_to_pack_ratio": 5.4441645030434325,
+          "v_measured": 4.5422338445400055e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.005682128999978886,
+            "align_error_pkts_design": 0.6567857142857143,
+            "align_error_pkts_observed_max": 1.8659705769573522,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.003045,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.7541090003403426e-05,
+            "max_lag_s": 0.00609026644915715,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 20360,
+            "max_ledger_gap_s": 0.005682128999978886,
+            "align_error_pkts_observed_max": 1.8659705769573522
+          }
+        },
+        "bc": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 96.90862944162437,
+          "bytes_per_packet_fitted": -232.78150217245226,
+          "background_bytes_per_window": 162301.13531966624,
+          "residual_sd_pkts": 2.072575543810833,
+          "acf1_residual": -0.22249839756977835,
+          "v_path": 1.0345835120327421e-05,
+          "v_pack_rho_units": 4.013860519543988e-07,
+          "v_pack_relative_units": 1.7746954941674468e-05,
+          "path_to_pack_ratio": 25.77527313157061,
+          "v_measured": 1.0243073110449084e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.0045178219997978886,
+            "align_error_pkts_design": 0.969107142857143,
+            "align_error_pkts_observed_max": 2.1891267850806377,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002064,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.0699192211083286e-05,
+            "max_lag_s": 0.006191265892758429,
+            "max_backlog": 3,
+            "n_send_errors": 0,
+            "packets_sent": 30042,
+            "max_ledger_gap_s": 0.0045178219997978886,
+            "align_error_pkts_observed_max": 2.1891267850806377
+          }
+        },
+        "bd": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 97.97969543147208,
+          "bytes_per_packet_fitted": 229.27101200685306,
+          "background_bytes_per_window": 118830.84734133862,
+          "residual_sd_pkts": 1.6080585240315546,
+          "acf1_residual": -0.37121633951644795,
+          "v_path": 6.044690558441753e-06,
+          "v_pack_rho_units": 3.8937103349402227e-07,
+          "v_pack_relative_units": 1.7361073645834557e-05,
+          "path_to_pack_ratio": 15.524243044480484,
+          "v_measured": 6.176271374551972e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004648220000490255,
+            "align_error_pkts_design": 0.9798214285714286,
+            "align_error_pkts_observed_max": 2.277212780597324,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002041,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.5285395979947047e-05,
+            "max_lag_s": 0.004082376526334973,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 30374,
+            "max_ledger_gap_s": 0.004648220000490255,
+            "align_error_pkts_observed_max": 2.277212780597324
+          }
+        },
+        "vC": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 112.78680203045685,
+          "bytes_per_packet_fitted": -433.92043010754725,
+          "background_bytes_per_window": 211579.4215053786,
+          "residual_sd_pkts": 1.3856520643097696,
+          "acf1_residual": -0.15254501267380635,
+          "v_path": 9.037754470332382e-06,
+          "v_pack_rho_units": 7.845273119658183e-07,
+          "v_pack_relative_units": 1.3101836757193467e-05,
+          "path_to_pack_ratio": 11.519999791576605,
+          "v_measured": 9.075862495411632e-06,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004092264999599138,
+            "align_error_pkts_design": 1.127857142857143,
+            "align_error_pkts_observed_max": 2.3077451551310855,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.001773,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": true,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 1.634354123680737e-05,
+            "max_lag_s": 0.0035465484483850535,
+            "max_backlog": 2,
+            "n_send_errors": 0,
+            "packets_sent": 34963,
+            "max_ledger_gap_s": 0.004092264999599138,
+            "align_error_pkts_observed_max": 2.3077451551310855
+          }
+        },
+        "vD": {
+          "status": "OK",
+          "n_windows": 197,
+          "mean_packets_per_window": 87.80203045685279,
+          "bytes_per_packet_fitted": -57.014778325151816,
+          "background_bytes_per_window": 131616.89655172682,
+          "residual_sd_pkts": 11.023369068667915,
+          "acf1_residual": -0.30042935601329634,
+          "v_path": 1.7562099312328762e-05,
+          "v_pack_rho_units": 2.4079098549617896e-08,
+          "v_pack_relative_units": 2.1619200591784852e-05,
+          "path_to_pack_ratio": 729.3503648460897,
+          "v_measured": 1.697770300720788e-05,
+          "ledger": {
+            "tick_s": 0.002,
+            "max_gap_s": 0.004032591999930446,
+            "align_error_pkts_design": 0.8780357142857141,
+            "align_error_pkts_observed_max": 1.7703798985408927,
+            "lag_p95_s": 0.0,
+            "lag_max_s": 0.002278,
+            "duplicate_ts_frac": 0.0
+          },
+          "gates": {
+            "G1S3-1_bytes_per_packet": false,
+            "G1S3-2_background": false,
+            "G1S3-3_residual_sd": false,
+            "G1S3-4_residual_acf": true,
+            "G1S3-7_alignment_design": true,
+            "G1S3-7b_alignment_observed": false,
+            "G1S3-8_no_stall": true
+          },
+          "emitter": {
+            "packet_shortfall_ratio": 3.936310496222006e-06,
+            "max_lag_s": 0.002277811673784828,
+            "max_backlog": 1,
+            "n_send_errors": 0,
+            "packets_sent": 27219,
+            "max_ledger_gap_s": 0.004032591999930446,
+            "align_error_pkts_observed_max": 1.7703798985408932
+          }
+        }
+      },
+      "rho_path_pairs": [
+        {
+          "pair": "uA-uB",
+          "rho_path": 0.0752090298211152,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "uA-ac",
+          "rho_path": 0.0669024706504193,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-ad",
+          "rho_path": 0.02102214306535447,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bc",
+          "rho_path": 0.05581461868524203,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-bd",
+          "rho_path": -0.007760157951015413,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vC",
+          "rho_path": 0.7471951467565024,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uA-vD",
+          "rho_path": 0.097551945130778,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ac",
+          "rho_path": 0.013161880193942372,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-ad",
+          "rho_path": 0.01603962061452449,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bc",
+          "rho_path": -0.1696643697881109,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-bd",
+          "rho_path": 0.07158700472453682,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vC",
+          "rho_path": 0.05766922066088219,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "uB-vD",
+          "rho_path": 0.10154844935685188,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-ad",
+          "rho_path": -0.06780271247347497,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bc",
+          "rho_path": -0.16628161584429274,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-bd",
+          "rho_path": 0.05782196059453797,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ac-vC",
+          "rho_path": 0.06005667859257223,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ac-vD",
+          "rho_path": 0.0891404449102105,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-bc",
+          "rho_path": 0.07426029013817316,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-bd",
+          "rho_path": -0.14444798746827772,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "ad-vC",
+          "rho_path": 0.004381375207316242,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "ad-vD",
+          "rho_path": 0.19861574264449,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-bd",
+          "rho_path": 0.10371517674270068,
+          "same_tx_node": 1,
+          "same_rx_node": 0,
+          "same_telemetry_side": 1
+        },
+        {
+          "pair": "bc-vC",
+          "rho_path": -0.029931844984151686,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bc-vD",
+          "rho_path": -0.0815690099584966,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vC",
+          "rho_path": -0.011995958131620162,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "bd-vD",
+          "rho_path": -0.0235977184145628,
+          "same_tx_node": 0,
+          "same_rx_node": 0,
+          "same_telemetry_side": 0
+        },
+        {
+          "pair": "vC-vD",
+          "rho_path": 0.11943300753301284,
+          "same_tx_node": 0,
+          "same_rx_node": 1,
+          "same_telemetry_side": 1
+        }
+      ],
+      "rho_path_uA_uB": 0.0752090298211152,
+      "rho_path_uA_uB_outcome": "CLEAN_PATH",
+      "infra": {
+        "schema": "dt4n.infra_summary.v1",
+        "source": "results/RAW/phase-G/g1-static-v3-smoke/F/rep1/infra.jsonl",
+        "samples": 700,
+        "interval_s": 0.1,
+        "cpu_p50": 13.419,
+        "cpu_p95": 33.118,
+        "cpu_max": 100.0,
+        "cpu_max_core_p95": 60.125,
+        "ctx_per_s": 45530.929,
+        "load_1m_max": 3.177,
+        "swap_max_pct": 0.0,
+        "net_drops": 0,
+        "clock_skew_ms_p95": 0.334761,
+        "clock_jump_ms_max": 0.340457,
+        "flag_cpu_saturated": false,
+        "flag_swapping": false,
+        "flag_packet_drops": false,
+        "flag_clock_jump": false
+      },
+      "infrastructure_checks": {
+        "cpu_p95_lt_40": true,
+        "net_drops_zero": true,
+        "swap_zero": true,
+        "packet_shortfall_le_0p01": true,
+        "max_lag_le_0p05": true,
+        "send_errors_zero": true
+      },
+      "preregistration": {
+        "pass": true,
+        "tag": "phase-G-g1-static-nc-v3-prereg",
+        "tag_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82",
+        "run_git_hash": "8254d632d4ed70cbbde9d9a956638856ec73ae82"
+      },
+      "read_duration_us": {
+        "p50": 221.25,
+        "p95": 304.2399999999998,
+        "p99": 350.7440000000002,
+        "max": 1080.1,
+        "implied_rate_error_p95": 0.0015211999999999988
+      },
+      "validity": {
+        "G1S3-0_engine_and_two_samplers": true,
+        "G1S3-1_bytes_per_packet": false,
+        "G1S3-2_background": false,
+        "G1S3-3_residual_sd": false,
+        "G1S3-4_residual_acf": false,
+        "G1S3-7_alignment_design": true,
+        "G1S3-7b_alignment_observed": false,
+        "G1S3-8_no_stall": true,
+        "G1S3-5_infrastructure_clean": true,
+        "G1S3-6_preregistered_before_run": true,
+        "G1S3-9_read_error_lt_0p005": true
+      },
+      "status": "INVALID",
+      "input_sha256": {
+        "rho_measured_s0": "d0a9d3de7cf99ad2e4fcdbc84dca2c4b427c56a8e03802b69ca57a0a526ba6be",
+        "rho_measured_s1": "00dbefb4dbcb0671e84073b35be1cb1c0964ba70de64c7f55c022a150c7861ab",
+        "meta": "4dcc7c34e16862a733f98ef21844c8c7d87803678c09e6db57dc3ed401ed85cf",
+        "infra": "bca53ea5ba19cd34376bfb1455c42972963cce292966fbe8a7ebecee704b735c"
+      }
+    }
+  ],
+  "dt_control": {
+    "status": "FAIL",
+    "per_link": {
+      "uA": {
+        "v_measured": {
+          "0.2": 9.774206410971924e-06,
+          "0.5": 5.292243407578257e-07,
+          "1.0": 1.5580723396741723e-07
+        },
+        "ratio_0p2_over_0p5": 18.4689283130396,
+        "ratio_0p5_over_1p0": 3.396660907724595,
+        "expected": {
+          "ratio_0p2_over_0p5": 6.25,
+          "ratio_0p5_over_1p0": 4.0
+        },
+        "pass_factor_two_band": false
+      },
+      "uB": {
+        "v_measured": {
+          "0.2": 1.9124892947772804e-05,
+          "0.5": 2.062971815037996e-06,
+          "1.0": 8.563599096280655e-07
+        },
+        "ratio_0p2_over_0p5": 9.270554647602182,
+        "ratio_0p5_over_1p0": 2.4090009257135665,
+        "expected": {
+          "ratio_0p2_over_0p5": 6.25,
+          "ratio_0p5_over_1p0": 4.0
+        },
+        "pass_factor_two_band": true
+      },
+      "ac": {
+        "v_measured": {
+          "0.2": 2.268672921322473e-05,
+          "0.5": 3.5766639842095883e-06,
+          "1.0": 7.129540334774748e-07
+        },
+        "ratio_0p2_over_0p5": 6.342985897859874,
+        "ratio_0p5_over_1p0": 5.016682445520648,
+        "expected": {
+          "ratio_0p2_over_0p5": 6.25,
+          "ratio_0p5_over_1p0": 4.0
+        },
+        "pass_factor_two_band": true
+      },
+      "ad": {
+        "v_measured": {
+          "0.2": 4.541681888523314e-05,
+          "0.5": 5.258414838627483e-06,
+          "1.0": 1.9813254854091665e-06
+        },
+        "ratio_0p2_over_0p5": 8.63697906669675,
+        "ratio_0p5_over_1p0": 2.653988391786905,
+        "expected": {
+          "ratio_0p2_over_0p5": 6.25,
+          "ratio_0p5_over_1p0": 4.0
+        },
+        "pass_factor_two_band": true
+      },
+      "bc": {
+        "v_measured": {
+          "0.2": 8.290131083338677e-06,
+          "0.5": 3.065280201650398e-06,
+          "1.0": 9.339027371845315e-07
+        },
+        "ratio_0p2_over_0p5": 2.704526352558286,
+        "ratio_0p5_over_1p0": 3.282226381401775,
+        "expected": {
+          "ratio_0p2_over_0p5": 6.25,
+          "ratio_0p5_over_1p0": 4.0
+        },
+        "pass_factor_two_band": false
+      },
+      "bd": {
+        "v_measured": {
+          "0.2": 3.223048101638166e-06,
+          "0.5": 1.1428534677674334e-06,
+          "1.0": 4.0993509436787104e-07
+        },
+        "ratio_0p2_over_0p5": 2.8201761577837243,
+        "ratio_0p5_over_1p0": 2.787888823058047,
+        "expected": {
+          "ratio_0p2_over_0p5": 6.25,
+          "ratio_0p5_over_1p0": 4.0
+        },
+        "pass_factor_two_band": false
+      },
+      "vC": {
+        "v_measured": {
+          "0.2": 8.740075761741677e-06,
+          "0.5": 2.1489671533095962e-07,
+          "1.0": 2.751969144366395e-07
+        },
+        "ratio_0p2_over_0p5": 40.67105329311898,
+        "ratio_0p5_over_1p0": 0.7808834476610267,
+        "expected": {
+          "ratio_0p2_over_0p5": 6.25,
+          "ratio_0p5_over_1p0": 4.0
+        },
+        "pass_factor_two_band": false
+      },
+      "vD": {
+        "v_measured": {
+          "0.2": 1.542550331349093e-05,
+          "0.5": 4.12763484228303e-06,
+          "1.0": 2.0854045549113627e-07
+        },
+        "ratio_0p2_over_0p5": 3.7371288650521595,
+        "ratio_0p5_over_1p0": 19.79296934286436,
+        "expected": {
+          "ratio_0p2_over_0p5": 6.25,
+          "ratio_0p5_over_1p0": 4.0
+        },
+        "pass_factor_two_band": false
+      }
+    }
+  }
+}
