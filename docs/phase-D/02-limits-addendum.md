@@ -68,9 +68,19 @@ kiểm lại **mọi** ngưỡng đang gắn vào nhánh đó, không chỉ ngư
 > `abs(r_true_hat-r_offered)` trên cùng hiện thực, không phải độ chính xác biên
 > duyên của riêng `r_offered`.
 
+**NT 58 — trước khi chia mẫu, phải audit luồng thông tin và giả định chuyển giao.**
+
+> Viết ra mọi biến mà thủ tục ước lượng đọc. Nếu biến mục tiêu không nằm trong
+> danh sách, nguy cơ rò rỉ mục tiêu trực tiếp không tự nó biện minh cho việc
+> chia mẫu. Phải cân lợi ích chống tuning/selection với giả định mới rằng tham
+> số nuisance hiệu chuẩn ở phần trước chuyển giao được sang phần sau. Khi giả
+> định đó không qua gate tính dừng đã ký, dùng hiệu chuẩn trong-cửa-sổ được ký
+> trước hoặc dữ liệu mới; không dùng lại outcome đã cháy để chứng nhận.
+
 Định danh NT54--NT55 thuộc master plan ngoài workspace và không được tái dựng
 từ trí nhớ tại đây. NT56 được chép lại từ chỉ dẫn Phase G trước; NT57 được ký
-bởi `docs/phase-G/13-amendment-G-A004.md`.
+bởi `docs/phase-G/13-amendment-G-A004.md`; NT58 được mở bởi chẩn đoán hậu
+nghiệm sau G-A004 và phép đo cửa sổ kết dính.
 
 ## Đính chính quan trọng so với bản hướng dẫn đầu vào
 
