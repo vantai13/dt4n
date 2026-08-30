@@ -7,7 +7,14 @@ import pytest
 from mininet.run_sync_v7 import MEASURED_CSV_FIELDS
 from mininet.static_emitter import StaticConfig
 from mininet.traffic_static import static_profile
-from tools.g1_static_nc import LINKS, certify, discriminate, nugget_direct, pair_table
+from tools.g1_static_nc import (
+    LINKS,
+    certify,
+    discriminate,
+    load_static_ledger,
+    nugget_direct,
+    pair_table,
+)
 
 
 def test_locked_static_geometry_matches_lesson_reference():
@@ -67,3 +74,16 @@ def test_certificate_never_certifies_an_invalid_cell():
     cert = certify([invalid], [0.01, 0.02])
     assert cert["A"]["status"] == "INVALID"
     assert "v_worst_link" not in cert["A"]
+
+
+def test_static_ledger_coalesces_duplicate_observation_times(tmp_path):
+    frame = pd.DataFrame(
+        {
+            "timestamp_s": [0.0, 0.2, 0.2, 0.4],
+            "cum_bytes": [0, 1400, 2800, 4200],
+        }
+    )
+    frame.to_csv(tmp_path / "rho_offered_uA.csv", index=False)
+    bits, dts = load_static_ledger(tmp_path, "uA", 0.2)
+    assert bits.tolist() == [2800 * 8]
+    assert dts.tolist() == pytest.approx([0.2])

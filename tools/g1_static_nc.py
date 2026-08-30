@@ -52,6 +52,12 @@ def load_measured(path: Path, column: str = "rho") -> pd.DataFrame:
 
 def load_static_ledger(flow_log_dir: Path, link: str, dt_target: float) -> tuple[np.ndarray, np.ndarray]:
     frame = pd.read_csv(flow_log_dir / ("rho_offered_%s.csv" % link))
+    # A delayed emitter can service more than one 10-ms logging deadline in a
+    # single loop. Those rows observe the same cumulative state and their
+    # timestamps can also collapse after six-decimal CSV formatting. Retain
+    # the last cumulative state at each observed instant; no packet evidence
+    # is discarded and no interpolation is introduced.
+    frame = frame.groupby("timestamp_s", as_index=False, sort=True).last()
     times = frame["timestamp_s"].to_numpy(dtype=float)
     cumulative_bytes = frame["cum_bytes"].to_numpy(dtype=float)
     if len(times) < 2 or np.any(np.diff(times) <= 0.0):
