@@ -1,0 +1,178 @@
+{
+  "schema": "dt4n.phase_g.g_a005_reclassification.v1",
+  "status": "POST_HOC_RECLASSIFICATION_COMPLETE",
+  "scope": {
+    "changes_G_A004_numeric_verdict": false,
+    "G_A004_verdict": "FAIL",
+    "G1_closed": false,
+    "pipeline_certified": false,
+    "component_cause_identified_by_G_A004": false,
+    "cause_classification": "NON_IDENTIFYING_AMONG_NUISANCE_ERROR_MODEL_MISSPECIFICATION_AND_TWO_BAND_DEFECT"
+  },
+  "pipeline_mismatch": {
+    "power_stage": "simulates with locked sf/phi and gives the same values directly to estimate_two_band",
+    "physical_stage": "estimates sf/phi on first half and transfers them to second-half estimate_two_band",
+    "full_pipeline_refit_in_power": false,
+    "power_all_six_probability": 0.9905,
+    "conclusion": "the power calculation calibrated a conditional solver, not the deployed nuisance-estimation-plus-solver pipeline"
+  },
+  "uA_uB_sensitivity": {
+    "r_offered_held_out": 0.11410408107527767,
+    "r_measured_held_out": 0.24981134673035038,
+    "phi_fixed_from_first_half": {
+      "uA": 0.9911198474322813,
+      "uB": 0.99051300059762
+    },
+    "solves": {
+      "first_half_G_A004": {
+        "sf": {
+          "uA": 0.9762815241159777,
+          "uB": 0.9365677884861318
+        },
+        "r_true_hat": 0.22317675372705784,
+        "rho_eps_hat": 0.9385770658100934,
+        "cond_A": 1.3602655333645377,
+        "absolute_error": 0.10907267265178017,
+        "pair_gate_pass": false
+      },
+      "full_run_posthoc": {
+        "sf": {
+          "uA": 0.8694228020696273,
+          "uB": 0.8567986764322684
+        },
+        "r_true_hat": 0.15801584895196977,
+        "rho_eps_hat": 0.8295069814418717,
+        "cond_A": 1.260217266346725,
+        "absolute_error": 0.0439117678766921,
+        "pair_gate_pass": true
+      },
+      "second_half_inferred_posthoc": {
+        "sf": {
+          "uA": 0.7809388633959164,
+          "uB": 0.7731444228220475
+        },
+        "r_true_hat": 0.08759362378073099,
+        "rho_eps_hat": 0.8152916252174168,
+        "cond_A": 1.442683325548749,
+        "absolute_error": 0.02651045729454668,
+        "pair_gate_pass": true,
+        "assumption": "v2=2*v_full-v1 and full-run signal variance is unchanged"
+      }
+    },
+    "local_derivatives_at_first_half_sf": {
+      "step": 0.0001,
+      "dr_dsf_uA": 0.5052875319683237,
+      "dr_dsf_uB": 0.15817128600076336,
+      "dr_dcommon_sf_shift": 0.663458367507197
+    }
+  },
+  "coherence": {
+    "W_star_s": null,
+    "all_link_pass_by_window": {
+      "50": false,
+      "100": false,
+      "200": false,
+      "400": false,
+      "750": false
+    },
+    "interpretation": "fixed-configuration nuisance transfer is rejected on every identifiable signed window"
+  },
+  "model_class_warnings": {
+    "ac": {
+      "sf": 1.027209404884444,
+      "v": -0.00013236939057438213,
+      "estimator_ok": false,
+      "classification": "OUTSIDE_PHYSICAL_DOMAIN_MODEL_CLASS_WARNING"
+    },
+    "bc": {
+      "sf": 1.0338155610383362,
+      "v": -0.00016756561588542748,
+      "estimator_ok": false,
+      "classification": "OUTSIDE_PHYSICAL_DOMAIN_MODEL_CLASS_WARNING"
+    },
+    "bd": {
+      "sf": 1.0221128209891237,
+      "v": -0.00010329014548077902,
+      "estimator_ok": false,
+      "classification": "OUTSIDE_PHYSICAL_DOMAIN_MODEL_CLASS_WARNING"
+    }
+  },
+  "H6_grouping_posthoc": {
+    "old_H6b_same_telemetry_side_retained_as_confirmatory": false,
+    "candidate_H6c": "high rho_eps iff both link counters are on interfaces transmitted by the same switch node",
+    "pairs": {
+      "uA-uB": {
+        "tx_nodes": [
+          "sSRC",
+          "sSRC"
+        ],
+        "same_tx_node": true,
+        "rho_eps_hat": 0.9385770658100934,
+        "rho_eps_ge_0p50": true
+      },
+      "uA-vC": {
+        "tx_nodes": [
+          "sSRC",
+          "sC"
+        ],
+        "same_tx_node": false,
+        "rho_eps_hat": 0.020604471054162483,
+        "rho_eps_ge_0p50": false
+      },
+      "uA-vD": {
+        "tx_nodes": [
+          "sSRC",
+          "sD"
+        ],
+        "same_tx_node": false,
+        "rho_eps_hat": 0.014250439788713749,
+        "rho_eps_ge_0p50": false
+      },
+      "uB-vC": {
+        "tx_nodes": [
+          "sSRC",
+          "sC"
+        ],
+        "same_tx_node": false,
+        "rho_eps_hat": 0.015129600500992671,
+        "rho_eps_ge_0p50": false
+      },
+      "uB-vD": {
+        "tx_nodes": [
+          "sSRC",
+          "sD"
+        ],
+        "same_tx_node": false,
+        "rho_eps_hat": 0.012722311239184252,
+        "rho_eps_ge_0p50": false
+      },
+      "vC-vD": {
+        "tx_nodes": [
+          "sC",
+          "sD"
+        ],
+        "same_tx_node": false,
+        "rho_eps_hat": -0.00456123896662914,
+        "rho_eps_ge_0p50": false
+      }
+    },
+    "warning": "formed after outcomes; descriptive only until tested on fresh/direct static-control data"
+  },
+  "custody": {
+    "raw_outcomes_already_burned": true,
+    "data_manifest_doi": null,
+    "input_sha256": {
+      "results/SMOKE/phase-G/g_a003_split_calibration.json": "46a8cc8d49b9d1d6f182eaf10ba5ecea0a717931ef4f9d3daa68d9051fa80fd1",
+      "results/SMOKE/phase-G/g_a004_paired_power.json": "9f45ae9c6b55a407993b9d4361d8089fd76bd271e3fbf76130d60e2c38649ca4",
+      "results/SMOKE/phase-G/g_a004_split_sample.json": "b1b2e7019712162671b349b2c97284e790f6173b2fcaf44da237feb6a30ed96d",
+      "results/SMOKE/phase-G/g1_4_physical_reanalysis.json": "8567552d1227a70249eade436189db6594911480ed4d5e10ff752205fc227bf0",
+      "results/SMOKE/phase-G/g_measurement_coherence.json": "e52d010b05298fe87541f0de73613550de63db3976d23d6c50a1cfb5e8e0d00a",
+      "tools/g_a004_paired_power.py": "14aff389be048dad97671fc184c2d1f498b6d9dbe5b760a691b32204e63d507a"
+    }
+  },
+  "provenance": {
+    "git_hash": "e6a6097cd6c94fb224384ec2a33865bd4b1c301c",
+    "timestamp_utc": "2026-08-30T02:01:52.955695+00:00",
+    "script": "tools/g_a005_reclassification.py"
+  }
+}

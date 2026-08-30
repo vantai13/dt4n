@@ -77,10 +77,19 @@ kiểm lại **mọi** ngưỡng đang gắn vào nhánh đó, không chỉ ngư
 > định đó không qua gate tính dừng đã ký, dùng hiệu chuẩn trong-cửa-sổ được ký
 > trước hoặc dữ liệu mới; không dùng lại outcome đã cháy để chứng nhận.
 
+**NT 59 — power phải chạy toàn bộ pipeline được triển khai.**
+
+> Mọi tham số nuisance mà phép triển khai phải ước lượng cũng phải được ước
+> lại trong từng replicate power bằng đúng dữ liệu và custody flow tương ứng.
+> Cho mô phỏng biết miễn phí một tham số mà phép triển khai phải tự ước nghĩa
+> là đang hiệu chuẩn một estimator khác. Power có điều kiện trên nuisance đã
+> biết không được dùng để tuyên bố power của pipeline end-to-end.
+
 Định danh NT54--NT55 thuộc master plan ngoài workspace và không được tái dựng
 từ trí nhớ tại đây. NT56 được chép lại từ chỉ dẫn Phase G trước; NT57 được ký
 bởi `docs/phase-G/13-amendment-G-A004.md`; NT58 được mở bởi chẩn đoán hậu
-nghiệm sau G-A004 và phép đo cửa sổ kết dính.
+nghiệm sau G-A004 và phép đo cửa sổ kết dính; NT59 được ghi bởi G-A005 sau
+khi audit khác biệt giữa power có `sf` cố định và pipeline phải ước `sf`.
 
 ## Đính chính quan trọng so với bản hướng dẫn đầu vào
 
