@@ -1,0 +1,163 @@
+{
+  "schema": "dt4n.phase_g.g1_closed_form_validation.v2",
+  "stage": "validate",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "git_hash": "b0fa18a7446127bfd9514276e52f1e2398f61b9d",
+  "quantization_mode": "independent_round",
+  "wire_bytes": 1442.0,
+  "n_per_cell": 6000,
+  "gates": {
+    "sf_abs_error_max": 0.03,
+    "acf3_control_error_max": 0.03,
+    "valid_seeds_required": 16
+  },
+  "n_cells": 12,
+  "n_pass": 12,
+  "overall": "PASS",
+  "cells": [
+    {
+      "dt_s": 0.2,
+      "sigma": 0.01,
+      "tau_s": 3.0,
+      "sf_true": 0.9584786260464491,
+      "sf_hat_median": 0.9561500024715177,
+      "sf_abs_error": 0.0023286235749313544,
+      "acf3_control_error_median": 0.0014507247149211921,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.01,
+      "tau_s": 10.0,
+      "sf_true": 0.9584786260464491,
+      "sf_hat_median": 0.9679527810522506,
+      "sf_abs_error": 0.00947415500580151,
+      "acf3_control_error_median": 0.003283218405972954,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.01,
+      "tau_s": 30.0,
+      "sf_true": 0.9584786260464491,
+      "sf_hat_median": 0.979997302944736,
+      "sf_abs_error": 0.021518676898286904,
+      "acf3_control_error_median": 0.0028408919767087815,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.02,
+      "tau_s": 3.0,
+      "sf_true": 0.9892860118812014,
+      "sf_hat_median": 0.9885166608394316,
+      "sf_abs_error": 0.0007693510417697835,
+      "acf3_control_error_median": 0.0018219272083389026,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.02,
+      "tau_s": 10.0,
+      "sf_true": 0.9892860118812014,
+      "sf_hat_median": 0.9891925652294841,
+      "sf_abs_error": 9.344665171728828e-05,
+      "acf3_control_error_median": 0.0007896737646623242,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.02,
+      "tau_s": 30.0,
+      "sf_true": 0.9892860118812014,
+      "sf_hat_median": 0.9905679942354362,
+      "sf_abs_error": 0.001281982354234823,
+      "acf3_control_error_median": 0.0005715993363281102,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.03,
+      "tau_s": 3.0,
+      "sf_true": 0.9952097146917124,
+      "sf_hat_median": 0.9947914935139355,
+      "sf_abs_error": 0.0004182211777769007,
+      "acf3_control_error_median": 0.0014609837797588954,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.03,
+      "tau_s": 10.0,
+      "sf_true": 0.9952097146917124,
+      "sf_hat_median": 0.9949046103530012,
+      "sf_abs_error": 0.0003051043387112262,
+      "acf3_control_error_median": 0.00042670608682998656,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.03,
+      "tau_s": 30.0,
+      "sf_true": 0.9952097146917124,
+      "sf_hat_median": 0.9949387658692745,
+      "sf_abs_error": 0.00027094882243783314,
+      "acf3_control_error_median": 0.0002612157611683874,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.05,
+      "tau_s": 3.0,
+      "sf_true": 0.9982701940801306,
+      "sf_hat_median": 0.9984710750709169,
+      "sf_abs_error": 0.00020088099078630073,
+      "acf3_control_error_median": 0.0017529652567496168,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.05,
+      "tau_s": 10.0,
+      "sf_true": 0.9982701940801306,
+      "sf_hat_median": 0.9982850996609611,
+      "sf_abs_error": 1.4905580830504306e-05,
+      "acf3_control_error_median": 0.00039379651149967776,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    },
+    {
+      "dt_s": 0.2,
+      "sigma": 0.05,
+      "tau_s": 30.0,
+      "sf_true": 0.9982701940801306,
+      "sf_hat_median": 0.9981627673399815,
+      "sf_abs_error": 0.00010742674014907472,
+      "acf3_control_error_median": 0.00013613931194317308,
+      "valid_seeds": 16,
+      "invalid_reasons": [],
+      "verdict": "PASS"
+    }
+  ]
+}
