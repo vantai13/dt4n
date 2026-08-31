@@ -287,10 +287,11 @@ def main() -> None:
         print("\nMODE %-20s rho_bar=%s" % (
             window["quant_mode"], window["rho_bar"]
         ))
-        print("  a0 in [%10,.0f, %10,.0f]  %s  floor:%s(%s) ceiling:%s" % (
-            window["a0_min"], window["a0_max"], state,
-            window["a0_min_link"], window["a0_min_from"], window["a0_max_link"],
-        ))
+        print(
+            f"  a0 in [{window['a0_min']:10,.0f}, {window['a0_max']:10,.0f}]  "
+            f"{state}  floor:{window['a0_min_link']}({window['a0_min_from']}) "
+            f"ceiling:{window['a0_max_link']}"
+        )
         for cell in cells:
             if (
                 cell["quant_mode"] != window["quant_mode"]
@@ -305,14 +306,12 @@ def main() -> None:
             ):
                 if cell[key]:
                     failures.append("%s:%s" % (label, ",".join(cell[key])))
+            verdict = "FEASIBLE" if cell["feasible"] else "REJECT"
             print(
-                "    sigma_ref=%.8f a0=%9,.0f sig_l=[%.4f,%.4f] %-8s %s"
-                % (
-                    cell["sigma_ref_at_uA"], cell["a0"],
-                    cell["sigma_min_link"], cell["sigma_max_link"],
-                    "FEASIBLE" if cell["feasible"] else "REJECT",
-                    " | ".join(failures),
-                )
+                f"    sigma_ref={cell['sigma_ref_at_uA']:.8f} "
+                f"a0={cell['a0']:9,.0f} "
+                f"sig_l=[{cell['sigma_min_link']:.4f},{cell['sigma_max_link']:.4f}] "
+                f"{verdict:<8} {' | '.join(failures)}"
             )
     print("\nG.2 FEASIBILITY: %d/%d cells" % (
         artifact["n_feasible"], artifact["n_cells"]
@@ -321,4 +320,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-

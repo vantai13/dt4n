@@ -230,7 +230,10 @@ def main() -> None:
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(artifact, indent=2) + "\n", encoding="utf-8")
 
-    print("a0 = %,.0f  (sigma_ref=%.8f at %s)" % (a0, SIGMA_REF, SIGMA_REF_LINK))
+    print(
+        f"a0 = {a0:,.0f}  "
+        f"(sigma_ref={SIGMA_REF:.8f} at {SIGMA_REF_LINK})"
+    )
     print("sigma_l = " + "  ".join(
         "%s:%.4f" % (link, sigma)
         for link, sigma in zip(LINKS, sigma_per_link(a0))
@@ -267,4 +270,3 @@ def main() -> None:
 
 if __name__ == "__main__":
     main()
-
