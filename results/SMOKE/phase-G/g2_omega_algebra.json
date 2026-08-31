@@ -1,0 +1,297 @@
+{
+  "schema": "dt4n.phase_g.g2_omega_algebra.v1",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "git_hash": "575e1ec08f8a73fd3555a09c3476cd895c4d5aed",
+  "sigma_ref_link": "uA",
+  "sigma_ref": 0.03034883720930232,
+  "a0": 171678.94873459428,
+  "sigma_per_link": {
+    "uA": 0.03034883720930232,
+    "uB": 0.040465116279069756,
+    "ac": 0.02861315812243238,
+    "ad": 0.04291973718364857,
+    "bc": 0.02861315812243238,
+    "bd": 0.02861315812243238,
+    "vC": 0.03034883720930232,
+    "vD": 0.040465116279069756
+  },
+  "dt_s": 0.2,
+  "T_over_tau": 200.0,
+  "mc_seeds": 120,
+  "checks": [
+    {
+      "id": "ALG-G2-1",
+      "description": "sum(k_topo^2) over 28 pairs equals 5",
+      "value": 4.999999999999999,
+      "gate": 1e-12,
+      "verdict": "PASS"
+    },
+    {
+      "id": "ALG-G2-2",
+      "description": "omega=1 gives r_lm=k_topo",
+      "value": 2.220446049250313e-16,
+      "gate": 1e-12,
+      "verdict": "PASS"
+    },
+    {
+      "id": "ALG-G2-3",
+      "description": "r_lm=omega*k_topo for every grid point and pair",
+      "value": 2.220446049250313e-16,
+      "gate": 1e-12,
+      "verdict": "PASS"
+    },
+    {
+      "id": "INV-G2-1",
+      "description": "per-link variance is invariant in omega",
+      "value": 2.168404344971009e-19,
+      "gate": 1e-12,
+      "verdict": "PASS"
+    },
+    {
+      "id": "PC-G2-1",
+      "description": "fixed-a legacy parameterisation must break invariance",
+      "value": 2.0,
+      "gate": ">=1.5 (analytic expectation 2)",
+      "verdict": "PASS"
+    },
+    {
+      "id": "NC-G2-1",
+      "description": "identity correlation recovers omega=0",
+      "value": 0.0,
+      "gate": 1e-12,
+      "verdict": "PASS"
+    },
+    {
+      "id": "NC-G2-2",
+      "description": "16 k=0 pairs remain zero",
+      "value": 0.0,
+      "gate": 1e-12,
+      "verdict": "PASS",
+      "null_pairs": [
+        "uA-uB",
+        "uA-bc",
+        "uA-bd",
+        "uB-ac",
+        "uB-ad",
+        "ac-ad",
+        "ac-bc",
+        "ac-bd",
+        "ac-vD",
+        "ad-bc",
+        "ad-bd",
+        "ad-vC",
+        "bc-bd",
+        "bc-vD",
+        "bd-vC",
+        "vC-vD"
+      ]
+    },
+    {
+      "id": "PC-G2-2",
+      "description": "round-trip omega at T=200*tau",
+      "value": {
+        "max_abs_bias": 0.010516110552840408,
+        "max_sd": 0.036271167660085986
+      },
+      "gate": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "id": "INV-G2-2",
+      "description": "tau_hat spread across omega at fixed tau",
+      "value": 0.05875343057580872,
+      "gate": 0.05,
+      "verdict": "FAIL"
+    },
+    {
+      "id": "OBS-G2-1",
+      "description": "absolute finite-sample tau_hat bias (reported only)",
+      "value": 0.047002907234474554,
+      "gate": "reported only",
+      "verdict": "PASS"
+    }
+  ],
+  "monte_carlo": [
+    {
+      "tau_s": 3.0,
+      "n": 3000,
+      "omega_true": 0.0,
+      "omega_hat_median": -0.0014447387772324896,
+      "omega_hat_sd": 0.03087118217027743,
+      "bias": -0.0014447387772324896,
+      "tau_hat_median": 2.9616048103295167,
+      "tau_rel_error": 0.01279839655682776,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 3.0,
+      "n": 3000,
+      "omega_true": 0.25,
+      "omega_hat_median": 0.24863374433412985,
+      "omega_hat_sd": 0.032388569779163615,
+      "bias": -0.0013662556658701475,
+      "tau_hat_median": 2.905676673587976,
+      "tau_rel_error": 0.03144110880400793,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 3.0,
+      "n": 3000,
+      "omega_true": 0.5,
+      "omega_hat_median": 0.4995484619036912,
+      "omega_hat_sd": 0.03263798960634487,
+      "bias": -0.00045153809630882336,
+      "tau_hat_median": 2.9050165992265153,
+      "tau_rel_error": 0.03166113359116155,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 3.0,
+      "n": 3000,
+      "omega_true": 0.75,
+      "omega_hat_median": 0.7547156563063193,
+      "omega_hat_sd": 0.03020142001007151,
+      "bias": 0.004715656306319316,
+      "tau_hat_median": 2.9092002630099025,
+      "tau_rel_error": 0.030266578996699156,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 3.0,
+      "n": 3000,
+      "omega_true": 1.0,
+      "omega_hat_median": 0.9992126721289858,
+      "omega_hat_sd": 0.021704539863800658,
+      "bias": -0.0007873278710142095,
+      "tau_hat_median": 2.937481882342939,
+      "tau_rel_error": 0.020839372552353613,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 10.0,
+      "n": 10000,
+      "omega_true": 0.0,
+      "omega_hat_median": 0.0002574311698078702,
+      "omega_hat_sd": 0.03319185261135304,
+      "bias": 0.0002574311698078702,
+      "tau_hat_median": 9.690090419691396,
+      "tau_rel_error": 0.030990958030860404,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 10.0,
+      "n": 10000,
+      "omega_true": 0.25,
+      "omega_hat_median": 0.2444959459024164,
+      "omega_hat_sd": 0.036271167660085986,
+      "bias": -0.005504054097583588,
+      "tau_hat_median": 9.766148327562146,
+      "tau_rel_error": 0.02338516724378543,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 10.0,
+      "n": 10000,
+      "omega_true": 0.5,
+      "omega_hat_median": 0.4894838894471596,
+      "omega_hat_sd": 0.02980182049854575,
+      "bias": -0.010516110552840408,
+      "tau_hat_median": 9.529970927655254,
+      "tau_rel_error": 0.047002907234474554,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 10.0,
+      "n": 10000,
+      "omega_true": 0.75,
+      "omega_hat_median": 0.7459363197511935,
+      "omega_hat_sd": 0.027618989594453164,
+      "bias": -0.004063680248806545,
+      "tau_hat_median": 10.104330086064586,
+      "tau_rel_error": 0.010433008606458571,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 10.0,
+      "n": 10000,
+      "omega_true": 1.0,
+      "omega_hat_median": 1.0006732507007094,
+      "omega_hat_sd": 0.02334712832181086,
+      "bias": 0.000673250700709449,
+      "tau_hat_median": 9.78823657432875,
+      "tau_rel_error": 0.021176342567125063,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 30.0,
+      "n": 30000,
+      "omega_true": 0.0,
+      "omega_hat_median": 0.0011635131058337412,
+      "omega_hat_sd": 0.032247433091738234,
+      "bias": 0.0011635131058337412,
+      "tau_hat_median": 29.212221941628044,
+      "tau_rel_error": 0.02625926861239852,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 30.0,
+      "n": 30000,
+      "omega_true": 0.25,
+      "omega_hat_median": 0.24749621347965012,
+      "omega_hat_sd": 0.03393169979882442,
+      "bias": -0.002503786520349882,
+      "tau_hat_median": 29.004600174019906,
+      "tau_rel_error": 0.03317999419933647,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 30.0,
+      "n": 30000,
+      "omega_true": 0.5,
+      "omega_hat_median": 0.49612828067510373,
+      "omega_hat_sd": 0.03420087223054297,
+      "bias": -0.0038717193248962722,
+      "tau_hat_median": 29.742202613540723,
+      "tau_rel_error": 0.008593246215309236,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 30.0,
+      "n": 30000,
+      "omega_true": 0.75,
+      "omega_hat_median": 0.7490589768119822,
+      "omega_hat_sd": 0.02640281519798171,
+      "bias": -0.0009410231880178088,
+      "tau_hat_median": 29.566929964857643,
+      "tau_rel_error": 0.014435667838078576,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    },
+    {
+      "tau_s": 30.0,
+      "n": 30000,
+      "omega_true": 1.0,
+      "omega_hat_median": 1.0017081875770275,
+      "omega_hat_sd": 0.023460015341972198,
+      "bias": 0.001708187577027509,
+      "tau_hat_median": 29.008273224428333,
+      "tau_rel_error": 0.03305755918572224,
+      "valid_tau_replicates": 120,
+      "verdict": "PASS"
+    }
+  ],
+  "overall": "FAIL"
+}
