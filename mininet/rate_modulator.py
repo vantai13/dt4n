@@ -12,6 +12,12 @@ from dataclasses import dataclass
 
 import numpy as np
 
+from tools.g1_quant_model import (
+    QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
+    WIRE_OVERHEAD_BYTES,
+    sigma_quant_floor_rho,
+)
+
 HEADROOM_MIN = 5.0
 DT_TAU_RATIO = 10.0
 
@@ -49,10 +55,25 @@ class ModulatorConfig:
 
     @property
     def sigma_quant_floor(self) -> float:
-        """Absolute standard-deviation floor in rho units (no rho_bar factor)."""
-        return float(
-            self.payload_bits / (self.cap_bps * self.dt_s * np.sqrt(12.0))
+        """Floor for the preregistered independent-round G.0 pipeline."""
+        return sigma_quant_floor_rho(
+            self.wire_bytes,
+            self.dt_s,
+            self.cap_bps,
+            mode="independent_round",
         )
+
+    @property
+    def payload_bytes(self) -> float:
+        return float(self.payload_bits / 8.0)
+
+    @property
+    def wire_bytes(self) -> float:
+        return float(self.payload_bytes + WIRE_OVERHEAD_BYTES)
+
+    @property
+    def wire_bits(self) -> float:
+        return float(self.wire_bytes * 8.0)
 
     @property
     def sigma_headroom(self) -> float:
@@ -60,13 +81,17 @@ class ModulatorConfig:
 
     @property
     def tau_floor_packet_s(self) -> float:
-        k = DT_TAU_RATIO * HEADROOM_MIN / np.sqrt(12.0)
-        return float(k * self.payload_bits / (self.cap_bps * self.sigma))
+        k = (
+            DT_TAU_RATIO
+            * HEADROOM_MIN
+            * np.sqrt(QUANT_VAR_PACKETS_INDEPENDENT_ROUND)
+        )
+        return float(k * self.wire_bits / (self.cap_bps * self.sigma))
 
     @property
     def n_pkt_per_window(self) -> float:
         return float(
-            self.rho_bar * self.cap_bps * self.dt_s / self.payload_bits
+            self.rho_bar * self.cap_bps * self.dt_s / self.wire_bits
         )
 
 
@@ -105,9 +130,9 @@ def modulate(
 
 def quantize(rho_series: np.ndarray, cfg: ModulatorConfig) -> dict[str, object]:
     """Convert offered load to an integer packet count in each time window."""
-    wanted = rho_series * cfg.cap_bps * cfg.dt_s / cfg.payload_bits
+    wanted = rho_series * cfg.cap_bps * cfg.dt_s / cfg.wire_bits
     sent = np.round(wanted)
-    rho_measured = sent * cfg.payload_bits / (cfg.cap_bps * cfg.dt_s)
+    rho_measured = sent * cfg.wire_bits / (cfg.cap_bps * cfg.dt_s)
     return {
         "n_pkt": sent,
         "rho_measured": rho_measured,
@@ -125,7 +150,7 @@ def pace(
     times: list[np.ndarray] = []
     t0 = 0.0
     for rho in rho_series:
-        rate_pps = rho * cfg.cap_bps / cfg.payload_bits
+        rate_pps = rho * cfg.cap_bps / cfg.wire_bits
         if rate_pps <= 0:
             t0 += cfg.dt_s
             continue

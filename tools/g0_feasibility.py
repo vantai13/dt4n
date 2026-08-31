@@ -7,11 +7,17 @@ from pathlib import Path
 
 import numpy as np
 
+from tools.g1_quant_model import (
+    QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
+    WIRE_BYTES_DEFAULT,
+    sigma_quant_floor_rho,
+)
 from twin.cost_v2 import sigma_max_regime
 
 C_BPS = 8e6
 RHO_BAR = 0.857
 PAYLOAD_BITS = 1400 * 8
+WIRE_BYTES = WIRE_BYTES_DEFAULT
 HEADROOM_MIN = 5.0
 DT_TAU_RATIO = 10.0
 Z_FEASIBLE = 2.58
@@ -34,8 +40,12 @@ def tau_floor_flow(
 
 
 def tau_floor_packet(sigma: float) -> float:
-    k = DT_TAU_RATIO * HEADROOM_MIN / np.sqrt(12.0)
-    return float(k * PAYLOAD_BITS / (C_BPS * sigma))
+    k = (
+        DT_TAU_RATIO
+        * HEADROOM_MIN
+        * np.sqrt(QUANT_VAR_PACKETS_INDEPENDENT_ROUND)
+    )
+    return float(k * WIRE_BYTES * 8.0 / (C_BPS * sigma))
 
 
 def main() -> None:
@@ -46,7 +56,9 @@ def main() -> None:
         for amplitude in AMPLITUDE_GRID:
             sigma = amplitude * sigma_max
             for tau in TAU_GRID:
-                floor = PAYLOAD_BITS / (C_BPS * dt * np.sqrt(12.0))
+                floor = sigma_quant_floor_rho(
+                    WIRE_BYTES, dt, C_BPS, mode="independent_round"
+                )
                 headroom = sigma / floor
                 resolution_ok = tau >= DT_TAU_RATIO * dt
                 clip_ok = RHO_BAR + Z_FEASIBLE * sigma <= RHO_MAX
@@ -73,7 +85,7 @@ def main() -> None:
                         "tau_resolution_ok": bool(resolution_ok),
                         "tau_floor_packet_s": tau_floor_packet(sigma),
                         "tau_floor_flow_s_20kB": tau_floor_flow(sigma),
-                        "n_pkt_per_window": RHO_BAR * C_BPS * dt / PAYLOAD_BITS,
+                        "n_pkt_per_window": RHO_BAR * C_BPS * dt / (WIRE_BYTES * 8.0),
                         "clip_headroom_ok": bool(clip_ok),
                         "feasible": bool(ok),
                         "reason": "+".join(reasons),
@@ -87,6 +99,8 @@ def main() -> None:
             "C_bps": C_BPS,
             "rho_bar": RHO_BAR,
             "payload_bits": PAYLOAD_BITS,
+            "wire_bytes": WIRE_BYTES,
+            "quantization_mode": "independent_round",
             "headroom_min": HEADROOM_MIN,
             "dt_tau_ratio": DT_TAU_RATIO,
             "z_feasible": Z_FEASIBLE,
