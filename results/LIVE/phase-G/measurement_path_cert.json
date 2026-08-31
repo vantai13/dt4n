@@ -1,0 +1,74 @@
+{
+  "schema": "dt4n.phase_g.measurement_path_certificate.v1",
+  "date_utc": "2026-08-31",
+  "status": "CONDITIONAL_PASS",
+  "certificate_kind": "REANALYSIS_EXISTING_RAW_NO_NEW_NETWORK_RUN",
+  "g1_closed": true,
+  "validity": {
+    "schema": "dt4n.validity.v1",
+    "axis_role": "measures_axis",
+    "instrument": {
+      "module": "tools.g1_closed_form_sf",
+      "source_path": "tools/g1_closed_form_sf.py",
+      "source_sha256": "1040aafaac07b251dd0b2cf8e4f0c47464d6bf510a40f2a4660cf95f96725323"
+    },
+    "inputs_sha256": {
+      "results/RAW/phase-G/lesson1-ipv6-off-matched/rep1/rho_measured.csv": "986b205db097f037edeef1e694d1a5fe9d06f744577e36bebd875e2a96751e78",
+      "results/RAW/phase-G/lesson1-ipv6-off-tight/rep1/rho_measured.csv": "445aa35acae5c3a322c9c01d96e40e002e37bd1fc5426a7da37a0bfece0a045b",
+      "results/RAW/phase-G/lesson1-ipv6-off-default/rep1/rho_measured.csv": "2160857a39c2173cd30677512c9774d4b81d4269239110ca8f9f25a842786b60"
+    },
+    "note": "Measures the Phase-G measurement path; consumes no AoI or SLA axis."
+  },
+  "scope": {
+    "quantization_mode": "independent_round",
+    "carry_accumulator": false,
+    "wire_bytes": 1442.0,
+    "measured_window_s": 0.2,
+    "topology": "phase-20-v7",
+    "sigma_min_grid": 0.020232558139534878,
+    "sigma_min_conservative_sf85_measured": 0.011114136445660712,
+    "sf_target": 0.85
+  },
+  "claims": {
+    "campaign_sigma_boundary": "sigma >= 0.020232558139534878",
+    "feasible_cells": 9,
+    "feasible_cells_total": 40,
+    "validation": "PASS_12_OF_12",
+    "sigma_nonquantized_raw_min": 0.0,
+    "sigma_nonquantized_raw_max": 0.0021143435407707345,
+    "rho_eps": "NOT_IDENTIFIABLE_STATIC_QUASIPERIODIC_AT_ABS_R_0P50"
+  },
+  "not_claimed": [
+    "unconditional sf >= 0.85",
+    "stationary v_path",
+    "direct rho_eps estimate",
+    "MA(1) quantization for the independent-round generator",
+    "identifiability at arbitrary run length"
+  ],
+  "expiry_conditions": [
+    "quantization mode changes",
+    "packet or wire size changes",
+    "measurement interval changes",
+    "topology or telemetry path changes",
+    "pacing process changes",
+    "scheduler isolation changes"
+  ],
+  "provenance": {
+    "git_head_at_execution": "b0fa18a7446127bfd9514276e52f1e2398f61b9d",
+    "worktree_dirty_at_execution": true,
+    "closeout": "docs/phase-G/27-g1-closeout.md",
+    "artifacts": {
+      "results/SMOKE/phase-G/g0_feasibility_v2.json": "b1004f19183100bbe59129828e16f2135d2fbeea858be9c69fee44d07ceb4657",
+      "results/SMOKE/phase-G/g1_closed_form_validation.json": "623cf301ae62fd604fe6b59753a941d120043fb81094158dc64318108e80e074",
+      "results/SMOKE/phase-G/g1_closed_form_sf.json": "bb885be28cd29396a4705f6ac6499bc06d59d6d0f735c8823b8b546fdb15d52c",
+      "results/SMOKE/phase-G/g1_null_matched_rep1.json": "e420bce8f107f275809a5986b777fd79fef61d85db15790b5d8bfffb18bcb377",
+      "results/SMOKE/phase-G/g1_null_tight_rep1.json": "22e36501b419cfba45dc285fb8a4e66c9934347df62a3fe59f2f10b3cbb73723",
+      "results/SMOKE/phase-G/g1_null_default_rep1.json": "f672bec2863327a201cd20c3075d70a82f2621d5dcd1f894ecf5b2921d969716"
+    },
+    "raw_inputs": {
+      "results/RAW/phase-G/lesson1-ipv6-off-matched/rep1/rho_measured.csv": "986b205db097f037edeef1e694d1a5fe9d06f744577e36bebd875e2a96751e78",
+      "results/RAW/phase-G/lesson1-ipv6-off-tight/rep1/rho_measured.csv": "445aa35acae5c3a322c9c01d96e40e002e37bd1fc5426a7da37a0bfece0a045b",
+      "results/RAW/phase-G/lesson1-ipv6-off-default/rep1/rho_measured.csv": "2160857a39c2173cd30677512c9774d4b81d4269239110ca8f9f25a842786b60"
+    }
+  }
+}
