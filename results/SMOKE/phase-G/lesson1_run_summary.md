@@ -12,7 +12,10 @@ Run date: 2026-08-31 (UTC)
 /home/ubuntu/miniforge3/envs/sdn_rl/bin/python -m pytest -q test/test_g1_static_nc.py
 ```
 
-No Mininet, root, or sudo was used.
+The initial replay used no Mininet, root, or sudo. The later root-cause
+investigation did use a disposable Mininet topology, `tcpdump`, and reversible
+IPv6 sysctls. IPv6 was restored to `0/0` (`all/default`) and Mininet/OVS was
+cleaned after every control run.
 
 ## Main measured results
 
@@ -81,9 +84,38 @@ and `0.21987`, which a single common jitter parameter cannot explain.
 - T5: only `vC` in D crosses `|corr|>0.2` (`-0.206`), and this does not repeat
   (`-0.048`). Read cost is not supported as a common cause.
 
-The decision tree reaches H1, so Lesson 2 remains closed pending explicit
-filtering/accounting of foreign traffic. Emitter send-time observability is
-also still missing because H1 does not explain the full-packet anomalies.
+## Live root-cause result
+
+The investigation continued with one IPv6-on packet capture, one exactly
+matched IPv6-off run, and four additional pacing controls:
+
+```text
+                     run  pace_ms  residue support_bad   sum_excess   catchups  backlog
+                 ipv6-on    2.000        8          11     +0.23192        900        5
+        ipv6-off/matched    2.000        0           2     +0.05912        274        5
+     ipv6-off/default-r1    2.000        0           3     +0.07508        131        5
+     ipv6-off/default-r2    2.000        0           0     +0.00366        115        3
+       ipv6-off/tight-r1    0.100        0           0     +0.00786         23        3
+       ipv6-off/tight-r2    0.100        0           7     +1.01102         26       11
+```
+
+The 70-byte frame is conclusively ICMPv6 Router Solicitation: 14-byte
+Ethernet + 40-byte IPv6 + 16-byte ICMPv6. It is locally emitted on measured
+veth/OVS interfaces, so static OpenFlow drop rules do not keep it out of the
+port counters. Disabling IPv6 makes every residue disappear.
+
+The remaining full-packet residual is an intermittent host-side scheduler
+event. In tight rep2, `ac`, `bd`, and `vD` all ended their largest ledger gap
+at monotonic time about `5948.62544 s`, with 25--30 ms gaps and maximum
+backlogs of 10, 11, and 9 packets. `ac` and `bd` then showed adjacent
+deficit/surplus windows; TX and RX were identical. The Python emitter sends
+all overdue packets immediately after resuming, converting descheduling into
+a batch. A smaller independent `uA` stall aligns with its 113/116 pair.
+
+Thus two causes have been identified: local IPv6 control traffic explains the
+70-byte events, while non-stationary host scheduling/catch-up batches explain
+the much larger whole-packet excursions. Lowering `pace_tick` reduces routine
+catchups but cannot prevent an external 25--30 ms scheduling pause.
 
 ## Files
 
@@ -95,6 +127,12 @@ also still missing because H1 does not explain the full-packet anomalies.
 - Source artifact: `results/SMOKE/phase-G/g1_static_v3_smoke_detail.json`
 - G-A008 amendment: `docs/phase-G/26-amendment-G-A008-quantization-jitter.md`
 - Forensics script: `tools/g_lesson1_forensics.py`
+- Root-cause replay: `tools/g_lesson1_root_cause.py`
+- Root-cause output: `results/SMOKE/phase-G/lesson1_root_cause_output.txt`
+- Packet capture: `results/RAW/phase-G/lesson1-forensics-live/rep1/control_under200.pcap`
+- IPv6-off controls: `results/RAW/phase-G/lesson1-ipv6-off-default/` and
+  `results/RAW/phase-G/lesson1-ipv6-off-tight/`
+- Matched IPv6-off control: `results/RAW/phase-G/lesson1-ipv6-off-matched/`
 - D output: `results/SMOKE/phase-G/lesson1_forensics_D_output.txt`
 - D_dt_0p2 output:
   `results/SMOKE/phase-G/lesson1_forensics_D_dt_0p2_output.txt`

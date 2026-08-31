@@ -93,10 +93,64 @@ The same script was run on `D/rep1` and `D_dt_0p2/rep1` without network use.
 - **T5 is not reproducible:** only `vC` in D crosses the proposed absolute
   correlation threshold (`-0.206`); it is `-0.048` in D_dt_0p2.
 
-H1 is established, so v4 must either filter traffic by protocol/port or
-account explicitly for non-CBR bytes. H1 is not sufficient to explain the
-full residual, and emitter send-time observability remains the next missing
-instrument.
+## Live identification and controls
+
+A new 40 s live diagnostic captured all frames at most 200 bytes while the
+same static workload and counter logger ran. The exact 70-byte contaminant is
+an ICMPv6 Router Solicitation (type 133) sent from link-local addresses to
+`ff02::2`. Its Ethernet accounting length is `14 + 40 + 16 = 70` bytes.
+`tcpdump -i any` displays 76 bytes because its Linux SLL2 cooked header is 20
+bytes rather than the 14-byte Ethernet header used by `/proc/net/dev`.
+
+This traffic is locally originated on Mininet/OVS veth interfaces. It is
+therefore already present in a measured port's TX counter before any static
+OpenFlow default-drop decision can protect the measurement. A reversible
+control disabled IPv6 in an otherwise matched run with the same
+`rho_bar=0.857` and `pace_tick=2 ms`. All post-burn non-1442-byte residues
+changed from 8/8 links in the IPv6-on run to zero in the matched IPv6-off run
+(784 post-burn link-windows). Four additional pacing controls also had zero
+residues. IPv6 was
+restored to its original host setting after each run. This establishes H1
+causally, not merely by packet-size coincidence.
+
+H1 is not the whole residual. After removing it, occasional whole-packet
+deficit/surplus pairs remain. In the second tight-pacing repetition, `ac` and
+`bd` simultaneously recorded 94 packets followed by 103/104 packets, while
+their nominal supports were `{98,99}` and `{99,100}`. TX and RX counts were
+identical, which puts the event upstream of the measured link and rejects a
+queue between its two counter endpoints.
+
+The cumulative ledgers locate the same event. The `ac`, `bd`, and `vD`
+emitter processes ended their largest post-burn gaps at monotonic time
+`5948.62544 s`, after gaps of 24.944, 29.589, and 26.606 ms. Their recorded
+maximum due backlogs were 10, 11, and 9 packets. The emitter implementation
+computes `due` after resuming and immediately sends every due packet in a
+loop, so a userspace scheduling pause becomes a catch-up batch. A separate
+11.862 ms ledger gap on `uA` aligns with its adjacent 113/116 packet windows.
+
+Reducing `pace_tick` from 2.0 to 0.1 ms reduced ordinary catch-up counts, but
+did not eliminate external descheduling: one tight run was clean and the
+other contained the common 25--30 ms pause. Therefore the remaining mechanism
+is an intermittent host-side scheduling/batch event, not a stable emitter
+jitter parameter. The old post-batch `sd(dev)` statistic is blind to it
+because it records only after the catch-up loop.
+
+The root-cause disposition is now:
+
+- **H1 confirmed:** local ICMPv6 Router Solicitation creates the exact 70-byte
+  counter residue.
+- **H2 rejected at the measured link:** TX and RX see the same whole-packet
+  event.
+- **H3/H4 confirmed:** intermittent userspace/host scheduling gaps cause
+  catch-up batches and non-stationary adjacent-window deficits/surpluses.
+- **H5 unsupported as a common cause:** read-cost correlation is not
+  reproducible and the counter sampler stays on its deadline while affected
+  emitters show link-specific pauses.
+
+For v4, disable IPv6 on every measured interface (or filter/account control
+traffic explicitly), and replace or isolate the Python userspace pacing path
+with observable send timestamps and scheduler controls. Lowering
+`pace_tick` alone is not a sufficient fix.
 
 ## Artifacts
 
@@ -104,9 +158,16 @@ instrument.
 - `tools/g_lesson1_verify.py`
 - `tools/g_lesson1_replay_v3.py`
 - `tools/g_lesson1_forensics.py`
+- `tools/g_lesson1_root_cause.py`
 - `results/SMOKE/phase-G/lesson1_verify_output.txt`
 - `results/SMOKE/phase-G/lesson1_replay_v3_output.txt`
 - `results/SMOKE/phase-G/lesson1_forensics_D_output.txt`
 - `results/SMOKE/phase-G/lesson1_forensics_D_dt_0p2_output.txt`
+- `results/SMOKE/phase-G/lesson1_root_cause_output.txt`
+- `results/RAW/phase-G/lesson1-forensics-live/rep1/control_under200.pcap`
+- `results/RAW/phase-G/lesson1-forensics-live/rep1/rho_measured.csv`
+- `results/RAW/phase-G/lesson1-ipv6-off-default/rep{1,2}/`
+- `results/RAW/phase-G/lesson1-ipv6-off-matched/rep1/`
+- `results/RAW/phase-G/lesson1-ipv6-off-tight/rep{1,2}/`
 - `results/RAW/phase-G/g1-static-v3-smoke/D/rep1/rho_measured.csv`
 - `results/RAW/phase-G/g1-static-v3-smoke/D/rep1/rho_measured_s1.csv`
