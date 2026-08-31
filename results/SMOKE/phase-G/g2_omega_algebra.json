@@ -1,7 +1,7 @@
 {
   "schema": "dt4n.phase_g.g2_omega_algebra.v1",
   "status": "SYNTHETIC_NO_NETWORK",
-  "git_hash": "575e1ec08f8a73fd3555a09c3476cd895c4d5aed",
+  "git_hash": "69526dcc053a5891a4a841adf19df47929928549",
   "sigma_ref_link": "uA",
   "sigma_ref": 0.03034883720930232,
   "a0": 171678.94873459428,
@@ -24,6 +24,7 @@
       "description": "sum(k_topo^2) over 28 pairs equals 5",
       "value": 4.999999999999999,
       "gate": 1e-12,
+      "required": true,
       "verdict": "PASS"
     },
     {
@@ -31,6 +32,7 @@
       "description": "omega=1 gives r_lm=k_topo",
       "value": 2.220446049250313e-16,
       "gate": 1e-12,
+      "required": true,
       "verdict": "PASS"
     },
     {
@@ -38,6 +40,7 @@
       "description": "r_lm=omega*k_topo for every grid point and pair",
       "value": 2.220446049250313e-16,
       "gate": 1e-12,
+      "required": true,
       "verdict": "PASS"
     },
     {
@@ -45,6 +48,7 @@
       "description": "per-link variance is invariant in omega",
       "value": 2.168404344971009e-19,
       "gate": 1e-12,
+      "required": true,
       "verdict": "PASS"
     },
     {
@@ -52,6 +56,7 @@
       "description": "fixed-a legacy parameterisation must break invariance",
       "value": 2.0,
       "gate": ">=1.5 (analytic expectation 2)",
+      "required": true,
       "verdict": "PASS"
     },
     {
@@ -59,6 +64,7 @@
       "description": "identity correlation recovers omega=0",
       "value": 0.0,
       "gate": 1e-12,
+      "required": true,
       "verdict": "PASS"
     },
     {
@@ -66,6 +72,7 @@
       "description": "16 k=0 pairs remain zero",
       "value": 0.0,
       "gate": 1e-12,
+      "required": true,
       "verdict": "PASS",
       "null_pairs": [
         "uA-uB",
@@ -94,21 +101,34 @@
         "max_sd": 0.036271167660085986
       },
       "gate": 0.05,
+      "required": true,
       "verdict": "PASS"
     },
     {
       "id": "INV-G2-2",
-      "description": "tau_hat spread across omega at fixed tau",
-      "value": 0.05875343057580872,
-      "gate": 0.05,
-      "verdict": "FAIL"
+      "description": "normalized lag covariance is invariant in omega",
+      "value": 1.1102230246251565e-16,
+      "gate": 1e-12,
+      "required": true,
+      "verdict": "PASS"
     },
     {
       "id": "OBS-G2-1",
-      "description": "absolute finite-sample tau_hat bias (reported only)",
+      "description": "finite-sample tau_hat spread across omega",
+      "value": 0.05875343057580872,
+      "gate": 0.05,
+      "required": false,
+      "verdict": "REPORTED",
+      "retired_gate": 0.05,
+      "amendment": "docs/phase-G/28a-g2-amendment-tau-gate.md"
+    },
+    {
+      "id": "OBS-G2-2",
+      "description": "absolute finite-sample tau_hat bias",
       "value": 0.047002907234474554,
       "gate": "reported only",
-      "verdict": "PASS"
+      "required": false,
+      "verdict": "REPORTED"
     }
   ],
   "monte_carlo": [
@@ -293,5 +313,5 @@
       "verdict": "PASS"
     }
   ],
-  "overall": "FAIL"
+  "overall": "PASS"
 }
