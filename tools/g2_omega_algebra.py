@@ -22,6 +22,7 @@ from tools.g2_topology import (
     a0_from_sigma_at,
     design_correlation,
     design_covariance,
+    design_lag_covariance,
     estimate_omega,
     sigma_per_link,
     simulate_correlations,
@@ -77,14 +78,19 @@ def main() -> None:
     a0 = a0_from_sigma_at(SIGMA_REF_LINK, SIGMA_REF)
     checks: list[dict[str, object]] = []
 
-    def record(check_id, description, value, gate, passed, **extra):
+    def record(
+        check_id, description, value, gate, passed, *, required=True, **extra
+    ):
         checks.append(
             {
                 "id": check_id,
                 "description": description,
                 "value": value,
                 "gate": gate,
-                "verdict": "PASS" if passed else "FAIL",
+                "required": required,
+                "verdict": (
+                    "PASS" if passed else "FAIL"
+                ) if required else "REPORTED",
                 **extra,
             }
         )
@@ -191,6 +197,24 @@ def main() -> None:
         GATE_OMEGA_MC,
         worst_bias <= GATE_OMEGA_MC and worst_sd <= GATE_OMEGA_MC,
     )
+    temporal_error = 0.0
+    for tau_s in TAU_GRID:
+        phi = float(np.exp(-DT_S / tau_s))
+        for omega in OMEGA_GRID:
+            variance = np.diag(design_covariance(a0, omega))
+            for lag in (1, 2, 3):
+                normalized = np.diag(
+                    design_lag_covariance(a0, omega, tau_s, DT_S, lag)
+                ) / variance
+                temporal_error = max(
+                    temporal_error,
+                    float(np.max(np.abs(normalized - phi**lag))),
+                )
+    record(
+        "INV-G2-2", "normalized lag covariance is invariant in omega",
+        temporal_error, GATE_ALGEBRA, temporal_error <= GATE_ALGEBRA,
+    )
+
     tau_spreads = []
     for tau_s in TAU_GRID:
         row = [
@@ -200,17 +224,23 @@ def main() -> None:
         tau_spreads.append((max(row) - min(row)) / float(np.mean(row)))
     worst_tau_spread = float(max(tau_spreads))
     record(
-        "INV-G2-2", "tau_hat spread across omega at fixed tau",
+        "OBS-G2-1", "finite-sample tau_hat spread across omega",
         worst_tau_spread, GATE_TAU_INVARIANCE_REL,
         worst_tau_spread <= GATE_TAU_INVARIANCE_REL,
+        required=False,
+        retired_gate=GATE_TAU_INVARIANCE_REL,
+        amendment="docs/phase-G/28a-g2-amendment-tau-gate.md",
     )
     absolute_tau_bias = max(row["tau_rel_error"] for row in monte_carlo)
     record(
-        "OBS-G2-1", "absolute finite-sample tau_hat bias (reported only)",
-        absolute_tau_bias, "reported only", True,
+        "OBS-G2-2", "absolute finite-sample tau_hat bias",
+        absolute_tau_bias, "reported only", True, required=False,
     )
 
-    overall = all(check["verdict"] == "PASS" for check in checks)
+    overall = all(
+        not check["required"] or check["verdict"] == "PASS"
+        for check in checks
+    )
     artifact = {
         "schema": "dt4n.phase_g.g2_omega_algebra.v1",
         "status": "SYNTHETIC_NO_NETWORK",

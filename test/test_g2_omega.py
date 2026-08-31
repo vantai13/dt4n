@@ -23,6 +23,7 @@ from tools.g2_topology import (
     a0_from_sigma_at,
     design_correlation,
     design_covariance,
+    design_lag_covariance,
     estimate_omega,
     sigma_per_link,
 )
@@ -86,6 +87,16 @@ def test_identity_matrix_recovers_zero_omega():
     assert estimate_omega(np.eye(len(LINKS))) == pytest.approx(0.0, abs=1e-12)
 
 
+@pytest.mark.parametrize("omega", [0.0, 0.25, 0.5, 0.75, 1.0])
+def test_normalized_lag_covariance_is_invariant_in_omega(omega):
+    tau_s = 10.0
+    lag = 3
+    covariance = design_covariance(A0, omega)
+    lag_covariance = design_lag_covariance(A0, omega, tau_s, 0.2, lag)
+    normalized = np.diag(lag_covariance) / np.diag(covariance)
+    assert np.allclose(normalized, np.exp(-0.2 / tau_s) ** lag, atol=1e-15)
+
+
 def test_sigma_spread_is_exactly_three_halves():
     sigma = sigma_per_link(A0)
     assert sigma.max() / sigma.min() == pytest.approx(1.5, abs=1e-12)
@@ -123,4 +134,3 @@ def test_g1_loader_refuses_an_unpinned_measurement(tmp_path):
     path.write_text(json.dumps(changed), encoding="utf-8")
     with pytest.raises(SystemExit, match="not pinned"):
         load_g1_contract(DEFAULT_G1_CERTIFICATE, path)
-

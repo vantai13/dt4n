@@ -77,6 +77,16 @@ def design_correlation(a0: float, omega: float) -> np.ndarray:
     return covariance / np.outer(sigma, sigma)
 
 
+def design_lag_covariance(
+    a0: float, omega: float, tau_s: float, dt_s: float, lag: int
+) -> np.ndarray:
+    """Return exact stationary lag covariance for the common-phi generator."""
+    if tau_s <= 0.0 or dt_s <= 0.0 or lag < 0:
+        raise ValueError("tau_s and dt_s must be positive; lag must be non-negative")
+    phi = float(np.exp(-dt_s / tau_s))
+    return phi**lag * design_covariance(a0, omega)
+
+
 def estimate_omega(correlation: np.ndarray) -> float:
     """Estimate omega by the one-parameter LS contrast ``<r,k>/<k,k>``.
 
@@ -195,4 +205,3 @@ def simulate_correlations(
     diagonal = np.arange(len(LINKS))
     correlations[:, diagonal, diagonal] = 1.0
     return correlations, traces
-
