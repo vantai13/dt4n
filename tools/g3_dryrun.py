@@ -16,6 +16,7 @@ from tools.g1_quant_model import (
     acf1_predicted_mechanism_a,
     acf_predicted_mechanism_a_lag,
     solve_phi_nugget_corrected,
+    solve_phi_multilag,
 )
 from tools.g2_decision_flow import contrast, p_flip, quad_forms
 from tools.g2_feasibility_omega import (
@@ -219,6 +220,7 @@ def quantization_stress(replicates: int) -> dict[str, object]:
     tau_repo_lag12 = []
     tau_legacy_lag23 = []
     tau_corrected_lag23 = []
+    tau_corrected_multilag = []
     sigma_packets = (
         QUANT_STRESS_A0 * np.sqrt(DEGREE) * DT_S / (WIRE_BYTES * 8.0)
     )
@@ -243,15 +245,16 @@ def quantization_stress(replicates: int) -> dict[str, object]:
             acf(sent[index] - target[index]) for index in range(len(LINKS))
         ])
         replicate_total_acfs = np.asarray([
-            [acf(sent_packets[index], lag) for lag in (1, 2, 3)]
+            [acf(sent_packets[index], lag) for lag in range(1, 9)]
             for index in range(len(LINKS))
         ])
         total_acfs.append(replicate_total_acfs)
         repo_row = []
         legacy_row = []
         corrected_row = []
+        multilag_row = []
         for index in range(len(LINKS)):
-            a1, a2, a3 = replicate_total_acfs[index]
+            a1, a2, a3 = replicate_total_acfs[index, :3]
             total_variance = float(np.var(sent_packets[index], ddof=1))
             phi_repo = a2 / a1 if a1 > 0.0 else float("nan")
             phi_legacy = a3 / a2 if a2 > 0.0 else float("nan")
@@ -262,12 +265,20 @@ def quantization_stress(replicates: int) -> dict[str, object]:
                 QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
                 sigma_packets[index],
             )
+            phi_multilag = solve_phi_multilag(
+                replicate_total_acfs[index],
+                total_variance,
+                QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
+                sigma_packets[index],
+            )
             repo_row.append(tau_from_phi(phi_repo))
             legacy_row.append(tau_from_phi(phi_legacy))
             corrected_row.append(tau_from_phi(phi_corrected))
+            multilag_row.append(tau_from_phi(phi_multilag))
         tau_repo_lag12.append(repo_row)
         tau_legacy_lag23.append(legacy_row)
         tau_corrected_lag23.append(corrected_row)
+        tau_corrected_multilag.append(multilag_row)
 
         wanted = target * CAP_BPS[:, None] * DT_S / (WIRE_BYTES * 8.0)
         cumulative_total = np.floor(np.cumsum(wanted, axis=1))
@@ -286,6 +297,7 @@ def quantization_stress(replicates: int) -> dict[str, object]:
     repo_tau = np.asarray(tau_repo_lag12)
     legacy_tau = np.asarray(tau_legacy_lag23)
     corrected_tau = np.asarray(tau_corrected_lag23)
+    multilag_tau = np.asarray(tau_corrected_multilag)
     observed = np.median(independent, axis=0)
     cumulative_observed = np.median(cumulative, axis=0)
     steps = quantization_step_packets(
@@ -301,7 +313,7 @@ def quantization_stress(replicates: int) -> dict[str, object]:
             sigma_packet**2 + QUANT_VAR_PACKETS_INDEPENDENT_ROUND
         )
         exact_acfs = []
-        for lag in (1, 2, 3):
+        for lag in range(1, 9):
             nugget_acf = acf_predicted_mechanism_a_lag(
                 sigma_packet, phi_true, lag
             )
@@ -318,15 +330,37 @@ def quantization_stress(replicates: int) -> dict[str, object]:
             QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
             sigma_packet,
         )
+        exact_phi_multilag = solve_phi_multilag(
+            np.asarray(exact_acfs),
+            total_variance,
+            QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
+            sigma_packet,
+        )
         exact_rows.append({
-            "acf1_3": exact_acfs,
+            "acf1_8": exact_acfs,
             "tau_repo_lag12_s": tau_from_phi(exact_phi_repo),
             "tau_legacy_lag23_s": tau_from_phi(exact_phi_legacy),
             "tau_corrected_lag23_s": tau_from_phi(exact_phi_corrected),
+            "tau_corrected_multilag_s": tau_from_phi(exact_phi_multilag),
         })
     corrected_relative_bias = np.abs(
         np.nanmedian(corrected_tau, axis=0) / QUANT_STRESS_TAU_S - 1.0
     )
+    multilag_relative_bias = np.abs(
+        np.nanmedian(multilag_tau, axis=0) / QUANT_STRESS_TAU_S - 1.0
+    )
+
+    def distribution(values: np.ndarray, index: int) -> dict[str, float | int]:
+        finite = values[np.isfinite(values[:, index]), index]
+        count = int(finite.size)
+        sd = float(np.std(finite, ddof=1)) if count >= 2 else float("nan")
+        return {
+            "valid_replicates": count,
+            "median_s": float(np.median(finite)) if count else float("nan"),
+            "sd_s": sd,
+            "se_median_s": float(1.253314 * sd / np.sqrt(count))
+            if count >= 2 else float("nan"),
+        }
     return {
         "sigma_ref_uA": QUANT_STRESS_SIGMA_REF,
         "a0": QUANT_STRESS_A0,
@@ -345,7 +379,7 @@ def quantization_stress(replicates: int) -> dict[str, object]:
                 "acf1_independent_predicted": float(predicted[index]),
                 "prediction_abs_error": float(abs(observed[index] - predicted[index])),
                 "acf1_cumulative_median": float(cumulative_observed[index]),
-                "total_acf1_3_median": np.median(
+                "total_acf1_8_median": np.median(
                     total_acf_array[:, index, :], axis=0
                 ).tolist(),
                 "tau_repo_lag12_median_s": float(
@@ -359,6 +393,19 @@ def quantization_stress(replicates: int) -> dict[str, object]:
                 ),
                 "tau_corrected_relative_bias": float(
                     corrected_relative_bias[index]
+                ),
+                "tau_repo_lag12_distribution": distribution(repo_tau, index),
+                "tau_legacy_lag23_distribution": distribution(
+                    legacy_tau, index
+                ),
+                "tau_corrected_lag23_distribution": distribution(
+                    corrected_tau, index
+                ),
+                "tau_corrected_multilag_distribution": distribution(
+                    multilag_tau, index
+                ),
+                "tau_corrected_multilag_relative_bias": float(
+                    multilag_relative_bias[index]
                 ),
                 "exact_moment_estimators": exact_rows[index],
                 "independent_classification": classify_quantization(observed[index]),
@@ -378,6 +425,13 @@ def quantization_stress(replicates: int) -> dict[str, object]:
         "tau_corrected_max_relative_bias": float(
             np.max(corrected_relative_bias)
         ),
+        "tau_corrected_multilag_max_relative_bias": float(
+            np.max(multilag_relative_bias)
+        ),
+        "tau_corrected_multilag_min_valid_replicates": int(min(
+            np.count_nonzero(np.isfinite(multilag_tau[:, index]))
+            for index in range(len(LINKS))
+        )),
     }
 
 
@@ -743,11 +797,50 @@ def main() -> None:
                     "tau_legacy_lag23_median_s",
                     "tau_corrected_lag23_median_s",
                     "tau_corrected_relative_bias",
+                    "tau_repo_lag12_distribution",
+                    "tau_legacy_lag23_distribution",
+                    "tau_corrected_lag23_distribution",
                     "exact_moment_estimators",
                 )
             }
             for link, row in quant_stress["per_link"].items()
         },
+        reduction="median of 16 preregistered replicates per link",
+    )
+    multilag_tau_bias = quant_stress[
+        "tau_corrected_multilag_max_relative_bias"
+    ]
+    multilag_valid = quant_stress[
+        "tau_corrected_multilag_min_valid_replicates"
+    ]
+    record(
+        "DRY-T-M",
+        "multi-lag corrected tau reuses lags 1--8 with physical refusal",
+        {
+            "max_relative_median_bias": multilag_tau_bias,
+            "min_valid_replicates": float(multilag_valid),
+        },
+        {
+            "relative_median_bias": GATE_QUANT_TAU_REL_BIAS,
+            "valid_replicates": float(args.replicates),
+        },
+        multilag_tau_bias <= GATE_QUANT_TAU_REL_BIAS
+        and multilag_valid == args.replicates,
+        estimators={
+            link: {
+                "tau_corrected_multilag_distribution": row[
+                    "tau_corrected_multilag_distribution"
+                ],
+                "tau_corrected_multilag_relative_bias": row[
+                    "tau_corrected_multilag_relative_bias"
+                ],
+                "exact_tau_corrected_multilag_s": row[
+                    "exact_moment_estimators"
+                ]["tau_corrected_multilag_s"],
+            }
+            for link, row in quant_stress["per_link"].items()
+        },
+        reduction="median of 16 preregistered replicates per link",
     )
 
     nc_cells = [cell for cell in cells if cell["tau_p_s"] == cell["tau_g_s"]]
@@ -789,10 +882,10 @@ def main() -> None:
     overall = all(check["verdict"] == "PASS" for check in checks)
     path_base, private_base, reconstructed = component_baselines()
     artifact = {
-        "schema": "dt4n.phase_g.g3_dryrun.v3",
+        "schema": "dt4n.phase_g.g3_dryrun.v4",
         "status": "SYNTHETIC_NO_NETWORK",
         "git_hash": git_hash(),
-        "prereg": "docs/phase-G/35-amendment-G-A012.md",
+        "prereg": "docs/phase-G/37-amendment-G-A013.md",
         "inputs": {
             "g1_contract": g1_provenance,
             "g2_decision_flow": {

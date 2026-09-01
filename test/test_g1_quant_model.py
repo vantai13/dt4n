@@ -10,6 +10,7 @@ from tools.g1_quant_model import (
     quant_var_rho_static,
     sigma_quant_floor_rho,
     solve_phi_nugget_corrected,
+    solve_phi_multilag,
 )
 
 
@@ -69,6 +70,31 @@ def test_nugget_corrected_solver_recovers_exact_persistence(
 def test_nugget_corrected_solver_refuses_nonphysical_input():
     assert np.isnan(solve_phi_nugget_corrected(0.0, 0.1, 1.0, 0.1, 2.0))
     assert np.isnan(solve_phi_nugget_corrected(0.2, 0.3, -1.0, 0.1, 2.0))
+
+
+@pytest.mark.parametrize("sigma_packets,tau_s", [(1.98, 3.0), (1.98, 30.0),
+                                                   (1.98, 100.0), (4.21, 30.0)])
+def test_multilag_solver_recovers_exact_persistence(sigma_packets, tau_s):
+    phi = np.exp(-0.2 / tau_s)
+    signal_var = sigma_packets**2
+    v_pack = 1.0 / 12.0
+    total = signal_var + v_pack
+    acfs = np.asarray([
+        (
+            signal_var * phi**lag
+            + v_pack * acf_predicted_mechanism_a_lag(
+                sigma_packets, phi, lag
+            )
+        ) / total
+        for lag in range(1, 9)
+    ])
+    solved = solve_phi_multilag(acfs, total, v_pack, sigma_packets)
+    assert solved == pytest.approx(phi, abs=1e-10)
+
+
+def test_multilag_solver_refuses_nonpositive_corrected_covariance():
+    acfs = np.asarray([0.5, 0.4, 0.3, 0.2, 0.1, 0.01, 0.001, 0.0001])
+    assert np.isnan(solve_phi_multilag(acfs, 0.1, 1.0, 0.1))
 
 
 def test_static_law_exact():

@@ -137,6 +137,71 @@ def solve_phi_nugget_corrected(
     return phi
 
 
+def solve_phi_multilag(
+    acfs: np.ndarray,
+    var_total: float,
+    v_pack: float,
+    sigma_packets: float,
+    *,
+    max_lag: int = 8,
+    iters: int = 16,
+    terms: int = 256,
+) -> float:
+    """Fit AR(1) persistence across lags 1..K after nugget subtraction.
+
+    For a trial ``phi``, subtract the analytic rounding covariance and fit
+    ``log(signal_covariance_k) = intercept + k*log(phi)``.  Weights are
+    proportional to the corrected covariance so small, noisy high-lag values
+    do not dominate through relative error.  Any non-positive corrected
+    covariance is outside the log-linear physical domain and is refused.
+    """
+    observed = np.asarray(acfs, dtype=float)
+    if observed.ndim != 1:
+        raise ValueError("acfs must be one-dimensional")
+    if not isinstance(max_lag, int) or max_lag < 2:
+        raise ValueError("max_lag must be an integer >= 2")
+    if not isinstance(iters, int) or iters <= 0:
+        raise ValueError("iters must be a positive integer")
+    if observed.size < max_lag:
+        raise ValueError("acfs does not contain every requested lag")
+    values = np.asarray([var_total, v_pack, sigma_packets], dtype=float)
+    if not np.all(np.isfinite(values)) or not np.all(np.isfinite(observed[:max_lag])):
+        return float("nan")
+    if var_total <= 0.0 or v_pack < 0.0 or sigma_packets < 0.0:
+        return float("nan")
+    if observed[0] <= 0.0:
+        return float("nan")
+    phi = float(observed[1] / observed[0])
+    if not 0.0 < phi < 1.0:
+        return float("nan")
+    lags = np.arange(1, max_lag + 1, dtype=float)
+    for _ in range(iters):
+        nugget_acfs = np.asarray([
+            acf_predicted_mechanism_a_lag(
+                sigma_packets, phi, lag, terms=terms
+            )
+            for lag in range(1, max_lag + 1)
+        ])
+        corrected = observed[:max_lag] * var_total - v_pack * nugget_acfs
+        if np.any(corrected <= 0.0) or not np.all(np.isfinite(corrected)):
+            return float("nan")
+        weights = corrected / corrected.sum()
+        log_corrected = np.log(corrected)
+        lag_mean = float(weights @ lags)
+        value_mean = float(weights @ log_corrected)
+        denominator = float(weights @ (lags - lag_mean) ** 2)
+        if denominator <= 0.0:
+            return float("nan")
+        slope = float(
+            weights @ ((lags - lag_mean) * (log_corrected - value_mean))
+            / denominator
+        )
+        phi = float(np.exp(slope))
+        if not 0.0 < phi < 1.0:
+            return float("nan")
+    return phi
+
+
 def packet_rho_quantum(wire_bytes: float, dt_s: float, cap_bps: float) -> float:
     """Rho represented by exactly one packet in one measurement window."""
     if wire_bytes <= 0 or dt_s <= 0 or cap_bps <= 0:
