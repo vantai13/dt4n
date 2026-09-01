@@ -34,6 +34,33 @@ QUANT_VAR_PACKETS_CUMULATIVE_MIXED = 1.0 / 6.0
 QUANT_ACF1_CUMULATIVE_MIXED = -0.5
 
 
+def acf1_predicted_mechanism_a(step_packets: float, *, terms: int = 256) -> float:
+    """Predict lag-one rounding-error ACF for independent-window rounding.
+
+    ``step_packets`` is the standard deviation of the target increment between
+    adjacent windows, measured in packet quanta.  With mixed fractional phase,
+    the rounded sawtooth has the Fourier autocorrelation
+
+        6/pi^2 * sum(exp(-2*pi^2*k^2*step^2) / k^2, k=1..infinity).
+
+    The result is one at zero movement, decreases monotonically, and approaches
+    zero for steps large enough to mix the fractional packet phase.  In
+    particular it is not generally zero for a persistent target process.
+    """
+    step = float(step_packets)
+    if not math.isfinite(step) or step < 0.0:
+        raise ValueError("step_packets must be finite and non-negative")
+    if not isinstance(terms, int) or terms <= 0:
+        raise ValueError("terms must be a positive integer")
+    if step == 0.0:
+        return 1.0
+    k = np.arange(1, terms + 1, dtype=float)
+    covariance = np.sum(
+        np.exp(-2.0 * math.pi**2 * k * k * step * step) / (k * k)
+    )
+    return float(6.0 * covariance / math.pi**2)
+
+
 def packet_rho_quantum(wire_bytes: float, dt_s: float, cap_bps: float) -> float:
     """Rho represented by exactly one packet in one measurement window."""
     if wire_bytes <= 0 or dt_s <= 0 or cap_bps <= 0:

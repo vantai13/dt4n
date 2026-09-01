@@ -14,6 +14,7 @@ from tools.g3_dryrun import (
     classify_quantization,
     component_baselines,
     mixture_acf,
+    quantization_step_packets,
     quantize_target,
     residual_correlation,
 )
@@ -37,11 +38,20 @@ def test_quantize_target_is_independent_per_window_rounding():
 
 @pytest.mark.parametrize(
     "value,expected",
-    [(0.02, "INDEPENDENT_ROUND"), (-0.08, "INDEPENDENT_ROUND"),
-     (-0.50, "CUMULATIVE"), (-0.20, "INCONCLUSIVE"), (0.20, "INCONCLUSIVE")],
+    [(0.02, "INDEPENDENT_ROUND"), (-0.05, "INDEPENDENT_ROUND"),
+     (-0.50, "CUMULATIVE"), (-0.25, "CUMULATIVE"),
+     (-0.08, "INCONCLUSIVE"), (-0.20, "INCONCLUSIVE"),
+     (0.20, "INDEPENDENT_ROUND")],
 )
 def test_quantization_classifier(value, expected):
     assert classify_quantization(value) == expected
+
+
+def test_quantization_step_is_smaller_in_dangerous_persistent_cell():
+    fast = quantization_step_packets(A0, 0.0, 3.0, 3.0)
+    slow = quantization_step_packets(A0, 0.0, 30.0, 30.0)
+    assert np.all(slow < fast)
+    assert slow[LINKS.index("ad")] == pytest.approx(0.343113, abs=1e-5)
 
 
 def test_mixture_acf_has_the_signed_endpoints():
@@ -62,4 +72,3 @@ def test_residual_correlation_is_psd_and_preserves_null_pairs():
         for j in range(i + 1, len(LINKS)):
             if K_TOPO[i, j] == 0.0:
                 assert correlation[i, j] == 0.0
-

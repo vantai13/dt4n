@@ -2,11 +2,28 @@ import numpy as np
 
 from mininet.rate_modulator import ModulatorConfig, modulate, quantize
 from tools.g1_quant_model import (
+    acf1_predicted_mechanism_a,
     quant_var_rho_cumulative_mixed,
     quant_var_rho_independent_round,
     quant_var_rho_static,
     sigma_quant_floor_rho,
 )
+
+
+def test_independent_round_acf_predictor_matches_dangerous_steps():
+    assert acf1_predicted_mechanism_a(0.0) == 1.0
+    assert np.isclose(acf1_predicted_mechanism_a(0.229), 0.2183, atol=0.002)
+    assert np.isclose(acf1_predicted_mechanism_a(0.323), 0.0775, atol=0.002)
+    assert acf1_predicted_mechanism_a(1.0) < 1e-8
+
+
+def test_independent_round_acf_predictor_is_nonnegative_and_monotone():
+    predictions = [
+        acf1_predicted_mechanism_a(step)
+        for step in np.linspace(0.0, 1.5, 101)
+    ]
+    assert min(predictions) >= 0.0
+    assert np.all(np.diff(predictions) <= 0.0)
 
 
 def test_static_law_exact():
