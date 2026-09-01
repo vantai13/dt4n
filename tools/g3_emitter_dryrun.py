@@ -38,10 +38,11 @@ REPLICATES = 16
 N_WINDOWS = int(DURATION_S / DT_S)
 PAYLOAD_BYTES = 1400
 WIRE_BYTES = WIRE_BYTES_DEFAULT
-REQUIRED_CPUS = 10
+REQUIRED_ROLES = 10
+MIN_LADDER_CPUS = 8
 START_DELAY_S = 1.0
 JOIN_SLACK_S = 10.0
-PREREG_TAG = "phase-G-g3-emitter-prereg"
+PREREG_TAG = "phase-G-g3-emitter-ladder-prereg"
 CELLS = (
     {"name": "anchor", "sigma_ref": 0.030348837209302317, "tau_s": 3.0},
     {"name": "stress", "sigma_ref": 0.020232558139534878, "tau_s": 30.0},
@@ -75,24 +76,57 @@ def parse_cpu_map(text: str) -> tuple[tuple[int, ...], int, int]:
         values = tuple(int(item.strip()) for item in text.split(","))
     except ValueError as exc:
         raise ValueError("cpu-map must contain comma-separated integers") from exc
-    if len(values) != REQUIRED_CPUS:
+    if len(values) != REQUIRED_ROLES:
         raise ValueError("cpu-map must contain 8 emitter, 1 sampler, 1 sink CPU")
-    if len(set(values)) != len(values) or min(values) < 0:
-        raise ValueError("cpu-map CPUs must be distinct and non-negative")
-    return values[:8], values[8], values[9]
+    if min(values) < 0:
+        raise ValueError("cpu-map CPUs must be non-negative")
+    emitter_cpus, sampler_cpu, sink_cpu = values[:8], values[8], values[9]
+    if sampler_cpu == sink_cpu or sampler_cpu in emitter_cpus or sink_cpu in emitter_cpus:
+        raise ValueError("sampler and sink CPUs must be isolated from emitters")
+    return emitter_cpus, sampler_cpu, sink_cpu
 
 
 def cpu_preflight(cpu_map: tuple[int, ...]) -> dict[str, object]:
     allowed = set(os.sched_getaffinity(0))
     requested = set(cpu_map)
     missing = sorted(requested - allowed)
+    emitter_cpus = cpu_map[:8]
+    sampler_cpu, sink_cpu = cpu_map[8], cpu_map[9]
+    role_isolation = (
+        sampler_cpu != sink_cpu
+        and sampler_cpu not in emitter_cpus
+        and sink_cpu not in emitter_cpus
+    )
     return {
         "allowed_cpus": sorted(allowed),
         "requested_cpus": list(cpu_map),
-        "distinct": len(requested) == REQUIRED_CPUS,
+        "emitter_core_count": len(set(emitter_cpus)),
+        "emitters_per_core": len(emitter_cpus) / len(set(emitter_cpus)),
+        "sampler_cpu": sampler_cpu,
+        "sink_cpu": sink_cpu,
+        "role_isolation": role_isolation,
         "missing": missing,
-        "pass": len(requested) == REQUIRED_CPUS and not missing,
+        "pass": role_isolation and not missing,
     }
+
+
+def build_ladder_cpu_maps(
+    allowed_cpus: tuple[int, ...] | None = None,
+) -> dict[str, tuple[int, ...]]:
+    """Build the preregistered L0/L1/L2 mappings on an eight-CPU cpuset."""
+    allowed = tuple(sorted(
+        os.sched_getaffinity(0) if allowed_cpus is None else allowed_cpus
+    ))
+    if len(allowed) < MIN_LADDER_CPUS:
+        raise RuntimeError("emitter ladder requires at least eight allowed CPUs")
+    emitter_pool = allowed[:6]
+    sampler_cpu, sink_cpu = allowed[-2], allowed[-1]
+
+    def assign(width: int) -> tuple[int, ...]:
+        emitters = tuple(emitter_pool[index % width] for index in range(8))
+        return emitters + (sampler_cpu, sink_cpu)
+
+    return {"L0": assign(6), "L1": assign(3), "L2": assign(1)}
 
 
 def remote_provenance() -> dict[str, object]:
@@ -402,19 +436,25 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
             "description": description, **extra,
         })
 
+    l0_cells = [cell for cell in cells if cell["level"] == "L0"]
+    stress_cells = [cell for cell in cells if cell["name"] == "stress"]
+    if len(l0_cells) != len(CELLS) or len(stress_cells) != 3:
+        raise ValueError("ladder must contain L0 anchor/stress and L1/L2 stress")
+
     total_overruns = sum(
         int(np.sum(run["overrun_counts"]))
-        for cell in cells for run in cell["runs"]
+        for cell in l0_cells for run in cell["runs"]
     )
-    total_windows = len(cells) * REPLICATES * len(LINKS) * N_WINDOWS
+    total_windows = len(l0_cells) * REPLICATES * len(LINKS) * N_WINDOWS
     overrun_fraction = total_overruns / total_windows
     overrun_rows = []
-    for cell in cells:
+    for cell in l0_cells:
         for index, link in enumerate(LINKS):
             count = sum(int(run["overrun_counts"][index]) for run in cell["runs"])
             windows = len(cell["runs"]) * N_WINDOWS
             overrun_rows.append({
-                "cell": cell["name"], "link": link, "count": count,
+                "level": cell["level"], "cell": cell["name"],
+                "link": link, "count": count,
                 "windows": windows, "fraction": count / windows,
             })
     record("EMIT-1", overrun_fraction, GATE_OVERRUN_FRACTION,
@@ -424,7 +464,7 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
 
     quant_rows = []
     emit2_pass = True
-    for cell in cells:
+    for cell in l0_cells:
         acfs = np.asarray([
             [acf(run["window_sent"][i] - run["target_packets"][i])
              for i in range(len(LINKS))]
@@ -440,7 +480,7 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
             passed = observed[index] >= GATE_QUANT_SIGN and error <= GATE_QUANT_PREDICTION
             emit2_pass = emit2_pass and passed
             quant_rows.append({
-                "cell": cell["name"], "link": link,
+                "level": cell["level"], "cell": cell["name"], "link": link,
                 "acf1_median": float(observed[index]),
                 "acf1_predicted": float(predicted[index]),
                 "prediction_abs_error": float(error),
@@ -452,7 +492,7 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
            reduction="median of 16 replicates")
 
     timing_rows = []
-    for cell in cells:
+    for cell in stress_cells:
         pooled_lateness = []
         for run in cell["runs"]:
             values = run["window_lateness_s"]
@@ -460,22 +500,29 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
         pooled = np.concatenate(pooled_lateness, axis=1)
         timing_corr, timing_matrix = _correlation_max_abs(pooled)
         timing_rows.append({
-            "cell": cell["name"], "max_abs_offdiag": timing_corr,
+            "level": cell["level"], "cell": cell["name"],
+            "emitter_core_count": cpu_detail[cell["level"]][
+                "emitter_core_count"
+            ],
+            "emitters_per_core": cpu_detail[cell["level"]][
+                "emitters_per_core"
+            ],
+            "max_abs_offdiag": timing_corr,
             "correlation": timing_matrix,
         })
-    timing_corr_max = max(row["max_abs_offdiag"] for row in timing_rows)
-    record("EMIT-3", timing_corr_max, GATE_TIMING_CORRELATION,
-           timing_corr_max <= GATE_TIMING_CORRELATION,
+    l0_timing = next(row for row in timing_rows if row["level"] == "L0")
+    record("EMIT-3", l0_timing["max_abs_offdiag"], GATE_TIMING_CORRELATION,
+           l0_timing["max_abs_offdiag"] <= GATE_TIMING_CORRELATION,
            "deadline lateness has no shared CPU-noise regression",
-           rows=timing_rows)
+           l0_row=l0_timing, reduction="pooled 16x300 windows after replicate centering")
 
     spans = np.concatenate([
-        run["snapshot_spans_s"] for cell in cells for run in cell["runs"]
+        run["snapshot_spans_s"] for cell in l0_cells for run in cell["runs"]
     ])
     snap_p99 = float(np.quantile(spans, 0.99))
     alignment_ok = True
     delivery_ok = True
-    for cell in cells:
+    for cell in l0_cells:
         for run in cell["runs"]:
             expected_cumulative = np.cumsum(run["window_sent"], axis=1)
             alignment_ok = alignment_ok and bool(np.array_equal(
@@ -494,10 +541,10 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
 
     overall = all(row["verdict"] == "PASS" for row in checks)
     return {
-        "schema": "dt4n.phase_g.g3_emitter_dryrun.v1",
+        "schema": "dt4n.phase_g.g3_emitter_dryrun.v2",
         "status": "REALTIME_LOOPBACK_NO_MININET",
         "git_hash": git_hash(),
-        "prereg": "docs/phase-G/39-prereg-g3-emitter-dryrun.md",
+        "prereg": "docs/phase-G/40-amendment-g3-emitter-ladder.md",
         "provenance": provenance,
         "cpu_preflight": cpu_detail,
         "design": {
@@ -508,6 +555,11 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
                       for cell in cells],
         },
         "checks": checks,
+        "emitter_core_ladder": {
+            "status": "REPORTED_DOSE_RESPONSE",
+            "rows": timing_rows,
+            "gate_applies_only_to": "L0",
+        },
         "overall": "PASS" if overall else "FAIL",
         "mininet_authorized": bool(overall),
     }
@@ -516,38 +568,51 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
 def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--out", required=True)
-    parser.add_argument("--cpu-map", required=True,
-                        help="8 emitter CPUs,sampler CPU,sink CPU")
     parser.add_argument("--execute", action="store_true",
-                        help="run the 32-minute real-time benchmark")
+                        help="run the approximately 64-minute real-time ladder")
     args = parser.parse_args()
-    emitter_cpus, sampler_cpu, sink_cpu = parse_cpu_map(args.cpu_map)
-    full_cpu_map = emitter_cpus + (sampler_cpu, sink_cpu)
-    cpu_detail = cpu_preflight(full_cpu_map)
+    try:
+        ladder_maps = build_ladder_cpu_maps()
+    except RuntimeError as exc:
+        raise SystemExit(f"REFUSED: {exc}") from exc
+    cpu_detail = {
+        level: cpu_preflight(cpu_map) for level, cpu_map in ladder_maps.items()
+    }
     provenance = remote_provenance()
-    print(json.dumps({"cpu_preflight": cpu_detail, "provenance": provenance}, indent=2))
+    print(json.dumps({
+        "cpu_preflight": cpu_detail,
+        "cpu_maps": {key: list(value) for key, value in ladder_maps.items()},
+        "provenance": provenance,
+    }, indent=2))
     if not args.execute:
         print("PREFLIGHT ONLY: pass --execute after prereg tag is on origin")
         return
-    if not cpu_detail["pass"]:
-        raise SystemExit("REFUSED: ten distinct allowed CPUs are required")
+    if not all(row["pass"] for row in cpu_detail.values()):
+        raise SystemExit("REFUSED: ladder CPU roles are unavailable or not isolated")
     if not provenance["pass"]:
         raise SystemExit("REFUSED: origin main/prereg tag do not match local HEAD")
 
     rng = np.random.default_rng(SEED)
     cells = []
-    for design in CELLS:
-        a0 = a0_from_sigma_at("uA", design["sigma_ref"])
-        cell = {**design, "a0": a0, "runs": []}
-        for replicate in range(REPLICATES):
-            trace = physical_trace(
-                0.0, design["tau_s"], design["tau_s"], N_WINDOWS, rng, a0=a0
-            )
-            print(f"running {design['name']} replicate {replicate + 1}/{REPLICATES}")
-            cell["runs"].append(run_replicate(
-                trace["rho_target"], emitter_cpus, sampler_cpu, sink_cpu
-            ))
-        cells.append(cell)
+    for level in ("L0", "L1", "L2"):
+        cpu_map = ladder_maps[level]
+        emitter_cpus, sampler_cpu, sink_cpu = cpu_map[:8], cpu_map[8], cpu_map[9]
+        designs = CELLS if level == "L0" else (CELLS[1],)
+        for design in designs:
+            a0 = a0_from_sigma_at("uA", design["sigma_ref"])
+            cell = {**design, "level": level, "a0": a0, "runs": []}
+            for replicate in range(REPLICATES):
+                trace = physical_trace(
+                    0.0, design["tau_s"], design["tau_s"], N_WINDOWS, rng, a0=a0
+                )
+                print(
+                    f"running {level}/{design['name']} "
+                    f"replicate {replicate + 1}/{REPLICATES}"
+                )
+                cell["runs"].append(run_replicate(
+                    trace["rho_target"], emitter_cpus, sampler_cpu, sink_cpu
+                ))
+            cells.append(cell)
     artifact = analyze(cells, cpu_detail, provenance)
     output = Path(args.out)
     output.parent.mkdir(parents=True, exist_ok=True)

@@ -5,9 +5,11 @@ from mininet.rate_modulator import ModulatorConfig, modulate, quantize
 from tools.g1_quant_model import (
     acf1_predicted_mechanism_a,
     acf_predicted_mechanism_a_lag,
+    choose_phase_g_tau_estimator,
     quant_var_rho_cumulative_mixed,
     quant_var_rho_independent_round,
     quant_var_rho_static,
+    physical_axis_sigma_packets,
     sigma_quant_floor_rho,
     solve_phi_nugget_corrected,
     solve_phi_multilag,
@@ -95,6 +97,25 @@ def test_multilag_solver_recovers_exact_persistence(sigma_packets, tau_s):
 def test_multilag_solver_refuses_nonpositive_corrected_covariance():
     acfs = np.asarray([0.5, 0.4, 0.3, 0.2, 0.1, 0.01, 0.001, 0.0001])
     assert np.isnan(solve_phi_multilag(acfs, 0.1, 1.0, 0.1))
+
+
+def test_physical_axis_packet_sigma_cancels_capacity_and_has_two_classes():
+    a0 = 114452.63249
+    edge = physical_axis_sigma_packets(a0, 1, 0.2, 1442.0)
+    boundary = physical_axis_sigma_packets(a0, 2, 0.2, 1442.0)
+    for capacity in (4e6, 6e6, 8e6):
+        q = 1442.0 * 8.0 / (0.2 * capacity)
+        sigma_rho = a0 / capacity
+        assert sigma_rho / q == pytest.approx(edge)
+    assert boundary / edge == pytest.approx(np.sqrt(2.0))
+    assert edge == pytest.approx(1.9843, abs=1e-4)
+
+
+def test_phase_g_tau_selector_is_two_class_and_never_returns_white():
+    assert choose_phase_g_tau_estimator(1) == "multilag_corrected"
+    assert choose_phase_g_tau_estimator(2) == "lag23_corrected"
+    with pytest.raises(ValueError):
+        choose_phase_g_tau_estimator(3)
 
 
 def test_static_law_exact():

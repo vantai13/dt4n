@@ -12,8 +12,8 @@ from mininet.modulated_emitter import (
 )
 from mininet.tick_sampler import parse_proc_net_dev, sample_at
 from tools.g3_emitter_dryrun import (
-    REQUIRED_CPUS,
     _correlation_max_abs,
+    build_ladder_cpu_maps,
     cpu_preflight,
     parse_cpu_map,
 )
@@ -139,12 +139,15 @@ def test_sampler_records_one_grid_and_snapshot_span():
     assert row.snapshot_span_s == pytest.approx(0.0002)
 
 
-def test_cpu_map_requires_ten_distinct_roles():
+def test_cpu_map_allows_shared_emitters_but_isolates_sampler_roles():
     emitters, sampler, sink = parse_cpu_map("0,1,2,3,4,5,6,7,8,9")
     assert emitters == tuple(range(8))
     assert (sampler, sink) == (8, 9)
+    shared, sampler, sink = parse_cpu_map("0,1,2,0,1,2,0,1,6,7")
+    assert len(set(shared)) == 3
+    assert (sampler, sink) == (6, 7)
     with pytest.raises(ValueError):
-        parse_cpu_map("0,1,2,3,4,5,6,7,7,9")
+        parse_cpu_map("0,1,2,0,1,2,0,1,1,7")
     with pytest.raises(ValueError):
         parse_cpu_map("0,1,2")
 
@@ -152,10 +155,22 @@ def test_cpu_map_requires_ten_distinct_roles():
 def test_cpu_preflight_refuses_unavailable_cpu():
     allowed = sorted(os.sched_getaffinity(0))
     unavailable = max(allowed) + 1000
-    candidate = tuple(allowed[:REQUIRED_CPUS - 1] + [unavailable])
+    candidate = (allowed[0],) * 8 + (allowed[-2], unavailable)
     detail = cpu_preflight(candidate)
     assert not detail["pass"]
     assert unavailable in detail["missing"]
+
+
+def test_ladder_maps_share_emitters_but_isolate_sampler_and_sink():
+    maps = build_ladder_cpu_maps(tuple(range(8)))
+    assert len(set(maps["L0"][:8])) == 6
+    assert len(set(maps["L1"][:8])) == 3
+    assert len(set(maps["L2"][:8])) == 1
+    for cpu_map in maps.values():
+        detail = cpu_preflight(cpu_map)
+        assert detail["pass"]
+        assert cpu_map[8] not in cpu_map[:8]
+        assert cpu_map[9] not in cpu_map[:8]
 
 
 def test_timing_correlation_refuses_zero_variance_and_reads_offdiagonal():

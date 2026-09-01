@@ -202,6 +202,40 @@ def solve_phi_multilag(
     return phi
 
 
+def physical_axis_sigma_packets(
+    a0_bps: float,
+    degree: int,
+    dt_s: float,
+    wire_bytes: float,
+) -> float:
+    """Convert the Phase-G physical amplitude axis to packet quanta.
+
+    ``sigma_rho=a0*sqrt(degree)/capacity`` and
+    ``q=wire_bits/(dt*capacity)``; capacity therefore cancels exactly in
+    ``sigma_rho/q``.
+    """
+    if a0_bps <= 0.0 or dt_s <= 0.0 or wire_bytes <= 0.0:
+        raise ValueError("a0_bps, dt_s, and wire_bytes must be positive")
+    if not isinstance(degree, int) or degree <= 0:
+        raise ValueError("degree must be a positive integer")
+    return float(a0_bps * math.sqrt(degree) * dt_s / (wire_bytes * 8.0))
+
+
+def choose_phase_g_tau_estimator(degree: int) -> str:
+    """Prospective two-class selector for the fixed Phase-G topology.
+
+    G-A013 showed that the degree-one class benefits from reusing lags 1--8,
+    while the degree-two class does not pay for that extra variance.  Both
+    branches retain analytic nugget correction; this selector never returns
+    the invalid white-round lag-1--2 estimator.
+    """
+    if degree == 1:
+        return "multilag_corrected"
+    if degree == 2:
+        return "lag23_corrected"
+    raise ValueError("Phase-G selector is defined only for degree 1 or 2")
+
+
 def packet_rho_quantum(wire_bytes: float, dt_s: float, cap_bps: float) -> float:
     """Rho represented by exactly one packet in one measurement window."""
     if wire_bytes <= 0 or dt_s <= 0 or cap_bps <= 0:
