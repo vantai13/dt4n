@@ -11,8 +11,11 @@ from pathlib import Path
 import numpy as np
 
 from tools.g1_quant_model import (
+    QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
     WIRE_BYTES_DEFAULT,
     acf1_predicted_mechanism_a,
+    acf_predicted_mechanism_a_lag,
+    solve_phi_nugget_corrected,
 )
 from tools.g2_decision_flow import contrast, p_flip, quad_forms
 from tools.g2_feasibility_omega import (
@@ -63,6 +66,7 @@ GATE_TARGET_CLIP = 0.01
 GATE_QUANT_INDEPENDENT_MIN = -0.05
 GATE_QUANT_CUMULATIVE_MAX = -0.25
 GATE_QUANT_PRED_ERROR = 0.05
+GATE_QUANT_TAU_REL_BIAS = 0.15
 GATE_WHITE_ACF1 = 0.10
 GATE_RESIDUAL_CORR_ERROR = 0.06
 GATE_OMEGA = 0.05
@@ -211,6 +215,19 @@ def quantization_stress(replicates: int) -> dict[str, object]:
     rng = np.random.default_rng(QUANT_STRESS_SEED)
     independent_acfs = []
     cumulative_acfs = []
+    total_acfs = []
+    tau_repo_lag12 = []
+    tau_legacy_lag23 = []
+    tau_corrected_lag23 = []
+    sigma_packets = (
+        QUANT_STRESS_A0 * np.sqrt(DEGREE) * DT_S / (WIRE_BYTES * 8.0)
+    )
+
+    def tau_from_phi(phi: float) -> float:
+        if not np.isfinite(phi) or not 0.0 < phi < 1.0:
+            return float("nan")
+        return float(-DT_S / np.log(phi))
+
     for _replicate in range(replicates):
         trace = physical_trace(
             0.0,
@@ -221,10 +238,36 @@ def quantization_stress(replicates: int) -> dict[str, object]:
             a0=QUANT_STRESS_A0,
         )
         target = trace["rho_target"]
-        sent, _sent_packets = quantize_target(target)
+        sent, sent_packets = quantize_target(target)
         independent_acfs.append([
             acf(sent[index] - target[index]) for index in range(len(LINKS))
         ])
+        replicate_total_acfs = np.asarray([
+            [acf(sent_packets[index], lag) for lag in (1, 2, 3)]
+            for index in range(len(LINKS))
+        ])
+        total_acfs.append(replicate_total_acfs)
+        repo_row = []
+        legacy_row = []
+        corrected_row = []
+        for index in range(len(LINKS)):
+            a1, a2, a3 = replicate_total_acfs[index]
+            total_variance = float(np.var(sent_packets[index], ddof=1))
+            phi_repo = a2 / a1 if a1 > 0.0 else float("nan")
+            phi_legacy = a3 / a2 if a2 > 0.0 else float("nan")
+            phi_corrected = solve_phi_nugget_corrected(
+                a2,
+                a3,
+                total_variance,
+                QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
+                sigma_packets[index],
+            )
+            repo_row.append(tau_from_phi(phi_repo))
+            legacy_row.append(tau_from_phi(phi_legacy))
+            corrected_row.append(tau_from_phi(phi_corrected))
+        tau_repo_lag12.append(repo_row)
+        tau_legacy_lag23.append(legacy_row)
+        tau_corrected_lag23.append(corrected_row)
 
         wanted = target * CAP_BPS[:, None] * DT_S / (WIRE_BYTES * 8.0)
         cumulative_total = np.floor(np.cumsum(wanted, axis=1))
@@ -239,6 +282,10 @@ def quantization_stress(replicates: int) -> dict[str, object]:
 
     independent = np.asarray(independent_acfs)
     cumulative = np.asarray(cumulative_acfs)
+    total_acf_array = np.asarray(total_acfs)
+    repo_tau = np.asarray(tau_repo_lag12)
+    legacy_tau = np.asarray(tau_legacy_lag23)
+    corrected_tau = np.asarray(tau_corrected_lag23)
     observed = np.median(independent, axis=0)
     cumulative_observed = np.median(cumulative, axis=0)
     steps = quantization_step_packets(
@@ -247,6 +294,39 @@ def quantization_stress(replicates: int) -> dict[str, object]:
     predicted = np.asarray([
         acf1_predicted_mechanism_a(step) for step in steps
     ])
+    phi_true = float(np.exp(-DT_S / QUANT_STRESS_TAU_S))
+    exact_rows = []
+    for sigma_packet in sigma_packets:
+        total_variance = (
+            sigma_packet**2 + QUANT_VAR_PACKETS_INDEPENDENT_ROUND
+        )
+        exact_acfs = []
+        for lag in (1, 2, 3):
+            nugget_acf = acf_predicted_mechanism_a_lag(
+                sigma_packet, phi_true, lag
+            )
+            exact_acfs.append(float((
+                sigma_packet**2 * phi_true**lag
+                + QUANT_VAR_PACKETS_INDEPENDENT_ROUND * nugget_acf
+            ) / total_variance))
+        exact_phi_repo = exact_acfs[1] / exact_acfs[0]
+        exact_phi_legacy = exact_acfs[2] / exact_acfs[1]
+        exact_phi_corrected = solve_phi_nugget_corrected(
+            exact_acfs[1],
+            exact_acfs[2],
+            total_variance,
+            QUANT_VAR_PACKETS_INDEPENDENT_ROUND,
+            sigma_packet,
+        )
+        exact_rows.append({
+            "acf1_3": exact_acfs,
+            "tau_repo_lag12_s": tau_from_phi(exact_phi_repo),
+            "tau_legacy_lag23_s": tau_from_phi(exact_phi_legacy),
+            "tau_corrected_lag23_s": tau_from_phi(exact_phi_corrected),
+        })
+    corrected_relative_bias = np.abs(
+        np.nanmedian(corrected_tau, axis=0) / QUANT_STRESS_TAU_S - 1.0
+    )
     return {
         "sigma_ref_uA": QUANT_STRESS_SIGMA_REF,
         "a0": QUANT_STRESS_A0,
@@ -265,6 +345,22 @@ def quantization_stress(replicates: int) -> dict[str, object]:
                 "acf1_independent_predicted": float(predicted[index]),
                 "prediction_abs_error": float(abs(observed[index] - predicted[index])),
                 "acf1_cumulative_median": float(cumulative_observed[index]),
+                "total_acf1_3_median": np.median(
+                    total_acf_array[:, index, :], axis=0
+                ).tolist(),
+                "tau_repo_lag12_median_s": float(
+                    np.nanmedian(repo_tau[:, index])
+                ),
+                "tau_legacy_lag23_median_s": float(
+                    np.nanmedian(legacy_tau[:, index])
+                ),
+                "tau_corrected_lag23_median_s": float(
+                    np.nanmedian(corrected_tau[:, index])
+                ),
+                "tau_corrected_relative_bias": float(
+                    corrected_relative_bias[index]
+                ),
+                "exact_moment_estimators": exact_rows[index],
                 "independent_classification": classify_quantization(observed[index]),
                 "cumulative_classification": classify_quantization(
                     cumulative_observed[index]
@@ -278,6 +374,9 @@ def quantization_stress(replicates: int) -> dict[str, object]:
         ),
         "cumulative_acf1_max_abs_error_from_minus_half": float(
             np.max(np.abs(cumulative_observed + 0.5))
+        ),
+        "tau_corrected_max_relative_bias": float(
+            np.max(corrected_relative_bias)
         ),
     }
 
@@ -628,6 +727,28 @@ def main() -> None:
         mixture_error <= GATE_MIXTURE_ACF and monotone,
         monotone=monotone, regimes=tau_rows,
     )
+    stress_tau_bias = quant_stress["tau_corrected_max_relative_bias"]
+    record(
+        "DRY-T-Q",
+        "stress-cell tau removes persistent-rounding covariance at lags 2--3",
+        stress_tau_bias,
+        GATE_QUANT_TAU_REL_BIAS,
+        stress_tau_bias <= GATE_QUANT_TAU_REL_BIAS,
+        true_tau_s=QUANT_STRESS_TAU_S,
+        estimators={
+            link: {
+                key: row[key]
+                for key in (
+                    "tau_repo_lag12_median_s",
+                    "tau_legacy_lag23_median_s",
+                    "tau_corrected_lag23_median_s",
+                    "tau_corrected_relative_bias",
+                    "exact_moment_estimators",
+                )
+            }
+            for link, row in quant_stress["per_link"].items()
+        },
+    )
 
     nc_cells = [cell for cell in cells if cell["tau_p_s"] == cell["tau_g_s"]]
     nc_pflip = [cell["pflip_median"] for cell in nc_cells]
@@ -668,10 +789,10 @@ def main() -> None:
     overall = all(check["verdict"] == "PASS" for check in checks)
     path_base, private_base, reconstructed = component_baselines()
     artifact = {
-        "schema": "dt4n.phase_g.g3_dryrun.v2",
+        "schema": "dt4n.phase_g.g3_dryrun.v3",
         "status": "SYNTHETIC_NO_NETWORK",
         "git_hash": git_hash(),
-        "prereg": "docs/phase-G/33-amendment-G-A011.md",
+        "prereg": "docs/phase-G/35-amendment-G-A012.md",
         "inputs": {
             "g1_contract": g1_provenance,
             "g2_decision_flow": {

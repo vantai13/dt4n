@@ -1,12 +1,15 @@
 import numpy as np
+import pytest
 
 from mininet.rate_modulator import ModulatorConfig, modulate, quantize
 from tools.g1_quant_model import (
     acf1_predicted_mechanism_a,
+    acf_predicted_mechanism_a_lag,
     quant_var_rho_cumulative_mixed,
     quant_var_rho_independent_round,
     quant_var_rho_static,
     sigma_quant_floor_rho,
+    solve_phi_nugget_corrected,
 )
 
 
@@ -24,6 +27,48 @@ def test_independent_round_acf_predictor_is_nonnegative_and_monotone():
     ]
     assert min(predictions) >= 0.0
     assert np.all(np.diff(predictions) <= 0.0)
+
+
+def test_lag_predictor_generalizes_the_same_sawtooth_formula():
+    sigma_packets = 1.98
+    phi = np.exp(-0.2 / 30.0)
+    predicted = [
+        acf_predicted_mechanism_a_lag(sigma_packets, phi, lag)
+        for lag in (1, 2, 3)
+    ]
+    assert predicted == pytest.approx([0.2180, 0.0766, 0.0276], abs=0.002)
+    assert predicted[0] > predicted[1] > predicted[2] >= 0.0
+
+
+@pytest.mark.parametrize(
+    "sigma_packets,tau_s",
+    [(4.21, 3.0), (4.21, 30.0), (2.81, 30.0), (1.98, 30.0),
+     (1.98, 100.0)],
+)
+def test_nugget_corrected_solver_recovers_exact_persistence(
+    sigma_packets, tau_s
+):
+    phi = np.exp(-0.2 / tau_s)
+    signal_var = sigma_packets**2
+    v_pack = 1.0 / 12.0
+    total = signal_var + v_pack
+    acfs = {}
+    for lag in (2, 3):
+        nugget_acf = acf_predicted_mechanism_a_lag(
+            sigma_packets, phi, lag
+        )
+        acfs[lag] = (
+            signal_var * phi**lag + v_pack * nugget_acf
+        ) / total
+    solved = solve_phi_nugget_corrected(
+        acfs[2], acfs[3], total, v_pack, sigma_packets
+    )
+    assert solved == pytest.approx(phi, abs=1e-10)
+
+
+def test_nugget_corrected_solver_refuses_nonphysical_input():
+    assert np.isnan(solve_phi_nugget_corrected(0.0, 0.1, 1.0, 0.1, 2.0))
+    assert np.isnan(solve_phi_nugget_corrected(0.2, 0.3, -1.0, 0.1, 2.0))
 
 
 def test_static_law_exact():

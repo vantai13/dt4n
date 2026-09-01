@@ -61,6 +61,82 @@ def acf1_predicted_mechanism_a(step_packets: float, *, terms: int = 256) -> floa
     return float(6.0 * covariance / math.pi**2)
 
 
+def acf_predicted_mechanism_a_lag(
+    sigma_packets: float,
+    phi: float,
+    lag: int,
+    *,
+    terms: int = 256,
+) -> float:
+    """Predict independent-round error ACF at an arbitrary positive lag.
+
+    An AR(1) target has adjacent-lag increment SD
+    ``sigma_packets*sqrt(2*(1-phi**lag))`` in packet quanta.  Passing that
+    increment to the G-A011 sawtooth formula exposes the rounding covariance at
+    every lag used by an estimator, rather than treating lag two onward as
+    automatically clean.
+    """
+    sigma = float(sigma_packets)
+    persistence = float(phi)
+    if not math.isfinite(sigma) or sigma < 0.0:
+        raise ValueError("sigma_packets must be finite and non-negative")
+    if not math.isfinite(persistence) or not 0.0 <= persistence <= 1.0:
+        raise ValueError("phi must be finite and in [0, 1]")
+    if not isinstance(lag, int) or lag <= 0:
+        raise ValueError("lag must be a positive integer")
+    step = sigma * math.sqrt(2.0 * (1.0 - persistence**lag))
+    return acf1_predicted_mechanism_a(step, terms=terms)
+
+
+def solve_phi_nugget_corrected(
+    acf2: float,
+    acf3: float,
+    var_total: float,
+    v_pack: float,
+    sigma_packets: float,
+    *,
+    iters: int = 16,
+    terms: int = 256,
+) -> float:
+    """Solve AR(1) persistence from lags 2--3 after nugget subtraction.
+
+    The observed lag covariance is
+    ``var_total*acf_k = sigma_signal^2*phi^k + v_pack*c_k(phi)``.
+    ``c_k`` is known analytically but depends on the unknown ``phi``, so this
+    routine uses the legacy ``acf3/acf2`` estimate only as a fixed-point seed.
+    Invalid physical iterates return NaN instead of being clipped.
+    """
+    values = np.asarray(
+        [acf2, acf3, var_total, v_pack, sigma_packets], dtype=float
+    )
+    if not np.all(np.isfinite(values)):
+        return float("nan")
+    if var_total <= 0.0 or v_pack < 0.0 or sigma_packets < 0.0:
+        return float("nan")
+    if not isinstance(iters, int) or iters <= 0:
+        raise ValueError("iters must be a positive integer")
+    if acf2 <= 0.0:
+        return float("nan")
+    phi = float(acf3 / acf2)
+    if not 0.0 < phi < 1.0:
+        return float("nan")
+    for _ in range(iters):
+        c2 = acf_predicted_mechanism_a_lag(
+            sigma_packets, phi, 2, terms=terms
+        )
+        c3 = acf_predicted_mechanism_a_lag(
+            sigma_packets, phi, 3, terms=terms
+        )
+        numerator = acf3 * var_total - v_pack * c3
+        denominator = acf2 * var_total - v_pack * c2
+        if denominator <= 0.0:
+            return float("nan")
+        phi = float(numerator / denominator)
+        if not 0.0 < phi < 1.0:
+            return float("nan")
+    return phi
+
+
 def packet_rho_quantum(wire_bytes: float, dt_s: float, cap_bps: float) -> float:
     """Rho represented by exactly one packet in one measurement window."""
     if wire_bytes <= 0 or dt_s <= 0 or cap_bps <= 0:
