@@ -1,0 +1,438 @@
+{
+  "schema": "dt4n.phase_g.g2_decision_flow.v1",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "git_hash": "1163e41280d80ff4ab560ca0a6ecae043fce767f",
+  "inputs": {
+    "g1_contract": {
+      "certificate_path": "results/LIVE/phase-G/measurement_path_cert.json",
+      "certificate_sha256": "45ab6135da047dac0f2d9a70424add890b341a7addb9b2789a9099b73ea0f3d2",
+      "measurement_path": "results/SMOKE/phase-G/g1_closed_form_sf.json",
+      "measurement_sha256": "bb885be28cd29396a4705f6ac6499bc06d59d6d0f735c8823b8b546fdb15d52c",
+      "measurement_sha256_pinned": true,
+      "certificate_status": "CONDITIONAL_PASS",
+      "certificate_expiry_conditions": [
+        "quantization mode changes",
+        "packet or wire size changes",
+        "measurement interval changes",
+        "topology or telemetry path changes",
+        "pacing process changes",
+        "scheduler isolation changes"
+      ],
+      "sigma_grid_boundary": 0.020232558139534878,
+      "nugget_source_field": "v_pack_future_independent_round",
+      "nugget_reduction_across_runs": "per_link_max"
+    },
+    "g2_feasibility": {
+      "path": "results/SMOKE/phase-G/g2_feasibility_omega.json",
+      "sha256": "550f043afdd6da7246b0cbad06778401e116f55d6fe3c93224d49a1d31484795"
+    }
+  },
+  "sigma_ref_at_uA": 0.03034883720930232,
+  "a0": 171678.94873459428,
+  "sigma_per_link": {
+    "uA": 0.03034883720930232,
+    "uB": 0.040465116279069756,
+    "ac": 0.02861315812243238,
+    "ad": 0.04291973718364857,
+    "bc": 0.02861315812243238,
+    "bd": 0.02861315812243238,
+    "vC": 0.03034883720930232,
+    "vD": 0.040465116279069756
+  },
+  "dt_s": 0.2,
+  "z_s": 2.0,
+  "tau_g_s": 3.0,
+  "omega_grid": [
+    0.0,
+    0.25,
+    0.5,
+    0.75,
+    1.0
+  ],
+  "kappa_grid": [
+    1.0,
+    10.0
+  ],
+  "mc_n": 40000,
+  "checks": [
+    {
+      "id": "DEC-0",
+      "description": "shared links cancel from every pairwise contrast",
+      "value": 0.0,
+      "gate": 1e-12,
+      "required": true,
+      "verdict": "PASS",
+      "pairs": {
+        "P1-P2": {
+          "shared_links": [
+            "uA"
+          ],
+          "c_on_shared": [
+            0.0
+          ],
+          "n_nonzero": 4
+        },
+        "P1-P3": {
+          "shared_links": [
+            "vC"
+          ],
+          "c_on_shared": [
+            0.0
+          ],
+          "n_nonzero": 4
+        },
+        "P1-P4": {
+          "shared_links": [],
+          "c_on_shared": [],
+          "n_nonzero": 6
+        },
+        "P2-P3": {
+          "shared_links": [],
+          "c_on_shared": [],
+          "n_nonzero": 6
+        },
+        "P2-P4": {
+          "shared_links": [
+            "vD"
+          ],
+          "c_on_shared": [
+            0.0
+          ],
+          "n_nonzero": 4
+        },
+        "P3-P4": {
+          "shared_links": [
+            "uB"
+          ],
+          "c_on_shared": [
+            0.0
+          ],
+          "n_nonzero": 4
+        }
+      }
+    },
+    {
+      "id": "DEC-1",
+      "description": "one common tau, linear contrast, no noise: omega cancels",
+      "value": 1.1102230246251565e-16,
+      "gate": 1e-12,
+      "required": true,
+      "verdict": "PASS",
+      "by_pair": {
+        "P1-P2": {
+          "path_variance_coefficient": 0.008903501892915083,
+          "link_variance_coefficient": 0.005219294213088152,
+          "var_ratio_omega1_over_omega0": 1.7058823529411764,
+          "p_flip": [
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324
+          ],
+          "spread": 0.0
+        },
+        "P1-P3": {
+          "path_variance_coefficient": 0.007061398053001617,
+          "link_variance_coefficient": 0.004195903190914005,
+          "var_ratio_omega1_over_omega0": 1.6829268292682924,
+          "p_flip": [
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324
+          ],
+          "spread": 0.0
+        },
+        "P1-P4": {
+          "path_variance_coefficient": 0.012587709572742013,
+          "link_variance_coefficient": 0.006754380746349374,
+          "var_ratio_omega1_over_omega0": 1.8636363636363633,
+          "p_flip": [
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.32837938003532413,
+            0.328379380035324
+          ],
+          "spread": 1.1102230246251565e-16
+        },
+        "P2-P3": {
+          "path_variance_coefficient": 0.014839169821525139,
+          "link_variance_coefficient": 0.007777771768523522,
+          "var_ratio_omega1_over_omega0": 1.907894736842105,
+          "p_flip": [
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324
+          ],
+          "spread": 0.0
+        },
+        "P2-P4": {
+          "path_variance_coefficient": 0.008698823688480253,
+          "link_variance_coefficient": 0.005219294213088152,
+          "var_ratio_omega1_over_omega0": 1.6666666666666665,
+          "p_flip": [
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324
+          ],
+          "spread": 0.0
+        },
+        "P3-P4": {
+          "path_variance_coefficient": 0.007061398053001618,
+          "link_variance_coefficient": 0.004195903190914004,
+          "var_ratio_omega1_over_omega0": 1.6829268292682928,
+          "p_flip": [
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324
+          ],
+          "spread": 0.0
+        }
+      }
+    },
+    {
+      "id": "DEC-2",
+      "description": "G.1 per-link independent-round nugget effect",
+      "value": 0.0006575269973017328,
+      "gate": 0.01,
+      "required": true,
+      "verdict": "PASS",
+      "note": "upper-bound gate: PASS means this mechanism is negligible",
+      "nugget_variance_per_link": {
+        "uA": 4.33205966808832e-06,
+        "uB": 7.701439409934792e-06,
+        "ac": 7.701439409934792e-06,
+        "ad": 1.732823867235328e-05,
+        "bc": 7.701439409934792e-06,
+        "bd": 7.701439409934792e-06,
+        "vC": 4.33205966808832e-06,
+        "vD": 7.701439409934792e-06
+      },
+      "decision_nugget": 3.706317716031118e-05,
+      "link_decision_variance_over_nugget": 140.82155424811216,
+      "detail": {
+        "z_over_tau=0.2": {
+          "p_flip": [
+            0.1962754372685119,
+            0.19603763827571186,
+            0.19586146915118743,
+            0.19572571949124004,
+            0.19561791027121017
+          ],
+          "spread": 0.0006575269973017328
+        },
+        "z_over_tau=1": {
+          "p_flip": [
+            0.3805285485207764,
+            0.380462168521082,
+            0.38041303373221275,
+            0.3803751964058017,
+            0.3803451618919917
+          ],
+          "spread": 0.00018338662878469858
+        }
+      }
+    },
+    {
+      "id": "DEC-3",
+      "description": "two time scales make omega select inherited persistence",
+      "value": 0.2134360846918576,
+      "gate": ">=0.10",
+      "required": true,
+      "verdict": "PASS",
+      "detail": {
+        "tau_p=3,tau_g=3": {
+          "kappa": 1.0,
+          "phi_path": 0.513417119032592,
+          "phi_link": 0.513417119032592,
+          "p_flip": [
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324,
+            0.328379380035324
+          ],
+          "spread": 0.0,
+          "monotone": true
+        },
+        "tau_p=30,tau_g=3": {
+          "kappa": 10.0,
+          "phi_path": 0.9355069850316178,
+          "phi_link": 0.513417119032592,
+          "p_flip": [
+            0.328379380035324,
+            0.2678237934309244,
+            0.21546446292778515,
+            0.1663569304833128,
+            0.11494329534346642
+          ],
+          "spread": 0.2134360846918576,
+          "monotone": true
+        },
+        "tau_p=3,tau_g=30": {
+          "kappa": 0.1,
+          "phi_path": 0.513417119032592,
+          "phi_link": 0.9355069850316178,
+          "p_flip": [
+            0.11494329534346664,
+            0.2139444889334468,
+            0.26654832300607784,
+            0.3021088331199482,
+            0.328379380035324
+          ],
+          "spread": 0.21343608469185738,
+          "monotone": true
+        }
+      }
+    },
+    {
+      "id": "DEC-3-NC",
+      "description": "kappa=1 must recover the exactly flat omega curve",
+      "value": 0.0,
+      "gate": 1e-12,
+      "required": true,
+      "verdict": "PASS"
+    },
+    {
+      "id": "DEC-4",
+      "description": "current CostV2 nonlinearity after baseline-margin removal",
+      "value": 0.01345336334083519,
+      "gate": "reported only",
+      "required": false,
+      "verdict": "REPORTED",
+      "mc_se_single_probability_upper": 0.0025,
+      "mc_se_spread_upper": 0.0035355339059327377,
+      "model": "twin.cost_v2.CostV2",
+      "profiles": {
+        "uniform_anchor": {
+          "mode": "poisson",
+          "w_loss": 5000.0,
+          "mean_load": {
+            "uA": 0.857,
+            "uB": 0.857,
+            "ac": 0.857,
+            "ad": 0.857,
+            "bc": 0.857,
+            "bd": 0.857,
+            "vC": 0.857,
+            "vD": 0.857
+          },
+          "baseline_margin_cost": -31.629429639991045,
+          "rows": [
+            {
+              "omega": 0.0,
+              "p_flip_linear_centered": 0.3318329582395599,
+              "p_flip_cost_v2_centered": 0.3309327331832958,
+              "p_flip_cost_v2_raw": 0.11450362590647661,
+              "clipping_fraction": 0.0
+            },
+            {
+              "omega": 0.25,
+              "p_flip_linear_centered": 0.3320080020005001,
+              "p_flip_cost_v2_centered": 0.33280820205051265,
+              "p_flip_cost_v2_raw": 0.13008252063015754,
+              "clipping_fraction": 0.0
+            },
+            {
+              "omega": 0.5,
+              "p_flip_linear_centered": 0.32845711427856966,
+              "p_flip_cost_v2_centered": 0.3345086271567892,
+              "p_flip_cost_v2_raw": 0.1385846461615404,
+              "clipping_fraction": 0.0
+            },
+            {
+              "omega": 0.75,
+              "p_flip_linear_centered": 0.32983245811452866,
+              "p_flip_cost_v2_centered": 0.3331582895723931,
+              "p_flip_cost_v2_raw": 0.14416104026006502,
+              "clipping_fraction": 0.0
+            },
+            {
+              "omega": 1.0,
+              "p_flip_linear_centered": 0.3348587146786697,
+              "p_flip_cost_v2_centered": 0.33465866466616656,
+              "p_flip_cost_v2_raw": 0.15998999749937484,
+              "clipping_fraction": 0.0
+            }
+          ],
+          "centered_spread": 0.003725931482870759,
+          "raw_spread": 0.04548637159289823,
+          "max_clipping_fraction": 0.0
+        },
+        "core_0p90": {
+          "mode": "poisson",
+          "w_loss": 5000.0,
+          "mean_load": {
+            "uA": 0.857,
+            "uB": 0.857,
+            "ac": 0.9,
+            "ad": 0.9,
+            "bc": 0.9,
+            "bd": 0.9,
+            "vC": 0.857,
+            "vD": 0.857
+          },
+          "baseline_margin_cost": -41.63501025698675,
+          "rows": [
+            {
+              "omega": 0.0,
+              "p_flip_linear_centered": 0.3271317829457364,
+              "p_flip_cost_v2_centered": 0.3334333583395849,
+              "p_flip_cost_v2_raw": 0.16589147286821707,
+              "clipping_fraction": 6.25e-06
+            },
+            {
+              "omega": 0.25,
+              "p_flip_linear_centered": 0.31847961990497625,
+              "p_flip_cost_v2_centered": 0.3199799949987497,
+              "p_flip_cost_v2_raw": 0.168192048012003,
+              "clipping_fraction": 1.875e-05
+            },
+            {
+              "omega": 0.5,
+              "p_flip_linear_centered": 0.32393098274568644,
+              "p_flip_cost_v2_centered": 0.32895723930982745,
+              "p_flip_cost_v2_raw": 0.1846461615403851,
+              "clipping_fraction": 1.25e-05
+            },
+            {
+              "omega": 0.75,
+              "p_flip_linear_centered": 0.3259564891222806,
+              "p_flip_cost_v2_centered": 0.33233308327081773,
+              "p_flip_cost_v2_raw": 0.19279819954988747,
+              "clipping_fraction": 1.5625e-05
+            },
+            {
+              "omega": 1.0,
+              "p_flip_linear_centered": 0.32308077019254816,
+              "p_flip_cost_v2_centered": 0.3204551137784446,
+              "p_flip_cost_v2_raw": 0.20665166291572892,
+              "clipping_fraction": 9.375e-06
+            }
+          ],
+          "centered_spread": 0.01345336334083519,
+          "raw_spread": 0.04076019004751186,
+          "max_clipping_fraction": 1.875e-05
+        }
+      }
+    }
+  ],
+  "conclusion": {
+    "omega_is_null_axis_under_single_tau_linear_model": true,
+    "dominant_measured_mechanism": "two_timescales",
+    "effect_ratio_two_tau_over_nugget": 324.6042908773734,
+    "required_design_change": "record tau_p and tau_g; add kappa=tau_p/tau_g",
+    "free_negative_control": "kappa=1 predicts an exactly flat omega curve",
+    "deferred": "DEC-5: full K=4 argmin error"
+  },
+  "overall": "PASS"
+}
