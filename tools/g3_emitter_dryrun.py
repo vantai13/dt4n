@@ -42,7 +42,7 @@ REQUIRED_ROLES = 10
 MIN_LADDER_CPUS = 8
 START_DELAY_S = 1.0
 JOIN_SLACK_S = 10.0
-PREREG_TAG = "phase-G-g3-emitter-ladder-prereg"
+PREREG_TAG = "phase-G-g3-emitter-reduction-prereg"
 CELLS = (
     {"name": "anchor", "sigma_ref": 0.030348837209302317, "tau_s": 3.0},
     {"name": "stress", "sigma_ref": 0.020232558139534878, "tau_s": 30.0},
@@ -53,6 +53,8 @@ GATE_QUANT_SIGN = -0.05
 GATE_QUANT_PREDICTION = 0.05
 GATE_TIMING_CORRELATION = 0.10
 GATE_SNAPSHOT_P99_S = 0.001
+EMIT3_NULL_TRIALS = 3000
+EMIT3_NULL_SEED = 20260909
 
 
 def git_hash() -> str:
@@ -426,6 +428,72 @@ def _correlation_max_abs(pooled: np.ndarray) -> tuple[float, list[list[float]]]:
     return float(np.max(np.abs(upper))), matrix.tolist()
 
 
+def mean_correlation_then_max(
+    replicates: np.ndarray,
+) -> tuple[float, list[list[float]]]:
+    """Average replicate correlation matrices before maximizing over pairs."""
+    values = np.asarray(replicates, dtype=float)
+    if values.ndim != 3 or values.shape[1] != len(LINKS):
+        raise ValueError("replicates must have shape (replicate, link, window)")
+    matrices = []
+    for replicate in values:
+        if np.any(np.std(replicate, axis=1) <= 0.0):
+            return (
+                float("inf"),
+                np.full((len(LINKS), len(LINKS)), np.nan).tolist(),
+            )
+        matrices.append(np.corrcoef(replicate))
+    mean_matrix = np.mean(np.asarray(matrices), axis=0)
+    upper = mean_matrix[np.triu_indices(len(LINKS), 1)]
+    return float(np.max(np.abs(upper))), mean_matrix.tolist()
+
+
+def simulate_emit3_null(
+    *,
+    trials: int = EMIT3_NULL_TRIALS,
+    replicates: int = REPLICATES,
+    windows: int = N_WINDOWS,
+    seed: int = EMIT3_NULL_SEED,
+    batch_size: int = 25,
+) -> dict[str, float | int]:
+    """Calibrate mean-matrix-then-max under eight independent white series."""
+    if min(trials, replicates, windows, batch_size) <= 0:
+        raise ValueError("null simulation dimensions must be positive")
+    rng = np.random.default_rng(seed)
+    maxima = np.empty(trials, dtype=float)
+    upper = np.triu_indices(len(LINKS), 1)
+    offset = 0
+    while offset < trials:
+        count = min(batch_size, trials - offset)
+        values = rng.standard_normal(
+            (count, replicates, len(LINKS), windows)
+        )
+        values -= values.mean(axis=-1, keepdims=True)
+        norms = np.sqrt(np.sum(values * values, axis=-1))
+        covariance = np.einsum("brin,brjn->brij", values, values)
+        correlations = covariance / (
+            norms[:, :, :, None] * norms[:, :, None, :]
+        )
+        mean_matrices = correlations.mean(axis=1)
+        maxima[offset:offset + count] = np.max(
+            np.abs(mean_matrices[:, upper[0], upper[1]]), axis=1
+        )
+        offset += count
+    return {
+        "trials": trials,
+        "replicates": replicates,
+        "windows": windows,
+        "seed": seed,
+        "median": float(np.quantile(maxima, 0.50)),
+        "p95": float(np.quantile(maxima, 0.95)),
+        "p99": float(np.quantile(maxima, 0.99)),
+        "gate": GATE_TIMING_CORRELATION,
+        "gate_over_p99": float(
+            GATE_TIMING_CORRELATION / np.quantile(maxima, 0.99)
+        ),
+    }
+
+
 def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str, object]:
     checks = []
 
@@ -493,12 +561,12 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
 
     timing_rows = []
     for cell in stress_cells:
-        pooled_lateness = []
-        for run in cell["runs"]:
-            values = run["window_lateness_s"]
-            pooled_lateness.append(values - values.mean(axis=1, keepdims=True))
-        pooled = np.concatenate(pooled_lateness, axis=1)
-        timing_corr, timing_matrix = _correlation_max_abs(pooled)
+        timing_replicates = np.asarray([
+            run["window_lateness_s"] for run in cell["runs"]
+        ])
+        timing_corr, timing_matrix = mean_correlation_then_max(
+            timing_replicates
+        )
         timing_rows.append({
             "level": cell["level"], "cell": cell["name"],
             "emitter_core_count": cpu_detail[cell["level"]][
@@ -514,7 +582,8 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
     record("EMIT-3", l0_timing["max_abs_offdiag"], GATE_TIMING_CORRELATION,
            l0_timing["max_abs_offdiag"] <= GATE_TIMING_CORRELATION,
            "deadline lateness has no shared CPU-noise regression",
-           l0_row=l0_timing, reduction="pooled 16x300 windows after replicate centering")
+           l0_row=l0_timing,
+           reduction="mean of 16 within-replicate 8x8 matrices, then max 28 pairs")
 
     spans = np.concatenate([
         run["snapshot_spans_s"] for cell in l0_cells for run in cell["runs"]
@@ -539,12 +608,13 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
            "shared-tick snapshot span and exact L2 ledger alignment",
            alignment_exact=alignment_ok, final_udp_delivery_exact=delivery_ok)
 
+    emit3_null = simulate_emit3_null()
     overall = all(row["verdict"] == "PASS" for row in checks)
     return {
-        "schema": "dt4n.phase_g.g3_emitter_dryrun.v2",
+        "schema": "dt4n.phase_g.g3_emitter_dryrun.v3",
         "status": "REALTIME_LOOPBACK_NO_MININET",
         "git_hash": git_hash(),
-        "prereg": "docs/phase-G/40-amendment-g3-emitter-ladder.md",
+        "prereg": "docs/phase-G/41-amendment-g3-emitter-reduction.md",
         "provenance": provenance,
         "cpu_preflight": cpu_detail,
         "design": {
@@ -560,6 +630,7 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
             "rows": timing_rows,
             "gate_applies_only_to": "L0",
         },
+        "emit3_null": emit3_null,
         "overall": "PASS" if overall else "FAIL",
         "mininet_authorized": bool(overall),
     }

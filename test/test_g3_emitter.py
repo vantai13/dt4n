@@ -15,7 +15,9 @@ from tools.g3_emitter_dryrun import (
     _correlation_max_abs,
     build_ladder_cpu_maps,
     cpu_preflight,
+    mean_correlation_then_max,
     parse_cpu_map,
+    simulate_emit3_null,
 )
 
 
@@ -182,3 +184,29 @@ def test_timing_correlation_refuses_zero_variance_and_reads_offdiagonal():
     value, matrix = _correlation_max_abs(values)
     assert value == pytest.approx(0.4, abs=0.03)
     assert matrix[0][1] == pytest.approx(0.4, abs=0.03)
+
+
+def test_emit3_averages_matrices_before_maximizing_pairs():
+    rng = np.random.default_rng(4)
+    values = rng.standard_normal((16, 8, 2000))
+    pairs = list(zip(*np.triu_indices(8, 1)))
+    for replicate in range(16):
+        left, right = pairs[replicate]
+        values[replicate, right] = (
+            0.8 * values[replicate, left]
+            + 0.6 * values[replicate, right]
+        )
+    mean_then_max, _matrix = mean_correlation_then_max(values)
+    max_then_mean = np.mean([
+        _correlation_max_abs(values[index])[0] for index in range(16)
+    ])
+    assert mean_then_max < 0.10
+    assert max_then_mean > 0.75
+
+
+def test_emit3_null_is_feasible_only_after_replicate_matrix_averaging():
+    null = simulate_emit3_null(
+        trials=300, replicates=16, windows=300, seed=9, batch_size=25
+    )
+    assert null["p99"] < 0.07
+    assert null["gate_over_p99"] > 1.4
