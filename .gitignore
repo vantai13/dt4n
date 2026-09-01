@@ -180,3 +180,7 @@ results/PENDING/phase-D/
 # Phase G static-control packet ledgers and per-run traces remain under local
 # custody; compact certificate/detail artifacts are committed.
 results/RAW/phase-G/g1-static*/
+# Phase G.3 target/sent/measured ledgers and emitter timing traces can grow to
+# many gigabytes. Keep all g3 RAW run directories local; commit only the compact
+# receipts from results/SMOKE/phase-G.
+results/RAW/phase-G/g3*/
