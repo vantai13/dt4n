@@ -454,10 +454,45 @@ def summarise_arm(name: str, replicates: list[np.ndarray], overruns: list[list[i
 # --------------------------------------------------------------------- main
 def main() -> None:
     parser = argparse.ArgumentParser()
-    parser.add_argument("--out", required=True)
+    parser.add_argument("--out")
     parser.add_argument("--arms", default="")
     parser.add_argument("--replicates", type=int, default=DIAG_REPLICATES)
+    parser.add_argument(
+        "--baseline-out",
+        help="write ONLY the synthetic staggered-window null baseline and exit; "
+             "runs no real-time arm, so it can be regenerated at any time",
+    )
     args = parser.parse_args()
+    if bool(args.out) == bool(args.baseline_out):
+        raise SystemExit("REFUSED: pass exactly one of --out or --baseline-out")
+
+    if args.baseline_out:
+        rows = staggered_overlap_baseline()
+        payload = {
+            "schema": "dt4n.phase_g.g3_stagger_baseline.v1",
+            "status": "SYNTHETIC_NO_NETWORK",
+            "adjudicates": None,
+            "git_hash": git_hash(),
+            "purpose": (
+                "calibrate the staggered/aligned correlation ratio under a null "
+                "with no synchronisation component, because the raw window "
+                "overlap coefficient is a biased predictor for a maximum"
+            ),
+            "overlap_coefficient": "1 - abs(i-j)/n_links",
+            "rows": rows,
+        }
+        out = Path(args.baseline_out)
+        out.parent.mkdir(parents=True, exist_ok=True)
+        out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
+        print("stall_ms  amp   aligned_med  ratio   overlap  residual +- SE")
+        for row in rows:
+            print("%8.1f  %.2f  %11.4f  %.4f  %.4f  %+.4f +- %.4f" % (
+                row["stall_duration_ms"], row["shared_amplitude"],
+                row["aligned_offdiag_median"], row["ratio_median"],
+                row["overlap_median"], row["residual_median"],
+                row["residual_se"]))
+        print("BASELINE ONLY - adjudicates nothing")
+        return
 
     selected = [a for a in ARMS
                 if not args.arms or a["name"] in args.arms.split(",")]
