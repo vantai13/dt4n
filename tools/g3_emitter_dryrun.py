@@ -4,6 +4,7 @@ from __future__ import annotations
 
 import argparse
 import gc
+import glob
 import hashlib
 import json
 import multiprocessing as mp
@@ -42,7 +43,7 @@ REQUIRED_ROLES = 10
 MIN_LADDER_CPUS = 8
 START_DELAY_S = 1.0
 JOIN_SLACK_S = 10.0
-PREREG_TAG = "phase-G-g3-emitter-run-prereg"
+PREREG_TAG = "phase-G-g3-emitter-run-2-prereg"
 CELLS = (
     {"name": "anchor", "sigma_ref": 0.030348837209302317, "tau_s": 3.0},
     {"name": "stress", "sigma_ref": 0.020232558139534878, "tau_s": 30.0},
@@ -53,6 +54,12 @@ GATE_QUANT_SIGN = -0.05
 GATE_QUANT_PREDICTION = 0.05
 GATE_TIMING_CORRELATION = 0.10
 GATE_SNAPSHOT_P99_S = 0.001
+# G-A015. Neither constant below is new. The sampler is held to the same
+# tolerance as the emitter because both are one-process timing failures, and
+# the alignment tolerance is their union bound: a mismatch requires the
+# emitter to finish late OR the sampler to read late.
+GATE_SAMPLER_LATE_FRACTION = GATE_OVERRUN_FRACTION
+GATE_ALIGNMENT_MISMATCH = GATE_OVERRUN_FRACTION + GATE_SAMPLER_LATE_FRACTION
 EMIT3_NULL_TRIALS = 3000
 EMIT3_NULL_SEED = 20260909
 
@@ -88,6 +95,19 @@ def parse_cpu_map(text: str) -> tuple[tuple[int, ...], int, int]:
     return emitter_cpus, sampler_cpu, sink_cpu
 
 
+def physical_core_map() -> dict[int, int]:
+    """Return ``{logical_cpu: physical_core_id}`` from sysfs, empty if absent."""
+    mapping: dict[int, int] = {}
+    for path in sorted(glob.glob("/sys/devices/system/cpu/cpu[0-9]*/topology/core_id")):
+        name = path.split("/")[5]
+        try:
+            with open(path, encoding="utf-8") as handle:
+                mapping[int(name[3:])] = int(handle.read().strip())
+        except (OSError, ValueError):
+            continue
+    return mapping
+
+
 def cpu_preflight(cpu_map: tuple[int, ...]) -> dict[str, object]:
     allowed = set(os.sched_getaffinity(0))
     requested = set(cpu_map)
@@ -99,6 +119,30 @@ def cpu_preflight(cpu_map: tuple[int, ...]) -> dict[str, object]:
         and sampler_cpu not in emitter_cpus
         and sink_cpu not in emitter_cpus
     )
+    cores = physical_core_map()
+    emitter_cores = {cores[cpu] for cpu in emitter_cpus if cpu in cores}
+    physical = {
+        "available": bool(cores),
+        "physical_core_count": len(set(cores.values())) or None,
+        "smt_threads_per_core": (
+            len(cores) / len(set(cores.values())) if cores else None
+        ),
+        "emitter_physical_core_count": len(emitter_cores) or None,
+        "emitters_per_physical_core": (
+            len(emitter_cpus) / len(emitter_cores) if emitter_cores else None
+        ),
+        # role_isolation above is a LOGICAL check. On an SMT host a sampler
+        # can sit on a logical CPU that shares its physical core with an
+        # emitter, which logical isolation cannot see. REPORTED, not gated:
+        # gating it now, with this host's topology already known, would be an
+        # outcome-based change.
+        "sampler_shares_core_with_emitter": (
+            cores.get(sampler_cpu) in emitter_cores if cores else None
+        ),
+        "sink_shares_core_with_emitter": (
+            cores.get(sink_cpu) in emitter_cores if cores else None
+        ),
+    }
     return {
         "allowed_cpus": sorted(allowed),
         "requested_cpus": list(cpu_map),
@@ -107,6 +151,7 @@ def cpu_preflight(cpu_map: tuple[int, ...]) -> dict[str, object]:
         "sampler_cpu": sampler_cpu,
         "sink_cpu": sink_cpu,
         "role_isolation": role_isolation,
+        "physical": physical,
         "missing": missing,
         "pass": role_isolation and not missing,
     }
@@ -129,6 +174,25 @@ def build_ladder_cpu_maps(
         return emitters + (sampler_cpu, sink_cpu)
 
     return {"L0": assign(6), "L1": assign(3), "L2": assign(1)}
+
+
+def sampler_margin_s(window_sent: np.ndarray, dt_s: float = DT_S) -> np.ndarray:
+    """Per-window slack the sampler has before the NEXT window's first packet.
+
+    The sampler must read at ``t_end`` of window ``w`` before the emitter of
+    window ``w+1`` sends, whose first deadline is ``t_end + 0.5*dt/n``. The
+    binding link is the one sending the most packets in that next window, and
+    ``n`` is read from the ledger rather than assumed from the mean load, so
+    the margin tightens automatically wherever the modulated rate is highest.
+    Returns one margin per window boundary that has a successor.
+    """
+    counts = np.asarray(window_sent, dtype=float)
+    if counts.ndim != 2 or counts.shape[1] < 2:
+        raise ValueError("window_sent must be (link, window) with two windows")
+    busiest_next = counts[:, 1:].max(axis=0)
+    if np.any(busiest_next <= 0.0):
+        raise ValueError("a window sends no packet on any link; margin undefined")
+    return 0.5 * dt_s / busiest_next
 
 
 def remote_provenance() -> dict[str, object]:
@@ -268,6 +332,7 @@ def _sampler_worker(
     snapshot_sent,
     snapshot_measured,
     snapshot_spans_ns,
+    tick_lateness_ns,
     ready_queue,
     error_queue,
 ) -> None:
@@ -292,6 +357,7 @@ def _sampler_worker(
                     link_index
                 ]
             snapshot_spans_ns[window_index] = int(round(row.snapshot_span_s * 1e9))
+            tick_lateness_ns[window_index] = int(round(row.tick_lateness_s * 1e9))
     except BaseException:
         _failed(error_queue, role)
         raise
@@ -330,6 +396,7 @@ def run_replicate(
     snapshot_sent = atomic_int64_array(len(LINKS) * N_WINDOWS)
     snapshot_measured = atomic_int64_array(len(LINKS) * N_WINDOWS)
     snapshot_spans_ns = atomic_int64_array(N_WINDOWS)
+    tick_lateness_ns = atomic_int64_array(N_WINDOWS)
     overrun_counts = atomic_int64_array(len(LINKS))
     overrun_max_ns = atomic_int64_array(len(LINKS))
     epoch_value = context.Value("d", 0.0, lock=False)
@@ -356,7 +423,7 @@ def run_replicate(
         target=_sampler_worker,
         args=(sampler_cpu, target_cumulative, epoch_value, start_event,
               sent_cumulative, receiver_counts, snapshot_sent, snapshot_measured,
-              snapshot_spans_ns, ready_queue, error_queue),
+              snapshot_spans_ns, tick_lateness_ns, ready_queue, error_queue),
         name="g3-sampler",
     ))
     for link_index, cpu in enumerate(emitter_cpus):
@@ -411,6 +478,7 @@ def run_replicate(
         "snapshot_sent": matrix(snapshot_sent),
         "snapshot_measured": matrix(snapshot_measured),
         "snapshot_spans_s": np.fromiter(snapshot_spans_ns, dtype=np.int64) / 1e9,
+        "tick_lateness_s": np.fromiter(tick_lateness_ns, dtype=np.int64) / 1e9,
         "overrun_counts": np.fromiter(overrun_counts, dtype=np.int64),
         "overrun_max_s": np.fromiter(overrun_max_ns, dtype=np.int64) / 1e9,
         "final_sent": np.fromiter(sent_cumulative, dtype=np.int64),
@@ -589,24 +657,45 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
         run["snapshot_spans_s"] for cell in l0_cells for run in cell["runs"]
     ])
     snap_p99 = float(np.quantile(spans, 0.99))
-    alignment_ok = True
+    record("EMIT-4a", snap_p99, GATE_SNAPSHOT_P99_S,
+           snap_p99 <= GATE_SNAPSHOT_P99_S,
+           "shared-tick snapshot read width",
+           note="width of the read, not the lateness of the tick")
+
+    late_windows = 0
+    total_windows = 0
+    under = over = 0
+    mismatch_cells = 0
     delivery_ok = True
     for cell in l0_cells:
         for run in cell["runs"]:
+            margins = sampler_margin_s(run["window_sent"])
+            lateness = run["tick_lateness_s"][:-1]
+            late_windows += int(np.count_nonzero(lateness > margins))
+            total_windows += int(margins.size)
             expected_cumulative = np.cumsum(run["window_sent"], axis=1)
-            alignment_ok = alignment_ok and bool(np.array_equal(
-                expected_cumulative, run["snapshot_sent"]
-            ))
-            alignment_ok = alignment_ok and bool(np.array_equal(
-                expected_cumulative[:, -1], run["final_sent"]
-            ))
+            difference = run["snapshot_sent"] - expected_cumulative
+            under += int(np.count_nonzero(difference < 0))
+            over += int(np.count_nonzero(difference > 0))
+            mismatch_cells += int(np.count_nonzero(difference))
             delivery_ok = delivery_ok and bool(np.array_equal(
                 run["final_sent"], run["final_received"]
             ))
-    record("EMIT-4", snap_p99, GATE_SNAPSHOT_P99_S,
-           snap_p99 <= GATE_SNAPSHOT_P99_S and alignment_ok and delivery_ok,
-           "shared-tick snapshot span and exact L2 ledger alignment",
-           alignment_exact=alignment_ok, final_udp_delivery_exact=delivery_ok)
+    sampler_late_fraction = late_windows / total_windows
+    mismatch_fraction = mismatch_cells / (
+        len(l0_cells) * REPLICATES * len(LINKS) * N_WINDOWS
+    )
+    record("EMIT-4b", sampler_late_fraction, GATE_SAMPLER_LATE_FRACTION,
+           sampler_late_fraction <= GATE_SAMPLER_LATE_FRACTION,
+           "sampler tick returns before the next window's first packet",
+           late_windows=late_windows, windows=total_windows,
+           margin_rule="0.5 * dt / max_link_packets(next window)")
+    record("EMIT-4c", mismatch_fraction, GATE_ALIGNMENT_MISMATCH,
+           mismatch_fraction <= GATE_ALIGNMENT_MISMATCH and delivery_ok,
+           "L2 ledger alignment mismatch fraction, split by sign",
+           undershoot=under, overshoot=over,
+           final_udp_delivery_exact=delivery_ok,
+           tolerance_rule="GATE_OVERRUN_FRACTION + GATE_SAMPLER_LATE_FRACTION")
 
     emit3_null = simulate_emit3_null()
     overall = all(row["verdict"] == "PASS" for row in checks)

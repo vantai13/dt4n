@@ -17,6 +17,7 @@ class TickSnapshot:
     sent_cumulative_packets: tuple[int, ...]
     measured_cumulative_packets: tuple[int, ...]
     snapshot_span_s: float
+    tick_lateness_s: float = 0.0
 
 
 def parse_proc_net_dev(
@@ -72,7 +73,14 @@ def sample_at(
     clock: Callable[[], float] = time.perf_counter,
     sleeper: Callable[[float], None] = time.sleep,
 ) -> TickSnapshot:
-    """Capture L2 then L3 on one absolute tick and record snapshot width."""
+    """Capture L2 then L3 on one absolute tick.
+
+    Two distinct timings are recorded. ``snapshot_span_s`` is the width of the
+    read itself, between the first and last counter access. ``tick_lateness_s``
+    is how late the tick woke: the gap between the absolute deadline and the
+    moment the read began. Only the second can shift a snapshot into the next
+    window, so a gate on alignment must read the second, not the first.
+    """
     sleep_until(
         deadline_s,
         spin_threshold_s=spin_threshold_s,
@@ -93,4 +101,5 @@ def sample_at(
         sent_cumulative_packets=sent,
         measured_cumulative_packets=measured,
         snapshot_span_s=max(0.0, snapshot_end - snapshot_start),
+        tick_lateness_s=max(0.0, snapshot_start - deadline_s),
     )

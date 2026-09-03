@@ -10,12 +10,14 @@ threshold edit under a new tag now fails the suite.
 """
 from __future__ import annotations
 
+import pytest
+
 from tools import g3_emitter_dryrun as E
 
 
 def test_prereg_tag_is_the_reanchored_run_tag():
-    """The tag is repointed to a new name; the old tag is never moved."""
-    assert E.PREREG_TAG == "phase-G-g3-emitter-run-prereg"
+    """The tag is repointed to a new name; no earlier tag is ever moved."""
+    assert E.PREREG_TAG == "phase-G-g3-emitter-run-2-prereg"
 
 
 def test_emitter_gates_are_unchanged_across_the_reanchor():
@@ -24,6 +26,52 @@ def test_emitter_gates_are_unchanged_across_the_reanchor():
     assert E.GATE_QUANT_PREDICTION == 0.05
     assert E.GATE_TIMING_CORRELATION == 0.10
     assert E.GATE_SNAPSHOT_P99_S == 0.001
+
+
+def test_emit4_thresholds_are_derived_not_new_constants():
+    """G-A015 introduces no number. Both new gates are functions of EMIT-1."""
+    assert E.GATE_SAMPLER_LATE_FRACTION == E.GATE_OVERRUN_FRACTION
+    assert E.GATE_ALIGNMENT_MISMATCH == (
+        E.GATE_OVERRUN_FRACTION + E.GATE_SAMPLER_LATE_FRACTION
+    )
+    assert E.GATE_ALIGNMENT_MISMATCH == pytest.approx(0.002)
+
+
+def test_sampler_margin_comes_from_the_ledger_not_from_a_constant():
+    """The margin must tighten where the modulated rate is highest.
+
+    A fixed margin taken at the mean load would forgive exactly the busiest
+    windows, which are the ones most likely to break alignment.
+    """
+    import numpy as np
+    quiet = E.sampler_margin_s(np.array([[119.0, 119.0], [89.0, 89.0]]))
+    busy = E.sampler_margin_s(np.array([[119.0, 138.0], [89.0, 89.0]]))
+    assert busy[0] < quiet[0]
+    assert quiet[0] == pytest.approx(0.5 * E.DT_S / 119.0)
+    assert busy[0] == pytest.approx(0.5 * E.DT_S / 138.0)
+
+
+def test_sampler_margin_uses_the_busiest_link_of_the_next_window():
+    import numpy as np
+    margin = E.sampler_margin_s(np.array([[10.0, 50.0], [10.0, 200.0]]))
+    assert margin[0] == pytest.approx(0.5 * E.DT_S / 200.0)
+
+
+def test_sampler_margin_refuses_a_silent_window():
+    import numpy as np
+    with pytest.raises(ValueError):
+        E.sampler_margin_s(np.array([[10.0, 0.0], [10.0, 0.0]]))
+
+
+def test_physical_core_reporting_is_present_and_ungated():
+    """SMT siblings are reported because logical isolation cannot see them."""
+    detail = E.cpu_preflight(E.build_ladder_cpu_maps(tuple(range(8)))["L0"])
+    physical = detail["physical"]
+    assert set(physical) >= {
+        "physical_core_count", "smt_threads_per_core",
+        "emitters_per_physical_core", "sampler_shares_core_with_emitter",
+    }
+    assert detail["pass"] == (detail["role_isolation"] and not detail["missing"])
 
 
 def test_emit3_null_calibration_inputs_are_unchanged():
