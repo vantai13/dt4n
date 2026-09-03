@@ -151,7 +151,7 @@ def component_baselines(a0: float = A0) -> tuple[np.ndarray, np.ndarray, np.ndar
     return path_base, private_base, reconstructed
 
 
-def _ar1(
+def ar1(
     n_processes: int, tau_s: float, n: int, rng: np.random.Generator
 ) -> np.ndarray:
     phi = float(np.exp(-DT_S / tau_s))
@@ -178,12 +178,12 @@ def physical_trace(
     path_base, private_base, reconstructed = component_baselines(a0)
     path_rate_raw = (
         path_base[:, None]
-        + a0 * np.sqrt(omega) * _ar1(len(path_base), tau_path_s, n, rng)
+        + a0 * np.sqrt(omega) * ar1(len(path_base), tau_path_s, n, rng)
     )
     private_amplitude = a0 * np.sqrt((1.0 - omega) * DEGREE)
     private_rate_raw = (
         private_base[:, None]
-        + private_amplitude[:, None] * _ar1(len(LINKS), tau_link_s, n, rng)
+        + private_amplitude[:, None] * ar1(len(LINKS), tau_link_s, n, rng)
     )
     path_rate = np.maximum(path_rate_raw, 0.0)
     private_rate = np.maximum(private_rate_raw, 0.0)
