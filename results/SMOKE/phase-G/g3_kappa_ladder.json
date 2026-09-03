@@ -1,0 +1,307 @@
+{
+  "schema": "dt4n.phase_g.g3_kappa_ladder.v1",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "amendment": "G-A014",
+  "prereg": "docs/phase-G/42-amendment-G-A014-certificate-renewal.md",
+  "git_hash": "61beee884dd03c700075e0bfe02ff6e667de8dc2",
+  "elapsed_s": 19.662,
+  "design": {
+    "tau_link_s": 3.0,
+    "kappa_ladder": [
+      1,
+      2,
+      3,
+      4,
+      5,
+      6,
+      8,
+      10
+    ],
+    "omega_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "z_stale_s": 2.0,
+    "dt_s": 0.2,
+    "t_over_slow_tau": 200.0,
+    "selection_rule": "smallest kappa on KAPPA_LADDER whose analytic pairwise flip spread is at least SAFETY_FACTOR * GATE_PC_FLIP_SPREAD",
+    "safety_factor": 1.5,
+    "inherited_gate": 0.1,
+    "inherited_gate_source": "DRY-D-PC in docs/phase-G/31a-prereg-g3-dryrun.md",
+    "sigma_ref_anchor": 0.03034883720930232,
+    "a0_bps": 171678.94873459428,
+    "contrast": {
+      "uA": 0.0,
+      "uB": 0.0,
+      "ac": 1.0,
+      "ad": -1.0,
+      "bc": 0.0,
+      "bd": 0.0,
+      "vC": 1.0,
+      "vD": -1.0
+    },
+    "path_decision_variance": 0.008903501892915083,
+    "link_decision_variance": 0.005219294213088152,
+    "link_over_path_variance_ratio": 0.5862068965517242,
+    "mc_seed": 20260910,
+    "mc_replicates": 40
+  },
+  "ladder": [
+    {
+      "kappa": 1,
+      "tau_path_s": 3.0,
+      "t_run_pc_s": 600.0,
+      "flip_curve": [
+        0.328379380035324,
+        0.328379380035324,
+        0.328379380035324,
+        0.328379380035324,
+        0.328379380035324
+      ],
+      "flip_spread": 0.0,
+      "meets_inherited_gate": false,
+      "meets_selection_threshold": false,
+      "campaign_hours": 6.416666666666667
+    },
+    {
+      "kappa": 2,
+      "tau_path_s": 6.0,
+      "t_run_pc_s": 1200.0,
+      "flip_curve": [
+        0.328379380035324,
+        0.3002907590387007,
+        0.27832597319319646,
+        0.26053106392218406,
+        0.24572868565113667
+      ],
+      "flip_spread": 0.08265069438418735,
+      "meets_inherited_gate": false,
+      "meets_selection_threshold": false,
+      "campaign_hours": 9.75
+    },
+    {
+      "kappa": 3,
+      "tau_path_s": 9.0,
+      "t_run_pc_s": 1800.0,
+      "flip_curve": [
+        0.328379380035324,
+        0.2881169337316099,
+        0.25560181629589745,
+        0.22823250423147654,
+        0.20444123914836185
+      ],
+      "flip_spread": 0.12393814088696217,
+      "meets_inherited_gate": true,
+      "meets_selection_threshold": false,
+      "campaign_hours": 13.083333333333334
+    },
+    {
+      "kappa": 4,
+      "tau_path_s": 12.0,
+      "t_run_pc_s": 2400.0,
+      "flip_curve": [
+        0.328379380035324,
+        0.28134891557220454,
+        0.24258168084303652,
+        0.20901988880827677,
+        0.1787164461638035
+      ],
+      "flip_spread": 0.14966293387152052,
+      "meets_inherited_gate": true,
+      "meets_selection_threshold": false,
+      "campaign_hours": 16.416666666666668
+    },
+    {
+      "kappa": 5,
+      "tau_path_s": 15.0,
+      "t_run_pc_s": 3000.0,
+      "flip_curve": [
+        0.328379380035324,
+        0.27704319563794,
+        0.23412382709617924,
+        0.196164809903342,
+        0.1607472526787917
+      ],
+      "flip_spread": 0.16763212735653232,
+      "meets_inherited_gate": true,
+      "meets_selection_threshold": true,
+      "campaign_hours": 19.75
+    },
+    {
+      "kappa": 6,
+      "tau_path_s": 18.0,
+      "t_run_pc_s": 3600.0,
+      "flip_curve": [
+        0.328379380035324,
+        0.2740633993336305,
+        0.22818049915523012,
+        0.18691373291674127,
+        0.14729001107047404
+      ],
+      "flip_spread": 0.18108936896484998,
+      "meets_inherited_gate": true,
+      "meets_selection_threshold": true,
+      "campaign_hours": 23.083333333333332
+    },
+    {
+      "kappa": 8,
+      "tau_path_s": 24.0,
+      "t_run_pc_s": 4800.0,
+      "flip_curve": [
+        0.328379380035324,
+        0.27020886918319753,
+        0.22037133535950082,
+        0.17442874608616335,
+        0.12815235603969058
+      ],
+      "flip_spread": 0.20022702399563344,
+      "meets_inherited_gate": true,
+      "meets_selection_threshold": true,
+      "campaign_hours": 29.75
+    },
+    {
+      "kappa": 10,
+      "tau_path_s": 30.0,
+      "t_run_pc_s": 6000.0,
+      "flip_curve": [
+        0.328379380035324,
+        0.2678237934309244,
+        0.21546446292778515,
+        0.1663569304833128,
+        0.11494329534346642
+      ],
+      "flip_spread": 0.2134360846918576,
+      "meets_inherited_gate": true,
+      "meets_selection_threshold": true,
+      "campaign_hours": 36.416666666666664
+    }
+  ],
+  "selected_kappa": 5,
+  "selected_regimes": {
+    "NC": [
+      3.0,
+      3.0
+    ],
+    "PC": [
+      15.0,
+      3.0
+    ],
+    "SYMMETRY": [
+      3.0,
+      15.0
+    ]
+  },
+  "budget": {
+    "kappa": 5,
+    "tau_link_s": 3.0,
+    "tau_path_pc_s": 15.0,
+    "t_run_nc_s": 600.0,
+    "t_run_pc_s": 3000.0,
+    "t_run_symmetry_s": 3000.0,
+    "runs_nc": 15,
+    "runs_pc": 15,
+    "runs_symmetry": 5,
+    "per_run_overhead_s": 60.0,
+    "total_seconds": 71100.0,
+    "total_hours": 19.75
+  },
+  "budget_at_kappa_10": {
+    "kappa": 10,
+    "tau_link_s": 3.0,
+    "tau_path_pc_s": 30.0,
+    "t_run_nc_s": 600.0,
+    "t_run_pc_s": 6000.0,
+    "t_run_symmetry_s": 6000.0,
+    "runs_nc": 15,
+    "runs_pc": 15,
+    "runs_symmetry": 5,
+    "per_run_overhead_s": 60.0,
+    "total_seconds": 131100.0,
+    "total_hours": 36.416666666666664
+  },
+  "omega_roundtrip": [
+    {
+      "omega_true": 0.0,
+      "omega_hat_median": -0.00012645717497329945,
+      "omega_hat_bias": -0.00012645717497329945,
+      "omega_hat_sd": 0.012713953941370836,
+      "replicates": 40
+    },
+    {
+      "omega_true": 0.25,
+      "omega_hat_median": 0.24746027225924697,
+      "omega_hat_bias": -0.002539727740753034,
+      "omega_hat_sd": 0.022934091259905396,
+      "replicates": 40
+    },
+    {
+      "omega_true": 0.5,
+      "omega_hat_median": 0.48994217772253434,
+      "omega_hat_bias": -0.010057822277465656,
+      "omega_hat_sd": 0.030588048397127032,
+      "replicates": 40
+    },
+    {
+      "omega_true": 0.75,
+      "omega_hat_median": 0.7469979039969558,
+      "omega_hat_bias": -0.003002096003044241,
+      "omega_hat_sd": 0.03203994156450998,
+      "replicates": 40
+    },
+    {
+      "omega_true": 1.0,
+      "omega_hat_median": 0.9990866728769039,
+      "omega_hat_bias": -0.0009133271230961082,
+      "omega_hat_sd": 0.02844155146473744,
+      "replicates": 40
+    }
+  ],
+  "checks": [
+    {
+      "id": "KAP-1",
+      "description": "selected kappa flip spread",
+      "value": 0.16763212735653232,
+      "gate": 0.15000000000000002,
+      "verdict": "PASS"
+    },
+    {
+      "id": "KAP-2",
+      "description": "kappa=1 negative control flat",
+      "value": 0.0,
+      "gate": 1e-12,
+      "verdict": "PASS"
+    },
+    {
+      "id": "KAP-3a",
+      "description": "omega round-trip max abs median bias",
+      "value": 0.010057822277465656,
+      "gate": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "id": "KAP-3b",
+      "description": "omega round-trip max sd",
+      "value": 0.03203994156450998,
+      "gate": 0.05,
+      "verdict": "PASS"
+    },
+    {
+      "id": "KAP-4",
+      "description": "mixture ACF monotonicity violation",
+      "value": 0.0,
+      "gate": 0.0,
+      "verdict": "PASS"
+    },
+    {
+      "id": "KAP-5",
+      "description": "campaign wall-clock hours",
+      "value": 19.75,
+      "gate": 24.0,
+      "verdict": "PASS"
+    }
+  ],
+  "overall": "PASS"
+}

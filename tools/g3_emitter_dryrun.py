@@ -42,7 +42,7 @@ REQUIRED_ROLES = 10
 MIN_LADDER_CPUS = 8
 START_DELAY_S = 1.0
 JOIN_SLACK_S = 10.0
-PREREG_TAG = "phase-G-g3-emitter-reduction-prereg"
+PREREG_TAG = "phase-G-g3-emitter-run-prereg"
 CELLS = (
     {"name": "anchor", "sigma_ref": 0.030348837209302317, "tau_s": 3.0},
     {"name": "stress", "sigma_ref": 0.020232558139534878, "tau_s": 30.0},
