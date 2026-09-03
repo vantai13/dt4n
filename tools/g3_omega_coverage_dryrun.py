@@ -50,6 +50,8 @@ GATE_COV1_MARGINAL = 0.010
 GATE_COV2_AMPLITUDE = 0.050
 GATE_COV3_MONOTONE = -0.002
 GATE_COV4_SNR = 3.0
+COV7_MIN_DEFICIT = 0.001     # below this the ratio is two small numbers
+COV7_BOOTSTRAP = 2000
 
 
 def git_hash() -> str:
@@ -153,19 +155,40 @@ def tau_amplification_sweep(
             values = coverage(trace(0.0, sf, n, rng, tau_s=tau_s), (k,))
             marginal.append(values[0])
             simultaneous.append(values[k])
-        marginal_deficit = float(np.mean(marginal)) - nominal_marginal
-        simultaneous_deficit = float(np.mean(simultaneous)) - nominal_simultaneous
+        marginal = np.asarray(marginal)
+        simultaneous = np.asarray(simultaneous)
+        marginal_deficit = float(marginal.mean()) - nominal_marginal
+        simultaneous_deficit = float(simultaneous.mean()) - nominal_simultaneous
+        # A ratio of two small deficits is only estimable where the
+        # denominator clears a stated threshold; otherwise it is noise over
+        # noise and reporting it beside the well-determined rows would imply
+        # they share a precision they do not.
+        estimable = abs(marginal_deficit) >= COV7_MIN_DEFICIT
+        ratio = ratio_se = None
+        if estimable:
+            boot = np.random.default_rng(SEED)
+            index = boot.integers(0, marginal.size, (COV7_BOOTSTRAP, marginal.size))
+            boot_marginal = marginal[index].mean(axis=1) - nominal_marginal
+            boot_simultaneous = (
+                simultaneous[index].mean(axis=1) - nominal_simultaneous
+            )
+            usable = np.abs(boot_marginal) >= COV7_MIN_DEFICIT / 10.0
+            if usable.sum() >= COV7_BOOTSTRAP // 2:
+                ratios = boot_simultaneous[usable] / boot_marginal[usable]
+                ratio = simultaneous_deficit / marginal_deficit
+                ratio_se = float(ratios.std(ddof=1))
         rows.append({
             "tau_s": float(tau_s),
             "phi": float(np.exp(-DT_S / tau_s)),
-            "marginal_mean": float(np.mean(marginal)),
-            "simultaneous_mean": float(np.mean(simultaneous)),
+            "marginal_mean": float(marginal.mean()),
+            "simultaneous_mean": float(simultaneous.mean()),
             "marginal_deficit": marginal_deficit,
+            "marginal_deficit_se": float(marginal.std(ddof=1) / np.sqrt(marginal.size)),
             "simultaneous_deficit": simultaneous_deficit,
-            "observed_ratio": (
-                simultaneous_deficit / marginal_deficit
-                if abs(marginal_deficit) > 1e-9 else None
-            ),
+            "ratio_estimable": bool(estimable),
+            "ratio_threshold": COV7_MIN_DEFICIT,
+            "observed_ratio": ratio,
+            "observed_ratio_se": ratio_se,
             "predicted_ratio": predicted,
         })
     return rows

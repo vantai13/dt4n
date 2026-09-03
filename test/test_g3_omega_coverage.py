@@ -13,6 +13,7 @@ import pytest
 from tools.g2_topology import LINKS
 from tools.g3_omega_coverage_dryrun import (
     ALPHA,
+    COV7_MIN_DEFICIT,
     K_PRIMARY,
     SF_PRIMARY,
     Z,
@@ -142,3 +143,35 @@ def test_trace_refuses_omega_and_signal_fraction_outside_range():
     for bad_sf in (0.0, 1.5):
         with pytest.raises(ValueError):
             trace(0.5, bad_sf, 100, rng)
+
+
+# ------------------------------------------------------------- OBS-COV-7
+def test_cov7_refuses_a_ratio_when_the_denominator_is_too_small():
+    """A ratio of two small deficits is noise over noise.
+
+    Reporting it beside the well-determined rows would imply a precision it
+    does not have, so the sweep marks it not estimable instead.
+    """
+    from tools.g3_omega_coverage_dryrun import tau_amplification_sweep
+    rows = tau_amplification_sweep(tau_grid=(0.5, 30.0), replicates=8)
+    shallow, deep = rows[0], rows[1]
+    assert abs(shallow["marginal_deficit"]) < COV7_MIN_DEFICIT
+    assert shallow["ratio_estimable"] is False
+    assert shallow["observed_ratio"] is None
+    assert abs(deep["marginal_deficit"]) >= COV7_MIN_DEFICIT
+    assert deep["ratio_estimable"] is True
+    assert deep["observed_ratio"] is not None
+    assert deep["observed_ratio_se"] > 0.0
+
+
+def test_cov7_deficit_deepens_with_tau():
+    """Channel 2: the calibration deficit is a function of the regime.
+
+    Both taus are chosen above the estimability threshold. At tau = 1 s the
+    deficit is not distinguishable from zero at this replicate count, which
+    is the situation the guard above exists to refuse.
+    """
+    from tools.g3_omega_coverage_dryrun import tau_amplification_sweep
+    rows = tau_amplification_sweep(tau_grid=(10.0, 30.0), replicates=8)
+    assert rows[1]["marginal_deficit"] < rows[0]["marginal_deficit"] < 0.0
+    assert all(row["ratio_estimable"] for row in rows)
