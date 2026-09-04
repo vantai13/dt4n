@@ -163,7 +163,7 @@ def test_missing_after_quiesce_probe_refuses_without_using_load1(tmp_path):
     assert admission["pass"] is False
 
 
-def test_valid_after_quiesce_probe_is_direct_admission_input(tmp_path):
+def test_legacy_sixty_second_floor_probe_no_longer_grants_admission(tmp_path):
     tool = "tools/host_jitter_probe.py"
     commit = subprocess.run(
         ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
@@ -181,8 +181,8 @@ def test_valid_after_quiesce_probe_is_direct_admission_input(tmp_path):
     artifact = tmp_path / "after.json"
     artifact.write_text(json.dumps(payload))
     admission = E.host_jitter_admission(artifact)
-    assert admission["pass"] is True
-    assert admission["p_stall_1ms"] == 0.01
+    assert admission["pass"] is False
+    assert "invalid host jitter artifact" in admission["reason"]
 
 
 def test_measured_p_stall_forecast_uses_threshold_conditional_events():

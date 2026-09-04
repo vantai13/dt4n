@@ -120,10 +120,13 @@ run.
   amendment.
 - Host `load1` remains a diagnostic only. It has no published transfer to
   shared-stall probability and cannot block the benchmark.
-- A 60-second no-socket probe directly measures the fraction of 200 ms
-  windows whose maximum scheduling lateness reaches 1 ms. The prospective
-  coarse admission ceiling is `GATE_P_STALL = 0.02`. It screens whether an
-  eight-minute bench is worth starting; it does not replace EMIT-3' or claim
+- The 60-second CPU-0 no-socket probes remain intervention evidence, not
+  admission evidence. Admission requires a fresh 300-second `ladder` probe:
+  eight emitter-cadence processes plus sampler- and sink-labelled probes on
+  the signed L0 CPU map. It decides on the worst role's 95% Wilson upper
+  endpoint at the unchanged `GATE_P_STALL = 0.02`, requires the current boot,
+  and is repeated live immediately before `--execute`. The probe screens
+  whether a benchmark is worth starting; it does not replace EMIT-3' or claim
   that timing correlation and load-residual correlation are the same
   quantity.
 
@@ -135,5 +138,31 @@ host's shared-stall behavior, not packet-count fidelity.
 
 **G-A016-L3:** observe and compensate for clock timing instead of requiring a
 general-purpose host to be hard real-time.
+
+**G-A016-L4:** a proxy may move in the opposite direction to the estimand
+under an intervention. Directional agreement must be demonstrated before a
+proxy is promoted to a gate; PSI and load average remain diagnostic here.
+
+## 7. Post-measurement admission addendum
+
+Added 2026-09-04 after the floor-probe intervention result, but before the
+reduced network benchmark. This addendum tightens the admission instrument
+and changes no scientific gate:
+
+- `floor` mode answers whether quiescing changed the idle host-noise floor.
+- `ladder` mode supplies the representative-condition admission measurement.
+  It uses all ten signed L0 roles and includes CPUs 6 and 7, whose sampler and
+  sink roles share physical cores with emitters on this host.
+- `ADMISSION_MIN_DURATION_S = 300` gives more than the already-signed 1.5x
+  margin between `GATE_P_STALL` and the Wilson upper endpoint at the observed
+  floor rate. A 60-second result at one event in 300 windows is too fragile:
+  the second event would move its Wilson endpoint above the gate.
+- Admission uses the worst role's Wilson endpoint, not its point estimate.
+- `measured_at_unix`, `boot_id`, and a 30-minute maximum artifact age bound
+  the check/use interval. `--a016 --execute` additionally requires a live
+  300-second ladder probe, eliminating that interval by construction.
+- Ladder timing correlation is a one-replicate, no-socket diagnostic. The
+  doc-41 threshold is not applied because that null is calibrated after
+  averaging sixteen replicate matrices.
 
 Intended preregistration tag: `phase-G-g3-a016-prereg`.

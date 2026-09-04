@@ -77,10 +77,17 @@ EMIT3_PRIME_NULL_TRIALS = 3000
 EMIT3_PRIME_NULL_SEED = 20260911
 EMIT3_PRIME_NULL_WINDOWS = N_WINDOWS - 1
 GATE_COMMON_MODE_RATIO = 0.05
+# G-A016 addendum: the threshold is unchanged; the measurement is tightened.
 GATE_P_STALL = 0.02
+ADMISSION_MODE = "ladder"
+ADMISSION_MIN_DURATION_S = 300.0
+ADMISSION_MAX_AGE_S = 1800.0
+ADMISSION_SCHEMA = "dt4n.phase_g.host_jitter_probe.v2"
+LOAD1_DIAGNOSTIC_REFERENCE = 0.10
 DEFAULT_HOST_JITTER_ARTIFACT = Path(
-    "results/SMOKE/phase-G/host_jitter_after_quiesce.json"
+    "results/SMOKE/phase-G/host_jitter_ladder_after_quiesce.json"
 )
+BOOT_ID_PATH = Path("/proc/sys/kernel/random/boot_id")
 
 
 def git_hash() -> str:
@@ -96,6 +103,26 @@ def sha256(path: Path) -> str:
         for chunk in iter(lambda: handle.read(1 << 20), b""):
             digest.update(chunk)
     return digest.hexdigest()
+
+
+def git_blob_sha256(commit: str, path: Path) -> str | None:
+    """Return the hash of a file as stored in a commit, or None if absent."""
+    result = subprocess.run(
+        ["git", "show", f"{commit}:{path.as_posix()}"],
+        capture_output=True,
+        check=False,
+    )
+    if result.returncode != 0:
+        return None
+    return hashlib.sha256(result.stdout).hexdigest()
+
+
+def read_boot_id(path: Path = BOOT_ID_PATH) -> str | None:
+    """Return the current boot identity used by freshness admission."""
+    try:
+        return path.read_text(encoding="utf-8").strip() or None
+    except OSError:
+        return None
 
 
 def parse_cpu_map(text: str) -> tuple[tuple[int, ...], int, int]:
@@ -171,18 +198,25 @@ def host_pressure_snapshot(
         "steal_ticks_since_boot": steal_ticks,
         "steal_fraction_since_boot": steal_fraction_since_boot,
         "load1": load1,
-        "load1_diagnostic_reference": 0.10,
+        "load1_diagnostic_reference": LOAD1_DIAGNOSTIC_REFERENCE,
         "load1_below_diagnostic_reference": (
-            load1 is not None and load1 <= 0.10
+            load1 is not None and load1 <= LOAD1_DIAGNOSTIC_REFERENCE
         ),
     }
 
 
 def host_jitter_admission(path: Path) -> dict[str, object]:
-    """Admit on measured >=1 ms stall-window rate; keep load1 diagnostic."""
+    """Admit on a fresh, same-boot L0 ladder probe's Wilson upper bound.
+
+    The gate remains 0.02. Compared with v1, the instrument is expanded from
+    an idle CPU-0 floor measurement to all ten signed L0 roles, the minimum
+    duration rises from 60 to 300 seconds, the confidence bound replaces the
+    point estimate, and time/boot identity prevents stale-state admission.
+    """
     result: dict[str, object] = {
         "artifact": str(path),
         "gate_p_stall_1ms": GATE_P_STALL,
+        "required_mode": ADMISSION_MODE,
         "available": path.is_file(),
         "pass": False,
     }
@@ -191,44 +225,142 @@ def host_jitter_admission(path: Path) -> dict[str, object]:
         return result
     try:
         payload = json.loads(path.read_text(encoding="utf-8"))
+        wilson = float(payload["p_stall_1ms_wilson_upper_95"])
         p_stall = float(payload["p_stall_1ms"])
         duration_s = float(payload["scheduled_duration_s"])
+        artifact_windows = int(payload["windows"])
         threshold_s = float(payload["stall_threshold_s"])
+        measured_at = float(payload["measured_at_unix"])
+        boot_id = payload.get("boot_id")
+        roles = list(payload["roles"])
+        binding_role = str(payload["binding_role"])
+        binding_cpu = int(payload["binding_cpu"])
         tool_path = Path(str(payload["tool_path"]))
         declared_sha = str(payload["tool_sha256"])
         commit = str(payload["git_hash"])
+        role_rows = [
+            {
+                "role": str(row["role"]),
+                "cpu": int(row["cpu"]),
+                "windows": int(row["windows"]),
+                "stall_windows": int(row["stall_windows"]),
+                "p_stall_1ms": float(row["p_stall_1ms"]),
+                "p_stall_1ms_wilson_upper_95": float(
+                    row["p_stall_1ms_wilson_upper_95"]
+                ),
+            }
+            for row in roles
+        ]
     except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
         result["reason"] = f"invalid host jitter artifact: {exc}"
         return result
-    commit_probe = subprocess.run(
-        ["git", "cat-file", "-e", f"{commit}:{tool_path.as_posix()}"],
-        capture_output=True,
-        check=False,
+
+    # Local import avoids a module-import cycle: the probe reuses this file's
+    # signed CPU-map and provenance helpers.
+    from tools.host_jitter_probe import wilson_upper_95
+
+    ladder = build_ladder_cpu_maps()["L0"]
+    expected_roles = [
+        (f"emitter-{LINKS[index]}", ladder[index])
+        for index in range(len(LINKS))
+    ] + [("sampler", ladder[8]), ("sink", ladder[9])]
+    actual_roles = [(row["role"], row["cpu"]) for row in role_rows]
+    covered = {row["cpu"] for row in role_rows}
+    role_counts_valid = all(
+        row["windows"] > 0
+        and 0 <= row["stall_windows"] <= row["windows"]
+        and np.isclose(
+            row["p_stall_1ms"], row["stall_windows"] / row["windows"]
+        )
+        for row in role_rows
+    )
+    role_bounds_valid = role_counts_valid and all(
+        np.isclose(
+            row["p_stall_1ms_wilson_upper_95"],
+            wilson_upper_95(row["stall_windows"], row["windows"]),
+        )
+        for row in role_rows
+    )
+    role_windows_consistent = (
+        artifact_windows > 0
+        and all(row["windows"] == artifact_windows for row in role_rows)
+        and np.isclose(duration_s, artifact_windows * DT_S)
+    )
+    worst_bound = max(
+        (row["p_stall_1ms_wilson_upper_95"] for row in role_rows),
+        default=float("inf"),
+    )
+    binding_rows = [
+        row for row in role_rows
+        if row["role"] == binding_role and row["cpu"] == binding_cpu
+    ]
+    binding_summary_valid = bool(
+        len(binding_rows) == 1
+        and np.isclose(binding_rows[0]["p_stall_1ms"], p_stall)
+        and np.isclose(
+            binding_rows[0]["p_stall_1ms_wilson_upper_95"], wilson
+        )
+        and np.isclose(worst_bound, wilson)
+    )
+    age_s = time.time() - measured_at
+    live_boot = read_boot_id()
+    tool_path_expected = tool_path.as_posix() == "tools/host_jitter_probe.py"
+    tool_exists = tool_path_expected and tool_path.is_file()
+    committed_sha = (
+        git_blob_sha256(commit, tool_path) if tool_path_expected else None
     )
     checks = {
-        "schema": payload.get("schema") == "dt4n.phase_g.host_jitter_probe.v1",
-        "scenario_after_quiesce": payload.get("scenario") == "after_quiesce",
-        "duration_at_least_60s": duration_s >= 60.0,
-        "threshold_is_1ms": threshold_s == 1e-3,
-        "p_stall_in_domain": 0.0 <= p_stall <= 1.0,
-        "tool_path_expected": tool_path.as_posix() == "tools/host_jitter_probe.py",
-        "tool_exists": tool_path.is_file(),
-        "tool_sha256_matches": (
-            tool_path.is_file() and sha256(tool_path) == declared_sha
+        "schema": payload.get("schema") == ADMISSION_SCHEMA,
+        "status": payload.get("status") == "NO_SOCKET_HOST_MEASUREMENT",
+        "scenario_admissible": payload.get("scenario") in {
+            "after_quiesce", "live_admission",
+        },
+        "mode_is_ladder": payload.get("mode") == ADMISSION_MODE,
+        "role_count_is_ten": len(role_rows) == REQUIRED_ROLES,
+        "covers_every_ladder_cpu": covered == set(ladder),
+        "role_population_matches_l0": actual_roles == expected_roles,
+        "role_counts_consistent": role_counts_valid,
+        "role_wilson_bounds_consistent": role_bounds_valid,
+        "role_windows_consistent": role_windows_consistent,
+        "binding_summary_consistent": binding_summary_valid,
+        "duration_at_least_signed_minimum": (
+            duration_s >= ADMISSION_MIN_DURATION_S
         ),
-        "commit_contains_tool": commit_probe.returncode == 0,
+        "threshold_is_1ms": threshold_s == 1e-3,
+        "p_stall_in_domain": 0.0 <= p_stall <= wilson <= 1.0,
+        "artifact_is_fresh": 0.0 <= age_s <= ADMISSION_MAX_AGE_S,
+        "same_boot": live_boot is not None and boot_id == live_boot,
+        "tool_path_expected": tool_path_expected,
+        "tool_exists": tool_exists,
+        "tool_sha256_matches": (
+            tool_exists and sha256(tool_path) == declared_sha
+        ),
+        "commit_contains_tool": committed_sha is not None,
+        "commit_tool_sha256_matches": committed_sha == declared_sha,
     }
-    passed = all(checks.values()) and p_stall <= GATE_P_STALL
+    passed = all(checks.values()) and wilson <= GATE_P_STALL
     result.update({
         "p_stall_1ms": p_stall,
+        "p_stall_1ms_wilson_upper_95": wilson,
+        "decided_on": "p_stall_1ms_wilson_upper_95",
+        "binding_role": binding_role,
+        "binding_cpu": binding_cpu,
+        "artifact_age_s": age_s,
         "scenario": payload.get("scenario"),
         "scheduled_duration_s": duration_s,
+        "loadavg_at_start": payload.get("loadavg_at_start"),
+        "load1_diagnostic_reference": LOAD1_DIAGNOSTIC_REFERENCE,
+        "emit3_timing_no_socket": payload.get("emit3_timing_no_socket"),
         "checks": checks,
         "verdict": "PASS" if passed else "FAIL",
         "pass": passed,
     })
     if not passed:
-        result["reason"] = "integrity/shape check failed or p_stall exceeds gate"
+        failed = sorted(key for key, value in checks.items() if not value)
+        result["reason"] = (
+            f"failed checks={failed}" if failed
+            else f"wilson upper {wilson:.6f} exceeds gate {GATE_P_STALL}"
+        )
     return result
 
 
@@ -786,6 +918,7 @@ def analyze(
     *,
     emit3_prime_null: dict[str, float | int] | None = None,
     legacy_emit3_null: dict[str, float | int] | None = None,
+    live_host_jitter_admission: dict[str, object] | None = None,
 ) -> dict[str, object]:
     checks = []
     diagnostics = []
@@ -1031,6 +1164,7 @@ def analyze(
         "git_hash": git_hash(),
         "prereg": "docs/phase-G/51-amendment-G-A016.md",
         "provenance": provenance,
+        "live_host_jitter_admission": live_host_jitter_admission,
         "cpu_preflight": cpu_detail,
         "design": {
             "seed": SEED, "dt_s": DT_S,
@@ -1071,7 +1205,21 @@ def main() -> None:
         default=DEFAULT_HOST_JITTER_ARTIFACT,
         help="after-quiesce no-socket probe used by the A016 admission gate",
     )
+    parser.add_argument(
+        "--live-admission",
+        action="store_true",
+        help=(
+            "run a 300-second ladder probe immediately before an A016 run; "
+            "required with --a016 --execute"
+        ),
+    )
     args = parser.parse_args()
+    if args.live_admission and not (args.a016 and args.execute):
+        raise SystemExit("REFUSED: --live-admission requires --a016 --execute")
+    if args.a016 and args.execute and not args.live_admission:
+        raise SystemExit(
+            "REFUSED: --a016 --execute requires --live-admission to close TOCTOU"
+        )
     try:
         ladder_maps = build_ladder_cpu_maps()
     except RuntimeError as exc:
@@ -1088,7 +1236,7 @@ def main() -> None:
         host_jitter_admission(args.host_jitter_artifact) if args.a016 else None
     )
     preflight_artifact = {
-        "schema": "dt4n.phase_g.g3_a016_preflight.v1",
+        "schema": "dt4n.phase_g.g3_a016_preflight.v2",
         "status": "PREFLIGHT_ONLY",
         "cpu_preflight": cpu_detail,
         "cpu_maps": {key: list(ladder_maps[key]) for key in levels},
@@ -1122,7 +1270,38 @@ def main() -> None:
         raise SystemExit("REFUSED: origin main/prereg tag do not match local HEAD")
     if args.a016 and not preflight_artifact["environment_pass"]:
         raise SystemExit(
-            "REFUSED: G-A016 requires a valid after-quiesce p_stall <= 0.02"
+            "REFUSED: G-A016 requires a fresh ladder admission with "
+            "Wilson upper <= 0.02"
+        )
+
+    live_admission = None
+    if args.a016:
+        # The artifact gate bounds TOCTOU to 30 minutes. This second probe
+        # removes it by measuring in the same process immediately before use.
+        from tools.host_jitter_probe import measure_artifact, write_artifact
+
+        print(
+            f"live admission probe: {ADMISSION_MODE} mode, "
+            f"{ADMISSION_MIN_DURATION_S:.0f} s"
+        )
+        live_payload = measure_artifact(
+            ADMISSION_MODE,
+            ADMISSION_MIN_DURATION_S,
+            "live_admission",
+        )
+        live_path = Path(args.out).with_name(
+            "host_jitter_live_admission.json"
+        )
+        write_artifact(live_path, live_payload)
+        live_admission = host_jitter_admission(live_path)
+        if not live_admission["pass"]:
+            raise SystemExit(
+                "REFUSED: live admission FAIL "
+                f"({live_admission.get('reason')}); artifact = {live_path}"
+            )
+        print(
+            "live admission PASS; binding role =",
+            live_admission["binding_role"],
         )
 
     rng = np.random.default_rng(SEED)
@@ -1147,7 +1326,12 @@ def main() -> None:
                     dt_s=DT_S,
                 ))
             cells.append(cell)
-    artifact = analyze(cells, cpu_detail, provenance)
+    artifact = analyze(
+        cells,
+        cpu_detail,
+        provenance,
+        live_host_jitter_admission=live_admission,
+    )
     output = Path(args.out)
     output.parent.mkdir(parents=True, exist_ok=True)
     output.write_text(json.dumps(artifact, indent=2) + "\n", encoding="utf-8")

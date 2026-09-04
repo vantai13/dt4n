@@ -19,12 +19,12 @@ def test_synthetic_artifacts_declare_a_commit_that_contains_their_tool():
         commit = payload["git_hash"]
         tool = payload["tool_path"]
         probe = subprocess.run(
-            ["git", "cat-file", "-e", f"{commit}:{tool}"],
+            ["git", "show", f"{commit}:{tool}"],
             capture_output=True,
             check=False,
         )
         assert probe.returncode == 0, f"{artifact}: {commit} lacks {tool}"
-        digest = hashlib.sha256(Path(tool).read_bytes()).hexdigest()
+        digest = hashlib.sha256(probe.stdout).hexdigest()
         assert digest == payload["tool_sha256"], (
-            f"{artifact}: tool_sha256 does not match {tool}"
+            f"{artifact}: tool_sha256 does not match {tool} at {commit}"
         )

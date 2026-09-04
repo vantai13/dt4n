@@ -1,7 +1,7 @@
 # G-A016 host jitter — after-quiesce result and forecast
 
 Executed: 2026-09-04 UTC, after the operator completed host quiescing from a
-plain shell. Status: `AFTER_COMPLETE_ADMISSION_PASS_BENCH_BLOCKED_PROVENANCE`.
+plain shell. Status: `FLOOR_COMPLETE_LADDER_ADMISSION_PENDING`.
 
 ## Direct no-socket measurement
 
@@ -21,11 +21,12 @@ seconds on CPU 0:
 | PSI `full` delta rate | 0 | 0 | unchanged |
 | steal ticks delta | 0 | **0** | unchanged |
 
-The point estimate passes the preregistered operational admission ceiling
-`p_stall_1ms <= 0.02`. Its Wilson upper endpoint is also below 0.02, although
-the implemented gate is explicitly based on the point estimate. Every
-artifact-integrity check passes: schema, scenario, duration, threshold, tool
-path, tool hash, and proof that the recorded commit contains the tool.
+The point estimate and its Wilson upper endpoint both fall below the original
+coarse operational ceiling. The later admission addendum reclassifies this
+single-process, 60-second result as a `floor` measurement: it demonstrates
+the effect of quiescing but does not authorize the benchmark. Admission now
+requires a fresh 300-second `ladder` measurement under the full L0 CPU-role
+population and decides on the binding role's Wilson upper endpoint.
 
 The slight increase in PSI `some` delta rate while the deadline-tail metrics
 improved substantially shows why PSI is retained as a diagnostic rather than
@@ -45,6 +46,68 @@ criterion `<= 0.10`. Passing the host-jitter admission gate therefore
 authorizes only the next experimental stage; it does not predict a passing
 network-benchmark result.
 
+## Preregistered mechanistic forecast verification
+
+Four intervals were recorded before the corresponding host measurement, and
+all four later contained the observed value:
+
+| Quantity | Predicted | Measured | In interval |
+|---|---:|---:|:---:|
+| `p_stall` before quiesce | 0.02--0.20 | 0.086667 | yes |
+| timing EMIT-3 forecast before | 0.66--0.99 | 0.988754 | yes |
+| `p_stall` after quiesce | 0.001--0.02 | 0.003333 | yes |
+| timing EMIT-3 forecast after | 0.18--0.80 | 0.366052 | yes |
+
+The accompanying prediction that quiescing would not bring timing EMIT-3
+below 0.10 also held. The mechanistic model behind G-A016-L2 was therefore
+forecast and verified across a 26-fold intervention; it was not fitted to
+the after-quiesce result.
+
+## PSI moved opposite to the estimand
+
+| Quantity | Before | After | Improvement ratio |
+|---|---:|---:|---:|
+| `p_stall(>=1ms)` | 0.086667 | 0.003333 | 26.00x |
+| lateness p99.9 | 1.086 ms | 24.0 us | 45.23x |
+| window-max p99 | 2.842 ms | 45.1 us | 63.06x |
+| lateness maximum | 3.109 ms | 2.658 ms | 1.17x |
+| PSI `some` delta rate | 0.004677 | 0.005402 | 0.87x |
+
+PSI `some` rose about 15 percent while the directly measured stall-window
+rate fell by a factor of 26. A PSI gate would therefore have assigned the
+wrong direction to this intervention. PSI remains diagnostic, establishing
+G-A016-L4: directional agreement of a proxy must be demonstrated rather than
+assumed.
+
+The maximum barely moved because one 2.658 ms event remained after the
+frequent tail largely disappeared. Its source is not identified by this
+probe; zero steal ticks makes guest steal unsupported over both intervals,
+while kernel, interrupt, firmware, or unaccounted virtualization effects
+remain possible. The defensible conclusion is only that this quiesced VM was
+not hard real-time during the measurement.
+
+## No forecast is claimed for EMIT-3'
+
+The forecast above covers timing EMIT-3, a diagnostic. The benchmark gate is
+EMIT-3', a load-residual statistic. Section 3 of the amendment bounds the
+timing-to-load transfer at `5.64399e-5`; the timing forecast consequently
+does not predict whether EMIT-3' clears its calibrated gate near 0.202.
+
+The reduced benchmark will be the first measurement of EMIT-3'. Its value,
+PASS or FAIL, is a result rather than a confirmation check.
+
+## Stop rule signed before the EMIT-3' run
+
+An EMIT-3' failure does not authorize widening its gate or shortening the
+benchmark. It authorizes decomposition of the sink/sampler boundary effect.
+Candidate mechanisms, each requiring an amendment before it is tried, are:
+
+1. Increase `SO_RCVBUF` or use batched `recvmmsg` on the sink read path.
+2. Retain split sinks only as an expected-ineffective control, because doc 46
+   branch A2 increased timing correlation.
+3. Try the optional merged single-process emitter to free physical cores for
+   sink and sampler roles.
+
 ## Artifacts
 
     results/SMOKE/phase-G/host_jitter_after_quiesce.json
@@ -54,16 +117,19 @@ network-benchmark result.
     sha256 ecaa54eff387181363c1801d212727820a6bf4eff6e38e867ffa0f4875fbceaf
 
     results/SMOKE/phase-G/g3_a016_benchmark_preflight.json
-    sha256 7f5a32fd8d15fbc5fa966e0fcdedbd2ecf9c9e2fdeade246ccc34c5801b93ea8
+    sha256 9b8f041f7699f2d32912af27764fe1a333c527acfa1455d1f5b3615837898b8d
 
 The measurement and forecast declare commit `30f2f7da`, which contains their
 generating tools, and embed the respective tool SHA256 values.
 
 ## Stop state
 
-Host-jitter admission and CPU-environment preflight pass, but benchmark
-execution remains correctly blocked: local HEAD `30f2f7da` is not yet on
-`origin/main`, and the remote preregistration tag
-`phase-G-g3-a016-prereg` does not exist. The preflight therefore reports
-`provenance.pass=false`, `environment_pass=true`, and
+The original five commits, including `712d92f0`, are present on
+`origin/main`; the earlier statement that they were unpushed was incorrect.
+The intended remote preregistration reference, named
+`phase-G-g3-a016-prereg`, is still absent.
+
+After the admission addendum, the v1 artifact is deliberately insufficient:
+the 300-second ladder artifact does not yet exist, so preflight must report
+`environment_pass=false`, `provenance.pass=false`, and
 `mininet_authorized=false`. No reduced network benchmark was started.
