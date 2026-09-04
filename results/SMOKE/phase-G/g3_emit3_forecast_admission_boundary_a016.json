@@ -1,0 +1,46 @@
+{
+  "schema": "dt4n.phase_g.g3_emit3_feasibility.v1",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "git_hash": "73ef8e94462edff0cc940e993d1e76b02629265f",
+  "tool_path": "tools/g3_emit3_feasibility.py",
+  "tool_sha256": "dc09b862729a11661cb680266cb7ae429606b48bb6abd20a205bf342cb1c6563",
+  "seed": 11,
+  "repeats": 20,
+  "windows": 150,
+  "replicates": 8,
+  "packets_per_window": 119,
+  "stall_amplitude_s": 0.001,
+  "p_stall_definition": "fraction of windows with injected shared lateness >= 1 ms",
+  "measured_threshold_input": true,
+  "legacy_gate": 0.1,
+  "rows": [
+    {
+      "p_stall_per_window": 0.02,
+      "mean_emit3": 0.8823924616880039,
+      "replicate_statistics": [
+        0.8442652269566412,
+        0.8475421533978686,
+        0.953768653100049,
+        0.8036454736722548,
+        0.9062139266331577,
+        0.9069318530382926,
+        0.8528473028229173,
+        0.8937505998476043,
+        0.7675338164851493,
+        0.8551997888604597,
+        0.9163835535489984,
+        0.9283335161939926,
+        0.9055284192720702,
+        0.9578947858893544,
+        0.8975163556712098,
+        0.7801288629915472,
+        0.9169466678257425,
+        0.8319961874858237,
+        0.9595822848409707,
+        0.9218398052259714
+      ],
+      "mean_seconds_between_stalls": 10.0
+    }
+  ],
+  "runtime_s": 0.24345153600006597
+}
