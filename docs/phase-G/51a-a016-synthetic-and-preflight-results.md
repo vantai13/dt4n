@@ -41,7 +41,7 @@ The prepared G-A016 design is L0 anchor/stress, eight replicates per cell,
 150 windows per replicate, 30 seconds per replicate. CPU logical-role checks
 pass, but the formal preflight does not authorize execution:
 
-- latest `load1 = 0.47`; this is now diagnostic rather than an admission
+- latest `load1 = 0.10`; this is now diagnostic rather than an admission
   variable because no transfer from load average to shared-stall probability
   is available;
 - local HEAD is not yet on origin and `phase-G-g3-a016-prereg` does not yet
@@ -67,7 +67,7 @@ mode only; no service or process was stopped.
 
 Latest targeted G-A016/emitter/custody suite:
 
-    48 passed in 0.71 s
+    50 passed in 0.71 s
 
 The full repository suite ran for 731 seconds and reported 2,014 passed, 72
 skipped, 13 deselected, and two failures. The G-A016 artifact tag-claim
@@ -85,7 +85,7 @@ was changed here.
 | `results/SMOKE/phase-G/g3_emit2_null_a016.json` | `0f76d7f8ecd920f674506d9b5ca4311b845e718a63724c79e4c7221bdef2d2a7` |
 | `results/SMOKE/phase-G/g3_emit3_feasibility_a016.json` | `178d81e2259824e905dcf4f3b6ca4cb801a54ce61897aa89f565a0ef3c642d98` |
 | `results/SMOKE/phase-G/g3_emit3_prime_null_a016.json` | `f6d812f88aff4d71bbc6edcc3cb93d169e78de302922702a71fd75d5fde0ef19` |
-| `results/SMOKE/phase-G/g3_a016_benchmark_preflight.json` | `e47c70854000269ca59f17ce48aef1df20b23819fc9131258ea0f7e0f5b8307e` |
+| `results/SMOKE/phase-G/g3_a016_benchmark_preflight.json` | `b0900454eaa7884a118abc94e76ad8668ce713aa123ef64888b47b50e9497fc0` |
 
 Each synthetic JSON embeds the SHA256 of the exact tool that generated it.
 The four primary synthetic artifacts were regenerated from a clean tree at
