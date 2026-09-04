@@ -1,0 +1,29 @@
+{
+  "schema": "dt4n.phase_g.g3_emit3_feasibility.v1",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "git_hash": "8381f14f7d684000a8ade16e722566bc7b12291d",
+  "tool_path": "tools/g3_emit3_feasibility.py",
+  "tool_sha256": "dc09b862729a11661cb680266cb7ae429606b48bb6abd20a205bf342cb1c6563",
+  "seed": 11,
+  "repeats": 3,
+  "windows": 150,
+  "replicates": 8,
+  "packets_per_window": 119,
+  "stall_amplitude_s": 0.001,
+  "p_stall_definition": "fraction of windows with injected shared lateness >= 1 ms",
+  "measured_threshold_input": true,
+  "legacy_gate": 0.1,
+  "rows": [
+    {
+      "p_stall_per_window": 0.007779452326555608,
+      "mean_emit3": 0.5980843702769407,
+      "replicate_statistics": [
+        0.4978856169618062,
+        0.6652449720250193,
+        0.6311225218439966
+      ],
+      "mean_seconds_between_stalls": 25.708750642675515
+    }
+  ],
+  "runtime_s": 0.04200073900028656
+}
