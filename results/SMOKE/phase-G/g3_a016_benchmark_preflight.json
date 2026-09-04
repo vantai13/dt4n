@@ -45,7 +45,7 @@
             "avg10": 0.0,
             "avg60": 0.0,
             "avg300": 0.0,
-            "total": 27304076.0
+            "total": 31531630.0
           },
           "full": {
             "avg10": 0.0,
@@ -56,7 +56,7 @@
         },
         "steal_ticks_since_boot": 0,
         "steal_fraction_since_boot": 0.0,
-        "load1": 0.02,
+        "load1": 0.0,
         "load1_diagnostic_reference": 0.1,
         "load1_below_diagnostic_reference": true
       },
@@ -86,8 +86,8 @@
     "git_tag_to_create": "phase-G-g3-a016-prereg"
   },
   "provenance": {
-    "local_head": "712d92f09aab8e6c4d4063407b893c879a6d30ac",
-    "remote_main": "712d92f09aab8e6c4d4063407b893c879a6d30ac",
+    "local_head": "3bee37afb64b7fd13153d3d5bedc85122b98210e",
+    "remote_main": "6b9227ce59d47be5bf634da1c7ccf03eca806e1f",
     "remote_prereg_tag_commit": null,
     "command_exit": 0,
     "pass": false
@@ -96,10 +96,63 @@
     "artifact": "results/SMOKE/phase-G/host_jitter_ladder_after_quiesce.json",
     "gate_p_stall_1ms": 0.02,
     "required_mode": "ladder",
-    "available": false,
-    "pass": false,
-    "reason": "after-quiesce host jitter artifact is missing"
+    "available": true,
+    "pass": true,
+    "p_stall_1ms": 0.0033333333333333335,
+    "p_stall_1ms_wilson_upper_95": 0.007779452326555608,
+    "decided_on": "p_stall_1ms_wilson_upper_95",
+    "binding_role": "sink",
+    "binding_cpu": 7,
+    "artifact_age_s": 881.8264758586884,
+    "scenario": "after_quiesce",
+    "scheduled_duration_s": 300.0,
+    "loadavg_at_start": 0.04638671875,
+    "load1_diagnostic_reference": 0.1,
+    "emit3_timing_no_socket": {
+      "status": "REPORTED_NOT_GATING",
+      "replicates": 1,
+      "windows": 1500,
+      "max_abs_offdiag": 0.8755376890779065,
+      "median_abs_offdiag": 0.0701982244543897,
+      "null_reference": {
+        "status": "REFERENCE_FOR_READING_NOT_GATING",
+        "trials": 3000,
+        "seed": 20260913,
+        "replicates": 1,
+        "windows": 1500,
+        "median": 0.057973558076536605,
+        "p95": 0.0803380518507597,
+        "p99": 0.09051292116423963,
+        "signed_safety_factor": 1.957,
+        "reference_at_signed_safety_factor": 0.17713378671841698
+      },
+      "note": "single replicate; the doc-41 sixteen-replicate null does not apply; this shape-matched reference is for reading only"
+    },
+    "checks": {
+      "schema": true,
+      "status": true,
+      "scenario_admissible": true,
+      "mode_is_ladder": true,
+      "role_count_is_ten": true,
+      "covers_every_ladder_cpu": true,
+      "role_population_matches_l0": true,
+      "role_counts_consistent": true,
+      "role_wilson_bounds_consistent": true,
+      "role_windows_consistent": true,
+      "binding_summary_consistent": true,
+      "duration_at_least_signed_minimum": true,
+      "threshold_is_1ms": true,
+      "p_stall_in_domain": true,
+      "artifact_is_fresh": true,
+      "same_boot": true,
+      "tool_path_expected": true,
+      "tool_exists": true,
+      "tool_sha256_matches": true,
+      "commit_contains_tool": true,
+      "commit_tool_sha256_matches": true
+    },
+    "verdict": "PASS"
   },
-  "environment_pass": false,
+  "environment_pass": true,
   "mininet_authorized": false
 }
