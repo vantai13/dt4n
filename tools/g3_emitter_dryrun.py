@@ -211,6 +211,7 @@ def host_jitter_admission(path: Path) -> dict[str, object]:
         "duration_at_least_60s": duration_s >= 60.0,
         "threshold_is_1ms": threshold_s == 1e-3,
         "p_stall_in_domain": 0.0 <= p_stall <= 1.0,
+        "tool_path_expected": tool_path.as_posix() == "tools/host_jitter_probe.py",
         "tool_exists": tool_path.is_file(),
         "tool_sha256_matches": (
             tool_path.is_file() and sha256(tool_path) == declared_sha

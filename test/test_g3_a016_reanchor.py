@@ -1,6 +1,10 @@
 """Machine-checked ledger for the G-A016 re-anchor."""
 from __future__ import annotations
 
+import hashlib
+import json
+import subprocess
+from pathlib import Path
 import numpy as np
 import pytest
 
@@ -157,6 +161,42 @@ def test_missing_after_quiesce_probe_refuses_without_using_load1(tmp_path):
     admission = E.host_jitter_admission(tmp_path / "missing.json")
     assert admission["available"] is False
     assert admission["pass"] is False
+
+
+def test_valid_after_quiesce_probe_is_direct_admission_input(tmp_path):
+    tool = "tools/host_jitter_probe.py"
+    commit = subprocess.run(
+        ["git", "rev-parse", "HEAD"], capture_output=True, text=True, check=True
+    ).stdout.strip()
+    payload = {
+        "schema": "dt4n.phase_g.host_jitter_probe.v1",
+        "scenario": "after_quiesce",
+        "p_stall_1ms": 0.01,
+        "scheduled_duration_s": 60.0,
+        "stall_threshold_s": 1e-3,
+        "tool_path": tool,
+        "tool_sha256": hashlib.sha256(Path(tool).read_bytes()).hexdigest(),
+        "git_hash": commit,
+    }
+    artifact = tmp_path / "after.json"
+    artifact.write_text(json.dumps(payload))
+    admission = E.host_jitter_admission(artifact)
+    assert admission["pass"] is True
+    assert admission["p_stall_1ms"] == 0.01
+
+
+def test_measured_p_stall_forecast_uses_threshold_conditional_events():
+    from tools import g3_emit3_feasibility as F
+
+    result = F.simulate(
+        repeats=1,
+        probabilities=(0.02,),
+        replicates=2,
+        windows=20,
+        measured_threshold_input=True,
+    )
+    assert result["measured_threshold_input"] is True
+    assert ">= 1 ms" in result["p_stall_definition"]
 
 
 def _analysis_run(offset: int) -> dict[str, object]:
