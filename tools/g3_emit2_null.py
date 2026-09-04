@@ -113,6 +113,7 @@ def calibrate(*, trials: int = TRIALS, seed: int = SEED, batch_size: int = 20):
         "schema": "dt4n.phase_g.g3_emit2_null.v1",
         "status": "SYNTHETIC_NO_NETWORK",
         "git_hash": git_hash(),
+        "tool_path": "tools/g3_emit2_null.py",
         "tool_sha256": sha256(Path(__file__)),
         "seed": seed,
         "seed_last": seed + trials - 1,

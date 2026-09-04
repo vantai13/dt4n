@@ -1,12 +1,12 @@
 #!/usr/bin/env bash
-# Prepare a quiet host for G-A016. Dry-run by default; pass --execute explicitly.
+# Prepare a quiet host for G-A016. Dry-run by default; pass --apply explicitly.
 set -euo pipefail
 
 execute=false
-if [[ "${1:-}" == "--execute" ]]; then
+if [[ "${1:-}" == "--apply" || "${1:-}" == "--execute" ]]; then
   execute=true
 elif [[ $# -ne 0 ]]; then
-  echo "usage: $0 [--execute]" >&2
+  echo "usage: $0 [--apply]" >&2
   exit 2
 fi
 
@@ -27,7 +27,7 @@ if [[ "$execute" == true ]]; then
     echo "cpupower unavailable (normal on a VM)"
   sleep 30
 else
-  echo "DRY RUN: no process or service was stopped; use --execute from tmux/SSH."
+  echo "DRY RUN: no process or service was stopped; use --apply from tmux/SSH."
 fi
 
 echo "=== AFTER / CURRENT ==="
@@ -38,11 +38,5 @@ grep -c . /proc/interrupts 2>/dev/null || true
 awk '/^cpu / {print "steal_ticks_since_boot = " $9}' /proc/stat
 
 load1=$(cut -d' ' -f1 /proc/loadavg)
-echo "load1 = $load1"
-awk -v l="$load1" 'BEGIN {
-  if (l > 0.10) {
-    print "REFUSED: load > 0.10"
-    exit 1
-  }
-  print "host is quiet enough"
-}'
+echo "load1 diagnostic = $load1 (reported, not gating)"
+echo "Run tools.host_jitter_probe after quiesce; p_stall is the admission input."

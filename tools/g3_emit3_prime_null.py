@@ -30,6 +30,7 @@ def calibrate() -> dict[str, object]:
         "schema": "dt4n.phase_g.g3_emit3_prime_null.v1",
         "status": "SYNTHETIC_NO_NETWORK",
         "git_hash": git_hash(),
+        "tool_path": "tools/g3_emit3_prime_null.py",
         "tool_sha256": sha256(Path(__file__)),
         **result,
         "runtime_s": time.perf_counter() - started,

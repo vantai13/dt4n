@@ -1,14 +1,17 @@
 {
   "schema": "dt4n.phase_g.g3_emit3_feasibility.v1",
   "status": "SYNTHETIC_NO_NETWORK",
-  "git_hash": "b974d26e3698b6dc81832333a774aa3bcd113ffe",
-  "tool_sha256": "ea2940d5e5df3f2a8e2bcf68eb58330abc1eedfe6b79630b622051b7392b6e2d",
+  "git_hash": "1e98dad18825152ad36b4609ff21b859ecbf5113",
+  "tool_path": "tools/g3_emit3_feasibility.py",
+  "tool_sha256": "dc09b862729a11661cb680266cb7ae429606b48bb6abd20a205bf342cb1c6563",
   "seed": 11,
   "repeats": 3,
   "windows": 300,
   "replicates": 16,
   "packets_per_window": 119,
   "stall_amplitude_s": 0.001,
+  "p_stall_definition": "legacy probability of an unconditional exponential event",
+  "measured_threshold_input": false,
   "legacy_gate": 0.1,
   "rows": [
     {
@@ -92,5 +95,5 @@
       "mean_seconds_between_stalls": 0.4
     }
   ],
-  "runtime_s": 0.9813365020017955
+  "runtime_s": 0.8844707660000495
 }

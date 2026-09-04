@@ -38,10 +38,50 @@ a window. A shared host stall can therefore dominate all emitter maxima. The
 emitter loop does not break and elapsed deadlines are caught up within the
 window, so the campaign estimand remains the measured packet count.
 
+Closed-form transfer bound at the signed anchor, using no measured value:
+
+    quantum = wire_bits / (C * dt) = 11536 / (8e6 * 0.2) = 7.21e-3 load
+    sigma   = 3.0348837209302317e-2                    (doc 29 anchor)
+    p_e     <= GATE_OVERRUN_FRACTION = 1e-3           (EMIT-1, unchanged)
+
+A stall displaces a packet across a window boundary only when the emitter
+overruns, whose rate EMIT-1 already bounds. Even under perfect cross-link
+correlation of the displacement, its variance relative to signal variance is
+bounded by
+
+    p_e * quantum^2 / sigma^2 = 5.64399e-5.
+
+The omega round-trip tolerance is `5e-2`. The timing proxy may therefore fail
+by an order of magnitude while the estimand retains nearly three orders of
+margin.
+
 EMIT-3 moves to `diagnostics`, retaining its L0/L1/L2 dose-response report.
 It is replaced as a validity gate by EMIT-3', which applies the doc-41
 `mean_correlation_then_max` reduction to the load residual. It is calibrated
 on `N_WINDOWS-1` observations because differencing loses one boundary.
+
+The reduced design's calibrated EMIT-3' gate is `0.202181`. Although larger
+in its own units than the historical timing gate, its worst-case propagation
+to the campaign estimand is bounded from signed quantities:
+
+    bias(omega_hat) = r_e * (v_e / sigma^2) * (sum(k) / sum(k^2))
+    sum(k) / sum(k^2) = 7.656854 / 5 = 1.531371
+    v_e / sigma^2 <= 1 / headroom^2 <= 1 / 5^2 = 0.04   (G3-F)
+    bias(omega_hat) <= 0.202181 * 0.04 * 1.531371 = 0.012385.
+
+That is 24.8 percent of the signed omega tolerance `0.05`. At the anchor
+headroom `14.58`, the corresponding bound is `0.00146`, or 2.9 percent. The
+gate is loose in residual-correlation units and quantitatively tight in the
+estimand's units; reducing runtime does not relax the final scientific
+tolerance.
+
+The EMIT-3' null uses white series. Serial correlation inflates the sampling
+variance of a correlation estimate by Bartlett's factor
+`(1+r1*r1')/(1-r1*r1')`. G3-E already requires
+`|ACF1(eps_path)| <= 0.10` on every link, limiting the factor to `1.0202` in
+variance and `1.010` in standard deviation. G3-E is therefore a precondition
+of EMIT-3', not an independent parallel gate: EMIT-3' is inadmissible unless
+G3-E passes first.
 
 ## 4. EMIT-4' observes and compensates for sampler timing
 
@@ -78,6 +118,14 @@ run.
 - EMIT-2 and EMIT-3 remain reported at full precision as diagnostics.
 - The optional merged single-process emitter is not adopted by this
   amendment.
+- Host `load1` remains a diagnostic only. It has no published transfer to
+  shared-stall probability and cannot block the benchmark.
+- A 60-second no-socket probe directly measures the fraction of 200 ms
+  windows whose maximum scheduling lateness reaches 1 ms. The prospective
+  coarse admission ceiling is `GATE_P_STALL = 0.02`. It screens whether an
+  eight-minute bench is worth starting; it does not replace EMIT-3' or claim
+  that timing correlation and load-residual correlation are the same
+  quantity.
 
 **G-A016-L1:** a proxy gate must publish its transfer to the estimand before
 it may block the campaign.

@@ -16,6 +16,7 @@ from mininet.modulated_emitter import (
     emit_window,
 )
 from tools import g3_emitter_dryrun as E
+from tools import host_jitter_probe as H
 
 
 class _Clock:
@@ -49,6 +50,7 @@ def test_reduced_design_is_separate_from_historical_ledger():
     assert E.A016_REPLICATES == 8
     assert E.A016_N_WINDOWS == 150
     assert E.A016_PREREG_TAG == "phase-G-g3-a016-prereg"
+    assert E.GATE_P_STALL == 0.02
 
 
 def test_detuning_changes_deadlines_but_not_counts():
@@ -129,8 +131,32 @@ def test_cpu_preflight_reports_psi_and_steal_evidence():
     detail = E.cpu_preflight(E.build_ladder_cpu_maps(tuple(range(8)))["L0"])
     assert set(detail["host_pressure"]) == {
         "cpu_psi", "steal_ticks_since_boot", "steal_fraction_since_boot",
-        "load1", "quiet_load_threshold", "quiet",
+        "load1", "load1_diagnostic_reference",
+        "load1_below_diagnostic_reference",
     }
+    # load1 is reported but cannot change logical CPU admission.
+    assert detail["pass"] == (detail["role_isolation"] and not detail["missing"])
+
+
+def test_host_probe_parses_psi_total_and_steal(tmp_path):
+    psi = tmp_path / "pressure"
+    psi.write_text(
+        "some avg10=0.00 avg60=0.01 avg300=0.02 total=12345\n"
+        "full avg10=0.00 avg60=0.00 avg300=0.00 total=7\n"
+    )
+    stat = tmp_path / "stat"
+    stat.write_text("cpu  1 2 3 4 5 6 7 8 9 10\n")
+    assert H.read_psi_totals(str(psi)) == {"some": 12345, "full": 7}
+    assert H.read_steal_ticks(str(stat)) == 8
+    assert H._psi_delta_rate(
+        {"some": 100, "full": 5}, {"some": 30100, "full": 5}, 2.0
+    ) == {"full": 0.0, "some": 0.015}
+
+
+def test_missing_after_quiesce_probe_refuses_without_using_load1(tmp_path):
+    admission = E.host_jitter_admission(tmp_path / "missing.json")
+    assert admission["available"] is False
+    assert admission["pass"] is False
 
 
 def _analysis_run(offset: int) -> dict[str, object]:

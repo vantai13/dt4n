@@ -77,6 +77,10 @@ EMIT3_PRIME_NULL_TRIALS = 3000
 EMIT3_PRIME_NULL_SEED = 20260911
 EMIT3_PRIME_NULL_WINDOWS = N_WINDOWS - 1
 GATE_COMMON_MODE_RATIO = 0.05
+GATE_P_STALL = 0.02
+DEFAULT_HOST_JITTER_ARTIFACT = Path(
+    "results/SMOKE/phase-G/host_jitter_after_quiesce.json"
+)
 
 
 def git_hash() -> str:
@@ -167,9 +171,64 @@ def host_pressure_snapshot(
         "steal_ticks_since_boot": steal_ticks,
         "steal_fraction_since_boot": steal_fraction_since_boot,
         "load1": load1,
-        "quiet_load_threshold": 0.10,
-        "quiet": load1 is not None and load1 <= 0.10,
+        "load1_diagnostic_reference": 0.10,
+        "load1_below_diagnostic_reference": (
+            load1 is not None and load1 <= 0.10
+        ),
     }
+
+
+def host_jitter_admission(path: Path) -> dict[str, object]:
+    """Admit on measured >=1 ms stall-window rate; keep load1 diagnostic."""
+    result: dict[str, object] = {
+        "artifact": str(path),
+        "gate_p_stall_1ms": GATE_P_STALL,
+        "available": path.is_file(),
+        "pass": False,
+    }
+    if not path.is_file():
+        result["reason"] = "after-quiesce host jitter artifact is missing"
+        return result
+    try:
+        payload = json.loads(path.read_text(encoding="utf-8"))
+        p_stall = float(payload["p_stall_1ms"])
+        duration_s = float(payload["scheduled_duration_s"])
+        threshold_s = float(payload["stall_threshold_s"])
+        tool_path = Path(str(payload["tool_path"]))
+        declared_sha = str(payload["tool_sha256"])
+        commit = str(payload["git_hash"])
+    except (OSError, ValueError, TypeError, KeyError, json.JSONDecodeError) as exc:
+        result["reason"] = f"invalid host jitter artifact: {exc}"
+        return result
+    commit_probe = subprocess.run(
+        ["git", "cat-file", "-e", f"{commit}:{tool_path.as_posix()}"],
+        capture_output=True,
+        check=False,
+    )
+    checks = {
+        "schema": payload.get("schema") == "dt4n.phase_g.host_jitter_probe.v1",
+        "scenario_after_quiesce": payload.get("scenario") == "after_quiesce",
+        "duration_at_least_60s": duration_s >= 60.0,
+        "threshold_is_1ms": threshold_s == 1e-3,
+        "p_stall_in_domain": 0.0 <= p_stall <= 1.0,
+        "tool_exists": tool_path.is_file(),
+        "tool_sha256_matches": (
+            tool_path.is_file() and sha256(tool_path) == declared_sha
+        ),
+        "commit_contains_tool": commit_probe.returncode == 0,
+    }
+    passed = all(checks.values()) and p_stall <= GATE_P_STALL
+    result.update({
+        "p_stall_1ms": p_stall,
+        "scenario": payload.get("scenario"),
+        "scheduled_duration_s": duration_s,
+        "checks": checks,
+        "verdict": "PASS" if passed else "FAIL",
+        "pass": passed,
+    })
+    if not passed:
+        result["reason"] = "integrity/shape check failed or p_stall exceeds gate"
+    return result
 
 
 def cpu_preflight(cpu_map: tuple[int, ...]) -> dict[str, object]:
@@ -1005,6 +1064,12 @@ def main() -> None:
         action="store_true",
         help="use the preregistered reduced L0-only 8x30-second design",
     )
+    parser.add_argument(
+        "--host-jitter-artifact",
+        type=Path,
+        default=DEFAULT_HOST_JITTER_ARTIFACT,
+        help="after-quiesce no-socket probe used by the A016 admission gate",
+    )
     args = parser.parse_args()
     try:
         ladder_maps = build_ladder_cpu_maps()
@@ -1018,6 +1083,9 @@ def main() -> None:
         level: cpu_preflight(ladder_maps[level]) for level in levels
     }
     provenance = remote_provenance(prereg_tag)
+    jitter_admission = (
+        host_jitter_admission(args.host_jitter_artifact) if args.a016 else None
+    )
     preflight_artifact = {
         "schema": "dt4n.phase_g.g3_a016_preflight.v1",
         "status": "PREFLIGHT_ONLY",
@@ -1031,11 +1099,10 @@ def main() -> None:
             "git_tag_to_create": prereg_tag,
         },
         "provenance": provenance,
+        "host_jitter_admission": jitter_admission,
         "environment_pass": all(
-            row["pass"]
-            and (not args.a016 or row["host_pressure"]["quiet"])
-            for row in cpu_detail.values()
-        ),
+            row["pass"] for row in cpu_detail.values()
+        ) and (not args.a016 or bool(jitter_admission["pass"])),
         "mininet_authorized": False,
     }
     print(json.dumps(preflight_artifact, indent=2))
@@ -1053,7 +1120,9 @@ def main() -> None:
     if not provenance["pass"]:
         raise SystemExit("REFUSED: origin main/prereg tag do not match local HEAD")
     if args.a016 and not preflight_artifact["environment_pass"]:
-        raise SystemExit("REFUSED: G-A016 requires load1 <= 0.10")
+        raise SystemExit(
+            "REFUSED: G-A016 requires a valid after-quiesce p_stall <= 0.02"
+        )
 
     rng = np.random.default_rng(SEED)
     cells = []

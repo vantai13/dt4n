@@ -72,6 +72,7 @@ def calculate() -> dict[str, object]:
         "schema": "dt4n.phase_g.g3_emit2_offline.v1",
         "status": "SYNTHETIC_NO_NETWORK",
         "git_hash": git_hash(),
+        "tool_path": "tools/g3_emit2_offline.py",
         "tool_sha256": sha256(Path(__file__)),
         "seed": SEED,
         "replicates": REPLICATES,

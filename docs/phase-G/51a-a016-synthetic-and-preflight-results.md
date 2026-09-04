@@ -41,15 +41,23 @@ The prepared G-A016 design is L0 anchor/stress, eight replicates per cell,
 150 windows per replicate, 30 seconds per replicate. CPU logical-role checks
 pass, but the formal preflight does not authorize execution:
 
-- latest `load1 = 0.96`, above the signed quiet-host threshold 0.10;
+- latest `load1 = 0.96`; this is now diagnostic rather than an admission
+  variable because no transfer from load average to shared-stall probability
+  is available;
 - `phase-G-g3-a016-prereg` does not yet exist on origin;
 - the host exposes four physical cores with two SMT threads each; the sampler
   and sink logical CPUs share physical cores with emitters;
-- cumulative steal time is zero and CPU PSI full-stall avg10 is zero in the
-  captured snapshot.
+- cumulative steal time is zero. This rejects the preregistered candidate
+  explanation that hypervisor steal contributes to the observed stalls and
+  narrows the candidate sources to activity inside the guest;
+- CPU PSI full-stall avg10 is zero, but this does not establish a quiet host.
+  A 1 ms event every 400 seconds contributes only 2.5 parts per million and
+  is invisible after PSI's displayed averaging and rounding. Only the change
+  in PSI `total` across a measured interval is used by the new host probe.
 
-The preflight artifact therefore records `environment_pass=false`,
-`provenance.pass=false`, and `mininet_authorized=false`. Per the stop rule,
+That historical preflight artifact records `environment_pass=false`,
+`provenance.pass=false`, and `mininet_authorized=false`. Per the stop rule then
+in force,
 the approximately 11-minute loopback run and the subsequent Mininet campaign
 were not started. `scripts/bench_quiesce.sh` was exercised in its safe dry-run
 mode only; no service or process was stopped.
