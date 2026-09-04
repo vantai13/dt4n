@@ -1,0 +1,41 @@
+{
+  "schema": "dt4n.phase_g.host_jitter_probe.v1",
+  "status": "NO_SOCKET_HOST_MEASUREMENT",
+  "scenario": "after_quiesce",
+  "git_hash": "30f2f7dafbc09d4815099e1d5b28be35e97da538",
+  "tool_path": "tools/host_jitter_probe.py",
+  "tool_sha256": "87f14167f333d4b0688630e007cc364711c8fbb9e45d5a1b1172d1e1e99b28e8",
+  "loadavg_at_start": 0.0712890625,
+  "cpu": 0,
+  "rate_pps": 594.3134535367545,
+  "packets_per_window": 119,
+  "windows": 300,
+  "scheduled_duration_s": 60.0,
+  "observed_elapsed_s": 59.99916571899985,
+  "lateness_median_s": 1.6325545857398538e-06,
+  "lateness_p99_s": 9.86129809462002e-06,
+  "lateness_p999_s": 2.4000988330953716e-05,
+  "lateness_max_s": 0.002658361007888743,
+  "window_max_median_s": 1.535492856419296e-05,
+  "window_max_p99_s": 4.506271320224176e-05,
+  "p_stall_1ms": 0.0033333333333333335,
+  "p_stall_1ms_wilson_upper_95": 0.018637164554943353,
+  "stall_threshold_s": 0.001,
+  "stall_windows": 1,
+  "psi_total_us_before": {
+    "some": 25848968,
+    "full": 0
+  },
+  "psi_total_us_after": {
+    "some": 26173063,
+    "full": 0
+  },
+  "psi_delta_rate": {
+    "full": 0.0,
+    "some": 0.005401658441683454
+  },
+  "steal_ticks_before": 0,
+  "steal_ticks_after": 0,
+  "steal_ticks_delta": 0,
+  "runtime_s": 60.51047766800002
+}

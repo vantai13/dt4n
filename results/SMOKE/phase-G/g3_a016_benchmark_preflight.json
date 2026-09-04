@@ -45,7 +45,7 @@
             "avg10": 0.0,
             "avg60": 0.0,
             "avg300": 0.0,
-            "total": 24036230.0
+            "total": 26438633.0
           },
           "full": {
             "avg10": 0.0,
@@ -56,9 +56,9 @@
         },
         "steal_ticks_since_boot": 0,
         "steal_fraction_since_boot": 0.0,
-        "load1": 0.1,
+        "load1": 0.14,
         "load1_diagnostic_reference": 0.1,
-        "load1_below_diagnostic_reference": true
+        "load1_below_diagnostic_reference": false
       },
       "missing": [],
       "pass": true
@@ -86,7 +86,7 @@
     "git_tag_to_create": "phase-G-g3-a016-prereg"
   },
   "provenance": {
-    "local_head": "79098db090ac09cd58e8cc8e7698cc7433e2302e",
+    "local_head": "30f2f7dafbc09d4815099e1d5b28be35e97da538",
     "remote_main": "1e98dad18825152ad36b4609ff21b859ecbf5113",
     "remote_prereg_tag_commit": null,
     "command_exit": 0,
@@ -95,10 +95,24 @@
   "host_jitter_admission": {
     "artifact": "results/SMOKE/phase-G/host_jitter_after_quiesce.json",
     "gate_p_stall_1ms": 0.02,
-    "available": false,
-    "pass": false,
-    "reason": "after-quiesce host jitter artifact is missing"
+    "available": true,
+    "pass": true,
+    "p_stall_1ms": 0.0033333333333333335,
+    "scenario": "after_quiesce",
+    "scheduled_duration_s": 60.0,
+    "checks": {
+      "schema": true,
+      "scenario_after_quiesce": true,
+      "duration_at_least_60s": true,
+      "threshold_is_1ms": true,
+      "p_stall_in_domain": true,
+      "tool_path_expected": true,
+      "tool_exists": true,
+      "tool_sha256_matches": true,
+      "commit_contains_tool": true
+    },
+    "verdict": "PASS"
   },
-  "environment_pass": false,
+  "environment_pass": true,
   "mininet_authorized": false
 }
