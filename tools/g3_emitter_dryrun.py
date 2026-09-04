@@ -321,7 +321,7 @@ def host_jitter_admission(path: Path) -> dict[str, object]:
         "role_population_matches_l0": actual_roles == expected_roles,
         "role_counts_consistent": role_counts_valid,
         "role_wilson_bounds_consistent": role_bounds_valid,
-        "role_windows_consistent": role_windows_consistent,
+        "role_windows_consistent": bool(role_windows_consistent),
         "binding_summary_consistent": binding_summary_valid,
         "duration_at_least_signed_minimum": (
             duration_s >= ADMISSION_MIN_DURATION_S
