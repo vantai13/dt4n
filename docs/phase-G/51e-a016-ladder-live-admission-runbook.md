@@ -14,6 +14,7 @@ git status --porcelain
 git fetch origin
 git rev-parse HEAD
 git rev-parse origin/main
+git rev-parse HEAD origin/main | uniq | wc -l  # must print 1
 git ls-remote --tags origin | grep "$A016_PREREG" || echo "TAG CHUA CO"
 
 $VENV_PY -m pytest -q \
@@ -48,9 +49,15 @@ diagnostic and must not be compared with the doc-41 16-replicate 0.10 gate.
 ## Forecast and preflight
 
 Use the ladder artifact's binding Wilson endpoint as the conservative model
-input:
+input. Produce two forecasts because the reduction operator is shape
+dependent:
 
 ```bash
+$VENV_PY -m tools.g3_emit3_feasibility \
+  --p-stall WILSON_UPPER_FROM_LADDER \
+  --replicates 1 --windows 1500 \
+  --out results/SMOKE/phase-G/g3_emit3_forecast_probe_shape_a016.json
+
 $VENV_PY -m tools.g3_emit3_feasibility \
   --p-stall WILSON_UPPER_FROM_LADDER \
   --replicates 8 --windows 150 \
@@ -61,6 +68,11 @@ $VENV_PY -m tools.g3_emitter_dryrun --a016 \
     results/SMOKE/phase-G/host_jitter_ladder_after_quiesce.json \
   --out results/SMOKE/phase-G/g3_a016_benchmark_preflight.json
 ```
+
+Compare `emit3_timing_no_socket.max_abs_offdiag` only with the `1 x 1500`
+forecast and null. Keep the `8 x 150` result for the later benchmark timing
+diagnostic. Cross-shape comparison is invalid even though both values use the
+same correlation-reduction function.
 
 Stop if `environment_pass` is false. A ladder admission failure is a measured
 result and does not authorize a gate change.
@@ -74,6 +86,7 @@ A016_PREREG=phase-G-g3-a016-prereg
 git add \
   results/SMOKE/phase-G/host_jitter_floor_after_quiesce_300s.json \
   results/SMOKE/phase-G/host_jitter_ladder_after_quiesce.json \
+  results/SMOKE/phase-G/g3_emit3_forecast_probe_shape_a016.json \
   results/SMOKE/phase-G/g3_emit3_forecast_ladder_a016.json \
   results/SMOKE/phase-G/g3_a016_benchmark_preflight.json
 git commit -m "G-A016: record ladder admission measurement"

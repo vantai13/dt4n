@@ -6,6 +6,7 @@ import sys
 import time
 from pathlib import Path
 
+import numpy as np
 import pytest
 
 from tools import g3_emitter_dryrun as E
@@ -197,6 +198,36 @@ def test_wilson_upper_matches_hand_computed_values():
     assert P.wilson_upper_95(1, 300) == pytest.approx(0.018637, abs=1e-5)
     assert P.wilson_upper_95(2, 300) == pytest.approx(0.023980, abs=1e-5)
     assert P.wilson_upper_95(2, 300) > E.GATE_P_STALL
+
+
+def test_a1_null_reference_uses_the_probe_shape_and_signed_factor():
+    reference = P.a1_null_reference(1500)
+    assert reference["status"] == "REFERENCE_FOR_READING_NOT_GATING"
+    assert reference["trials"] == 3000
+    assert reference["seed"] == 20260913
+    assert reference["replicates"] == 1
+    assert reference["windows"] == 1500
+    assert reference["p99"] == pytest.approx(0.09051292116423963)
+    assert reference["reference_at_signed_safety_factor"] == pytest.approx(
+        E.EMIT3_SAFETY_FACTOR * reference["p99"]
+    )
+    # The published doc-41 shape is 16x300 and has p99 0.051107. A1 must
+    # carry its own, materially different reference rather than borrow it.
+    assert reference["p99"] > 1.7 * 0.051107099213492733
+
+
+def test_a1_timing_diagnostic_carries_reference_but_no_verdict():
+    rng = np.random.default_rng(7)
+    rows = [
+        {"role": f"emitter-{link}", "window_max_s": rng.normal(size=1500)}
+        for link in LINKS
+    ]
+    diagnostic = P._emit3_timing(rows)
+    assert diagnostic["status"] == "REPORTED_NOT_GATING"
+    assert diagnostic["replicates"] == 1
+    assert diagnostic["windows"] == 1500
+    assert diagnostic["null_reference"] == P.a1_null_reference(1500)
+    assert "verdict" not in diagnostic and "pass" not in diagnostic
 
 
 def test_a016_execute_requires_live_admission(monkeypatch, tmp_path):

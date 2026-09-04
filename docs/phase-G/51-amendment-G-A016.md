@@ -143,6 +143,10 @@ general-purpose host to be hard real-time.
 under an intervention. Directional agreement must be demonstrated before a
 proxy is promoted to a gate; PSI and load average remain diagnostic here.
 
+**G-A016-L5:** a prediction interval is the interval written in the signed
+artifact. A range restated in correspondence, even contemporaneously, is not
+the record and cannot narrow it retrospectively.
+
 ## 7. Post-measurement admission addendum
 
 Added 2026-09-04 after the floor-probe intervention result, but before the
@@ -163,6 +167,8 @@ and changes no scientific gate:
   300-second ladder probe, eliminating that interval by construction.
 - Ladder timing correlation is a one-replicate, no-socket diagnostic. The
   doc-41 threshold is not applied because that null is calibrated after
-  averaging sixteen replicate matrices.
+  averaging sixteen replicate matrices. The diagnostic instead carries a
+  reading-only null calibrated at its exact `1 x W` shape. Neither the null
+  nor the signed safety-factor reference can refuse a run.
 
 Intended preregistration tag: `phase-G-g3-a016-prereg`.

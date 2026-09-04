@@ -63,6 +63,11 @@ below 0.10 also held. The mechanistic model behind G-A016-L2 was therefore
 forecast and verified across a 26-fold intervention; it was not fitted to
 the after-quiesce result.
 
+The signed after-quiesce interval is `0.18--0.80` in doc 51b. A narrower
+`0.18--0.66` range appeared later only in correspondence and is not used.
+This establishes G-A016-L5: the signed artifact is the prediction record;
+correspondence cannot narrow it retrospectively.
+
 ## PSI moved opposite to the estimand
 
 | Quantity | Before | After | Improvement ratio |
@@ -121,6 +126,10 @@ Candidate mechanisms, each requiring an amendment before it is tried, are:
 
 The measurement and forecast declare commit `30f2f7da`, which contains their
 generating tools, and embed the respective tool SHA256 values.
+
+The preflight artifact is a stop-state snapshot generated before the v2 code
+commit and deliberately records local HEAD `712d92f0`. It must be regenerated
+after the ladder measurement and must not be read as live repository state.
 
 ## Stop state
 

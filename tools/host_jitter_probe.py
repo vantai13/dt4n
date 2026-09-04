@@ -20,6 +20,7 @@ import multiprocessing as mp
 import os
 import queue
 import time
+from functools import lru_cache
 from pathlib import Path
 
 import numpy as np
@@ -34,9 +35,11 @@ from tools.g1_quant_model import WIRE_BYTES_DEFAULT
 from tools.g2_topology import CAP_BPS, LINKS
 from tools.g3_emitter_dryrun import (
     DT_S,
+    EMIT3_SAFETY_FACTOR,
     build_ladder_cpu_maps,
     git_hash,
     sha256,
+    simulate_emit3_null,
 )
 
 
@@ -46,6 +49,8 @@ WARMUP_S = 0.5
 DEFAULT_DURATION_S = 300.0
 SCHEMA = "dt4n.phase_g.host_jitter_probe.v2"
 BOOT_ID_PATH = "/proc/sys/kernel/random/boot_id"
+A1_NULL_TRIALS = 3000
+A1_NULL_SEED = 20260913
 
 
 def read_psi_totals(path: str = "/proc/pressure/cpu") -> dict[str, int]:
@@ -230,11 +235,38 @@ def _worker(
         raise
 
 
+@lru_cache(maxsize=None)
+def a1_null_reference(windows: int) -> dict[str, object]:
+    """Calibrate the one-replicate A1 operator at its own window count."""
+    if windows < 2:
+        raise ValueError("A1 null calibration needs at least two windows")
+    null = simulate_emit3_null(
+        trials=A1_NULL_TRIALS,
+        replicates=1,
+        windows=windows,
+        seed=A1_NULL_SEED,
+    )
+    p99 = float(null["p99"])
+    return {
+        "status": "REFERENCE_FOR_READING_NOT_GATING",
+        "trials": A1_NULL_TRIALS,
+        "seed": A1_NULL_SEED,
+        "replicates": 1,
+        "windows": windows,
+        "median": float(null["median"]),
+        "p95": float(null["p95"]),
+        "p99": p99,
+        "signed_safety_factor": EMIT3_SAFETY_FACTOR,
+        "reference_at_signed_safety_factor": EMIT3_SAFETY_FACTOR * p99,
+    }
+
+
 def _emit3_timing(rows: list[dict[str, object]]) -> dict[str, object]:
     """Report doc-46 branch A1 timing correlation for one replicate.
 
-    This is diagnostic only. The doc-41 null averages sixteen replicate
-    matrices before maximising, so its threshold does not apply here.
+    This is diagnostic only and cannot refuse a run. Its reference uses the
+    same operator under a one-replicate null at this exact window count. The
+    doc-41 null averages sixteen replicate matrices and does not apply here.
     """
     emitters = [
         row for row in rows if str(row["role"]).startswith("emitter-")
@@ -244,22 +276,34 @@ def _emit3_timing(rows: list[dict[str, object]]) -> dict[str, object]:
     series = np.asarray(
         [row["window_max_s"] for row in emitters], dtype=float
     )
+    windows = int(series.shape[1])
+    null_reference = a1_null_reference(windows)
     if np.any(np.std(series, axis=1) <= 0.0):
         return {
             "status": "DEGENERATE_NO_VARIATION",
             "replicates": 1,
+            "windows": windows,
             "max_abs_offdiag": None,
             "median_abs_offdiag": None,
-            "note": "single replicate; the doc-41 null does not apply",
+            "null_reference": null_reference,
+            "note": (
+                "single replicate; the doc-41 sixteen-replicate null does "
+                "not apply; this shape-matched reference is for reading only"
+            ),
         }
     matrix = np.corrcoef(series)
     upper = matrix[np.triu_indices(len(LINKS), 1)]
     return {
         "status": "REPORTED_NOT_GATING",
         "replicates": 1,
+        "windows": windows,
         "max_abs_offdiag": float(np.max(np.abs(upper))),
         "median_abs_offdiag": float(np.median(np.abs(upper))),
-        "note": "single replicate; the doc-41 null does not apply",
+        "null_reference": null_reference,
+        "note": (
+            "single replicate; the doc-41 sixteen-replicate null does not "
+            "apply; this shape-matched reference is for reading only"
+        ),
     }
 
 
