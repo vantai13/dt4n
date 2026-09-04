@@ -3,6 +3,18 @@
 Status: code-ready, measurement pending. Run only from plain tmux/SSH because
 quiescing intentionally stops coding-agent and editor processes.
 
+## Provenance operating condition
+
+The pushes observed shortly after agent commits in this sequence were manual
+operator actions performed at step 0 so an external reviewer could pull the
+new commit. They are not evidence of an automatic Git hook or editor sync.
+`origin/main` therefore remains under deliberate operator control and retains
+its provenance meaning.
+
+Because a manual review push may already have published any reported commit,
+do not amend or reset a published `main`. Record corrections in a new commit,
+then let the operator decide when to push it for the next review.
+
 ## Before quiescing
 
 ```bash

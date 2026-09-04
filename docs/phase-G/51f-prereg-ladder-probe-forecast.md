@@ -11,7 +11,7 @@ reduced loopback benchmark. Status: `PREREG_NO_LADDER_MEASUREMENT`.
 | binding role | sink or sampler |
 | ladder `p_stall` / floor `p_stall` | 2x--25x |
 | ladder Wilson upper endpoint | 0.004--0.08 |
-| admission outcome | PASS probability about 55%; FAIL about 45% |
+| admission outcome | PASS about 55% / FAIL about 45% (reviewer prior adopted; author held no independent prior) |
 | A1 no-socket timing statistic, `1 x 1500` | 0.10--0.85 |
 
 The mechanism is CPU-role contention: sampler CPU 6 and sink CPU 7 share
