@@ -43,9 +43,9 @@
         "cpu_psi": {
           "some": {
             "avg10": 0.0,
-            "avg60": 0.0,
-            "avg300": 0.0,
-            "total": 314102957.0
+            "avg60": 0.01,
+            "avg300": 0.02,
+            "total": 23654710.0
           },
           "full": {
             "avg10": 0.0,
@@ -56,9 +56,9 @@
         },
         "steal_ticks_since_boot": 0,
         "steal_fraction_since_boot": 0.0,
-        "load1": 0.96,
-        "quiet_load_threshold": 0.1,
-        "quiet": false
+        "load1": 0.47,
+        "load1_diagnostic_reference": 0.1,
+        "load1_below_diagnostic_reference": false
       },
       "missing": [],
       "pass": true
@@ -86,11 +86,18 @@
     "git_tag_to_create": "phase-G-g3-a016-prereg"
   },
   "provenance": {
-    "local_head": "b974d26e3698b6dc81832333a774aa3bcd113ffe",
-    "remote_main": "b974d26e3698b6dc81832333a774aa3bcd113ffe",
+    "local_head": "68b3a219697834119037408dda4466969cbeb38c",
+    "remote_main": "1e98dad18825152ad36b4609ff21b859ecbf5113",
     "remote_prereg_tag_commit": null,
     "command_exit": 0,
     "pass": false
+  },
+  "host_jitter_admission": {
+    "artifact": "results/SMOKE/phase-G/host_jitter_after_quiesce.json",
+    "gate_p_stall_1ms": 0.02,
+    "available": false,
+    "pass": false,
+    "reason": "after-quiesce host jitter artifact is missing"
   },
   "environment_pass": false,
   "mininet_authorized": false
