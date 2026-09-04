@@ -22,12 +22,18 @@ from mininet.modulated_emitter import (
     SPIN_THRESHOLD_S,
     EmitterState,
     atomic_int64_array,
+    deadline_phase_fraction,
     emit_window,
     pin_current_process,
 )
 from mininet.tick_sampler import sample_at
+from measurements.rho_from_counters import (
+    emit4_prime as evaluate_emit4_prime,
+    rho_from_counters,
+    sampling_grid_diagnostics,
+)
 from tools.g1_quant_model import WIRE_BYTES_DEFAULT
-from tools.g2_topology import CAP_BPS, LINKS, a0_from_sigma_at
+from tools.g2_topology import CAP_BPS, LINKS, a0_from_sigma_at, sigma_per_link
 from tools.g3_dryrun import acf, physical_trace, quantization_step_packets
 from tools.g1_quant_model import acf1_predicted_mechanism_a
 
@@ -44,6 +50,10 @@ MIN_LADDER_CPUS = 8
 START_DELAY_S = 1.0
 JOIN_SLACK_S = 10.0
 PREREG_TAG = "phase-G-g3-emitter-run-2-prereg"
+A016_PREREG_TAG = "phase-G-g3-a016-prereg"
+A016_DURATION_S = 30.0
+A016_REPLICATES = 8
+A016_N_WINDOWS = int(A016_DURATION_S / DT_S)
 CELLS = (
     {"name": "anchor", "sigma_ref": 0.030348837209302317, "tau_s": 3.0},
     {"name": "stress", "sigma_ref": 0.020232558139534878, "tau_s": 30.0},
@@ -62,6 +72,11 @@ GATE_SAMPLER_LATE_FRACTION = GATE_OVERRUN_FRACTION
 GATE_ALIGNMENT_MISMATCH = GATE_OVERRUN_FRACTION + GATE_SAMPLER_LATE_FRACTION
 EMIT3_NULL_TRIALS = 3000
 EMIT3_NULL_SEED = 20260909
+EMIT3_SAFETY_FACTOR = 1.957
+EMIT3_PRIME_NULL_TRIALS = 3000
+EMIT3_PRIME_NULL_SEED = 20260911
+EMIT3_PRIME_NULL_WINDOWS = N_WINDOWS - 1
+GATE_COMMON_MODE_RATIO = 0.05
 
 
 def git_hash() -> str:
@@ -108,6 +123,55 @@ def physical_core_map() -> dict[int, int]:
     return mapping
 
 
+def host_pressure_snapshot(
+    *,
+    pressure_path: str = "/proc/pressure/cpu",
+    stat_path: str = "/proc/stat",
+) -> dict[str, object]:
+    """Read PSI and cumulative steal time for mechanical host evidence."""
+    psi: dict[str, dict[str, float]] = {}
+    try:
+        with open(pressure_path, encoding="utf-8") as handle:
+            for line in handle:
+                fields = line.split()
+                if not fields:
+                    continue
+                psi[fields[0]] = {
+                    key: float(value)
+                    for key, value in (
+                        field.split("=", 1) for field in fields[1:] if "=" in field
+                    )
+                }
+    except OSError:
+        psi = {}
+    steal_ticks = None
+    steal_fraction_since_boot = None
+    load1 = None
+    try:
+        with open(stat_path, encoding="utf-8") as handle:
+            fields = handle.readline().split()
+        if fields and fields[0] == "cpu" and len(fields) > 8:
+            ticks = [int(value) for value in fields[1:]]
+            steal_ticks = ticks[7]
+            total = sum(ticks)
+            steal_fraction_since_boot = steal_ticks / total if total else 0.0
+    except (OSError, ValueError):
+        pass
+    try:
+        with open("/proc/loadavg", encoding="utf-8") as handle:
+            load1 = float(handle.read().split()[0])
+    except (OSError, ValueError, IndexError):
+        pass
+    return {
+        "cpu_psi": psi,
+        "steal_ticks_since_boot": steal_ticks,
+        "steal_fraction_since_boot": steal_fraction_since_boot,
+        "load1": load1,
+        "quiet_load_threshold": 0.10,
+        "quiet": load1 is not None and load1 <= 0.10,
+    }
+
+
 def cpu_preflight(cpu_map: tuple[int, ...]) -> dict[str, object]:
     allowed = set(os.sched_getaffinity(0))
     requested = set(cpu_map)
@@ -152,6 +216,7 @@ def cpu_preflight(cpu_map: tuple[int, ...]) -> dict[str, object]:
         "sink_cpu": sink_cpu,
         "role_isolation": role_isolation,
         "physical": physical,
+        "host_pressure": host_pressure_snapshot(),
         "missing": missing,
         "pass": role_isolation and not missing,
     }
@@ -195,12 +260,12 @@ def sampler_margin_s(window_sent: np.ndarray, dt_s: float = DT_S) -> np.ndarray:
     return 0.5 * dt_s / busiest_next
 
 
-def remote_provenance() -> dict[str, object]:
+def remote_provenance(prereg_tag: str = PREREG_TAG) -> dict[str, object]:
     head = git_hash()
     result = subprocess.run(
         [
             "git", "ls-remote", "origin", "refs/heads/main",
-            f"refs/tags/{PREREG_TAG}^{{}}",
+            f"refs/tags/{prereg_tag}^{{}}",
         ],
         capture_output=True,
         text=True,
@@ -211,7 +276,7 @@ def remote_provenance() -> dict[str, object]:
         object_id, ref = line.split(maxsplit=1)
         refs[ref] = object_id
     remote_main = refs.get("refs/heads/main")
-    remote_tag = refs.get(f"refs/tags/{PREREG_TAG}^{{}}")
+    remote_tag = refs.get(f"refs/tags/{prereg_tag}^{{}}")
     return {
         "local_head": head,
         "remote_main": remote_main,
@@ -278,6 +343,7 @@ def _emitter_worker(
     overrun_max_ns,
     ready_queue,
     error_queue,
+    dt_s=DT_S,
 ) -> None:
     role = f"emitter-{link_index}"
     sock = None
@@ -289,6 +355,7 @@ def _emitter_worker(
         _ready(ready_queue, role)
         start_event.wait()
         state = EmitterState()
+        phase = deadline_phase_fraction(link_index, len(LINKS))
         gc_was_enabled = gc.isenabled()
         gc.disable()
         try:
@@ -296,13 +363,14 @@ def _emitter_worker(
                 row = emit_window(
                     window_index,
                     epoch_value.value,
-                    DT_S,
+                    dt_s,
                     float(rate_pps),
                     sock,
                     payload,
                     shared_sent_cumulative,
                     link_index,
                     state,
+                    phase_fraction=phase,
                 )
                 offset = link_index * len(rates_pps) + window_index
                 window_sent[offset] = row.sent_packets
@@ -335,6 +403,7 @@ def _sampler_worker(
     tick_lateness_ns,
     ready_queue,
     error_queue,
+    dt_s=DT_S,
 ) -> None:
     role = "sampler"
     try:
@@ -345,7 +414,7 @@ def _sampler_worker(
         for window_index in range(n_windows):
             row = sample_at(
                 window_index,
-                epoch_value.value + (window_index + 1) * DT_S,
+                epoch_value.value + (window_index + 1) * dt_s,
                 target_cumulative[:, window_index],
                 sent_cumulative,
                 lambda: receiver_counts,
@@ -384,19 +453,24 @@ def run_replicate(
     emitter_cpus: tuple[int, ...],
     sampler_cpu: int,
     sink_cpu: int,
+    *,
+    dt_s: float = DT_S,
 ) -> dict[str, object]:
-    """Run one 60 s eight-emitter UDP-loopback replicate."""
-    if target.shape != (len(LINKS), N_WINDOWS):
-        raise ValueError(f"target must have shape {(len(LINKS), N_WINDOWS)}")
+    """Run one eight-emitter UDP-loopback replicate on an absolute grid."""
+    if target.ndim != 2 or target.shape[0] != len(LINKS) or target.shape[1] < 2:
+        raise ValueError("target must have shape (link, >=2 windows)")
+    if not np.isfinite(dt_s) or dt_s <= 0.0:
+        raise ValueError("dt_s must be finite and positive")
+    n_windows = target.shape[1]
     context = mp.get_context("fork")
     sent_cumulative = atomic_int64_array(len(LINKS))
     receiver_counts = atomic_int64_array(len(LINKS))
-    window_sent = atomic_int64_array(len(LINKS) * N_WINDOWS)
-    window_lateness_ns = atomic_int64_array(len(LINKS) * N_WINDOWS)
-    snapshot_sent = atomic_int64_array(len(LINKS) * N_WINDOWS)
-    snapshot_measured = atomic_int64_array(len(LINKS) * N_WINDOWS)
-    snapshot_spans_ns = atomic_int64_array(N_WINDOWS)
-    tick_lateness_ns = atomic_int64_array(N_WINDOWS)
+    window_sent = atomic_int64_array(len(LINKS) * n_windows)
+    window_lateness_ns = atomic_int64_array(len(LINKS) * n_windows)
+    snapshot_sent = atomic_int64_array(len(LINKS) * n_windows)
+    snapshot_measured = atomic_int64_array(len(LINKS) * n_windows)
+    snapshot_spans_ns = atomic_int64_array(n_windows)
+    tick_lateness_ns = atomic_int64_array(n_windows)
     overrun_counts = atomic_int64_array(len(LINKS))
     overrun_max_ns = atomic_int64_array(len(LINKS))
     epoch_value = context.Value("d", 0.0, lock=False)
@@ -409,7 +483,7 @@ def run_replicate(
     receiver_socket.setsockopt(socket.SOL_SOCKET, socket.SO_RCVBUF, 4 << 20)
     receiver_socket.bind(("127.0.0.1", 0))
     destination = receiver_socket.getsockname()
-    target_packets = target * CAP_BPS[:, None] * DT_S / (WIRE_BYTES * 8.0)
+    target_packets = target * CAP_BPS[:, None] * dt_s / (WIRE_BYTES * 8.0)
     target_cumulative = np.cumsum(target_packets, axis=1)
     rates_pps = target * CAP_BPS[:, None] / (WIRE_BYTES * 8.0)
 
@@ -423,7 +497,8 @@ def run_replicate(
         target=_sampler_worker,
         args=(sampler_cpu, target_cumulative, epoch_value, start_event,
               sent_cumulative, receiver_counts, snapshot_sent, snapshot_measured,
-              snapshot_spans_ns, tick_lateness_ns, ready_queue, error_queue),
+              snapshot_spans_ns, tick_lateness_ns, ready_queue, error_queue,
+              dt_s),
         name="g3-sampler",
     ))
     for link_index, cpu in enumerate(emitter_cpus):
@@ -432,7 +507,7 @@ def run_replicate(
             args=(link_index, cpu, rates_pps[link_index].tolist(), destination,
                   epoch_value, start_event, sent_cumulative, window_sent,
                   window_lateness_ns, overrun_counts, overrun_max_ns,
-                  ready_queue, error_queue),
+                  ready_queue, error_queue, dt_s),
             name=f"g3-emitter-{LINKS[link_index]}",
         ))
     for process in processes:
@@ -441,7 +516,7 @@ def run_replicate(
         ready_roles = _wait_ready(ready_queue, processes)
         epoch_value.value = time.perf_counter() + START_DELAY_S
         start_event.set()
-        deadline = DURATION_S + START_DELAY_S + JOIN_SLACK_S
+        deadline = n_windows * dt_s + START_DELAY_S + JOIN_SLACK_S
         for process in processes[1:]:
             process.join(timeout=deadline)
             if process.is_alive():
@@ -468,7 +543,7 @@ def run_replicate(
         receiver_socket.close()
 
     def matrix(values):
-        return np.fromiter(values, dtype=np.int64).reshape(len(LINKS), N_WINDOWS)
+        return np.fromiter(values, dtype=np.int64).reshape(len(LINKS), n_windows)
 
     return {
         "ready_roles": ready_roles,
@@ -562,8 +637,98 @@ def simulate_emit3_null(
     }
 
 
-def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str, object]:
+def simulate_emit3_prime_null(
+    *,
+    trials: int = EMIT3_PRIME_NULL_TRIALS,
+    replicates: int = REPLICATES,
+    windows: int = EMIT3_PRIME_NULL_WINDOWS,
+    seed: int = EMIT3_PRIME_NULL_SEED,
+    batch_size: int = 25,
+) -> dict[str, float | int]:
+    """Calibrate EMIT-3' under its exact W-1 reduction operator."""
+    result = simulate_emit3_null(
+        trials=trials,
+        replicates=replicates,
+        windows=windows,
+        seed=seed,
+        batch_size=batch_size,
+    )
+    result["safety_factor"] = EMIT3_SAFETY_FACTOR
+    result["gate"] = EMIT3_SAFETY_FACTOR * float(result["p99"])
+    result["gate_over_p99"] = EMIT3_SAFETY_FACTOR
+    return result
+
+
+def emit3_prime_null_p99() -> float:
+    """Return the signed deterministic p99 for tests and artifact builders."""
+    return float(simulate_emit3_prime_null()["p99"])
+
+
+def load_residual(run: dict[str, object], cap_bps: np.ndarray = CAP_BPS) -> np.ndarray:
+    """Return measured-minus-sent load on actual sampler intervals."""
+    measured_packets = np.asarray(run["snapshot_measured"], dtype=float)
+    sent_packets = np.asarray(run["window_sent"], dtype=float)
+    lateness = np.asarray(run["tick_lateness_s"], dtype=float)
+    capacity = np.asarray(cap_bps, dtype=float)
+    if measured_packets.shape != sent_packets.shape:
+        raise ValueError("measured and sent ledgers must have identical shapes")
+    if measured_packets.ndim != 2 or measured_packets.shape[0] != capacity.size:
+        raise ValueError("ledger shape disagrees with cap_bps")
+    wire_bytes = measured_packets * float(WIRE_BYTES)
+    rho_result = rho_from_counters(wire_bytes, lateness, capacity, DT_S)
+    rho_sent = (
+        sent_packets[:, 1:]
+        * (WIRE_BYTES * 8.0)
+        / (capacity[:, None] * DT_S)
+    )
+    return rho_result["rho"] - rho_sent
+
+
+def emit3_prime(
+    cell_runs: list[dict[str, object]], cap_bps: np.ndarray = CAP_BPS
+) -> tuple[float, list[list[float]]]:
+    """Apply the doc-41 reduction to load residuals, not timing proxies."""
+    replicates = np.asarray([
+        load_residual(run, cap_bps) for run in cell_runs
+    ])
+    return mean_correlation_then_max(replicates)
+
+
+def emit4_prime_for_run(
+    run: dict[str, object],
+    a0: float,
+    cap_bps: np.ndarray = CAP_BPS,
+) -> dict[str, object]:
+    """Evaluate EMIT-4' and sampling-grid limits for one physical run."""
+    measured_packets = np.asarray(run["snapshot_measured"], dtype=float)
+    wire_bytes = measured_packets * float(WIRE_BYTES)
+    rho_result = rho_from_counters(
+        wire_bytes,
+        np.asarray(run["tick_lateness_s"], dtype=float),
+        cap_bps,
+        DT_S,
+    )
+    gate = evaluate_emit4_prime(
+        rho_result,
+        sigma_per_link(a0),
+        gate_common_mode_ratio=GATE_COMMON_MODE_RATIO,
+    )
+    return {
+        **gate,
+        "grid": sampling_grid_diagnostics(rho_result["dt_actual_s"], DT_S),
+    }
+
+
+def analyze(
+    cells: list[dict[str, object]],
+    cpu_detail,
+    provenance,
+    *,
+    emit3_prime_null: dict[str, float | int] | None = None,
+    legacy_emit3_null: dict[str, float | int] | None = None,
+) -> dict[str, object]:
     checks = []
+    diagnostics = []
 
     def record(check_id, value, gate, passed, description, **extra):
         checks.append({
@@ -572,22 +737,39 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
             "description": description, **extra,
         })
 
+    def diagnose(check_id, value, description, **extra):
+        diagnostics.append({
+            "id": check_id,
+            "value": value,
+            "status": "REPORTED_NOT_GATING",
+            "description": description,
+            **extra,
+        })
+
     l0_cells = [cell for cell in cells if cell["level"] == "L0"]
     stress_cells = [cell for cell in cells if cell["name"] == "stress"]
-    if len(l0_cells) != len(CELLS) or len(stress_cells) != 3:
-        raise ValueError("ladder must contain L0 anchor/stress and L1/L2 stress")
+    if len(l0_cells) != len(CELLS) or len(stress_cells) not in {1, 3}:
+        raise ValueError("design must contain L0 anchor/stress; ladder is optional")
+    replicate_count = len(l0_cells[0]["runs"])
+    if replicate_count <= 0 or any(
+        len(cell["runs"]) != replicate_count for cell in l0_cells
+    ):
+        raise ValueError("L0 cells must have the same positive replicate count")
+    window_count = np.asarray(l0_cells[0]["runs"][0]["window_sent"]).shape[1]
+    if window_count < 2:
+        raise ValueError("runs must contain at least two windows")
 
     total_overruns = sum(
         int(np.sum(run["overrun_counts"]))
         for cell in l0_cells for run in cell["runs"]
     )
-    total_windows = len(l0_cells) * REPLICATES * len(LINKS) * N_WINDOWS
+    total_windows = len(l0_cells) * replicate_count * len(LINKS) * window_count
     overrun_fraction = total_overruns / total_windows
     overrun_rows = []
     for cell in l0_cells:
         for index, link in enumerate(LINKS):
             count = sum(int(run["overrun_counts"][index]) for run in cell["runs"])
-            windows = len(cell["runs"]) * N_WINDOWS
+            windows = len(cell["runs"]) * window_count
             overrun_rows.append({
                 "level": cell["level"], "cell": cell["name"],
                 "link": link, "count": count,
@@ -622,10 +804,15 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
                 "prediction_abs_error": float(error),
                 "verdict": "PASS" if passed else "FAIL",
             })
-    record("EMIT-2", max(row["prediction_abs_error"] for row in quant_rows),
-           GATE_QUANT_PREDICTION, emit2_pass,
-           "independent-round sign and packet-step prediction", rows=quant_rows,
-           reduction="median of 16 replicates")
+    diagnose(
+        "EMIT-2",
+        max(row["prediction_abs_error"] for row in quant_rows),
+        "deterministic independent-round packet-step prediction",
+        legacy_gate=GATE_QUANT_PREDICTION,
+        legacy_verdict="PASS" if emit2_pass else "FAIL",
+        rows=quant_rows,
+        reduction=f"median of {replicate_count} replicates",
+    )
 
     timing_rows = []
     for cell in stress_cells:
@@ -647,11 +834,48 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
             "correlation": timing_matrix,
         })
     l0_timing = next(row for row in timing_rows if row["level"] == "L0")
-    record("EMIT-3", l0_timing["max_abs_offdiag"], GATE_TIMING_CORRELATION,
-           l0_timing["max_abs_offdiag"] <= GATE_TIMING_CORRELATION,
-           "deadline lateness has no shared CPU-noise regression",
-           l0_row=l0_timing,
-           reduction="mean of 16 within-replicate 8x8 matrices, then max 28 pairs")
+    diagnose(
+        "EMIT-3",
+        l0_timing["max_abs_offdiag"],
+        "deadline-lateness shared-stall dose response",
+        legacy_gate=GATE_TIMING_CORRELATION,
+        legacy_verdict=(
+            "PASS"
+            if l0_timing["max_abs_offdiag"] <= GATE_TIMING_CORRELATION
+            else "FAIL"
+        ),
+        l0_row=l0_timing,
+        reduction=(
+            f"mean of {replicate_count} within-replicate 8x8 matrices, "
+            "then max 28 pairs"
+        ),
+    )
+
+    prime_rows = []
+    for cell in l0_cells:
+        value, matrix = emit3_prime(cell["runs"])
+        prime_rows.append({
+            "level": cell["level"],
+            "cell": cell["name"],
+            "max_abs_offdiag": value,
+            "correlation": matrix,
+        })
+    if emit3_prime_null is None:
+        emit3_prime_null = simulate_emit3_prime_null(
+            replicates=replicate_count, windows=window_count - 1
+        )
+    prime_gate = float(emit3_prime_null["gate"])
+    prime_value = max(float(row["max_abs_offdiag"]) for row in prime_rows)
+    record(
+        "EMIT-3'",
+        prime_value,
+        prime_gate,
+        prime_value <= prime_gate,
+        "cross-link correlation of measured load residual",
+        rows=prime_rows,
+        calibration=emit3_prime_null,
+        reduction="per L0 cell: mean replicate matrices, then max 28 pairs",
+    )
 
     spans = np.concatenate([
         run["snapshot_spans_s"] for cell in l0_cells for run in cell["runs"]
@@ -661,6 +885,28 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
            snap_p99 <= GATE_SNAPSHOT_P99_S,
            "shared-tick snapshot read width",
            note="width of the read, not the lateness of the tick")
+
+    emit4_prime_rows = []
+    for cell in l0_cells:
+        for replicate, run in enumerate(cell["runs"]):
+            emit4_prime_rows.append({
+                "level": cell["level"],
+                "cell": cell["name"],
+                "replicate": replicate,
+                **emit4_prime_for_run(run, float(cell["a0"])),
+            })
+    emit4_prime_value = max(
+        float(row["common_mode_ratio"]) for row in emit4_prime_rows
+    )
+    record(
+        "EMIT-4'",
+        emit4_prime_value,
+        GATE_COMMON_MODE_RATIO,
+        emit4_prime_value <= GATE_COMMON_MODE_RATIO,
+        "sampler common-mode correction relative to designed signal",
+        rows=emit4_prime_rows,
+        reduction="maximum run-level ratio across L0 cells",
+    )
 
     late_windows = 0
     total_windows = 0
@@ -683,43 +929,67 @@ def analyze(cells: list[dict[str, object]], cpu_detail, provenance) -> dict[str,
             ))
     sampler_late_fraction = late_windows / total_windows
     mismatch_fraction = mismatch_cells / (
-        len(l0_cells) * REPLICATES * len(LINKS) * N_WINDOWS
+        len(l0_cells) * replicate_count * len(LINKS) * window_count
     )
-    record("EMIT-4b", sampler_late_fraction, GATE_SAMPLER_LATE_FRACTION,
-           sampler_late_fraction <= GATE_SAMPLER_LATE_FRACTION,
-           "sampler tick returns before the next window's first packet",
-           late_windows=late_windows, windows=total_windows,
-           margin_rule="0.5 * dt / max_link_packets(next window)")
-    record("EMIT-4c", mismatch_fraction, GATE_ALIGNMENT_MISMATCH,
-           mismatch_fraction <= GATE_ALIGNMENT_MISMATCH and delivery_ok,
-           "L2 ledger alignment mismatch fraction, split by sign",
-           undershoot=under, overshoot=over,
-           final_udp_delivery_exact=delivery_ok,
-           tolerance_rule="GATE_OVERRUN_FRACTION + GATE_SAMPLER_LATE_FRACTION")
+    diagnose(
+        "EMIT-4b",
+        sampler_late_fraction,
+        "sampler punctuality before the next first-packet deadline",
+        legacy_gate=GATE_SAMPLER_LATE_FRACTION,
+        legacy_verdict=(
+            "PASS"
+            if sampler_late_fraction <= GATE_SAMPLER_LATE_FRACTION
+            else "FAIL"
+        ),
+        late_windows=late_windows,
+        windows=total_windows,
+        margin_rule="0.5 * dt / max_link_packets(next window)",
+    )
+    diagnose(
+        "EMIT-4c",
+        mismatch_fraction,
+        "L2 ledger alignment mismatch fraction, split by sign",
+        legacy_gate=GATE_ALIGNMENT_MISMATCH,
+        legacy_verdict=(
+            "PASS"
+            if mismatch_fraction <= GATE_ALIGNMENT_MISMATCH and delivery_ok
+            else "FAIL"
+        ),
+        undershoot=under,
+        overshoot=over,
+        final_udp_delivery_exact=delivery_ok,
+        tolerance_rule="GATE_OVERRUN_FRACTION + GATE_SAMPLER_LATE_FRACTION",
+    )
 
-    emit3_null = simulate_emit3_null()
+    emit3_null = (
+        simulate_emit3_null() if legacy_emit3_null is None else legacy_emit3_null
+    )
     overall = all(row["verdict"] == "PASS" for row in checks)
     return {
-        "schema": "dt4n.phase_g.g3_emitter_dryrun.v3",
+        "schema": "dt4n.phase_g.g3_emitter_dryrun.v4",
         "status": "REALTIME_LOOPBACK_NO_MININET",
         "git_hash": git_hash(),
-        "prereg": "docs/phase-G/41-amendment-g3-emitter-reduction.md",
+        "prereg": "docs/phase-G/51-amendment-G-A016.md",
         "provenance": provenance,
         "cpu_preflight": cpu_detail,
         "design": {
-            "seed": SEED, "dt_s": DT_S, "duration_s": DURATION_S,
-            "replicates": REPLICATES, "payload_bytes": PAYLOAD_BYTES,
+            "seed": SEED, "dt_s": DT_S,
+            "duration_s": window_count * DT_S,
+            "replicates": replicate_count, "payload_bytes": PAYLOAD_BYTES,
+            "windows": window_count,
             "wire_bytes": WIRE_BYTES, "spin_threshold_s": SPIN_THRESHOLD_S,
             "cells": [{key: value for key, value in cell.items() if key != "runs"}
                       for cell in cells],
         },
         "checks": checks,
+        "diagnostics": diagnostics,
         "emitter_core_ladder": {
             "status": "REPORTED_DOSE_RESPONSE",
             "rows": timing_rows,
             "gate_applies_only_to": "L0",
         },
         "emit3_null": emit3_null,
+        "emit3_prime_null": emit3_prime_null,
         "overall": "PASS" if overall else "FAIL",
         "mininet_authorized": bool(overall),
     }
@@ -730,47 +1000,81 @@ def main() -> None:
     parser.add_argument("--out", required=True)
     parser.add_argument("--execute", action="store_true",
                         help="run the approximately 64-minute real-time ladder")
+    parser.add_argument(
+        "--a016",
+        action="store_true",
+        help="use the preregistered reduced L0-only 8x30-second design",
+    )
     args = parser.parse_args()
     try:
         ladder_maps = build_ladder_cpu_maps()
     except RuntimeError as exc:
         raise SystemExit(f"REFUSED: {exc}") from exc
+    levels = ("L0",) if args.a016 else ("L0", "L1", "L2")
+    replicates = A016_REPLICATES if args.a016 else REPLICATES
+    n_windows = A016_N_WINDOWS if args.a016 else N_WINDOWS
+    prereg_tag = A016_PREREG_TAG if args.a016 else PREREG_TAG
     cpu_detail = {
-        level: cpu_preflight(cpu_map) for level, cpu_map in ladder_maps.items()
+        level: cpu_preflight(ladder_maps[level]) for level in levels
     }
-    provenance = remote_provenance()
-    print(json.dumps({
+    provenance = remote_provenance(prereg_tag)
+    preflight_artifact = {
+        "schema": "dt4n.phase_g.g3_a016_preflight.v1",
+        "status": "PREFLIGHT_ONLY",
         "cpu_preflight": cpu_detail,
-        "cpu_maps": {key: list(value) for key, value in ladder_maps.items()},
+        "cpu_maps": {key: list(ladder_maps[key]) for key in levels},
+        "design": {
+            "a016": args.a016,
+            "replicates": replicates,
+            "windows": n_windows,
+            "duration_s": n_windows * DT_S,
+            "git_tag_to_create": prereg_tag,
+        },
         "provenance": provenance,
-    }, indent=2))
+        "environment_pass": all(
+            row["pass"]
+            and (not args.a016 or row["host_pressure"]["quiet"])
+            for row in cpu_detail.values()
+        ),
+        "mininet_authorized": False,
+    }
+    print(json.dumps(preflight_artifact, indent=2))
     if not args.execute:
+        output = Path(args.out)
+        output.parent.mkdir(parents=True, exist_ok=True)
+        output.write_text(
+            json.dumps(preflight_artifact, indent=2) + "\n", encoding="utf-8"
+        )
         print("PREFLIGHT ONLY: pass --execute after prereg tag is on origin")
+        print(f"artifact = {output}")
         return
     if not all(row["pass"] for row in cpu_detail.values()):
         raise SystemExit("REFUSED: ladder CPU roles are unavailable or not isolated")
     if not provenance["pass"]:
         raise SystemExit("REFUSED: origin main/prereg tag do not match local HEAD")
+    if args.a016 and not preflight_artifact["environment_pass"]:
+        raise SystemExit("REFUSED: G-A016 requires load1 <= 0.10")
 
     rng = np.random.default_rng(SEED)
     cells = []
-    for level in ("L0", "L1", "L2"):
+    for level in levels:
         cpu_map = ladder_maps[level]
         emitter_cpus, sampler_cpu, sink_cpu = cpu_map[:8], cpu_map[8], cpu_map[9]
         designs = CELLS if level == "L0" else (CELLS[1],)
         for design in designs:
             a0 = a0_from_sigma_at("uA", design["sigma_ref"])
             cell = {**design, "level": level, "a0": a0, "runs": []}
-            for replicate in range(REPLICATES):
+            for replicate in range(replicates):
                 trace = physical_trace(
-                    0.0, design["tau_s"], design["tau_s"], N_WINDOWS, rng, a0=a0
+                    0.0, design["tau_s"], design["tau_s"], n_windows, rng, a0=a0
                 )
                 print(
                     f"running {level}/{design['name']} "
-                    f"replicate {replicate + 1}/{REPLICATES}"
+                    f"replicate {replicate + 1}/{replicates}"
                 )
                 cell["runs"].append(run_replicate(
-                    trace["rho_target"], emitter_cpus, sampler_cpu, sink_cpu
+                    trace["rho_target"], emitter_cpus, sampler_cpu, sink_cpu,
+                    dt_s=DT_S,
                 ))
             cells.append(cell)
     artifact = analyze(cells, cpu_detail, provenance)

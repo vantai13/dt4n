@@ -1,0 +1,97 @@
+{
+  "schema": "dt4n.phase_g.g3_a016_preflight.v1",
+  "status": "PREFLIGHT_ONLY",
+  "cpu_preflight": {
+    "L0": {
+      "allowed_cpus": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        6,
+        7
+      ],
+      "requested_cpus": [
+        0,
+        1,
+        2,
+        3,
+        4,
+        5,
+        0,
+        1,
+        6,
+        7
+      ],
+      "emitter_core_count": 6,
+      "emitters_per_core": 1.3333333333333333,
+      "sampler_cpu": 6,
+      "sink_cpu": 7,
+      "role_isolation": true,
+      "physical": {
+        "available": true,
+        "physical_core_count": 4,
+        "smt_threads_per_core": 2.0,
+        "emitter_physical_core_count": 4,
+        "emitters_per_physical_core": 2.0,
+        "sampler_shares_core_with_emitter": true,
+        "sink_shares_core_with_emitter": true
+      },
+      "host_pressure": {
+        "cpu_psi": {
+          "some": {
+            "avg10": 0.0,
+            "avg60": 0.0,
+            "avg300": 0.0,
+            "total": 314102957.0
+          },
+          "full": {
+            "avg10": 0.0,
+            "avg60": 0.0,
+            "avg300": 0.0,
+            "total": 0.0
+          }
+        },
+        "steal_ticks_since_boot": 0,
+        "steal_fraction_since_boot": 0.0,
+        "load1": 0.96,
+        "quiet_load_threshold": 0.1,
+        "quiet": false
+      },
+      "missing": [],
+      "pass": true
+    }
+  },
+  "cpu_maps": {
+    "L0": [
+      0,
+      1,
+      2,
+      3,
+      4,
+      5,
+      0,
+      1,
+      6,
+      7
+    ]
+  },
+  "design": {
+    "a016": true,
+    "replicates": 8,
+    "windows": 150,
+    "duration_s": 30.0,
+    "git_tag_to_create": "phase-G-g3-a016-prereg"
+  },
+  "provenance": {
+    "local_head": "b974d26e3698b6dc81832333a774aa3bcd113ffe",
+    "remote_main": "b974d26e3698b6dc81832333a774aa3bcd113ffe",
+    "remote_prereg_tag_commit": null,
+    "command_exit": 0,
+    "pass": false
+  },
+  "environment_pass": false,
+  "mininet_authorized": false
+}

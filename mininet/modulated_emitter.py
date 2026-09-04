@@ -19,6 +19,7 @@ from typing import Callable, MutableSequence, Protocol
 
 
 SPIN_THRESHOLD_S = 200e-6
+MAX_PHASE_FRACTION = 0.45
 NATIVE_INT64_BYTES = ctypes.sizeof(ctypes.c_longlong)
 
 
@@ -88,6 +89,17 @@ def atomic_int64_array(size: int) -> MutableSequence[int]:
     return values
 
 
+def deadline_phase_fraction(emitter_index: int, n_emitters: int) -> float:
+    """Return a deterministic per-emitter offset in units of packet gap."""
+    if not isinstance(emitter_index, int) or emitter_index < 0:
+        raise ValueError("emitter_index must be a non-negative integer")
+    if not isinstance(n_emitters, int) or n_emitters <= 0:
+        raise ValueError("n_emitters must be a positive integer")
+    if emitter_index >= n_emitters:
+        raise ValueError("emitter_index must be below n_emitters")
+    return MAX_PHASE_FRACTION * emitter_index / n_emitters
+
+
 def emit_window(
     window_index: int,
     epoch_s: float,
@@ -99,6 +111,7 @@ def emit_window(
     emitter_index: int,
     state: EmitterState,
     *,
+    phase_fraction: float = 0.0,
     spin_threshold_s: float = SPIN_THRESHOLD_S,
     clock: Callable[[], float] = time.perf_counter,
     sleeper: Callable[[float], None] = time.sleep,
@@ -106,6 +119,8 @@ def emit_window(
     """Emit one independently rounded window without deficit compensation."""
     if window_index < 0 or dt_s <= 0.0 or rate_pps < 0.0:
         raise ValueError("window_index/rate/dt outside physical domain")
+    if not 0.0 <= phase_fraction < 0.5:
+        raise ValueError("phase_fraction must be in [0, 0.5)")
     if not payload:
         raise ValueError("payload must not be empty")
     target_packets = float(rate_pps * dt_s)
@@ -115,8 +130,9 @@ def emit_window(
     state.target_cum_packets += target_packets
     max_lateness = 0.0
 
+    gap = dt_s / n_target if n_target else dt_s
     for packet_index in range(n_target):
-        deadline = t_start + (packet_index + 0.5) * dt_s / n_target
+        deadline = t_start + (packet_index + 0.5 + phase_fraction) * gap
         sleep_until(
             deadline,
             spin_threshold_s=spin_threshold_s,
@@ -159,6 +175,7 @@ def emit_series(
     emitter_index: int,
     *,
     cpu: int | None = None,
+    phase_fraction: float = 0.0,
     spin_threshold_s: float = SPIN_THRESHOLD_S,
     window_sent: MutableSequence[int] | None = None,
     window_lateness_ns: MutableSequence[int] | None = None,
@@ -181,6 +198,7 @@ def emit_series(
                 shared_cumulative,
                 emitter_index,
                 state,
+                phase_fraction=phase_fraction,
                 spin_threshold_s=spin_threshold_s,
             )
             if window_sent is not None:

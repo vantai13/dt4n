@@ -1,0 +1,96 @@
+{
+  "schema": "dt4n.phase_g.g3_emit3_feasibility.v1",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "git_hash": "b974d26e3698b6dc81832333a774aa3bcd113ffe",
+  "tool_sha256": "ea2940d5e5df3f2a8e2bcf68eb58330abc1eedfe6b79630b622051b7392b6e2d",
+  "seed": 11,
+  "repeats": 3,
+  "windows": 300,
+  "replicates": 16,
+  "packets_per_window": 119,
+  "stall_amplitude_s": 0.001,
+  "legacy_gate": 0.1,
+  "rows": [
+    {
+      "p_stall_per_window": 0.0,
+      "mean_emit3": 0.03537181165743753,
+      "replicate_statistics": [
+        0.04303169671361739,
+        0.03631024153880477,
+        0.026773496719890415
+      ],
+      "mean_seconds_between_stalls": null
+    },
+    {
+      "p_stall_per_window": 0.0005,
+      "mean_emit3": 0.11403596223150077,
+      "replicate_statistics": [
+        0.08273581450025128,
+        0.07589229337651505,
+        0.18347977881773594
+      ],
+      "mean_seconds_between_stalls": 400.0
+    },
+    {
+      "p_stall_per_window": 0.001,
+      "mean_emit3": 0.18163183242738848,
+      "replicate_statistics": [
+        0.21003171386695355,
+        0.1631401511906697,
+        0.17172363222454223
+      ],
+      "mean_seconds_between_stalls": 200.0
+    },
+    {
+      "p_stall_per_window": 0.005,
+      "mean_emit3": 0.27721918761376463,
+      "replicate_statistics": [
+        0.35314087438122904,
+        0.27752427113898326,
+        0.20099241732108158
+      ],
+      "mean_seconds_between_stalls": 40.0
+    },
+    {
+      "p_stall_per_window": 0.02,
+      "mean_emit3": 0.7690002231358134,
+      "replicate_statistics": [
+        0.8002620428795492,
+        0.7965552449922355,
+        0.7101833815356552
+      ],
+      "mean_seconds_between_stalls": 10.0
+    },
+    {
+      "p_stall_per_window": 0.05,
+      "mean_emit3": 0.8997394543091648,
+      "replicate_statistics": [
+        0.9069279716702969,
+        0.857166955409596,
+        0.9351234358476016
+      ],
+      "mean_seconds_between_stalls": 4.0
+    },
+    {
+      "p_stall_per_window": 0.1,
+      "mean_emit3": 0.9640117292547622,
+      "replicate_statistics": [
+        0.964581846063632,
+        0.9651633006034839,
+        0.9622900410971711
+      ],
+      "mean_seconds_between_stalls": 2.0
+    },
+    {
+      "p_stall_per_window": 0.5,
+      "mean_emit3": 0.9961439659718966,
+      "replicate_statistics": [
+        0.9958244345289782,
+        0.9965581201336647,
+        0.9960493432530464
+      ],
+      "mean_seconds_between_stalls": 0.4
+    }
+  ],
+  "runtime_s": 0.9813365020017955
+}
