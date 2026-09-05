@@ -246,6 +246,7 @@ dung day du nam o cot "dinh nghia tai".
 | G-L96 | **trung noi dung voi G-L90 (doc 45)** -- xem ghi chu duoi bang | `docs/phase-G/49-amendment-G-A015-emit4-satisfiability.md:48` |
 | G-L97 | ha yeu cau CPU tu role count xuong LOGICAL CPU count la ngam chap nhan chia se physical core tren host SMT; ladder do per-core contention phai dem PHYSICAL core | `docs/phase-G/50-note-smt-provisioning-limit.md:82` |
 | G-L98 | userspace open-loop per-link packet pacing co san common-mode floor khong the khu bang tuning: stall toan may `delta` xoa goi khoi MOI link cung dau, cho `(delta/dt)*rho_bar/sigma` = 0.706--0.749 ngay tai `delta=5 ms`. Bound la HOST duoi signed L0 map, khong phai emitter | `docs/phase-G/54-limits-G-L98.md`; dong o `docs/phase-G/53-g3-stop-note.md` |
+| G-L99 | co validity flag suy tu MOT dau ra cua mot fit chung khong duoc dung de chan mot dau ra KHAC cua chinh fit do. `estimate_nugget.ok` doc tu CHAN (nugget), con `tau` den tu DO DOC; chan `tau` bang `ok` loai bo phi ngau nhien ~50% ban ghi sach nhat va DAO DAU chech bieu kien (−2.4% -> +2.5%). PHAM VI: rang buoc TIEN NGHIEM cho G-A017, KHONG phai phat hien loi hoi to | `docs/phase-G/55-prereg-G-A017.md` muc 3.1; bang chung `results/SMOKE/phase-G2/g1_bias_sim.json` |
 
 **Va cham da phat hien, chua phan xu.** `G-L90` mang HAI noi dung khac nhau:
 doc 43 dat no cho "mot khoang trich tu bang truoc phai doc tren toan bang",

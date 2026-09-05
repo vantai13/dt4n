@@ -1,0 +1,241 @@
+{
+  "schema": "dt4n.phase_g2.mutual_satisfiability.v1",
+  "status": "DESK_CHECK_NO_DATA",
+  "principle": "G-L90: a gate SET must be checked for mutual satisfiability before it is signed",
+  "provenance": {
+    "git_head_at_execution": "7ef1b1a0256c2dc034dd1765f44d1fdf76ce6bb3",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 1
+  },
+  "constants": {
+    "C_bps": 8000000.0,
+    "rho_bar": 0.857,
+    "rho_max": 0.995,
+    "payload_bytes": 1400.0,
+    "z_tail": 2.58,
+    "source": "docs/phase-G/00-prereg-g0.md:12,28"
+  },
+  "pair_checks": [
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 1.0,
+      "dt_s": 0.05,
+      "sf_level": "target",
+      "sf": 0.95,
+      "sigma_quantisation_floor": 0.008082903768654762,
+      "sigma_lower_required": 0.035232560697930154,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 1.5181517049416622
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 1.0,
+      "dt_s": 0.05,
+      "sf_level": "limit",
+      "sf": 0.9,
+      "sigma_quantisation_floor": 0.008082903768654762,
+      "sigma_lower_required": 0.024248711305964288,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 2.20582328760156
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 3.0,
+      "dt_s": 0.15,
+      "sf_level": "target",
+      "sf": 0.95,
+      "sigma_quantisation_floor": 0.002694301256218254,
+      "sigma_lower_required": 0.011744186899310052,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 4.554455114824986
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 3.0,
+      "dt_s": 0.15,
+      "sf_level": "limit",
+      "sf": 0.9,
+      "sigma_quantisation_floor": 0.002694301256218254,
+      "sigma_lower_required": 0.008082903768654762,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 6.61746986280468
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 5.0,
+      "dt_s": 0.2,
+      "sf_level": "target",
+      "sf": 0.95,
+      "sigma_quantisation_floor": 0.0020207259421636905,
+      "sigma_lower_required": 0.008808140174482539,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 6.072606819766649
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 5.0,
+      "dt_s": 0.2,
+      "sf_level": "limit",
+      "sf": 0.9,
+      "sigma_quantisation_floor": 0.0020207259421636905,
+      "sigma_lower_required": 0.006062177826491072,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 8.82329315040624
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 10.0,
+      "dt_s": 0.2,
+      "sf_level": "target",
+      "sf": 0.95,
+      "sigma_quantisation_floor": 0.0020207259421636905,
+      "sigma_lower_required": 0.008808140174482539,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 6.072606819766649
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 10.0,
+      "dt_s": 0.2,
+      "sf_level": "limit",
+      "sf": 0.9,
+      "sigma_quantisation_floor": 0.0020207259421636905,
+      "sigma_lower_required": 0.006062177826491072,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 8.82329315040624
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 20.0,
+      "dt_s": 0.2,
+      "sf_level": "target",
+      "sf": 0.95,
+      "sigma_quantisation_floor": 0.0020207259421636905,
+      "sigma_lower_required": 0.008808140174482539,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 6.072606819766649
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 20.0,
+      "dt_s": 0.2,
+      "sf_level": "limit",
+      "sf": 0.9,
+      "sigma_quantisation_floor": 0.0020207259421636905,
+      "sigma_lower_required": 0.006062177826491072,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 8.82329315040624
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 30.0,
+      "dt_s": 0.2,
+      "sf_level": "target",
+      "sf": 0.95,
+      "sigma_quantisation_floor": 0.0020207259421636905,
+      "sigma_lower_required": 0.008808140174482539,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 6.072606819766649
+    },
+    {
+      "pair": "B-1 (sf floor) vs G.0 tail headroom",
+      "tau_s": 30.0,
+      "dt_s": 0.2,
+      "sf_level": "limit",
+      "sf": 0.9,
+      "sigma_quantisation_floor": 0.0020207259421636905,
+      "sigma_lower_required": 0.006062177826491072,
+      "sigma_upper_allowed": 0.05348837209302326,
+      "intersection_empty": false,
+      "headroom_ratio": 8.82329315040624
+    }
+  ],
+  "budget_checks": [
+    {
+      "check": "T-1 run length vs wall-clock budget",
+      "tau_s": 1.0,
+      "T_run_s": 205.0,
+      "n_replicates": 3,
+      "total_s": 615.0,
+      "total_h": 0.17083333333333334,
+      "within_budget": true
+    },
+    {
+      "check": "T-1 run length vs wall-clock budget",
+      "tau_s": 3.0,
+      "T_run_s": 615.0,
+      "n_replicates": 3,
+      "total_s": 1845.0,
+      "total_h": 0.5125,
+      "within_budget": true
+    },
+    {
+      "check": "T-1 run length vs wall-clock budget",
+      "tau_s": 5.0,
+      "T_run_s": 1025.0,
+      "n_replicates": 3,
+      "total_s": 3075.0,
+      "total_h": 0.8541666666666666,
+      "within_budget": true
+    },
+    {
+      "check": "T-1 run length vs wall-clock budget",
+      "tau_s": 10.0,
+      "T_run_s": 2050.0,
+      "n_replicates": 3,
+      "total_s": 6150.0,
+      "total_h": 1.7083333333333333,
+      "within_budget": true
+    },
+    {
+      "check": "T-1 run length vs wall-clock budget",
+      "tau_s": 20.0,
+      "T_run_s": 4100.0,
+      "n_replicates": 3,
+      "total_s": 12300.0,
+      "total_h": 3.4166666666666665,
+      "within_budget": true
+    },
+    {
+      "check": "T-1 run length vs wall-clock budget",
+      "tau_s": 30.0,
+      "T_run_s": 6150.0,
+      "n_replicates": 3,
+      "total_s": 18450.0,
+      "total_h": 5.125,
+      "within_budget": true
+    }
+  ],
+  "boolean_scan": [
+    {
+      "gate": "EMIT-4 alignment_exact (HISTORICAL, G-L90)",
+      "in_this_budget": false,
+      "p_per_trial": 0.001,
+      "n_trials": 76800,
+      "p_pass": 4.260845192434387e-34,
+      "log10_p_pass": -33.370504244558724,
+      "signable": false
+    }
+  ],
+  "summary": {
+    "n_pairs_checked": 12,
+    "n_pairs_empty": 0,
+    "empty_pairs": [],
+    "n_cells_over_budget": 0,
+    "cells_over_budget": [],
+    "any_tolerance_free_boolean_in_budget": false,
+    "all_pairs_satisfiable": true
+  }
+}
