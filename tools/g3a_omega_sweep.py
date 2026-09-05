@@ -130,13 +130,23 @@ def analyse_level(level: dict, k_tilde: np.ndarray) -> dict:
         if abs(rc[lo].mean()) > 1e-9 else float("nan"))
 
     eps_stats = [rho_eps_from_series(r["rho"], r["rho_target"]) for r in reps]
+    # ★ P-7's null (doc 62) is computed on the FISHER-Z POOLED statistic, so the
+    #   gate must read the pooled value. Reading the max over per-replicate
+    #   maxima instead compares a different statistic against that null: its own
+    #   null has p99 = 0.0733, so a 0.040 gate on it is infeasible by
+    #   construction. G-L106.
+    eps_pooled = np.tanh(np.mean(
+        [np.arctanh(np.clip(np.corrcoef((r["rho"] - r["rho_target"]).T)[iu],
+                            -0.999999, 0.999999)) for r in reps], axis=0))
     return {
         "omega": level["omega"],
         "sf_per_link": sf.tolist(),
         "sf_min_over_links": float(np.nanmin(sf)),
         "R_hat_upper": pooled[iu].tolist(),
         **fit,
-        "rho_eps_max_abs": float(max(e["rho_eps_max_abs"] for e in eps_stats)),
+        "rho_eps_max_abs": float(np.abs(eps_pooled).max()),        # pooled: the gate
+        "rho_eps_max_abs_per_replicate": float(
+            max(e["rho_eps_max_abs"] for e in eps_stats)),          # diagnostic only
         "rho_eps_median_abs": float(np.median(
             [e["rho_eps_median_abs"] for e in eps_stats])),
         "eps_acf1_median": float(np.median(
