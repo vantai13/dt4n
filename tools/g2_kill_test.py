@@ -32,6 +32,7 @@ import numpy as np
 
 from mininet.byte_sampler import read_counters, sample
 from mininet.rate_controller import drive
+from tools.artifact_guard import write_contract_artifact
 from tools.g1_estimator_bias_sim import provenance
 from tools import g3_dryrun
 from tools.g3_dryrun import CAP_BPS, LINKS, physical_trace
@@ -382,9 +383,9 @@ def main() -> None:
         "replicates": [{k: v for k, v in r.items() if not k.startswith("_")}
                        for r in reps],
     }
-    out.parent.mkdir(parents=True, exist_ok=True)
-    out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
-    chown_back(out)
+    # Refuses to clobber a hash-referenced artifact; an instrumented rerun
+    # must be given its own name.
+    write_contract_artifact(out, payload)
 
     # ★ The raw series are the actual data; the JSON holds derived statistics.
     #   rho_target is deterministic given the seed, so storing both makes the

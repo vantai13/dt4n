@@ -122,12 +122,28 @@ def main() -> None:
             s = [fit_intercept_slope(measured[r, :, i], dt, lo) for r in range(nrep)]
             sf_pl.append(float(np.nanmedian([a for a, _ in s])))
             tau_pl.append(float(np.nanmedian([b for _, b in s])))
+        # tau is ONE parameter: physical_trace calls ar1(len(LINKS), tau_link_s,
+        # ...), so every link shares it and per-link differences can only be
+        # estimation noise. Pooling all fits is therefore both legitimate and
+        # more precise, and the pooled figure is the one to read.
+        # sf is the opposite: it differs per link BY CONSTRUCTION because
+        # sigma_l scales with DEGREE while v is common, so it takes
+        # min-over-links (G-A019 sec 4.1). Same data, two different reductions,
+        # for a reason that is about the parameter and not about the statistics.
+        tau_flat = [fit_intercept_slope(measured[r, :, i], dt, lo)[1]
+                    for r in range(nlink) for i in range(nrep)]
+        tau_pooled = float(np.nanmedian(tau_flat))
         fits[f"lags_{lo}_to_{FIT_LAGS}"] = {
             "sf_per_link": sf_pl,
             "sf_min_over_links": float(np.nanmin(sf_pl)),
             "sf_median_over_links": float(np.nanmedian(sf_pl)),
-            "tau_median_over_links": float(np.nanmedian(tau_pl)),
-            "tau_bias_vs_true": float(np.nanmedian(tau_pl) / tau_true - 1.0),
+            "tau_pooled_over_all_fits": tau_pooled,
+            "tau_bias_pooled": float(tau_pooled / tau_true - 1.0),
+            "tau_per_link": tau_pl,
+            "tau_worst_link_abs_dev": float(
+                np.nanmax(np.abs(np.array(tau_pl) / tau_true - 1.0))),
+            "reduction_note": "tau pooled (one shared parameter); "
+                              "sf min-over-links (differs per link by design)",
         }
 
     payload = {
