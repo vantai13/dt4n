@@ -229,6 +229,36 @@ the Phase 23 `L*` namespace.
 | G-L43 | Khi CBR packetized cham san luong tu hoa, ledger doc lap va TX counter cung thay bien thien dem goi. Gate `offered_share<=0.10` mau thuan voi yeu cau QUANT_LIMITED: v2 co 0/48 flat gate nhung 45/48 QUANT_LIMITED | `g1_static_v2_smoke_detail.json`; `docs/phase-G/22-g1-static-nc-v2-smoke-results.md` | Khong chung nhan v2 va khong noi packetization thanh measurement nugget. Thiet ke tiep theo phai dinh nghia residual counter tru offered tren cung luoi, voi byte-accounting duoc khoa doc lap |
 | G-L44 | Hai sampler lech pha `dt/2` do hai cua so dem goi khac nhau; quantization bao toan co the tao tuong quan am ngay ca khi bo doc hoan hao | `g1_static_v2_smoke_detail.json::independent_sampler` | Nguong same-link s0/s1 v2 khong duoc dien giai H-SAMPLER khi validity fail. Independent replicate tiep theo can cung support thoi gian hoac null lech pha giai tich |
 
+### Phase G forward ledger (`G-L90`+)
+
+Cac ma nay duoc DINH NGHIA inline trong `docs/phase-G/`, khong phai o day.
+Bang duoi la CHI MUC de namespace `G-L*` co mot cho tra cuu duy nhat; noi
+dung day du nam o cot "dinh nghia tai".
+
+| ma | han che (rut gon) | dinh nghia tai |
+|---|---|---|
+| G-L90 | **VA CHAM, chua phan xu** -- xem ghi chu duoi bang | `docs/phase-G/43-amendment-G-A014a-corrigendum-and-reanchor.md:37` VA `docs/phase-G/45-g3-emitter-dryrun-results.md:106` |
+| G-L91 | mechanical-decorrelation baseline phai duoc hieu chuan bang mo phong duoi null khi estimand la order statistic | `docs/phase-G/46-g3-emit3-decomposition-results.md:120` |
+| G-L92 | SHAPE cua null phai duoc du lieu chong do, khong duoc gia dinh; can ca tail statistic va rank statistic | `docs/phase-G/46-g3-emit3-decomposition-results.md:139` |
+| G-L93 | independence anchor cho finite-sample joint coverage | `docs/phase-G/47-proposal-omega-as-coverage-axis.md:158` |
+| G-L94 | marginal calibration deficit tai xuat hien trong joint coverage | `docs/phase-G/47-proposal-omega-as-coverage-axis.md:162` |
+| G-L95 | artifact phan xu phai vao repo qua mot commit | `docs/phase-G/48-addenda-to-45-and-46.md:24` |
+| G-L96 | **trung noi dung voi G-L90 (doc 45)** -- xem ghi chu duoi bang | `docs/phase-G/49-amendment-G-A015-emit4-satisfiability.md:48` |
+| G-L97 | ha yeu cau CPU tu role count xuong LOGICAL CPU count la ngam chap nhan chia se physical core tren host SMT; ladder do per-core contention phai dem PHYSICAL core | `docs/phase-G/50-note-smt-provisioning-limit.md:82` |
+| G-L98 | userspace open-loop per-link packet pacing co san common-mode floor khong the khu bang tuning: stall toan may `delta` xoa goi khoi MOI link cung dau, cho `(delta/dt)*rho_bar/sigma` = 0.706--0.749 ngay tai `delta=5 ms`. Bound la HOST duoi signed L0 map, khong phai emitter | `docs/phase-G/54-limits-G-L98.md`; dong o `docs/phase-G/53-g3-stop-note.md` |
+
+**Va cham da phat hien, chua phan xu.** `G-L90` mang HAI noi dung khac nhau:
+doc 43 dat no cho "mot khoang trich tu bang truoc phai doc tren toan bang",
+doc 45 dat no cho "hai signed gate phai duoc kiem MUTUAL SATISFIABILITY".
+`G-L96` (doc 49) lap lai dung noi dung thu hai. Ca ba tai lieu DA KY va
+khong duoc sua. Phan xu can mot amendment rieng; ghi nhan o
+`docs/phase-G/53-g3-stop-note.md` muc 5.
+
+`test/test_limits_ledger.py` KHONG bat ho nay: no chi quet `docs/phase-23/*.md`
+va chi khop `^L\d{1,2}` o dau dong, nen `G-L*` dinh nghia inline trong
+`docs/phase-G/` nam ngoai tam. Do la ly do va cham tren ton tai ma khong ai
+thay.
+
 ### A084 -- dong PHAM VI 23.25, khong xoa debt thiet ke moi
 
 `G23-340..343` dong moi cau hoi T14--T17 trong Lesson 23.25. L139..L162
