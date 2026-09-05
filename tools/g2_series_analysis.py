@@ -131,7 +131,7 @@ def main() -> None:
         # min-over-links (G-A019 sec 4.1). Same data, two different reductions,
         # for a reason that is about the parameter and not about the statistics.
         tau_flat = [fit_intercept_slope(measured[r, :, i], dt, lo)[1]
-                    for r in range(nlink) for i in range(nrep)]
+                    for r in range(nrep) for i in range(nlink)]
         tau_pooled = float(np.nanmedian(tau_flat))
         fits[f"lags_{lo}_to_{FIT_LAGS}"] = {
             "sf_per_link": sf_pl,
