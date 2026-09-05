@@ -38,6 +38,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import pathlib
 import subprocess
 from pathlib import Path
 
@@ -53,6 +54,14 @@ TAU_GRID = (1.0, 3.0, 5.0, 10.0, 20.0, 30.0)
 T_OVER_TAU_GRID = (55, 100, 200)
 SF_GRID = (1.00, 0.95, 0.90)
 N_FIT_LAGS = 8          # the signed default of estimate_nugget
+FIT_LAG_LO = 1          # first ACF lag entering the slope fit
+# ★ The nugget model matters as much as its size. G'.2 measured the REAL
+#   measurement-path nugget and found ACF(1) = -0.5019 with ACF(k>=2) ~ 0:
+#   a first difference of a white sequence, not white noise. A shaper's token
+#   bucket conserves bytes, so a window that under-delivers is followed by one
+#   that over-delivers. "white" is the assumption this simulation originally
+#   made; "ma1" is what the hardware actually does.
+NUGGET_MODEL = "white"
 N_TRIAL = 600
 N_REP_GATE = 3          # the gate reads the MEDIAN of this many replicates
 BURN_IN_TAU = 5.0
@@ -163,9 +172,39 @@ def summarise(ratios: np.ndarray) -> dict[str, object]:
     }
 
 
+def _slope_from_lag(x, dt: float, n_lags: int, lag_lo: int) -> dict:
+    """`estimate_nugget` restricted to lags `lag_lo..n_lags`.
+
+    Excluding lag 1 removes the only lag an MA(1) nugget touches, which
+    restores nugget immunity for a token-bucket measurement path.
+    """
+    x = np.asarray(x, float)
+    n = len(x)
+    c = x - x.mean()
+    denom = float(c @ c)
+    if denom <= 0:
+        return {"sf": float("nan"), "tau_from_fit_s": float("nan"), "ok": False}
+    fft_len = 1 << (2 * n - 1).bit_length()
+    spec = np.fft.rfft(c, fft_len)
+    acf = np.fft.irfft(spec * np.conjugate(spec), fft_len)[: n_lags + 1] / denom
+    lags = np.arange(1, n_lags + 1)
+    vals = acf[1:]
+    keep = (vals > 2.0 / np.sqrt(n)) & (lags >= lag_lo)
+    if keep.sum() < 3:
+        return {"sf": float("nan"), "tau_from_fit_s": float("nan"), "ok": False}
+    slope, intercept = np.polyfit(lags[keep], np.log(vals[keep]), 1)
+    phi = float(np.exp(slope))
+    return {
+        "sf": float(np.exp(intercept)),
+        "tau_from_fit_s": float(-dt / np.log(phi)) if 0 < phi < 1 else float("nan"),
+        "ok": bool(0 < np.exp(intercept) <= 1),
+    }
+
+
 def run_cell(
     tau: float, t_over_tau: int, sf: float, n_trial: int,
-    rng: np.random.Generator,
+    rng: np.random.Generator, nugget_model: str = NUGGET_MODEL,
+    fit_lag_lo: int = FIT_LAG_LO,
 ) -> dict[str, object]:
     dt = dt_of(tau)
     phi = float(np.exp(-dt / tau))
@@ -175,7 +214,13 @@ def run_cell(
     if sf < 1.0:
         # signal variance 1 -> nugget variance v with sf = 1/(1+v)
         v = (1.0 - sf) / sf
-        paths = paths + rng.standard_normal(paths.shape) * np.sqrt(v)
+        if nugget_model == "ma1":
+            # eps_k = u_k - u_{k-1}: Var(eps) = 2*Var(u), ACF(1) = -0.5
+            u = rng.standard_normal((paths.shape[0], paths.shape[1] + 1))
+            u *= np.sqrt(v / 2.0)
+            paths = paths + (u[:, 1:] - u[:, :-1])
+        else:
+            paths = paths + rng.standard_normal(paths.shape) * np.sqrt(v)
 
     int_ratio = np.empty(n_trial)
     log_ratio = np.empty(n_trial)
@@ -184,7 +229,9 @@ def run_cell(
     for i in range(n_trial):
         row = paths[i]
         int_ratio[i] = tau_int(row, dt) / tau
-        fit = estimate_nugget(row, dt, n_fit_lags=N_FIT_LAGS)
+        fit = (estimate_nugget(row, dt, n_fit_lags=N_FIT_LAGS)
+               if fit_lag_lo == 1
+               else _slope_from_lag(row, dt, N_FIT_LAGS, fit_lag_lo))
         tau_fit = fit.get("tau_from_fit_s", float("nan"))
         usable = np.isfinite(tau_fit) and tau_fit > 0
         # As the estimator is signed: `ok` requires 0 < sf_hat <= 1, so a
@@ -218,7 +265,43 @@ def main() -> None:
     parser = argparse.ArgumentParser()
     parser.add_argument("--quick", action="store_true",
                         help="coarse grid while editing; not a signable artifact")
+    parser.add_argument("--nugget-sweep", action="store_true",
+                        help="compare white vs MA(1) nugget and lag-1 vs lag-2 "
+                             "fits; writes a separate artifact")
     args = parser.parse_args()
+
+    if args.nugget_sweep:
+        rng = np.random.default_rng(SEED)
+        rows = [
+            {
+                "tau_s": tau, "T_over_tau": 200, "sf_true": sf,
+                "nugget_model": model, "fit_lag_lo": lag,
+                **{k: v for k, v in
+                   run_cell(tau, 200, sf, 300, rng, model, lag).items()
+                   if k in ("dt_s", "n_samples", "loglinear_slope_only")},
+            }
+            for tau in (1.0, 3.0, 5.0, 10.0, 20.0)
+            for sf in (0.95, 0.90)
+            for model in ("white", "ma1")
+            for lag in (1, 2)
+        ]
+        out = pathlib.Path("results/SMOKE/phase-G2/g1_bias_sim_ma1.json")
+        out.write_text(json.dumps({
+            "schema": "dt4n.phase_g2.estimator_bias_nugget_model.v1",
+            "status": "SYNTHETIC_DIAGNOSTIC_NO_EXPERIMENTAL_DATA",
+            "principle": "NT 53 applied to the NOISE MODEL, not only its size: "
+                         "G'.2 measured ACF(1) = -0.5019 on the real path, so "
+                         "the white-nugget simulation of doc 55 modelled the "
+                         "wrong noise",
+            "provenance": provenance(),
+            "design": {"seed": SEED, "n_trial_per_cell": 300,
+                       "n_fit_lags": N_FIT_LAGS,
+                       "gate_tolerance": GATE_TOL,
+                       "measured_acf1_on_real_path": -0.5019},
+            "rows": rows,
+        }, indent=2) + "\n", encoding="utf-8")
+        print(f"{out}: {len(rows)} cells")
+        return
     n_trial = 120 if args.quick else N_TRIAL
     taus = (1.0, 5.0, 20.0) if args.quick else TAU_GRID
 
