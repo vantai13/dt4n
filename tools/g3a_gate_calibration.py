@@ -99,7 +99,26 @@ def main() -> None:
             "abs_p99": float(np.nanpercentile(np.abs(a), 99)),
             "max_abs": float(np.nanmax(np.abs(a))),
         }
-        rows.append({"omega": omega,
+        # P(pass) for candidate thresholds, computed the way KILL-1 was:
+        # a gate is only signable if a CORRECT mechanism clears it reliably.
+        arr = {k: np.asarray(v, float) for k, v in acc.items()}
+        candidates = {
+            "P2_omega_err": {t: float(np.mean(np.abs(arr["omega_hat"] - omega) <= t))
+                             for t in (0.05, 0.10, 0.20)},
+            "P3_abs_intercept": {t: float(np.mean(np.abs(arr["intercept"]) <= t))
+                                 for t in (0.05, 0.08, 0.10)},
+            "P4_abs_null_mean": {t: float(np.mean(np.abs(arr["null_pairs_mean_r"]) <= t))
+                                 for t in (0.03, 0.05, 0.06, 0.08)},
+            "P6_residual_rms": {t: float(np.mean(arr["residual_rms"] <= t))
+                                for t in (0.05, 0.06, 0.08)},
+            "P5_ratio_corrected": {
+                f"{lo}-{hi}": float(np.mean(
+                    (arr["level_ratio_corrected"] >= lo)
+                    & (arr["level_ratio_corrected"] <= hi)))
+                for lo, hi in ((1.26, 1.50), (1.28, 1.55), (1.30, 1.53),
+                               (1.20, 1.62))},
+        }
+        rows.append({"omega": omega, "p_pass_candidates": candidates,
                      **{k: stat(np.array(vals)) for k, vals in acc.items()}})
         print(f"  omega={omega:.2f}  omega_hat {rows[-1]['omega_hat']['median']:+.4f}"
               f" (sd {rows[-1]['omega_hat']['sd']:.4f})"
