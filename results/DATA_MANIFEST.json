@@ -1,7 +1,7 @@
 {
  "schema": "dt4n.data_manifest.v1",
- "generated_utc": "2026-09-05T04:01:00.944598+00:00",
- "git_head": "610cb6bdeffa93a78f2f2e0bea4f00973b7aad59",
+ "generated_utc": "2026-09-05T12:29:32.092431+00:00",
+ "git_head": "ac14ca1ca06dcb8f63b3dba809a2b0a966fea6a6",
  "git_dirty": false,
  "patterns": [
   "*.parquet",
@@ -11,8 +11,8 @@
  "roots": [
   "results"
  ],
- "n_files": 122,
- "total_bytes": 6919755770,
+ "n_files": 124,
+ "total_bytes": 6927739233,
  "by_tier": {
   "LIVE": {
    "n": 44,
@@ -23,8 +23,8 @@
    "bytes": 1510291722
   },
   "SMOKE": {
-   "n": 7,
-   "bytes": 476613948
+   "n": 9,
+   "bytes": 484597411
   },
   "SUPERSEDED": {
    "n": 49,
@@ -902,6 +902,20 @@
    "bytes": 69211254,
    "mtime_utc": "2026-08-21T10:11:15.344404+00:00",
    "sha256": "903b9e17459aed6b038cac2c71a93b834270be9a2875817b820d4c8e2b1659b5"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g2_kill_series.npz",
+   "tier": "SMOKE",
+   "bytes": 1695138,
+   "mtime_utc": "2026-09-05T09:14:02.416179+00:00",
+   "sha256": "64279ffe1610858383003587ef53a64eba2096f7c8083d8f7b8e8c00b48f986b"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3a_omega_series.npz",
+   "tier": "SMOKE",
+   "bytes": 6288325,
+   "mtime_utc": "2026-09-05T12:22:34.306455+00:00",
+   "sha256": "44f87da7b5a09d7b7f9d6d50365dd6e54803765891c1d8e0b5a73656a971bf6a"
   }
  ]
 }
