@@ -88,10 +88,15 @@ def main() -> None:
                 if abs(rc[lo2].mean()) > 1e-9 else float("nan"))
             for key in acc:
                 acc[key].append(out[key])
+        # A gate is read on the ABSOLUTE deviation, so calibrate the absolute
+        # percentiles too. Reading a gate off an SD assumes symmetry and
+        # normality; neither is guaranteed for a ratio or a residual RMS.
         stat = lambda a: {
             "median": float(np.nanmedian(a)), "sd": float(np.nanstd(a, ddof=1)),
             "p05": float(np.nanpercentile(a, 5)),
             "p95": float(np.nanpercentile(a, 95)),
+            "abs_p95": float(np.nanpercentile(np.abs(a), 95)),
+            "abs_p99": float(np.nanpercentile(np.abs(a), 99)),
             "max_abs": float(np.nanmax(np.abs(a))),
         }
         rows.append({"omega": omega,
