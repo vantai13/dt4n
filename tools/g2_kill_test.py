@@ -177,6 +177,9 @@ def run_replicate(rep: int, n_link: int, n_win: int, rng) -> dict:
     ifaces, caps = IFACE[:n_link], CAP_BPS[:n_link]
     trace = physical_trace(OMEGA, TAU_S, TAU_S, n_win, rng)
     rho_target = trace["rho_target"][:n_link].T          # (n_win, n_link)
+    clips = {k: float(trace[k]) for k in
+             ("component_clip_fraction", "path_clip_fraction",
+              "private_clip_fraction", "target_clip_fraction")}
 
     monitor = BacklogMonitor(ifaces)
     rx0 = [peer_rx_bytes(i) for i in range(n_link)]
@@ -226,7 +229,9 @@ def run_replicate(rep: int, n_link: int, n_win: int, rng) -> dict:
         "rho_measured_sd": rho_meas.std(axis=0, ddof=1).tolist(),
         "sink_rate_ratio": [float(sink_mean[i] / set_mean[i])
                             for i in range(n_link)],
+        "clip_fractions": clips,
         "_rho_measured": rho_meas,
+        "_rho_target": rho_target,
     }
 
 
@@ -248,15 +253,22 @@ def analyse(reps: list[dict], n_link: int) -> dict:
         r_stack = np.zeros((len(reps), 0))
         pooled = np.zeros(0)
 
+    # `sf` is a constraint on EVERY link, not on the average link: a multi-link
+    # claim is only as strong as its weakest link. Report min-over-links as the
+    # binding figure and keep the distribution.
     sf, v, tau_fit = [], [], []
+    sf_per_link: list[list[float]] = [[] for _ in range(n_link)]
     for rep_fits in fits:
-        for fit in rep_fits:
+        for idx, fit in enumerate(rep_fits):
             if np.isfinite(fit.get("sf", np.nan)):
                 sf.append(float(fit["sf"]))
                 v.append(float(fit["v"]))
+                sf_per_link[idx].append(float(fit["sf"]))
             t = fit.get("tau_from_fit_s", np.nan)
             if np.isfinite(t) and t > 0:
                 tau_fit.append(float(t))
+    sf_link_median = [float(np.median(x)) if x else float("nan")
+                      for x in sf_per_link]
 
     delta_rms = float(np.sqrt(np.mean([r["controller"]["delta_rms_s"] ** 2
                                        for r in reps])))
@@ -283,6 +295,9 @@ def analyse(reps: list[dict], n_link: int) -> dict:
         "delta_rms_controller_s": delta_rms,
         "sigma2_measured": sigma2,
         "sf_hat_median": float(np.median(sf)) if sf else None,
+        "sf_hat_per_link_median": sf_link_median,
+        "sf_hat_min_over_links": (float(np.nanmin(sf_link_median))
+                                  if sf_link_median else None),
         "tau_hat_median_s": float(np.median(tau_fit)) if tau_fit else None,
         "v_pred_over_sigma2": v_pred_over_sigma2,
     }
@@ -370,6 +385,25 @@ def main() -> None:
     out.parent.mkdir(parents=True, exist_ok=True)
     out.write_text(json.dumps(payload, indent=2) + "\n", encoding="utf-8")
     chown_back(out)
+
+    # ★ The raw series are the actual data; the JSON holds derived statistics.
+    #   rho_target is deterministic given the seed, so storing both makes the
+    #   nugget directly observable as eps = rho_measured - rho_target, with no
+    #   estimator and no model assumption in between. That yields v, rho_eps
+    #   for all 28 pairs, and ACF(eps) -- the whiteness assumption the whole
+    #   nugget-immunity argument rests on and that nothing has yet tested.
+    series = out.with_name(out.stem.replace("g2_kill_test", "g2_kill_series")
+                           + ".npz")
+    np.savez_compressed(
+        series,
+        rho_measured=np.stack([r["_rho_measured"] for r in reps]),
+        rho_target=np.stack([r["_rho_target"] for r in reps]),
+        ifaces=np.array(IFACE[:n_link]),
+        cap_bps=np.asarray(CAP_BPS[:n_link]),
+        dt_s=DT_S, tau_s=TAU_S, omega=OMEGA, seed=SEED,
+    )
+    chown_back(series)
+    print(f"{series}")
     print(f"{out}")
     print(json.dumps(stats, indent=2))
     if not smoke:
