@@ -29,6 +29,7 @@ from pathlib import Path
 import numpy as np
 
 from tools.g1_estimator_bias_sim import provenance
+from tools import g3_dryrun
 from tools.g3_dryrun import LINKS, physical_trace
 
 OUT = Path("results/SMOKE/phase-G2/g2_kill_null.json")
@@ -41,6 +42,15 @@ N_REPLICATES = 4
 N_TRIALS = 400
 SEED = 2026_09_05
 N_PAIRS = len(LINKS) * (len(LINKS) - 1) // 2
+
+# ★ `tools.g3_dryrun.ar1` reads the module-level `DT_S` (0.2 s) rather than a
+# caller-supplied step, so `physical_trace(tau_s=...)` silently generates
+# `phi = exp(-DT_S/tau)`. Driving that series at a different `dt` realises
+# `tau_eff = -dt/log(phi)`, not `tau`. Run 1 of the kill test was executed at
+# `tau_eff = 1.0 s` instead of the signed 2.0 s for exactly this reason, and
+# was recorded invalid. Bind the constant to the step actually used, and put
+# the value in the artifact so the realised tau is never implicit again.
+g3_dryrun.DT_S = DT_S
 
 
 def fisher_pool(rs: np.ndarray) -> np.ndarray:

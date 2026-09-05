@@ -1,0 +1,91 @@
+{
+  "schema": "dt4n.phase_g2.kill_test.v1",
+  "status": "SMOKE_PIPELINE_CHECK",
+  "prereg": "docs/phase-G/58-prereg-g2-kill-test.md",
+  "prereg_tag": "phase-G2-kill-test-prereg",
+  "provenance": {
+    "git_head_at_execution": "3149f30ac034cd21906b1b06ac9aaf0ddaf2fa4d",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 5
+  },
+  "design": {
+    "omega": 0.0,
+    "tau_s": 2.0,
+    "dt_s": 0.1,
+    "T_run_s": 60.0,
+    "n_windows": 600,
+    "n_links": 1,
+    "n_replicates": 1,
+    "qdisc_limit_frames": 300,
+    "frame_bytes": 1442,
+    "seed": 20260905,
+    "host_quiesced": false,
+    "rate_path": "tools.g3_dryrun.physical_trace",
+    "tau_estimator": "measurement_path_calib.estimate_nugget slope"
+  },
+  "analysis": {
+    "kill_1_max_abs_r": null,
+    "kill_1_median_abs_r": null,
+    "pooled_abs_r_sorted": [],
+    "per_replicate_max_abs_r": [],
+    "kill_2_underrun_fraction": 0.0,
+    "kill_3_v_measured": 7.83430000909809e-05,
+    "kill_3_v_predicted": 4.07134687743117e-11,
+    "kill_3_ratio": 1924252.6478218352,
+    "kill_4_max_abs_sink_ratio_error": 3.5293429490490524e-05,
+    "delta_rms_controller_s": 7.546104144978337e-05,
+    "sigma2_measured": 0.0007149777327559492,
+    "sf_hat_median": 0.8904259580378813,
+    "tau_hat_median_s": 0.9391498781116822,
+    "v_pred_over_sigma2": 5.694368776685924e-08
+  },
+  "gates": null,
+  "replicates": [
+    {
+      "replicate": 0,
+      "wall_s": 60.00109894399975,
+      "controller": {
+        "delta_mean_s": 7.501129420234065e-05,
+        "delta_p50_s": 7.439150158461416e-05,
+        "delta_p95_s": 8.75019019076717e-05,
+        "delta_p99_s": 9.867727236269275e-05,
+        "delta_max_s": 0.0001411440007359488,
+        "delta_rms_s": 7.546104144978337e-05,
+        "n_windows": 600,
+        "dt_s": 0.1,
+        "tc_stderr_head": "",
+        "tc_stderr_empty": true
+      },
+      "sampler": {
+        "delta_mean_s": 7.899763696817293e-05,
+        "delta_p50_s": 7.798300066497177e-05,
+        "delta_p95_s": 9.076295064005535e-05,
+        "delta_p99_s": 0.00010360509111706048,
+        "delta_max_s": 0.00011767500109272078,
+        "delta_rms_s": 7.934826228317158e-05,
+        "read_span_p95_s": 0.00019019020146515683
+      },
+      "backlog": {
+        "n_samples": 297,
+        "underrun_fraction_per_link": {
+          "g2v0": 0.0
+        },
+        "underrun_fraction": 0.0,
+        "drops_max": 0
+      },
+      "rho_target_mean": [
+        0.8552549832768244
+      ],
+      "rho_measured_mean": [
+        0.8552561090396775
+      ],
+      "rho_measured_sd": [
+        0.026739067537144022
+      ],
+      "sink_rate_ratio": [
+        1.0000352934294905
+      ]
+    }
+  ]
+}

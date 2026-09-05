@@ -3,10 +3,10 @@
   "status": "SYNTHETIC_NULL_CALIBRATION_NO_EXPERIMENTAL_DATA",
   "principle": "G-L90: calibrate a gate's null before signing the gate",
   "provenance": {
-    "git_head_at_execution": "eafbbef75918086545a27b439227e83ba92e82e4",
-    "worktree_dirty_at_execution": false,
+    "git_head_at_execution": "3149f30ac034cd21906b1b06ac9aaf0ddaf2fa4d",
+    "worktree_dirty_at_execution": true,
     "dirty_scope": "tracked files only",
-    "untracked_paths_present": 0
+    "untracked_paths_present": 7
   },
   "design": {
     "omega": 0.0,
@@ -23,31 +23,31 @@
     "pooling": "Fisher z mean over replicates"
   },
   "max_abs_r_over_pairs": {
-    "median": 0.05578962521496701,
-    "p95": 0.07849466550507832,
-    "p99": 0.08837960215525562,
-    "max": 0.09565572743072479
+    "median": 0.07961585360933225,
+    "p95": 0.11068976576459222,
+    "p99": 0.12207747721140412,
+    "max": 0.14095055922826732
   },
   "median_abs_r_over_pairs": {
-    "median": 0.01707706624344117,
-    "p95": 0.023099000646855668,
-    "p99": 0.025354042887838185
+    "median": 0.024110791004985775,
+    "p95": 0.03333205595197849,
+    "p99": 0.03682759806697418
   },
   "gate_feasibility": [
     {
       "gate": 0.1,
-      "p_pass_under_null": 1.0,
-      "safety_factor_over_null_p99": 1.1314828032867918
+      "p_pass_under_null": 0.885,
+      "safety_factor_over_null_p99": 0.8191519212575791
     },
     {
       "gate": 0.15,
       "p_pass_under_null": 1.0,
-      "safety_factor_over_null_p99": 1.6972242049301876
+      "safety_factor_over_null_p99": 1.2287278818863685
     },
     {
       "gate": 0.2,
       "p_pass_under_null": 1.0,
-      "safety_factor_over_null_p99": 2.2629656065735837
+      "safety_factor_over_null_p99": 1.6383038425151581
     }
   ]
 }
