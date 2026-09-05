@@ -1,0 +1,820 @@
+{
+  "schema": "dt4n.phase_g2.estimator_bias_nugget_model.v1",
+  "status": "SYNTHETIC_DIAGNOSTIC_NO_EXPERIMENTAL_DATA",
+  "principle": "NT 53 applied to the NOISE MODEL, not only its size: G'.2 measured ACF(1) = -0.5019 on the real path, so the white-nugget simulation of doc 55 modelled the wrong noise",
+  "provenance": {
+    "git_head_at_execution": "be0198072aa78225da9e16712feebc09c6cdfe58",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 0
+  },
+  "design": {
+    "seed": 20260905,
+    "n_trial_per_cell": 300,
+    "n_fit_lags": 8,
+    "gate_tolerance": 0.2,
+    "measured_acf1_on_real_path": -0.5019
+  },
+  "rows": [
+    {
+      "tau_s": 1.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.05,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.973712785884733,
+        "p05": 0.8139807536882406,
+        "p95": 1.1912086497309906,
+        "bias_factor": 0.973712785884733,
+        "med3_corrected_p05": 0.8836970796443261,
+        "med3_corrected_p95": 1.119052552996941,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 1.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.05,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9892727976464684,
+        "p05": 0.7828336735230305,
+        "p95": 1.230887068338306,
+        "bias_factor": 0.9892727976464684,
+        "med3_corrected_p05": 0.8516504736040439,
+        "med3_corrected_p95": 1.1454458903049476,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 1.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.05,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.0275672198591752,
+        "p05": 0.8577246882219681,
+        "p95": 1.2749662295153927,
+        "bias_factor": 1.0275672198591752,
+        "med3_corrected_p05": 0.898277171325829,
+        "med3_corrected_p95": 1.1538923373703263,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 1.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.05,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9743076110119018,
+        "p05": 0.7852285083568594,
+        "p95": 1.182992116908928,
+        "bias_factor": 0.9743076110119018,
+        "med3_corrected_p05": 0.8604730014231362,
+        "med3_corrected_p95": 1.1103557748072466,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 1.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.05,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9797461064802369,
+        "p05": 0.8103960194400407,
+        "p95": 1.1945573965848644,
+        "bias_factor": 0.9797461064802369,
+        "med3_corrected_p05": 0.884916064883134,
+        "med3_corrected_p95": 1.124986357646218,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 1.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.05,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9687563649682162,
+        "p05": 0.7827290946981841,
+        "p95": 1.2123205802639818,
+        "bias_factor": 0.9687563649682162,
+        "med3_corrected_p05": 0.8596867831220696,
+        "med3_corrected_p95": 1.1293956502048212,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 1.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.05,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.0851265692983545,
+        "p05": 0.8891105389454868,
+        "p95": 1.3325380596532894,
+        "bias_factor": 1.0851265692983545,
+        "med3_corrected_p05": 0.8777857878546383,
+        "med3_corrected_p95": 1.1355921038842822,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 1.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.05,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9534504063090208,
+        "p05": 0.7967744414349601,
+        "p95": 1.1708332109925597,
+        "bias_factor": 0.9534504063090208,
+        "med3_corrected_p05": 0.8871229595463374,
+        "med3_corrected_p95": 1.1595552116309216,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 3.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.15,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9843396345153245,
+        "p05": 0.8036283489315632,
+        "p95": 1.2293374658390808,
+        "bias_factor": 0.9843396345153245,
+        "med3_corrected_p05": 0.8554397839188611,
+        "med3_corrected_p95": 1.1367625356774855,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 3.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.15,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9615473111101297,
+        "p05": 0.7626618893913036,
+        "p95": 1.2242135094171942,
+        "bias_factor": 0.9615473111101297,
+        "med3_corrected_p05": 0.8659892206765889,
+        "med3_corrected_p95": 1.1520787266275871,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 3.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.15,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.0221753898641368,
+        "p05": 0.845682091205752,
+        "p95": 1.2433039021151935,
+        "bias_factor": 1.0221753898641368,
+        "med3_corrected_p05": 0.9001496745416783,
+        "med3_corrected_p95": 1.1244844087146126,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 3.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.15,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9684929449368755,
+        "p05": 0.7942946006659739,
+        "p95": 1.1866976679510044,
+        "bias_factor": 0.9684929449368755,
+        "med3_corrected_p05": 0.8621410844511784,
+        "med3_corrected_p95": 1.185398322538259,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 3.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.15,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9803863810144717,
+        "p05": 0.8010976643620129,
+        "p95": 1.2019180800533231,
+        "bias_factor": 0.9803863810144717,
+        "med3_corrected_p05": 0.8758466636688257,
+        "med3_corrected_p95": 1.1627221308205236,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 3.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.15,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9755414544461518,
+        "p05": 0.7818344383388294,
+        "p95": 1.2135304663592992,
+        "bias_factor": 0.9755414544461518,
+        "med3_corrected_p05": 0.8819677270030711,
+        "med3_corrected_p95": 1.1532195504160687,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 3.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.15,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.06975909776516,
+        "p05": 0.8897312807520139,
+        "p95": 1.3304337295447917,
+        "bias_factor": 1.06975909776516,
+        "med3_corrected_p05": 0.8886019613971421,
+        "med3_corrected_p95": 1.1095605222990894,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 3.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.15,
+      "n_samples": 4000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9711110223598158,
+        "p05": 0.812762872885337,
+        "p95": 1.219739002618075,
+        "bias_factor": 0.9711110223598158,
+        "med3_corrected_p05": 0.873292530143431,
+        "med3_corrected_p95": 1.1640072416506004,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 5.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 5000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.97517149673333,
+        "p05": 0.7934373523061454,
+        "p95": 1.1624805824985625,
+        "bias_factor": 0.97517149673333,
+        "med3_corrected_p05": 0.8652302877324091,
+        "med3_corrected_p95": 1.1353775127534598,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 5.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 5000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9892802545979895,
+        "p05": 0.8332410499709303,
+        "p95": 1.2052423001687778,
+        "bias_factor": 0.9892802545979895,
+        "med3_corrected_p05": 0.8963434735939841,
+        "med3_corrected_p95": 1.131607362671155,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 5.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 5000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.039563986544753,
+        "p05": 0.8501024915867536,
+        "p95": 1.255723328967008,
+        "bias_factor": 1.039563986544753,
+        "med3_corrected_p05": 0.8651857472867477,
+        "med3_corrected_p95": 1.1120441403242114,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 5.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 5000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9717718299828482,
+        "p05": 0.8197361127023036,
+        "p95": 1.1926518179753574,
+        "bias_factor": 0.9717718299828482,
+        "med3_corrected_p05": 0.8864795450158971,
+        "med3_corrected_p95": 1.1455268871433752,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 5.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 5000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9830242814992083,
+        "p05": 0.8030429566824547,
+        "p95": 1.16925701361883,
+        "bias_factor": 0.9830242814992083,
+        "med3_corrected_p05": 0.8924056013350641,
+        "med3_corrected_p95": 1.1292284635249252,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 5.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 5000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9872215459703642,
+        "p05": 0.8104440594539489,
+        "p95": 1.1807408243942612,
+        "bias_factor": 0.9872215459703642,
+        "med3_corrected_p05": 0.8867339271666416,
+        "med3_corrected_p95": 1.1400380732475217,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 5.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 5000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.1194157885246712,
+        "p05": 0.9032433152805479,
+        "p95": 1.3518669446334628,
+        "bias_factor": 1.1194157885246712,
+        "med3_corrected_p05": 0.8821332276614356,
+        "med3_corrected_p95": 1.102741427736689,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 5.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 5000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9806835399646749,
+        "p05": 0.7986718932465906,
+        "p95": 1.1829478564119738,
+        "bias_factor": 0.9806835399646749,
+        "med3_corrected_p05": 0.9025790845483824,
+        "med3_corrected_p95": 1.1247815510856054,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 10.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 10000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9694513365476869,
+        "p05": 0.8089633014653856,
+        "p95": 1.1404519964916453,
+        "bias_factor": 0.9694513365476869,
+        "med3_corrected_p05": 0.9092971451342882,
+        "med3_corrected_p95": 1.1216244938285322,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 10.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 10000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9829705686939084,
+        "p05": 0.8089087705932041,
+        "p95": 1.1882697308811723,
+        "bias_factor": 0.9829705686939084,
+        "med3_corrected_p05": 0.9041142106260119,
+        "med3_corrected_p95": 1.1195847106674721,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 10.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 10000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.1089676948675176,
+        "p05": 0.9341801145358313,
+        "p95": 1.3289229961224418,
+        "bias_factor": 1.1089676948675176,
+        "med3_corrected_p05": 0.8785603389161453,
+        "med3_corrected_p95": 1.1275040037292758,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 10.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 10000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9961903992142571,
+        "p05": 0.8333424863631429,
+        "p95": 1.1570417608610728,
+        "bias_factor": 0.9961903992142571,
+        "med3_corrected_p05": 0.8891170307321948,
+        "med3_corrected_p95": 1.1216348908877982,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 10.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 10000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.975122006344215,
+        "p05": 0.8157107952949988,
+        "p95": 1.1620543336393274,
+        "bias_factor": 0.975122006344215,
+        "med3_corrected_p05": 0.8870848491850656,
+        "med3_corrected_p95": 1.1261901665689722,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 10.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 10000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9917837409465342,
+        "p05": 0.8126678454879993,
+        "p95": 1.1895648025783103,
+        "bias_factor": 0.9917837409465342,
+        "med3_corrected_p05": 0.8680278494462551,
+        "med3_corrected_p95": 1.115035622894135,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 10.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 10000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.3043286658238236,
+        "p05": 1.081378062275739,
+        "p95": 1.5438860906316672,
+        "bias_factor": 1.3043286658238236,
+        "med3_corrected_p05": 0.8809674169222372,
+        "med3_corrected_p95": 1.1080241524048378,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 10.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 10000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9720812404248776,
+        "p05": 0.8278552591479424,
+        "p95": 1.1795460281447583,
+        "bias_factor": 0.9720812404248776,
+        "med3_corrected_p05": 0.8886532118297966,
+        "med3_corrected_p95": 1.125581913534787,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 20.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 20000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9810148847666047,
+        "p05": 0.836209453678072,
+        "p95": 1.1614077613963107,
+        "bias_factor": 0.9810148847666047,
+        "med3_corrected_p05": 0.9165069017267531,
+        "med3_corrected_p95": 1.1051936973037337,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 20.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 20000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9757829437391641,
+        "p05": 0.8284201352706222,
+        "p95": 1.1561595299861003,
+        "bias_factor": 0.9757829437391641,
+        "med3_corrected_p05": 0.8935023192501785,
+        "med3_corrected_p95": 1.1199718230841336,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 20.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 20000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.2674477116832898,
+        "p05": 1.0570819604529247,
+        "p95": 1.4967852579518353,
+        "bias_factor": 1.2674477116832898,
+        "med3_corrected_p05": 0.904934004869192,
+        "med3_corrected_p95": 1.1424310573718872,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 20.0,
+      "T_over_tau": 200,
+      "sf_true": 0.95,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 20000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.97004972957552,
+        "p05": 0.8172063828647105,
+        "p95": 1.1614394245313597,
+        "bias_factor": 0.97004972957552,
+        "med3_corrected_p05": 0.9090857513361154,
+        "med3_corrected_p95": 1.131906858306014,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 20.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 20000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9839610463077703,
+        "p05": 0.8185643848170961,
+        "p95": 1.1373123163141463,
+        "bias_factor": 0.9839610463077703,
+        "med3_corrected_p05": 0.8819170878454516,
+        "med3_corrected_p95": 1.1051422259151311,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 20.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "white",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 20000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9825908611808125,
+        "p05": 0.8376269258457839,
+        "p95": 1.16199754599832,
+        "bias_factor": 0.9825908611808125,
+        "med3_corrected_p05": 0.8982050025606222,
+        "med3_corrected_p95": 1.109631975610554,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 20.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 1,
+      "dt_s": 0.2,
+      "n_samples": 20000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 1.8797352807708152,
+        "p05": 1.574055823054822,
+        "p95": 2.2620873277752738,
+        "bias_factor": 1.8797352807708152,
+        "med3_corrected_p05": 0.8986383923572249,
+        "med3_corrected_p95": 1.1182291214103806,
+        "feasible": true
+      }
+    },
+    {
+      "tau_s": 20.0,
+      "T_over_tau": 200,
+      "sf_true": 0.9,
+      "nugget_model": "ma1",
+      "fit_lag_lo": 2,
+      "dt_s": 0.2,
+      "n_samples": 20000,
+      "loglinear_slope_only": {
+        "n_ok": 300,
+        "ok_fraction": 1.0,
+        "median": 0.9857337362774208,
+        "p05": 0.8407444594097795,
+        "p95": 1.1491297235923905,
+        "bias_factor": 0.9857337362774208,
+        "med3_corrected_p05": 0.9004174590854607,
+        "med3_corrected_p95": 1.1159736529200044,
+        "feasible": true
+      }
+    }
+  ]
+}
