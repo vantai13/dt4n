@@ -1,0 +1,83 @@
+{
+  "schema": "dt4n.phase_g2.g3a_readjudicated.v1",
+  "status": "READJUDICATED_FROM_STORED_SERIES",
+  "source_series": "results/SMOKE/phase-G2/g3a_omega_series.npz",
+  "measured_artifact": "results/SMOKE/phase-G2/g3a_omega_sweep.json",
+  "provenance": {
+    "git_head_at_execution": "37165a4cf49ee5ee60a474b2006beadd6fd72905",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 1
+  },
+  "defect": "P-7 was implemented as max over per-replicate maxima while its null is computed on the Fisher-z pooled statistic. The signed 0.040 threshold is infeasible on the per-replicate statistic, whose own null p99 is higher than the gate.",
+  "null_3_replicates": {
+    "pooled": {
+      "median": 0.024422092654055014,
+      "p95": 0.03583725868814014,
+      "p99": 0.041823444633877944
+    },
+    "per_replicate": {
+      "median": 0.05087905381951894,
+      "p95": 0.06483275516805316,
+      "p99": 0.07334073311224666
+    }
+  },
+  "gate": 0.04,
+  "p_pass_gate_under_null": {
+    "pooled": 0.9825,
+    "per_replicate": 0.045
+  },
+  "levels": [
+    {
+      "omega": 0.0,
+      "rho_eps_pooled_max": 0.033564202480001505,
+      "rho_eps_per_replicate_max": 0.04728365982593777,
+      "p_null_ge_pooled": 0.08,
+      "p_null_ge_per_replicate": 0.705,
+      "pooled_inside_null": true,
+      "per_replicate_inside_null": true
+    },
+    {
+      "omega": 0.25,
+      "rho_eps_pooled_max": 0.02602532131653646,
+      "rho_eps_per_replicate_max": 0.044674332010151106,
+      "p_null_ge_pooled": 0.4175,
+      "p_null_ge_per_replicate": 0.825,
+      "pooled_inside_null": true,
+      "per_replicate_inside_null": true
+    },
+    {
+      "omega": 0.5,
+      "rho_eps_pooled_max": 0.020048450970201127,
+      "rho_eps_per_replicate_max": 0.06158263305450617,
+      "p_null_ge_pooled": 0.8825,
+      "p_null_ge_per_replicate": 0.0975,
+      "pooled_inside_null": true,
+      "per_replicate_inside_null": true
+    },
+    {
+      "omega": 0.75,
+      "rho_eps_pooled_max": 0.022859642628961528,
+      "rho_eps_per_replicate_max": 0.05868685066024297,
+      "p_null_ge_pooled": 0.6625,
+      "p_null_ge_per_replicate": 0.15,
+      "pooled_inside_null": true,
+      "per_replicate_inside_null": true
+    },
+    {
+      "omega": 1.0,
+      "rho_eps_pooled_max": 0.021615317665920897,
+      "rho_eps_per_replicate_max": 0.05578067135615522,
+      "p_null_ge_pooled": 0.7725,
+      "p_null_ge_per_replicate": 0.2475,
+      "pooled_inside_null": true,
+      "per_replicate_inside_null": true
+    }
+  ],
+  "verdict": {
+    "P7_pooled": true,
+    "P7_per_replicate": false,
+    "all_levels_inside_own_null_pooled": true,
+    "all_levels_inside_own_null_per_replicate": true
+  }
+}
