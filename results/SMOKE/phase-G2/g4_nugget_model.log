@@ -1,0 +1,58 @@
+cell                kappa      ACF1  max|rho_eps| run_max aligned
+t2_s0.028           1.9887  -0.49439      0.03200 0.05530 True
+t2_s0.045           2.0120  -0.49779      0.02259 0.04714 True
+t5_s0.028           2.0040  -0.49755      0.02560 0.04011 True
+t5_s0.045           2.0070  -0.49884      0.01677 0.03371 True
+t30_s0.036          2.0072  -0.49683      0.01264 0.01264 True
+g2_run3             2.0217  -0.50121      0.02268 0.05867 True
+{
+  "summary": {
+    "G3b": {
+      "kappa_median": 2.0045011279305083,
+      "kappa_iqr": [
+        1.9929499244761408,
+        2.014869470670364
+      ],
+      "kappa_range": [
+        1.8972180431021595,
+        2.055541078252653
+      ],
+      "acf1_median": -0.4974676637599274,
+      "rho_eps_max": 0.032003776965883496,
+      "rho_eps_run_max": 0.05530262685707261,
+      "n_link_runs": 72
+    },
+    "G2": {
+      "kappa_median": 2.0217309849895324,
+      "kappa_iqr": [
+        2.010247507314339,
+        2.0331792335762167
+      ],
+      "kappa_range": [
+        1.971602156448793,
+        2.0631485842311146
+      ],
+      "acf1_median": -0.5012137712798036,
+      "rho_eps_max": 0.022680882840285497,
+      "rho_eps_run_max": 0.058669728048576224,
+      "n_link_runs": 32
+    }
+  },
+  "sf_self_test": {
+    "rms": 0.006817034768811326,
+    "max_abs": 0.020957088609038443,
+    "median_predicted_minus_measured": -0.0005912424148827311,
+    "n": 40,
+    "gate": 0.02
+  },
+  "gates": {
+    "M-1_aligned": true,
+    "M-2_finite": true,
+    "M-3_rho_eps_within_B2": true,
+    "M-4_kappa_in_band": true,
+    "M-5_acf1_matches_theory": true,
+    "M-6_sf_rms": true
+  },
+  "overall": "PASS"
+}
+results/SMOKE/phase-G2/g4_nugget_model.json

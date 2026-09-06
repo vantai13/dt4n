@@ -44,9 +44,9 @@ def main():
     for i,r in enumerate(model['cells']):
         axes[0].scatter(np.full(8,i),r['kappa_per_link'],s=24)
         axes[1].scatter(np.full(8,i),r['acf1_per_link'],s=24)
-    axes[0].axhspan(1.5,2.5,color='#e1f2e7'); axes[0].axhline(2,color='black',ls='--')
+    axes[0].axhspan(1.5,2.5,color='#e1f2e7',zorder=0); axes[0].axhline(2,color='black',ls='--')
     axes[0].set_title('Direct kappa; fixed theory = 2')
-    axes[1].axhspan(-.55,-.45,color='#e1f2e7'); axes[1].axhline(-.5,color='black',ls='--')
+    axes[1].axhspan(-.55,-.45,color='#e1f2e7',zorder=0); axes[1].axhline(-.5,color='black',ls='--')
     axes[1].set_title('Residual ACF at lag 1')
     axes[2].scatter(range(6),[r['rho_eps_max'] for r in model['cells']],label='Pooled by cell')
     axes[2].scatter(range(6),[r['rho_eps_run_max'] for r in model['cells']],marker='x',label='Worst individual run')

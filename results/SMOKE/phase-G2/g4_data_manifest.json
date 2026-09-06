@@ -1,0 +1,991 @@
+{
+ "schema": "dt4n.data_manifest.v1",
+ "generated_utc": "2026-09-06T09:03:25.100198+00:00",
+ "git_head": "f5d800665424c5101b9c01b0309a69e0a4d188be",
+ "git_dirty": false,
+ "patterns": [
+  "*.parquet",
+  "*.csv.gz",
+  "*.npz"
+ ],
+ "roots": [
+  "results"
+ ],
+ "n_files": 134,
+ "total_bytes": 6952580229,
+ "by_tier": {
+  "LIVE": {
+   "n": 44,
+   "bytes": 2880270088
+  },
+  "PENDING": {
+   "n": 22,
+   "bytes": 1510291722
+  },
+  "SMOKE": {
+   "n": 19,
+   "bytes": 509438407
+  },
+  "SUPERSEDED": {
+   "n": 49,
+   "bytes": 2052580012
+  }
+ },
+ "doi": null,
+ "custody": {
+  "offsite_backup": {
+   "status": "USER_ATTESTED_PRESENT",
+   "location_class": "user-managed remote server",
+   "exact_location_disclosed": false,
+   "checksum_verified_in_workspace": false,
+   "attested_utc": "2026-08-30T02:06:40+00:00"
+  },
+  "phase_g_local_gate": {
+   "status": "OPEN_BY_USER_CUSTODY_WAIVER",
+   "scope": "Phase G internal experiments and local RAW capture",
+   "public_doi_equivalent": false,
+   "allows_historical_data_cleanup": false,
+   "allows_claim_of_public_archival": false
+  }
+ },
+ "files": [
+  {
+   "path": "results/LIVE/phase-20R/decision_error_by_age_by_regime_slaB.parquet",
+   "tier": "LIVE",
+   "bytes": 30218,
+   "mtime_utc": "2026-08-26T08:21:06.923185+00:00",
+   "sha256": "fe6ead4589544b9674605c40733af8f34408c6ed49766285ff099cf10bcf036a"
+  },
+  {
+   "path": "results/LIVE/phase-20R/truth_table.parquet",
+   "tier": "LIVE",
+   "bytes": 19642,
+   "mtime_utc": "2026-08-12T00:21:09.175081+00:00",
+   "sha256": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.650_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69267033,
+   "mtime_utc": "2026-08-24T08:42:57.209912+00:00",
+   "sha256": "7a8171a8e7f52c76a184dbf112e10db5f2b3ed590fada080995858de1291c6a3"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.650_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69257577,
+   "mtime_utc": "2026-08-24T08:41:36.833918+00:00",
+   "sha256": "d72837836414d81434084c80ee94f84c3ffd993ea5efde4b882870554771da45"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.675_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 68942824,
+   "mtime_utc": "2026-08-24T08:43:45.817908+00:00",
+   "sha256": "7d935dfafcf57c4f9e60084fed7954394dec7a1e8b1f78866050f0a6a1801799"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.675_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 68932495,
+   "mtime_utc": "2026-08-24T08:41:46.653917+00:00",
+   "sha256": "58316e62d7009b654460b5c10601c1e7791d320d7decb6f33a824b9a2363cd51"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.700_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 68781203,
+   "mtime_utc": "2026-08-23T15:24:07.381019+00:00",
+   "sha256": "04f6899e5a6fa1c760033fab4e813716efd4c8f8edd8f09e1ea90a06bc89274e"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.700_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 68764875,
+   "mtime_utc": "2026-08-23T15:24:16.565017+00:00",
+   "sha256": "840ed29688c316938c155eb03a8e8962080006a716f08825e705b76448758f32"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.740_U3_measured_v7_A069.parquet",
+   "tier": "LIVE",
+   "bytes": 68230897,
+   "mtime_utc": "2026-08-26T00:20:51.250287+00:00",
+   "sha256": "3f9cf602f846f268023a73490cb0d7ae55f9369f32632972c35c9e627b674994"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.744_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 68134714,
+   "mtime_utc": "2026-08-26T01:27:29.461889+00:00",
+   "sha256": "c53845f11352753aadecfc1c608e9cb371e2f67f4a60c5ec7ed14544c92ad172"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.750_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 68022527,
+   "mtime_utc": "2026-08-26T01:27:38.381889+00:00",
+   "sha256": "ea8bd560176e40ce7e6154d6ca5b626cdc06215cd9b3b162004f96955451ae49"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.756_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 67958375,
+   "mtime_utc": "2026-08-26T01:27:47.493889+00:00",
+   "sha256": "d8a59bf44aa901e9a82a98aa6f056124ecda803efa632fd1980cc46e176a505b"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.760_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 67926745,
+   "mtime_utc": "2026-08-26T01:27:56.405889+00:00",
+   "sha256": "d7357ccb489cbd828c245d2cffe41ed4226943ef28c7ae23fe65e473d0651fa9"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.764_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 67922336,
+   "mtime_utc": "2026-08-26T01:28:05.553889+00:00",
+   "sha256": "d8b7c636d40c980a1923e94b1a6c40c842aa8e2a4ca5cc17c065e848345a8a34"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.770_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 67927244,
+   "mtime_utc": "2026-08-26T01:28:14.585889+00:00",
+   "sha256": "aa8dd053011361d83fe517786cd893acb7ff9f335ecbabbb93b2dda004419373"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.780_U3_measured_v7_A069.parquet",
+   "tier": "LIVE",
+   "bytes": 67919603,
+   "mtime_utc": "2026-08-26T00:21:32.062281+00:00",
+   "sha256": "8a1f218ae3d6de897b1d97334f686672e87cff3e9d8eff8d3ef50283eb23e0b5"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.820_U3_measured_v7_A069.parquet",
+   "tier": "LIVE",
+   "bytes": 67747347,
+   "mtime_utc": "2026-08-26T00:22:46.618273+00:00",
+   "sha256": "ab9c06fa835803f26207c7f36253cef8cc3033c45d8fa3ff3c60bf2ec60c4c0f"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.850_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 67671943,
+   "mtime_utc": "2026-08-23T15:24:41.533014+00:00",
+   "sha256": "1e0adcc38b75ba625b0a9f35c8974ca3bb84ce122a242b20c75ba508cbc1f82a"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.850_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 67677047,
+   "mtime_utc": "2026-08-23T15:24:51.121013+00:00",
+   "sha256": "4a6ac552eb991f2fb55c0ad3980b81e6e8b5862981d1f7838135e8d362dffcd9"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.925_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 67639222,
+   "mtime_utc": "2026-08-23T15:25:16.537009+00:00",
+   "sha256": "a613f83f405458a85dcb82c10356649ffa8d26e9dffe738d2f49517bbee6a9ef"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.925_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 67633765,
+   "mtime_utc": "2026-08-23T15:25:26.081007+00:00",
+   "sha256": "92a44f5d18e240b7618c20a1905fcdb777cf4e4019655c2d7392a2a801c14f2b"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.960_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 67637677,
+   "mtime_utc": "2026-08-23T15:25:51.533003+00:00",
+   "sha256": "a48ca3c6be62f779677148cc6d24f29cbe4e2f7b21ee14cb82bcd61a014de809"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_h2_0.960_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 67633035,
+   "mtime_utc": "2026-08-23T15:26:00.709002+00:00",
+   "sha256": "314e4ae23cbfb83838ec2acd572111a0e74086743bd89e00a58f2fd0b851d7ec"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.700_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 67672276,
+   "mtime_utc": "2026-08-23T15:21:56.557039+00:00",
+   "sha256": "3aef4e8af775d1ef0d4cb35fbe26b233a68c5519896bfa2b91dfb27a43fe5e66"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.700_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 67670698,
+   "mtime_utc": "2026-08-23T15:22:05.625038+00:00",
+   "sha256": "60687280ec14c08d013fabce28abecce226506cd99794e19a95b6fc31f8e05ab"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.740_U3_measured_v7_A069.parquet",
+   "tier": "LIVE",
+   "bytes": 67945936,
+   "mtime_utc": "2026-08-26T00:17:24.730303+00:00",
+   "sha256": "f1e657a57b70dd0b0f0adc511c742debab5c030279f28d9e01ce4a0a9eaebc36"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.744_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 68103056,
+   "mtime_utc": "2026-08-26T01:26:33.205895+00:00",
+   "sha256": "8ef0cdfe3193193443133e17b54fd62287ce74c0f7622fc49598ce340f638853"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.750_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 68441515,
+   "mtime_utc": "2026-08-26T01:26:42.945894+00:00",
+   "sha256": "22a947ae8dbb19b923eec3f122d38dacc9d89e7b070c16e7274af43ef0e5b946"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.756_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 68752600,
+   "mtime_utc": "2026-08-26T01:26:52.153893+00:00",
+   "sha256": "aa5f815ecc8878e5c80fb73844b54898eff5bc55847bd4bcabd7944dceefeddb"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.760_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 68889261,
+   "mtime_utc": "2026-08-26T01:27:01.773892+00:00",
+   "sha256": "9194868bcaf6e3fa83d2d5cf7118e228582b67ebdc0805fece2bc73477bfe4a5"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.764_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 68960531,
+   "mtime_utc": "2026-08-26T01:27:11.165891+00:00",
+   "sha256": "4206080c765c988c3ad7aee244117ccd20dd043e0ead5f245560572a927dddf0"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.770_U3_measured_v7_A070W.parquet",
+   "tier": "LIVE",
+   "bytes": 69006991,
+   "mtime_utc": "2026-08-26T01:27:20.549890+00:00",
+   "sha256": "03d9308cd4a0290ccd313c4c41c3e36887c85444894e8b78362696bdcd684972"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.780_U3_measured_v7_A069.parquet",
+   "tier": "LIVE",
+   "bytes": 69070073,
+   "mtime_utc": "2026-08-26T00:18:57.514298+00:00",
+   "sha256": "26ebfad907a354d66954682ffbb14289a804f0aa0ba3973e13fadf5f1c1c4088"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.820_U3_measured_v7_A069.parquet",
+   "tier": "LIVE",
+   "bytes": 69439681,
+   "mtime_utc": "2026-08-26T00:19:54.930292+00:00",
+   "sha256": "133442fda662279c90e2048e18953ec34784ac0f88b3a84fc8a0462907b43dbe"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.850_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69551220,
+   "mtime_utc": "2026-08-23T15:22:29.097034+00:00",
+   "sha256": "3dbafd26c000300c45170df4c1622045aef998880b9590441bca9af35ad2a7c2"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.850_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69526275,
+   "mtime_utc": "2026-08-23T15:22:38.205033+00:00",
+   "sha256": "2674e75559129ec9d689d3cce4a0aac48afc18cc083dbea448bcfc27b13820ac"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.875_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69664764,
+   "mtime_utc": "2026-08-24T08:44:34.305903+00:00",
+   "sha256": "dcd31ef702a01de8720320bced458ada3dd8bd3de678bb5ad915172012215d5a"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.875_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69656300,
+   "mtime_utc": "2026-08-24T08:41:56.489917+00:00",
+   "sha256": "3f1bcd4bacb39dc48929ff06545c543f00e4734bf6b46d2157438a2fa3f122ad"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.900_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69508114,
+   "mtime_utc": "2026-08-24T08:45:22.765899+00:00",
+   "sha256": "9803314336ab6744bc6de6fc3c149d489db3a37eb9c02abc52210090a2018c86"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69483761,
+   "mtime_utc": "2026-08-24T08:42:07.733916+00:00",
+   "sha256": "d10cabfa2aedff40aae9b3c769bb360393b1b36c64da020d5725e0b82d49c939"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.925_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69400971,
+   "mtime_utc": "2026-08-23T15:23:01.973029+00:00",
+   "sha256": "6af7734b63445ca6aeaf20ad6c3d63eaeb2a066a2de3110d0601dfb255525b98"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.925_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69384148,
+   "mtime_utc": "2026-08-23T15:23:10.925028+00:00",
+   "sha256": "3398579bf97b479c56b64cefa9a72beab64591b5b95013e439b39cbc25040adc"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.960_U0_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69240416,
+   "mtime_utc": "2026-08-23T15:23:34.337024+00:00",
+   "sha256": "c7f1962e9c475d6989afc98943030f09af03c81973f21e7185982f9978f6874b"
+  },
+  {
+   "path": "results/LIVE/phase-21R/calib_set_poisson_0.960_U3_measured_v7.parquet",
+   "tier": "LIVE",
+   "bytes": 69223157,
+   "mtime_utc": "2026-08-23T15:23:43.273022+00:00",
+   "sha256": "599a328bc4fc755648b871a764fde73316d26a3431b24ebfefb84aca6af8325f"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.700_U0_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 68676142,
+   "mtime_utc": "2026-08-23T04:02:06.021279+00:00",
+   "sha256": "6585f8d45d54df2eb3af78370461eb774ccc5815ee9f24244fca5698eac14a01"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.700_U1_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 68669159,
+   "mtime_utc": "2026-08-23T04:02:06.435283+00:00",
+   "sha256": "5b277943d6f477be41c5ac3b9e70587caa887eedb4fe24ff21198487d5f0e1e4"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.700_U2_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 68661486,
+   "mtime_utc": "2026-08-23T04:02:06.847287+00:00",
+   "sha256": "2c0fd95f1ceedf26174b307a68d9c24fad6453ad17c43958eea1eedb903bd586"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.700_U3_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 68648822,
+   "mtime_utc": "2026-08-23T04:02:07.259292+00:00",
+   "sha256": "e2f6c368fa5740ed0dafe7db9dafcdfeb545ad7645534e44e495974e9bd510e1"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.850_U0_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 67711779,
+   "mtime_utc": "2026-08-23T04:02:07.685296+00:00",
+   "sha256": "2e30cdfef8066ad1daed726e14d7cac04af46d2bf480fc03bdc6292c5522e559"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.850_U3_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 67712256,
+   "mtime_utc": "2026-08-23T04:02:08.114300+00:00",
+   "sha256": "8b74c6dde48f4ae217d1782535a4e953415e2cf5d6e379338a644fe2532be205"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.925_U0_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 67660331,
+   "mtime_utc": "2026-08-23T04:02:08.519304+00:00",
+   "sha256": "389849dde8aef9d7b86c51fc27aeaac28c726d754db49c9262629c58bdf7ec2a"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.925_U3_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 67660386,
+   "mtime_utc": "2026-08-23T04:02:08.933308+00:00",
+   "sha256": "0031a27a6fe45b223fec9d968007e7cf91f0b858fdbfd6ad1d7e418b02220841"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.960_U0_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 67710792,
+   "mtime_utc": "2026-08-23T04:02:09.344312+00:00",
+   "sha256": "d957d9635d50bd54fd8cdbade8622622f1d81d5cbf0f3570e831b2c057340f2b"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_h2_0.960_U3_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 67714924,
+   "mtime_utc": "2026-08-23T04:02:09.776317+00:00",
+   "sha256": "e700320330450d09830bc9905005d73957ff02e5896ec94859b520db1492292d"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.700_U0_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 67610919,
+   "mtime_utc": "2026-08-23T04:02:10.190321+00:00",
+   "sha256": "6a3979e65ab93f080013430579f8951dd6c979cf1706956bf1b54b2539b2c133"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.700_U3_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 67610196,
+   "mtime_utc": "2026-08-23T04:02:10.612325+00:00",
+   "sha256": "d79bc533388fba9beffbd04fc22493b8d30bb2c158c7b963add2163d4b3f817b"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.850_U0_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69433357,
+   "mtime_utc": "2026-08-23T04:02:11.034329+00:00",
+   "sha256": "e72b3f8e37fa3497ce7dede329fd4e2a593f4ef881fb72e9e5fbbe5bd34e120a"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.850_U1_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69436138,
+   "mtime_utc": "2026-08-23T04:02:11.446333+00:00",
+   "sha256": "9b83a4f22e732f33104882d0d07ec1744cf4ac71a293686f35cf9f1378bf6f5a"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.850_U2_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69445172,
+   "mtime_utc": "2026-08-23T04:02:11.859337+00:00",
+   "sha256": "33abf344c087dac4cdd00b550d1323684baf1dece20bbe01310522871339ee27"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.850_U3_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69425715,
+   "mtime_utc": "2026-08-23T04:02:12.258341+00:00",
+   "sha256": "f48d59dfe562d885d63d2196b2adffbdb118df2e3a541b704ae033a40e95445a"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.925_U0_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69463844,
+   "mtime_utc": "2026-08-23T04:02:12.672345+00:00",
+   "sha256": "14af960c4c43f94b87ccfa0001f5125532f8dd8790c025fe0a1a5dea492d5117"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.925_U1_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69456433,
+   "mtime_utc": "2026-08-23T04:02:13.084349+00:00",
+   "sha256": "35e50287ef21d369d39926d56c7992e4faa8ff90e56354f51751924164e2b3d1"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.925_U2_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69457055,
+   "mtime_utc": "2026-08-23T04:02:13.511354+00:00",
+   "sha256": "d462f40d855a673b81107f66c89ac39d9fb8e93d05125764e72af59a624ee0cd"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.925_U3_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69448644,
+   "mtime_utc": "2026-08-23T04:02:13.926358+00:00",
+   "sha256": "c83adcc25d25c6b1ac3b8510a9fbe84cb6a76b47c4758b62e6ed7edc6b651150"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.960_U0_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69345353,
+   "mtime_utc": "2026-08-23T04:02:14.350362+00:00",
+   "sha256": "117366c967e2b8db258d9a4ea4d2ee0b4362c4270c04854b28f5f0c95d7f1d56"
+  },
+  {
+   "path": "results/PENDING/phase-21R/calib_set_poisson_0.960_U3_measured_v7.parquet",
+   "tier": "PENDING",
+   "bytes": 69332819,
+   "mtime_utc": "2026-08-23T04:02:14.776366+00:00",
+   "sha256": "ce573268c511e4b1cbe6917b52ecb121db7a457f569847b770aee3408ea86382"
+  },
+  {
+   "path": "results/SMOKE/phase-23/a069-invalid-selfcal/main-run/calib_set_h2_0.740_U3_measured_v7_A069.parquet",
+   "tier": "SMOKE",
+   "bytes": 68192867,
+   "mtime_utc": "2026-08-26T00:03:59.902385+00:00",
+   "sha256": "c161e9ef7688430814000e3bb6088a48c134cb927b625fa5b04141dc50164e83"
+  },
+  {
+   "path": "results/SMOKE/phase-23/a069-invalid-selfcal/main-run/calib_set_h2_0.780_U3_measured_v7_A069.parquet",
+   "tier": "SMOKE",
+   "bytes": 67908633,
+   "mtime_utc": "2026-08-26T00:05:04.394380+00:00",
+   "sha256": "84cfeb8fd95089599b479202d9eb11ff871dcd09b9551b9e8ec3dacceaa36aa6"
+  },
+  {
+   "path": "results/SMOKE/phase-23/a069-invalid-selfcal/main-run/calib_set_h2_0.820_U3_measured_v7_A069.parquet",
+   "tier": "SMOKE",
+   "bytes": 67769415,
+   "mtime_utc": "2026-08-26T00:06:29.834370+00:00",
+   "sha256": "5e33cb5b5c5fc0767d07c339d98b96656b4ed7077ff96a2c0cf0790c718b371e"
+  },
+  {
+   "path": "results/SMOKE/phase-23/a069-invalid-selfcal/main-run/calib_set_poisson_0.740_U3_measured_v7_A069.parquet",
+   "tier": "SMOKE",
+   "bytes": 67694353,
+   "mtime_utc": "2026-08-25T23:59:04.510412+00:00",
+   "sha256": "e6464b16c05153da08f6661dac4b3f4654d22604ac21d3cdebac4cae26588abf"
+  },
+  {
+   "path": "results/SMOKE/phase-23/a069-invalid-selfcal/main-run/calib_set_poisson_0.780_U3_measured_v7_A069.parquet",
+   "tier": "SMOKE",
+   "bytes": 68251198,
+   "mtime_utc": "2026-08-26T00:02:04.146396+00:00",
+   "sha256": "0fd37c9da94078527d6f99b2de351b3afd60a9fd8b68b63dbe40baa901484dd6"
+  },
+  {
+   "path": "results/SMOKE/phase-23/a069-invalid-selfcal/main-run/calib_set_poisson_0.820_U3_measured_v7_A069.parquet",
+   "tier": "SMOKE",
+   "bytes": 69103129,
+   "mtime_utc": "2026-08-26T00:03:06.622390+00:00",
+   "sha256": "20e0bd4be75b0eecc849ded01aac3727c3354948253ec7a31edf2f20fdd9ac49"
+  },
+  {
+   "path": "results/SMOKE/phase-23/a069-invalid-selfcal/stdout-leak/calib_set_poisson_0.740_U3_measured_v7_A069.parquet",
+   "tier": "SMOKE",
+   "bytes": 67694353,
+   "mtime_utc": "2026-08-25T23:56:26.658429+00:00",
+   "sha256": "e6464b16c05153da08f6661dac4b3f4654d22604ac21d3cdebac4cae26588abf"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_by_age_by_regime.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 31047,
+   "mtime_utc": "2026-08-26T08:21:06.944185+00:00",
+   "sha256": "5e4d4797a5b5471a93a0eb8898555fd4e682ea33a5356e4b11253deff962596f"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_by_age_summary.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 41827,
+   "mtime_utc": "2026-08-12T00:21:09.115081+00:00",
+   "sha256": "e154ac177fae0bde27e637f9737d128925cc81f149de4b0c78acfd6b79c23faa"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_constant_sigma.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 29039,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "cdc8263c7a69f7a4ad0e42363f3d88ce1278d828391c7315b7856db6ca8723e2"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_delay_only.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 20946,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "604b56c31b01afaa2729973eb4acc6ef703d272ea73441f1be67fb4854360496"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_tau0.2.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 18481,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "a9b2b740f2e19d3115f10136aaec2a0cecf1a7bb11f3e83e475a85ffcf02cd12"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_tau1.0.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 18445,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "94587b3f12fd2393ef5ecd3fdd05b5957ef421d0572a0220b84f1e59dfd9de91"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_tau5.0.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 18297,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "a464a858145ac6e9a548a54e2ad95f600ce68d343f819e70aa7dc617918379a8"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_unimodal.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 41010,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "8e15c6b61861e55952a971a99ec47d5f2cdb745562b1f3d7de3d1d4abb41334f"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/decision_error_w2500.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 40764,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "2161d6f81441e2720486e171a1805f17c9b63b4f4e6e15863dabeadeff0fd0a9"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/margin_cv_a02.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 11923,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "d2dc7c32946b5457db13d00140b283b596a55997be004d18215cc866d82573bd"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/margin_cv_by_tau.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 15004,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "3fc3d9a1bdd3537e83eccb8ada30c19b68b5eeaf91f2d8926bd88965e65a7fb4"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/margin_cv_by_tau_operational.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 14954,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "5a4f10d38ed11f9c61ef1253dce54243cbeac44225e792d3acaae926aa9a73da"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/margin_cv_operational.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 12892,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "7e92c06b2fd37a0a5997654be0620f9d522dc65d40108e4842e3226f942b388a"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/margin_cv_unimodal.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 14730,
+   "mtime_utc": "2026-08-12T00:21:09.119081+00:00",
+   "sha256": "c9d8a99ae03e7fc40aebb8038dc2b5aed0f6d9c09ba043de15aa438cd3f2b703"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-20R/sensitivity_a02.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 27865,
+   "mtime_utc": "2026-08-12T00:21:09.171081+00:00",
+   "sha256": "2877ec4a2b4d70f7149b662ae19be5696679c41275a91def31737ee0133a00a3"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_cbr_0.700.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 28257182,
+   "mtime_utc": "2026-08-12T02:32:33.562290+00:00",
+   "sha256": "67c6ca2af2cc63bb75ac3216f2bbd79bf9850c12a908ac073bbdcabc9c0c8380"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.650_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69133789,
+   "mtime_utc": "2026-08-24T08:42:32.781914+00:00",
+   "sha256": "719dacc4af28353fa12abb742edf7ae0ec0d4ac773079e69733118df7fc3b6fc"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.675_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 68810135,
+   "mtime_utc": "2026-08-24T08:43:21.993910+00:00",
+   "sha256": "aedd1a4799060488936f1b27135e85451296d20bc5ccffccc776a89d536b60ce"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.700.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 36141036,
+   "mtime_utc": "2026-08-12T02:31:55.094294+00:00",
+   "sha256": "e425dba0df2d1106de1b67245106530eaa1d069c81bebcd726d9cff62eaf145c"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.700_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 68572234,
+   "mtime_utc": "2026-08-23T04:02:15.195370+00:00",
+   "sha256": "9b573f5dfa960ab33862c5c533a77628993b4898c175bf8381b40fe8eec02f1f"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.850.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 35280800,
+   "mtime_utc": "2026-08-12T02:34:20.874279+00:00",
+   "sha256": "b39c2e13228dd2aaf60b4affe3d31f4fec38943a390582b4e7634f57740e8ba8"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.850_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 67691631,
+   "mtime_utc": "2026-08-23T04:02:15.632375+00:00",
+   "sha256": "2999a57234f8420f9d6d62ee1c88568446738672c20ca91212a5a5f0ba6f127e"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.925.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 35261475,
+   "mtime_utc": "2026-08-12T02:34:52.074276+00:00",
+   "sha256": "ba845d2c0893963e3d8cb198ca590385523cdf0a64283fa4028d3e9281aeb5a2"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.925_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 67648360,
+   "mtime_utc": "2026-08-23T04:02:16.046379+00:00",
+   "sha256": "ee04acc7ad9eed94d42b07987eae3e35a3eae5149e9dbb619fd1b4c5e5defffe"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_h2_0.960_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 67701785,
+   "mtime_utc": "2026-08-23T04:02:16.470383+00:00",
+   "sha256": "5fde4ae6ee11c6f7ff5adc3cd63ad76f0462687f06353563355729edd843460a"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.700.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 35240768,
+   "mtime_utc": "2026-08-12T02:33:48.130283+00:00",
+   "sha256": "d82457b38861a23adcf68b06798039d7deed7f1c5a63cd935492fb82f82c4cce"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.700_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 67601752,
+   "mtime_utc": "2026-08-23T04:02:16.882387+00:00",
+   "sha256": "ec49deb8725498f9cf03d7c302983ab51ff99d36237891f52e932a54bb5e24ac"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.850.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 36823374,
+   "mtime_utc": "2026-08-12T02:31:13.110299+00:00",
+   "sha256": "8c75cbf884b44147786eb36ef0f2c043aedf63e4ff121bb94dba91e747965651"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.850_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69328502,
+   "mtime_utc": "2026-08-23T04:02:17.283391+00:00",
+   "sha256": "1ae0bf6aa00366e6af87cdd253b5cb640616252aa10431f7cfab3891a778008a"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.875_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69518979,
+   "mtime_utc": "2026-08-24T08:44:10.001906+00:00",
+   "sha256": "b8ba5035c0e04b8977921a91dfb540225f4ebadf98452267ff3f0ae6a1558e95"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.900_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69353238,
+   "mtime_utc": "2026-08-24T08:44:58.485901+00:00",
+   "sha256": "64c1a8a9acc4a164484f2525aa60ee181fda2e6cb4390078b8fdc2f0fc4cb380"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.925.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 36835622,
+   "mtime_utc": "2026-08-12T02:30:26.602303+00:00",
+   "sha256": "6e089de6e3221083e75394750991f677eb5a5877fdbd4e2ccf4e33c89ed65c96"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.925_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69342527,
+   "mtime_utc": "2026-08-23T04:02:17.686395+00:00",
+   "sha256": "768cd257d119dc1fb59d596037d044c410f1bbad24b40792e96452a43d633f26"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.925_V3.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 36954253,
+   "mtime_utc": "2026-08-12T02:33:07.590287+00:00",
+   "sha256": "178afd2dc7e94fd29a5de3c331372e9d9cfd2aa73a00efc2aa75fc0274cc43b8"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-21R/calib_set_poisson_0.960_U0_legacy_sawtooth_51ms.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69211254,
+   "mtime_utc": "2026-08-23T04:02:18.100399+00:00",
+   "sha256": "903b9e17459aed6b038cac2c71a93b834270be9a2875817b820d4c8e2b1659b5"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69342527,
+   "mtime_utc": "2026-08-14T14:08:05.596315+00:00",
+   "sha256": "e37965269d73191f3caf0c9a0d7645d7fced2c82bdc2c3e6217521b39d9b98b3"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_cbr_0.700.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 54426490,
+   "mtime_utc": "2026-08-13T04:34:58.524728+00:00",
+   "sha256": "c399731a95ed66297b9f71b17faebf6d589e1dd24c5ad8f680a98afacc40c793"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.650.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 68822989,
+   "mtime_utc": "2026-08-21T12:47:29.655221+00:00",
+   "sha256": "52427ba3cd7285b730da24f0bcc4b6da0d63a8a4a693db6d9e1c98aee526ec38"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 68572238,
+   "mtime_utc": "2026-08-15T08:21:44.853846+00:00",
+   "sha256": "cae93a3c1008e39e7ef76b4f7f20dea07186b96cef256920725cc2a8bf08ce05"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.850.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 67691631,
+   "mtime_utc": "2026-08-21T10:11:41.840468+00:00",
+   "sha256": "2999a57234f8420f9d6d62ee1c88568446738672c20ca91212a5a5f0ba6f127e"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.925.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 67648360,
+   "mtime_utc": "2026-08-21T10:12:08.351533+00:00",
+   "sha256": "ee04acc7ad9eed94d42b07987eae3e35a3eae5149e9dbb619fd1b4c5e5defffe"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.960.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 67701785,
+   "mtime_utc": "2026-08-21T10:12:34.452596+00:00",
+   "sha256": "5fde4ae6ee11c6f7ff5adc3cd63ad76f0462687f06353563355729edd843460a"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.700.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 67482424,
+   "mtime_utc": "2026-08-13T04:35:22.580722+00:00",
+   "sha256": "2267423d8d33f3da3ad07ab12a2c5d28122229392db24ec66b5732dd2d1c47e1"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69328506,
+   "mtime_utc": "2026-08-15T08:18:54.217860+00:00",
+   "sha256": "1565767d87060304be9ee651a627c2fa0cb737e0fd11e578078b34579aa16f66"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.875.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69411082,
+   "mtime_utc": "2026-08-21T12:46:38.090095+00:00",
+   "sha256": "19e0a824901da96265cbc1adbf4e7a0ec776bc17941bbe80a96fd50a4559b7ab"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.900.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69433751,
+   "mtime_utc": "2026-08-21T12:47:03.796158+00:00",
+   "sha256": "bc6c69dcca9d26f9815ff5dbd03ed7c6b49262be6d0c3f5185ef5e47856f3237"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69161205,
+   "mtime_utc": "2026-08-13T04:33:46.364745+00:00",
+   "sha256": "bf704ca60cb62deb5834631ac239a4554d4317bb5bf5242ea108ae78fdb29aa5"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.925_V3.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69279850,
+   "mtime_utc": "2026-08-13T04:35:45.740715+00:00",
+   "sha256": "3c0b2ab8195e37a32a12a461f39ff6740ff997d7d170dcd6758b43abb0c80abd"
+  },
+  {
+   "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.960.parquet",
+   "tier": "SUPERSEDED",
+   "bytes": 69211254,
+   "mtime_utc": "2026-08-21T10:11:15.344404+00:00",
+   "sha256": "903b9e17459aed6b038cac2c71a93b834270be9a2875817b820d4c8e2b1659b5"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g2_kill_series.npz",
+   "tier": "SMOKE",
+   "bytes": 1695138,
+   "mtime_utc": "2026-09-05T09:14:02.416179+00:00",
+   "sha256": "64279ffe1610858383003587ef53a64eba2096f7c8083d8f7b8e8c00b48f986b"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3a_omega_series.npz",
+   "tier": "SMOKE",
+   "bytes": 6288325,
+   "mtime_utc": "2026-09-05T12:22:34.306455+00:00",
+   "sha256": "44f87da7b5a09d7b7f9d6d50365dd6e54803765891c1d8e0b5a73656a971bf6a"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t2_s0.028_rep0.npz",
+   "tier": "SMOKE",
+   "bytes": 422920,
+   "mtime_utc": "2026-09-06T03:58:02.988396+00:00",
+   "sha256": "aa82b39887ef111faea3783ba1137e1c9a78d038b1b77b7ea5d116ab82a9d91b"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t2_s0.028_rep1.npz",
+   "tier": "SMOKE",
+   "bytes": 419680,
+   "mtime_utc": "2026-09-06T04:04:53.085723+00:00",
+   "sha256": "df65196cf8a929fd556a77cf288257fb0ebf086bfabe79f8e2c22d18e5679371"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t2_s0.045_rep0.npz",
+   "tier": "SMOKE",
+   "bytes": 438810,
+   "mtime_utc": "2026-09-06T04:11:43.185052+00:00",
+   "sha256": "34e5d995482cddc5c978edb5d6854a45e53a66a14966761bd9dad6d99c35ed02"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t2_s0.045_rep1.npz",
+   "tier": "SMOKE",
+   "bytes": 437117,
+   "mtime_utc": "2026-09-06T04:18:33.282381+00:00",
+   "sha256": "911ff1f63c1626c94568ff6a4778bf55f78f6ab362b8715ca455e7b43ab25e9f"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t30_s0.036_rep0.npz",
+   "tier": "SMOKE",
+   "bytes": 6413454,
+   "mtime_utc": "2026-09-06T07:09:25.158663+00:00",
+   "sha256": "551c4df22f80190413cab48ea11200e8c4c4d1512c9be3067e78455ed7068cb9"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t5_s0.028_rep0.npz",
+   "tier": "SMOKE",
+   "bytes": 1048950,
+   "mtime_utc": "2026-09-06T04:35:38.491203+00:00",
+   "sha256": "da465b9b7f854314d4303da0d6d6827b50f3e192d5e059e5f1f274da482e2128"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t5_s0.028_rep1.npz",
+   "tier": "SMOKE",
+   "bytes": 1048833,
+   "mtime_utc": "2026-09-06T04:52:43.714025+00:00",
+   "sha256": "9b946c72c9c96d973c02ee7e81fb8460587605415aafe1f1c82e90676dfccabf"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t5_s0.045_rep0.npz",
+   "tier": "SMOKE",
+   "bytes": 1095050,
+   "mtime_utc": "2026-09-06T05:09:48.926854+00:00",
+   "sha256": "59932f41bb9bb103f7388ca44cca64b019f14c37f63a790c8a56062aca67eae1"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_checkpoints/t5_s0.045_rep1.npz",
+   "tier": "SMOKE",
+   "bytes": 1095782,
+   "mtime_utc": "2026-09-06T05:26:54.137685+00:00",
+   "sha256": "572a8c87d07dd7834edbda26bff70ab435f6cd03315dae7caae0e2d5531a8a44"
+  },
+  {
+   "path": "results/SMOKE/phase-G2/g3b_sigma_tau_series.npz",
+   "tier": "SMOKE",
+   "bytes": 12420400,
+   "mtime_utc": "2026-09-06T07:09:25.967672+00:00",
+   "sha256": "cfb519b7b46bdc95e186d4c96c0149a1127929ad8fe112c123b2b5cccb8eec13"
+  }
+ ]
+}
