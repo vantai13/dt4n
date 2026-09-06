@@ -1,0 +1,138 @@
+{
+  "schema": "dt4n.phase_g2.g3b_orthogonality_audit.v1",
+  "status": "POST_HOC_DIAGNOSTIC_NO_REGATING",
+  "source": "results/SMOKE/phase-G2/g4_nugget_model.json",
+  "source_sha256": "e5285b4319afe4b51a55b876630c009b16f5bb720a5dd58564d6d747477c9a9e",
+  "provenance": {
+    "git_head_at_execution": "e9395764531146cbace5d8c41ac8ec02e2c46fce",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 1
+  },
+  "regression": {
+    "beta_sigma": -0.016029725695805,
+    "beta_tau": -0.009307881393974435,
+    "n": 64,
+    "rank": 10,
+    "intervals": {
+      "ols": {
+        "se": 0.07058167644948231,
+        "df": 54,
+        "ci95": [
+          -0.1575374669349628,
+          0.1254780155433528
+        ],
+        "log_drift_upper": 0.07474490827249479,
+        "relative_drift_upper": 0.07760922662147532
+      },
+      "hc3": {
+        "se": 0.07683959666286568,
+        "df": 54,
+        "ci95": [
+          -0.17008384155790848,
+          0.1380243901662985
+        ],
+        "log_drift_upper": 0.08069763582734103,
+        "relative_drift_upper": 0.0840430712215817
+      },
+      "cluster_link": {
+        "se": 0.11383896446141602,
+        "df": 7,
+        "ci95": [
+          -0.2852161018374784,
+          0.2531566504458684
+        ],
+        "log_drift_upper": 0.13532305542580478,
+        "relative_drift_upper": 0.14490659290064528
+      },
+      "cluster_run": {
+        "se": 0.07124186249342457,
+        "df": 7,
+        "ci95": [
+          -0.1844899614763951,
+          0.15243051008478511
+        ],
+        "log_drift_upper": 0.08753273437767115,
+        "relative_drift_upper": 0.09147799271101036
+      }
+    }
+  },
+  "bootstrap": {
+    "RT-O1": {
+      "ci95": [
+        -0.24129139963247426,
+        0.18402172019811888
+      ],
+      "sd": 0.10257303148452612,
+      "normal_p_pass_at_zero": 0.6703976380311774,
+      "normal_p_pass_at_slope_point2": 0.1630774901478898
+    },
+    "RT-O2": {
+      "ci95": [
+        -0.01566747868302327,
+        0.03761060234542108
+      ],
+      "sd": 0.013642702550173021,
+      "normal_p_pass_at_zero": 0.9997526256520561,
+      "normal_p_pass_at_slope_point2": 2.0220542877883336e-28
+    }
+  },
+  "bootstrap_seed": 20260906,
+  "bootstrap_draws": 20000,
+  "bootstrap_unit": "8 link identities jointly over all 4 cells, both replicates retained",
+  "outlier": {
+    "tau_s": 5.0,
+    "sigma_ref": 0.045,
+    "replicate": 0,
+    "link": "vC",
+    "link_index": 6,
+    "tau_hat_s": 4.456156872217468,
+    "sigma_ratio": 1.024201535069751,
+    "sf": 0.9997911439923693,
+    "v_indirect": 4.4374508820133143e-07,
+    "kappa_indirect": 0.025608508459394205,
+    "sigma_target": 0.045
+  },
+  "per_link_tau_error_range": [
+    -0.22986743092825213,
+    0.311630251705153
+  ],
+  "sigma_cell_intervals": [
+    {
+      "tau": 2,
+      "sigma_ref": 0.028,
+      "sigma_ratio_bootstrap_ci95": [
+        0.9862440748052921,
+        1.0435003057179848
+      ]
+    },
+    {
+      "tau": 2,
+      "sigma_ref": 0.045,
+      "sigma_ratio_bootstrap_ci95": [
+        0.947201074783933,
+        0.9775572950408529
+      ]
+    },
+    {
+      "tau": 5,
+      "sigma_ref": 0.028,
+      "sigma_ratio_bootstrap_ci95": [
+        0.9750827302731644,
+        1.0150177653308319
+      ]
+    },
+    {
+      "tau": 5,
+      "sigma_ref": 0.045,
+      "sigma_ratio_bootstrap_ci95": [
+        0.9621273468992237,
+        1.024201535069751
+      ]
+    }
+  ],
+  "external_review_arithmetic": {
+    "p_pass_zero_if_sd_point11": 0.6366978591131023,
+    "p_pass_slope_point2_if_sd_point11": 0.1784580588020954
+  }
+}
