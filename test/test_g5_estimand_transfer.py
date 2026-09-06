@@ -52,3 +52,12 @@ def test_null_family_adjusts_for_multiplicity_and_heterogeneous_n():
     assert r['per_comparison_z'][1]>r['per_comparison_z'][0]
     assert r['m']==2
     assert r['per_comparison_p_bonferroni'][0]>=r['per_comparison_p'][0]
+
+
+def test_reserved_doi_does_not_clear_public_archival_gate():
+    from tools.zenodo_reserve_doi import reservation_receipt
+    r=reservation_receipt({'id':123,'metadata':{'prereserve_doi':{'doi':'10.5281/zenodo.123'}}})
+    assert r['status']=='RESERVED_NOT_PUBLISHED' and r['published_doi'] is None
+    assert r['public_archival_gate_pass'] is False
+    with pytest.raises(ValueError,match='non-production'):
+        reservation_receipt({'id':123,'metadata':{'prereserve_doi':{'doi':'10.5072/zenodo.123'}}})

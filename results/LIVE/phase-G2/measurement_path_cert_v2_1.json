@@ -1,0 +1,391 @@
+{
+  "schema": "dt4n.phase_g2.measurement_path_cert.v2.1",
+  "status": "PASS",
+  "scope": "conditional model validation at measured configurations; not universal portability",
+  "provenance": {
+    "git_head_at_execution": "6702d310f90956a241a12f30aa5d415004479685",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 1
+  },
+  "environment": {
+    "kernel": "6.8.0-1066-gcp",
+    "host": "dt4n-research-01",
+    "python": "3.12.13",
+    "numpy": "2.4.3"
+  },
+  "certifies": {
+    "form": "v(C,dt,L)=2*(8*L/(C*dt))^2/12",
+    "kappa": 2.0,
+    "kappa_theory": 2.0,
+    "empirical_kappa_by_dataset": {
+      "G3b": 2.0045011279305083,
+      "G2": 2.0217309849895324
+    },
+    "wire_bytes": 1442.0,
+    "links": [
+      "uA",
+      "uB",
+      "ac",
+      "ad",
+      "bc",
+      "bd",
+      "vC",
+      "vD"
+    ],
+    "cap_bps": [
+      8000000.0,
+      6000000.0,
+      6000000.0,
+      4000000.0,
+      6000000.0,
+      6000000.0,
+      8000000.0,
+      6000000.0
+    ],
+    "observed_dt_s": [
+      0.1
+    ],
+    "rho_eps_max": 0.058669728048576224,
+    "rho_eps_statistic": "max observed absolute correlation over all 28 pairs and 13 runs; not a population upper confidence bound",
+    "assumptions": [
+      "byte conservation",
+      "independent uniform sub-frame remainders at window boundaries"
+    ],
+    "kappa_nugget": 2.0
+  },
+  "lookup_table": {
+    "0.05": {
+      "evidence_level": "UNVALIDATED_MODEL_PREDICTION",
+      "v_per_link": [
+        0.00013862426666666667,
+        0.00024644314074074073,
+        0.00024644314074074073,
+        0.0005544970666666667,
+        0.00024644314074074073,
+        0.00024644314074074073,
+        0.00013862426666666667,
+        0.00024644314074074073
+      ],
+      "sigma_min_claim_c_proxy": [
+        0.02568856973546335,
+        0.03425142631395113,
+        0.03425142631395113,
+        0.0513771394709267,
+        0.03425142631395113,
+        0.03425142631395113,
+        0.02568856973546335,
+        0.03425142631395113
+      ],
+      "sigma_min_pair_bias_conditional_on_observed_rho_eps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "0.1": {
+      "evidence_level": "OBSERVED_CONFIGURATION",
+      "v_per_link": [
+        3.465606666666667e-05,
+        6.161078518518518e-05,
+        6.161078518518518e-05,
+        0.00013862426666666667,
+        6.161078518518518e-05,
+        6.161078518518518e-05,
+        3.465606666666667e-05,
+        6.161078518518518e-05
+      ],
+      "sigma_min_claim_c_proxy": [
+        0.012844284867731676,
+        0.017125713156975565,
+        0.017125713156975565,
+        0.02568856973546335,
+        0.017125713156975565,
+        0.017125713156975565,
+        0.012844284867731676,
+        0.017125713156975565
+      ],
+      "sigma_min_pair_bias_conditional_on_observed_rho_eps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "0.15": {
+      "evidence_level": "UNVALIDATED_MODEL_PREDICTION",
+      "v_per_link": [
+        1.5402696296296296e-05,
+        2.738257119341564e-05,
+        2.738257119341564e-05,
+        6.161078518518518e-05,
+        2.738257119341564e-05,
+        2.738257119341564e-05,
+        1.5402696296296296e-05,
+        2.738257119341564e-05
+      ],
+      "sigma_min_claim_c_proxy": [
+        0.008562856578487783,
+        0.011417142104650377,
+        0.011417142104650377,
+        0.017125713156975565,
+        0.011417142104650377,
+        0.011417142104650377,
+        0.008562856578487783,
+        0.011417142104650377
+      ],
+      "sigma_min_pair_bias_conditional_on_observed_rho_eps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "0.2": {
+      "evidence_level": "UNVALIDATED_MODEL_PREDICTION",
+      "v_per_link": [
+        8.664016666666667e-06,
+        1.5402696296296296e-05,
+        1.5402696296296296e-05,
+        3.465606666666667e-05,
+        1.5402696296296296e-05,
+        1.5402696296296296e-05,
+        8.664016666666667e-06,
+        1.5402696296296296e-05
+      ],
+      "sigma_min_claim_c_proxy": [
+        0.006422142433865838,
+        0.008562856578487783,
+        0.008562856578487783,
+        0.012844284867731676,
+        0.008562856578487783,
+        0.008562856578487783,
+        0.006422142433865838,
+        0.008562856578487783
+      ],
+      "sigma_min_pair_bias_conditional_on_observed_rho_eps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "0.25": {
+      "evidence_level": "UNVALIDATED_MODEL_PREDICTION",
+      "v_per_link": [
+        5.544970666666666e-06,
+        9.857725629629631e-06,
+        9.857725629629631e-06,
+        2.2179882666666665e-05,
+        9.857725629629631e-06,
+        9.857725629629631e-06,
+        5.544970666666666e-06,
+        9.857725629629631e-06
+      ],
+      "sigma_min_claim_c_proxy": [
+        0.00513771394709267,
+        0.006850285262790227,
+        0.006850285262790227,
+        0.01027542789418534,
+        0.006850285262790227,
+        0.006850285262790227,
+        0.00513771394709267,
+        0.006850285262790227
+      ],
+      "sigma_min_pair_bias_conditional_on_observed_rho_eps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "0.5": {
+      "evidence_level": "UNVALIDATED_MODEL_PREDICTION",
+      "v_per_link": [
+        1.3862426666666665e-06,
+        2.4644314074074078e-06,
+        2.4644314074074078e-06,
+        5.544970666666666e-06,
+        2.4644314074074078e-06,
+        2.4644314074074078e-06,
+        1.3862426666666665e-06,
+        2.4644314074074078e-06
+      ],
+      "sigma_min_claim_c_proxy": [
+        0.002568856973546335,
+        0.0034251426313951137,
+        0.0034251426313951137,
+        0.00513771394709267,
+        0.0034251426313951137,
+        0.0034251426313951137,
+        0.002568856973546335,
+        0.0034251426313951137
+      ],
+      "sigma_min_pair_bias_conditional_on_observed_rho_eps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "1.0": {
+      "evidence_level": "UNVALIDATED_MODEL_PREDICTION",
+      "v_per_link": [
+        3.4656066666666663e-07,
+        6.161078518518519e-07,
+        6.161078518518519e-07,
+        1.3862426666666665e-06,
+        6.161078518518519e-07,
+        6.161078518518519e-07,
+        3.4656066666666663e-07,
+        6.161078518518519e-07
+      ],
+      "sigma_min_claim_c_proxy": [
+        0.0012844284867731676,
+        0.0017125713156975568,
+        0.0017125713156975568,
+        0.002568856973546335,
+        0.0017125713156975568,
+        0.0017125713156975568,
+        0.0012844284867731676,
+        0.0017125713156975568
+      ],
+      "sigma_min_pair_bias_conditional_on_observed_rho_eps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    },
+    "1.5": {
+      "evidence_level": "UNVALIDATED_MODEL_PREDICTION",
+      "v_per_link": [
+        1.5402696296296299e-07,
+        2.738257119341564e-07,
+        2.738257119341564e-07,
+        6.161078518518519e-07,
+        2.738257119341564e-07,
+        2.738257119341564e-07,
+        1.5402696296296299e-07,
+        2.738257119341564e-07
+      ],
+      "sigma_min_claim_c_proxy": [
+        0.0008562856578487784,
+        0.0011417142104650378,
+        0.0011417142104650378,
+        0.0017125713156975568,
+        0.0011417142104650378,
+        0.0011417142104650378,
+        0.0008562856578487784,
+        0.0011417142104650378
+      ],
+      "sigma_min_pair_bias_conditional_on_observed_rho_eps": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "self_test": {
+    "rms": 0.006817034768811326,
+    "max_abs_error": 0.020957088609038443,
+    "n_values": 40,
+    "threshold_rms": 0.02,
+    "passed": true,
+    "source": "actual 40 G3b link/cell medians; fixed kappa=2"
+  },
+  "gates": {
+    "M-1_aligned": true,
+    "M-2_finite": true,
+    "M-3_rho_eps_within_B2": true,
+    "M-4_kappa_in_band": true,
+    "M-5_acf1_matches_theory": true,
+    "M-6_sf_rms": true
+  },
+  "evidence_sha256": {
+    "results/SMOKE/phase-G2/g4_nugget_model.json": "e5285b4319afe4b51a55b876630c009b16f5bb720a5dd58564d6d747477c9a9e",
+    "results/SMOKE/phase-G2/g3b_sigma_tau_series.npz": "cfb519b7b46bdc95e186d4c96c0149a1127929ad8fe112c123b2b5cccb8eec13",
+    "results/SMOKE/phase-G2/g3b_sigma_tau.json": "e71d61c1bdef6c3b58c6c2b3d640847e5797e8e446169cb53f40ddf1318baf08",
+    "results/SMOKE/phase-G2/g2_kill_series.npz": "64279ffe1610858383003587ef53a64eba2096f7c8083d8f7b8e8c00b48f986b",
+    "results/SMOKE/phase-G2/g2_kill_test_run3_instrumented.json": "567b5ddb1faeae7855422f567628e94c02cbcea24a274dd782a278822f4776b5",
+    "docs/phase-G/67-prereg-g4-nugget-model.md": "0a396c9e98c6f3d87946ad2ec08caa40c148d4f2ad437b1059768b554d944b54",
+    "tools/g4_certify.py": "7e6d1d9b172167bd70d65fd131ff2980abc9cc6cc7a685f0468eaa590a9973aa",
+    "tools/g4_nugget_model.py": "87117324a5d09e1acb101f430dac3f28051127505d08d123e8fad2cdf4526b5b",
+    "test/test_g4_reanalysis.py": "96eb99c6bb1e755e4b1b524c315343c80abba839eeb0e7dcacd6b9389e84a07a",
+    "results/SMOKE/phase-G2/g5_rho_eps_null.json": "11337d8f8f3d12e7af17f8551a8ab682362874e0f2ebaf5a334056b01d928778",
+    "tools/g5_null_addendum.py": "870a462df4d16aa093b00880175e85f3dddc45a7b7b773f72c7bd2b09da3e15c"
+  },
+  "expires_or_requires_revalidation_if": [
+    "drops/underrun or nonconserving shaper appears",
+    "frame size or sampler elapsed-time normalisation changes",
+    "kernel, driver, host or datapath changes",
+    "dt/C moves outside measured configurations: formula extrapolates, empirical rho_eps bound does not"
+  ],
+  "does_not_certify": [
+    "tau estimator",
+    "physical NIC or Internet",
+    "omega>0 residual model",
+    "population confidence bound on residual cross-correlation",
+    "an omega bias bound from a single pair-correlation proxy",
+    "all telemetry configurations",
+    "cross-campaign comparability of raw max or max/SD without family-size correction"
+  ],
+  "not_retroactive": "G3b estimates and verdicts remain unchanged",
+  "parent_certificate": {
+    "path": "results/LIVE/phase-G2/measurement_path_cert_v2.json",
+    "sha256": "6829990d257814e3f26e287cfa861de1121c563f2ac5814bd6d7d35da9f33a0b"
+  },
+  "parent_provenance": {
+    "git_head_at_execution": "c0d33ba3852ac53b5834569e837fb9261cbc58ec",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 0
+  },
+  "rho_eps_null_consistency": {
+    "null_model": "independent MA1 residuals with ACF1=-.5; Bartlett Var(r) approximately 1.5/n",
+    "sd_under_h0_per_run_n4100": 0.019127301391900147,
+    "max_standardized_over_heterogeneous_run_lengths": 3.315249843392157,
+    "family_size": 364,
+    "min_bonferroni_p": 0.3332829507863369,
+    "verdict": "NO_EVIDENCE_AGAINST_NULL_AT_FWER_0.05",
+    "source": {
+      "path": "results/SMOKE/phase-G2/g5_rho_eps_null.json",
+      "sha256": "11337d8f8f3d12e7af17f8551a8ab682362874e0f2ebaf5a334056b01d928778"
+    },
+    "note": "nonrejection is not proof of independence; both raw max and standardized max depend on family size"
+  }
+}
