@@ -1,0 +1,269 @@
+{
+  "schema": "dt4n.phase_g2.g5a_mechanism_audit.v1",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "corrects": "docs/phase-G/70-g5-results.md section 3 explanation, not its verdict",
+  "link_subsets": [
+    {
+      "subset": [
+        "uA",
+        "uB"
+      ],
+      "K": 2,
+      "coupling_sum": 0.0,
+      "coverage_by_omega": [
+        0.8067408333333332,
+        0.8075166666666667,
+        0.8060183333333335,
+        0.8062716666666665,
+        0.8068683333333333
+      ],
+      "amplitude": 0.0014983333333331572
+    },
+    {
+      "subset": [
+        "uA",
+        "ac"
+      ],
+      "K": 2,
+      "coupling_sum": 0.7071067811865475,
+      "coverage_by_omega": [
+        0.8065625,
+        0.8089316666666667,
+        0.8137774999999999,
+        0.8217108333333334,
+        0.8337775
+      ],
+      "amplitude": 0.02721499999999999
+    },
+    {
+      "subset": [
+        "ac",
+        "vC"
+      ],
+      "K": 2,
+      "coupling_sum": 0.7071067811865475,
+      "coverage_by_omega": [
+        0.8069416666666668,
+        0.8083616666666668,
+        0.8135575,
+        0.8219091666666668,
+        0.8334200000000002
+      ],
+      "amplitude": 0.02647833333333338
+    },
+    {
+      "subset": [
+        "uA",
+        "vC"
+      ],
+      "K": 2,
+      "coupling_sum": 0.5,
+      "coverage_by_omega": [
+        0.80674,
+        0.8087191666666668,
+        0.8105141666666666,
+        0.8145758333333333,
+        0.8208291666666666
+      ],
+      "amplitude": 0.014089166666666597
+    },
+    {
+      "subset": [
+        "ac",
+        "ad",
+        "bc",
+        "bd"
+      ],
+      "K": 4,
+      "coupling_sum": 0.0,
+      "coverage_by_omega": [
+        0.6505066666666667,
+        0.6505366666666665,
+        0.650305,
+        0.6508558333333334,
+        0.6507933333333332
+      ],
+      "amplitude": 0.0005508333333333892
+    },
+    {
+      "subset": [
+        "uA",
+        "uB",
+        "ac",
+        "ad"
+      ],
+      "K": 4,
+      "coupling_sum": 1.414213562373095,
+      "coverage_by_omega": [
+        0.6508766666666668,
+        0.6539125000000001,
+        0.6611908333333334,
+        0.6746358333333333,
+        0.6944033333333334
+      ],
+      "amplitude": 0.0435266666666666
+    },
+    {
+      "subset": [
+        "uA",
+        "uB",
+        "ac",
+        "ad",
+        "bc",
+        "bd"
+      ],
+      "K": 6,
+      "coupling_sum": 2.82842712474619,
+      "coverage_by_omega": [
+        0.5250608333333333,
+        0.5295883333333333,
+        0.54159,
+        0.5640774999999999,
+        0.5977941666666667
+      ],
+      "amplitude": 0.07273333333333343
+    },
+    {
+      "subset": [
+        "uA",
+        "uB",
+        "ac",
+        "ad",
+        "bc",
+        "bd",
+        "vC",
+        "vD"
+      ],
+      "K": 8,
+      "coupling_sum": 7.6568542494923815,
+      "coverage_by_omega": [
+        0.42389083333333333,
+        0.4324658333333333,
+        0.45631916666666666,
+        0.49736916666666664,
+        0.5573316666666667
+      ],
+      "amplitude": 0.13344083333333334
+    }
+  ],
+  "scale_channel": {
+    "uncorrected": {
+      "qhat_omega0": [
+        11.528745930841914,
+        11.637364691127855,
+        11.861309616547993
+      ],
+      "qhat_omega1": [
+        14.9831503652506,
+        15.257211260491903,
+        15.758901168790343
+      ],
+      "scale_factor": [
+        1.2996340152806558,
+        1.3110538051732419,
+        1.328597067123577
+      ],
+      "mean_scale": 1.3130949625258248,
+      "spread_fraction_of_mean": 0.02205708853471557
+    },
+    "maxscore": {
+      "qhat_omega0": [
+        14.698353123706427,
+        14.698353123706427,
+        14.698353123706427
+      ],
+      "qhat_omega1": [
+        19.42652251818964,
+        19.42652251818964,
+        19.42652251818964
+      ],
+      "scale_factor": [
+        1.321680215102284,
+        1.321680215102284,
+        1.321680215102284
+      ],
+      "mean_scale": 1.321680215102284,
+      "spread_fraction_of_mean": 0.0
+    }
+  },
+  "equivariance": {
+    "base_qhat": 14.092492580906004,
+    "base_coverage": 0.8473333333333334,
+    "scaling_the_score_matrix": [
+      {
+        "c": 1.3131,
+        "qhat_ratio": 1.3131,
+        "coverage": 0.8473333333333334,
+        "bit_identical_to_base": true
+      },
+      {
+        "c": 2.0,
+        "qhat_ratio": 2.0,
+        "coverage": 0.8473333333333334,
+        "bit_identical_to_base": true
+      },
+      {
+        "c": 7.5,
+        "qhat_ratio": 7.5,
+        "coverage": 0.8473333333333334,
+        "bit_identical_to_base": true
+      }
+    ],
+    "scaling_the_twin_error": [
+      {
+        "c": 1.3131,
+        "qhat_ratio": 1.316453404014982,
+        "coverage": 0.8481666666666666,
+        "rows_reranked": 0.09116666666666666
+      },
+      {
+        "c": 2.0,
+        "qhat_ratio": 2.0237383881680904,
+        "coverage": 0.8468333333333333,
+        "rows_reranked": 0.279
+      },
+      {
+        "c": 7.5,
+        "qhat_ratio": 8.081440591217602,
+        "coverage": 0.8388333333333333,
+        "rows_reranked": 0.7768333333333334
+      }
+    ],
+    "omega_reranking": [
+      {
+        "omega": 0.0,
+        "rows_reranked_vs_omega0": 0.0
+      },
+      {
+        "omega": 0.25,
+        "rows_reranked_vs_omega0": 0.44483333333333336
+      },
+      {
+        "omega": 0.5,
+        "rows_reranked_vs_omega0": 0.4465
+      },
+      {
+        "omega": 0.75,
+        "rows_reranked_vs_omega0": 0.45866666666666667
+      },
+      {
+        "omega": 1.0,
+        "rows_reranked_vs_omega0": 0.47333333333333333
+      }
+    ]
+  },
+  "provenance": {
+    "git_head_at_execution": "cd0802de2cc9a8e43c91b5aa2234615fd279b765",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 1
+  },
+  "elapsed_s": 19.407773640001324,
+  "source_sha256": {
+    "cert/simultaneous_score.py": "5e909216a77456e3af1912402d8f9d5c6c91df08b68e057dc026e6c445764803",
+    "cert/margin_score.py": "452f5840ecf867cde9690510ed0e49065c8c29de75c39b62c1a03377bd00b328",
+    "test/test_phase22_simscore.py": "a7ef8de0d4679827914c5b802efe6475b399de59e19c7fdddd8637f573d4e5d8",
+    "results/LIVE/phase-G2/measurement_path_cert_v2.json": "6829990d257814e3f26e287cfa861de1121c563f2ac5814bd6d7d35da9f33a0b",
+    "tools/g5a_mechanism_audit.py": "b54a114f380c2ae1592e0d221ae14fa5ff7ea0c670b1173d054d1e3cd89d07fc"
+  }
+}
