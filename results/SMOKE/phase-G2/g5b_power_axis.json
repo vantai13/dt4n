@@ -1,0 +1,232 @@
+{
+  "schema": "dt4n.phase_g2.g5b_power_axis.v1",
+  "status": "SYNTHETIC_NO_NETWORK",
+  "results": {
+    "primary": {
+      "maxscore": {
+        "amplitude": 0.10177083333333325,
+        "single_trace_sd": 0.01382595777222593,
+        "snr": 7.360852319234916,
+        "worst_step": -0.030782499999999935,
+        "coverage_amplitude": 0.0010224999999998152,
+        "acceptance_by_omega": [
+          0.5397733333333332,
+          0.5089908333333333,
+          0.4830258333333333,
+          0.4594575,
+          0.43800249999999996
+        ],
+        "acceptance_mc_se": [
+          0.0009687207714291692,
+          0.0009186154080283617,
+          0.000988503921132234,
+          0.0009921396810458449,
+          0.0010174342034349813
+        ],
+        "coverage_by_omega": [
+          0.9006366666666666,
+          0.8996141666666668,
+          0.9006033333333333,
+          0.9005641666666666,
+          0.9004858333333334
+        ],
+        "surrogate_acceptance": [
+          null,
+          0.5073758333333334,
+          0.4801741666666666,
+          0.45549,
+          0.4327108333333334
+        ],
+        "irreducible_remainder": 0.0052916666666665835,
+        "qhat_inflation": 1.3219759569324763
+      },
+      "uncorrected": {
+        "amplitude": 0.08448750000000005,
+        "single_trace_sd": 0.01237122091482916,
+        "snr": 6.82935828093785,
+        "worst_step": -0.025656666666666772,
+        "coverage_amplitude": 0.002930833333333438,
+        "acceptance_by_omega": [
+          0.624225,
+          0.5985683333333333,
+          0.5771158333333334,
+          0.557555,
+          0.5397375
+        ],
+        "acceptance_mc_se": [
+          0.0008513863214438607,
+          0.0007707099611534197,
+          0.0008924978886001798,
+          0.000907133395179516,
+          0.0009422747384490106
+        ],
+        "coverage_by_omega": [
+          0.7720241666666666,
+          0.7722733333333334,
+          0.7741366666666667,
+          0.7746591666666667,
+          0.7749550000000001
+        ],
+        "surrogate_acceptance": [
+          null,
+          0.5956275,
+          0.5714416666666666,
+          0.5491541666666666,
+          0.5288491666666667
+        ],
+        "irreducible_remainder": 0.010888333333333278,
+        "qhat_inflation": 1.3156713813293182
+      },
+      "scale_channel": {
+        "mean_scale": 1.315523102849587,
+        "scale_spread_fraction": 0.02277401533003093,
+        "scale_factor": [
+          1.3016551338213251,
+          1.3132992975948048,
+          1.3316148771326315
+        ]
+      },
+      "rows_reranked": [
+        0.0,
+        0.4160008333333334,
+        0.4282683333333333,
+        0.4425283333333333,
+        0.4573525
+      ]
+    },
+    "null_uA_uB": {
+      "maxscore": {
+        "amplitude": 0.0,
+        "single_trace_sd": 0.013301196614557571,
+        "snr": 0.0,
+        "worst_step": 0.0,
+        "coverage_amplitude": 0.0,
+        "acceptance_by_omega": [
+          0.7247999999999999,
+          0.7247999999999999,
+          0.7247999999999999,
+          0.7247999999999999,
+          0.7247999999999999
+        ],
+        "acceptance_mc_se": [
+          0.0009405366324049207,
+          0.0009405366324049207,
+          0.0009405366324049207,
+          0.0009405366324049207,
+          0.0009405366324049207
+        ],
+        "coverage_by_omega": [
+          0.8987733333333332,
+          0.8987733333333332,
+          0.8987733333333332,
+          0.8987733333333332,
+          0.8987733333333332
+        ],
+        "surrogate_acceptance": [
+          null,
+          0.7247999999999999,
+          0.7247999999999999,
+          0.7247999999999999,
+          0.7247999999999999
+        ],
+        "irreducible_remainder": 0.0,
+        "qhat_inflation": 1.0
+      },
+      "uncorrected": {
+        "amplitude": 0.0,
+        "single_trace_sd": 0.01221669388892331,
+        "snr": 0.0,
+        "worst_step": 0.0,
+        "coverage_amplitude": 0.0,
+        "acceptance_by_omega": [
+          0.7576875,
+          0.7576875,
+          0.7576875,
+          0.7576875,
+          0.7576875
+        ],
+        "acceptance_mc_se": [
+          0.0008638507092537927,
+          0.0008638507092537927,
+          0.0008638507092537927,
+          0.0008638507092537927,
+          0.0008638507092537927
+        ],
+        "coverage_by_omega": [
+          0.8460758333333334,
+          0.8460758333333334,
+          0.8460758333333334,
+          0.8460758333333334,
+          0.8460758333333334
+        ],
+        "surrogate_acceptance": [
+          null,
+          0.7576875,
+          0.7576875,
+          0.7576875,
+          0.7576875
+        ],
+        "irreducible_remainder": 0.0,
+        "qhat_inflation": 1.0
+      },
+      "scale_channel": {
+        "mean_scale": 1.0,
+        "scale_spread_fraction": 0.0,
+        "scale_factor": [
+          1.0,
+          1.0,
+          1.0
+        ]
+      },
+      "rows_reranked": [
+        0.0,
+        0.0,
+        0.0,
+        0.0,
+        0.0
+      ]
+    }
+  },
+  "gates": {
+    "P-1": true,
+    "P-2": true,
+    "P-3": false,
+    "NC-1": true,
+    "NC-2": true
+  },
+  "verdict": "ADOPT_WEAK",
+  "classification": null,
+  "irreducible_remainder": 0.0052916666666665835,
+  "design": {
+    "seed": 20260908,
+    "omega_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "replicates": 200,
+    "dt_s": 0.1,
+    "tau_s": 3.0,
+    "kappa_time_simulated": 1,
+    "kappa_accept": 1.0,
+    "alpha": 0.1,
+    "surrogate": "score matrix scaled by measured c; twin margins held at omega=0"
+  },
+  "provenance": {
+    "git_head_at_execution": "19b1b70cc097a1b0c88edf4ae87e389ef5055205",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 1
+  },
+  "elapsed_s": 19.842446155998914,
+  "source_sha256": {
+    "cert/simultaneous_score.py": "5e909216a77456e3af1912402d8f9d5c6c91df08b68e057dc026e6c445764803",
+    "cert/margin_score.py": "452f5840ecf867cde9690510ed0e49065c8c29de75c39b62c1a03377bd00b328",
+    "test/test_phase22_simscore.py": "a7ef8de0d4679827914c5b802efe6475b399de59e19c7fdddd8637f573d4e5d8",
+    "results/LIVE/phase-G2/measurement_path_cert_v2.json": "6829990d257814e3f26e287cfa861de1121c563f2ac5814bd6d7d35da9f33a0b",
+    "tools/g5b_power_axis.py": "5ea4da85a6b3ea98eb037d2bcf807fbf3b3e27b7bccbef7f9b6ebe8460b892e7",
+    "docs/phase-G/72-prereg-g5b-power-axis.md": "3c2d9ca2afa6a8d6b3ada2c8353d26ad2acb84a8bcf21ea96bef5d48850c03e5"
+  }
+}
