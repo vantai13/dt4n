@@ -16,13 +16,27 @@ import numpy as np
 
 
 def estimate_nugget(
-    x: np.ndarray, dt: float, n_fit_lags: int = 8
+    x: np.ndarray, dt: float, n_fit_lags: int = 8, lag_lo: int = 1
 ) -> dict[str, object]:
     """Estimate nugget by extrapolating the positive-lag ACF to lag zero.
 
     For exponential true ACF,
     ``log(ACF_measured(k)) = log(sf) + k*log(phi)`` for ``k >= 1``.
     Only early lags above the approximate two-sigma ACF noise floor are fit.
+
+    ★ `lag_lo` selects the FIRST lag entering the fit. The default of 1 is
+      retained so every pre-G-A019 caller reproduces bit-exact.
+
+      `lag_lo = 2` is the estimator signed by `G-A019` for any path whose
+      nugget is CONSERVING. A token bucket does not lose bytes, so a window
+      that under-delivers leaves tokens for the next one: the nugget is a
+      first difference, `ACF_eps(1) = -0.5`, `ACF_eps(k>=2) = 0` (`G-L103`,
+      measured at -0.5019 in run 3). That depresses lag 1 ALONE, tilting the
+      fitted slope shallower and inflating `tau_hat`. Lags 2.. are exactly
+      `sf*phi^k` and are therefore immune.
+
+      Do NOT make 2 the default. Doing so silently changes every historical
+      artifact this function produced.
     """
     values = np.asarray(x, dtype=float)
     n = len(values)
@@ -45,7 +59,7 @@ def estimate_nugget(
     lags = np.arange(1, n_fit_lags + 1)
     positive_acf = acf[1 : n_fit_lags + 1]
     noise_floor = 2.0 / np.sqrt(n)
-    keep = positive_acf > noise_floor
+    keep = (positive_acf > noise_floor) & (lags >= lag_lo)
     if keep.sum() < 4:
         return {
             "sf": float("nan"),
@@ -72,10 +86,10 @@ def estimate_nugget(
         ),
         "n_lags_used": int(keep.sum()),
         "acf_noise_floor": float(noise_floor),
+        "lag_lo": int(lag_lo),
         "ok": bool(0.0 < sf <= 1.0),
         "reason": "" if 0.0 < sf <= 1.0 else "sf outside (0,1]",
     }
-
 
 def estimate_rho_eps(
     x_l: np.ndarray, x_m: np.ndarray, tau_s: float, dt: float
