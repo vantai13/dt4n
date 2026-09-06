@@ -135,3 +135,5 @@ Kết luận của mục này: doc 47 **đúng về vật lý link** và **mạn
 
 Mã: `tools/g5_estimand_transfer.py`, `tools/g5_parameters.py`, `tools/g5_report.py`, `tools/g5_null_addendum.py`, `test/test_g5_estimand_transfer.py`.
 Phụ lục null và proxy `Q-1`: [doc 68a](68a-null-consistency-and-forward-proxy.md).
+
+> **Cập nhật 2026-09-06:** cổng thực thi chiến dịch đã mở trên cơ sở niêm phong backup đã xác minh hash — xem [doc 71](71-amendment-local-custody-seal.md). DOI công khai **vẫn còn nợ** và vẫn là điều kiện của công bố; câu chặn ở trên giữ nguyên đối với việc phát hành ra ngoài.

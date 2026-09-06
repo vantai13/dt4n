@@ -47,6 +47,7 @@ def main():
                  'public_doi':None,'reserved_doi':None,'network_action_performed':False,
                  'official_documentation':['https://developers.zenodo.org/','https://help.zenodo.org/docs/deposit/describe-records/reserve-doi/']}
         path=BASE/'g5_zenodo_draft_request.json';write_contract_artifact(path,payload);print(path);return
+    assert args.reserve
     path=BASE/'zenodo_reservation_receipt.json'
     if path.exists():raise FileExistsError('A receipt already exists; inspect it rather than creating a duplicate draft')
     token=next((os.environ[k] for k in ('ZENODO_ACCESS_TOKEN','ZENODO_TOKEN','ZENODO_API_TOKEN') if os.environ.get(k)),None)

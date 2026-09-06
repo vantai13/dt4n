@@ -46,6 +46,26 @@
    "public_doi_equivalent": false,
    "allows_historical_data_cleanup": false,
    "allows_claim_of_public_archival": false
+  },
+  "local_backup_seal": {
+   "status": "VERIFIED_LOCAL_BACKUP_SEAL",
+   "seal_path": "/home/ubuntu/backups/dt4n/20260906T100621Z/SEAL.json",
+   "seal_sha256": "93084fcbcc728d3ce8816f28d1b40be6b53f2e860f5d1ed5ace878324021e1ad",
+   "sealed_utc": "2026-09-06T10:06:21.218742+00:00",
+   "host": "dt4n-research-01",
+   "n_files_verified": 134,
+   "bytes_verified": 6952580229,
+   "checksum_verified_in_workspace": true,
+   "public_doi_equivalent": false,
+   "allows_historical_data_cleanup": false,
+   "allows_claim_of_public_archival": false,
+   "allows_campaign_execution": true,
+   "scope": "Phase G local execution including G-prime.7 and G-prime.8 measurement runs",
+   "known_limits": [
+    "same-host copy: does not survive loss of this machine",
+    "not third-party held, not citable, not immutable against this account",
+    "seals the tree as of sealed_utc only; later data needs a later seal"
+   ]
   }
  },
  "files": [
