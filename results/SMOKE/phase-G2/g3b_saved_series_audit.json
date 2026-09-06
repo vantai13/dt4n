@@ -1,0 +1,92 @@
+{
+  "schema": "dt4n.phase_g2.g3b_saved_series_audit.v1",
+  "status": "REANALYSIS_NO_NEW_NETWORK_DATA",
+  "raw_reproduction_pass": true,
+  "checkpoint_identity_pass": true,
+  "gates_identical": true,
+  "source_sha256": "e71d61c1bdef6c3b58c6c2b3d640847e5797e8e446169cb53f40ddf1318baf08",
+  "series_sha256": "cfb519b7b46bdc95e186d4c96c0149a1127929ad8fe112c123b2b5cccb8eec13",
+  "target_only_diagnostics": [
+    {
+      "tau_s": 2.0,
+      "sigma_ref": 0.028,
+      "tau_hat_median": 1.978063653260568,
+      "sigma_ratio_median": 1.0026067435863517,
+      "target_tau_rel_error": -0.010968173369716006,
+      "residual_variance_median": 6.0981963992948445e-05,
+      "residual_acf1_median": -0.49170541381251376,
+      "measured_minus_target_tau_s": 0.00654263645083919,
+      "measured_minus_target_sigma_ratio": 0.0004886999313766793
+    },
+    {
+      "tau_s": 2.0,
+      "sigma_ref": 0.045,
+      "tau_hat_median": 1.9012150839369124,
+      "sigma_ratio_median": 0.9616469205023336,
+      "target_tau_rel_error": -0.049392458031543796,
+      "residual_variance_median": 6.203009175372877e-05,
+      "residual_acf1_median": -0.49862125295794857,
+      "measured_minus_target_tau_s": -3.769789631724585e-05,
+      "measured_minus_target_sigma_ratio": 0.00016790952279632787
+    },
+    {
+      "tau_s": 5.0,
+      "sigma_ref": 0.028,
+      "tau_hat_median": 4.964510131302507,
+      "sigma_ratio_median": 1.004364261285512,
+      "target_tau_rel_error": -0.007097973739498498,
+      "residual_variance_median": 6.113731064263785e-05,
+      "residual_acf1_median": -0.501378885100791,
+      "measured_minus_target_tau_s": -0.006363111459124937,
+      "measured_minus_target_sigma_ratio": 0.00016853710919173537
+    },
+    {
+      "tau_s": 5.0,
+      "sigma_ref": 0.045,
+      "tau_hat_median": 4.942962759733577,
+      "sigma_ratio_median": 0.9849368421921494,
+      "target_tau_rel_error": -0.011407448053284641,
+      "residual_variance_median": 6.17935261793465e-05,
+      "residual_acf1_median": -0.49796400770311533,
+      "measured_minus_target_tau_s": 0.0014291581603842474,
+      "measured_minus_target_sigma_ratio": -3.6143043692815624e-05
+    },
+    {
+      "tau_s": 30.0,
+      "sigma_ref": 0.036,
+      "tau_hat_median": 28.972944362401886,
+      "sigma_ratio_median": 1.0237533381926633,
+      "target_tau_rel_error": -0.03423518791993707,
+      "residual_variance_median": 6.183131183684827e-05,
+      "residual_acf1_median": -0.4968299111773703,
+      "measured_minus_target_tau_s": -0.0008746833887762762,
+      "measured_minus_target_sigma_ratio": -3.9828384476248146e-05
+    }
+  ],
+  "target_only_orthogonality": {
+    "available": true,
+    "d_log_tau_hat_d_log_sigma": -0.046342293147674594,
+    "d_log_sigma_ratio_d_log_tau": 0.014013879778018662
+  },
+  "infrastructure": {
+    "n_samples": 11935,
+    "span_s": 11934.936249,
+    "cpu_percent_median": 3.212,
+    "cpu_percent_p95": 5.713,
+    "load_1m_max": 2.625,
+    "clock_skew_abs_max_ms": 0.419131,
+    "steal_recorded": false,
+    "drop_in_increase": 0,
+    "drop_out_increase": 0,
+    "err_in_increase": 0,
+    "err_out_increase": 0
+  },
+  "analysis_environment": {
+    "python": "3.12.13 | packaged by Anaconda, Inc. | (main, Jul  9 2026, 14:38:16) [GCC 14.3.0]",
+    "numpy": "2.4.3",
+    "kernel": "6.8.0-1066-gcp",
+    "machine": "x86_64",
+    "captured_after_acquisition": true
+  },
+  "note": "Diagnostic only; nominal targets and signed gates are unchanged."
+}

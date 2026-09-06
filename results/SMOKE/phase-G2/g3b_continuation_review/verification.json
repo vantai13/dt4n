@@ -1,0 +1,45 @@
+{
+  "schema": "dt4n.phase_g2.g3b_continuation_review.v1",
+  "reviewed_at_utc": "2026-09-06T07:51:16.980151+00:00",
+  "status": "VERIFIED_EXISTING_MEASUREMENTS_NO_NEW_NETWORK_RUN",
+  "source_manifest_sha256": "76e111d399d346e2cde5197519f26dde4a8af1cd6b7d09ab8ea03415f102ba2e",
+  "artifact_hashes_verified": 46,
+  "prereg_commit": "026533a72e4386992b9eb4494f774dca3a3d1de2",
+  "prereg_commit_precedes_acquisition": true,
+  "signed_code_unchanged": true,
+  "checkpoint_pairs_identical": 9,
+  "per_link_replicate_estimates_reproduced": 72,
+  "numerical_tolerance": {
+    "rtol": 1e-12,
+    "atol": 1e-12
+  },
+  "gates_reproduced": {
+    "complete_grid": true,
+    "finite_estimates": true,
+    "RT-C1": true,
+    "RT-B1_small_tau": true,
+    "RT-B1_tau30": true,
+    "RT-O1": true,
+    "RT-O2": true,
+    "T-5": true,
+    "Q-1": true,
+    "C-1": true,
+    "B-1a": true,
+    "S-1": true,
+    "K-2": true,
+    "verdict": "GO"
+  },
+  "orthogonality": {
+    "available": true,
+    "d_log_tau_hat_d_log_sigma": -0.04818685784459802,
+    "d_log_sigma_ratio_d_log_tau": 0.013724229722009824
+  },
+  "tests": {
+    "command": "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python -m pytest test/test_estimator_lag_lo.py test/test_g3b_sigma_tau_grid.py -v",
+    "passed": 7,
+    "elapsed_s": 1.91
+  },
+  "acquisition_started_utc": "2026-09-06T03:51:09.883762+00:00",
+  "acquisition_finished_utc": "2026-09-06T07:09:25.180901+00:00",
+  "new_network_measurements": false
+}
