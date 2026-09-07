@@ -27,6 +27,12 @@ BIG=$(
         if [ -f "$f" ]; then
             size=$(wc -c < "$f")
             if [ "$size" -gt "$MAXBYTES" ]; then
+                # One CITED_RAW dependency is distributed for clean-clone
+                # verification (doc 76a). Validate staged bytes and decision;
+                # all other large additions remain blocked.
+                if python3 -m tools.check_cited_git_exception "$f"; then
+                    continue
+                fi
                 echo "$f ($((size / 1024 / 1024)) MiB)"
             fi
         fi

@@ -1,0 +1,227 @@
+{
+  "schema": "dt4n.phase_g.closeout_custody_repair.v1",
+  "date_utc": "2026-09-07",
+  "status": "TAGS_REPAIRED_RAW_DEPENDENCY_PENDING_PUBLIC_DISTRIBUTION",
+  "before_tag_inventory": {
+    "local_tag_count": 120,
+    "remote_tag_count": 113,
+    "missing": {
+      "phase-G2-cert-v2": "4e6dc18ef717e64ef63eabe5216e43ce82779350",
+      "phase-G2-g-a020-decision": "51136f70cd2e9ef7f3e700893b4b63519f4e5274",
+      "phase-G2-g3b-prereg": "026533a72e4386992b9eb4494f774dca3a3d1de2",
+      "phase-G2-g4-prereg": "059d9666beee5c71238e686b119d83c48ac9c487",
+      "phase-G2-g5-prereg": "f2174b98e84b9cf41ea3f27957631b8a4fc55f7c",
+      "phase-G2-g5c-complete": "51136f70cd2e9ef7f3e700893b4b63519f4e5274",
+      "phase-G2-g5c-prereg": "eafe3104bfd0c5d89c1ec55a68dffd9caa0eb0a8"
+    },
+    "mismatches": []
+  },
+  "before_clean_clone": {
+    "clone": "/tmp/dt4n-g-closeout-before-5sfgfzyk/repo",
+    "clone_head": "51136f70cd2e9ef7f3e700893b4b63519f4e5274",
+    "command": [
+      "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python",
+      "-c",
+      "from tools.g5_estimand_transfer import verify_protected; print(verify_protected())"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "fatal: invalid object name 'phase-G2-g5-prereg'.\nTraceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/tmp/dt4n-g-closeout-before-5sfgfzyk/repo/tools/g5_estimand_transfer.py\", line 35, in verify_protected\n    frozen=subprocess.check_output(['git','show',f'phase-G2-g5-prereg:{path}'])\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py\", line 466, in check_output\n    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,\n           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^\n  File \"/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py\", line 571, in run\n    raise CalledProcessError(retcode, process.args,\nsubprocess.CalledProcessError: Command '['git', 'show', 'phase-G2-g5-prereg:cert/simultaneous_score.py']' returned non-zero exit status 128.\n"
+  },
+  "after_tags_origin_check": {
+    "pass": true,
+    "checked": true,
+    "scope": "documented Phase G tags on origin; exact tag object IDs",
+    "referenced_tag_count": 34,
+    "local_tag_count": 120,
+    "remote_tag_count": 120,
+    "missing_local": [],
+    "missing_remote": [],
+    "mismatches": {},
+    "references": {
+      "phase-G-coherence-threshold-locked": [
+        "docs/phase-G/15-prereg-measurement-coherence.md",
+        "docs/phase-G/16-measurement-coherence-results.md"
+      ],
+      "phase-G-coherence-threshold-prereg": [
+        "docs/phase-G/15-prereg-measurement-coherence.md",
+        "docs/phase-G/16-measurement-coherence-results.md"
+      ],
+      "phase-G-g-a004-power-pass": [
+        "docs/phase-G/14-g-a004-results.md"
+      ],
+      "phase-G-g-a004-prereg": [
+        "docs/phase-G/13-amendment-G-A004.md",
+        "docs/phase-G/14-g-a004-results.md"
+      ],
+      "phase-G-g0-amendment-v2-prereg": [
+        "docs/phase-G/01a-g0-amendment-G-A001.md",
+        "docs/phase-G/01b-g0-v2-results.md"
+      ],
+      "phase-G-g0-complete-v2": [
+        "docs/phase-G/01a-g0-amendment-G-A001.md"
+      ],
+      "phase-G-g0-prereg": [
+        "docs/phase-G/00-prereg-g0.md",
+        "docs/phase-G/01-g0-results.md"
+      ],
+      "phase-G-g1-4-prereg": [
+        "docs/phase-G/07-prereg-g1-4.md",
+        "docs/phase-G/08-g1-4-results.md"
+      ],
+      "phase-G-g1-static-nc-prereg": [
+        "docs/phase-G/18-prereg-g1-static-nc.md",
+        "docs/phase-G/19-g1-static-nc-smoke-results.md"
+      ],
+      "phase-G-g1-static-nc-v2-prereg": [
+        "docs/phase-G/21-prereg-g1-static-nc-v2.md",
+        "docs/phase-G/22-g1-static-nc-v2-smoke-results.md"
+      ],
+      "phase-G-g1-static-nc-v3-prereg": [
+        "docs/phase-G/24-prereg-g1-static-nc-v3.md",
+        "docs/phase-G/25-g1-static-nc-v3-smoke-results.md"
+      ],
+      "phase-G-g1-static-smoke-invalid": [
+        "docs/phase-G/21-prereg-g1-static-nc-v2.md",
+        "docs/phase-G/59-amendment-g2-harness-defect-and-null.md"
+      ],
+      "phase-G-g1a-g-a002-prereg": [
+        "docs/phase-G/05-prereg-g1a-G-A002.md",
+        "docs/phase-G/06-g1a-G-A002-results.md"
+      ],
+      "phase-G-g1a-prereg": [
+        "docs/phase-G/03-prereg-g1a.md",
+        "docs/phase-G/04-g1a-results.md"
+      ],
+      "phase-G-g3-a013-pass": [
+        "docs/phase-G/39-prereg-g3-emitter-dryrun.md"
+      ],
+      "phase-G-g3-a014-prereg": [
+        "docs/phase-G/42-amendment-G-A014-certificate-renewal.md",
+        "docs/phase-G/43-amendment-G-A014a-corrigendum-and-reanchor.md",
+        "docs/phase-G/44-g-a014-results.md",
+        "docs/phase-G/49-amendment-G-A015-emit4-satisfiability.md"
+      ],
+      "phase-G-g3-a016-prereg": [
+        "docs/phase-G/51-amendment-G-A016.md",
+        "docs/phase-G/51a-a016-synthetic-and-preflight-results.md",
+        "docs/phase-G/51d-host-jitter-after-quiesce-results.md",
+        "docs/phase-G/51e-a016-ladder-live-admission-runbook.md",
+        "docs/phase-G/52-g-a016-reduced-loopback-results.md"
+      ],
+      "phase-G-g3-dryrun-prereg": [
+        "docs/phase-G/32-g3-dryrun-results.md"
+      ],
+      "phase-G-g3-emitter-ladder-prereg": [
+        "docs/phase-G/40-amendment-g3-emitter-ladder.md"
+      ],
+      "phase-G-g3-emitter-prereg": [
+        "docs/phase-G/39-prereg-g3-emitter-dryrun.md",
+        "docs/phase-G/40-amendment-g3-emitter-ladder.md"
+      ],
+      "phase-G-g3-emitter-reduction-prereg": [
+        "docs/phase-G/41-amendment-g3-emitter-reduction.md",
+        "docs/phase-G/42-amendment-G-A014-certificate-renewal.md",
+        "docs/phase-G/43-amendment-G-A014a-corrigendum-and-reanchor.md"
+      ],
+      "phase-G-g3-emitter-run-2-prereg": [
+        "docs/phase-G/49-amendment-G-A015-emit4-satisfiability.md"
+      ],
+      "phase-G-g3-emitter-run-prereg": [
+        "docs/phase-G/43-amendment-G-A014a-corrigendum-and-reanchor.md",
+        "docs/phase-G/45-g3-emitter-dryrun-results.md",
+        "docs/phase-G/49-amendment-G-A015-emit4-satisfiability.md"
+      ],
+      "phase-G-g3-prereg": [
+        "docs/phase-G/31a-prereg-g3-dryrun.md"
+      ],
+      "phase-G-offered-nugget-check-prereg": [
+        "docs/phase-G/09-prereg-offered-nugget-check.md",
+        "docs/phase-G/10-offered-nugget-check-results.md"
+      ],
+      "phase-G2-a017-prereg": [
+        "docs/phase-G/57-amendment-G-A017a-nugget-decomposition.md",
+        "docs/phase-G/61-amendment-G-A019-nugget-colour-and-sf-retirement.md"
+      ],
+      "phase-G2-g-a020-decision": [
+        "docs/phase-G/76-amendment-G-A020-omega-reduction.md"
+      ],
+      "phase-G2-g3a-prereg": [
+        "docs/phase-G/64-g3a-omega-positive-control-results.md"
+      ],
+      "phase-G2-g3b-prereg": [
+        "docs/phase-G/65-prereg-g3b-sigma-tau-roundtrip.md",
+        "docs/phase-G/66-g3b-results.md"
+      ],
+      "phase-G2-g4-prereg": [
+        "docs/phase-G/67-prereg-g4-nugget-model.md",
+        "docs/phase-G/68-measurement-path-cert-v2.md"
+      ],
+      "phase-G2-g5-prereg": [
+        "docs/phase-G/69-prereg-g5-estimand-transfer.md",
+        "docs/phase-G/70-g5-results.md",
+        "docs/phase-G/74-prereg-g5c-monotone.md"
+      ],
+      "phase-G2-g5b-prereg": [
+        "docs/phase-G/72-prereg-g5b-power-axis.md",
+        "docs/phase-G/73-g5b-results.md"
+      ],
+      "phase-G2-g5c-prereg": [
+        "docs/phase-G/74-prereg-g5c-monotone.md",
+        "docs/phase-G/75-g5c-results.md"
+      ],
+      "phase-G2-kill-test-prereg": [
+        "docs/phase-G/59-amendment-g2-harness-defect-and-null.md",
+        "docs/phase-G/60-kill-test-results.md"
+      ]
+    },
+    "verified_object_ids": {
+      "phase-G-coherence-threshold-locked": "456903144c6150fadc6e9d05005e94f2e293f4c7",
+      "phase-G-coherence-threshold-prereg": "ffe500d034f5ea8db28f8242f6269625d791dc2a",
+      "phase-G-g-a004-power-pass": "1dba3051b8aceafcafe6d87961e1fe3282824c30",
+      "phase-G-g-a004-prereg": "6457da1c890fcf3fe577ef1c67fd6dc30647cc90",
+      "phase-G-g0-amendment-v2-prereg": "88fb0dd429f36af4323b8c908d41f8b1a6a68279",
+      "phase-G-g0-complete-v2": "4ea13d7504d29f6a4f1c902b5e11815523a40fe0",
+      "phase-G-g0-prereg": "408e5ba51204b904613beeeb758cecda544a38ba",
+      "phase-G-g1-4-prereg": "0a4c045ec6c776b3481ac62358701d290b3cc2c7",
+      "phase-G-g1-static-nc-prereg": "13190eb65370edfb08514e53a3b5a7d4407c389a",
+      "phase-G-g1-static-nc-v2-prereg": "794c9d0a26f48e21c41fdfaee3fa1551693d8f38",
+      "phase-G-g1-static-nc-v3-prereg": "da6dae17501fed0cfc0fa37ef7f89de0f9471b7e",
+      "phase-G-g1-static-smoke-invalid": "0abf0eb7343ac7ac5a1d2c082ccd33aac18ec8be",
+      "phase-G-g1a-g-a002-prereg": "b4b74579b452fa42cc1bd95aee3b75764c605a65",
+      "phase-G-g1a-prereg": "44c62c83a97127365ebfdc368871923a9383b62e",
+      "phase-G-g3-a013-pass": "9f3c041a60ee8d9093595226c11dec1e82f22418",
+      "phase-G-g3-a014-prereg": "d03614c908c9fadaae0efd1e05148ed7f1dea226",
+      "phase-G-g3-a016-prereg": "5904074b158737d11464ac5127ee26355c9c1f6b",
+      "phase-G-g3-dryrun-prereg": "548e4df7549744a20808049b2ea93a608864596e",
+      "phase-G-g3-emitter-ladder-prereg": "25aa49a0c437165cc1b8331adf0ecb0e93606dc4",
+      "phase-G-g3-emitter-prereg": "510982684614e83613e2e5025de70d30fc7c7851",
+      "phase-G-g3-emitter-reduction-prereg": "5f09414f0ebf74da0657edbbec3217549b78cd72",
+      "phase-G-g3-emitter-run-2-prereg": "9fe0cfef3b8819769c94f779bd41b251e659f925",
+      "phase-G-g3-emitter-run-prereg": "b79b03d8a9fa790a25cd6134689aff064f160d87",
+      "phase-G-g3-prereg": "f204101b61459b2451277d2354fdb3070e15c644",
+      "phase-G-offered-nugget-check-prereg": "a10db0f6a3bff88faa8da9bd2f6356c02ed2ec61",
+      "phase-G2-a017-prereg": "48d5996363a17f4f1b7fc698aa554bca91604617",
+      "phase-G2-g-a020-decision": "51136f70cd2e9ef7f3e700893b4b63519f4e5274",
+      "phase-G2-g3a-prereg": "677ab537519f049333e331fab1ea905030724b90",
+      "phase-G2-g3b-prereg": "026533a72e4386992b9eb4494f774dca3a3d1de2",
+      "phase-G2-g4-prereg": "059d9666beee5c71238e686b119d83c48ac9c487",
+      "phase-G2-g5-prereg": "f2174b98e84b9cf41ea3f27957631b8a4fc55f7c",
+      "phase-G2-g5b-prereg": "3f01eeadaa23905310e1c828a0fc414527904879",
+      "phase-G2-g5c-prereg": "eafe3104bfd0c5d89c1ec55a68dffd9caa0eb0a8",
+      "phase-G2-kill-test-prereg": "edc49a43a12d6467e7a1cb91b497046267f958ca"
+    }
+  },
+  "after_tags_clean_clone": {
+    "clone": "/tmp/dt4n-g-closeout-after-tags-rb742ae8/repo",
+    "clone_head": "51136f70cd2e9ef7f3e700893b4b63519f4e5274",
+    "command": [
+      "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python",
+      "-c",
+      "import json; from tools.g5_estimand_transfer import verify_protected; print(json.dumps(verify_protected(), sort_keys=True))"
+    ],
+    "exit_code": 1,
+    "stdout": "",
+    "stderr": "Traceback (most recent call last):\n  File \"<string>\", line 1, in <module>\n  File \"/tmp/dt4n-g-closeout-after-tags-rb742ae8/repo/tools/g5_estimand_transfer.py\", line 42, in verify_protected\n    if sha256_of(path)!=h: raise RuntimeError(f'certificate evidence changed: {path}')\n       ^^^^^^^^^^^^^^^\n  File \"/tmp/dt4n-g-closeout-after-tags-rb742ae8/repo/tools/artifact_guard.py\", line 26, in sha256_of\n    with open(path, \"rb\") as handle:\n         ^^^^^^^^^^^^^^^^\nFileNotFoundError: [Errno 2] No such file or directory: 'results/SMOKE/phase-G2/g3b_sigma_tau_series.npz'\n"
+  }
+}
