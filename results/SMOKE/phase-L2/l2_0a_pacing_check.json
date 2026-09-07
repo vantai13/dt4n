@@ -1,0 +1,151 @@
+{
+  "constants": {
+    "frame_bytes": 1442.0,
+    "s_ms": 1.9226666666666667,
+    "s_phase_l_ms": 2.016,
+    "stage2_burst_bytes": 1600.0
+  },
+  "f10_hybrid_overshoot": {
+    "0.0": {
+      "delay_060_ms": 0.0,
+      "delay_090_ms": 0.0,
+      "delay_095_ms": 0.0,
+      "frac_rho_over_one_at_095": 0.0,
+      "r": null
+    },
+    "0.05": {
+      "delay_060_ms": 0.0,
+      "delay_090_ms": 0.004325719971955278,
+      "delay_095_ms": 0.06483187833322215,
+      "frac_rho_over_one_at_095": 0.16025,
+      "r": null
+    },
+    "0.1": {
+      "delay_060_ms": 3.0718065703687087e-06,
+      "delay_090_ms": 0.12966375666644467,
+      "delay_095_ms": 0.5453238412159138,
+      "frac_rho_over_one_at_095": 0.31475,
+      "r": 177525.4491855777
+    },
+    "0.2": {
+      "delay_060_ms": 0.01730287988782109,
+      "delay_090_ms": 1.0906476824318294,
+      "delay_095_ms": 2.9320983831831557,
+      "frac_rho_over_one_at_095": 0.40508333333333335,
+      "r": 169.45724655044043
+    },
+    "0.3": {
+      "delay_060_ms": 0.16503172734712504,
+      "delay_090_ms": 2.9392647939396594,
+      "delay_095_ms": 6.353850502451983,
+      "frac_rho_over_one_at_095": 0.43666666666666665,
+      "r": 38.50078166537879
+    }
+  },
+  "f7_pacing": {
+    "b12_rho0.60": {
+      "cv_gap": 3.310537296566308e-12,
+      "mean_gap_ms": 3.204444444442774,
+      "paced_gap_ms": 3.204444444444445,
+      "transient_frames": 12
+    },
+    "b12_rho0.90": {
+      "cv_gap": 2.3218262213096523e-12,
+      "mean_gap_ms": 2.13629629629877,
+      "paced_gap_ms": 2.136296296296296,
+      "transient_frames": 12
+    },
+    "b1_rho0.60": {
+      "cv_gap": 3.311307840740642e-12,
+      "mean_gap_ms": 3.2044444444427724,
+      "paced_gap_ms": 3.204444444444445,
+      "transient_frames": 1
+    },
+    "b1_rho0.90": {
+      "cv_gap": 2.3221403203818032e-12,
+      "mean_gap_ms": 2.1362962962987706,
+      "paced_gap_ms": 2.136296296296296,
+      "transient_frames": 1
+    },
+    "b4_rho0.60": {
+      "cv_gap": 3.3110057984477423e-12,
+      "mean_gap_ms": 3.204444444442773,
+      "paced_gap_ms": 3.204444444444445,
+      "transient_frames": 4
+    },
+    "b4_rho0.90": {
+      "cv_gap": 2.3220421460573495e-12,
+      "mean_gap_ms": 2.1362962962987706,
+      "paced_gap_ms": 2.136296296296296,
+      "transient_frames": 4
+    },
+    "b50_rho0.60": {
+      "cv_gap": 3.3080568087561637e-12,
+      "mean_gap_ms": 3.2044444444427804,
+      "paced_gap_ms": 3.204444444444445,
+      "transient_frames": 50
+    },
+    "b50_rho0.90": {
+      "cv_gap": 2.320835159623202e-12,
+      "mean_gap_ms": 2.136296296298768,
+      "paced_gap_ms": 2.136296296296296,
+      "transient_frames": 50
+    }
+  },
+  "f7_watchdog": {
+    "g_us_needed_for_one_frame_rho090": 2136.296296296296,
+    "grid": {
+      "1.0": {
+        "cv_gap": 0.00021375083429443068,
+        "frames_per_wake": 0.0004680998613037448
+      },
+      "10.0": {
+        "cv_gap": 0.0022604170337361994,
+        "frames_per_wake": 0.004680998613037448
+      },
+      "100.0": {
+        "cv_gap": 0.02250852135171715,
+        "frames_per_wake": 0.04680998613037448
+      },
+      "1000.0": {
+        "cv_gap": 0.16061417140567272,
+        "frames_per_wake": 0.4680998613037448
+      },
+      "4000.0": {
+        "cv_gap": 0.934014630577334,
+        "frames_per_wake": 1.8723994452149793
+      },
+      "50.0": {
+        "cv_gap": 0.010439609412652229,
+        "frames_per_wake": 0.02340499306518724
+      }
+    },
+    "kernel": "6.8.0-1066-gcp, CONFIG_HZ=1000, CONFIG_HIGH_RES_TIMERS=y, psched clock_res 1e9 ns"
+  },
+  "f9_phase_l_cbr": {
+    "0.6": {
+      "excess_over_floor_ms": -0.002529930756233034,
+      "measured_ms": 0.13817006924376696,
+      "residual_service_prediction_ms": 0.6048
+    },
+    "0.8": {
+      "excess_over_floor_ms": -0.0003946007040929178,
+      "measured_ms": 0.14030539929590707,
+      "residual_service_prediction_ms": 0.8064
+    },
+    "0.9": {
+      "excess_over_floor_ms": -0.007712552839284403,
+      "measured_ms": 0.1329874471607156,
+      "residual_service_prediction_ms": 0.9072
+    },
+    "0.95": {
+      "excess_over_floor_ms": -0.0022409708223931624,
+      "measured_ms": 0.13845902917760683,
+      "residual_service_prediction_ms": 0.9576
+    },
+    "r_if_residual_service": 1.5833333333333333,
+    "r_measured": 1.0020913352321628
+  },
+  "f9_stage2_queue_under_paced_input_ms": 0.0,
+  "schema": "dt4n.phase_l2.pacing_check.v1"
+}
