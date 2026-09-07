@@ -138,12 +138,12 @@ Bon tang (Lesson 23.17, amendment 23-44):
 | `phase-20R/additivity_check.json` | `measurements.additivity_check` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/additivity_check_probe_runtime.json` | `measurements.additivity_check` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/additivity_plan.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
-| `phase-20R/band_v2_cascade.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-20R/band_v2_cascade.json` | `?` | `?` | ? | - | - | Tai kiem toan L2.1 / doi chieu lich su band cascade G6-CASCADE (Amd 14 §42). Giu SUPERSEDED do to chuc lai 4 tang va provenance git_dirty; khong dung nhu artifact LIVE de nop paper |
 | `phase-20R/band_v2_transfer.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/branch_b_fixed_s104_108.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/branch_c_fixed_s104_108.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
-| `phase-20R/breakdown_scan_cascade.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
-| `phase-20R/breakdown_scan_cascade_pilot_n30k.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-20R/breakdown_scan_cascade.json` | `?` | `?` | ? | - | - | Tai kiem toan L2.1 / doi chieu lich su safety scan G6-CASCADE (Amd 14 §42). Giu SUPERSEDED do to chuc lai 4 tang va provenance git_dirty; khong dung nhu artifact LIVE de nop paper |
+| `phase-20R/breakdown_scan_cascade_pilot_n30k.json` | `?` | `?` | ? | - | - | Pilot lich su cua breakdown scan cascade; chi dung de truy vet qua trinh G6-CASCADE. Giu SUPERSEDED, khong dung cho headline hay artifact LIVE |
 | `phase-20R/breakdown_scan_transfer_n30k_bracket.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/breakdown_scan_transfer_qt3_n120k.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/campaign_state.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
@@ -170,7 +170,7 @@ Bon tang (Lesson 23.17, amendment 23-44):
 | `phase-20R/quasistatic_band.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/quasistatic_check.json` | `measurements.quasistatic_check` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/quasistatic_plan.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
-| `phase-20R/residual_cascade.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-20R/residual_cascade.json` | `?` | `?` | ? | - | - | Tai kiem toan L2.1 / doi chieu lich su G6-CASCADE (Amd 14 §42). Giu SUPERSEDED do to chuc lai 4 tang va provenance git_dirty; khong dung nhu artifact LIVE de nop paper |
 | `phase-20R/residual_transfer.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/sd_stability_s101_108.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/sentinel_control.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
@@ -453,6 +453,7 @@ Bon tang (Lesson 23.17, amendment 23-44):
 | `phase-20R/breakdown_scan_transfer_smoke.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/pilot_power_fixed_pilot3.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-20R/smoke_state.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
+| `phase-L2/l2_1_additivity_recheck.json` | `?` | `?` | ? | - | - | AUDIT_NO_MEASUREMENT L2.1: tai lap phan ra e_add/e_model/e_total tu artifact Phase 20R.6 va khoa doi chieu r_path Amd 14 §42 |
 | `phase-23/a0_instrument_calibration_attempt1.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-23/a0_instrument_calibration_attempt2.json` | `?` | `?` | ? | - | - | _(dien tay)_ |
 | `phase-23/a2_smoke_estimate.json` | `?` | `?` | 2026-08-22 | - | - | _(dien tay)_ |
