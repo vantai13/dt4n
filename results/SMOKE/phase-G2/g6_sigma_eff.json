@@ -1,0 +1,138 @@
+{
+  "schema": "dt4n.phase_g2.g6_sigma_eff.v1",
+  "status": "ANALYTIC_DIAGNOSTIC_NO_NEW_MEASUREMENT",
+  "interpretation": "exact fixed-identity contrast SD; approximate ranked-score quantile proxy",
+  "design": {
+    "sigma_ref": 0.028,
+    "reference_link": "uA",
+    "dt_s": 0.1,
+    "reference_path_index": 0,
+    "omega_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ]
+  },
+  "rows": [
+    {
+      "omega": 0.0,
+      "reference_path": "P1",
+      "fixed_contrast_sd": [
+        0.06884161946359463,
+        0.06157145424446119,
+        0.07787867877286701
+      ],
+      "fixed_contrast_sd_ratio": [
+        1.0,
+        1.0,
+        1.0
+      ],
+      "c_analytic_proxy": 1.0,
+      "sigma_eff_proxy": 0.028,
+      "spread_fraction": 0.0
+    },
+    {
+      "omega": 0.25,
+      "reference_path": "P1",
+      "fixed_contrast_sd": [
+        0.07431802318664275,
+        0.06633868973348475,
+        0.08547761075709089
+      ],
+      "fixed_contrast_sd_ratio": [
+        1.0795507683537893,
+        1.0774260661457806,
+        1.0975739715151838
+      ],
+      "c_analytic_proxy": 1.0848502686715846,
+      "sigma_eff_proxy": 0.03037580752280437,
+      "spread_fraction": 0.018572061003473365
+    },
+    {
+      "omega": 0.5,
+      "reference_path": "P1",
+      "fixed_contrast_sd": [
+        0.0794176842420526,
+        0.07078558845791517,
+        0.09245407116008508
+      ],
+      "fixed_contrast_sd_ratio": [
+        1.1536289364030852,
+        1.1496494491890754,
+        1.187155106081437
+      ],
+      "c_analytic_proxy": 1.1634778305578657,
+      "sigma_eff_proxy": 0.03257737925562024,
+      "spread_fraction": 0.03223581567891007
+    },
+    {
+      "omega": 0.75,
+      "reference_path": "P1",
+      "fixed_contrast_sd": [
+        0.08420907653198893,
+        0.07496917573984063,
+        0.09893982316240214
+      ],
+      "fixed_contrast_sd_ratio": [
+        1.2232291626509606,
+        1.2175963140676456,
+        1.270435306831025
+      ],
+      "c_analytic_proxy": 1.237086927849877,
+      "sigma_eff_proxy": 0.03463843397979656,
+      "spread_fraction": 0.04271243319595691
+    },
+    {
+      "omega": 1.0,
+      "reference_path": "P1",
+      "fixed_contrast_sd": [
+        0.08874214652784984,
+        0.07893133147799351,
+        0.10502581559188552
+      ],
+      "fixed_contrast_sd_ratio": [
+        1.289076974355305,
+        1.2819468444680104,
+        1.348582400815929
+      ],
+      "c_analytic_proxy": 1.3065354065464148,
+      "sigma_eff_proxy": 0.036582991383299616,
+      "spread_fraction": 0.05100172258175339
+    }
+  ],
+  "comparison_existing_measurements": {
+    "g5b_power_axis": {
+      "measured_slot_mean_qhat_ratio": 1.315523102849587,
+      "measured_maxscore_qhat_ratio": 1.3219759569324763,
+      "relative_gap_to_slot_mean": 0.006879030034807573,
+      "relative_gap_to_maxscore": 0.011817934905320139,
+      "measured_slot_spread_fraction": 0.02277401533003093
+    },
+    "g5c_monotone": {
+      "measured_slot_mean_qhat_ratio": 1.3122626546073628,
+      "measured_maxscore_qhat_ratio": 1.320290417734798,
+      "relative_gap_to_slot_mean": 0.004383538350550304,
+      "relative_gap_to_maxscore": 0.010527851843481323,
+      "measured_slot_spread_fraction": 0.02081457188176308
+    }
+  },
+  "evidence_sha256": {
+    "results/SMOKE/phase-G2/g5b_power_axis.json": "62239b1f5cef6e276e82854cc691e0ce2e0cfd5eb38f4adab68001b7dbb38600",
+    "results/SMOKE/phase-G2/g5c_monotone.json": "10e44f07dd57f5bdbaad5ce7f83b878334dc1b47ea18cc30b51773cf24d75d3c"
+  },
+  "source_sha256": {
+    "tools/g6_sigma_eff.py": "8bd74922f7fac6fbbdb4e6da299620e51f95492804ca0f8aff79a6561ab74857",
+    "tools/g2_topology.py": "2076973b2464a0100286280e131a6d2f801396095fec9fed36bfb1a5809161d2",
+    "twin/topology_v7.py": "235280407c6077e59dd3f452fbf4101992dbed1887fe0f76e08030cdbdf960bd",
+    "tools/g5_parameters.py": "3d5c0a9a7bd64a8a7a2fcee35ed2b2f881e3fa5ab0a05501811cb3e5e9d6ba31",
+    "tools/g4_nugget_model.py": "87117324a5d09e1acb101f430dac3f28051127505d08d123e8fad2cdf4526b5b"
+  },
+  "provenance": {
+    "git_head_at_execution": "45a2d82e165cba92b63a263a9ebb424eb4dbd15d",
+    "worktree_dirty_at_execution": false,
+    "dirty_scope": "tracked files only",
+    "untracked_paths_present": 0
+  }
+}

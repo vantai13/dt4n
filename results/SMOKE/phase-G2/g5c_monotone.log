@@ -1,0 +1,28 @@
+Starting primary: seed=20260909, replicates=200
+Primary complete; starting null sweep
+{
+  "verdict": "POWER_AXIS_HOLDS",
+  "classification": "REDUCIBLE_TO_EFFECTIVE_SIGMA",
+  "gates": {
+    "NC-0": true,
+    "P-1": true,
+    "P-2": true,
+    "P-3b": true,
+    "NC-1": true,
+    "NC-2": true
+  },
+  "monotonicity": {
+    "steps": [
+      -0.029327500000000062,
+      -0.02729333333333328,
+      -0.023797500000000027,
+      -0.021535000000000026
+    ],
+    "worst_increase": -0.021535000000000026,
+    "worst_decrease": -0.029327500000000062,
+    "n_steps": 4,
+    "gate_read": "max(diff) <= +0.005"
+  },
+  "irreducible_remainder": 0.004256666666666631,
+  "elapsed_s": 19.396898239999985
+}
