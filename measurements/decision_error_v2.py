@@ -27,10 +27,25 @@ from twin import topology_v7 as T7
 
 
 DT = 0.005
-TAU = 1.0
+
+# CHI dung cho doi chung hoi quy 20R/21R/22/23. KHONG duoc dung lam mac
+# dinh cho run moi: moi run T2 phai truyen --tau tuong minh.
+# Xem docs/GLOSSARY.md muc "tau_load".
+TAU_LOAD_LEGACY = 1.0
+# Bi danh giu nguyen hop dong import: cert/build_calib_set_v2.py va
+# cert/build_calib_set_v3.py import truc tiep ten `TAU`. Doi ten cung
+# o day se pha lo chung nhan, khong phai cai T2.2 nham toi.
+TAU = TAU_LOAD_LEGACY
+
 N = 200_000
 CONTROL_N = 50_000
-BLOCK_S = 5.0
+
+# Kenh (c): block conformal PHAI theo thoi gian tuong quan, khong phai
+# theo giay. cert/tau_sweep.py da lam dung tu 22.6; day la day bi thieu.
+BLOCKS_PER_TAU = 5.0
+# Bi danh: measurements/band_v2.py:31 va test_phase20r6_band.py:423 doc
+# `BLOCK_S`. Gio no TU DAN ra tu quy tac 5*tau thay vi la hang so 5 giay.
+BLOCK_S = BLOCKS_PER_TAU * TAU_LOAD_LEGACY
 N_BOOT = 2000
 Z_GRID = (0.0, 0.05, 0.10, 0.20, 0.30, 0.55)
 Z_EXTRAP = (1.0, 2.0, 4.0)
@@ -70,6 +85,19 @@ def load_calibration(path: str = CALIBRATION) -> List[Dict[str, Any]]:
     with open(path, "r", encoding="utf-8") as f:
         report = json.load(f)
     return [dict(row) for row in report["cells"]]
+
+
+def block_s_for_tau(tau: float) -> float:
+    """Kenh (c): kich thuoc block conformal theo thoi gian tuong quan.
+
+    'one block is always 5 tau, not always 5 seconds' -- cert/tau_sweep.py,
+    Lesson 22.6. Giu 5 giay cung khi tau doi se lam so block moi seed sai,
+    va conformal mat rang buoc calib/test.
+    """
+    tau = float(tau)
+    if tau <= 0.0:
+        raise ValueError("tau phai duong")
+    return BLOCKS_PER_TAU * tau
 
 
 def z_values_for(tau: float = TAU, scaled: bool = False) -> Tuple[float, ...]:
@@ -1212,7 +1240,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--out", default=FIXED_OUT)
     ap.add_argument("--summary-out", default=SUMMARY_OUT)
     ap.add_argument("--sawtooth-out", default=SAWTOOTH_OUT)
-    ap.add_argument("--n", type=int, default=N)
+    ap.add_argument("--n", type=int, default=None,
+                    help="mac dinh: n_for_tau(tau, dt) -- giu >= 10 block moi seed")
     ap.add_argument("--control-n", type=int, default=CONTROL_N)
     ap.add_argument("--seeds", default="101,102,103,104,105")
     ap.add_argument("--rho-source", choices=("calibration_ar1", "scalar_ou"), default=RHO_SOURCE)
@@ -1220,11 +1249,21 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     ap.add_argument("--a-override", type=float, default=None, help="set sigma_rho to a * sigma_max for every calibration cell")
     ap.add_argument("--w-loss-override", type=float, default=None)
     ap.add_argument("--rho-bar-extra", default="", help="comma-separated extra rho_bar values for h2/poisson H7 diagnostics")
-    ap.add_argument("--tau", default=str(TAU), help="single tau or comma-separated tau list for --compute-margin-cv")
-    ap.add_argument("--z-grid-scaled", action="store_true", help="use z/tau ratios 0.10,0.30,0.55,1.00")
+    ap.add_argument("--tau", required=True,
+                    help="THOI GIAN TUONG QUAN cua tai, GIAY. BAT BUOC, khong co "
+                         "mac dinh (mot mac dinh im lang chinh la nguyen nhan F4). "
+                         "Nhan mot tau hoac danh sach ngan cach bang dau phay cho "
+                         "--compute-margin-cv.")
+    ap.add_argument("--z-mode", choices=("fixed", "scaled"), required=True,
+                    help="fixed = NHANH B: z co dinh theo sync_period, KHONG co gian "
+                         "theo tau (che do van hanh that, chua ai quet). "
+                         "scaled = NHANH A: z/tau co dinh 0.10,0.30,0.55,1.00 "
+                         "(tai tao 20R cu). Bat buoc chon tuong minh de lua chon "
+                         "nay di vao provenance thay vi bi chon ngam.")
     ap.add_argument("--n-boot", type=int, default=N_BOOT)
     ap.add_argument("--boot-metrics", default=None, help="accepted for audit compatibility; all metrics are bootstrapped")
-    ap.add_argument("--block-s", type=float, default=BLOCK_S)
+    ap.add_argument("--block-s", type=float, default=None,
+                    help="mac dinh: 5*tau (block_s_for_tau)")
     args = ap.parse_args(argv)
     if args.sigma_override is not None and args.a_override is not None:
         ap.error("--sigma-override and --a-override are mutually exclusive")
@@ -1236,7 +1275,11 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not (args.compute_margin_cv or args.compute_margin_cv_ci) and len(tau_values) != 1:
         ap.error("--tau may be a list only with --compute-margin-cv or --compute-margin-cv-ci")
     tau = tau_values[0]
-    z_values = z_values_for(tau, args.z_grid_scaled)
+    z_values = z_values_for(tau, scaled=(args.z_mode == "scaled"))
+    if args.n is None:
+        args.n = SLA.n_for_tau(tau, DT)
+    if args.block_s is None:
+        args.block_s = block_s_for_tau(tau)
     rho_bar_extra = parse_float_list(args.rho_bar_extra)
 
     tt = TruthTable(args.truth_table)

@@ -24,8 +24,15 @@ from tools.audit_tags import _git_tags, _scan_docs, _scan_json
 #   (1) tag CO Y KHONG TAO  -- doc tu ghi quyet dinh do
 #   (2) TROI TEN            -- mot moc, hai cach viet trong cung lesson
 #   (3) MOC CHUA XAC DINH   -- khong doc nao ghi hash; doan la bia
+#   (4) CHUA KY             -- tai lieu tu khai la ban thao; tag tao LUC KY
 # ---------------------------------------------------------------------------
 UNRESOLVED_DOC_CLAIMS: dict[str, str] = {
+    "phase-T2-prereg-signed":
+        "(4) CHUA KY. `docs/phase-T2/00-preregistration.md` tu khai TRANG "
+        "THAI: BAN THAO -- CHUA KY, va con bon muc de trong (QD-2, ngan sach "
+        "T2-4, bang du doan T2-5, thoi han T2-7). Tag duoc tao DUNG luc ky, "
+        "khong truoc. GO DONG NAY khi tag ton tai -- neu tai lieu da ky ma "
+        "tag chua co thi day la loi custody that, khong phai ngoai le.",
     "lesson-23-22c-prereg":
         "(1) CO Y KHONG TAO. `48-a069-pilot.md:110` ghi: `M-210..M-214` va "
         "sensitivity NOT_RUN trong lesson nay, 'khong tao tag "

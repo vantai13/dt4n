@@ -1,0 +1,41 @@
+{
+  "args": {
+    "dt": 0.005,
+    "mode": "poisson",
+    "n": 200000,
+    "rho_bar": 0.925,
+    "seed": 101,
+    "sigma": 0.0218,
+    "tau": 1.0
+  },
+  "dtype": "float64",
+  "first_row": [
+    0.860079911634918,
+    0.8770929111456021,
+    1.0074816917978873,
+    0.9976648290829225,
+    0.9952838985623688,
+    0.9657981165515047,
+    0.8170044619323348,
+    0.8603521046247191
+  ],
+  "generator": "measurements.sla_calib_v2.ar1_matrix",
+  "last_row": [
+    0.8451926038051892,
+    0.9101788519592054,
+    1.015807117186497,
+    0.9927409553882703,
+    0.9452335866494312,
+    0.9805491403451273,
+    0.8755449611767036,
+    0.8869552385277221
+  ],
+  "mean": 0.9250693450800169,
+  "note": "Golden BIT-EXACT cho ar1_matrix. Luu DIGEST thay vi mang: results/**/* bi gitignore tru *.json, va mot mang 200k x 8 float64 la ~12 MB. Digest van cho doi chung bit-exact, va theo dung quy uoc golden JSON cua repo (tools/freeze_l2_golden.py).",
+  "sha256_tobytes_C": "dbe26ba7b115ff67e126f2ba8faec1bc806ad5e040a7183e0e7a71641db9cba8",
+  "shape": [
+    200000,
+    8
+  ],
+  "std": 0.05999834675979557
+}

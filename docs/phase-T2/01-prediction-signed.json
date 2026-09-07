@@ -1,0 +1,979 @@
+{
+  "cells": {
+    "cbr@0.700": {
+      "branch_A_mechanism": {
+        "note": "Voi A,c,em co dinh, rms o z/tau co dinh la HANG SO theo tau (span = 0 dung bang so). Bien thien do duoc o T2.6 chi den tu troi cua A,c,em -- do la thuoc do cua troi do, khong phai mot hieu ung cua tau.",
+        "relative_span_across_tau": {
+          "0.10": 0.0,
+          "0.30": 0.0,
+          "0.55": 0.0,
+          "1.00": 0.0
+        },
+        "rms_curves": {
+          "0.10": {
+            "1": 0.004584558751741064,
+            "10": 0.004584558751741064,
+            "2": 0.004584558751741064,
+            "20": 0.004584558751741064,
+            "28": 0.004584558751741064,
+            "3": 0.004584558751741064,
+            "5": 0.004584558751741064
+          },
+          "0.30": {
+            "1": 0.004585396461147237,
+            "10": 0.004585396461147237,
+            "2": 0.004585396461147237,
+            "20": 0.004585396461147237,
+            "28": 0.004585396461147237,
+            "3": 0.004585396461147237,
+            "5": 0.004585396461147237
+          },
+          "0.55": {
+            "1": 0.004586233247622804,
+            "10": 0.004586233247622804,
+            "2": 0.004586233247622804,
+            "20": 0.004586233247622804,
+            "28": 0.004586233247622804,
+            "3": 0.004586233247622804,
+            "5": 0.004586233247622804
+          },
+          "1.00": {
+            "1": 0.004587300634209641,
+            "10": 0.004587300634209641,
+            "2": 0.004587300634209641,
+            "20": 0.004587300634209641,
+            "28": 0.004587300634209641,
+            "3": 0.004587300634209641,
+            "5": 0.004587300634209641
+          }
+        },
+        "z_over_tau": [
+          0.1,
+          0.3,
+          0.55,
+          1.0
+        ]
+      },
+      "branch_B_operational": {
+        "knee_tol": 0.05,
+        "monotone_decreasing_in_tau": true,
+        "ratio_tau28_over_tau0.5": {
+          "0.05": 0.9998959576510231,
+          "0.15": 0.9997172505111149,
+          "0.30": 0.9995094540225232,
+          "0.50": 0.9993160304558707
+        },
+        "rms_curves": {
+          "0.05": {
+            "1": 0.004584321782069675,
+            "10": 0.004584098127648811,
+            "2": 0.00458419877447213,
+            "20": 0.004584085404513585,
+            "28": 0.004584081763479511,
+            "3": 0.004584157083053648,
+            "5": 0.00458412347858897
+          },
+          "0.15": {
+            "1": 0.004584784152898612,
+            "10": 0.004584148702951643,
+            "2": 0.004584441749419563,
+            "20": 0.004584110818980744,
+            "28": 0.004584099942641512,
+            "3": 0.004584321782069675,
+            "5": 0.004584223622885842
+          },
+          "0.30": {
+            "1": 0.004585396461147237,
+            "10": 0.004584223622885842,
+            "2": 0.004584784152898612,
+            "20": 0.004584148702951643,
+            "28": 0.0045841270898042035,
+            "3": 0.004584558751741064,
+            "5": 0.004584370129584751
+          },
+          "0.50": {
+            "1": 0.0045860822056737905,
+            "10": 0.004584321782069675,
+            "2": 0.0045852024831446354,
+            "20": 0.00458419877447213,
+            "28": 0.004584163060286077,
+            "3": 0.004584856814351243,
+            "5": 0.004584558751741064
+          }
+        },
+        "tau_grid": [
+          1.0,
+          2.0,
+          3.0,
+          5.0,
+          10.0,
+          20.0,
+          28.0
+        ],
+        "tau_knee_s": {
+          "0.05": 0.0,
+          "0.15": 0.0,
+          "0.30": 0.0,
+          "0.50": 0.0
+        },
+        "z_fixed_s": [
+          0.05,
+          0.15,
+          0.3,
+          0.5
+        ]
+      },
+      "fit": {
+        "A": 9.969118646066259e-05,
+        "A_span_pct": 0.17583762568014538,
+        "c": 4.71251119266627,
+        "c_span_pct": 72.95044066734533,
+        "law_max_rel_err_vs_measured": 0.007209721863747354,
+        "rms_e_model": 0.004584072649495282,
+        "rms_em_span_pct": 1.408288957098568
+      },
+      "hump": {
+        "measured_22_6_ratio": [
+          0.9874460921486667,
+          1.001104200158989,
+          0.9963800541614983,
+          0.9981589661194763,
+          0.9984191769875762
+        ],
+        "peak_22_6_from_tau1_fit": {
+          "ratio": 1.0007629887779212,
+          "tau": 0.20381603816038157
+        },
+        "peak_basis_note": "22.6 dung fit tai tau=1.0; day dung trung binh tren luoi tau. Khac CO SO, khong phai sai so.",
+        "peak_ratio": 1.000624632199363,
+        "peak_tau_abs_diff": 0.0009256285062850811,
+        "peak_tau_s": 0.20474166666666666,
+        "tau_grid_22_6": [
+          0.5,
+          1.0,
+          2.0,
+          2.87,
+          5.0
+        ],
+        "z0": 0.077,
+        "z3": 0.425
+      },
+      "hump_power_scope": {
+        "amplitude_over_noise": 2.7264735724334748,
+        "declared_scope": "WEAK",
+        "hump_amplitude": 0.01365810801032219,
+        "mean_abs_diff_two_estimators": 0.005009440820705202
+      },
+      "role": "negative_control",
+      "self_check": {
+        "max_abs_diff_vs_22_6_ratio_pred": 0.0,
+        "pass": true
+      },
+      "source": "results/SUPERSEDED/phase-22/tau_sweep_cbr_0.700.json",
+      "tau_independence": {
+        "A": {
+          "passes": true,
+          "ratio_span_over_spread": 0.09714386857193807,
+          "span_between_tau_pct": 0.17583762568014538,
+          "spread_within_tau_pct_max": 1.8258121798161395,
+          "spread_within_tau_pct_mean": 1.810074359453084
+        },
+        "c": {
+          "passes": true,
+          "ratio_span_over_spread": 0.46028948319907365,
+          "span_between_tau_pct": 72.95044066734533,
+          "spread_within_tau_pct_max": 342.38240183504934,
+          "spread_within_tau_pct_mean": 158.4881760937269
+        },
+        "em": {
+          "passes": false,
+          "ratio_span_over_spread": 1.7761662945809984,
+          "span_between_tau_pct": 1.408288957098568,
+          "spread_within_tau_pct_max": 1.3685770724505788,
+          "spread_within_tau_pct_mean": 0.7928812529520421
+        }
+      }
+    },
+    "h2@0.700": {
+      "branch_A_mechanism": {
+        "note": "Voi A,c,em co dinh, rms o z/tau co dinh la HANG SO theo tau (span = 0 dung bang so). Bien thien do duoc o T2.6 chi den tu troi cua A,c,em -- do la thuoc do cua troi do, khong phai mot hieu ung cua tau.",
+        "relative_span_across_tau": {
+          "0.10": 0.0,
+          "0.30": 0.0,
+          "0.55": 0.0,
+          "1.00": 0.0
+        },
+        "rms_curves": {
+          "0.10": {
+            "1": 4.609030661803875,
+            "10": 4.609030661803875,
+            "2": 4.609030661803875,
+            "20": 4.609030661803875,
+            "28": 4.609030661803875,
+            "3": 4.609030661803875,
+            "5": 4.609030661803875
+          },
+          "0.30": {
+            "1": 7.115066647650786,
+            "10": 7.115066647650786,
+            "2": 7.115066647650786,
+            "20": 7.115066647650786,
+            "28": 7.115066647650786,
+            "3": 7.115066647650786,
+            "5": 7.115066647650786
+          },
+          "0.55": {
+            "1": 8.943051629286188,
+            "10": 8.943051629286188,
+            "2": 8.943051629286188,
+            "20": 8.943051629286188,
+            "28": 8.943051629286188,
+            "3": 8.943051629286188,
+            "5": 8.943051629286188
+          },
+          "1.00": {
+            "1": 10.83647855820275,
+            "10": 10.83647855820275,
+            "2": 10.83647855820275,
+            "20": 10.83647855820275,
+            "28": 10.83647855820275,
+            "3": 10.83647855820275,
+            "5": 10.83647855820275
+          }
+        },
+        "z_over_tau": [
+          0.1,
+          0.3,
+          0.55,
+          1.0
+        ]
+      },
+      "branch_B_operational": {
+        "knee_tol": 0.05,
+        "monotone_decreasing_in_tau": true,
+        "ratio_tau28_over_tau0.5": {
+          "0.05": 0.46107753069918855,
+          "0.15": 0.3190633274516517,
+          "0.30": 0.26798221508312525,
+          "0.50": 0.25046965590063397
+        },
+        "rms_curves": {
+          "0.05": {
+            "1": 3.596233105229211,
+            "10": 2.2560955155762765,
+            "2": 2.935867499563771,
+            "20": 2.1549511009847353,
+            "28": 2.125120476461378,
+            "3": 2.6753183935786855,
+            "5": 2.4451857283595557
+          },
+          "0.15": {
+            "1": 5.39890155790285,
+            "10": 2.619821707515737,
+            "2": 4.140044031606365,
+            "20": 2.3526592856633917,
+            "28": 2.2701568396397285,
+            "3": 3.596233105229211,
+            "5": 3.0806949758484543
+          },
+          "0.30": {
+            "1": 7.115066647650786,
+            "10": 3.0806949758484543,
+            "2": 5.39890155790285,
+            "20": 2.619821707515737,
+            "28": 2.470944348416866,
+            "3": 4.609030661803874,
+            "5": 3.824702986845131
+          },
+          "0.50": {
+            "1": 8.641719137228591,
+            "10": 3.596233105229211,
+            "2": 6.619690241181438,
+            "20": 2.935867499563771,
+            "28": 2.714209055647641,
+            "3": 5.629965207208868,
+            "5": 4.609030661803875
+          }
+        },
+        "tau_grid": [
+          1.0,
+          2.0,
+          3.0,
+          5.0,
+          10.0,
+          20.0,
+          28.0
+        ],
+        "tau_knee_s": {
+          "0.05": 20.797175725402564,
+          "0.15": 62.39152717620768,
+          "0.30": 124.78305435241536,
+          "0.50": 207.97175725402562
+        },
+        "z_fixed_s": [
+          0.05,
+          0.15,
+          0.3,
+          0.5
+        ]
+      },
+      "fit": {
+        "A": 13.717609843750747,
+        "A_span_pct": 0.12311594971356449,
+        "c": 0.9519522005930826,
+        "c_span_pct": 0.17637233506639904,
+        "law_max_rel_err_vs_measured": 0.00975221624142264,
+        "rms_e_model": 2.048546983268378,
+        "rms_em_span_pct": 1.23552162600984
+      },
+      "hump": {
+        "measured_22_6_ratio": [
+          1.9214486445378565,
+          1.9856293209733895,
+          1.9221797904614168,
+          1.8365650526566564,
+          1.7382733217053865
+        ],
+        "peak_22_6_from_tau1_fit": {
+          "ratio": 1.9466272701014828,
+          "tau": 0.9254147541475415
+        },
+        "peak_basis_note": "22.6 dung fit tai tau=1.0; day dung trung binh tren luoi tau. Khac CO SO, khong phai sai so.",
+        "peak_ratio": 1.947528247110388,
+        "peak_tau_abs_diff": 0.0031185791857918366,
+        "peak_tau_s": 0.9285333333333333,
+        "tau_grid_22_6": [
+          0.5,
+          1.0,
+          2.0,
+          2.87,
+          5.0
+        ],
+        "z0": 0.077,
+        "z3": 0.425
+      },
+      "hump_power_scope": {
+        "amplitude_over_noise": 1.0876193071920792,
+        "declared_scope": "INSUFFICIENT_POWER",
+        "hump_amplitude": 0.247355999268003,
+        "mean_abs_diff_two_estimators": 0.227428841720919
+      },
+      "role": "live",
+      "self_check": {
+        "max_abs_diff_vs_22_6_ratio_pred": 0.0,
+        "pass": true
+      },
+      "source": "results/SUPERSEDED/phase-22/tau_sweep_h2_0.700.json",
+      "tau_independence": {
+        "A": {
+          "passes": true,
+          "ratio_span_over_spread": 0.061805536543478486,
+          "span_between_tau_pct": 0.12311594971356449,
+          "spread_within_tau_pct_max": 2.2336360372754,
+          "spread_within_tau_pct_mean": 1.99198901261792
+        },
+        "c": {
+          "passes": true,
+          "ratio_span_over_spread": 0.09144681609379804,
+          "span_between_tau_pct": 0.17637233506639904,
+          "spread_within_tau_pct_max": 2.7102191225353067,
+          "spread_within_tau_pct_mean": 1.9286875432108204
+        },
+        "em": {
+          "passes": false,
+          "ratio_span_over_spread": 2.7180833538686726,
+          "span_between_tau_pct": 1.23552162600984,
+          "spread_within_tau_pct_max": 0.8367302605748363,
+          "spread_within_tau_pct_mean": 0.4545561946256398
+        }
+      }
+    },
+    "poisson@0.850": {
+      "branch_A_mechanism": {
+        "note": "Voi A,c,em co dinh, rms o z/tau co dinh la HANG SO theo tau (span = 0 dung bang so). Bien thien do duoc o T2.6 chi den tu troi cua A,c,em -- do la thuoc do cua troi do, khong phai mot hieu ung cua tau.",
+        "relative_span_across_tau": {
+          "0.10": 0.0,
+          "0.30": 0.0,
+          "0.55": 0.0,
+          "1.00": 0.0
+        },
+        "rms_curves": {
+          "0.10": {
+            "1": 2.193378068906261,
+            "10": 2.193378068906261,
+            "2": 2.193378068906261,
+            "20": 2.193378068906261,
+            "28": 2.193378068906261,
+            "3": 2.193378068906261,
+            "5": 2.193378068906261
+          },
+          "0.30": {
+            "1": 3.5177905219218326,
+            "10": 3.5177905219218326,
+            "2": 3.5177905219218326,
+            "20": 3.5177905219218326,
+            "28": 3.5177905219218326,
+            "3": 3.5177905219218326,
+            "5": 3.5177905219218326
+          },
+          "0.55": {
+            "1": 4.464508845612831,
+            "10": 4.464508845612831,
+            "2": 4.464508845612831,
+            "20": 4.464508845612831,
+            "28": 4.464508845612831,
+            "3": 4.464508845612831,
+            "5": 4.464508845612831
+          },
+          "1.00": {
+            "1": 5.438140406206278,
+            "10": 5.438140406206278,
+            "2": 5.438140406206278,
+            "20": 5.438140406206278,
+            "28": 5.438140406206278,
+            "3": 5.438140406206278,
+            "5": 5.438140406206278
+          }
+        },
+        "z_over_tau": [
+          0.1,
+          0.3,
+          0.55,
+          1.0
+        ]
+      },
+      "branch_B_operational": {
+        "knee_tol": 0.05,
+        "monotone_decreasing_in_tau": true,
+        "ratio_tau28_over_tau0.5": {
+          "0.05": 0.3238772358500451,
+          "0.15": 0.23246920790502157,
+          "0.30": 0.2074743208806569,
+          "0.50": 0.20464868079913115
+        },
+        "rms_curves": {
+          "0.05": {
+            "1": 1.6344675305287069,
+            "10": 0.8076978496495077,
+            "2": 1.2493932237494836,
+            "20": 0.7331553761862435,
+            "28": 0.7103852261314696,
+            "3": 1.0883951944829562,
+            "5": 0.9387407454279968
+          },
+          "0.15": {
+            "1": 2.6164842241220465,
+            "10": 1.053067482186542,
+            "2": 1.9376703614527706,
+            "20": 0.8757556954623976,
+            "28": 0.8177779762069608,
+            "3": 1.6344675305287069,
+            "5": 1.3361549681764984
+          },
+          "0.30": {
+            "1": 3.5177905219218326,
+            "10": 1.3361549681764984,
+            "2": 2.6164842241220465,
+            "20": 1.053067482186542,
+            "28": 0.9559471369118792,
+            "3": 2.19337806890626,
+            "5": 1.7629432636584759
+          },
+          "0.50": {
+            "1": 4.309023409478379,
+            "10": 1.6344675305287069,
+            "2": 3.259330997574539,
+            "20": 1.2493932237494836,
+            "28": 1.112908260130566,
+            "3": 2.7389871150264713,
+            "5": 2.193378068906261
+          }
+        },
+        "tau_grid": [
+          1.0,
+          2.0,
+          3.0,
+          5.0,
+          10.0,
+          20.0,
+          28.0
+        ],
+        "tau_knee_s": {
+          "0.05": 53.23563020508052,
+          "0.15": 159.70689061524155,
+          "0.30": 319.4137812304831,
+          "0.50": 532.3563020508052
+        },
+        "z_fixed_s": [
+          0.05,
+          0.15,
+          0.3,
+          0.5
+        ]
+      },
+      "fit": {
+        "A": 6.294752100705543,
+        "A_span_pct": 0.8278354861645003,
+        "c": 1.1638480705979362,
+        "c_span_pct": 1.8381417054145557,
+        "law_max_rel_err_vs_measured": 0.010944613521778779,
+        "rms_e_model": 0.6499002140118819,
+        "rms_em_span_pct": 6.79380669169338
+      },
+      "hump": {
+        "measured_22_6_ratio": [
+          1.9489450007666214,
+          2.1077683267364056,
+          2.086810794008631,
+          2.0417246324549114,
+          1.9766415003629327
+        ],
+        "peak_22_6_from_tau1_fit": {
+          "ratio": 2.0759555220275754,
+          "tau": 1.4064140641406413
+        },
+        "peak_basis_note": "22.6 dung fit tai tau=1.0; day dung trung binh tren luoi tau. Khac CO SO, khong phai sai so.",
+        "peak_ratio": 2.0793826596760847,
+        "peak_tau_abs_diff": 0.021285935859358673,
+        "peak_tau_s": 1.4277,
+        "tau_grid_22_6": [
+          0.5,
+          1.0,
+          2.0,
+          2.87,
+          5.0
+        ],
+        "z0": 0.077,
+        "z3": 0.425
+      },
+      "hump_power_scope": {
+        "amplitude_over_noise": 3.2082153045150315,
+        "declared_scope": "WEAK",
+        "hump_amplitude": 0.1588233259697842,
+        "mean_abs_diff_two_estimators": 0.049505195535432645
+      },
+      "role": "live",
+      "self_check": {
+        "max_abs_diff_vs_22_6_ratio_pred": 0.0,
+        "pass": true
+      },
+      "source": "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.850.json",
+      "tau_independence": {
+        "A": {
+          "passes": true,
+          "ratio_span_over_spread": 0.548446870402725,
+          "span_between_tau_pct": 0.8278354861645003,
+          "spread_within_tau_pct_max": 1.7173606396674783,
+          "spread_within_tau_pct_mean": 1.5094178321349887
+        },
+        "c": {
+          "passes": false,
+          "ratio_span_over_spread": 1.2679213187655554,
+          "span_between_tau_pct": 1.8381417054145557,
+          "spread_within_tau_pct_max": 2.225360143475425,
+          "spread_within_tau_pct_mean": 1.4497285266913607
+        },
+        "em": {
+          "passes": false,
+          "ratio_span_over_spread": 1.0972825098392684,
+          "span_between_tau_pct": 6.79380669169338,
+          "spread_within_tau_pct_max": 11.182357053692698,
+          "spread_within_tau_pct_mean": 6.191483625022462
+        }
+      }
+    },
+    "poisson@0.925": {
+      "branch_A_mechanism": {
+        "note": "Voi A,c,em co dinh, rms o z/tau co dinh la HANG SO theo tau (span = 0 dung bang so). Bien thien do duoc o T2.6 chi den tu troi cua A,c,em -- do la thuoc do cua troi do, khong phai mot hieu ung cua tau.",
+        "relative_span_across_tau": {
+          "0.10": 0.0,
+          "0.30": 0.0,
+          "0.55": 0.0,
+          "1.00": 0.0
+        },
+        "rms_curves": {
+          "0.10": {
+            "1": 7.891982058808897,
+            "10": 7.891982058808897,
+            "2": 7.891982058808897,
+            "20": 7.891982058808897,
+            "28": 7.891982058808897,
+            "3": 7.891982058808897,
+            "5": 7.891982058808897
+          },
+          "0.30": {
+            "1": 12.717231428544244,
+            "10": 12.717231428544244,
+            "2": 12.717231428544244,
+            "20": 12.717231428544244,
+            "28": 12.717231428544244,
+            "3": 12.717231428544244,
+            "5": 12.717231428544244
+          },
+          "0.55": {
+            "1": 16.158005682407346,
+            "10": 16.158005682407346,
+            "2": 16.158005682407346,
+            "20": 16.158005682407346,
+            "28": 16.158005682407346,
+            "3": 16.158005682407346,
+            "5": 16.158005682407346
+          },
+          "1.00": {
+            "1": 19.693658883869798,
+            "10": 19.693658883869798,
+            "2": 19.693658883869798,
+            "20": 19.693658883869798,
+            "28": 19.693658883869798,
+            "3": 19.693658883869798,
+            "5": 19.693658883869798
+          }
+        },
+        "z_over_tau": [
+          0.1,
+          0.3,
+          0.55,
+          1.0
+        ]
+      },
+      "branch_B_operational": {
+        "knee_tol": 0.05,
+        "monotone_decreasing_in_tau": true,
+        "ratio_tau28_over_tau0.5": {
+          "0.05": 0.30167195273106645,
+          "0.15": 0.2199741224340257,
+          "0.30": 0.19929928405250746,
+          "0.50": 0.1987293717739605
+        },
+        "rms_curves": {
+          "0.05": {
+            "1": 5.844311472207973,
+            "10": 2.758690978549641,
+            "2": 4.422218104162027,
+            "20": 2.469879077989392,
+            "28": 2.380789638599422,
+            "3": 3.8219997855707017,
+            "5": 3.258714537320475
+          },
+          "0.15": {
+            "1": 9.436047655519072,
+            "10": 3.6895878200286747,
+            "2": 6.956684973558897,
+            "20": 3.0193838282476535,
+            "28": 2.797461823284431,
+            "3": 5.844311472207973,
+            "5": 4.743972846472585
+          },
+          "0.30": {
+            "1": 12.717231428544244,
+            "10": 4.743972846472585,
+            "2": 9.436047655519072,
+            "20": 3.6895878200286747,
+            "28": 3.3238273996792915,
+            "3": 7.8919820588088925,
+            "5": 6.316211349445903
+          },
+          "0.50": {
+            "1": 15.593149869801717,
+            "10": 5.844311472207973,
+            "2": 11.777062637086056,
+            "20": 4.422218104162027,
+            "28": 3.913708457922121,
+            "3": 9.882527531731286,
+            "5": 7.891982058808897
+          }
+        },
+        "tau_grid": [
+          1.0,
+          2.0,
+          3.0,
+          5.0,
+          10.0,
+          20.0,
+          28.0
+        ],
+        "tau_knee_s": {
+          "0.05": 64.45959844237584,
+          "0.15": 193.3787953271275,
+          "0.30": 386.757590654255,
+          "0.50": 644.5959844237584
+        },
+        "z_fixed_s": [
+          0.05,
+          0.15,
+          0.3,
+          0.5
+        ]
+      },
+      "fit": {
+        "A": 26.068555370078958,
+        "A_span_pct": 0.7623412299969916,
+        "c": 0.8921801757258011,
+        "c_span_pct": 1.0464355055546841,
+        "law_max_rel_err_vs_measured": 0.011277839285154245,
+        "rms_e_model": 2.141599752193734,
+        "rms_em_span_pct": 0.6638399114371083
+      },
+      "hump": {
+        "measured_22_6_ratio": [
+          1.977949756247702,
+          2.0989601786571823,
+          2.14319323216089,
+          2.0834100434350473,
+          2.00755705975703
+        ],
+        "peak_22_6_from_tau1_fit": {
+          "ratio": 2.1012599222741124,
+          "tau": 1.5590330903309033
+        },
+        "peak_basis_note": "22.6 dung fit tai tau=1.0; day dung trung binh tren luoi tau. Khac CO SO, khong phai sai so.",
+        "peak_ratio": 2.1012553017884175,
+        "peak_tau_abs_diff": 0.0015497569975699843,
+        "peak_tau_s": 1.5574833333333333,
+        "tau_grid_22_6": [
+          0.5,
+          1.0,
+          2.0,
+          2.87,
+          5.0
+        ],
+        "z0": 0.077,
+        "z3": 0.425
+      },
+      "hump_power_scope": {
+        "amplitude_over_noise": 10.853160843584217,
+        "declared_scope": "READABLE",
+        "hump_amplitude": 0.16524347591318822,
+        "mean_abs_diff_two_estimators": 0.015225377960824283
+      },
+      "role": "live",
+      "self_check": {
+        "max_abs_diff_vs_22_6_ratio_pred": 4.440892098500626e-16,
+        "pass": true
+      },
+      "source": "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json",
+      "tau_independence": {
+        "A": {
+          "passes": true,
+          "ratio_span_over_spread": 0.4885363668586023,
+          "span_between_tau_pct": 0.7623412299969916,
+          "spread_within_tau_pct_max": 1.8983680072798657,
+          "spread_within_tau_pct_mean": 1.5604595311890814
+        },
+        "c": {
+          "passes": true,
+          "ratio_span_over_spread": 0.9639594733577583,
+          "span_between_tau_pct": 1.0464355055546841,
+          "spread_within_tau_pct_max": 1.962770199887683,
+          "spread_within_tau_pct_mean": 1.0855596469316673
+        },
+        "em": {
+          "passes": true,
+          "ratio_span_over_spread": 0.7278640080583755,
+          "span_between_tau_pct": 0.6638399114371083,
+          "spread_within_tau_pct_max": 1.3149299664171528,
+          "spread_within_tau_pct_mean": 0.9120383809167105
+        }
+      }
+    }
+  },
+  "provenance": {
+    "derivation": "A, c, em = trung binh tren luoi tau cua 22.6 (chung doc lap voi tau, gate G22_11/S3). KHONG fit lai. Luat: rms = sqrt(em^2 + c*A^2*(1-exp(-z/tau))).",
+    "estimand": "quy uoc HIEU (1-exp(-z/tau)), khop e_stale cua measurements/decision_error_v2.py:402. Xem docs/GLOSSARY.md.",
+    "git_commit": "dc51777f13fd09896c3fe9aa31f2f1a45d22b968",
+    "git_dirty": true,
+    "inputs": {
+      "results/SUPERSEDED/phase-22/tau_sweep_cbr_0.700.json": "8641caa1de2e63fcbc0dd41c75e49d1631765c46c2adada71236a298e753bc15",
+      "results/SUPERSEDED/phase-22/tau_sweep_h2_0.700.json": "7910f3aee779cda4f3d8fac9394ed772fb218f30852c6a220a7f64656f6e0ce5",
+      "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.850.json": "b391be95fe0d4cc8d4e3e6678c971e585afea0a3ac7ff542bc6af56ed027b3f5",
+      "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json": "659878301da7fdb7c3511aaba170a79fe172d6d6518142f5c66f464a4c2530b2"
+    },
+    "predicts": "rms_total. KHONG du doan err_total (ti le quyet dinh sai): luat khong mo hinh hoa phep bien doi rms -> ti le loi.",
+    "script": "tools/t2_1_prediction.py",
+    "z_ops_source": "measurements/decision_error.py:37 DEFAULT_SYNC_PERIOD_S = 0.5"
+  },
+  "signed_predictions": {
+    "D-T2.6-1": {
+      "basis": "giai tich: z co dinh, tau tang => (1-exp(-z/tau)) giam",
+      "claim": "nhanh B don dieu GIAM theo tau o moi o song, moi z",
+      "holds_in_model": true
+    },
+    "D-T2.6-2": {
+      "claim": "rms(tau=28)/rms(tau=0.5) o z co dinh",
+      "note": "BANG CHAP NHAN phai KY o prereg, khong doc tu day",
+      "per_cell": {
+        "h2@0.700": {
+          "0.05": 0.46107753069918855,
+          "0.15": 0.3190633274516517,
+          "0.30": 0.26798221508312525,
+          "0.50": 0.25046965590063397
+        },
+        "poisson@0.850": {
+          "0.05": 0.3238772358500451,
+          "0.15": 0.23246920790502157,
+          "0.30": 0.2074743208806569,
+          "0.50": 0.20464868079913115
+        },
+        "poisson@0.925": {
+          "0.05": 0.30167195273106645,
+          "0.15": 0.2199741224340257,
+          "0.30": 0.19929928405250746,
+          "0.50": 0.1987293717739605
+        }
+      },
+      "point_range": [
+        0.1987293717739605,
+        0.46107753069918855
+      ]
+    },
+    "D-T2.6-3": {
+      "claim": "R(tau) co dinh (hump); vi tri dinh du doan",
+      "cross_check_vs_22_6_max_abs_diff_s": 0.021285935859358673,
+      "peak_range_s": [
+        0.9285333333333333,
+        1.5574833333333333
+      ],
+      "per_cell": {
+        "h2@0.700": 0.9285333333333333,
+        "poisson@0.850": 1.4277,
+        "poisson@0.925": 1.5574833333333333
+      },
+      "power_scope_declared_before_run": {
+        "h2@0.700": {
+          "amplitude_over_noise": 1.0876193071920792,
+          "declared_scope": "INSUFFICIENT_POWER",
+          "hump_amplitude": 0.247355999268003,
+          "mean_abs_diff_two_estimators": 0.227428841720919
+        },
+        "poisson@0.850": {
+          "amplitude_over_noise": 3.2082153045150315,
+          "declared_scope": "WEAK",
+          "hump_amplitude": 0.1588233259697842,
+          "mean_abs_diff_two_estimators": 0.049505195535432645
+        },
+        "poisson@0.925": {
+          "amplitude_over_noise": 10.853160843584217,
+          "declared_scope": "READABLE",
+          "hump_amplitude": 0.16524347591318822,
+          "mean_abs_diff_two_estimators": 0.015225377960824283
+        }
+      }
+    },
+    "D-T2.6-4": {
+      "claim": "span GIUA-tau cua X nho hon spread TRONG-tau cua X, voi X in {A, c, em}",
+      "driver": {
+        "cell": "poisson@0.850",
+        "quantity": "rms_em_span_pct",
+        "span_pct": 6.79380669169338
+      },
+      "form": "khong thu nguyen, tu hieu chuan; KHONG can ky nguong",
+      "max_span_pct_measured_at_22_6": 6.79380669169338,
+      "n_checks": 9,
+      "n_fail_on_22_6": 3,
+      "note": "Span lon nhat den tu `rms_em` cua poisson@0.850 -- chinh o ma gate `rms_em_independent_of_tau` cua 22.6 DA FAIL (T2.0 muc F3, prereg muc R4). Khong phai mot con so la: no la bat thuong DA BIET, do lai tu huong khac. Bang chap nhan phai ky co tinh den no, hoac loai rieng dai luong nay o o nay kem ly do.",
+      "per_cell": {
+        "h2@0.700": {
+          "A": {
+            "passes": true,
+            "ratio_span_over_spread": 0.061805536543478486,
+            "span_between_tau_pct": 0.12311594971356449,
+            "spread_within_tau_pct_max": 2.2336360372754,
+            "spread_within_tau_pct_mean": 1.99198901261792
+          },
+          "c": {
+            "passes": true,
+            "ratio_span_over_spread": 0.09144681609379804,
+            "span_between_tau_pct": 0.17637233506639904,
+            "spread_within_tau_pct_max": 2.7102191225353067,
+            "spread_within_tau_pct_mean": 1.9286875432108204
+          },
+          "em": {
+            "passes": false,
+            "ratio_span_over_spread": 2.7180833538686726,
+            "span_between_tau_pct": 1.23552162600984,
+            "spread_within_tau_pct_max": 0.8367302605748363,
+            "spread_within_tau_pct_mean": 0.4545561946256398
+          }
+        },
+        "poisson@0.850": {
+          "A": {
+            "passes": true,
+            "ratio_span_over_spread": 0.548446870402725,
+            "span_between_tau_pct": 0.8278354861645003,
+            "spread_within_tau_pct_max": 1.7173606396674783,
+            "spread_within_tau_pct_mean": 1.5094178321349887
+          },
+          "c": {
+            "passes": false,
+            "ratio_span_over_spread": 1.2679213187655554,
+            "span_between_tau_pct": 1.8381417054145557,
+            "spread_within_tau_pct_max": 2.225360143475425,
+            "spread_within_tau_pct_mean": 1.4497285266913607
+          },
+          "em": {
+            "passes": false,
+            "ratio_span_over_spread": 1.0972825098392684,
+            "span_between_tau_pct": 6.79380669169338,
+            "spread_within_tau_pct_max": 11.182357053692698,
+            "spread_within_tau_pct_mean": 6.191483625022462
+          }
+        },
+        "poisson@0.925": {
+          "A": {
+            "passes": true,
+            "ratio_span_over_spread": 0.4885363668586023,
+            "span_between_tau_pct": 0.7623412299969916,
+            "spread_within_tau_pct_max": 1.8983680072798657,
+            "spread_within_tau_pct_mean": 1.5604595311890814
+          },
+          "c": {
+            "passes": true,
+            "ratio_span_over_spread": 0.9639594733577583,
+            "span_between_tau_pct": 1.0464355055546841,
+            "spread_within_tau_pct_max": 1.962770199887683,
+            "spread_within_tau_pct_mean": 1.0855596469316673
+          },
+          "em": {
+            "passes": true,
+            "ratio_span_over_spread": 0.7278640080583755,
+            "span_between_tau_pct": 0.6638399114371083,
+            "spread_within_tau_pct_max": 1.3149299664171528,
+            "spread_within_tau_pct_mean": 0.9120383809167105
+          }
+        }
+      },
+      "why_not_a_percentage_band": "Bang '+/-3%' vi pham TRAN cua cua so kha thi: span giua-tau do duoc chi 0.12-0.83%, nen bang 3% rong gap 4 lan hieu ung va du doan KHONG THE SAI. Siet lai cung khong cuu: 3*se ~ 0.899% > span 0.762% => cua so RONG."
+    },
+    "D-T2.6-6": {
+      "claim": "tau_knee: tau nho nhat de rms ve trong 5% cua em",
+      "per_cell": {
+        "h2@0.700": {
+          "0.05": 20.797175725402564,
+          "0.15": 62.39152717620768,
+          "0.30": 124.78305435241536,
+          "0.50": 207.97175725402562
+        },
+        "poisson@0.850": {
+          "0.05": 53.23563020508052,
+          "0.15": 159.70689061524155,
+          "0.30": 319.4137812304831,
+          "0.50": 532.3563020508052
+        },
+        "poisson@0.925": {
+          "0.05": 64.45959844237584,
+          "0.15": 193.3787953271275,
+          "0.30": 386.757590654255,
+          "0.50": 644.5959844237584
+        }
+      },
+      "range_s": [
+        20.797175725402564,
+        644.5959844237584
+      ]
+    },
+    "D-T2.6-7": {
+      "A_measured": 9.969118646066259e-05,
+      "claim": "cbr chet o moi tau (doi chung am)"
+    }
+  }
+}

@@ -1,0 +1,1278 @@
+{
+  "baseline_table": {
+    "cbr@0.700": {
+      "A": 9.969118646066259e-05,
+      "err_baseline": 0.0,
+      "mode": "cbr",
+      "rho_bar": 0.7
+    },
+    "cbr@0.850": {
+      "A": null,
+      "err_baseline": 0.0,
+      "mode": "cbr",
+      "rho_bar": 0.85
+    },
+    "h2@0.700": {
+      "A": 13.717609843750747,
+      "err_baseline": 0.3483831735626846,
+      "mode": "h2",
+      "rho_bar": 0.7
+    },
+    "h2@0.850": {
+      "A": null,
+      "err_baseline": 0.2969476711331902,
+      "mode": "h2",
+      "rho_bar": 0.85
+    },
+    "h2@0.925": {
+      "A": null,
+      "err_baseline": 0.08899778646111396,
+      "mode": "h2",
+      "rho_bar": 0.925
+    },
+    "h2@0.960": {
+      "A": null,
+      "err_baseline": 0.0017062206723063517,
+      "mode": "h2",
+      "rho_bar": 0.96
+    },
+    "poisson@0.700": {
+      "A": null,
+      "err_baseline": 0.16666932812068322,
+      "mode": "poisson",
+      "rho_bar": 0.7
+    },
+    "poisson@0.850": {
+      "A": 6.294752100705543,
+      "err_baseline": 0.38275694509970437,
+      "mode": "poisson",
+      "rho_bar": 0.85
+    },
+    "poisson@0.925": {
+      "A": 26.068555370078958,
+      "err_baseline": 0.33677313766609945,
+      "mode": "poisson",
+      "rho_bar": 0.925
+    },
+    "poisson@0.960": {
+      "A": null,
+      "err_baseline": 0.23131856068202644,
+      "mode": "poisson",
+      "rho_bar": 0.96
+    }
+  },
+  "canary": {
+    "a": 0.9,
+    "branch": "fixed",
+    "every": 30,
+    "seed": 999,
+    "tau": 3.0,
+    "why": "mot lenh KHONG DOI lap lai dinh ky; seed=999 nam NGOAI luoi nen canary khong bao gio la mot o cua thiet ke. Neu so cua no troi, moi truong troi -- va ta biet KHI NAO."
+  },
+  "grid": {
+    "a_values": [
+      0.5,
+      0.9
+    ],
+    "branches": [
+      "fixed",
+      "scaled"
+    ],
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "taus": [
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      10.0,
+      20.0,
+      28.0
+    ]
+  },
+  "n_canaries": 5,
+  "n_runs": 140,
+  "provenance": {
+    "git_commit": "dc51777f13fd09896c3fe9aa31f2f1a45d22b968",
+    "git_dirty": true,
+    "inputs": {
+      "results/SUPERSEDED/phase-20R/decision_error_tau0.2.parquet": "a9b2b740f2e19d3115f10136aaec2a0cecf1a7bb11f3e83e475a85ffcf02cd12",
+      "results/SUPERSEDED/phase-20R/decision_error_tau1.0.parquet": "94587b3f12fd2393ef5ecd3fdd05b5957ef421d0572a0220b84f1e59dfd9de91",
+      "results/SUPERSEDED/phase-20R/decision_error_tau5.0.parquet": "a464a858145ac6e9a548a54e2ad95f600ce68d343f819e70aa7dc617918379a8",
+      "results/SUPERSEDED/phase-22/tau_sweep_cbr_0.700.json": "8641caa1de2e63fcbc0dd41c75e49d1631765c46c2adada71236a298e753bc15",
+      "results/SUPERSEDED/phase-22/tau_sweep_h2_0.700.json": "7910f3aee779cda4f3d8fac9394ed772fb218f30852c6a220a7f64656f6e0ce5",
+      "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.850.json": "b391be95fe0d4cc8d4e3e6678c971e585afea0a3ac7ff542bc6af56ed027b3f5",
+      "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json": "659878301da7fdb7c3511aaba170a79fe172d6d6518142f5c66f464a4c2530b2"
+    },
+    "note": "KE HOACH thuan co che. Khong chua k, san, lift_min hay eps loai o -- tat ca deu la chinh sach cua luot 2.",
+    "order_seed": 7200,
+    "script": "tools/t2_6_plan.py"
+  },
+  "runs": [
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": true,
+      "run_index": 0,
+      "seed": 999,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 1,
+      "seed": 101,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 2,
+      "seed": 102,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 3,
+      "seed": 103,
+      "tau": 10.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 4,
+      "seed": 102,
+      "tau": 1.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 5,
+      "seed": 102,
+      "tau": 20.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 6,
+      "seed": 105,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 7,
+      "seed": 101,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 8,
+      "seed": 101,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 9,
+      "seed": 102,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 10,
+      "seed": 103,
+      "tau": 20.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 11,
+      "seed": 103,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 12,
+      "seed": 102,
+      "tau": 10.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 13,
+      "seed": 105,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 14,
+      "seed": 103,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 15,
+      "seed": 104,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 16,
+      "seed": 101,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 17,
+      "seed": 102,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 18,
+      "seed": 104,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 19,
+      "seed": 102,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 20,
+      "seed": 103,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 21,
+      "seed": 101,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 22,
+      "seed": 105,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 23,
+      "seed": 105,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 24,
+      "seed": 105,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 25,
+      "seed": 104,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 26,
+      "seed": 104,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 27,
+      "seed": 105,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 28,
+      "seed": 104,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 29,
+      "seed": 105,
+      "tau": 1.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 30,
+      "seed": 102,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": true,
+      "run_index": 31,
+      "seed": 999,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 32,
+      "seed": 104,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 33,
+      "seed": 105,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 34,
+      "seed": 105,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 35,
+      "seed": 103,
+      "tau": 10.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 36,
+      "seed": 104,
+      "tau": 10.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 37,
+      "seed": 102,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 38,
+      "seed": 101,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 39,
+      "seed": 105,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 40,
+      "seed": 102,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 41,
+      "seed": 101,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 42,
+      "seed": 101,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 43,
+      "seed": 102,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 44,
+      "seed": 105,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 45,
+      "seed": 104,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 46,
+      "seed": 105,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 47,
+      "seed": 101,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 48,
+      "seed": 102,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 49,
+      "seed": 102,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 50,
+      "seed": 105,
+      "tau": 20.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 51,
+      "seed": 105,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 52,
+      "seed": 104,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 53,
+      "seed": 103,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 54,
+      "seed": 103,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 55,
+      "seed": 101,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 56,
+      "seed": 105,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 57,
+      "seed": 102,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 58,
+      "seed": 101,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 59,
+      "seed": 105,
+      "tau": 10.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 60,
+      "seed": 104,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 61,
+      "seed": 104,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": true,
+      "run_index": 62,
+      "seed": 999,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 63,
+      "seed": 102,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 64,
+      "seed": 105,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 65,
+      "seed": 104,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 66,
+      "seed": 104,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 67,
+      "seed": 103,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 68,
+      "seed": 103,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 69,
+      "seed": 104,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 70,
+      "seed": 101,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 71,
+      "seed": 102,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 72,
+      "seed": 103,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 73,
+      "seed": 105,
+      "tau": 1.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 74,
+      "seed": 101,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 75,
+      "seed": 105,
+      "tau": 1.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 76,
+      "seed": 101,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 77,
+      "seed": 104,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 78,
+      "seed": 104,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 79,
+      "seed": 102,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 80,
+      "seed": 102,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 81,
+      "seed": 103,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 82,
+      "seed": 101,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 83,
+      "seed": 105,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 84,
+      "seed": 101,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 85,
+      "seed": 101,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 86,
+      "seed": 104,
+      "tau": 10.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 87,
+      "seed": 104,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 88,
+      "seed": 101,
+      "tau": 1.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 89,
+      "seed": 102,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 90,
+      "seed": 102,
+      "tau": 10.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 91,
+      "seed": 105,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 92,
+      "seed": 104,
+      "tau": 1.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": true,
+      "run_index": 93,
+      "seed": 999,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 94,
+      "seed": 102,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 95,
+      "seed": 105,
+      "tau": 28.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 96,
+      "seed": 103,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 97,
+      "seed": 103,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 98,
+      "seed": 104,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 99,
+      "seed": 104,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 100,
+      "seed": 105,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 101,
+      "seed": 101,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 102,
+      "seed": 103,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 103,
+      "seed": 102,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 104,
+      "seed": 104,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 105,
+      "seed": 101,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 106,
+      "seed": 104,
+      "tau": 2.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 107,
+      "seed": 103,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 108,
+      "seed": 103,
+      "tau": 5.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 109,
+      "seed": 102,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 110,
+      "seed": 102,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 111,
+      "seed": 103,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 112,
+      "seed": 103,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 113,
+      "seed": 102,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 114,
+      "seed": 101,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 115,
+      "seed": 103,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 116,
+      "seed": 103,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 117,
+      "seed": 102,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 118,
+      "seed": 103,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 119,
+      "seed": 104,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 120,
+      "seed": 103,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 121,
+      "seed": 102,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 122,
+      "seed": 103,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 123,
+      "seed": 105,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": true,
+      "run_index": 124,
+      "seed": 999,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 125,
+      "seed": 101,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 126,
+      "seed": 105,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 127,
+      "seed": 101,
+      "tau": 10.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 128,
+      "seed": 103,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 129,
+      "seed": 102,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 130,
+      "seed": 101,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 131,
+      "seed": 104,
+      "tau": 5.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 132,
+      "seed": 103,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 133,
+      "seed": 103,
+      "tau": 20.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 134,
+      "seed": 101,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 135,
+      "seed": 103,
+      "tau": 28.0
+    },
+    {
+      "a": 0.5,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 136,
+      "seed": 101,
+      "tau": 1.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 137,
+      "seed": 104,
+      "tau": 2.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 138,
+      "seed": 101,
+      "tau": 3.0
+    },
+    {
+      "a": 0.9,
+      "branch": "scaled",
+      "is_canary": false,
+      "run_index": 139,
+      "seed": 101,
+      "tau": 20.0
+    },
+    {
+      "a": 0.9,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 140,
+      "seed": 105,
+      "tau": 20.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 141,
+      "seed": 105,
+      "tau": 3.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 142,
+      "seed": 105,
+      "tau": 10.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 143,
+      "seed": 104,
+      "tau": 20.0
+    },
+    {
+      "a": 0.5,
+      "branch": "fixed",
+      "is_canary": false,
+      "run_index": 144,
+      "seed": 104,
+      "tau": 28.0
+    }
+  ]
+}

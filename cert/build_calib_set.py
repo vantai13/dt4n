@@ -37,8 +37,15 @@ from twin.topology_v7 import JUMPS, K
 W_LOSS = 1451.3765784675
 T_DELAY = 14.513765784675
 T_LOSS = 0.010
-TAU_CORE = 2.87
-B_BLOCK_S = 14.35
+# DO DUOC tu trace v7 that (tai loi Mininet), KHAC voi tau_load = 1.0 la
+# tham so THIET KE cua AR(1) tong hop. Hai dai luong, khong phai mau thuan
+# -- da ghi o docs/phase-21R/00-preregistration.md R9.
+# Vai tro: chuan hoa BIEN DIEU KIEN u (chia bin Mondrian), nen dung cong
+# thuc CO DIEU KIEN sqrt(1-exp(-2z/tau)) chu khong phai cong thuc HIEU.
+# Xem docs/GLOSSARY.md muc "sigma_z".
+TAU_CORE_MEASURED_S = 2.87
+# 14.35 giay, gio tu noi ra vi sao thay vi la mot hang so mo coi.
+B_BLOCK_S = round(5.0 * TAU_CORE_MEASURED_S, 10)   # == 14.35 dung bang bit
 WARMUP = 0.20
 T0_S = 4.0
 SIGMA_RHO = 0.010
@@ -84,7 +91,7 @@ def provenance(argv: Sequence[str]) -> dict:
             "w_loss": W_LOSS,
             "t_delay_ms": T_DELAY,
             "t_loss": T_LOSS,
-            "tau_core_s": TAU_CORE,
+            "tau_core_s": TAU_CORE_MEASURED_S,
             "b_block_s": B_BLOCK_S,
             "warmup_frac": WARMUP,
             "t0_s": T0_S,
@@ -169,7 +176,7 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
     gap_true = y_sorted[:, 1] - y_sorted[:, 0]
 
     z_s = age[rows] * float(dt_s)
-    sig_z = SIGMA_RHO * np.sqrt(1.0 - np.exp(-2.0 * z_s / TAU_CORE))
+    sig_z = SIGMA_RHO * np.sqrt(1.0 - np.exp(-2.0 * z_s / TAU_CORE_MEASURED_S))
     dist = np.min(
         np.abs(rho[src][:, :, None] - np.asarray(JUMPS, dtype=float)[None, None, :]),
         axis=2,

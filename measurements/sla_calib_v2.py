@@ -36,9 +36,33 @@ RHO_BAR_GRID = (0.70, 0.85, 0.925, 0.96)
 MODE_GRID = ("cbr", "poisson", "h2")
 DEFAULT_N = 200_000
 DEFAULT_DT = 0.005
-DEFAULT_TAU = 1.0
 DEFAULT_A = 0.9
 DEFAULT_SEED = 100
+
+# tau KHONG con mac dinh im lang. No la TRUC, khong phai tien nghi.
+# Lich su: `DEFAULT_TAU = 1.0` tung len vao 20R/21R/22/23 ma khong ai ky,
+# va chinh no sinh ra F4 (quet tau nhung giu z/tau co dinh).
+# Ten moi tu to cao chinh no o moi cho su dung.
+# Xem docs/GLOSSARY.md muc "tau_load".
+TAU_LOAD_LEGACY_S = 1.0
+
+TAU_LOAD_MIN_CYCLES = 50.0        # T_sim >= 50*tau  (ngan sach block)
+TAU_MIN_DT_RATIO = 20.0           # tau >= 20*dt     (phan giai)
+
+
+def n_for_tau(tau: float, dt: float = DEFAULT_DT, n_floor: int = DEFAULT_N) -> int:
+    """Ngan sach mau suy TU tham so, khong dat truoc.
+
+    Bao dam T_sim >= 50*tau, tuc con >= 10 block moi seed khi block = 5*tau.
+    KHONG bao dam do chech cua tau_hat on dinh: do chech theo T_sim/tau,
+    nen muon no hang so thi phai bo san n, tra gia 28x compute o tau=28.
+    Cach dung dung la sua GATE (so voi ky vong huu han mau), xem
+    test/test_t2_tau_hat_expectation.py.
+    """
+    tau = float(tau)
+    if tau <= 0.0:
+        raise ValueError("tau phai duong")
+    return max(int(n_floor), int(round(TAU_LOAD_MIN_CYCLES * tau / float(dt))))
 
 RESULT_PATH = "results/LIVE/phase-20R/sla_calibration.json"
 DOC_PATH = "docs/phase-20R/03-sla-calibration.md"
@@ -62,18 +86,38 @@ def ar1_matrix(
     dt: float,
     n: int,
     seed: int,
-) -> np.ndarray:
+    return_diagnostics: bool = False,
+):
     """Return rho matrix ``(n, 8)``: independent AR(1) per link.
 
     Values are clipped to the measured/reliable range of the selected traffic
     family. For ``cbr`` this upper bound is 0.95, so the CostV2 reliability
     guard can remain strict during calibration.
+
+    ``return_diagnostics`` la CO OPT-IN. Khi False (mac dinh) ham tra ve
+    DUNG object cu, khong phai tuple: moi call site 20R/21R/22/23 giu
+    nguyen hop dong va NC-T2-1 (bit-exact) khong bi pha vi ly do tam thuong.
+
+    !! THU TU RUT RNG LA MOT HOP DONG. Bat ky thay doi nao ve thu tu hoac
+       hinh dang cua lenh rut deu pha NC-T2-1 va lam moi so lich su khong
+       con so sanh duoc. KHONG sua vong lap ben duoi.
     """
+    if tau is None or float(tau) <= 0.0:
+        raise ValueError("tau la THAM SO BAT BUOC va phai duong")
+    if float(tau) < TAU_MIN_DT_RATIO * float(dt):
+        raise ValueError(
+            "tau=%.4g < %g*dt=%.4g: khong du phan giai"
+            % (float(tau), TAU_MIN_DT_RATIO, TAU_MIN_DT_RATIO * float(dt))
+        )
+
     rng = np.random.default_rng(int(seed))
     phi = float(np.exp(-float(dt) / float(tau)))
     sd_eps = float(sigma) * math.sqrt(max(1.0 - phi * phi, 0.0))
     hi = float(C.RELIABLE_CEILING[mode])
     out = np.empty((int(n), len(T7.LINK_NAMES)), dtype=float)
+    raw = np.empty_like(out) if return_diagnostics else None
+
+    # --- VUNG DONG BANG: thu tu rut RNG khong duoc doi -------------------
     for i, link in enumerate(T7.LINK_NAMES):
         mu = float(rho_bar) + C.LINK_OFFSET[link]
         shocks = rng.standard_normal(int(n)) * sd_eps
@@ -82,7 +126,24 @@ def ar1_matrix(
         for t in range(1, int(n)):
             x[t] = mu + phi * (x[t - 1] - mu) + shocks[t]
         out[:, i] = np.clip(x, C.RHO_MIN, hi)
-    return out
+        if raw is not None:
+            raw[:, i] = x
+    # --- HET VUNG DONG BANG ----------------------------------------------
+
+    if raw is None:
+        return out
+
+    n_clipped = int(((raw < C.RHO_MIN) | (raw > hi)).sum())
+    return out, {
+        "n_clipped": n_clipped,
+        "n_clipped_ratio": n_clipped / float(out.size),
+        "sigma_hat": float(out.std(axis=0).mean()),
+        "sigma_design": float(sigma),
+        "tau_design": float(tau),
+        "dt": float(dt),
+        "n": int(n),
+        "cycles": float(n) * float(dt) / float(tau),
+    }
 
 
 def _optimal_series(delay: np.ndarray, loss: np.ndarray, opt: np.ndarray) -> Tuple[np.ndarray, np.ndarray]:
@@ -142,7 +203,7 @@ def calibrate_cell(
     seed: int,
     n: int = DEFAULT_N,
     dt: float = DEFAULT_DT,
-    tau: float = DEFAULT_TAU,
+    tau: float = TAU_LOAD_LEGACY_S,
     a: float = DEFAULT_A,
 ) -> Dict[str, object]:
     sigma = C.sigma_from_a_regime(mode, rho_bar, a)
@@ -232,7 +293,7 @@ def calibrate_cell(
 def run_calibration(
     n: int = DEFAULT_N,
     dt: float = DEFAULT_DT,
-    tau: float = DEFAULT_TAU,
+    tau: float = TAU_LOAD_LEGACY_S,
     a: float = DEFAULT_A,
     seed: int = DEFAULT_SEED,
 ) -> Dict[str, object]:
@@ -537,7 +598,7 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--n", type=int, default=DEFAULT_N)
     ap.add_argument("--dt", type=float, default=DEFAULT_DT)
-    ap.add_argument("--tau", type=float, default=DEFAULT_TAU)
+    ap.add_argument("--tau", type=float, default=TAU_LOAD_LEGACY_S)
     ap.add_argument("--a", type=float, default=DEFAULT_A)
     ap.add_argument("--seed", type=int, default=DEFAULT_SEED)
     ap.add_argument("--out", default=RESULT_PATH)

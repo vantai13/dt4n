@@ -318,7 +318,7 @@ def evaluate_cell(
     cv2: C.CostV2, mode: str, rho_bar: float, *,
     t_delay_ms: float, t_loss: float, w_loss: float,
     seed: int = S14.DEFAULT_SEED, n: int = S14.DEFAULT_N,
-    dt: float = S14.DEFAULT_DT, tau: float = S14.DEFAULT_TAU,
+    dt: float = S14.DEFAULT_DT, tau: float = S14.TAU_LOAD_LEGACY_S,
     a: float = S14.DEFAULT_A, with_ci: bool = False,
     sigma_override: float | None = None,
 ) -> Dict[str, Any]:
@@ -504,7 +504,7 @@ def run_t_loss_fine(t_delay_ms: float = 50.0, seed: int = S14.DEFAULT_SEED,
     out: Dict[str, Any] = {}
     for (mode, rb), t_endo in sorted(endo.items()):
         sigma = C.sigma_from_a_regime(mode, rb, S14.DEFAULT_A)
-        rho_mat = S14.ar1_matrix(mode, rb, sigma, S14.DEFAULT_TAU,
+        rho_mat = S14.ar1_matrix(mode, rb, sigma, S14.TAU_LOAD_LEGACY_S,
                                  S14.DEFAULT_DT, n, seed)
         delay, loss, _ = cv2.tables_batch(rho_mat, mode, 5000.0)
         curve = []
@@ -580,7 +580,7 @@ def run_local_fine(seed: int = S14.DEFAULT_SEED,
             grid.append(round(t, 8))
             t *= 1.05
         sigma = C.sigma_from_a_regime(mode, rb, S14.DEFAULT_A)
-        rho_mat = S14.ar1_matrix(mode, rb, sigma, S14.DEFAULT_TAU,
+        rho_mat = S14.ar1_matrix(mode, rb, sigma, S14.TAU_LOAD_LEGACY_S,
                                  S14.DEFAULT_DT, n, seed)
         delay, loss, _ = cv2.tables_batch(rho_mat, mode, 5000.0)
         curve = []
@@ -793,7 +793,7 @@ def run_spec(spec_id: str, w_loss: float | None = None, **kw) -> Dict[str, Any]:
             "n": kw.get("n", S14.DEFAULT_N),
             "seed": kw.get("seed", S14.DEFAULT_SEED),
             "dt": kw.get("dt", S14.DEFAULT_DT),
-            "tau": kw.get("tau", S14.DEFAULT_TAU),
+            "tau": kw.get("tau", S14.TAU_LOAD_LEGACY_S),
             "a": kw.get("a", S14.DEFAULT_A),
             "endogenous": False,
         },

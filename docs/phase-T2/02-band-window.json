@@ -1,0 +1,221 @@
+{
+  "dispersion": {
+    "h2@0.700": {
+      "dof": 2,
+      "n_seed_observed": 3,
+      "ratio_mean": 1.0412872410516811,
+      "sd_between_seed": 0.029317404522879228,
+      "se_observed": 0.016926411393225475,
+      "se_projected_n5": 0.013111141887403548,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "h2@0.850": {
+      "dof": 2,
+      "n_seed_observed": 3,
+      "ratio_mean": 1.031969916386499,
+      "sd_between_seed": 0.0495697444885592,
+      "se_observed": 0.028619105324130624,
+      "se_projected_n5": 0.02216826366074278,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "h2@0.925": {
+      "dof": 2,
+      "n_seed_observed": 3,
+      "ratio_mean": 1.105834419973272,
+      "sd_between_seed": 0.10272647308761297,
+      "se_observed": 0.0593091568900342,
+      "se_projected_n5": 0.04594067538254106,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "h2@0.960": {
+      "dof": 2,
+      "n_seed_observed": 3,
+      "ratio_mean": 0.8565888477788444,
+      "sd_between_seed": 0.8347974912990582,
+      "se_observed": 0.4819705563203356,
+      "se_projected_n5": 0.37333278759819666,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "poisson@0.700": {
+      "dof": 2,
+      "n_seed_observed": 3,
+      "ratio_mean": 1.0641711247472825,
+      "sd_between_seed": 0.053669836977129445,
+      "se_observed": 0.03098629482610902,
+      "se_projected_n5": 0.02400188076443865,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "poisson@0.850": {
+      "dof": 2,
+      "n_seed_observed": 3,
+      "ratio_mean": 1.036282158037894,
+      "sd_between_seed": 0.04581502700442194,
+      "se_observed": 0.026451318173932984,
+      "se_projected_n5": 0.020489102954575202,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "poisson@0.925": {
+      "dof": 2,
+      "n_seed_observed": 3,
+      "ratio_mean": 1.039599798977538,
+      "sd_between_seed": 0.04250270821232805,
+      "se_observed": 0.02453895002767572,
+      "se_projected_n5": 0.019007788958120816,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    },
+    "poisson@0.960": {
+      "dof": 2,
+      "n_seed_observed": 3,
+      "ratio_mean": 1.0147158910527876,
+      "sd_between_seed": 0.027940105313875026,
+      "se_observed": 0.01613122732415224,
+      "se_projected_n5": 0.012495194956065532,
+      "seeds": [
+        101,
+        102,
+        103
+      ]
+    }
+  },
+  "excluded_cells": [
+    "h2@0.960"
+  ],
+  "parameters": {
+    "band_floor": 0.05,
+    "degenerate_err_threshold": 0.01,
+    "effect_branch_B": 0.8,
+    "k_sigma": 3.0,
+    "n_seed_projected": 5
+  },
+  "provenance": {
+    "caveat": "sd uoc tu n=3 seed legacy => dof=2, bat dinh cua chinh sd rat lon. Phai do lai o diem canh cua T2.6 va viet amendment neu lech > 50%.",
+    "git_commit": "dc51777f13fd09896c3fe9aa31f2f1a45d22b968",
+    "git_dirty": true,
+    "inputs": {
+      "results/SUPERSEDED/phase-20R/decision_error_tau0.2.parquet": "a9b2b740f2e19d3115f10136aaec2a0cecf1a7bb11f3e83e475a85ffcf02cd12",
+      "results/SUPERSEDED/phase-20R/decision_error_tau1.0.parquet": "94587b3f12fd2393ef5ecd3fdd05b5957ef421d0572a0220b84f1e59dfd9de91",
+      "results/SUPERSEDED/phase-20R/decision_error_tau5.0.parquet": "a464a858145ac6e9a548a54e2ad95f600ce68d343f819e70aa7dc617918379a8"
+    },
+    "script": "tools/t2_band_window.py",
+    "se_source": "bien thien GIUA SEED cua ti so err(tau_max)/err(tau_min) tai z/tau co dinh; KHONG dung so mau trong mot lan chay (docs/phase-L/00f-amendment-5.md:29)"
+  },
+  "readable_cells": [
+    "h2@0.700",
+    "h2@0.850",
+    "h2@0.925",
+    "poisson@0.700",
+    "poisson@0.850",
+    "poisson@0.925",
+    "poisson@0.960"
+  ],
+  "windows": {
+    "h2@0.700": {
+      "band_ceiling_from_effect": 0.8,
+      "band_floor_from_noise": 0.039333425662210646,
+      "degenerate": false,
+      "err_baseline": 0.3483831735626846,
+      "recommended_band": 0.05,
+      "se_used": 0.013111141887403548,
+      "verdict": "READABLE",
+      "window_empty": false
+    },
+    "h2@0.850": {
+      "band_ceiling_from_effect": 0.8,
+      "band_floor_from_noise": 0.06650479098222833,
+      "degenerate": false,
+      "err_baseline": 0.2969476711331902,
+      "recommended_band": 0.06650479098222833,
+      "se_used": 0.02216826366074278,
+      "verdict": "READABLE",
+      "window_empty": false
+    },
+    "h2@0.925": {
+      "band_ceiling_from_effect": 0.8,
+      "band_floor_from_noise": 0.13782202614762318,
+      "degenerate": false,
+      "err_baseline": 0.08899778646111396,
+      "recommended_band": 0.13782202614762318,
+      "se_used": 0.04594067538254106,
+      "verdict": "READABLE",
+      "window_empty": false
+    },
+    "h2@0.960": {
+      "band_ceiling_from_effect": 0.8,
+      "band_floor_from_noise": 1.11999836279459,
+      "degenerate": true,
+      "err_baseline": 0.0017062206723063517,
+      "recommended_band": null,
+      "se_used": 0.37333278759819666,
+      "verdict": "INSUFFICIENT_POWER",
+      "window_empty": true
+    },
+    "poisson@0.700": {
+      "band_ceiling_from_effect": 0.8,
+      "band_floor_from_noise": 0.07200564229331595,
+      "degenerate": false,
+      "err_baseline": 0.16666932812068322,
+      "recommended_band": 0.07200564229331595,
+      "se_used": 0.02400188076443865,
+      "verdict": "READABLE",
+      "window_empty": false
+    },
+    "poisson@0.850": {
+      "band_ceiling_from_effect": 0.8,
+      "band_floor_from_noise": 0.0614673088637256,
+      "degenerate": false,
+      "err_baseline": 0.38275694509970437,
+      "recommended_band": 0.0614673088637256,
+      "se_used": 0.020489102954575202,
+      "verdict": "READABLE",
+      "window_empty": false
+    },
+    "poisson@0.925": {
+      "band_ceiling_from_effect": 0.8,
+      "band_floor_from_noise": 0.05702336687436245,
+      "degenerate": false,
+      "err_baseline": 0.33677313766609945,
+      "recommended_band": 0.05702336687436245,
+      "se_used": 0.019007788958120816,
+      "verdict": "READABLE",
+      "window_empty": false
+    },
+    "poisson@0.960": {
+      "band_ceiling_from_effect": 0.8,
+      "band_floor_from_noise": 0.03748558486819659,
+      "degenerate": false,
+      "err_baseline": 0.23131856068202644,
+      "recommended_band": 0.05,
+      "se_used": 0.012495194956065532,
+      "verdict": "READABLE",
+      "window_empty": false
+    }
+  }
+}
