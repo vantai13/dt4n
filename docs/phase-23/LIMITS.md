@@ -257,6 +257,8 @@ dung day du nam o cot "dinh nghia tai".
 
 | G-L113 | Quy gọn ω chỉ được kiểm cho topology hiện tại, 4 hành động/3 khe, alpha=0.10, dt=0.1 s, tau=3 s, sigma_ref=0.028 và nugget tổng hợp hiện tại. Covariance cho SD contrast cố định chính xác; trung bình ratio là proxy, không là định luật qhat rank-slot | `docs/phase-G/75-g5c-results.md`; `docs/phase-G/76-amendment-G-A020-omega-reduction.md` §3–4; `results/SMOKE/phase-G2/g6_sigma_eff.json` | G-A020 hết hiệu lực khi hơn 3 claim hoặc đổi tập/cấu trúc link, ranking/estimand; các cấu hình khác cần kiểm chuyển giao. K giữ nguyên không bảo đảm chuyển giao. Tính covariance chỉ sàng lọc, không thay tiền đăng ký retest |
 
+| G-L114 | Clone sạch thất bại vì 7 tag chỉ ở local, rồi tiếp tục thất bại vì thiếu NPZ G3b được certificate trích hash. Đã phân phối đủ tag và đúng file CITED_RAW 12,420,400 byte, giữ hash; clone mới từ origin chạy verify_protected PASS | `docs/phase-G/76a-custody-portability-repair.md`; `docs/phase-G/77-g-closeout.md` §5.1; `results/SMOKE/phase-G2/g_closeout_clean_clone.json` | Kiểm tag live trên origin với đúng object ID và kiểm dependency bằng clone thật; tag count không thay hash/evidence. GitHub distribution không thay DOI; dữ liệu cũ không bị sửa/xóa |
+
 **Va cham da phat hien, chua phan xu.** `G-L90` mang HAI noi dung khac nhau:
 doc 43 dat no cho "mot khoang trich tu bang truoc phai doc tren toan bang",
 doc 45 dat no cho "hai signed gate phai duoc kiem MUTUAL SATISFIABILITY".

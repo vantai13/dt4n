@@ -1,0 +1,200 @@
+{
+  "schema": "dt4n.phase_g.closeout_scope.v1",
+  "status": "SCOPE_INVENTORY_NOT_NEW_MEASUREMENT",
+  "source_of_v10_requirements": "User-supplied review; MASTER_PLAN_v10 is absent from this checkout",
+  "gate_crosswalk": [
+    {
+      "gate": "G-1",
+      "disposition": "PASS_IN_SIGNED_AGGREGATION",
+      "requirement": "Round-trip sigma/tau; orthogonality point estimates",
+      "measurements": {
+        "max_abs_cell_tau_error": 0.04941130697970242,
+        "max_abs_cell_sigma_error": 0.03818516997487009,
+        "orthogonality": {
+          "available": true,
+          "d_log_tau_hat_d_log_sigma": -0.04818685784459802,
+          "d_log_sigma_ratio_d_log_tau": 0.013724229722009824
+        }
+      },
+      "qualification": "Doc 66 point gates; uncertainty and per-link exceptions remain in doc 66a."
+    },
+    {
+      "gate": "G-2",
+      "disposition": "STRUCTURAL_SCOPE",
+      "requirement": "Direct AR rate target avoids the previous flow-layer M/G/infinity dependency",
+      "measurements": {},
+      "qualification": "Code inspection of physical_trace, not a universal statement about all downstream statistics."
+    },
+    {
+      "gate": "G-3",
+      "disposition": "PASS_MEASURED_LEVELS",
+      "requirement": "Omega round-trip",
+      "measurements": {
+        "max_abs_omega_error": 0.02713833645076902,
+        "omega_grid": [
+          0.0,
+          0.25,
+          0.5,
+          0.75,
+          1.0
+        ]
+      },
+      "qualification": "Five level estimates; historical P7 correction in doc 64 is retained."
+    },
+    {
+      "gate": "G-4",
+      "disposition": "PASS_POOLED",
+      "requirement": "Null cross-link correlation",
+      "measurements": {
+        "max_abs_pooled_r": 0.0705,
+        "corrected_null_median": 0.0796
+      },
+      "qualification": "Rounded doc60 values; not a bound on every replicate or population correlation."
+    },
+    {
+      "gate": "G-5",
+      "disposition": "PARTIAL",
+      "requirement": "Per-host pps invariance across omega",
+      "measurements": {
+        "max_sink_ratio_error": 4.6036512213909475e-05
+      },
+      "qualification": "Variance invariance and sink tracking do not prove per-host pps invariance."
+    },
+    {
+      "gate": "G-6",
+      "disposition": "PASS_MEASURED_SERIES",
+      "requirement": "Alignment at lag 0",
+      "measurements": {
+        "aligned_series": 104,
+        "total_series": 104
+      },
+      "qualification": "Doc68 alignment diagnostic, not independent clocks at multiple physical hosts."
+    },
+    {
+      "gate": "G-7",
+      "disposition": "PASS_SIGNED_CLIPPING_STATISTIC",
+      "requirement": "Clipping fraction",
+      "measurements": {
+        "g3a_max_target_clip": 0.0010060975609756098,
+        "g3b_max_target_clip": 0.005579268292682927
+      },
+      "qualification": "Generator clipping fraction, not a proof of all queue/telemetry censoring."
+    },
+    {
+      "gate": "G-8",
+      "disposition": "PASS_MEASURED_RUN_LENGTH",
+      "requirement": "T_run/tau",
+      "measurements": {
+        "T_run_over_tau": 205.0,
+        "tau30_run_s": 6150
+      },
+      "qualification": "Not an amendment to campaign kappa_time=5 or its run-length rule."
+    },
+    {
+      "gate": "G-9",
+      "disposition": "RETIRED_IN_G_A020_SCOPE",
+      "requirement": "Dedicated k_phys physical-branch campaign",
+      "measurements": {},
+      "qualification": "Retired only for redundant omega-axis work; physical byte conservation and L2 requirements are separate."
+    },
+    {
+      "gate": "G-10",
+      "disposition": "PARTIAL",
+      "requirement": "Full controlled operating domain",
+      "measurements": {},
+      "qualification": "Only the measured configurations listed below, not the full Cartesian product."
+    },
+    {
+      "gate": "G-11",
+      "disposition": "NOT_TRIGGERED",
+      "requirement": "Exit if G-1/G-4 fail",
+      "measurements": {},
+      "qualification": "Signed G3b and pooled null gates passed; other debts remain."
+    }
+  ],
+  "measured_sigma_tau_cells": [
+    {
+      "tau_s": 2.0,
+      "sigma_ref": 0.028,
+      "omega": 0.0,
+      "replicates": 2,
+      "T_run_s": 410.0
+    },
+    {
+      "tau_s": 2.0,
+      "sigma_ref": 0.045,
+      "omega": 0.0,
+      "replicates": 2,
+      "T_run_s": 410.0
+    },
+    {
+      "tau_s": 5.0,
+      "sigma_ref": 0.028,
+      "omega": 0.0,
+      "replicates": 2,
+      "T_run_s": 1025.0
+    },
+    {
+      "tau_s": 5.0,
+      "sigma_ref": 0.045,
+      "omega": 0.0,
+      "replicates": 2,
+      "T_run_s": 1025.0
+    },
+    {
+      "tau_s": 30.0,
+      "sigma_ref": 0.036,
+      "omega": 0.0,
+      "replicates": 1,
+      "T_run_s": 6150.0
+    }
+  ],
+  "measured_omega_sweep": {
+    "omega_grid": [
+      0.0,
+      0.25,
+      0.5,
+      0.75,
+      1.0
+    ],
+    "tau_s": 2.0,
+    "dt_s": 0.1,
+    "T_run_s": 410.0,
+    "n_windows": 4100,
+    "n_replicates": 3,
+    "n_links": 8,
+    "host_quiesced": false,
+    "fit_lag_lo": 2,
+    "seed": 20260905
+  },
+  "scope": {
+    "dt_s": 0.1,
+    "rho_bar_approx": 0.857,
+    "n_links": 8,
+    "datapath": "single virtualized host, Linux veth/HTB; no physical NIC/multi-host certification",
+    "ca_swept": false,
+    "is_full_cartesian_domain": false
+  },
+  "historical_g5c_verdict": "POWER_AXIS_HOLDS",
+  "evidence_sha256": {
+    "results/SMOKE/phase-G2/g2_kill_test.json": "50a30667e33a2c076e731752b84c0d42a4ed608e3e05eea51c858b459e2ec6e7",
+    "results/SMOKE/phase-G2/g2_kill_null.json": "21a39f3f46d1c8ad861813a66b548c1d87cb9e9f753197e42114412c43823754",
+    "results/SMOKE/phase-G2/g2_kill_series.npz": "64279ffe1610858383003587ef53a64eba2096f7c8083d8f7b8e8c00b48f986b",
+    "results/SMOKE/phase-G2/g3a_omega_sweep.json": "947a987f33889201034d86407c4efe78a8a9f05fe4ba5e42298ce4237b3ebe0e",
+    "results/SMOKE/phase-G2/g3a_readjudicated.json": "351049ee17185cd2ac6909767316821b8efa9713a572716122655b1767b59757",
+    "results/SMOKE/phase-G2/g3b_sigma_tau.json": "e71d61c1bdef6c3b58c6c2b3d640847e5797e8e446169cb53f40ddf1318baf08",
+    "results/SMOKE/phase-G2/g3b_sigma_tau_series.npz": "cfb519b7b46bdc95e186d4c96c0149a1127929ad8fe112c123b2b5cccb8eec13",
+    "results/SMOKE/phase-G2/g3b_orthogonality_audit.json": "0947ecd886ac62c488a71c52bda22434761dc6ea562c0d359eb4fd52d0e667ca",
+    "results/SMOKE/phase-G2/g4_nugget_model.json": "e5285b4319afe4b51a55b876630c009b16f5bb720a5dd58564d6d747477c9a9e",
+    "results/SMOKE/phase-G2/g5_estimand_transfer.json": "8d6b5ec7820c8deff1ac4151831a3627013972a2814b2c4dda27f83960add9b7",
+    "results/SMOKE/phase-G2/g5a_mechanism_audit.json": "1c699b185b363bb95ecd1775a76a11d66aee04b98c8174a39801e56ae990d4e1",
+    "results/SMOKE/phase-G2/g5b_power_axis.json": "62239b1f5cef6e276e82854cc691e0ce2e0cfd5eb38f4adab68001b7dbb38600",
+    "results/SMOKE/phase-G2/g5c_monotone.json": "10e44f07dd57f5bdbaad5ce7f83b878334dc1b47ea18cc30b51773cf24d75d3c",
+    "results/SMOKE/phase-G2/g6_sigma_eff.json": "3ad56f7ac9351ffc3dcec6fa1b5e8af03a451d94839e9812d4f1e76a9c957977",
+    "results/SMOKE/phase-G2/g_closeout_custody_repair.json": "bf1b33168f03d2f918803a0a000c50991219bfa8c790a43b9613573c711098f2",
+    "results/SMOKE/phase-G2/g_closeout_clean_clone.json": "af3cd00f546f28420af02550cfa48e23b814ef5efe843ded9acc4ef0808c3f85",
+    "results/SMOKE/phase-G2/g3b_series_git_custody.json": "b7f492d8d4b45f6ea5615052c1a71cf5a5d97a6a2eef2617516ce3ea0eafbee6",
+    "results/SMOKE/phase-G2/g_closeout_tests.log": "df929fd212517bd9c70b3b75176d10f435455f67b8c41ab7924272f7b375021d",
+    "results/LIVE/phase-G2/measurement_path_cert_v2.json": "6829990d257814e3f26e287cfa861de1121c563f2ac5814bd6d7d35da9f33a0b"
+  }
+}

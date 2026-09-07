@@ -75,3 +75,32 @@ def test_reference_scan_deduplicates_and_preserves_source_documents(repository):
     refs = custody.referenced_phase_g_tags(repository)
     assert refs['phase-G2-example-prereg'] == ['docs/phase-G/00-test.md', 'docs/phase-G/01-test.md']
     assert refs['phase-G-old-tag'] == ['docs/phase-G/01-test.md']
+
+
+def test_default_cli_fails_when_backup_passes_but_origin_fails(monkeypatch, capsys):
+    import json
+    monkeypatch.setattr('sys.argv', ['check_phase_g_custody'])
+    monkeypatch.setattr(custody, 'evaluate', lambda deep=False: {
+        'pass': True, 'phase_g_local_work_allowed': True,
+        'campaign_execution_allowed': True, 'public_archival_claim_allowed': False})
+    monkeypatch.setattr(custody, 'check_remote_tags', lambda: {'pass': False, 'checked': True})
+    assert custody.main() == 1
+    output = json.loads(capsys.readouterr().out)
+    assert output['local_backup_pass'] is True
+    assert output['campaign_execution_allowed'] is False
+
+
+def test_tags_only_cli_does_not_depend_on_host_backup(monkeypatch, capsys):
+    monkeypatch.setattr('sys.argv', ['check_phase_g_custody', '--tags-only'])
+    monkeypatch.setattr(custody, 'evaluate', lambda **kw: pytest.fail('must not read host backup'))
+    monkeypatch.setattr(custody, 'check_remote_tags', lambda: {'pass': True, 'checked': True})
+    assert custody.main() == 0
+
+
+def test_local_only_cli_is_explicitly_offline(monkeypatch, capsys):
+    import json
+    monkeypatch.setattr('sys.argv', ['check_phase_g_custody', '--local-only'])
+    monkeypatch.setattr(custody, 'evaluate', lambda deep=False: {'pass': True})
+    monkeypatch.setattr(custody, 'check_remote_tags', lambda: pytest.fail('offline mode must not contact origin'))
+    assert custody.main() == 0
+    assert json.loads(capsys.readouterr().out)['remote_tags']['checked'] is False
