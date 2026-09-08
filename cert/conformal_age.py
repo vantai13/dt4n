@@ -10,6 +10,7 @@ from __future__ import annotations
 
 import argparse
 import json
+import math
 import os
 import subprocess
 import sys
@@ -215,17 +216,37 @@ def report(
     print(f"  muc phan vi tham chieu cho (B): {level_ref:.5f}   can tren cho (A): {upper_a:.5f}")
     best = None
     best_dev = float("inf")
+    min_blocks_required = int(math.ceil(1.0 / alpha)) - 1   # conformal can >= 1/alpha - 1
     for variant in ("A", "B", "C"):
-        qhat, cov, _nblk = fit_eval(ix, flag, alpha, variant)
+        qhat, cov, nblk = fit_eval(ix, flag, alpha, variant)
+        # O SUY BIEN: q_hat = inf => coverage = 1.0 theo DINH NGHIA, khong
+        # theo phep do. Neu khong tach ra, chung KEO `marginal` len va bien
+        # mot chung chi vo dung thanh mot ket qua "dat muc tieu".
+        degenerate = sorted(int(c) for c in qhat
+                            if not math.isfinite(qhat[c])
+                            or nblk.get(c, 0) < min_blocks_required)
         cov_values = np.array([cov[c] for c in sorted(cov)], dtype=float)
+        cov_readable = np.array([cov[c] for c in sorted(cov)
+                                 if int(c) not in degenerate], dtype=float)
         marginal = float(np.nanmean(cov_values))
         target = level_ref if variant == "B" else (1.0 - alpha)
         dev = abs(marginal - target)
         h4_pass = bool(np.all(np.abs(cov_values - (1.0 - alpha)) <= TOL_H4))
         result[f"variant_{variant}"] = {
-            "qhat": {int(k): float(v) for k, v in qhat.items()},
+            # q_hat = inf KHONG phai JSON hop le (RFC 8259) -> ghi None va
+            # giu mot co rieng, thay vi de `Infinity` lot vao artifact.
+            "qhat": {int(k): (float(v) if math.isfinite(v) else None)
+                     for k, v in qhat.items()},
+            "qhat_is_infinite": {int(k): (not math.isfinite(v))
+                                 for k, v in qhat.items()},
+            "n_blocks_per_cell": {int(k): int(v) for k, v in nblk.items()},
+            "min_blocks_required": min_blocks_required,
+            "degenerate_cells": degenerate,
+            "n_degenerate": len(degenerate),
             "coverage": {int(k): float(v) for k, v in cov.items()},
             "marginal": marginal,
+            "marginal_readable_only": (float(np.nanmean(cov_readable))
+                                       if cov_readable.size else None),
             "target": float(target),
             "H4_pass": h4_pass,
         }
@@ -260,7 +281,10 @@ def report(
     for cell in sorted(qhat):
         print(f"  o {cell}: q(a)={qhat[cell]:9.3f}  q(a/K)={qhat_k[cell]:9.3f}  {'OK' if qhat_k[cell] > qhat[cell] else '<-- DAO DAU!'}")
     print(f"  H6 -> {'PASS' if h6_pass else 'FAIL'}")
-    result["H6"] = {"pass": bool(h6_pass), "qhat_alpha_over_k": {int(k): float(v) for k, v in qhat_k.items()}}
+    # Cung ly do JSON nhu tren: q_hat(alpha/K) cung co the la inf.
+    result["H6"] = {"pass": bool(h6_pass),
+                    "qhat_alpha_over_k": {int(k): (float(v) if math.isfinite(v) else None)
+                                          for k, v in qhat_k.items()}}
 
     print(f"\n=== V3 DOI CHUNG DUONG ({N_REPEAT} lan chia moi loai) ===")
     cov_block, cov_sample, cells = v3_variance_control(ix, alpha)

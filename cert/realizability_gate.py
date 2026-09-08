@@ -60,6 +60,7 @@ def realizability_gate(
     omega: float = 0.0,
     sigma: float | None = None,
     clip_fraction: float | None = None,
+    min_cell_blocks: int | None = None,
 ) -> Dict[str, Any]:
     """Phan quyet mot o co DO DUOC khong. Chi doc, khong chay gi.
 
@@ -114,6 +115,20 @@ def realizability_gate(
         add("censoring_ok", float(clip_fraction) < CLIP_MAX,
             float(clip_fraction), "< %g" % CLIP_MAX,
             "kep AR(1) lam lech ca sigma_hat lan tau_hat [V-T2-3]")
+
+    # Bao dam Mondrian la THEO TUNG O, nen so block cua O NHO NHAT moi la
+    # rang buoc, khong phai tong so block. Duoi nguong nay conformal_age.py
+    # tra q_hat = inf va coverage = 1.0 -- mot chung chi vo dung DOI LOT mot
+    # ket qua hoan hao. Rui ro tang theo tau: block_s = 5*tau.
+    if min_cell_blocks is None:
+        checks["mondrian_cells_populated"] = {"pass": None, "got": None,
+                                              "need": ">= %d" % mb,
+                                              "why": "not_evaluated"}
+    else:
+        add("mondrian_cells_populated", int(min_cell_blocks) >= mb,
+            int(min_cell_blocks), ">= %d" % mb,
+            "bao dam Mondrian la THEO O; o thieu block => q_hat=inf, "
+            "coverage=1.0 theo dinh nghia chu khong theo phep do")
 
     failed = sorted(k for k, v in checks.items() if v["pass"] is False)
     not_eval = sorted(k for k, v in checks.items() if v["pass"] is None)

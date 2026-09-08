@@ -788,6 +788,7 @@ def _control_one(
     n: int,
     seed: int,
     rho_source: str,
+    tau: float,
 ) -> Dict[str, Any]:
     mode = str(cal_cell["mode"])
     rho_mat = rho_matrix_from_cell(
@@ -795,7 +796,10 @@ def _control_one(
         float(cal_cell["rho_bar"]),
         float(cal_cell["sigma_rho"]),
         int(seed),
-        tau=TAU,
+        # KHONG duoc la TAU: hang so do la 1.0, nen `--control --tau 10` se
+        # im lang sinh rho o tau=1.0. NC3_one_step_churn phu thuoc TRUC TIEP
+        # vao tau, va mot doi chung o tau SAI te hon khong co doi chung.
+        tau=float(tau),
         n=int(n),
         dt=DT,
         source=rho_source,
@@ -814,6 +818,7 @@ def _control_one(
         "seed": int(seed),
         "n": int(n),
         "rho_source": str(rho_source),
+        "tau_rho": float(tau),
         "NC1b_perfect_twin": nc1b,
         "NC2_random_twin": nc2,
         "NC3_one_step_churn": nc3,
@@ -828,10 +833,20 @@ def controls(
     n: int = CONTROL_N,
     seed: int = 100,
     rho_source: str = RHO_SOURCE,
+    *,
+    tau: float,
 ) -> Dict[str, Any]:
+    """Doi chung am. `tau` la KEYWORD-ONLY va KHONG co mac dinh.
+
+    Keyword-only vi da co 5 tham so dung truoc: mot `tau` theo vi tri se
+    doc duoc la mot con so vo nghia tai cho goi. Khong mac dinh vi tau la
+    TRUC, khong phai tien nghi -- mot mac dinh im lang o day chinh la
+    duong ma tau=1.0 len vao 20R/21R/22/23 ma khong ai ky (T2.0 muc F4).
+    """
     check = check_z_grid(list(Z_ALL), DT)
     cells = feasible_cells(calibration_path, include_pc1=True)
-    rows = [_control_one(tt, cv2, cell, n=n, seed=seed, rho_source=rho_source) for cell in cells]
+    rows = [_control_one(tt, cv2, cell, n=n, seed=seed,
+                         rho_source=rho_source, tau=tau) for cell in cells]
     pc1 = [row for row in rows if row["mode"] == "cbr"]
     return {
         "phase": "20R.5",
@@ -840,6 +855,7 @@ def controls(
         "n": int(n),
         "seed": int(seed),
         "rho_source": str(rho_source),
+        "tau_rho": float(tau),
         "z_grid_check": check,
         "summary": {
             "NC1b_max_abs": float(max(abs(row["NC1b_perfect_twin"]) for row in rows)) if rows else math.nan,
@@ -1285,7 +1301,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     tt = TruthTable(args.truth_table)
     cv2 = C.CostV2(strict_reliable=False)
     if args.control:
-        report = controls(tt, cv2, args.calibration, n=args.control_n, rho_source=args.rho_source)
+        report = controls(tt, cv2, args.calibration, n=args.control_n,
+                          rho_source=args.rho_source, tau=tau)
         write_json(args.control_out, report)
         print(json.dumps(report["summary"], indent=2, sort_keys=True))
         print("controls -> %s" % args.control_out)

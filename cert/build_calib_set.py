@@ -115,8 +115,15 @@ def _bin_with_edge_warnings(values: np.ndarray, edges: Sequence[float]) -> tuple
     low = raw < 0
     high = raw >= n_bins
     clipped = np.clip(raw, 0, n_bins - 1)
+    # DEM SO HANG MOI BIN. Mot bin rong (hoac gan rong) khong lam conformal
+    # SAI -- no lam q_hat = inf va coverage = 1.0 (cert/conformal_age.py),
+    # tuc chung chi VO DUNG ma bao cao HOAN HAO. Khong dem thi khong thay.
+    counts = np.bincount(clipped, minlength=n_bins).tolist()
     return clipped.astype(np.int8), {
         "n_bins": int(n_bins),
+        "n_per_bin": [int(x) for x in counts],
+        "n_min_bin": int(min(counts)) if counts else 0,
+        "empty_bins": [i for i, x in enumerate(counts) if int(x) == 0],
         "n_low": int(low.sum()),
         "n_high": int(high.sum()),
         "min_value": float(np.min(values)) if len(values) else None,

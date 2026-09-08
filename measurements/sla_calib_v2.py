@@ -598,7 +598,13 @@ def main(argv: Sequence[str] | None = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--n", type=int, default=DEFAULT_N)
     ap.add_argument("--dt", type=float, default=DEFAULT_DT)
-    ap.add_argument("--tau", type=float, default=TAU_LOAD_LEGACY_S)
+    # tau la TRUC, khong phai tien nghi. Mot mac dinh im lang o day chinh la
+    # duong ma tau=1.0 len vao 20R/21R/22/23 ma khong ai ky (T2.0 muc F4).
+    # TAU_LOAD_LEGACY_S van con lam BI DANH cho doi chung hoi quy, nhung
+    # NGUOI DUNG phai go no ra tuong minh de lua chon di vao provenance.
+    ap.add_argument("--tau", type=float, required=True,
+                    help="THOI GIAN TUONG QUAN cua tai, GIAY. BAT BUOC. "
+                         "Dung 1.0 de tai tao ket qua legacy 20R.")
     ap.add_argument("--a", type=float, default=DEFAULT_A)
     ap.add_argument("--seed", type=int, default=DEFAULT_SEED)
     ap.add_argument("--out", default=RESULT_PATH)

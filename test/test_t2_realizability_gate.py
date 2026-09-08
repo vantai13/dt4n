@@ -86,7 +86,21 @@ def test_unevaluated_criteria_are_not_silently_passed():
     r = realizability_gate(tau=1.0, n=200_000, **BASE)
     assert r["checks"]["censoring_ok"]["pass"] is None
     assert r["checks"]["sigma_feasible"]["pass"] is None
-    assert set(r["not_evaluated"]) == {"censoring_ok", "sigma_feasible"}
+    assert r["checks"]["mondrian_cells_populated"]["pass"] is None
+    assert set(r["not_evaluated"]) == {"censoring_ok", "sigma_feasible",
+                                       "mondrian_cells_populated"}
+
+
+def test_mondrian_occupancy_is_enforced_when_supplied():
+    """O Mondrian thieu block => q_hat=inf => coverage=1.0 theo DINH NGHIA.
+
+    Nguong la chinh MIN_BLOCKS suy tu alpha, khong phai mot so moi.
+    """
+    mb = min_blocks(ALPHA)
+    ok = realizability_gate(tau=1.0, n=200_000, min_cell_blocks=mb, **BASE)
+    assert ok["verdict"] == "REALIZABLE"
+    bad = realizability_gate(tau=1.0, n=200_000, min_cell_blocks=mb - 1, **BASE)
+    assert "mondrian_cells_populated" in bad["failed"]
 
 
 def test_censoring_and_sigma_are_enforced_when_supplied():
