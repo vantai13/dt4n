@@ -191,9 +191,42 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
     dist_min = dist.min(axis=1)
     u = dist_min / sig_z
 
+    # --- NHANH NHAY CAM u_cond (prereg T2, QD-1) -------------------------
+    # `u` o tren dung TU SO KHONG DIEU KIEN voi MAU SO CO DIEU KIEN: no do
+    # khoang cach tu rho(t_src) den nguong, nhung chia cho do phan tan cua
+    # rho(t_src + z). Phan bi bo qua la HOI QUY VE TRUNG BINH:
+    #
+    #     E[rho(t+z) | rho(t)] = mu + phi_z * (rho(t) - mu),  phi_z = exp(-z/tau)
+    #
+    # Do lon phan bo qua = (1 - phi_z) * |rho - mu|:
+    #     z/tau=0.05 -> 4.9% | 0.19 -> 17% | 1.00 -> 63% | 2.50 -> 92%
+    # Nhanh B cua T2 di tu z/tau ~ 1 xuong ~0.002, tuc CHAY THANG QUA vung
+    # ma phan bo qua lon nhat -- chua phase nao tung o do.
+    #
+    # KHONG thay `u`: Mondrian conformal HOP LE voi moi taxonomy do duoc va
+    # co dinh TRUOC hieu chuan, nen `u` cu KHONG mat bao dam bao phu -- no
+    # chi KEM HIEU QUA. Doi `u` se XOA doi chung hoi quy Phase 21 va tron
+    # hai thay doi (tau + dinh nghia u) vao mot phep so.
+    # => Chay SONG SONG, bao cao HIEU. Chenh lech la DU LIEU, khong phai loi.
+    #
+    # tau dung o day la TAU_CORE_MEASURED_S, GIONG HET nhanh chinh: u_cond
+    # sua MOI QUAN HE tu so/mau so, KHONG dung den truc tau cua T2 (F1).
+    mu_link = rho.mean(axis=0)                              # (n_links,)
+    phi_z = np.exp(-z_s / TAU_CORE_MEASURED_S)              # (n_rows,)
+    rho_pred = mu_link[None, :] + phi_z[:, None] * (rho[src] - mu_link[None, :])
+    dist_cond = np.min(
+        np.abs(rho_pred[:, :, None] - np.asarray(JUMPS, dtype=float)[None, None, :]),
+        axis=2,
+    ).min(axis=1)
+    u_cond = dist_cond / sig_z
+
     age_edges = age_edges_for_dt(dt_s)
     z_bin, z_diag = _bin_with_edge_warnings(z_s, age_edges)
     u_bin, u_diag = _bin_with_edge_warnings(u, U_EDGES)
+    # CUNG U_EDGES: bien phan bin phai co dinh TRUOC khi nhin du lieu. Neu
+    # phan bo u_cond lech khoi U_EDGES thi DO CHINH LA phat hien, khong phai
+    # ly do de chinh bien cho vua.
+    u_cond_bin, u_cond_diag = _bin_with_edge_warnings(u_cond, U_EDGES)
     if z_diag["n_unique_values"] < len(age_edges) - 1:
         print(
             "  [CANH BAO] chi %d muc tuoi khac nhau (dt=%.6gs) - co the bi aliasing"
@@ -217,6 +250,9 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
         "dist_min": dist_min.astype(np.float32),
         "u": u.astype(np.float32),
         "u_bin": u_bin,
+        "u_cond": u_cond.astype(np.float32),
+        "u_cond_bin": u_cond_bin,
+        "phi_z": phi_z.astype(np.float32),
         "s_maxabs": s_maxabs.astype(np.float32),
         "s_range": s_range.astype(np.float32),
         "s_vs_a1": s_vs_a1.astype(np.float32),
@@ -245,6 +281,15 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
         "age_edges": list(age_edges),
         "z_bin_diag": z_diag,
         "u_bin_diag": u_diag,
+        "u_cond_bin_diag": u_cond_diag,
+        "u_cond_tau_s": float(TAU_CORE_MEASURED_S),
+        # Hai con so quan trong nhat cua nhanh nay: chung tra loi truc tiep
+        # "bo qua hoi quy ve trung binh co THUC SU doi cach chia bin khong".
+        # ~0 => hai dinh nghia tuong duong thuc dung (QD-1 duoc xac nhan
+        # bang so); lon => co tac dong that, phai bao cao. CA HAI deu la
+        # ket qua tot: khong outcome nao lam phep do that bai.
+        "mean_abs_u_minus_u_cond": float(np.mean(np.abs(u - u_cond))),
+        "frac_rows_bin_differs": float(np.mean(u_bin != u_cond_bin)),
     }
     return pd.DataFrame(data), diagnostics
 
@@ -293,6 +338,22 @@ def self_check(df: pd.DataFrame) -> list[str]:
         failures.append("u co gia tri vo han -> sig_z = 0 (z=0?)")
     if len(u_finite) and float(u_finite.max()) > 1e3:
         failures.append("u_max = %.2e qua lon -> nghi chia cho gan 0" % float(u_finite.max()))
+    if "u_cond" in df.columns:
+        uc = df.loc[df.u_cond.notna(), "u_cond"]
+        if not np.isfinite(uc).all():
+            failures.append("u_cond co gia tri vo han -> sig_z = 0 (z=0?)")
+        if (df.u_cond_bin < 0).any() or (df.u_cond_bin > len(U_EDGES) - 2).any():
+            failures.append("u_cond_bin ngoai mien hop le")
+        # BIEN THAI: phi_z -> 1 thi mu + 1*(rho-mu) = rho, nen u_cond -> u.
+        # Bat sai DAU trong (rho - mu) va sai TRUC khi lay trung binh -- loai
+        # loi ma mot test gia tri hardcode khong bat duoc.
+        near = df.phi_z > 0.99
+        if near.any():
+            d = float((df.loc[near, "u"] - df.loc[near, "u_cond"]).abs().max())
+            if d > 0.5:
+                failures.append(
+                    "u_cond lech u qua nhieu (%.3f) o phi_z>0.99 -> nghi sai dau "
+                    "trong (rho - mu) hoac mu tinh tren truc sai" % d)
     return failures
 
 
