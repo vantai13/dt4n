@@ -26,6 +26,19 @@ PLAN = ROOT / "docs/phase-T2/03-run-plan.json"
 TAG = "phase-T2-prereg-signed"
 
 
+def _rel(p: pathlib.Path) -> str:
+    """Duong dan tuong doi so voi repo khi duoc, tuyet doi khi khong.
+
+    `Path.relative_to` NEM khi dich nam ngoai repo (vi du --out-dir tro vao
+    /tmp luc smoke test). Loi do xay ra SAU khi lenh da chay xong, nen no
+    vut di ca ket qua lan dong nhat ky -- dung cai dat tien nhat de mat cong.
+    """
+    try:
+        return str(p.resolve().relative_to(ROOT))
+    except ValueError:
+        return str(p.resolve())
+
+
 def _git(*a: str) -> str:
     try:
         return subprocess.check_output(["git", *a], text=True, cwd=ROOT).strip()
@@ -132,7 +145,7 @@ def main(argv=None) -> int:
                 "tau": run["tau"], "branch": run["branch"],
                 "a": run["a"], "seed": run["seed"],
                 "cmd": cmd[1:], "returncode": r.returncode,
-                "seconds": dt, "out": str(target.relative_to(ROOT)),
+                "seconds": dt, "out": _rel(target),
                 "sha256": (hashlib.sha256(target.read_bytes()).hexdigest()
                            if ok else None),
                 "git_commit": _git("rev-parse", "HEAD"),
@@ -149,7 +162,7 @@ def main(argv=None) -> int:
 
     if not a.dry_run:
         print("\nTONG: %.1f phut" % ((time.time() - t_all) / 60.0))
-        print("nhat ky: %s" % log_path.relative_to(ROOT))
+        print("nhat ky: %s" % _rel(log_path))
     return 0
 
 
