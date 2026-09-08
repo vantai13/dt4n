@@ -2,29 +2,34 @@
 # Thoi gian tuong quan cua tai nhu mot TRUC, va bao dam chung nhan theo tau
 
 ```text
-Ngay ky      : ____________          <- DE TRONG. Xem muc "TRANG THAI".
-Nguoi ky     : ____________
 Tag du kien  : phase-T2-prereg-signed
-Commit khi ky: ____________
-SHA256 file  : ____________          <- tinh SAU khi dien xong, TRUOC khi tag
+Ngay ky      : xem `git log -1 --format=%cI phase-T2-prereg-signed`
+Nguoi ky     : xem muc T2-8 (dien tay) va tac gia cua tag annotated
 ```
 
-> **TRANG THAI: BAN THAO -- CHUA KY, CHUA CO HIEU LUC.**
+> **TRANG THAI: NOI DUNG DA DAY DU -- CHO CHU KY. CHUA CO HIEU LUC.**
 >
-> Con lai chua dien:
->   - QD-2 `lift_min`               (nguong dinh nghia tau*)
->   - QD-7 k va san cua cua so bang (quy tac loai o da co tieu chi do duoc)
->   (T2-5: D-T2.6-2 co cua so do duoc; -3 da khai pham vi doc duoc;
->    -4 da doi sang tieu chi khong thu nguyen -- ca ba KHONG con o trong)
->   (T2-4 ngan sach CPU: DA DIEN -- 0.53 gio, do duoc)
->   - T2-7 thoi han kill clause
+> Bon muc tung de trong DA DIEN XONG:
+>   QD-2 `lift_min`  -> DUONG {0.05, 0.10, 0.20}, khong phai mot diem
+>   QD-7 k = 3.0, san = 0.05  (nhat quan voi 02-band-window.json)
+>   T2-4 ngan sach CPU -> 0.53 gio, 160 lenh (do duoc)
+>   T2-7 kill clause -> 2 ngay / 2 vong / 8 ngay, kem no N-T2-1..4
+>   (T2-5: D-T2.6-2/-3/-4 deu KHONG con o trong; tro vao artifact)
+>
+> CON LAI DUNG MOT VIEC: chu repo dien hai dong `Ky` va `Ngay` o muc T2-8,
+> commit, tao tag ANNOTATED `phase-T2-prereg-signed`, va PUSH ca hai.
+> Chi khi do trang thai moi la DA KY.
+>
+> KHONG dat trang thai thanh "DA KY" khi hai dong chu ky con trong: mot
+> tai lieu tu khai da ky ma khong co tag la mot LOI CUSTODY THAT, dung
+> nhu test/test_closure_tags_exist.py ghi.
 >
 > T2-5 DA GO CHAN o T2.5b: du doan gio suy tu artifact 22.6 da commit qua
 > `tools/t2_1_prediction.py`, va muc T2-5 TRO VAO artifact thay vi chep so.
-> Cai con thieu khong phai du doan ma la NGUONG PHAN QUYET quanh chung.
 >
 > KHONG chay bat ky o nao cua T2.6 truoc khi file nay duoc ky, commit, tag
-> va push. Hieu luc den tu dau vet, khong den tu file markdown.
+> VA PUSH. Hieu luc den tu dau vet, khong den tu file markdown -- mot tag
+> chua push la mot ghi chu ca nhan, khong phai mot dau vet.
 
 Tien de: Phase 22 dong tai lesson 22.6 (7/7 gate tren cell poisson@0.925).
 Phase T2.0 va T2.2 da dong, xem muc T2-0 va T2-2.
@@ -318,7 +323,7 @@ KET QUA nam o results/PENDING/ cho den khi duoc tham dinh -- PENDING theo
         classification.md).
 ```
 
-### QD-2  `lift_min` -- nguong dinh nghia tau*    [★ CHUA KY -- CHU REPO DIEN]
+### QD-2  `lift_min` -- nguong dinh nghia tau*    [DA CHOT]
 
 ```text
 tau*     = inf { tau : lift(tau) < lift_min }
@@ -326,10 +331,47 @@ lift(tau) = (err_baseline - err_certified) / err_baseline
 ```
 
 ```text
-CHOT: lift_min = ____________
-LY DO (phai viet TRUOC khi chay, khong phai sau): ______________________
-_______________________________________________________________________
+CHOT: KHONG chon mot lift_min duy nhat.
+      Bao cao tau* nhu MOT DUONG tren  lift_min in {0.05, 0.10, 0.20}.
 ```
+
+LY DO (viet TRUOC khi chay T2.6):
+
+```text
+(1) lift_min ma hoa CHI PHI VAN HANH cua abstain. Dai luong do khong suy
+    ra duoc tu repo nay: no thuoc mot he trien khai dang chay, ma Phase 24
+    moi cam day. Chon mot con so bay gio la chon mot ket luan bang mot gia
+    dinh khong kiem duoc (NT 54: khi mot dai luong chuyen tu DO sang DAT,
+    cau hoi nghien cuu phai doi theo).
+
+(2) BANG CHUNG THUC NGHIEM cho luat nay, do trong CHINH phase nay: o T2.5c
+    viec chon SAI mot tham so (tau trong hieu chinh u_cond) lam DOI DAU
+    ket luan -- +9.72% duoi U_EDGES nhung -1.14% duoi bin phan vi. Mot
+    tham so khong co can cu KHONG phai mot chi tiet.
+
+(3) Mot DUONG ben hon mot DIEM vi ba le:
+    - khong doi hoi mot quyet dinh khong co can cu;
+    - doc gia co chi phi abstain KHAC doc duoc ket qua cua ho tren cung
+      mot hinh;
+    - DO NHAY CAM cua tau* theo lift_min tro thanh mot DAI LUONG DUOC BAO
+      CAO, thay vi mot gia dinh bi giau.
+
+Ba muc phu mot bac do lon: 0.05 (abstain re) / 0.10 (trung binh) /
+0.20 (abstain dat). Chon TRUOC khi nhin bat ky so nao cua T2.6.
+```
+
+CACH BAO CAO -- chot o day:
+
+```text
+· tau*(lift_min) cho MOI (mode, rho_bar), kem CI tu bien thien GIUA SEED
+· KHONG duoc THEM mot muc lift_min nao sau khi nhin du lieu T2.6
+· tau* > max(luoi) o mot muc => ghi "> 28 s (ngoai luoi)".
+  KHONG mo rong luoi de di tim tau* (T2-6c). Do la cherry-picking.
+· HINH T2-1 ve BA duong ngang lift_min; giao diem la tau*.
+```
+
+CAI DAT: `cert/realizability_gate.tau_star_curve(taus, lifts, lift_mins)`
+-- da co san, da unit-test, va `lift_min` KHONG co mac dinh o do.
 
 > Day la nguong DUY NHAT trong phase nay anh huong truc tiep den ket qua
 > chinh. No phu thuoc chi phi van hanh cua abstain trong he cua chu repo --
@@ -408,7 +450,7 @@ suyt gánh hai dai luong; xem `docs/GLOSSARY.md`.
 
 ---
 
-### QD-7  Cua so bang kha thi va o suy bien   [CHUA KY -- CHU REPO KY]
+### QD-7  Cua so bang kha thi va o suy bien   [DA CHOT]
 
 GHI CHU them sau QD1-R4 (do duoc, khong phai suy doan):
 
@@ -435,8 +477,27 @@ Mot bang chap nhan +/-b phai nam trong CUA SO:
 ```
 
 ```text
-CHOT  k    = ______        (goi y 3; 2 neu chap nhan rui ro cao hon)
-CHOT  san  = ______        (goi y 0.05)
+CHOT  k    = 3.0
+CHOT  san  = 0.05
+
+LY DO cho k = 3.0:
+  k phat bieu muc kiem soat MONG MUON theo don vi sigma CHUAN. Voi 5 seed
+  (df = 4) va duoi t, k = 3 cho sai so loai I THUC SU la 3.99% MOI PHEP,
+  khong phai 0.27% -- lech 15 lan. cert/adjudicate.band() DA quy doi qua
+  phan vi t va BAT BUOC nhan n_seed; khong cho nao dung k*se tho.
+  k = 2 se cho ~11%/phep: qua long cho mot bang chap nhan.
+
+LY DO cho san = 0.05:
+  San chan mot bang VI MO khi se tinh ra rat nho o mot o. Mot bang hep hon
+  do phan giai that cua phep do bien gate thanh tung xu. 0.05 la ~2% cua
+  bien do ti so du doan [0.199, 0.461] -- du chat de co rang, du rong de
+  khong tung xu.
+
+NHAT QUAN VOI ARTIFACT: hai gia tri nay DA nam trong
+  docs/phase-T2/02-band-window.json §parameters
+  {"k_sigma": 3.0, "band_floor": 0.05, "n_seed_projected": 5}
+  va cua so tung o da tinh tu chung. Ky o day la XAC NHAN artifact,
+  khong phai dat mot so moi.
 ```
 
 `se` uoc tu bien thien GIUA SEED cua 20R legacy (KHONG tu so mau trong mot
@@ -519,7 +580,7 @@ DIEM CANH  : moi 30 o, chay lai (poisson, rho_bar=0.925, a=0.9, tau=3, seed 999)
 
 ---
 
-## T2-5  BANG DU DOAN KY TRUOC     [DA GO CHAN -- BANG CHAP NHAN CHUA KY]
+## T2-5  BANG DU DOAN KY TRUOC     [DA GO CHAN -- BANG CHAP NHAN DA KY o QD-7]
 
 ```text
 Nguon    docs/phase-T2/01-prediction-signed.json
@@ -562,7 +623,7 @@ D-T2.6-2  rms(tau=28)/rms(tau=0.5) o z co dinh
           mien  : [0.1993, 0.4611] tren ba o song x bon muc z
           BANG CHAP NHAN: theo O, doc tu docs/phase-T2/02-band-window.json
           sha256 ee5bc55c977b96f9f468333437a37f3055adac1de64d88b454eac453c19072a5
-          b(o) = max(k*se_seed(o), san).  k va san CHUA KY (xem QD-7).
+          b(o) = max(k*se_seed(o), san),  k = 3.0, san = 0.05  [DA KY o QD-7].
           Voi k=3, san=0.05 thi cua so cho:
              h2@0.700 0.050 | h2@0.850 0.067 | h2@0.925 0.138
              poisson@0.700 0.072 | @0.850 0.061 | @0.925 0.057 | @0.960 0.050
@@ -644,15 +705,54 @@ NGAN SACH: toi da 2 vong, moi vong sua DUNG MOT thu, kem mot amendment danh so.
 
 ---
 
-## T2-7  DIEU KIEN DUNG (KILL CLAUSE)     [★ CHUA DIEN -- CHU REPO DAT HAN]
+## T2-7  DIEU KIEN DUNG (KILL CLAUSE)     [DA DIEN]
+
+Moc dem: NGAY KY (ghi o khoi dau file va o T2-8).
 
 ```text
-T2.4 gate   : ____ ngay. Qua han => dung can giai tich,
+T2.4 gate   : 2 ngay.  Qua han => dung can giai tich,
               bound_source = "analytic_pre_T2", di tiep.
-T2.6 sweep  : ____ vong.  Qua han => dong INSTRUMENT_LIMIT voi
-              TAU_GRID = {1, 3, 10}, ghi gioi han.
-Tong T2     : ____ ngay.  Qua han => dong phase voi ket qua da co,
-              chuyen phan con lai thanh no.
+              [T2.4 DA cai dat + unit-test; han nay chi phu cho tieu chi
+               mondrian_cells_populated va cac chan doan bin them o T2.2b.]
+
+T2.6 sweep  : 2 vong.  Mot vong = mot lan chay TOAN luoi + mot lan phan
+              quyet bang cert/adjudicate. Moi vong sua DUNG MOT thu, kem
+              mot amendment danh so.
+              Qua 2 vong => dong INSTRUMENT_LIMIT voi TAU_GRID = {1, 3, 10},
+              ghi gioi han, chuyen sang 20R2.
+
+Tong T2     : 8 ngay. Qua han => dong phase voi ket qua da co, chuyen
+              phan con lai thanh NO CO TEN VA CO CHU (danh sach duoi).
+```
+
+NO DA BIET TAI THOI DIEM KY -- khong chan viec ky, nhung phai co ten:
+
+```text
+N-T2-1  Nhanh u_cond / u_cond_load (QD-1, QD1-R4) DA co ket qua o
+        results/PENDING/phase-T2/ tai MOT diem (poisson@0.925, tau_load=10,
+        5 seed). CHUA quet tren luoi tau. Ket qua nam o PENDING, KHONG
+        dung lam headline cho den khi duoc tham dinh.
+        Han: cung han tong T2.
+
+N-T2-2  `z_over_tau_span` trong prereg la so CHEP TAY suy tu hai hang so
+        khac (Z_FIXED_S, TAU_GRID_T2). Nen dua vao
+        01-prediction-signed.json de no tu dan ra, dung nguyen tac T2-5.
+        Han: truoc khi dong phase.
+
+N-T2-3  Taxonomy PHU THUOC THANG. T2.5c do duoc: hieu chinh hoi quy ve
+        trung binh cai thien THU TU do kho (-1.14% q_hat duoi bin phan vi,
+        5/5 seed, 4.9 sigma) nhung lam VO THANG duoi U_EDGES co dinh
+        (+9.72%). Mot taxonomy dua tren HANG (rank) hoac phan vi se tach
+        duoc hai hieu ung nay.
+        BI CAM TRONG T2: y tuong nay hinh thanh SAU khi nhin du lieu.
+        Chuyen thanh no cua 21R2, tien dang ky rieng.
+
+N-T2-4  u_cond_load la ORACLE: no dung tau THIET KE cua trace tong hop,
+        thu mot he that KHONG BIET. Phien ban trien khai duoc phai dung
+        tau_hat uoc luong -- estimand da ky o QD-4 (integral time scale,
+        kem gate so voi ky vong huu han mau). Day la mach noi truc tiep
+        T2 -> 21R2.
+        Han: 21R2.
 ```
 
 > Kill clause khong co ngay cu the thi khong phai kill clause.
@@ -674,6 +774,23 @@ R4  Ba trong bon cell cua 22.6 co gate rieng fail (F3). Bo 7/7 chi cham tren
     poisson@0.925. Khong duoc trich "22.6 PASS toan bo".
 R5  Kep AR(1) < 0.09% moi o da do; khong phai rui ro, nhung van phai ghi
     `clip_fraction` vao moi artifact (co san tu 20R).
+
+R6  TAXONOMY PHU THUOC THANG (do duoc o T2.5c, ghi TRUOC khi ky).
+    U_EDGES = (0, 1, 2, 3, inf) la bien TUYET DOI, hieu chuan cho thang
+    cua `u`. Bat ky bien doi nao lam doi THANG cua bien dieu kien deu lam
+    mat phan tang, KE CA khi no cai thien THU TU do kho.
+    Do duoc (poisson@0.925, tau_load=10, 5 seed):
+        u              65.3% diem o bin tren cung   mean q_hat 24.84
+        u_cond(2.87)   73.1%                        26.10  (+5.04%)
+        u_cond_load    81.4%                        27.26  (+9.72%)
+      nhung duoi bin PHAN VI (thang bi loai bo):
+        u_cond_load    -1.14%   eta2 +0.00248, 5/5 seed, 4.9 sigma
+    Nguyen nhan do duoc: sigma_z(2.87)/sigma_z(10) = 1.7483 lan.
+    HE QUA CHO T2.6: khong duoc doc mot thay doi q_hat nhu mot thay doi ve
+    CHAT LUONG taxonomy neu chua kiem so diem/bin. Moi artifact T2.6 phai
+    mang `n_per_bin` (da co tu T2.2b).
+    Giam nhe: bao cao ca hai che do bin, va tuyen bo ro rang bin phan vi la
+    CHAN DOAN chu KHONG phai mot taxonomy de xuat.
 ```
 
 ---
@@ -692,11 +809,29 @@ NC-T2-4  diem canh lap lai moi 30 o, trung trong sai so lay mau
 ## T2-8  CHU KY
 
 ```text
-Toi xac nhan da dien QD-2, T2-4 (ngan sach), T2-5 (bang du doan) va T2-7
-TRUOC khi chay bat ky o nao cua T2.6.
+Toi xac nhan da dien QD-2, QD-7, T2-4 (ngan sach), T2-5 (bang du doan) va
+T2-7 (kill clause) TRUOC khi chay bat ky o nao cua T2.6.
 
-Ky: ______________   Ngay: __________
-SHA256 cua file nay sau khi dien: ______________
+Toi xac nhan ket qua QD1-R1..R4 (nhanh u / u_cond / u_cond_load) da duoc
+NHIN THAY va da duoc ghi vao muc QD-1 kem thu tu thoi gian, TRUOC chu ky
+nay -- chung KHONG phai ket qua cua T2.6.
+
+Ky   : ______________
+Ngay : ______________
+```
+
+DAU VET BAT BIEN cua file nay KHONG phai mot so chep tay o day. Mot hash
+dan vao chinh file se lam doi hash cua file, va mot o tu tham chieu thi
+khong bao gio kiem duoc -- mot o khong kiem duoc TE HON mot o trong.
+Cung ly do voi mot dong "commit khi ky": ghi commit vao file roi commit
+lai se doi chinh commit do.
+
+Dau vet that la COMMIT ma tag tro toi. Kiem bang:
+
+```bash
+git rev-parse phase-T2-prereg-signed
+git show phase-T2-prereg-signed:docs/phase-T2/00-preregistration.md | sha256sum
+git log -1 --format=%cI phase-T2-prereg-signed      # ngay ky, do git giu
 ```
 
 Quy trinh lam file nay co hieu luc:
