@@ -7,7 +7,7 @@ Ngay ky      : xem `git log -1 --format=%cI phase-T2-prereg-signed`
 Nguoi ky     : xem muc T2-8 (dien tay) va tac gia cua tag annotated
 ```
 
-> **TRANG THAI: NOI DUNG DA DAY DU -- CHO CHU KY. CHUA CO HIEU LUC.**
+> **TRANG THAI: DA KY -- CO HIEU LUC TU TAG `phase-T2-prereg-signed`.**
 >
 > Bon muc tung de trong DA DIEN XONG:
 >   QD-2 `lift_min`  -> DUONG {0.05, 0.10, 0.20}, khong phai mot diem
@@ -816,8 +816,8 @@ Toi xac nhan ket qua QD1-R1..R4 (nhanh u / u_cond / u_cond_load) da duoc
 NHIN THAY va da duoc ghi vao muc QD-1 kem thu tu thoi gian, TRUOC chu ky
 nay -- chung KHONG phai ket qua cua T2.6.
 
-Ky   : ______________
-Ngay : ______________
+Ky   : Đoàn Văn Tài
+Ngay : 2026-09-08
 ```
 
 DAU VET BAT BIEN cua file nay KHONG phai mot so chep tay o day. Mot hash
@@ -839,7 +839,7 @@ Quy trinh lam file nay co hieu luc:
 ```bash
 git add docs/phase-T2/00-preregistration.md
 git commit -m "prereg(T2): freeze design, thresholds and signed predictions"
-git tag phase-T2-prereg-signed
+git tag -a phase-T2-prereg-signed -m "Phase T2 pre-registration signed"
 git push origin phase-T2-prereg-signed
 sha256sum docs/phase-T2/00-preregistration.md
 ```
