@@ -120,13 +120,16 @@ def test_plan_is_deterministic_given_the_order_seed():
 
 
 def test_run_count_matches_the_measured_execution_unit(doc):
-    """Don vi chay la (tau,branch,a,seed): 7x2x2x5 = 140 lenh.
+    """Don vi chay la (tau,branch,a,seed): 8x2x2x5 = 160 lenh.
 
     Do duoc: mot lenh sinh 90 hang = 10 o x 9 muc z. Lap ke hoach theo
-    tung O se dem sai (980) va uoc sai ngan sach.
+    tung O se dem sai (1120) va uoc sai ngan sach.
+
+    So 160 duoc VIET RA thay vi chi tin vao tich cac len(): mot hang so
+    doc lap bat duoc truong hop ai do lang le them mot muc vao mot truc.
     """
     assert doc["n_runs"] == len(TAUS) * len(BRANCHES) * len(A_VALS) * len(SEEDS)
-    assert doc["n_runs"] == 140
+    assert doc["n_runs"] == 160
 
 
 def test_order_is_actually_randomised(doc):

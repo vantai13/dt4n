@@ -35,13 +35,29 @@ SRC = ROOT / "results/SUPERSEDED/phase-22"          # tang da chot, amendment 23
 OUT = ROOT / "docs/phase-T2/01-prediction-signed.json"
 
 # Luoi cua prereg T2-4.
-TAU_GRID_T2: Sequence[float] = (1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0)
-# Nhanh B: z co dinh theo chu ky dong bo, KHONG co gian theo tau.
-Z_FIXED_S: Sequence[float] = (0.05, 0.15, 0.30, 0.50)
+# tau=0.5 CO trong luoi: no la mau so cua D-T2.6-2 (TAU_LO duoi day) va no
+# qua realizability_gate (0.5 >= 20*dt = 0.1; 400 block/seed). Bo no ra khoi
+# TAUS cua t2_6_plan la mot lech luoi -- du doan ky o mot diem khong chay.
+TAU_GRID_T2: Sequence[float] = (0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0)
+
+# Nhanh B: z CO DINH theo chu ky dong bo, KHONG co gian theo tau.
+# !! MOI GIA TRI O DAY PHAI CO TRONG measurements/decision_error_v2.py:Z_ALL.
+#    Harness sinh z tu Z_ALL; mot muc z khong nam trong do se KHONG BAO GIO
+#    duoc do, va du doan tai do la NOT_EVALUATED chu khong phai FAIL.
+#    Z_ALL = (0.0, 0.05, 0.10, 0.20, 0.30, 0.55, 1.0, 2.0, 4.0)
+#    Chon 4 muc trong phan NOI SUY (Z_GRID), tranh Z_EXTRAP.
+Z_FIXED_S: Sequence[float] = (0.05, 0.10, 0.30, 0.55)
+
 # Nhanh A: z/tau co dinh (tai tao 20R legacy).
 Z_OVER_TAU: Sequence[float] = (0.10, 0.30, 0.55, 1.00)
-# Cap tau dung cho ti so bao cao cua nhanh B.
+
+# Cap tau dung cho ti so bao cao cua nhanh B. TAU_LO PHAI nam trong
+# TAU_GRID_T2 va trong TAUS cua t2_6_plan.py.
 TAU_LO, TAU_HI = 0.5, 28.0
+# Khoa cua ti so trong artifact. Sinh MOT LAN tu TAU_HI/TAU_LO roi dung lai
+# o moi cho doc: truoc day khoa duoc SINH dong o _branch_b nhung DOC bang
+# chuoi cung "ratio_tau28_over_tau0.5", nen doi TAU_LO se gay KeyError.
+RATIO_KEY = "ratio_tau%g_over_tau%g" % (TAU_HI, TAU_LO)
 # tau_knee: tau nho nhat ma duong da ve trong KNEE_TOL cua tiem can em.
 KNEE_TOL = 0.05
 # Cell chet, giu lam doi chung am (QD-3 cua prereg).
@@ -137,7 +153,7 @@ def _branch_b(cell: Dict[str, Any]) -> Dict[str, Any]:
         "tau_grid": list(TAU_GRID_T2),
         "rms_curves": curves,
         "monotone_decreasing_in_tau": monotone,
-        "ratio_tau%g_over_tau%g" % (TAU_HI, TAU_LO): ratios,
+        RATIO_KEY: ratios,
         "tau_knee_s": knees,
         "knee_tol": KNEE_TOL,
     }
@@ -313,7 +329,7 @@ def build() -> Dict[str, Any]:
     max_span = max(max(v["fit"]["A_span_pct"], v["fit"]["c_span_pct"],
                        v["fit"]["rms_em_span_pct"]) for v in live.values())
     ratios = [r for v in live.values()
-              for r in v["branch_B_operational"]["ratio_tau28_over_tau0.5"].values()]
+              for r in v["branch_B_operational"][RATIO_KEY].values()]
     knees = [k for v in live.values()
              for k in v["branch_B_operational"]["tau_knee_s"].values()]
     return {
@@ -330,7 +346,7 @@ def build() -> Dict[str, Any]:
             "D-T2.6-2": {
                 "claim": "rms(tau=28)/rms(tau=0.5) o z co dinh",
                 "point_range": [min(ratios), max(ratios)],
-                "per_cell": {k: v["branch_B_operational"]["ratio_tau28_over_tau0.5"]
+                "per_cell": {k: v["branch_B_operational"][RATIO_KEY]
                              for k, v in live.items()},
                 "note": "BANG CHAP NHAN phai KY o prereg, khong doc tu day",
             },
@@ -411,7 +427,7 @@ def main(argv: List[str] | None = None) -> int:
                   % (b["monotone_decreasing_in_tau"], c["hump"]["peak_tau_s"]))
             print("   rms(28)/rms(0.5): %s"
                   % {k: round(v, 4) for k, v in
-                     b["ratio_tau28_over_tau0.5"].items()})
+                     b[RATIO_KEY].items()})
             print("   tau_knee_s      : %s"
                   % {k: round(v, 2) for k, v in b["tau_knee_s"].items()})
     return 0

@@ -15,7 +15,7 @@ Hai dieu chinh so voi ban de xuat dau vao, ca hai deu do DO DUOC:
   (1) DON VI CHAY la (tau, branch, a, seed), KHONG phai tung o.
       Mot lenh `decision_error_v2 --run-fixed` tinh CA 10 o x 9 muc z
       trong mot lan (do duoc: 90 hang/lenh). Nen lap ke hoach theo o se
-      dem sai so lenh: 7x2x2x5 = 140 lenh, khong phai 980.
+      dem sai so lenh: 8x2x2x5 = 160 lenh, khong phai 1120.
 
   (2) O SUY BIEN VAN DUOC CHAY.
       Ban de xuat loc chung khoi ke hoach (`if is_live(c)`), nhung doi
@@ -42,7 +42,10 @@ OUT = ROOT / "docs/phase-T2/03-run-plan.json"
 
 # --- luoi da ky o prereg T2-4 ------------------------------------------
 ORDER_SEED = 7200
-TAUS: Sequence[float] = (1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0)
+# tau=0.5 la mau so cua D-T2.6-2 va la dau mut duoi cua HINH T2-1.
+# Kiem realizability: 0.5 >= 20*dt=0.1 ; T_sim=1000 >= 50*0.5=25 ;
+# block_s=2.5 -> 400 block/seed >= 9. Xem test_t2_realizability_gate.py.
+TAUS: Sequence[float] = (0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0)
 A_VALS: Sequence[float] = (0.5, 0.9)
 SEEDS: Sequence[int] = (101, 102, 103, 104, 105)
 BRANCHES: Sequence[str] = ("fixed", "scaled")
@@ -115,9 +118,9 @@ def is_live(cell: Dict[str, Any], *, eps_err: float, eps_a: float) -> bool:
 
 
 def plan() -> List[Dict[str, Any]]:
-    """Ke hoach chay: 140 lenh + diem canh, thu tu ngau nhien TOAN PHAN.
+    """Ke hoach chay: 160 lenh + diem canh, thu tu ngau nhien TOAN PHAN.
 
-    Ngau nhien hoa de drift he thong (may nong len trong 29 phut) tro
+    Ngau nhien hoa de drift he thong (may nong len trong 32 phut) tro
     thanh NHIEU thay vi trung khit voi truc tau va thanh tin hieu gia.
     """
     runs = [

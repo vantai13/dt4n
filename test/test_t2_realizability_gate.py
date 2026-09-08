@@ -55,7 +55,7 @@ def test_scaling_n_by_the_locked_rule_repairs_the_rejected_cell():
 
 def test_every_cell_on_the_signed_grid_is_realizable():
     """Luoi tau cua prereg T2-4 voi n_for_tau phai qua sach."""
-    for tau in (1, 2, 3, 5, 10, 20, 28):
+    for tau in (0.5, 1, 2, 3, 5, 10, 20, 28):
         r = realizability_gate(tau=float(tau), n=n_for_tau(float(tau), DT), **BASE)
         assert r["verdict"] == "REALIZABLE", (tau, r["failed"])
 

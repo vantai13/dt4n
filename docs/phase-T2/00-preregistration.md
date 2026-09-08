@@ -16,7 +16,7 @@ SHA256 file  : ____________          <- tinh SAU khi dien xong, TRUOC khi tag
 >   - QD-7 k va san cua cua so bang (quy tac loai o da co tieu chi do duoc)
 >   (T2-5: D-T2.6-2 co cua so do duoc; -3 da khai pham vi doc duoc;
 >    -4 da doi sang tieu chi khong thu nguyen -- ca ba KHONG con o trong)
->   (T2-4 ngan sach CPU: DA DIEN -- 0.48 gio, do duoc)
+>   (T2-4 ngan sach CPU: DA DIEN -- 0.53 gio, do duoc)
 >   - T2-7 thoi han kill clause
 >
 > T2-5 DA GO CHAN o T2.5b: du doan gio suy tu artifact 22.6 da commit qua
@@ -297,10 +297,15 @@ NHANH A "co che"      --z-mode scaled    z/tau in {0.10, 0.30, 0.55, 1.00}
     MUC DICH: tai tao 22.6 / 20R legacy => doi chung noi phase
     KHONG dung lam ket qua chinh.
 
-NHANH B "van hanh"    --z-mode fixed     z in {0.05, 0.15, 0.30, 0.50} s
+NHANH B "van hanh"    --z-mode fixed     z in {0.05, 0.10, 0.30, 0.55} s
+    (BON muc nay deu nam trong Z_ALL cua harness -- decision_error_v2.py:52.
+     Ban cu {0.05,0.15,0.30,0.50} co HAI muc khong ton tai trong harness,
+     nen hai du doan se la NOT_EVALUATED chu khong phai FAIL. Sua TRUOC khi ky.)
     MUC DICH: ★ KET QUA CHINH. z do chu ky dong bo quyet dinh
     (DEFAULT_SYNC_PERIOD_S = 0.5 s), KHONG co gian theo tau.
-    z/tau di tu 1.00 (tau=0.5) xuong 0.025 (tau=20) -- 40 lan.
+    z/tau di tu 1.10 (tau=0.5, z=0.55) xuong 0.0018 (tau=28, z=0.05)
+    -- 616 lan. (So cu "1.00 ... 0.025, 40 lan" tinh tren luoi z cu va
+     tren tau=20; sua theo luoi da dong bo voi harness.)
 ```
 
 DOI CHUNG NOI: tai `(tau=1.0, z=0.10)` hai nhanh PHAI trung trong 1%.
@@ -309,7 +314,9 @@ tai tau=1.0 la {0.1, 0.3, 0.55, 1.0}]
 
 ```text
 LUOI   rho_bar in {0.70, 0.85, 0.925, 0.96}          [RHO_BAR_GRID]
-       tau     in {1, 2, 3, 5, 10, 20, 28}
+       tau     in {0.5, 1, 2, 3, 5, 10, 20, 28}
+       (tau=0.5 la mau so cua D-T2.6-2; bo sung TRUOC khi ky, khong phai
+        amendment. Qua realizability_gate: 400 block/seed.)
        a       in {0.5, 0.9}   (sigma = a * sigma_max_regime)
        mode    in {poisson, h2}          (cbr loai theo QD-3)
        omega   = 0 co dinh, ghi sigma_eff_proxy       [G-A020 da rut truc omega]
@@ -320,14 +327,14 @@ dt      = 0.005                   [khoa tu 20R]
 ```
 
 ```text
-NGAN SACH CPU: 0.48 gio (~29 phut)   <- DO DUOC, khong doan
+NGAN SACH CPU: 0.53 gio (~32 phut)   <- DO DUOC, khong doan
   don vi   : mot lenh = 1 tau x 1 seed x 10 o x 9 muc z
   do duoc  : tau=1.0 -> 11.81 s | tau=5.0 -> 11.29 s | tau=28 -> 15.28 s
              (scaled 9.37 s; a=0.5 11.10 s -- bien the < 20 phan tram)
-  suy ra   : 7 tau x 5 seed x 2 nhanh x 2 muc a = 140 lenh ~ 1723 s
+  suy ra   : 8 tau x 5 seed x 2 nhanh x 2 muc a = 160 lenh ~ 1920 s
 NEU > 8 gio => FRACTIONAL DESIGN: toan phan tren (tau, rho_bar); a va mode
 lay 2 muc. GHI O DAY, khong cat sau khi nhin so.
-=> 0.48 < 8 gio: quy tac da ky tu giai quyet. CHAY TOAN PHAN, khong cat luoi.
+=> 0.53 < 8 gio: quy tac da ky tu giai quyet. CHAY TOAN PHAN, khong cat luoi.
 THU TU CHAY: ngau nhien toan phan, seed thu tu 7200
 DIEM CANH  : moi 30 o, chay lai (poisson, rho_bar=0.925, a=0.9, tau=3, seed 999)
 ```
@@ -341,7 +348,7 @@ DIEM CANH  : moi 30 o, chay lai (poisson, rho_bar=0.925, a=0.9, tau=3, seed 999)
 
 ```text
 Nguon    docs/phase-T2/01-prediction-signed.json
-sha256   89757bff1b0e854a7f8c10dfd567699779699a6ff4f7400d62e509bedec328cc
+sha256   68e975c2c08247e208cabc29f6e7f7710eeb01e46ba8018be0d9fda885608d7f
 Script   tools/t2_1_prediction.py     (CHI DOC; khong fit lai)
 Suy tu   results/SUPERSEDED/phase-22/tau_sweep_{poisson_0.925,poisson_0.850,
          h2_0.700,cbr_0.700}.json      [DA DO o 22.6, hash trong artifact]
@@ -377,7 +384,7 @@ D-T2.6-1  nhanh B DON DIEU GIAM theo tau, moi o song, moi z
 
 D-T2.6-2  rms(tau=28)/rms(tau=0.5) o z co dinh
           diem  : artifact §signed_predictions.D-T2.6-2.per_cell
-          mien  : [0.1987, 0.4611] tren ba o song x bon muc z
+          mien  : [0.1993, 0.4611] tren ba o song x bon muc z
           BANG CHAP NHAN: theo O, doc tu docs/phase-T2/02-band-window.json
           sha256 ee5bc55c977b96f9f468333437a37f3055adac1de64d88b454eac453c19072a5
           b(o) = max(k*se_seed(o), san).  k va san CHUA KY (xem QD-7).
@@ -434,7 +441,7 @@ D-T2.6-5  diem giao (tau=1.0, z=0.10) hai nhanh khop trong 1%
 
 D-T2.6-6  tau_knee (tau nho nhat de rms ve trong 5% cua em)
           diem  : artifact §signed_predictions.D-T2.6-6.per_cell
-          mien  : [20.8, 644.6] s
+          mien  : [20.8, 709.1] s
           ★ CHU Y: phan lon tau_knee NAM NGOAI luoi tau (max = 28 s).
           Do la mot du doan hop le: no noi truoc rang T2.6 se KHONG thay
           knee tren luoi. Neu khong thay, ghi "> 28 s (ngoai luoi)" va
