@@ -159,6 +159,106 @@ SUC MANH, khong phai DUNG SAI.
 NGUONG BAO CAO: neu `|cov(u) - cov(u_cond)| > 0.02` o bat ky o nao
 => ghi thanh gioi han, KHONG doi nhanh chinh giua chung.
 
+CACH DOC NGUONG DO (chot TRUOC khi chay):
+
+```text
+(a) Day la nguong BAO CAO, KHONG phai nguong PASS/FAIL. Vuot 0.02 KHONG
+    lam phase FAIL; no kich hoat mot NGHIA VU VIET o Threats to Validity.
+    NT 56: tach gate TINH HOP LE khoi gate KET QUA.
+
+(b) "o BAT KY o nao" = lay MAX tren cac o, KHONG lay trung binh. Trung binh
+    pha loang mot o lech manh vao nhieu o lech nhe. Phai kem TEN O dat max
+    (cung nguyen tac voi `_span_driver`: mot so bat thuong phai chi ra o
+    nao sinh ra no).
+
+(c) CHI so sanh tren o ma CA HAI nhanh deu READABLE (q_hat huu han VA
+    n_blocks >= ceil(1/alpha)-1 o ca hai). O readable ben nay nhung khong
+    ben kia thi hieu so VO NGHIA -- vi cov = 1.0 o do la theo DINH NGHIA,
+    khong theo phep do. Truong hop do la MOT KET QUA rieng, bao cao dang
+    DEM, khong nhet vao phep tru.
+
+(d) KHONG doi nhanh chinh giua chung, ke ca khi u_cond dep hon. `u_cond`
+    duoc chon SAU khi nhin du lieu thi moi bao dam conformal cua no mat
+    hieu luc (dieu kien "taxonomy co dinh TRUOC hieu chuan" bi pha).
+```
+
+BA SO PHAI BAO CAO:
+
+```text
+QD1-R1  max_o |cov(u) - cov(u_cond)|  + TEN O          [nguong 0.02]
+QD1-R2  n_degenerate(u)  vs  n_degenerate(u_cond)      [DEM, khong tru]
+QD1-R3  mean q_hat(u) vs mean q_hat(u_cond) tren o readable
+        ★ day la so do HIEU QUA: coverage bang nhau ma khoang HEP hon
+          la efficiency gain duoi validity khong doi.
+```
+
+!! DINH CHINH PHAM VI CUA BANG TREN (do duoc, sua TRUOC khi ky):
+
+```text
+Bang z/tau o dau muc nay tinh voi tau = tau_LOAD. Nhung duong chung nhan
+that su (cert/build_calib_set.py -> cert/conformal_age.py) KHONG dung
+tau_load o bat ky dau:
+    z    <- sawtooth_age_steps(), tuc CHU KY DONG BO 0.5 s
+    phi_z <- exp(-z / TAU_CORE_MEASURED_S) voi tau_core = 2.87 CO DINH
+Ca hai deu doc lap voi tau_load => QUET TRUC TAU CUA T2 KHONG LAM DOI
+phan bi bo qua o day, du mot chut.
+
+DO DUOC tren results/PENDING/phase-T2/calib_p0925_tau10.parquet (5 seed):
+    z_s   in [0.055, 0.550] s  =>  z/tau_core in [0.019, 0.192]
+    phi_z in [0.826, 0.981]    =>  phan BO QUA in [1.9%, 17.4%]
+
+=> Hai hang "1.00 -> 63%" va "2.50 -> 92%" KHONG voi toi duoc tren duong
+   chung nhan. Chung mo ta nhanh B cua measurements/decision_error_v2.py,
+   la mot duong code KHAC va khong tinh `u` bao gio.
+   Tran that cua hieu ung nay la ~17%, khong phai ~92%. Ghi lai de khong
+   ai (ke ca chu repo) doc muc nay thanh mot loi hua manh hon su that.
+```
+
+KET QUA DA DO (luot mot, o poisson@0.925, tau_load = 10.0, 5 seed):
+
+```text
+Nguon  results/PENDING/phase-T2/conformal_u_main.json
+       results/PENDING/phase-T2/conformal_u_cond.json
+       (PENDING: "khong dung lam headline" -- chua duoc prereg da ky bao chung)
+
+QD1-R1  max_o |cov(u) - cov(u_cond)| = 0.04401  tai o 402
+        => VUOT nguong 0.02  => KICH HOAT nghia vu ghi GIOI HAN.
+        Bon o vuot: 402 (0.0440), 2 (0.0275), 202 (0.0237), 201 (0.0206).
+QD1-R2  n_degenerate(u) = 0 ; n_degenerate(u_cond) = 0
+        (khong o nao co q_hat = inf, nen khong hieu so nao bi nhiem)
+QD1-R3  mean q_hat(u) = 24.84 ; mean q_hat(u_cond) = 26.10
+        => u_cond RONG hon 5.04%, tuc KEM HIEU QUA HON, KHONG phai hon.
+
+CA HAI nhanh: H3 PASS va H4 PASS (marginal 0.9106 vs 0.9100).
+=> Du doan ly thuyet cua QD-1 duoc XAC NHAN o phan VALIDITY: doi taxonomy
+   khong lam mat bao dam bao phu. Nhung gia thuyet ngam rang taxonomy
+   "dung hon" se HIEU QUA HON thi KHONG duoc xac nhan -- no di NGUOC lai.
+   Ghi nguyen, khong dieu chinh: mot ket qua nguoc du doan van la ket qua.
+
+PHAM VI DOC DUOC: mot o song, mot tau_load, mot muc a. KHONG duoc doc
+thanh ket luan toan phase. Va vi phi_z doc lap voi tau_load (xem dinh
+chinh tren), chay lai o tau_load khac se KHONG doi ba so nay mot cach co
+he thong -- chi doi qua dong luc cua chinh chuoi rho.
+```
+
+TRANG THAI CAI DAT (ghi TRUOC khi ky -- xem N-T2-1 muc T2-7):
+
+```text
+DA CO   cot u_cond/u_cond_bin/phi_z o cert/build_calib_set.py; chan doan
+        mean_abs_u_minus_u_cond va frac_rows_bin_differs; kiem BIEN THAI
+        trong self_check (phi_z -> 1 thi u_cond -> u); test/test_t2_u_cond.py.
+CHUA CO ket qua conformal cua hai nhanh.
+DAU VAO la trace TONG HOP sinh boi tools/t2_make_synthetic_trace.py.
+        KHONG dung results/phase-20/rho_offered_long*.csv: tau cua chung la
+        DO DUOC va CO DINH RIENG TUNG LINK (2.441 s o `bc` den 32.00 s o
+        `vD` -- docs/phase-20/00f-amendment-5.md muc A5.1), nen KHONG QUET
+        DUOC mot TRUC tren chung; va B9/D10 da ky rang truc tau cua T2 chay
+        trong TWIN chu khong tren Mininet.
+KET QUA nam o results/PENDING/ cho den khi duoc tham dinh -- PENDING theo
+        dinh nghia la "khong dung lam headline" (docs/phase-D/01-data-
+        classification.md).
+```
+
 ### QD-2  `lift_min` -- nguong dinh nghia tau*    [★ CHUA KY -- CHU REPO DIEN]
 
 ```text

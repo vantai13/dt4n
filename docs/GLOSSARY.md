@@ -39,6 +39,19 @@ dinh, khien err(tau) "gan phang" la mot TAUTOLOGY chu khong phai ket qua.
 Ky hieu   TAU_CORE_MEASURED_S
 Gia tri   2.87 s -- DO DUOC, khong phai dat
 Cong thuc uoc luong tu trace v7 that (tai loi Mininet)
+DIA CHI   = tau do duoc cua link `ac` tren trace v7: 2.869 s
+          docs/phase-20/00f-amendment-5.md muc A5.1 (bang tam link)
+          Bay link con lai KHONG bang no, va trai rat rong:
+              bc 2.441 | bd 2.605 | ac 2.869 | ad 3.958
+              vC 17.38 | uB 21.70 | uA 22.87 | vD 32.00     (giay)
+          => mot sigma_z dung CHUNG 2.87 cho ca TAM link la mot XAP XI,
+             lech manh nhat o vD (32.00, gap 11 lan). Day KHONG pha bao
+             dam bao phu (Mondrian hop le voi moi taxonomy co dinh truoc)
+             nhung no lam bin KEM HIEU QUA -- va do chinh la ly do ton tai
+             cua nhanh nhay cam `u_cond` (prereg T2 muc QD-1).
+             Phai viet vao Threats to Validity, khong duoc "dong bo" thanh
+             tau rieng tung link: doi dinh nghia u sau khi nhin du lieu la
+             pha dieu kien "taxonomy co dinh TRUOC hieu chuan".
 Vai tro   chuan hoa bien dieu kien u; B_BLOCK_S = 5*tau_core = 14.35 s
 Goc       cert/build_calib_set.py:46          TAU_CORE_MEASURED_S
           measurements/decision_error.py:40    DEFAULT_TAU_CORE_S   <- CUNG MOT

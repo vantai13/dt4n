@@ -1,0 +1,39 @@
+{
+  "B3_sigma_scale_mismatch": {
+    "calib_sigma_rho_hardcoded": 0.01,
+    "ratio": 2.1802325581395348,
+    "trace_sigma_design": 0.021802325581395346,
+    "why": "cert/build_calib_set.py:51 dung SIGMA_RHO = 0.010 CUNG de tinh sigma_z, trong khi trace nay co sigma khac. `u` bi lech thang theo dung ti so nay, nen nhieu diem se don ve bin cao cua U_EDGES = (0,1,2,3,inf). KHONG pha so sanh u vs u_cond (ca hai dung CHUNG sigma_z) nhung PHA viec doc `u` tuyet doi so voi U_EDGES. Day la B3. KHONG sua SIGMA_RHO -- sua se pha tai tao Phase 21."
+  },
+  "a": 0.9,
+  "cycles": 100.0,
+  "dt": 0.005,
+  "link_names": [
+    "uA",
+    "uB",
+    "ac",
+    "ad",
+    "bc",
+    "bd",
+    "vC",
+    "vD"
+  ],
+  "mode": "poisson",
+  "n": 200000,
+  "n_clipped": 367,
+  "n_clipped_ratio": 0.000229375,
+  "note": "Trace TONG HOP. tau_load la THAM SO DAT, khong phai do duoc. z do sawtooth_age_steps() cua build_calib_set quyet dinh (chu ky dong bo), KHONG tu file nay.",
+  "rho_bar": 0.925,
+  "script": "tools/t2_make_synthetic_trace.py",
+  "seed": 101,
+  "sha256_csv": "0d1c33632e694d5ee12004284f93b7cb0c08a36a52569d59b2bb679e59ea7e16",
+  "sigma_design": 0.021802325581395346,
+  "sigma_hat": 0.021328277506474112,
+  "t_sim_s": 1000.0,
+  "tau_core_vs_tau_load": {
+    "tau_core_used_for_sigma_z": 2.87,
+    "tau_load_of_this_trace": 10.0,
+    "why": "sigma_z van dung tau_core = 2.87 (DO DUOC) chu KHONG dong bo theo tau_load. Day la lua chon CO CHU Y theo QD-1/F1: tau_core va tau_load la hai dai luong khac nhau. Ghi ca hai so de khong ai doc nham thanh mot loi."
+  },
+  "tau_load": 10.0
+}

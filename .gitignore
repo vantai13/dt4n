@@ -184,3 +184,11 @@ results/RAW/phase-G/g1-static*/
 # many gigabytes. Keep all g3 RAW run directories local; commit only the compact
 # receipts from results/SMOKE/phase-G.
 results/RAW/phase-G/g3*/
+
+# Trace TONG HOP cua Phase T2: SINH LAI DUOC bit-exact tu
+# tools/t2_make_synthetic_trace.py + (mode, rho_bar, a, tau, dt, n, seed).
+# Ban ghi custody la file .meta.json di kem (co sha256 cua CSV), KHONG phai
+# CSV. Mot trace 35 MB x 5 seed = 175 MB CSV sinh lai duoc trong git chinh
+# la sai lam da lam results/phase-20/rho_offered_long*.csv khong version hoa
+# duoc (docs/phase-20/99-gate-decision.md:319). Giu .meta.json, bo CSV.
+results/**/phase-T2/traces/*.csv

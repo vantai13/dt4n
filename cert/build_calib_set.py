@@ -200,8 +200,18 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
     #
     # Do lon phan bo qua = (1 - phi_z) * |rho - mu|:
     #     z/tau=0.05 -> 4.9% | 0.19 -> 17% | 1.00 -> 63% | 2.50 -> 92%
-    # Nhanh B cua T2 di tu z/tau ~ 1 xuong ~0.002, tuc CHAY THANG QUA vung
-    # ma phan bo qua lon nhat -- chua phase nao tung o do.
+    #
+    # !! PHAM VI THAT CUA DUONG NAY, DO DUOC -- dung doc nham bang tren:
+    #    z o day KHONG den tu mot luoi ma tu sawtooth_age_steps(), tuc CHU KY
+    #    DONG BO (DEFAULT_SYNC_PERIOD_S = 0.5 s), va mau so dung TAU_CORE
+    #    = 2.87 CO DINH. Ca hai deu KHONG phu thuoc tau_load. Nen quet truc
+    #    tau cua T2 KHONG lam doi phi_z o day chut nao. Do duoc tren calib
+    #    p0925_tau10 (5 seed):
+    #        z_s in [0.055, 0.550] s  =>  z/tau_core in [0.019, 0.192]
+    #        phi_z in [0.826, 0.981]  =>  phan bo qua in [1.9%, 17.4%]
+    #    Hai hang 63% va 92% cua bang tren la z/tau_LOAD trong nhanh B cua
+    #    measurements/decision_error_v2.py -- mot duong code KHAC, khong tinh
+    #    `u` bao gio. KHONG voi toi duoc tu day.
     #
     # KHONG thay `u`: Mondrian conformal HOP LE voi moi taxonomy do duoc va
     # co dinh TRUOC hieu chuan, nen `u` cu KHONG mat bao dam bao phu -- no
