@@ -241,6 +241,65 @@ chinh tren), chay lai o tau_load khac se KHONG doi ba so nay mot cach co
 he thong -- chi doi qua dong luc cua chinh chuoi rho.
 ```
 
+QD1-R4  NHANH THU BA `u_cond_load` -- tach CONFOUND cua tau sai dac ta
+
+```text
+THU TU THOI GIAN (ghi de nguoi doc tu danh gia, khong de bien minh):
+  1. Chay hai nhanh, thay QD1-R3 = +5.04% (u_cond RONG hon).
+  2. SAU DO moi hinh thanh gia thuyet: u_cond dang hieu chinh bang SAI tau.
+     Dong co la mot CO CHE tinh duoc bang giay but, khong phai mot so
+     khong vua y: o z=0.55, tau_core=2.87 co ve trung binh QUA TAY 3.26
+     lan so voi tau_load=10, va sigma_z lon hon 1.75 lan.
+  3. Them nhanh thu ba, KHONG thay nhanh chinh. `u` van la nhanh chinh
+     bat ke ket qua. Prereg CHUA KY nen day la THIET KE, khong phai
+     amendment -- nhung thu tu van phai ghi.
+
+`u_cond_load` la ORACLE: no dung tau THIET KE cua trace tong hop, thu ma
+mot he trien khai that KHONG BIET. No do CAN TREN cua hieu chinh, khong
+phai mot phuong phap dung duoc. Ban dung duoc phai uoc luong tau_hat --
+va T2 DA co estimand do, da ky o QD-4.
+
+KET QUA (poisson@0.925, tau_load=10, 5 seed, alpha=0.10):
+
+  (A) DUOI U_EDGES DA TIEN DANG KY -- day la cau hoi DA KY:
+        nhanh              mean q_hat    vs u     H3   H4  n_degen
+        u                     24.8424   +0.00%  PASS PASS       0
+        u_cond(2.87)          26.0953   +5.04%  PASS PASS       0
+        u_cond_load(10)       27.2562   +9.72%  PASS PASS       0
+      => CA HAI nhanh hieu chinh deu KEM HIEU QUA HON. Sua tau lam
+         TE HON, khong phai tot hon. QD1-R3 DUNG, va manh hon vi co ba
+         nhanh thay vi hai.
+
+  (B) CHAN DOAN, bin theo PHAN VI (tach THANG DO khoi THU TU):
+        u                     23.4750   +0.00%
+        u_cond(2.87)          23.5271   +0.22%
+        u_cond_load(10)       23.2066   -1.14%   <- HEP hon
+      eta2 (do chat luong phan tang, phan vi, 5 seed):
+        u 0.06601 | u_cond(2.87) 0.06171 | u_cond_load(10) 0.06849
+        hieu ghep cap (u_cond_load - u) = +0.00248, cung dau 5/5 seed,
+        4.9 sigma.
+
+GIAI THICH -- hai ket qua tren KHONG mau thuan:
+  Hieu chinh hoi quy ve trung binh voi DUNG tau THAT SU cai thien THU TU
+  cua do kho (eta2 tang, q_hat giam 1.14% khi thang do bi loai bo).
+  NHUNG no dong thoi doi THANG DO cua u: sigma_z(tau_load) nho hon
+  sigma_z(tau_core) 1.75 lan, nen u_cond_load bi thoi to va 81.4% so hang
+  don vao bin CAO NHAT cua U_EDGES (so voi 65.3% cua `u`).
+  U_EDGES = (0,1,2,3,inf) la mot taxonomy PHU THUOC THANG DO, va no duoc
+  dinh ra cho thang do cua `u`. Loi tu thang do LON HON lai tu thu tu.
+
+KET LUAN CHO T2 (nhu da tien dang ky):
+  `u` van la nhanh chinh, va no vua HOP LE vua HIEU QUA HON hai nhanh kia.
+  Hieu chinh KHONG vo dung -- no KHONG TUONG THICH voi mot taxonomy bien
+  CO DINH phu thuoc thang do. Do la mot phat bieu manh hon "hieu chinh
+  khong giup", va no chi ra viec phai lam tiep.
+
+NO CHUYEN TIEP (post-hoc, ghi ro): mot taxonomy dua tren HANG (scale-free)
+se cho hieu chinh co co hoi tra cong. Gia thuyet nay hinh thanh SAU khi
+nhin du lieu, nen KHONG duoc dung cho T2. No la thiet ke ung vien cho
+21R2, va phai duoc tien dang ky o do truoc khi chay.
+```
+
 TRANG THAI CAI DAT (ghi TRUOC khi ky -- xem N-T2-1 muc T2-7):
 
 ```text
@@ -350,6 +409,22 @@ suyt gánh hai dai luong; xem `docs/GLOSSARY.md`.
 ---
 
 ### QD-7  Cua so bang kha thi va o suy bien   [CHUA KY -- CHU REPO KY]
+
+GHI CHU them sau QD1-R4 (do duoc, khong phai suy doan):
+
+```text
+B3 -- sigma cua trace lech so voi SIGMA_RHO = 0.010 CUNG trong
+cert/build_calib_set.py:51: 2.18x o poisson@0.925, 4.80x o poisson@0.850,
+4.62x o h2@0.700 -- lam U_EDGES chia bin RAT mat can bang. Do duoc o
+poisson@0.925: 65.3% so hang roi vao bin cao nhat voi `u`, 81.4% voi
+`u_cond_load`.
+=> Moi dai luong doc THEO O Mondrian phai kem SO DIEM/O. Mot eta2 hay mot
+   chenh lech coverage tren bin mat can bang la mot phep do cua B3 TRUOC
+   khi la mot phep do cua taxonomy.
+=> Va vi U_EDGES phu thuoc THANG DO, so sanh hai nhanh co sigma_z khac
+   thang do duoi cung bo bien la mot so sanh BI TRON. Xem QD1-R4 (B).
+KHONG sua SIGMA_RHO -- sua se pha tai tao Phase 21. Ghi va bao cao.
+```
 
 Mot bang chap nhan +/-b phai nam trong CUA SO:
 

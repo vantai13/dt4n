@@ -132,8 +132,17 @@ def _bin_with_edge_warnings(values: np.ndarray, edges: Sequence[float]) -> tuple
     }
 
 
-def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame, dict]:
-    """Convert one warmed-up rho trace into calibration rows."""
+def build_one(rho: np.ndarray, dt_s: float, trace_id: int,
+              tau_load: float | None = None) -> tuple[pd.DataFrame, dict]:
+    """Convert one warmed-up rho trace into calibration rows.
+
+    ``tau_load`` la THOI GIAN TUONG QUAN cua qua trinh SINH RA trace. Khi
+    duoc truyen, ham them nhanh thu ba ``u_cond_load`` hieu chinh bang
+    CHINH no thay vi bang ``TAU_CORE_MEASURED_S``. Truyen TUONG MINH qua
+    tham so, KHONG qua mot bien module bi CLI ghi de: repo nay da co nam
+    tool ghi de global luc import va lam hong thu tu test
+    (tools/g3_dryrun.py DT_S) -- khong them mot cai nua.
+    """
     n = int(len(rho))
     delay, loss, cost = build_cost_tables(rho, W_LOSS)
     viol = _viol_flags(delay, loss, T_DELAY, T_LOSS)
@@ -237,6 +246,45 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
     # phan bo u_cond lech khoi U_EDGES thi DO CHINH LA phat hien, khong phai
     # ly do de chinh bien cho vua.
     u_cond_bin, u_cond_diag = _bin_with_edge_warnings(u_cond, U_EDGES)
+
+    # --- NHANH THU BA u_cond_load: hieu chinh bang tau cua CHINH tai -----
+    # `u_cond` o tren hieu chinh bang tau_core = 2.87 -- tau DO DUOC cua
+    # link `ac` tren trace Mininet v7. Voi mot trace sinh o tau_load KHAC,
+    # do la SAI DAC TA, va sai ve CA HAI phia:
+    #     tu so : co ve trung binh QUA TAY  (z=0.55, tau_load=10: 3.26 lan)
+    #     mau so: sigma_z QUA LON           (cung diem: 1.75 lan)
+    # Nen mot `u_cond` te hon `u` chua chac chung minh "hieu chinh khong
+    # giup"; no co the chi dang do sai so cua tau.
+    #
+    # !! u_cond_load la mot ORACLE: no dung tau THIET KE, thu ma mot he
+    #    trien khai that KHONG BIET. Ban dung duoc phai uoc luong tau_hat
+    #    tu chinh trace (estimand da ky o QD-4 cua prereg T2). Ghi ro de no
+    #    khong troi vao paper nhu mot phuong phap dung duoc.
+    #
+    # !! CANH BAO SO SANH: sigma_z cua nhanh nay NHO hon nhanh u_cond dung
+    #    ty le sqrt((1-e^(-2z/tau_core))/(1-e^(-2z/tau_load))), nen u_cond_load
+    #    bi THOI TO tuong ung. Duoi U_EDGES CO DINH, so sanh ba nhanh vi the
+    #    bi tron voi mot phep doi THANG DO. Chi cach chia bin theo HANG
+    #    (phan vi) moi tach duoc chat luong THU TU khoi thang do -- va do la
+    #    CHAN DOAN, khong phai taxonomy de xuat.
+    if tau_load is not None:
+        tau_num = float(tau_load)
+        phi_z_load = np.exp(-z_s / tau_num)
+        rho_pred_load = (mu_link[None, :]
+                         + phi_z_load[:, None] * (rho[src] - mu_link[None, :]))
+        sig_z_load = SIGMA_RHO * np.sqrt(1.0 - np.exp(-2.0 * z_s / tau_num))
+        dist_cond_load = np.min(
+            np.abs(rho_pred_load[:, :, None]
+                   - np.asarray(JUMPS, dtype=float)[None, None, :]),
+            axis=2,
+        ).min(axis=1)
+        u_cond_load = dist_cond_load / sig_z_load
+        u_cond_load_bin, u_cond_load_diag = _bin_with_edge_warnings(
+            u_cond_load, U_EDGES)
+    else:
+        tau_num = None
+        u_cond_load = u_cond_load_bin = u_cond_load_diag = None
+        phi_z_load = None
     if z_diag["n_unique_values"] < len(age_edges) - 1:
         print(
             "  [CANH BAO] chi %d muc tuoi khac nhau (dt=%.6gs) - co the bi aliasing"
@@ -275,6 +323,11 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
         "viol_twin": viol[rows, a_twin],
         "viol_opt": viol[rows, a_opt],
     }
+    if u_cond_load is not None:
+        data["u_cond_load"] = u_cond_load.astype(np.float32)
+        data["u_cond_load_bin"] = u_cond_load_bin
+        data["phi_z_load"] = phi_z_load.astype(np.float32)
+
     for action in range(K):
         data[f"y_true_{action}"] = y[:, action].astype(np.float32)
         data[f"y_hat_{action}"] = yhat[:, action].astype(np.float32)
@@ -300,18 +353,41 @@ def build_one(rho: np.ndarray, dt_s: float, trace_id: int) -> tuple[pd.DataFrame
         # ket qua tot: khong outcome nao lam phep do that bai.
         "mean_abs_u_minus_u_cond": float(np.mean(np.abs(u - u_cond))),
         "frac_rows_bin_differs": float(np.mean(u_bin != u_cond_bin)),
+        "tau_core_s": float(TAU_CORE_MEASURED_S),
+        "tau_load_used": tau_num,
     }
+    if u_cond_load is not None:
+        zmax = float(z_s.max())
+        diagnostics.update({
+            "u_cond_load_bin_diag": u_cond_load_diag,
+            # co QUA TAY: ty le phan co cua tau_core so voi tau_load tai z_max
+            "phi_z_overshrink_ratio_at_zmax": float(
+                (1.0 - np.exp(-zmax / TAU_CORE_MEASURED_S))
+                / (1.0 - np.exp(-zmax / tau_num))),
+            # THANG DO: u_cond_load bi thoi to dung ty le nay so voi u_cond
+            "sigma_z_ratio_core_over_load_at_zmax": float(
+                np.sqrt((1.0 - np.exp(-2.0 * zmax / TAU_CORE_MEASURED_S))
+                        / (1.0 - np.exp(-2.0 * zmax / tau_num)))),
+            "frac_rows_bin_differs_load_vs_u": float(
+                np.mean(u_bin != u_cond_load_bin)),
+            "oracle_warning": (
+                "u_cond_load dung tau THIET KE cua trace tong hop -- mot he "
+                "trien khai that KHONG biet so nay. Ban dung duoc phai uoc "
+                "luong tau_hat (estimand da ky o QD-4). Day la CAN TREN cua "
+                "hieu chinh, khong phai mot phuong phap."),
+        })
     return pd.DataFrame(data), diagnostics
 
 
-def build(trace_paths: Sequence[str], out_path: str, dt_s: float | None = None) -> tuple[pd.DataFrame, list[dict]]:
+def build(trace_paths: Sequence[str], out_path: str, dt_s: float | None = None,
+          tau_load: float | None = None) -> tuple[pd.DataFrame, list[dict]]:
     frames = []
     diagnostics = []
     for trace_id, path in enumerate(trace_paths):
         rho, dt = read_trace_matrix(path, dt_s)
         rho = drop_warmup_matrix(rho, WARMUP)
         print(f"[{trace_id}] {os.path.basename(path)}  n={len(rho)}  dt={dt:.6g}s")
-        frame, diag = build_one(rho, dt, trace_id)
+        frame, diag = build_one(rho, dt, trace_id, tau_load=tau_load)
         frames.append(frame)
         diagnostics.append(diag)
     df = pd.concat(frames, ignore_index=True)
@@ -509,9 +585,14 @@ def main(argv: Sequence[str] | None = None) -> None:
     parser.add_argument("--report-json", default=None, help="optional JSON report path")
     parser.add_argument("--dt", type=float, default=None, help="dt_s if CSV has no dt_s column")
     parser.add_argument("--alpha", type=float, default=0.10)
+    parser.add_argument("--tau-load", type=float, default=None,
+                        help="THOI GIAN TUONG QUAN cua qua trinh sinh ra trace, "
+                             "GIAY. Khi co, them nhanh thu ba u_cond_load hieu "
+                             "chinh bang chinh no thay vi tau_core=2.87. "
+                             "ORACLE: he that khong biet so nay.")
     args = parser.parse_args(argv[1:])
 
-    df, diagnostics = build(args.traces, args.out, args.dt)
+    df, diagnostics = build(args.traces, args.out, args.dt, tau_load=args.tau_load)
     report(
         df,
         alpha=args.alpha,
