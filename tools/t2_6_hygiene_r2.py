@@ -4,7 +4,7 @@ import glob, hashlib, json, numpy as np, pandas as pd, pathlib
 D = "results/PENDING/phase-T2/sweep_r2"
 log = [json.loads(l) for l in open(D + "/run_log.jsonl")]
 plan = json.loads(pathlib.Path("docs/phase-T2/03-run-plan.json").read_text())
-assert len(log) == plan["n_runs"], "incomplete campaign"
+assert len(log) == len(plan["runs"]) == plan["n_runs"] + plan["n_canaries"], "incomplete campaign"
 assert len({r["run_index"] for r in log}) == len(log)
 assert len({r["git_commit"] for r in log}) == 1, "mixed code revisions"
 for r, planned in zip(log, plan["runs"]):

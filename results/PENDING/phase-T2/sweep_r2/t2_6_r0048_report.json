@@ -1,0 +1,56 @@
+{
+  "cells": [
+    "cbr@0.700",
+    "cbr@0.850",
+    "h2@0.700",
+    "h2@0.850",
+    "h2@0.925",
+    "h2@0.960",
+    "poisson@0.700",
+    "poisson@0.850",
+    "poisson@0.925",
+    "poisson@0.960"
+  ],
+  "n_rows": 90,
+  "parquet": "results/PENDING/phase-T2/sweep_r2/t2_6_r0048.parquet",
+  "parquet_sha256": "7702aafbc6ffc5cd1c0326a0be2f97bf6ed853bc8a85b99094cd6d7c8aa8afcc",
+  "schema": "dt4n.decision_error.v2_report",
+  "validity": {
+    "aoi_axis": {
+      "label": "aoi_axis_free",
+      "note": "luoi z CO DINH, tien dang ky; khong goi bo sinh AoI nao",
+      "z_grid_s": [
+        0.0,
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.55,
+        1.0,
+        2.0,
+        4.0
+      ]
+    },
+    "axis_role": "aoi_axis_free",
+    "note": "err_total/err_stale/d_sla PHU THUOC truc SLA; rms_e_model/rms_e_stale/cov_e KHONG -- chung tinh tren DELAY THUAN (d_true - d_fresh), khong qua ham chi phi, nen w_loss khong cham toi duoc. Do duoc (G23-203): max|diff| = 0.0 qua doi truc SLA.",
+    "omega": null,
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "self_calibrated",
+      "source_path": "results/LIVE/phase-20R/sla_calibration.json",
+      "source_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
+    },
+    "w_loss": NaN
+  },
+  "w_loss_values": [
+    1245.6355455410035,
+    1656.4432584423428,
+    2424.3596038611254,
+    2861.395300891912,
+    3222.244681647411,
+    3655.8944289989972,
+    4021.4160578887495,
+    4515.904012589386,
+    4722.690139052064
+  ]
+}

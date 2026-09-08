@@ -1,0 +1,51 @@
+{
+  "KIEM_1_canary_NC_T2_4": {
+    "max_span_any_numeric_column": 0.0,
+    "n_canary": 6,
+    "n_distinct_sha256": 1,
+    "verdict": "PASS"
+  },
+  "KIEM_2_clip": {
+    "ar1_clip": {
+      "R5_threshold": 0.0009,
+      "median_max_over_cells": 0.0008651785714285714,
+      "single_draw_max": 0.0030504464285714284,
+      "verdict": "PASS",
+      "worst_cell": "('cbr', np.float64(0.7), np.float64(28.0), np.float64(0.046220930232558126))"
+    },
+    "headline_cells": {
+      "('h2', 0.7)": {
+        "ar1_median": 0.0008651785714285714,
+        "tt_median": 0.0002
+      },
+      "('poisson', 0.85)": {
+        "ar1_median": 0.000693125,
+        "tt_median": 0.0061
+      },
+      "('poisson', 0.925)": {
+        "ar1_median": 0.000438125,
+        "tt_median": 0.00759
+      }
+    },
+    "note": "Trung vi va min/max qua 5 seed; tau=28 co n*dt/tau=50, uoc luong duoi nhieu.",
+    "tt_domain_clip": {
+      "median_max_over_cells": 0.033405,
+      "note": "R7 -- ngoai suy phang, KHONG co nguong da ky",
+      "single_draw_max": 0.08563928571428571,
+      "worst_cell": "('h2', np.float64(0.96), np.float64(0.5), np.float64(0.009593023255813982))"
+    }
+  },
+  "KIEM_3_branch_join_NC_T2_2": {
+    "max_rel_span_err_total": 0.0,
+    "max_rel_span_rms_e_model": 0.0,
+    "note": "rms_e_model KHONG phu thuoc z; khac 0 la bang chung cua so lech",
+    "threshold": 0.01,
+    "verdict": "PASS"
+  },
+  "git_commit": "d8956cf5650c023c809659aa0c58886b79388b4a",
+  "n_commands": 166,
+  "n_rows": 10940,
+  "n_rows_without_canaries": 10400,
+  "phase": "T2.6 luot 2 -- sau A-T2-1 va A-T2-2",
+  "seconds": 1834.2758779525757
+}

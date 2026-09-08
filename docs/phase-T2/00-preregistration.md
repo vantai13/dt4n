@@ -912,6 +912,27 @@ CHUA NHIN: err(tau), err_total, d_sla, rms_e_* theo tau.
     BAT BUOC: do lai co he thong o buoc kiem ve sinh luot 2 -- TRUNG VI qua
     5 seed, tren TOAN luoi tau -- roi moi ghi con so cuoi cung vao day.
 
+
+    KET QUA THUC TE LUOT 2 -- 2026-09-08, TRUOC KHI DOC err(tau):
+      Commit chay: d8956cf5650c023c809659aa0c58886b79388b4a
+      166 lenh thanh cong; 10940 dong, 160 o mode/rho/tau/sigma.
+      Moi o dung dung 5 seed 101..105; loai canary 999 khoi trung vi.
+      AR1: trung vi lon nhat 0.086518% tai
+        cbr@0.700, tau=28, sigma=0.0462209302326;
+        dai 5 seed 0.027187% .. 0.305045%.
+      R5 (<0.09%): PASS.
+      TT: trung vi lon nhat 3.340500% tai
+        h2@0.960, tau=0.5, sigma=0.00959302325581;
+        dai 5 seed 2.935000% .. 3.790500%.
+      R7 khong co nguong da ky; giu nhan 0.96, khong dung lam headline.
+      Day la so do moi thay cho so tham chieu mot seed, KHONG doi nguong.
+      cbr@0.700: max trung vi AR1=0.086518%; TT=0.020000%.
+      h2@0.700: max trung vi AR1=0.086518%; TT=0.020000%.
+      poisson@0.850: max trung vi AR1=0.069312%; TT=0.610000%.
+      poisson@0.925: max trung vi AR1=0.043812%; TT=0.759000%.
+      Nguon: results/PENDING/phase-T2/hygiene_checks_r2.json
+             results/PENDING/phase-T2/clip_summary_r2.csv (ca dai min/max).
+
 (c) RUI RO MOI R7 -- NGOAI SUY PHANG NGOAI MIEN BANG SU THAT.
 
     RELIABLE_CEILING[poisson] = RELIABLE_CEILING[h2] = 1.05
@@ -1059,6 +1080,22 @@ CHUNG cho amendment nay, khong duoc ghi de. Luot 2 ghi vao sweep_r2/.
 ```
 
 ---
+
+
+KET QUA TOAN CHIEN DICH LUOT 2 (da do, 2026-09-08):
+- NC-T2-4: PASS, 6 canary, 1 SHA256, numeric span=0.
+- NC-T2-2: PASS, err_total rel_span=0.0,
+  rms_e_model rel_span=0.0.
+- Nguon: results/PENDING/phase-T2/hygiene_checks_r2.json.
+
+GIOI HAN CONG DOC DUOC PHAT HIEN TRUOC KHI DOC DUONG err(tau):
+Cong thuc RMS tai tao 22.6 trong sai so may, nhung 22.6 la RMS sai so
+MARGIN CHI PHI hai hanh dong, con run_cell T2 la RMS sai so DELAY moi hanh
+dong. Hai dai luong khac nhau du cung ten cot. Khong phan quyet du doan
+RMS/ratio/peak/knee cua T2-5 bang parquet nay. Chua tinh tau_star tu du
+lieu khong co lift conformal. Ghi NOT_EVALUATED, khong gia vo FAIL/PASS.
+Day la ghi nhan gioi han, KHONG sua phep do/nguong hay tieu vong sua thu hai.
+Bang chung: results/PENDING/phase-T2/rms_reference_check_r2.json.
 
 Amendment protocol: file nay duoc phep doi, nhung moi thay doi phai la mot
 amendment danh so ghi ro DOI GI, VI SAO, va DA NHIN THAY DU LIEU NAO khi

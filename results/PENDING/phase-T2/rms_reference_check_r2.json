@@ -1,0 +1,48 @@
+{
+  "formula": "sqrt(rms_e_model**2 + 2*cov_e + rms_e_stale**2)",
+  "formula_verdict": "PASS",
+  "reference_source": "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json",
+  "reference_sha256": "659878301da7fdb7c3511aaba170a79fe172d6d6518142f5c66f464a4c2530b2",
+  "reference_tau": 0.5,
+  "reference_provenance": {
+    "calibration": "results/phase-20R/sla_calibration.json",
+    "dt": 0.005,
+    "git_dirty": true,
+    "git_hash": "bf98eb536be4147af57192cc903d0ffc4c5fc6fb",
+    "n": 200000,
+    "script": "cert/tau_sweep.py",
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "sigma_rho": 0.0096,
+    "timestamp_utc": "2026-08-13T13:21:33.694050+00:00",
+    "truth_table": "results/phase-20R/truth_table.parquet"
+  },
+  "n_decomposition_rows": 100,
+  "max_abs_formula_error": 7.105427357601002e-15,
+  "reference_fit_difference": {
+    "A": 0.0,
+    "c": 8.881784197001252e-16,
+    "rms_e_model": 8.43769498715119e-15
+  },
+  "example": {
+    "z_s": 0.054999999701976776,
+    "n": 10000.0,
+    "rms_e_model": 2.15153199684004,
+    "rms_e_stale": 8.380710429373005,
+    "cov_e": -3.5175494720007237,
+    "rms_total": 8.235915145897662,
+    "corr_e": -0.1950794713037984,
+    "rms_total_reconstructed": 8.235915145897662
+  },
+  "cross_phase_estimand_verdict": "INCOMPATIBLE",
+  "phase22_quantity": "RMS of cost margin error between two actions ranked by stale twin; cost includes w_loss * loss",
+  "t2_quantity": "RMS of delay error over all actions; delay excludes w_loss * loss",
+  "phase22_code": "cert/tau_sweep.py:build_at_tau + decompose",
+  "t2_code": "measurements/decision_error_v2.py:run_cell",
+  "consequence": "Algebraic identity passes, but it does not make the two estimands equal. Do not adjudicate signed RMS predictions or infer conformal lift from T2 delay RMS."
+}
