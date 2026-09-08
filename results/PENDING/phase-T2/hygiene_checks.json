@@ -1,0 +1,38 @@
+{
+  "KIEM_1_canary_NC_T2_4": {
+    "max_span_any_numeric_column": 0.0,
+    "n_canary": 6,
+    "n_distinct_sha256": 1,
+    "verdict": "PASS"
+  },
+  "KIEM_2_clip_V_T2_3": {
+    "max_clip": 0.08563928571428571,
+    "n_cells": 80,
+    "n_cells_violating": 28,
+    "prereg_R5_claimed": 0.0009,
+    "ratio_vs_claim": 95.1547619047619,
+    "threshold": 0.01,
+    "verdict": "FAIL",
+    "worst": {
+      "('h2', 0.96, 0.5)": 0.037905,
+      "('h2', 0.96, 28.0)": 0.08563928571428571,
+      "('poisson', 0.96, 0.5)": 0.037905,
+      "('poisson', 0.96, 1.0)": 0.037245,
+      "('poisson', 0.96, 28.0)": 0.08563928571428571
+    }
+  },
+  "KIEM_3_branch_join_NC_T2_2": {
+    "max_rel_span": 0.021899487246021917,
+    "mechanical_cause": "measurements/decision_error_v2.py:418 -- common_start = max(z_s)/dt, nen CUA SO CHAM DIEM phu thuoc z LON NHAT cua lan chay. fixed dung Z_ALL (max 4.0s -> hang 800); scaled tai tau=1.0 max 1.0s -> hang 200. Hai nhanh cham diem tren HAI DAI HANG KHAC NHAU.",
+    "n_groups": 100,
+    "n_groups_violating": 2,
+    "threshold": 0.01,
+    "verdict": "FAIL"
+  },
+  "minutes": 30.3,
+  "n_commands": 166,
+  "n_ok": 166,
+  "n_rows": 10940,
+  "phase": "T2.6 luot 1 -- KIEM VE SINH, chay TRUOC khi doc err(tau)",
+  "signed_tag": "phase-T2-prereg-signed"
+}
