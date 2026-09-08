@@ -431,7 +431,7 @@ def build_one_v3(
                  else SYNC_PERIOD * 1000.0),
         "offset_ms_realised": [float(x) for x in off * float(dt) * 1000.0],
         "offset_mean_ms": float(np.mean(off)) * float(dt) * 1000.0,
-        "clip_fraction_max": float(max(arr["clip_fraction"].values())) if arr["clip_fraction"] else 0.0,
+        "clip_fraction_max": float(max(arr["tt_domain_clip"].values())) if arr["tt_domain_clip"] else 0.0,
         "w_loss": float(arr["w_loss"]),
         "t_delay_ms": float(cell["t_delay_ms"]),
         "t_loss": float(cell["t_loss"]),

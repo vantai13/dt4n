@@ -844,6 +844,222 @@ git push origin phase-T2-prereg-signed
 sha256sum docs/phase-T2/00-preregistration.md
 ```
 
+
+---
+
+## AMENDMENT A-T2-1 -- Tach hai dai luong "clip"; xac nhan R5; them R7
+
+Ngay      : 2026-09-08
+Commit    : commit them amendment (git log); SHA chay ghi trong sweep_r2/run_log.jsonl
+Vong T2-7 : VONG 1 / 2 cua T2.6 (cung vong voi A-T2-2)
+
+### DA NHIN THAY GI KHI QUYET DINH -- khai bao truoc
+
+```text
+DA NHIN:  results/PENDING/phase-T2/hygiene_checks.json (KIEM 1/2/3 luot 1)
+          Huong dan nguoi dung cung cap: so 5 seed tai
+          (poisson|h2, rho_bar=0.96, tau=28): 8.5639% seed=104;
+          bon seed con lai 1.80 / 2.49 / 2.60 / 2.80%.
+          Cac so nay la TRICH DAN huong dan, CHUA tu do lai o luot nay.
+          mien luoi truth-table va RELIABLE_CEILING (doc tu code)
+CHUA NHIN: err(tau), err_total, d_sla, rms_e_* theo tau.
+           Bang du doan T2-5 chua duoc doi chieu voi bat ky so nao.
+```
+
+### DOI GI
+
+```text
+(a) TACH TEN. Cot parquet `clip_fraction_max` GOP HAI DAI LUONG:
+
+      ar1_clip_ratio      rho ra ngoai [RHO_MIN, RELIABLE_CEILING]
+                          = [0.50, 1.05] cho poisson/h2, [0.50, 0.95] cho cbr,
+                          do trong sla_calib_v2.ar1_matrix.
+                          ← DAY la dai luong ma R5 noi den.
+
+      tt_domain_clip_max  rho ra ngoai MIEN LUOI DA DO cua truth table
+                          mien phu thuoc link (bang chi tiet ben duoi),
+                          do trong TruthTable.delay_loss (clip_log).
+                          ← DAY la dai luong ma parquet luot 1 ghi.
+
+    Doi ten cot: clip_fraction_max -> tt_domain_clip_max
+    Them cot   : ar1_clip_ratio, ar1_cycles, extrapolation_contaminated
+    Hai builder cert v2/v3 doc ten noi bo moi; giu schema artifact legacy.
+    scalar_ou van tra ndarray mac dinh; chan doan AR1 la NaN (khong ap dung).
+
+    LY DO: KIEM 2 luot 1 doc `clip_fraction_max` = 8.56% roi so voi R5
+    ("kep AR(1) < 0.09%") va ket luan "vi pham 95 lan". Do la mot VA CHAM
+    TEN (NT 64: mot ten, hai dai luong), khong phai mot vi pham. Hai so
+    khong so sanh duoc voi nhau.
+
+(b) R5 -- KET QUA THAT, phai DO LAI truoc khi ghi so.
+    So so bo TRICH TU HUONG DAN (chua do lai o luot nay) cho thay kep AR(1) NHO HON hai bac so voi 8.56%:
+      cbr@0.700         0.3050%   <- VUOT nguong 0.09%
+      h2/poisson@0.850  0.0521%
+      poisson@0.925     0.0204%
+      h2/poisson@0.960  0.0118%
+    (mot lan rut, tau=28, seed=104. Xem (d) ve tinh khong on dinh.)
+
+    CO CHE o cbr@0.700 la KEP SAN, khong phai kep tran:
+      mu(uA) = 0.70 - 0.0675 = 0.6325 ; RHO_MIN = 0.50 ; sigma = 0.046221
+      khoang cach = 0.1325 = 2.87 sigma  =>  P ~ 0.2%
+      RELIABLE_CEILING[cbr] = 0.95 con xa 4.06 sigma.
+    R5 khong khai chieu nao, nen no bi vi pham o phia khong ai nhin.
+
+    MUC NGHIEM TRONG: THAP. cbr da bi QD-3 loai khoi luoi song (A < 0.01,
+    S37) va chi dong vai NC-T2-3 (doi chung AM: ratio ~ 1 o moi tau). Kep
+    san khong pha vai tro do, nhung lam doi chung YEU HON ta tuong. Ghi lai.
+
+    BAT BUOC: do lai co he thong o buoc kiem ve sinh luot 2 -- TRUNG VI qua
+    5 seed, tren TOAN luoi tau -- roi moi ghi con so cuoi cung vao day.
+
+(c) RUI RO MOI R7 -- NGOAI SUY PHANG NGOAI MIEN BANG SU THAT.
+
+    RELIABLE_CEILING[poisson] = RELIABLE_CEILING[h2] = 1.05
+    Mien truth-table theo link (kiem tra truc tiep truoc luot 2):
+      poisson/h2: uA,vC [0.50,0.96]; ad [0.60,1.04]; con lai [0.50,1.04]
+      cbr:        uA,vC [0.50,0.85]; ad [0.60,0.95]; con lai [0.50,0.95]
+    Huong dan cung cap da nham mien cua ad thanh mien chung moi link.
+    Rieng tran link ad co dai 0.01 ma ar1_matrix CHO PHEP rho di toi nhung truth table
+    KHONG CO PHEP DO. `np.interp` kep phang vao dau mut, IM LANG.
+
+    CHIEU CUA THIEN LECH -- doc ky, no NGUOC voi truc giac:
+      Dinh chinh theo code: d_true doc TruthTable; d_fresh doc CostV2
+      (LinkModelV2 fit + luoi cache [0.50, 1.05]), KHONG doc cung bang.
+      Kep phang cua oracle da xac nhan; khong the suy ra ca hai dong y
+      hay chieu thien lech err_decision chi tu clip_log. R7 la nguy co
+      ngoai mien do; chieu va do lon thien lech CHUA DUOC XAC LAP.
+      Van danh dau o 0.96 va khong dung lam headline nhu pham vi da khai.
+
+    DO DUOC (rho_bar = 0.96, mode poisson va h2):
+      link cao nhat `ad`: mu = 0.96 + 0.0625 = 1.0225
+      khoang cach toi 1.04 = 0.0175 = 1.82 sigma  (sigma(a=0.9) = 0.00959)
+      tt_domain_clip qua 5 seed o tau=28: 1.80 / 2.49 / 2.60 / 2.80 / 8.56%
+
+(d) DAI LUONG BAO CAO cho ca hai loai kep: TRUNG VI QUA SEED + DAI,
+    KHONG phai MAX.
+    LY DO: o tau=28, n*dt/tau = 1400/28 = 50 chu ky doc lap. Mot ti le duoi
+    uoc tu 50 mau doc lap khong phai mot phep do -- no la mot lan rut. Trai
+    do duoc 1.80-8.56% = 4.75 lan tren cung mot o. `max` qua seed se LUON
+    tra ve gia tri ngoai le va bien nhieu thanh mot phat hien.
+    Tot hon nua khi co the: gia tri GIAI TICH P(rho > hi) tu (mu_link, sigma),
+    von khong nhieu chut nao.
+
+(e) PHAM VI DOC.
+    O rho_bar = 0.96 (poisson va h2) danh dau EXTRAPOLATION_CONTAMINATED.
+    KHONG dung lam headline. KHONG loai khoi luoi chay.
+      - KHONG loai vi: loai mot o SAU khi thay so cua no la cherry-picking.
+      - Duoc danh dau vi: ly do (rho vuot mien da do cua truth table) phat
+        bieu duoc DOC LAP voi ket qua, va da phat bieu o (c).
+    QD-3 giu poisson@0.960 vi ly do BANG DOC DUOC. Ly do do khong bao ham
+    ngoai suy, nen day la mot khai bao RIENG, khong ghi de QD-3.
+
+    So tham chieu tu huong dan (se thay bang so luot 2): ba o headline cua D-T2.6-2 (h2@0.700, poisson@0.850, poisson@0.925) do
+    duoc tt_domain_clip < 1.8%, ar1_clip < 0.06%. GHI SO, khong loai.
+```
+
+### KHONG DOI GI
+
+```text
+- KHONG doi RELIABLE_CEILING (pha tai tao 20R/21R/22/23).
+- KHONG mo rong luoi truth-table (can do lai tren Mininet; ngoai pham vi T2,
+  vi B9/D10 da ky rang T2 la THUAN NUMPY, khong root).
+- KHONG doi QD-3. Danh dau EXTRAPOLATION_CONTAMINATED la mot NHAN THEM.
+- KHONG doi bat ky nguong nao cua T2-5. Bang du doan giu nguyen.
+```
+
+---
+
+## AMENDMENT A-T2-2 -- Cua so cham diem phai DOC LAP VOI NHANH (NC-T2-2)
+
+Ngay      : 2026-09-08
+Commit    : commit them amendment (git log); SHA chay ghi trong sweep_r2/run_log.jsonl
+Vong T2-7 : VONG 1 / 2 cua T2.6 -- SUA DUNG MOT THU: cua so cham diem.
+            Con lai 1 vong. Het vong => dong INSTRUMENT_LIMIT voi
+            TAU_GRID = {1, 3, 10} theo dung T2-7.
+
+### DA NHIN THAY GI KHI QUYET DINH
+
+```text
+DA NHIN:  KIEM 3 luot 1 -- max rel_span = 2.19% vs nguong NC-T2-2 = 1%,
+          2/100 nhom vi pham (nhom theo mode x rho_bar x sigma_rho).
+          Bang chung co hoc: rms_e_model -- KHONG phu thuoc z chut nao --
+          van khac 0.05% giua hai nhanh.
+CHUA NHIN: err(tau). Khong mot dai luong nao cua T2-5 duoc doi chieu.
+```
+
+### LOI
+
+```text
+measurements/decision_error_v2.py:418  (run_cell -- duong T2.6 da chay)
+measurements/decision_error_v2.py:548  (fixed_summary_with_bootstrap -- ban sao)
+
+    common_start = max(int(round(z_s / dt)) for z_s in z_values)
+
+`z_values` la luoi cua NHANH DANG CHAY, nen cua so cham diem PHU THUOC NHANH:
+
+    tau=0.5   fixed max z=4.0 -> hang  800 | scaled max z=0.5 -> hang  100
+    tau=1     fixed             hang  800 | scaled max z=1.0 -> hang  200
+    tau=28    fixed             hang  800 | scaled max z=28  -> hang 5600
+
+Hai nhanh cham diem tren HAI DAI HANG KHAC NHAU. Va do lech DOI DAU theo
+tau: scaled bat dau SOM hon o tau nho, MUON hon o tau lon. Mot doi chung
+co do lech doi dau theo chinh truc dang quet thi KHONG DOC DUOC.
+
+DAY KHONG PHAI NHIEM TRANSIENT. sla_calib_v2.py:125 khoi tao
+    x[0] = mu + sigma * randn()
+tuc TU PHAN PHOI DUNG. Khong co burn-in. Cac hang lech nhau khong "ban" --
+chung chi la NHUNG HANG KHAC, thong ke dong nhat. Nen day la NHIEU HUU HAN
+MAU do cua so lech, khong phai THIEN LECH. Phan khong chong lan o tau=1 la
+600/200000 = 0.3% so hang, nhung 600 hang o tau=1 chi la ~3 khoi tau doc
+lap -- mang phuong sai lon so voi ti trong cua chung. Do la ly do 2.19%.
+
+Phan biet nay QUAN TRONG cho cach sua:
+    neu la transient   => phai CAT burn-in (doi ban chat phep do)
+    vi la lech cua so  => chi can mot cua so CHUNG (khong doi ban chat)
+```
+
+### SUA
+
+```text
+common_start (va max_k) lay tu HOP luoi z cua CA HAI nhanh:
+
+    def scoring_window_start(tau, dt):
+        z_union = set(z_values_for(tau, scaled=False)) | set(z_values_for(tau, scaled=True))
+        return max(int(round(float(z) / float(dt))) for z in z_union)
+
+    tau=0.5,1,2,3  -> 800  (4.0 s, do Z_ALL chi phoi)
+    tau=5          -> 1000
+    tau=10         -> 2000
+    tau=20         -> 4000
+    tau=28         -> 5600 (28 s, do nhanh scaled chi phoi)
+
+Sua o CA HAI dong 418 va 548. Chi sua 418 thi loi song lai lan sau ai do
+chay --summarize-fixed.
+
+KET QUA THAM CHIEU do nguoi dung cung cap (CHUA xac minh o luot nay):
+    NC-T2-1 bit-exact               10/10 PASS  (golden la digest cua
+                                     ar1_matrix, khong dung toi cua so)
+    NC-T2-2 rel_span err_total       0.000000   (truoc: 0.021899)
+    rel_span rms_e_model             0.000e+00  (truoc: ~5e-4)
+```
+
+### KIEM THU THUC TE TRUOC CHIEN DICH
+
+2026-09-08: 98 passed (15.68 s), gom NC-T2-1 10 test, cua so 13 test,
+clip 3 test va hoi quy decision/calibration v2/v3. Log: /tmp/t2_r2_tests.log.
+Interpreter: /home/ubuntu/miniforge3/envs/sdn_rl/bin/python.
+Test mien clip cua huong dan duoc sua vi mien THUC TE phu thuoc link.
+
+### HE QUA
+
+```text
+Moi so cua T2.6 doi => PHAI chay lai toan bo chien dich (166 lenh, ~30 phut).
+Ket qua luot 1 GIU NGUYEN o results/PENDING/phase-T2/sweep/ -- no la BANG
+CHUNG cho amendment nay, khong duoc ghi de. Luot 2 ghi vao sweep_r2/.
+```
+
+---
+
 Amendment protocol: file nay duoc phep doi, nhung moi thay doi phai la mot
 amendment danh so ghi ro DOI GI, VI SAO, va DA NHIN THAY DU LIEU NAO khi
 quyet dinh. Cai lam no trung thuc la DAU VET, khong phai su bat bien.

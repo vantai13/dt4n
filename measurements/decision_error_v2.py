@@ -106,6 +106,28 @@ def z_values_for(tau: float = TAU, scaled: bool = False) -> Tuple[float, ...]:
     return tuple(round(float(ratio) * float(tau), 12) for ratio in Z_SCALED_RATIOS)
 
 
+def scoring_window_start(tau: float, dt: float) -> int:
+    """Hang dau tien duoc cham diem -- DOC LAP VOI NHANH.
+
+    Cu: common_start = max(z_values)/dt, lay tu luoi z cua NHANH DANG CHAY.
+        fixed  dung Z_ALL          -> hang 800 voi MOI tau (4.0 s)
+        scaled dung Z_SCALED*tau   -> hang 100 o tau=0.5, 5600 o tau=28
+    => hai nhanh cham diem tren HAI DAI HANG KHAC NHAU, va do lech DOI DAU
+       theo tau (scaled som hon o tau nho, muon hon o tau lon). Mot doi chung
+       co do lech doi dau theo truc dang quet thi khong doc duoc.
+    Bang chung: rms_e_model KHONG phu thuoc z chut nao ma van khac ~0.05%
+                giua hai nhanh -- chi xay ra neu cua so khac nhau.
+
+    LUU Y: viec bo qua cac hang dau KHONG phai de cat transient. ar1_matrix
+    khoi tao x[0] = mu + sigma*N(0,1), tuc TU PHAN PHOI DUNG (sla_calib_v2
+    dong 125), nen khong co burn-in. Cua so nay chi can du de lag_rows >= 0
+    cho MOI muc z cua CA HAI nhanh. Neu ai do doi khoi tao x[0], dong nay
+    phai duoc xet lai.
+    """
+    z_union = set(z_values_for(tau, scaled=False)) | set(z_values_for(tau, scaled=True))
+    return max(int(round(float(z) / float(dt))) for z in z_union)
+
+
 def z_over_tau(z_s: float, tau: float) -> float:
     if not float(tau):
         return math.nan
@@ -241,7 +263,8 @@ def rho_matrix_from_cell(
     n: int = N,
     dt: float = DT,
     source: str = RHO_SOURCE,
-) -> np.ndarray:
+    return_diagnostics: bool = False,
+):
     """Return ``rho[t, link]`` for a Phase 20R operating cell.
 
     ``calibration_ar1`` matches ``sla_calib_v2`` and ``predict_err_quick``:
@@ -250,7 +273,8 @@ def rho_matrix_from_cell(
     common-mode rho can lock the path ranking and create artificial err ~= 0.
     """
     if source == "calibration_ar1":
-        return SLA.ar1_matrix(mode, rho_bar, sigma, tau=tau, dt=dt, n=n, seed=seed)
+        return SLA.ar1_matrix(mode, rho_bar, sigma, tau=tau, dt=dt, n=n, seed=seed,
+                              return_diagnostics=return_diagnostics)
     if source != "scalar_ou":
         raise ValueError("unknown rho source %r" % source)
     traj = ou_trajectory(
@@ -262,10 +286,14 @@ def rho_matrix_from_cell(
         dt=float(dt),
     )
     rho_t = np.asarray(traj.rho, dtype=float)
-    return np.stack(
+    out = np.stack(
         [np.clip(rho_t + C.LINK_OFFSET[link], C.RHO_MIN, C.RHO_MAX) for link in T7.LINK_NAMES],
         axis=1,
     )
+
+    if return_diagnostics:
+        return out, {"n_clipped_ratio": math.nan, "sigma_hat": math.nan, "cycles": math.nan}
+    return out
 
 
 def _viol(delay: np.ndarray, loss: np.ndarray, t_delay_ms: float, t_loss: float) -> np.ndarray:
@@ -289,7 +317,7 @@ def _cell_arrays(
     sigma, sigma_source = resolve_sigma(cal_cell, sigma_override=sigma_override, a_override=a_override)
     w_loss = float(w_loss_override) if w_loss_override is not None else float(cal_cell["w_loss"])
     tt.reset_clip_log()
-    rho_mat = rho_matrix_from_cell(
+    rho_mat, ar1_diag = rho_matrix_from_cell(
         mode,
         float(cal_cell["rho_bar"]),
         sigma,
@@ -298,6 +326,7 @@ def _cell_arrays(
         n=n,
         dt=dt,
         source=rho_source,
+        return_diagnostics=True,
     )
     d_true, l_true, c_true = tt.path_tables(mode, rho_mat, w_loss)
     d_fresh, l_fresh, c_fresh = cv2.tables_batch(rho_mat, mode, w_loss)
@@ -315,7 +344,10 @@ def _cell_arrays(
         "n": int(n),
         "dt": float(dt),
         "rho_source": str(rho_source),
-        "clip_fraction": dict(tt.clip_log),
+        "tt_domain_clip": dict(tt.clip_log),
+        "ar1_clip_ratio": float(ar1_diag["n_clipped_ratio"]),
+        "ar1_sigma_hat": float(ar1_diag["sigma_hat"]),
+        "ar1_cycles": float(ar1_diag["cycles"]),
         "d_true": d_true,
         "l_true": l_true,
         "c_true": c_true,
@@ -411,15 +443,19 @@ def run_cell(
         "n": int(n),
         "dt": float(dt),
         "rho_source": str(rho_source),
-        "clip_fraction": dict(arrays["clip_fraction"]),
+        "tt_domain_clip": dict(arrays["tt_domain_clip"]),
+        "ar1_clip_ratio": float(arrays["ar1_clip_ratio"]),
+        "ar1_cycles": float(arrays["ar1_cycles"]),
         "per_z": {},
     }
     rows = np.arange(int(n))
-    common_start = max(int(round(float(z_s) / float(dt))) for z_s in z_values)
+    common_start = scoring_window_start(tau, dt)
+    if common_start >= int(n):
+        raise ValueError("scoring window exceeds trace length")
     err_model_const = float((a_fresh[common_start:int(n)] != a_true[common_start:int(n)]).mean())
     for z_s in z_values:
         k = int(round(float(z_s) / float(dt)))
-        if k >= int(n):
+        if k > common_start or k >= int(n):
             raise ValueError("z %.3f exceeds trace length" % float(z_s))
         current = rows[common_start:int(n)]
         lag_rows = current - k
@@ -545,7 +581,9 @@ def fixed_summary_with_bootstrap(
 ) -> pd.DataFrame:
     check_z_grid(z_values, DT)
     block_len = int(round(float(block_s) / DT))
-    max_k = max(int(round(z / DT)) for z in z_values)
+    max_k = scoring_window_start(tau, DT)  # A-T2-2: same window as run_cell
+    if max_k >= int(n) or any(int(round(z / DT)) > max_k for z in z_values):
+        raise ValueError("invalid scoring window for trace or z grid")
     tt = TruthTable(truth_path)
     cv2 = C.CostV2(strict_reliable=False)
     out_rows: List[Dict[str, Any]] = []
@@ -578,7 +616,7 @@ def fixed_summary_with_bootstrap(
             per_seed_means = {key: [] for key in by_metric_blocks}
             clip_max = 0.0
             for arrays in arrays_by_seed:
-                clip_max = max(clip_max, max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0)
+                clip_max = max(clip_max, max(arrays["tt_domain_clip"].values()) if arrays["tt_domain_clip"] else 0.0)
                 series = _fixed_metric_series(arrays, z_s, max_k)
                 for key, values in series.items():
                     if key.startswith("rms_"):
@@ -607,7 +645,7 @@ def fixed_summary_with_bootstrap(
                 "block_len": int(block_len),
                 "n_boot": int(n_boot),
                 "rho_source": str(rho_source),
-                "clip_fraction_max": float(clip_max),
+                "tt_domain_clip_max": float(clip_max),
                 "extrapolated": bool(float(z_s) in Z_EXTRAP),
             }
             for key, means in per_seed_means.items():
@@ -703,7 +741,7 @@ def sawtooth_summary(
                 a_override=a_override,
                 w_loss_override=w_loss_override,
             )
-            clip_max = max(clip_max, max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0)
+            clip_max = max(clip_max, max(arrays["tt_domain_clip"].values()) if arrays["tt_domain_clip"] else 0.0)
             series = _sawtooth_metric_series(arrays)
             age_means.append(float(np.mean(series["age_s"])))
             age_min = min(age_min, float(np.min(series["age_s"])))
@@ -719,7 +757,7 @@ def sawtooth_summary(
                 "w_loss_source": str(arrays["w_loss_source"]),
                 "n": int(n),
                 "rho_source": str(rho_source),
-                "clip_fraction_max": float(max(arrays["clip_fraction"].values()) if arrays["clip_fraction"] else 0.0),
+                "tt_domain_clip_max": float(max(arrays["tt_domain_clip"].values()) if arrays["tt_domain_clip"] else 0.0),
                 "age_mean_s": float(np.mean(series["age_s"])),
                 "age_min_s": float(np.min(series["age_s"])),
                 "age_max_s": float(np.max(series["age_s"])),
@@ -746,7 +784,7 @@ def sawtooth_summary(
             "block_len": int(block_len),
             "n_boot": int(n_boot),
             "rho_source": str(rho_source),
-            "clip_fraction_max": float(clip_max),
+            "tt_domain_clip_max": float(clip_max),
             "age_mean_s": float(np.mean(age_means)),
             "age_min_s": float(age_min),
             "age_max_s": float(age_max),
@@ -822,7 +860,7 @@ def _control_one(
         "NC1b_perfect_twin": nc1b,
         "NC2_random_twin": nc2,
         "NC3_one_step_churn": nc3,
-        "clip_fraction": dict(tt.clip_log),
+        "tt_domain_clip": dict(tt.clip_log),
     }
 
 
@@ -885,7 +923,10 @@ def flatten_cell_result(result: Mapping[str, Any]) -> List[Dict[str, Any]]:
                 "dt": result["dt"],
                 "z_key": z,
                 **metrics,
-                "clip_fraction_max": max(result["clip_fraction"].values()) if result["clip_fraction"] else 0.0,
+                "tt_domain_clip_max": max(result["tt_domain_clip"].values()) if result["tt_domain_clip"] else 0.0,
+                "ar1_clip_ratio": result["ar1_clip_ratio"],
+                "ar1_cycles": result["ar1_cycles"],
+                "extrapolation_contaminated": result["mode"] in ("poisson", "h2") and abs(result["rho_bar"] - 0.96) < 1e-9,
             }
         )
     return rows
