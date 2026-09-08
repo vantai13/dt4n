@@ -1,7 +1,8 @@
 #!/usr/bin/env python3
 """Replay a signed Phase 22.6 reference cell and audit RMS estimands; run from repo root."""
-import hashlib,json,math
+import hashlib,json,math,sys
 from pathlib import Path
+sys.path.insert(0, str(Path(__file__).resolve().parents[1]))
 import numpy as np
 from cert import tau_sweep as TS
 source=Path('results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json')

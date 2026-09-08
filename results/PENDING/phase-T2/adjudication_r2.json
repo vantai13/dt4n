@@ -1,0 +1,68 @@
+{
+  "amendment_measurements_committed_before_adjudication": "1c3a4baf5d0ce4f8e40d76eaa9377ba8492b239e",
+  "cross_phase_estimand_compatible": false,
+  "evidence": "rms_reference_check_r2.json",
+  "hygiene_gate": {
+    "R5_median_pass": true,
+    "actual_results_committed": true,
+    "branch_join_pass": true,
+    "canary_pass": true
+  },
+  "instrument_status": "READING_PAUSED_ESTIMAND_MISMATCH",
+  "measurement_commit": "d8956cf5650c023c809659aa0c58886b79388b4a",
+  "outcome_curves_opened": false,
+  "phase": "T2.6 round 2",
+  "rounds_remaining": 1,
+  "rounds_used": 1,
+  "summary": {
+    "n_fail": 0,
+    "n_insufficient_power": 0,
+    "n_not_evaluated": 6,
+    "n_pass": 1,
+    "n_readable": 1,
+    "n_total": 7,
+    "n_vacuous": 0
+  },
+  "tau_star_curve": {
+    "lift_min_grid": [
+      0.05,
+      0.1,
+      0.2
+    ],
+    "state": "NOT_EVALUATED",
+    "why": "No comparable conformal lift measurements; no tau_star evaluated. This is not evidence of failure to reach a threshold on the grid."
+  },
+  "verdicts": {
+    "D-T2.6-1": {
+      "state": "NOT_EVALUATED",
+      "why": "Not opened: stopped at cross-phase estimand check before reading err(tau)."
+    },
+    "D-T2.6-2": {
+      "state": "NOT_EVALUATED",
+      "why": "Signed predictions concern cost-margin RMS; measured columns concern all-action delay RMS."
+    },
+    "D-T2.6-3": {
+      "state": "NOT_EVALUATED",
+      "why": "Conformal qhat ratio is not present in this decision-error sweep."
+    },
+    "D-T2.6-4": {
+      "state": "NOT_EVALUATED",
+      "why": "No compatible cost-margin A,c,em estimates in this sweep; do not fit delay RMS to the signed margin model."
+    },
+    "D-T2.6-5": {
+      "max_rel_span_err_total": 0.0,
+      "max_rel_span_rms_e_model": 0.0,
+      "source": "hygiene_checks_r2.json",
+      "state": "PASS",
+      "threshold": 0.01
+    },
+    "D-T2.6-6": {
+      "state": "NOT_EVALUATED",
+      "why": "Signed knee is for cost-margin RMS, not all-action delay RMS."
+    },
+    "D-T2.6-7": {
+      "state": "NOT_EVALUATED",
+      "why": "Signed negative-control ratio is not measured by the decision-error sweep."
+    }
+  }
+}
