@@ -1100,3 +1100,361 @@ Bang chung: results/PENDING/phase-T2/rms_reference_check_r2.json.
 Amendment protocol: file nay duoc phep doi, nhung moi thay doi phai la mot
 amendment danh so ghi ro DOI GI, VI SAO, va DA NHIN THAY DU LIEU NAO khi
 quyet dinh. Cai lam no trung thuc la DAU VET, khong phai su bat bien.
+
+---
+
+## AMENDMENT A-T2-3 -- ESTIMAND CUA DU DOAN VA ESTIMAND CUA PHEP DO KHONG TRUNG NHAU
+
+Ngay      : 2026-09-09
+Commit    : commit them amendment (git log); SHA chay ghi trong sweep_r3/run_log.jsonl
+Vong T2-7 : ERRATUM THIET KE -- KHONG tinh la vong sua. Xem muc "PHAN LOAI".
+            Neu nguoi tham dinh doc day la vong 2 thi rounds_remaining = 0
+            va moi thay doi sau day dong phase o INSTRUMENT_LIMIT.
+            Ghi CA HAI cach doc; khong tu phan quyet co loi cho minh.
+
+### DA NHIN THAY GI KHI QUYET DINH -- khai bao truoc
+
+```text
+DA NHIN:
+  docs/phase-T2/01-prediction-signed.json          artifact DA KY, truoc chien dich
+  results/SUPERSEDED/phase-22/tau_sweep_*.json     artifact 22.6 DA CONG BO
+  results/PENDING/phase-T2/rms_reference_check_r2.json   kiem tra CONG THUC
+  results/PENDING/phase-T2/adjudication_r2.json    trang thai vong, khong phai duong
+  results/PENDING/phase-T2/realizability_grid.json cot not_evaluated
+  docs/phase-T2/02-band-window.json                bang chap nhan (se, effect, verdict)
+  tools/t2_band_window.py, cert/tau_sweep.py,
+  measurements/decision_error_v2.py, cert/realizability_gate.py    MA NGUON
+  results/PENDING/phase-T2/sweep_r2/*.parquet      CHI cot rms_e_model tai
+      poisson@0.925, tau=0.5 -- de DOI CHIEU ESTIMAND (muc L1), khong doc theo tau.
+
+CHUA NHIN:
+  err(tau), R(tau), coverage(tau), lift(tau), tau* tren BAT KY luoi nao.
+  adjudication_r2.json ghi outcome_curves_opened = false.
+  Khong mot du doan D-T2.6-* nao duoc doi chieu voi so do.
+```
+
+### PHAN LOAI -- vi sao day la ERRATUM chu khong phai VONG SUA
+
+```text
+Ngan sach 2 vong cua T2-7 ap cho viec SUA PHEP DO TRONG MOT THIET KE DUNG.
+Bon nhanh T2-6 (a)(b)(c)(d) deu thuoc loai do.
+
+Cai xay ra khong nam trong bon nhanh. No la MAU THUAN NOI TAI cua thiet ke
+da ky:
+
+    T2-5 ky du doan tren estimand   RMS_MARGIN_COST     (margin / cost_ms)
+    T2-4 chi dinh harness phat      RMS_ALLACTION_DELAY (all_action / delay_ms)
+
+TIEU CHUAN de mot khiem khuyet duoc goi la erratum (dat o day de no khong
+thanh cua sau ne kill clause): PHAI chung minh duoc HOAN TOAN tu artifact
+commit TRUOC chien dich, khong dung mot byte du lieu KET QUA nao.
+
+Tieu chuan nay THOA:
+  B1  01-prediction-signed.json §provenance.estimand tu khai
+      "quy uoc HIEU (1-exp(-z/tau)), khop e_stale cua
+       measurements/decision_error_v2.py:402"
+  B2  §provenance.inputs cua CHINH NO la 4 tep tau_sweep_*.json, va moi
+      hang cua chung mang  "scale": "cost_ms",  "level": "margin"
+      (do duoc: rows[0].scale, rows[0].level cua tau_sweep_poisson_0.925.json)
+  => Mot artifact khai estimand cua minh la A trong khi nguon cua no tu khai
+     la B. Mau thuan, thay duoc, KHONG can mot so nao cua T2.6.
+```
+
+### LOI -- ba cho, khong phai mot
+
+```text
+(L1) HARNESS SAI ESTIMAND            [da phat hien o SUMMARY_R2]
+     T2.6 chay measurements/decision_error_v2.py --run-fixed
+       e_model = d_true[cur] - d_fresh[cur]     ma tran (n, 4 duong)
+       rms_e_model = RMS tren TOAN BO o          -> all_action / delay_ms
+     Du doan suy tu cert/tau_sweep.py
+       e_model = m_true - m_mid                  chenh lech HAI hanh dong
+       chi phi co w_loss * loss                  -> margin / cost_ms
+     Bang chung: results/PENDING/phase-T2/rms_reference_check_r2.json
+       cross_phase_estimand_verdict = "INCOMPATIBLE"
+
+     DO DUOC, cung o poisson@0.925, cung tau=0.5, cung seed 101..105:
+       RMS_MARGIN_COST      2.1400 ms   (22.6, sigma = 0.0096)
+                            nguon rows[0].ar1_fit.rms_e_model cua
+                            results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json
+       RMS_ALLACTION_DELAY  0.3405 ms   (T2.6 luot 2, a = 0.9 => sigma = 0.021802)
+                            0.3129 ms   (a = 0.5 => sigma = 0.012112)
+                            nguon cot rms_e_model cua sweep_r2, nhanh fixed
+     Doc theo HUONG, khong chi theo do lon: T2.6 chay voi sigma LON HON 2.27
+     lan ma do duoc so NHO HON 6.29 lan. Voi CUNG mot estimand, RMS phai
+     TANG theo sigma. Huong nguoc nhau la bang chung manh hon ti so.
+
+(L2) BANG CHAP NHAN CUNG SAI ESTIMAND    [MOI -- phat hien o amendment nay]
+     tools/t2_band_window.py:SRC doc 3 parquet decision_error cua 20R va
+     tinh sd GIUA SEED cua  err_total_hi / err_total_lo,  merge tren khoa
+     ["mode", "rho_bar", "seed", "z_over_tau"].
+     => LECH BA CHO so voi diem du doan:
+          dai luong : err_total (KHONG thu nguyen)  vs  rms_total (ms)
+          muc/thang : all_action / delay_ms         vs  margin / cost_ms
+          nhanh     : z_over_tau co dinh = NHANH A  vs  z co dinh = NHANH B
+     HE QUA DINH LUONG: err_total la thong ke BAC THANG (tan suat argmin
+     doi), nhieu hon nhieu bac so voi chuan L2 tron. Nen se bi thoi to.
+     Do duoc trong 02-band-window.json:
+          h2@0.925  se_used = 0.045941  ->  recommended_band = 0.137822
+     quanh diem du doan ~0.24, tuc +/- 57% gia tri diem. Bang do NUOT hon
+     nua bien do du doan [0.199, 0.461] => D-T2.6-2 gan nhu KHONG THE FAIL.
+     Day dung la vi pham TRAN cua chinh QD-7:  b < |effect|.
+     Cung loai loi voi bang "+/-3%" cua D-T2.6-4 ma QD-7 da bo vi VACUOUS.
+     Ghi them, khong giau: se do uoc tu 3 seed legacy (101,102,103), dof=2,
+     va chinh provenance cua file da ghi caveat do.
+
+(L3) MUC CONFORMAL TROI THEO TAU          [MOI -- confound chua ai ghi]
+     level = ceil((n_calib+1)(1-alpha))/n_calib   (cert/conformal_v2.py:72)
+     va n_calib = T_sim/(5*tau)/2 moi bin  =>  GIAM khi tau tang.
+     DO DUOC (5 seed, n = n_for_tau(tau, 0.005), alpha = 0.10, build that):
+         tau        0.5     1      2      3      5     10     20     28
+         n_calib   1000    500    250    167    100     50     25     25
+         level   0.9010 0.9020 0.9040 0.9096 0.9100 0.9200 0.9600 0.9600
+     => q_hat TUYET DOI va coverage bi thoi toi +6 diem phan tram o tau lon
+        MA KHONG CO VAT LY NAO. Day la confound trung khit voi truc quet.
+     => NHUNG R(tau) = q_hat[bin3]/q_hat[bin0] la ti so TRONG CUNG mot tau,
+        cung n_calib, cung level  =>  muc TRIET TIEU trong ti so.
+        D-T2.6-3 (hump cua R(tau)) DUOC BAO VE.
+     Phan biet nay phai ky TRUOC, khong duoc phat hien sau khi thay so.
+```
+
+### NGUYEN NHAN GOC
+
+```text
+docs/GLOSSARY.md dang ky dai luong theo DANG HAM, khong theo MUC va THANG.
+Muc `sat` ghi "Khop voi measurements/decision_error_v2.py:402". Ve DANG HAM
+dieu do DUNG -- ca hai deu la HIEU. Ve MUC va THANG thi SAI.
+cert/tau_sweep.py DA ghi "scale"/"level" trong artifact tu 22.6, nhung
+GLOSSARY khong chep sang, nen nguoi thiet ke T2.6 doc GLOSSARY va chon
+harness sai.
+Day la NT 64 dao chieu: khong phai mot dai luong nhieu ten, ma HAI DAI LUONG
+MOT TEN (`rms_e_model`).
+Ghi them mot khuyet tat nho cung loai: so dong ":402" da TROI. Trong ban
+hien tai dong 402 nam trong CHU KY cua run_cell; e_stale o dong 466 (run_cell)
+va 681 (fixed_summary). Mot tro dan file:dong khong co neo la mot tro dan se
+sai sau vai commit -- vi vay so dang ky moi neo bang ARTIFACT_FIELD va CODE
+theo TEN HAM, khong theo so dong.
+```
+
+### DOI GI
+
+```text
+(a) DANG KY ESTIMAND -- docs/GLOSSARY.md muc moi "SO DANG KY ESTIMAND"
+    Moi estimand co ID + 7 truong bat buoc:
+        LEVEL  POPULATION  SCALE  UNIT  BRANCH  CODE  ARTIFACT_FIELD
+    Hai muc dau: RMS_MARGIN_COST va RMS_ALLACTION_DELAY.
+    Sua dong "Khop voi ...:402" thanh mot canh bao KHONG TUONG THICH.
+
+(b) MOI ARTIFACT PHAI MANG estimand_id
+    cert/tau_sweep.py                 da co scale/level -> them ESTIMAND_ID
+    measurements/decision_error_v2.py -> them ESTIMAND_ID va ghi vao run_cell
+    Test canh: test/test_t2_estimand_registry.py (dung TRUOC khi sua code;
+    log do luu o results/PENDING/phase-T2/tests_red_before_fix.log)
+
+(c) HARNESS CUA T2.6 DOI SANG cert/tau_sweep.py
+    LY DO KHOA HOC, khong phai "vi no cho so dep hon":
+      1. No la harness DA SINH RA du doan da ky (cung estimand).
+      2. No VON DA chay z co dinh: z_s = (cur - old)*dt tu _valid_rows,
+         doc lap tau  =>  NHANH B theo dinh nghia.
+      3. No la harness DUY NHAT phat q_hat / coverage / R(tau); 6/7 du doan
+         can chung. decision_error_v2 khong chay conformal.
+      4. No FAIL-LOUD khi thieu block: conformal_level tra None -> qhat vo
+         nghia thay vi im lang. DO DUOC: 1 seed, n=200000, tau=28 ->
+         blocks_total = 8 -> calib/bin = 4 -> conformal_level(4, 0.10) = None.
+    LOAI TRU cach khac (ghi de nguoi doc tu danh gia):
+      - Sua decision_error_v2 de tinh margin + conformal = viet lai
+        cert/tau_sweep.py mot lan nua, rui ro cao hon, khong loi ich.
+      - Doi du doan sang all_action/delay = TAI KY DU DOAN SAU KHI CHAY.
+        CAM TUYET DOI.
+
+(d) BA SUA BAT BUOC KEM THEO KHI DOI HARNESS
+    d1  n = n_for_tau(tau, dt) THAY VI n = V3.N co dinh   [T2.2 da ky]
+        DO DUOC: tau=28, 1 seed, n=200000 -> 8 block -> level = None
+                 tau=28, 5 seed, n=280000 -> 50 block, 25 calib/bin >= 9 OK
+                 block_len_for_tau(28) = 28000 mau = 140.0 s = 5*28
+    d2  sigma = a * sigma_max_regime(mode, rho_bar), a in {0.5, 0.9}
+        THAY VI V3.SIGMA = 0.0096 co dinh trong chu ky build_at_tau.
+        Day KHONG phai mot truc them cho vui: DO DUOC tu twin/cost_v2.py
+             cell             sigma_max   a=0.9      0.0096 lech
+             cbr@0.700        0.051357    0.046221   4.81x
+             h2@0.700         0.051357    0.046221   4.81x
+             poisson@0.850    0.053295    0.047965   5.00x
+             h2@0.850         0.053295    0.047965   5.00x
+             poisson@0.925    0.024225    0.021802   2.27x
+             h2@0.925         0.024225    0.021802   2.27x
+             poisson@0.960    0.010659    0.009593   1.00x
+             h2@0.960         0.010659    0.009593   1.00x
+        0.0096 VUA KHIT o rho_bar = 0.96 va SAI 5.00 lan o rho_bar = 0.850.
+        Toan bo 22.6 chay lop chung nhan voi bien do cua MOT o, ap cho moi o.
+        Do la B3, ghi trong chinh file nay o QD-7 (dong 456-466): 2.18x o
+        poisson@0.925, 4.80x o poisson@0.850, 4.62x o h2@0.700 -- do la so
+        so voi SIGMA_RHO = 0.010; bang tren so voi 0.0096 nen lech chut.
+        sigma va a LOAI TRU NHAU va KHONG CO MAC DINH IM LANG.
+    d3  realizability_gate NHAN DU 9 THAM SO: them sigma, clip_fraction
+        (tu ar1_clip_ratio), min_cell_blocks (tu min_calib_blocks).
+        Hien 3 tieu chi la "not_evaluated" tren CA 96/96 o
+        (censoring_ok, mondrian_cells_populated, sigma_feasible).
+        DO DUOC sau khi truyen du: verdict REALIZABLE, failed [],
+        not_evaluated [] -- rong.
+
+(e) BANG CHAP NHAN TINH LAI TREN DUNG ESTIMAND        [sua L2]
+    Chay cert/tau_sweep.py tren luoi tau CU {0.5, 1, 2, 2.87, 5}, MOI SEED
+    MOT LAN, lay sd giua seed cua rms(tau=5)/rms(tau=0.5).
+    DAY LA DU LIEU CU (22.6 da cong bo)  =>  KHONG VONG TRON.
+    XAP XI PHAI KHAI: se do tren khoang [0.5, 5] duoc dung lam SAN cho ti so
+    tren khoang [0.5, 28]. se cua mot LOG-TI SO on dinh theo do dai khoang,
+    nen day la san BAO THU. Khai o day, khong giau.
+    NEU khong dung duoc: chuyen sang bao cao DIEM + CI (Student-t, n = 5 seed)
+    va phan quyet INSUFFICIENT_BAND -- KHONG PASS, KHONG FAIL (NT 56, QD-5).
+    02-band-window.json duoc danh SUPERSEDED_BY_A-T2-3 trong
+    docs/phase-T2/04-estimand-descriptor.json; FILE GIU NGUYEN, khong xoa.
+
+(f) MUC CONFORMAL PHAI DUOC BAO CAO VA KHU            [sua L3]
+    f1  moi hang ghi conformal_level_used va n_calib_blocks_per_bin
+    f2  duong CHINH cua coverage(tau) dung PHAN TICH KHOP MUC: rut ngau
+        nhien DUNG 25 block hieu chuan o MOI tau (seed rut = 7201) => moi
+        tau cung level = 0.96 => muc khong con la ham cua tau
+    f3  R(tau) doc tren DU LIEU DAY DU (muc triet tieu trong ti so)
+    f4  DU DOAN KY TRUOC: bang level o muc (L3) phai TAI HIEN trong cot
+        conformal_level_used. Lech => loi co hoc, dung ngay.
+    KHONG sua n_for_tau: no la hang so T2.2 DA KY. Khu bang PHAN TICH,
+    khong bang cach doi thiet ke.
+```
+
+### KHONG DOI GI
+
+```text
+- 01-prediction-signed.json: KHONG SUA MOT BYTE. So du doan VAN DUNG vi
+  chung von suy tu 22.6 = margin/cost. Chi CAI NHAN sai. Nhan duoc sua o
+  file MOI docs/phase-T2/04-estimand-descriptor.json; artifact ky giu nguyen
+  sha256 68e975c2c08247e208cabc29f6e7f7710eeb01e46ba8018be0d9fda885608d7f
+- QD-1 (`u` la nhanh chinh), QD-2 (lift_min la mot DUONG {0.05,0.10,0.20}),
+  QD-3 (loai cbr, giu lam doi chung am), QD-4, QD-5, QD-6: GIU NGUYEN.
+- QD-7 k = 3.0, san = 0.05: GIU NGUYEN. Chi doi NGUON cua se, khong doi k.
+- TAU_GRID trong cert/tau_sweep.py: KHONG SUA. test/test_phase22_tau.py
+  GT1 ghim no lam chu ky cua Phase 22 DA DONG. Luoi moi truyen qua --taus
+  va dat ten rieng TAU_GRID_T2.
+- Ket qua 166 lenh o sweep_r2/: GIU NGUYEN, khong ghi de. Xem "TAI SU DUNG".
+- Toan bo Phase G, L2, 22.6: khong dung toi.
+```
+
+### TAI SU DUNG 166 LENH DA CHAY -- chung KHONG bi vut
+
+```text
+Chung do dai luong RMS_ALLACTION_DELAY, la dai luong HOP LE cho mot cau hoi
+KHAC. Chuyen quyen so huu:
+
+  err_total(tau, z), d_sla(tau, z)     -> Phase 20R2 muc (1) va (2)
+                                          (twin sai bao nhieu, gia bao nhieu)
+  err theo tau                          -> 20R2 muc (4), truc chinh cua v10
+  ar1_clip_ratio, tt_domain_clip_max    -> V-T2-3 va Threats
+  canary 6 lan / 1 SHA-256 / lech 0.0   -> bang chung moi truong on dinh
+  NC-T2-2 rel_span = 0.0                -> bang chung hai nhanh chung luong
+  R5 trung vi max 0.086518% < 0.09%     -> gate ve sinh PASS
+
+Ghi vao results/PENDING/phase-T2/sweep_r2/OWNERSHIP.md, gan
+estimand_id = RMS_ALLACTION_DELAY, va KHONG dung chung de phan quyet bat ky
+du doan T2-5 nao.
+```
+
+### DU DOAN BO SUNG -- KY TRUOC KHI CHAY (khong duoc sua sau)
+
+```text
+D-T2.6-8   conformal_level_used(tau) do duoc KHOP bang (L3) tuyet doi < 1e-9
+           o moi tau. Day la kiem CO HOC, khong phai vat ly.
+           FAIL => dung ngay, loi cai dat.
+D-T2.6-9   arm doi chung legacy (sigma = 0.0096, tau in {0.5,1,2,2.87,5},
+           5 seed gop, n = 200000) TAI TAO tau_sweep_*.json cu voi
+           |diff| < 1e-8 tren A, c, rms_e_model.
+           FAIL => da doi them thu khac. DUNG, khong debug tiep.
+           (cung vai tro voi NC-T2-1 bit-exact o T2.3)
+D-T2.6-10  R(tau) do tren du lieu day du va R(tau) do tren phan tich khop
+           muc LECH < 1% o moi tau. Co so: muc triet tieu trong ti so.
+           FAIL => gia thuyet "muc triet tieu" SAI => phai bao cao, va moi
+           doc R(tau) phai chuyen sang ban khop muc.
+```
+
+### NGAN SACH -- DO DUOC TRUOC KHI CHAY (khong doan)
+
+```text
+Do tren may nay, poisson@0.925, 5 seed, a = 0.9, luoi tau moi, CHI PHAN BUILD:
+    tau   0.5   1     2     3     5     10    20    28
+    n     200k  200k  200k  200k  200k  200k  200k  280k
+    s     4.9   4.6   4.4   4.5   4.4   4.3   4.3   6.0     TONG 37.4 s
+
+    Luoi chinh   9 o x 2 muc a x 37.4 s ~ 674 s ~ 11.2 phut
+    Arm legacy   4 o x ~23 s            ~  92 s ~  1.5 phut
+    ---------------------------------------------------------
+    TOAN CHIEN DICH ~ 13 phut (BUILD)  <<  8 gio
+
+GIOI HAN CUA CON SO NAY, khai ro: no CHI dem build_at_tau. decompose,
+fit_ar1, qhat_by_bin va coverage_by_bin CHUA duoc tinh vao. Ngay ca khi
+chung nhan doi tong so len 3 lan, chien dich van duoi 1 gio.
+=> Quy tac "neu > 8 gio thi FRACTIONAL DESIGN" cua T2-4 TU GIAI QUYET:
+   CHAY TOAN PHAN.
+```
+
+### PHAM VI DOC DUOC -- khai TRUOC
+
+```text
+CONFIRMATORY (co diem du doan da ky o 01-prediction-signed.json):
+    h2@0.700 | poisson@0.850 | poisson@0.925
+DOI CHUNG AM (QD-3):
+    cbr@0.700   -- phai tiep tuc cho R ~ 1.00
+EXPLORATORY (KHONG co diem ky; chi bao cao, KHONG phan quyet du doan):
+    h2@0.850 | h2@0.925 | h2@0.960 | poisson@0.700 | poisson@0.960
+h2@0.960 da bi 02-band-window danh INSUFFICIENT_POWER (se = 0.373,
+recommended_band = null); giu nhan do.
+
+Mot ket qua EXPLORATORY khong duoc trinh bay nhu mot du doan da xac nhan.
+```
+
+### NEU FAIL THI SAO -- dien TRUOC
+
+```text
+(a) D-T2.6-9 FAIL (khong tai tao duoc 22.6)
+    -> gan nhu chac chan la co hoc: sigma truyen sai duong (sigma= vs a=),
+       n khong dung 200000, hoac seeds khong dung (101..105).
+    -> KHONG di tim loi khoa hoc. Kiem ba thu do theo dung thu tu.
+(b) D-T2.6-8 FAIL (level khong khop bang)
+    -> split_by_block chia calib/test khac ti le gia dinh 50/50.
+       In n_calib_blocks_total va n_test_blocks_total, doi chieu.
+(c) D-T2.6-10 FAIL (muc KHONG triet tieu trong ti so)
+    -> DAY LA KET QUA, khong phai loi. Bao cao, va chuyen MOI phep doc
+       R(tau) sang ban khop muc. Ghi vao Threats.
+(d) Bang (e) khong dung duoc (se legacy khong tinh ra)
+    -> chuyen sang DIEM + CI, phan quyet INSUFFICIENT_BAND.
+       KHONG tu dat mot bang tron.
+
+NGAN SACH: KHONG mo vong sua thu ba. Neu (a) hoac (b) FAIL sau MOT lan sua
+co hoc, dong phase o INSTRUMENT_LIMIT theo dung T2-7.
+```
+
+### DINH CHINH TRONG CHINH BAN NHAP NAY -- ghi lai vi dau vet quan trong hon su sach se
+
+```text
+Ban nhap dau cua amendment nay dan bang chung L1 la
+    "8.2359 ms (T2.6)  vs  2.1400 ms (22.6)  =>  ti so 3.85x".
+KIEM LAI TUNG FILE:DONG cho thay ve so nay SAI QUY GAN.
+    8.235915145897662 la rms_total CUA CHINH 22.6 tai z = 0.055, tau = 0.5
+    (results/PENDING/phase-T2/rms_reference_check_r2.json muc "example",
+     va rms_reference_decomposition_r2.csv dong 2). No la ve trai cua phep
+     kiem DONG NHAT THUC sqrt(em^2 + 2cov + es^2), KHONG phai mot so do cua
+     T2.6, va KHONG phai RMS_ALLACTION_DELAY.
+So do THAT cua T2.6 luot 2 tai cung o, cung tau, cung seed la 0.3405 ms
+(a = 0.9) va 0.3129 ms (a = 0.5) -- xem muc (L1). Ket luan KHONG doi:
+hai estimand van khong so sanh duoc, va bang chung con manh hon vi HUONG
+sai (sigma to hon ma so nho hon). Chi con so bi thay.
+Ghi lai o day de nguoi doc sau thay: mot bang chung dung ket luan van co the
+dung sai so lieu, va cach chua la GREP TUNG FILE:DONG chu khong phai tin ban nhap.
+```
+
+### CHU KY
+
+```text
+Toi xac nhan da doc muc "DA NHIN THAY GI", da dien BA DU DOAN BO SUNG
+(D-T2.6-8/-9/-10) va BON NHANH FAIL TRUOC khi chay bat ky lenh nao cua
+sweep_r3, va da ky phan loai ERRATUM kem ca cach doc nguoc lai.
+
+Ky: ______________   Ngay: __________
+```
