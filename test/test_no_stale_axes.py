@@ -239,6 +239,88 @@ PENDING_NO_VALIDITY_GRANDFATHERED: dict[str, str] = {
         "L75: provenance khai sai nguon SLA; phai sinh lai; bi chan boi L51",
 }
 
+# A-T2-3 / T2.6 vong 3: cert/tau_sweep.py va cac cong cu t2_6b_* KHONG ghi khoi
+# `validity`. Hai duong sua deu bi chan, va ca hai deu bi chan VI MOT LY DO
+# DUNG, nen day la mot mon NO DUOC KHAI chu khong phai mot ngoai le tuy tien:
+#
+#   (1) SINH LAI artifact kem validity  -> PHA DAU VET. sweep_r3/run_log.jsonl
+#       ghi sha256 cua tung artifact, va adjudication_r3.json da phan quyet
+#       tren chinh chung. Sinh lai la ghi de bang chung sau khi da doc ket qua.
+#   (2) THEM `pending_on` vao ma nguon  -> doi hoi khai CHINH XAC truc nao
+#       chua duyet. Cac artifact nay chay tren truc conformal/tau, khong phai
+#       aoi_axis hay sla_axis cua so dang ky. Doan mot nhan truc chi de qua
+#       mot test la dung loai loi ma A-T2-3 vua sua (dat ten truoc khi hieu).
+#
+# => Mon no ghi o docs/phase-T2/07-handoff-21R2.md muc N6. Muc nay bi XOA khi
+#    21R2 quyet dinh truc `pending_on` dung cho artifact chung nhan va
+#    cert/tau_sweep.py ghi validity ngay tu luc sinh.
+_T2_R3_REASON = (
+    "A-T2-3/N6: tau_sweep chua ghi validity; KHONG sinh lai vi run_log da ghi "
+    "sha256 va adjudication_r3 da phan quyet tren chinh artifact nay"
+)
+PENDING_NO_VALIDITY_GRANDFATHERED.update({
+    "phase-T2/sweep_r3/adjudication_r3.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/hygiene_r3.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/hygiene_r3_FAIL_before_table_erratum.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/legacy_cbr_0.700.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/legacy_h2_0.700.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/legacy_poisson_0.850.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/legacy_poisson_0.925.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/level_probe_posthoc.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/sigmaprobe_cbr_0.700.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/sigmaprobe_h2_0.700.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/sigmaprobe_poisson_0.850.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/sigmaprobe_poisson_0.925.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r000.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r001.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r002.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r003.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r004.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r005.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r006.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r007.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r008.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r009.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r010.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r011.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r012.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r013.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r014.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r015.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r016.json":
+        _T2_R3_REASON,
+    "phase-T2/sweep_r3/t2_6b_r017.json":
+        _T2_R3_REASON,
+})
+
 
 def _pending_json() -> list[str]:
     return sorted(glob.glob(os.path.join(PENDING, "**", "*.json"), recursive=True))

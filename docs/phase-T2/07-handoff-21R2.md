@@ -98,6 +98,21 @@ N4  D-T2.6-4 FAIL 11/18 (22.6 da FAIL 3/9), chu yeu o `em`.
     21R2 PHAI kiem lai gia dinh nay TRUOC khi dung luat, khong duoc ke thua.
 
 N5  No DOI/K10 van BLOCKED (doc77 muc 6, D6). T2 khong mo khoa duoc.
+
+N6  Artifact vong 3 KHONG mang khoi `validity`, nen truot
+    test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for.
+    30 tep duoc ghi vao PENDING_NO_VALIDITY_GRANDFATHERED kem ly do, KHONG
+    duoc lang le bo qua. Hai duong sua deu bi chan, ca hai vi mot ly do DUNG:
+      (1) sinh lai kem validity  -> PHA DAU VET: sweep_r3/run_log.jsonl ghi
+          sha256 tung artifact va adjudication_r3.json da phan quyet tren
+          chinh chung. Sinh lai la ghi de bang chung SAU khi da doc ket qua.
+      (2) them `pending_on` vao ma nguon -> doi hoi khai CHINH XAC truc nao
+          chua duyet. Artifact nay chay tren truc conformal/tau, khong phai
+          aoi_axis hay sla_axis cua docs/phase-23/axis_registry.json. Doan
+          mot nhan truc chi de qua mot test la DUNG loai loi A-T2-3 vua sua.
+    21R2 PHAI: quyet dinh truc `pending_on` dung cho artifact chung nhan, roi
+    cho cert/tau_sweep.py ghi validity NGAY TU LUC SINH. Khi do xoa 30 muc
+    grandfather -- danh sach do chi duoc NGAN DI.
 ```
 
 ---

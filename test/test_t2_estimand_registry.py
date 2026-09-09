@@ -204,10 +204,14 @@ def test_the_new_threats_carry_numbers_not_adjectives():
 
 
 def test_every_new_threat_id_is_present_with_a_scope():
-    """Sau T2 phai co du sau Threat T-1..T-6, moi cai mot scope."""
-    import re
-    txt = (ROOT / "cert/gate_report.py").read_text()
-    for i in range(1, 7):
-        assert '"id": "T-%d"' % i in txt, "thieu Threat T-%d" % i
-    block = txt[txt.index('"id": "T-1"'):txt.index('"id": "L4"')]
-    assert block.count('"scope"') == 6, "moi Threat phai khai scope"
+    """Sau T2 phai co du sau Threat T-1..T-6, moi cai mot scope va mot loi ra.
+
+    Chung song o THREATS_T2, KHONG o LIMITATIONS: LIMITATIONS la hop dong
+    L1..L10 cua Phase 21R va test_phase21r_gate.py ghim dung muoi ID do.
+    """
+    import cert.gate_report as G
+    ids = [x["id"] for x in G.THREATS_T2]
+    assert ids == ["T-%d" % i for i in range(1, 7)], ids
+    for x in G.THREATS_T2:
+        assert x["scope"] and x["resolved_by"] and x["text"], x["id"]
+    assert [y["id"] for y in G.LIMITATIONS] == ["L%d" % i for i in range(1, 11)]

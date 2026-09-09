@@ -372,6 +372,84 @@ LIMITATIONS: List[Dict[str, str]] = [
         "resolved_by": "larger truth-table measurement campaign",
     },
     {
+        "id": "L3",
+        "title": "Guarantees are for rho with a SET correlation time, not a measured one",
+        "text": (
+            "tau is a design parameter written into the generator, not estimated "
+            "from deployment telemetry. Phase T2 turned it into a real axis and "
+            "swept {0.5 .. 28} s in the twin; feasibility on the kernel datapath is "
+            "anchored only for tau in {2, 5, 30} s (Phase G: worst round-trip error "
+            "4.94% for tau and 3.82% for sigma, each cell a median over links and "
+            "rounds, T_run = 205*tau). See THREATS_T2 entries T-1 .. T-6 for what "
+            "the sweep measured and what it could not."
+        ),
+        "scope": "external validity",
+        "resolved_by": "21R2: estimate tau from telemetry instead of setting it",
+    },
+    {
+        "id": "L4",
+        "title": "Exact finite-sample guarantee belongs to Variant A",
+        "text": "Variant B is the reported pooled-row approximation with block-level effective n.",
+        "scope": "statistical conclusion validity",
+        "resolved_by": "report A/B side by side",
+    },
+    {
+        "id": "L5",
+        "title": "Coverage is not preserved after selection",
+        "text": "Marginal violation 0.0913 becomes 0.1214 on the accepted set.",
+        "scope": "post-selection validity",
+        "resolved_by": "Phase 22 selective conformal",
+    },
+    {
+        "id": "L6",
+        "title": "The certificate is pairwise, not simultaneous over K=4",
+        "text": "s_margin certifies the stale top-2 pair, not all four action costs.",
+        "scope": "construct validity",
+        "resolved_by": "Phase 22 simultaneous coverage",
+    },
+    {
+        "id": "L7",
+        "title": "Robustness has only one second traffic family on the fixed path",
+        "text": "The fixed-sigma path has three nondegenerate cells, with only h2@0.700 outside poisson.",
+        "scope": "external validity",
+        "resolved_by": "add traffic families",
+    },
+    {
+        "id": "L8",
+        "title": "The 2.17 age-shape ratio is not proven as a law",
+        "text": (
+            "It was observed on synthetic AR(1) at a single tau. Phase T2 swept tau "
+            "over {0.5 .. 28} s and found the ratio is NOT flat: R(tau) has an "
+            "interior maximum bracketed in (1, 3) s, and the AR(1) rms law itself "
+            "loses validity at larger sigma (gate ar1_rms_total_fit_within_2pct is "
+            "false at poisson@0.850 for a in {0.5, 0.9} while true at sigma = 0.0096). "
+            "Treat the ratio as regime-dependent, not as a law."
+        ),
+        "scope": "external validity",
+        "resolved_by": "Phase T2 tau sweep (measured); 21R2 for real telemetry",
+    },
+    {
+        "id": "L9",
+        "title": "Operating cells are not independent",
+        "text": "Several cells share rho trajectories by seed, making pooled p-values optimistic.",
+        "scope": "statistical conclusion validity",
+        "resolved_by": "independent seed design",
+    },
+    {
+        "id": "L10",
+        "title": "Absolute path ranking inherits the Phase 20R residual bound",
+        "text": "s_margin reduces but does not remove the inherited ranking-risk condition.",
+        "scope": "internal validity",
+        "resolved_by": "Phase 23",
+    },
+]
+
+
+# Phase T2 (A-T2-3): sau Threat DANH SO, moi cai co SO do duoc. Danh sach
+# nay TACH khoi LIMITATIONS vi LIMITATIONS la hop dong L1..L10 cua Phase 21R
+# (test_phase21r_gate.py::test_limitations_complete ghim dung mười ID do).
+THREATS_T2: List[Dict[str, str]] = [
+    {
         "id": "T-1",
         "title": "tau is a design parameter, not a measured property of the system",
         "text": (
@@ -474,62 +552,6 @@ LIMITATIONS: List[Dict[str, str]] = [
         ),
         "scope": "construct validity",
         "resolved_by": "21R2: one harness emitting q_hat and err on one estimand",
-    },
-    {
-        "id": "L4",
-        "title": "Exact finite-sample guarantee belongs to Variant A",
-        "text": "Variant B is the reported pooled-row approximation with block-level effective n.",
-        "scope": "statistical conclusion validity",
-        "resolved_by": "report A/B side by side",
-    },
-    {
-        "id": "L5",
-        "title": "Coverage is not preserved after selection",
-        "text": "Marginal violation 0.0913 becomes 0.1214 on the accepted set.",
-        "scope": "post-selection validity",
-        "resolved_by": "Phase 22 selective conformal",
-    },
-    {
-        "id": "L6",
-        "title": "The certificate is pairwise, not simultaneous over K=4",
-        "text": "s_margin certifies the stale top-2 pair, not all four action costs.",
-        "scope": "construct validity",
-        "resolved_by": "Phase 22 simultaneous coverage",
-    },
-    {
-        "id": "L7",
-        "title": "Robustness has only one second traffic family on the fixed path",
-        "text": "The fixed-sigma path has three nondegenerate cells, with only h2@0.700 outside poisson.",
-        "scope": "external validity",
-        "resolved_by": "add traffic families",
-    },
-    {
-        "id": "L8",
-        "title": "The 2.17 age-shape ratio is not proven as a law",
-        "text": (
-            "It was observed on synthetic AR(1) at a single tau. Phase T2 swept tau "
-            "over {0.5 .. 28} s and found the ratio is NOT flat: R(tau) has an "
-            "interior maximum bracketed in (1, 3) s, and the AR(1) rms law itself "
-            "loses validity at larger sigma (gate ar1_rms_total_fit_within_2pct is "
-            "false at poisson@0.850 for a in {0.5, 0.9} while true at sigma = 0.0096). "
-            "Treat the ratio as regime-dependent, not as a law."
-        ),
-        "scope": "external validity",
-        "resolved_by": "Phase T2 tau sweep (measured); 21R2 for real telemetry",
-    },
-    {
-        "id": "L9",
-        "title": "Operating cells are not independent",
-        "text": "Several cells share rho trajectories by seed, making pooled p-values optimistic.",
-        "scope": "statistical conclusion validity",
-        "resolved_by": "independent seed design",
-    },
-    {
-        "id": "L10",
-        "title": "Absolute path ranking inherits the Phase 20R residual bound",
-        "text": "s_margin reduces but does not remove the inherited ranking-risk condition.",
-        "scope": "internal validity",
-        "resolved_by": "Phase 23",
     },
 ]
 
