@@ -106,6 +106,45 @@ def test_live_artifact_has_approved_axes(path):
     if not isinstance(payload, dict):
         pytest.skip("khong phai artifact dang dict")
 
+    # (0) ARTIFACT CHUNG NHAN DUONG DO TREN TESTBED.
+    #
+    # Certificate cua Phase G2 chung nhan HINH THUC CUA NHAC CU DO tren kernel
+    # datapath: v(C,dt,L) = 2*(8L/(C*dt))^2/12. Chung khong dung truc AoI
+    # (khong goi bo sinh z nao) va khong dung truc SLA (khong doc
+    # sla_calibration.json, khong co w_loss). Ba vai tro hien co deu khong
+    # khop, va do la ly do CHINH DANG khien chung thieu `validity`.
+    #
+    # KHONG SUA DUOC BANG CACH THEM `validity` VAO ARTIFACT: sha256 cua chung
+    # bi GHIM trong 14 tep khac, gom g_closeout_clean_clone.json va
+    # g_closeout_final_remote_verification.json -- bang chung dong Phase G.
+    # Doi mot byte = pha cac ban ghi do. Sinh lai cung khong cho byte giong:
+    # provenance nhung platform.release()/node(), va artifact_guard TU CHOI
+    # ghi de.
+    #
+    # Nen mien tru o day la mot LUAT KIEM DUOC, khong phai mot ten file trong
+    # danh sach: artifact phai TU KHAI hop dong cua no VA phai chung minh no
+    # khong cham truc nao. Bat ky certificate nao cung schema deu qua cung
+    # dieu kien. Cung tinh than amendment 23-45a va 23-60: mien tru NGAM ->
+    # vai tro TUONG MINH.
+    if str(payload.get("schema", "")).startswith(
+            "dt4n.phase_g2.measurement_path_cert."):
+        for field in ("evidence_sha256", "does_not_certify",
+                      "expires_or_requires_revalidation_if", "scope"):
+            assert payload.get(field), (
+                f"{rel}: khai la measurement-path certificate nhung thieu "
+                f"{field!r}. Mien tru di kem NGHIA VU, khong phai mot loi "
+                f"khai suong.")
+        blob = json.dumps(payload)
+        for banned in ("sla_calibration.json", "w_loss",
+                       "sawtooth_age_steps", "aoi_axis"):
+            assert banned not in blob, (
+                f"{rel}: khai khong cham truc twin nhung noi dung co "
+                f"{banned!r}. Neu no THUC SU dung truc do thi vai tro dung la "
+                f"consumes_axis va no phai mang `validity`.")
+        pytest.skip("measurement-path certificate: khong cham truc AoI lan "
+                    "SLA; sha256 bi ghim trong artifact closeout Phase G nen "
+                    "BAT DONG")
+
     # (1) phai CO khoi validity
     assert "validity" in payload, (
         f"{rel}: nam trong LIVE/ nhung KHONG co khoi validity.\n"
@@ -341,6 +380,70 @@ def _pending_json() -> list[str]:
     return sorted(glob.glob(os.path.join(PENDING, "**", "*.json"), recursive=True))
 
 
+FROZEN_SIDECAR = os.path.join(PENDING, "phase-T2", "FROZEN_PENDING_ON.json")
+
+
+def _sha256_file(path: str) -> str:
+    import hashlib
+    h = hashlib.sha256()
+    with open(path, "rb") as fh:
+        for chunk in iter(lambda: fh.read(1 << 20), b""):
+            h.update(chunk)
+    return h.hexdigest()
+
+
+def _frozen_pending_on() -> dict:
+    """Doc sidecar va tra ve anh xa rel_path -> muc khai.
+
+    Sidecar la mot LUAT, khong phai mot DANH SACH MIEN TRU:
+      . moi muc phai neu `frozen_by` -- MOT file thuc su chua sha256 cua
+        artifact
+      . test `test_frozen_entries_prove_the_freeze_instead_of_declaring_it`
+        XAC MINH dieu do; muc khong chung minh duoc thi VO HIEU va artifact
+        quay ve duong kiem binh thuong (tuc se FAIL).
+    Nho vay khong ai them duoc mot muc chi de qua test: muon qua, artifact
+    phai THAT SU bi dong bang boi mot ban ghi da ton tai.
+    """
+    if not os.path.exists(FROZEN_SIDECAR):
+        return {}
+    with open(FROZEN_SIDECAR, "r", encoding="utf-8") as fh:
+        doc = json.load(fh)
+    out: dict = {}
+    base = os.path.join(PENDING, "phase-T2")
+    for entry in doc.get("entries", []):
+        for path in glob.glob(os.path.join(base, entry["glob"])):
+            rel = os.path.relpath(path, PENDING).replace(os.sep, "/")
+            out[rel] = entry
+    return out
+
+
+FROZEN = _frozen_pending_on()
+
+
+@pytest.mark.parametrize("rel", sorted(FROZEN))
+def test_frozen_entries_prove_the_freeze_instead_of_declaring_it(rel):
+    """Moi muc sidecar phai CHUNG MINH artifact that su bi dong bang.
+
+    Khong chung minh duoc => muc vo hieu => artifact quay ve duong kiem binh
+    thuong va se FAIL. Do la y do: mot loi khai khong kiem duoc thi khong
+    duoc phep mua duong qua.
+    """
+    entry = FROZEN[rel]
+    art = os.path.join(PENDING, rel)
+    pin = os.path.join(REPO, entry["frozen_by"])
+    assert os.path.exists(art), rel
+    assert os.path.exists(pin), (
+        "%s: frozen_by tro toi file khong ton tai: %s"
+        % (rel, entry["frozen_by"]))
+    with open(pin, "r", encoding="utf-8", errors="ignore") as fh:
+        blob = fh.read()
+    assert _sha256_file(art) in blob, (
+        "%s: sidecar khai bi dong bang boi %s, nhung sha256 cua no KHONG co "
+        "trong file do.\n  -> hoac artifact da doi (dong bang that bai), hoac "
+        "muc sidecar la mot loi khai khong co can cu."
+        % (rel, entry["frozen_by"]))
+
+
 @pytest.mark.parametrize("path", _pending_json())
 def test_pending_artifacts_declare_what_they_wait_for(path):
     """PENDING/ khac SUPERSEDED/: no CHO, khong bi THAY THE.
@@ -363,6 +466,27 @@ def test_pending_artifacts_declare_what_they_wait_for(path):
     # Do duoc 2026-08-24: 16/16 file PENDING/phase-23 thoat theo dung duong do.
     if rel in PENDING_NO_VALIDITY_GRANDFATHERED:
         pytest.skip("grandfathered: %s" % PENDING_NO_VALIDITY_GRANDFATHERED[rel])
+
+    # Chinh sidecar la CO CHE KHAI, khong phai mot artifact do dac.
+    if rel == "phase-T2/FROZEN_PENDING_ON.json":
+        pytest.skip("sidecar khai bao, khong phai artifact do dac")
+
+    # Artifact BI DONG BANG (sha256 ghim noi khac) khai `pending_on` qua
+    # sidecar thay vi trong chinh no. Hieu luc cua duong nay den tu
+    # test_frozen_entries_prove_the_freeze_instead_of_declaring_it: muc nao
+    # khong chung minh duoc viec dong bang thi KHONG toi duoc day.
+    if rel in FROZEN:
+        entry = FROZEN[rel]
+        approved_axes = _approved()
+        pend = entry["pending_on"]
+        assert pend, "%s: muc sidecar khong khai pending_on" % rel
+        for axis in pend:
+            assert axis in approved_axes, "%s: truc la %r" % (rel, axis)
+            assert entry["axis_label"] not in approved_axes[axis], (
+                "%s: khai cho %s nhung nhan %r DA duoc duyet -> PROMOTE."
+                % (rel, axis, entry["axis_label"]))
+        return
+
     assert "validity" in payload, (
         f"{rel}: nam o PENDING/ nhung KHONG co khoi validity.\n"
         f"  -> them validity_block(...)/sla_only_validity_block(...) vao script "
@@ -383,3 +507,67 @@ def test_pending_artifacts_declare_what_they_wait_for(path):
             f"{rel}: khai cho {axis} nhung truc {label!r} DA duoc duyet.\n"
             f"  -> PROMOTE artifact nay len LIVE/. Tang PENDING tu don la o day."
         )
+
+
+def test_measurement_path_certificates_are_pinned_or_are_the_chain_head():
+    """Mien tru o tren dua tren HAI ly do; test nay kiem ly do THU HAI.
+
+    Ly do (1) NOI DUNG -- certificate khong cham truc AoI lan SLA -- da duoc
+    kiem ngay trong test chinh (danh sach tu bi cam).
+    Ly do (2) KHONG SUA DUOC -- sha256 bi ghim noi khac nen doi mot byte se
+    pha ban ghi da co -- duoc kiem o day.
+
+    DO DUOC (2026-09-09): quan he trong ho certificate KHONG dong nhat:
+        measurement_path_cert_v2.json    sha bi ghim o 12 tep (gom hai
+                                          artifact closeout Phase G)
+        measurement_path_cert_v2_1.json  sha KHONG bi ghim o dau, NHUNG no
+                                          ghim sha cua v2 ben trong -- no la
+                                          DAU CHUOI, ban ke nhiem
+    Nen dieu kien dung la: MOI certificate hoac (a) bi ghim boi tep khac, hoac
+    (b) la dau chuoi, tuc chinh no ghim sha cua mot certificate khac.
+    Mot certificate KHONG thoa ca hai la mot tep mo coi: khong ai tro toi no
+    va no khong tro toi ai -> ly do "khong sua duoc" het hieu luc -> phai
+    mang `validity` hoac ha xuong SUPERSEDED/.
+
+    Nho vay mien tru TU HET HAN: dieu kien duoc kiem MOI LAN CHAY, thay vi
+    song mai bang mot dong "# TODO" khong ai doc lai.
+    """
+    import hashlib
+
+    certs = sorted(glob.glob(os.path.join(
+        LIVE, "phase-G2", "measurement_path_cert*.json")))
+    assert certs, "khong con certificate nao -> xoa ca nhanh mien tru o tren"
+
+    sha = {}
+    for c in certs:
+        with open(c, "rb") as fh:
+            sha[c] = hashlib.sha256(fh.read()).hexdigest()
+
+    scan = [p for p in glob.glob(os.path.join(REPO, "results", "**", "*"),
+                                 recursive=True)
+            if os.path.isfile(p)
+            and os.path.splitext(p)[1] in (".json", ".jsonl", ".log", ".md")]
+
+    for c in certs:
+        pinned_by = None
+        for o in scan:
+            if o == c:
+                continue
+            try:
+                with open(o, "r", encoding="utf-8", errors="ignore") as fh:
+                    if sha[c] in fh.read():
+                        pinned_by = o
+                        break
+            except OSError:
+                continue
+        if pinned_by:
+            continue
+        # khong bi ghim -> phai la DAU CHUOI: chinh no ghim mot cert khac
+        with open(c, "r", encoding="utf-8", errors="ignore") as fh:
+            body = fh.read()
+        heads = [o for o in certs if o != c and sha[o] in body]
+        assert heads, (
+            "%s: sha256 KHONG bi ghim o dau VA no cung khong ghim certificate "
+            "nao -> tep mo coi, ly do mien tru 'khong sua duoc' het hieu luc.\n"
+            "  -> them `validity`, hoac ha xuong SUPERSEDED/, hoac ghim no vao "
+            "mot ban ghi closeout." % os.path.basename(c))

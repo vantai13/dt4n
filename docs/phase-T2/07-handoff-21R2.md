@@ -122,6 +122,54 @@ N4  D-T2.6-4 FAIL 11/18 (22.6 da FAIL 3/9), chu yeu o `em`.
 
 N5  No DOI/K10 van BLOCKED (doc77 muc 6, D6). T2 khong mo khoa duoc.
 
+N6-ERRATUM  LY DO (2) CUA N6 SAI VE MAT SU KIEN -- dinh chinh 2026-09-09
+
+    N6 ban dau viet: "Artifact nay chay tren truc conformal/tau, khong phai
+    aoi_axis hay sla_axis cua so dang ky."
+    KET LUAN (khong bia nhan) DUNG. TIEN DE (khong cham truc SLA) SAI.
+
+    Duong du lieu, do bang tools/t2_sla_axis_provenance.py:
+      cert/build_calib_set_v3.py:200-204  _load_cell doc sla_calibration.json;
+                                          o khong co -> SystemExit
+      cert/build_calib_set_v3.py:271,360  w_loss lay tu chinh cell do
+      twin/cost_v2.py CostV2.tables_batch w_loss VAO ham chi phi
+      -> c_true/c_fresh -> s_margin -> qhat_margin -> RMS_MARGIN_COST
+    Prereg muc "Ke thua" da ky chinh dieu nay. Va moi artifact
+    PENDING/phase-T2 co khoi validity deu TU KHAI sla_axis.label =
+    "self_calibrated" -- do duoc, khong suy dien.
+
+    => Estimand CHINH cua T2 (RMS_MARGIN_COST) tieu thu truc SLA nhan
+       `self_calibrated`, truc DEPRECATED (loi cau truc S14, thay o Lesson
+       23.21 bang `exogenous_g114_S-B`).
+    => Nhan dung DA TON TAI. `pending_on: ["sla_axis"]` la phat bieu DUNG,
+       khong phai nhan doan. KHONG can dang ky truc moi.
+    => Day la mot THREAT phai vao paper (T2-L5), khong chi la ve sinh
+       artifact: T2 ke thua nguong SLA tu hieu chuan DE giu so sanh voi 22.6,
+       va moi so cua T2 vi the CHO truc SLA -- dung nhu tang PENDING/ noi.
+
+    Bai hoc: N6 tu choi bia mot nhan (DUNG) nhung ket luan "khong truc nao ap
+    dung" ma KHONG truy vet duong du lieu. NT 50 ap ca cho khang dinh PHU
+    DINH: "cai nay khong lien quan" cung la mot cau chuyen nhan qua va cung
+    phai co bang chung may moc.
+
+N7  MUOI BAY tep PENDING/phase-T2 thieu HAN khoi `validity` -- NO CO TEN.
+    12 tep goc: adjudication_r2, calib_p0925_tau10_report,
+        calib_p0925_tau10_v3_report, clip_direction_r2, conformal_u_cond,
+        conformal_u_cond_load, conformal_u_main, hygiene_checks,
+        hygiene_checks_r2, preservation_r2, realizability_grid,
+        rms_reference_check_r2
+    5 tep traces/rho_p0925_tau10_s10*.meta.json
+    Chung KHONG duoc dan mot truong `pending_on` don le: `validity` co mot
+    LUOC DO (validity_block / sla_only_validity_block); dan mot manh cua no
+    tao ra mot khoi validity NUA VOI -- dung bay "mot ten hai nghia" ma
+    A-T2-3 vua sua.
+    Duong sua dung: script sinh ra chung goi validity_block(...) roi SINH LAI.
+    Chan: adjudication_r2.json la phan quyet vong 2 DA KY -- sinh lai no la
+    chay lai phan quyet. Cac tep con lai sinh lai duoc nhung tung tep phai
+    duoc kiem xem co bi ghim khong truoc khi dung toi.
+    => 21R2 quyet dinh tung tep. Day la 17 fail CON LAI cua
+       test_no_stale_axes (tu 351 xuong).
+
 N6  Artifact vong 3 KHONG mang khoi `validity`, nen truot
     test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for.
     30 tep duoc ghi vao PENDING_NO_VALIDITY_GRANDFATHERED kem ly do, KHONG

@@ -1,0 +1,55 @@
+{
+ "schema": "dt4n.frozen_pending_on.v1",
+ "why": [
+  "Artifact o day KHONG THE mang `pending_on` trong chinh no, vi sha256 cua",
+  "chung DA BI GHIM trong mot artifact khac. Them mot truong = doi sha = pha",
+  "bang chung da ghi. Chung van PHAI khai cho truc nao -- chi la khai O DAY.",
+  "",
+  "Day la mot LUAT (dieu kien kiem tra duoc), khong phai mot DANH SACH MIEN",
+  "TRU. Moi muc phai neu MOT file thuc su chua sha256 cua no; test XAC MINH",
+  "dieu do va TU CHOI muc nao khong chung minh duoc. Mot loi khai khong kiem",
+  "duoc thi khong mua duoc duong qua.",
+  "",
+  "Muc bi XOA khi artifact duoc thay bang ban chay tren truc SLA DA DUYET",
+  "(`exogenous_g114_S-B`), khong phai khi ai do thay no phien."
+ ],
+ "axis_evidence": "tools/t2_sla_axis_provenance.py -- duong du lieu tu cert/tau_sweep.py qua _load_cell den sla_calibration.json, w_loss vao CostV2.tables_batch",
+ "entries": [
+  {
+   "glob": "sweep/*.json",
+   "n_files": 166,
+   "pending_on": ["sla_axis"],
+   "axis_label": "self_calibrated",
+   "evidence_axis": "validity.sla_axis.label doc thang tu chinh artifact",
+   "frozen_by": "results/PENDING/phase-T2/preservation_r2.json",
+   "note": "T2.6 vong 1 (hygiene FAIL hai gate). preservation_r2 ghim 336 sha; do lai hom nay: 166/166 khop."
+  },
+  {
+   "glob": "sweep_r3/t2_6b_r*.json",
+   "n_files": 18,
+   "pending_on": ["sla_axis"],
+   "axis_label": "self_calibrated",
+   "evidence_axis": "tools/t2_sla_axis_provenance.py",
+   "frozen_by": "results/PENDING/phase-T2/gate_v2_retro_audit.json",
+   "note": "T2.6 vong 3, luoi chinh. sha cung bi ghim trong sweep_r3/run_log.jsonl; adjudication_r3 da phan quyet tren chinh cac tep nay."
+  },
+  {
+   "glob": "sweep_r3/legacy_*.json",
+   "n_files": 4,
+   "pending_on": ["sla_axis"],
+   "axis_label": "self_calibrated",
+   "evidence_axis": "tools/t2_sla_axis_provenance.py",
+   "frozen_by": "results/PENDING/phase-T2/gate_v2_retro_audit.json",
+   "note": "Arm doi chung 22.6 (D-T2.6-9, max |diff| = 2.665e-12)."
+  },
+  {
+   "glob": "sweep_r3/sigmaprobe_*.json",
+   "n_files": 4,
+   "pending_on": ["sla_axis"],
+   "axis_label": "self_calibrated",
+   "evidence_axis": "tools/t2_sla_axis_provenance.py",
+   "frozen_by": "results/PENDING/phase-T2/gate_v2_retro_audit.json",
+   "note": "Arm chan doan sigma, HAU NGHIEM (A-T2-3.3 muc d)."
+  }
+ ]
+}
