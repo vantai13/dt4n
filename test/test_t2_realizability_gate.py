@@ -12,6 +12,7 @@ import pytest
 
 from cert.realizability_gate import (
     CLIP_MAX,
+    GATE_VERSION,
     OMEGA_MAX,
     gate_grid,
     min_blocks,
@@ -21,6 +22,7 @@ from cert.realizability_gate import (
 )
 from cert.simultaneous_score import ALPHA
 from measurements.sla_calib_v2 import n_for_tau
+from twin.cost_v2 import sigma_max_regime
 
 DT = 0.005
 BASE = dict(mode="poisson", rho_bar=0.925, dt=DT)
@@ -85,9 +87,9 @@ def test_unevaluated_criteria_are_not_silently_passed():
     """
     r = realizability_gate(tau=1.0, n=200_000, **BASE)
     assert r["checks"]["censoring_ok"]["pass"] is None
-    assert r["checks"]["sigma_feasible"]["pass"] is None
+    assert r["checks"]["sigma_within_headroom"]["pass"] is None
     assert r["checks"]["mondrian_cells_populated"]["pass"] is None
-    assert set(r["not_evaluated"]) == {"censoring_ok", "sigma_feasible",
+    assert set(r["not_evaluated"]) == {"censoring_ok", "sigma_within_headroom",
                                        "mondrian_cells_populated"}
 
 
@@ -109,7 +111,7 @@ def test_censoring_and_sigma_are_enforced_when_supplied():
     assert ok["verdict"] == "REALIZABLE"
     bad = realizability_gate(tau=1.0, n=200_000, sigma=0.0,
                              clip_fraction=0.05, **BASE)
-    assert set(bad["failed"]) == {"censoring_ok", "sigma_feasible"}
+    assert set(bad["failed"]) == {"censoring_ok", "sigma_within_headroom"}
     assert CLIP_MAX == 0.01
 
 
@@ -168,3 +170,83 @@ def test_gate_grid_reports_why_cells_were_rejected():
     g = gate_grid(cells, **BASE)
     assert g["n_cells"] == 3 and g["n_rejected"] == 1
     assert g["rejected_by_reason"]["enough_blocks"] == 1
+
+
+# ---------------------------------------------------------------------------
+# T2.4-fix: bon test ghim con thieu cho tieu chi HEADROOM.
+#
+# Bo test cu phu HAI loai tu choi: phan giai (`tau_resolves_dt`) va ngan sach
+# block (`run_covers_tau` / `enough_blocks`). Loai thu BA -- headroom -- chua
+# bao gio duoc viet, nen tieu chi tuong ung song ba vong sweep ma khong ai
+# biet no khong hoat dong: no chi kiem `sigma > 0`, va cert/tau_sweep.py luon
+# truyen vao mot sigma duong.
+#
+# Bon test duoi day la DOI CHUNG DUONG CHO CHINH GATE: chung chung minh gate
+# CO THE do vi dung ly do. Mot gate khong bao gio do duoc thi khong phai gate.
+# ---------------------------------------------------------------------------
+
+def test_headroom_rejects_a_cell_with_no_headroom_left():
+    """(cbr, rho_bar=0.96, sigma=0.05) PHAI bi tu choi.
+
+    Vi sao, suy tu tham so vat ly chu khong tu code:
+        RELIABLE_CEILING["cbr"] = 0.95  <  rho_bar = 0.96
+        => moi link da NAM TREN tran do tin cay ngay ca khi sigma = 0
+        => sigma_max_regime("cbr", 0.96) = 0.0
+        => KHONG co bien do nao hop le. O nay khong sinh duoc.
+    Do duoc TRUOC ban sua: verdict = REALIZABLE, failed = [].
+    """
+    smax = sigma_max_regime("cbr", 0.96)
+    assert smax == 0.0, "tien de cua test doi: RELIABLE_CEILING da bi sua?"
+
+    r = realizability_gate(mode="cbr", rho_bar=0.96, tau=3.0, dt=DT,
+                           n=200_000, sigma=0.05)
+    assert r["verdict"] == "REJECTED", r["checks"]["sigma_within_headroom"]
+    assert "sigma_within_headroom" in r["failed"]
+    # artifact phai TU CHUNG MINH no so voi cai gi, khong bat ai tin ten check
+    assert r["derived"]["sigma_max_regime"] == 0.0
+    assert r["derived"]["gate_version"] == GATE_VERSION
+
+
+def test_a_physically_absurd_sigma_cannot_pass():
+    """Doi chung duong tho: sigma = 99 phai bi chan.
+
+    Truoc ban sua day la ket qua DO DUOC: REALIZABLE. Test nay ton tai de
+    tinh trang do khong quay lai ma khong ai thay.
+    """
+    r = realizability_gate(mode="poisson", rho_bar=0.925, tau=3.0, dt=DT,
+                           n=200_000, sigma=99.0)
+    assert r["verdict"] == "REJECTED"
+    assert "sigma_within_headroom" in r["failed"]
+
+
+def test_headroom_boundary_is_inclusive_above_and_open_below():
+    """Bien tren DONG (sigma <= sigma_max), bien duoi MO (sigma > 0).
+
+    Vi sao dong o tren: sigma = sigma_max la a = 1.0, tuc dung cham tran --
+    van sinh duoc, chi la khong con du tru. Vi sao mo o duoi: sigma = 0
+    khong phai "an toan"; no nghia la HET headroom (sigma_max = 0), dung
+    truong hop cua cbr@0.96.
+    """
+    smax = sigma_max_regime("poisson", 0.925)
+    kw = dict(mode="poisson", rho_bar=0.925, tau=3.0, dt=DT, n=200_000)
+
+    assert realizability_gate(sigma=smax, **kw)["verdict"] == "REALIZABLE"
+    assert realizability_gate(sigma=smax * 1.001, **kw)["verdict"] == "REJECTED"
+    assert realizability_gate(sigma=0.0, **kw)["verdict"] == "REJECTED"
+
+
+def test_the_signed_sigma_axis_of_round_three_stays_inside_headroom():
+    """Truc sigma DA KY cua vong 3 (a in {0.5, 0.9}) phai qua sach.
+
+    Neu test nay do, ban vua lam vo mot phan quyet DA KY -- dung lai va doc
+    lai QD-7, dung noi long tieu chi.
+    """
+    for mode in ("poisson", "h2"):
+        for rb in (0.700, 0.850, 0.925, 0.960):
+            smax = sigma_max_regime(mode, rb)
+            if smax == 0.0:
+                continue                       # o suy bien, loai theo QD-3/QD-7
+            for a in (0.5, 0.9):
+                r = realizability_gate(mode=mode, rho_bar=rb, tau=3.0, dt=DT,
+                                       n=200_000, sigma=a * smax)
+                assert r["verdict"] == "REALIZABLE", (mode, rb, a, r["failed"])

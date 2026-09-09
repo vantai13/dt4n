@@ -175,11 +175,15 @@ def _tau_window(dt: float, n_rule, sigma=0.02, taus=None):
 def fig3(runs):
     """Bien VE TU realizability_gate(), khong go lai bat dang thuc.
 
-    !! Gate KHONG chan tren theo sigma: tieu chi sigma_feasible chi kiem
-       sigma > 0 (do duoc: sigma = 99.0 van REALIZABLE). Nen tran sigma o
-       hinh nay ve RIENG tu twin/cost_v2.sigma_max_regime va PHAI duoc chu
-       thich la khong den tu gate. Ve no nhu mot bien cua gate la noi doi
-       bang hinh.
+    Sau ban sua T2.4-fix (GATE_VERSION = 2), gate CO chan tren theo sigma:
+    tieu chi `sigma_within_headroom` so sigma voi
+    twin/cost_v2.sigma_max_regime(mode, rho_bar). Nen CA HAI bien cua hinh
+    nay -- bien tau va tran sigma -- deu ve tu cung mot ham phan quyet.
+
+    (Lich su: ban v1 co tieu chi ten `sigma_feasible` chi kiem `sigma > 0`;
+     do duoc khi do: sigma = 99 van REALIZABLE. Chu thich cu ghi "TRAN sigma
+     KHONG den tu gate" -- DUNG voi v1, SAI voi v2. Giu ghi chu nay de mot
+     nguoi doc ban hinh cu khong tuong hai ban mau thuan nhau.)
     """
     import cert.build_calib_set_v3 as V3
 
@@ -237,7 +241,8 @@ def fig3(runs):
              "Bien tau ve tu cert/realizability_gate.py -- quet gate tren luoi tau roi lay khoang REALIZABLE, CUNG ham ma chien dich dung de chap nhan tung o.\n"
              "Vung to dung ngan sach CO DINH n = 200 000: bien trai la phan giai luoi (tau >= 20*dt), bien phai la ngan sach block (T_sim >= 50*tau).\n"
              "Duong gach-cham: khi n = n_for_tau(tau) bien phai chay xa hon, doi lai CPU tuyen tinh theo tau -- do la cach vong 3 chay tau = 28 s.\n"
-             "TRAN sigma KHONG den tu gate (tieu chi sigma_feasible chi kiem sigma > 0; do duoc: sigma = 99 van REALIZABLE); no ve tu twin/cost_v2.sigma_max_regime.\n"
+             "TRAN sigma DEN TU gate ke tu GATE_VERSION = 2 (tieu chi sigma_within_headroom so voi twin/cost_v2.sigma_max_regime). Ban hinh truoc T2.4-fix\n"
+             "ghi nguoc lai: khi do gate chi kiem sigma > 0 va sigma = 99 van REALIZABLE.\n"
              "Diem tam giac la bang chung kha thi DO DUOC tren kernel datapath o Phase G (tau in {2,5,30}; |sai so| round-trip lon nhat 4.94% cho tau va 3.82%\n"
              "cho sigma, moi o la trung vi qua link/luot; T_run = 205*tau; docs/phase-G/66-g3b-results.md). Vung tau < 2 s CHI khao sat trong twin.",
              ha="center", fontsize=7.2)

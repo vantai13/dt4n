@@ -36,6 +36,27 @@ from twin import cost_v2 as C
 # V-T2-3, chot o T2.2. Do duoc tren toan luoi: < 0.09% moi o.
 CLIP_MAX = 0.01
 
+# Phien ban NGU NGHIA cua gate. Tang khi mot TIEU CHI doi nghia, khong tang
+# khi chi sua loi chinh ta. v1 -> v2: `sigma_feasible` (chi kiem sigma > 0,
+# mot tieu chi MA) duoc thay bang `sigma_within_headroom` (so voi
+# twin/cost_v2.sigma_max_regime). Moi artifact ghi so nay de mot nguoi doc
+# nam sau biet no duoc phan quyet bang THUOC NAO.
+GATE_VERSION = 2
+
+
+def _sigma_max_or_nan(mode, rho_bar) -> float:
+    """Tran headroom cua o, hoac NaN neu mode khong co trong registry.
+
+    Tach thanh ham vi no duoc dung o HAI cho (tieu chi va `derived`), va hai
+    cho do PHAI cho cung mot so  [W4 ban giao T2: mot nguon, import, khong chep].
+    NaN lam moi phep so sanh thanh False, nen mot mode la se KHONG duoc coi
+    la dat.
+    """
+    try:
+        return float(C.sigma_max_regime(str(mode), float(rho_bar)))
+    except (ValueError, KeyError):
+        return float("nan")
+
 # G-A020 giu mien dau vao 0 <= omega <= 1 sau khi rut truc omega doc lap.
 # Xem docs/phase-G/76-amendment-G-A020-omega-reduction.md muc T2.3.
 OMEGA_MIN, OMEGA_MAX = 0.0, 1.0
@@ -67,6 +88,12 @@ def realizability_gate(
     Tra ve dict co ``verdict`` in {"REALIZABLE", "REJECTED"} va ``checks``
     liet ke tung tieu chi kem so DO DUOC, de mot FAIL luon quy duoc trach
     nhiem cho dung tieu chi.
+
+    ``sigma`` la SIGMA THIET KE cua o (a*sigma_max, hoac sigma tuyet doi cua
+    arm legacy). KHONG phai sigma do duoc, KHONG phai tran. Gate TU tra tran
+    bang ``C.sigma_max_regime(mode, rho_bar)`` va so ``0 < sigma <= tran``.
+    Dong dinh o day de loi "mot ten hai nghia" khong tai phat: ban v1 ngam
+    gia dinh caller truyen vao TRAN, con caller thuc te truyen GIA TRI THIET KE.
 
     ``sigma`` va ``clip_fraction`` la tuy chon: neu khong truyen thi tieu
     chi tuong ung duoc ghi "not_evaluated" chu KHONG duoc coi la PASS.
@@ -101,12 +128,30 @@ def realizability_gate(
         float(omega), "[%g, %g]" % (OMEGA_MIN, OMEGA_MAX),
         "mien dau vao giu nguyen sau khi rut truc omega [G-A020]")
 
+    # --- T2.4-fix: tieu chi headroom, DUNG nhu prereg:388 gia dinh ---------
+    # Ban cu chi kiem `sigma > 0`. Do la mot tieu chi MA: cert/tau_sweep.py
+    # truyen vao sigma THIET KE (a*sigma_max hoac sigma_override), von luon
+    # duong, nen tieu chi KHONG BAO GIO fail duoc tren duong chay that.
+    # Do duoc truoc khi sua: (cbr, 0.96, sigma=0.05) -> REALIZABLE va
+    # (poisson, 0.925, sigma=99.0) -> REALIZABLE. Thong diep `why` cu nhac
+    # sigma_max_regime nhung ham do chua bao gio duoc goi: `from twin import
+    # cost_v2 as C` la dead import, `grep -c "C\."` = 0.
+    # Ten doi vi ten cu khong noi dung viec no lam  [NT 65].
     if sigma is None:
-        checks["sigma_feasible"] = {"pass": None, "got": None,
-                                    "need": "> 0", "why": "not_evaluated"}
+        checks["sigma_within_headroom"] = {
+            "pass": None, "got": None,
+            "need": "0 < sigma <= sigma_max_regime(mode, rho_bar)",
+            "why": "not_evaluated"}
     else:
-        add("sigma_feasible", float(sigma) > 0.0, float(sigma), "> 0",
-            "sigma_max_regime = 0 nghia la het headroom den tran do tin cay")
+        sigma_max = _sigma_max_or_nan(mode, rho_bar)
+        add("sigma_within_headroom",
+            0.0 < float(sigma) <= sigma_max,
+            float(sigma),
+            "in (0, %.6g]" % sigma_max,
+            "sigma > sigma_max_regime: o vuot TRAN DO TIN CAY cua traffic "
+            "family (RELIABLE_CEILING) hoac cham san RHO_MIN => rho(t) bi kep "
+            "lien tuc va sigma_hat/tau_hat deu lech. sigma = 0 nghia la het "
+            "headroom hoan toan (vi du cbr o rho_bar = 0.96).")
 
     if clip_fraction is None:
         checks["censoring_ok"] = {"pass": None, "got": None,
@@ -139,7 +184,11 @@ def realizability_gate(
                     "blocks_per_seed": blocks_per_seed,
                     "cycles": (t_sim / tau) if tau > 0 else float("nan"),
                     "min_blocks": mb,
-                    "blocks_per_tau": BLOCKS_PER_TAU},
+                    "blocks_per_tau": BLOCKS_PER_TAU,
+                    # tran headroom, DOC TU nguon, de artifact TU CHUNG MINH
+                    # no da so voi cai gi -- khong bat ai tin vao ten mot check
+                    "sigma_max_regime": _sigma_max_or_nan(mode, rho_bar),
+                    "gate_version": GATE_VERSION},
         "checks": checks,
         "failed": failed,
         "not_evaluated": not_eval,
