@@ -1,0 +1,175 @@
+{
+  "branch": "z_fixed",
+  "budget_measured_s": {
+    "per_cell_per_a": 37.4,
+    "source": "do lai boi chu repo tren poisson@0.925, 5 seed",
+    "total_estimate_s": 673.1999999999999
+  },
+  "estimand_id": "RMS_MARGIN_COST",
+  "grid": {
+    "a_values": [
+      0.5,
+      0.9
+    ],
+    "level_matched_blocks": 25,
+    "seeds": [
+      101,
+      102,
+      103,
+      104,
+      105
+    ],
+    "taus": [
+      0.5,
+      1.0,
+      2.0,
+      3.0,
+      5.0,
+      10.0,
+      20.0,
+      28.0
+    ]
+  },
+  "n_runs": 18,
+  "provenance": {
+    "amendment": "A-T2-3",
+    "git_commit": "3629a6439edd3ce72786a997f7acfcaedb3a5613",
+    "git_dirty": true,
+    "inputs": {
+      "docs/phase-T2/01-prediction-signed.json": "68e975c2c08247e208cabc29f6e7f7710eeb01e46ba8018be0d9fda885608d7f",
+      "docs/phase-T2/04-estimand-descriptor.json": "a9a7a9977f6271784dfeb6ce80e82d8ef68e6101d1e178f7195ff74bcd4684ed",
+      "docs/phase-T2/05-band-window-v2.json": "c44131eb52f4851e081684a1bdbed1e737e76208fe7a793f6ea356e07ad5752d"
+    },
+    "note": "KE HOACH thuan co che. Khong chua k, san, lift_min hay eps loai o -- tat ca deu la chinh sach.",
+    "order_seed": 7202,
+    "script": "tools/t2_6b_plan.py"
+  },
+  "runs": [
+    {
+      "a": 0.5,
+      "mode": "poisson",
+      "rho_bar": 0.96,
+      "run_index": 0,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.9,
+      "mode": "h2",
+      "rho_bar": 0.7,
+      "run_index": 1,
+      "scope": "CONFIRMATORY"
+    },
+    {
+      "a": 0.5,
+      "mode": "h2",
+      "rho_bar": 0.96,
+      "run_index": 2,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.5,
+      "mode": "poisson",
+      "rho_bar": 0.85,
+      "run_index": 3,
+      "scope": "CONFIRMATORY"
+    },
+    {
+      "a": 0.5,
+      "mode": "poisson",
+      "rho_bar": 0.7,
+      "run_index": 4,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.9,
+      "mode": "poisson",
+      "rho_bar": 0.925,
+      "run_index": 5,
+      "scope": "CONFIRMATORY"
+    },
+    {
+      "a": 0.9,
+      "mode": "h2",
+      "rho_bar": 0.925,
+      "run_index": 6,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.9,
+      "mode": "poisson",
+      "rho_bar": 0.85,
+      "run_index": 7,
+      "scope": "CONFIRMATORY"
+    },
+    {
+      "a": 0.5,
+      "mode": "poisson",
+      "rho_bar": 0.925,
+      "run_index": 8,
+      "scope": "CONFIRMATORY"
+    },
+    {
+      "a": 0.9,
+      "mode": "poisson",
+      "rho_bar": 0.7,
+      "run_index": 9,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.9,
+      "mode": "h2",
+      "rho_bar": 0.85,
+      "run_index": 10,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.5,
+      "mode": "h2",
+      "rho_bar": 0.85,
+      "run_index": 11,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.5,
+      "mode": "cbr",
+      "rho_bar": 0.7,
+      "run_index": 12,
+      "scope": "NEGATIVE_CONTROL"
+    },
+    {
+      "a": 0.9,
+      "mode": "cbr",
+      "rho_bar": 0.7,
+      "run_index": 13,
+      "scope": "NEGATIVE_CONTROL"
+    },
+    {
+      "a": 0.5,
+      "mode": "h2",
+      "rho_bar": 0.7,
+      "run_index": 14,
+      "scope": "CONFIRMATORY"
+    },
+    {
+      "a": 0.9,
+      "mode": "poisson",
+      "rho_bar": 0.96,
+      "run_index": 15,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.9,
+      "mode": "h2",
+      "rho_bar": 0.96,
+      "run_index": 16,
+      "scope": "EXPLORATORY"
+    },
+    {
+      "a": 0.5,
+      "mode": "h2",
+      "rho_bar": 0.925,
+      "run_index": 17,
+      "scope": "EXPLORATORY"
+    }
+  ]
+}
