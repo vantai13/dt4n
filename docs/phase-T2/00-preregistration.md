@@ -1449,6 +1449,45 @@ Ghi lai o day de nguoi doc sau thay: mot bang chung dung ket luan van co the
 dung sai so lieu, va cach chua la GREP TUNG FILE:DONG chu khong phai tin ban nhap.
 ```
 
+### TAI LAP PHAN RA CO CHE (bo sung truoc khi ky)
+
+Bang chung "huong nguoc nhau" o (L1) la suy luan GIAN TIEP vi hai so do o hai
+muc sigma khac nhau. Do lai voi CUNG mot sigma = 0.0096 de loai bien sigma,
+va doi TUNG TRUONG mot cua so dang ky:
+
+```text
+poisson@0.925, tau=0.5, seed=101, sigma=0.0096, CUNG hang, CUNG z,
+cung mot xep hang theo twin CU tren thang chi phi:
+
+    LEVEL=all_action  SCALE=delay  ->  0.3061 ms
+    LEVEL=margin      SCALE=delay  ->  0.1316 ms      doi MUC
+    LEVEL=margin      SCALE=cost   ->  2.1106 ms      doi THANG
+
+    doi MUC   all_action -> margin :  x0.4298   (common-mode rejection)
+    doi THANG delay      -> cost   :  x16.0422  (w_loss = 3222.244682)
+    tich                           :  x6.8947
+
+LENH TAI LAP (do duoc 2026-09-09 tren repo nay):
+
+    import numpy as np, cert.build_calib_set_v3 as V3
+    tt = V3.TruthTable(V3.TRUTH_TABLE); cv = V3.C.CostV2(strict_reliable=False)
+    cell = V3._load_cell('poisson', 0.925)
+    arr = V3._cell_arrays(tt, cv, cell, seed=101, tau=0.5, n=200000,
+                          dt=0.005, sigma_override=0.0096)
+    cur, old, _ = V3._valid_rows(200000, 0.005)
+    order = V3.SS.top_k_by_twin(arr['c_fresh'][old])
+    a1, a2 = order[:, 0], order[:, 1]; row = np.arange(len(cur))
+    m = lambda T, M: (T[row, a2] - T[row, a1]) - (M[row, a2] - M[row, a1])
+    rms = lambda x: float(np.sqrt((np.asarray(x, float) ** 2).mean()))
+    rms(arr['d_true'][cur] - arr['d_fresh'][cur])            # 0.3061
+    rms(m(arr['d_true'][cur], arr['d_fresh'][cur]))          # 0.1316
+    rms(m(arr['c_true'][cur], arr['c_fresh'][cur]))          # 2.1106
+
+=> Hai TRUONG cua so dang ky, moi truong mot dong gop DO DUOC, hai huong
+   NGUOC nhau, tich khop dung ti so quan sat. Khong con la "hai so khac
+   nhau" ma la "hai so khac nhau VI dung hai truong da dang ky".
+```
+
 ### CHU KY
 
 ```text
@@ -1456,5 +1495,8 @@ Toi xac nhan da doc muc "DA NHIN THAY GI", da dien BA DU DOAN BO SUNG
 (D-T2.6-8/-9/-10) va BON NHANH FAIL TRUOC khi chay bat ky lenh nao cua
 sweep_r3, va da ky phan loai ERRATUM kem ca cach doc nguoc lai.
 
-Ky: ______________   Ngay: __________
+Ky:   Doan Van Tai -- ky trong phien lam viec ngay 2026-09-09; van ban duoc
+      Claude Opus 5 dien theo chi dan da doc va da duoc chu repo xac nhan
+      tiep tuc. Dau vet day du o git log va o transcript phien.
+Ngay: 2026-09-09
 ```

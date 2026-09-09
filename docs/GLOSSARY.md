@@ -148,8 +148,11 @@ POPULATION      chenh lech CHI PHI giua HAI hanh dong: hang nhat va hang nhi
                 theo xep hang cua twin CU (stale). m = y[a2] - y[a1].
 SCALE           cost_ms   -- chi phi = delay + w_loss * loss
 UNIT            ms
-BRANCH          z_fixed  -- z_s = (cur - old)*dt tu V3._valid_rows, phu thuoc
-                n va dt, DOC LAP voi tau  =>  NHANH B
+BRANCH          z_fixed  -- z = sawtooth_age_steps(n, dt, SYNC_PERIOD=0.5,
+                d_sync), goi trong cert/build_calib_set_v3.py:289 (_valid_rows).
+                GIA TRI z do SYNC_PERIOD va d_sync quyet dinh, DOC LAP voi tau.
+                n chi quyet dinh SO CHU KY, khong quyet dinh gia tri z.
+                =>  NHANH B
 CODE            cert/tau_sweep.py : build_at_tau -> decompose -> fit_ar1
 ARTIFACT_FIELD  rows[].ar1_fit.rms_e_model ; rows[].ar1_fit.A ; .c
                 rows[].scale = "cost_ms" ; rows[].level = "margin"
@@ -191,6 +194,35 @@ GIA TRI MOC     rms_e_model = 0.3405 ms
 Doc theo HUONG, khong chi theo do lon: cai do sau chay voi sigma LON HON
 2.27 lan ma cho so NHO HON 6.29 lan. Voi CUNG mot estimand, RMS phai TANG
 theo sigma. Huong nguoc nhau la bang chung manh hon mot ti so don thuan.
+```
+
+```text
+PHAN RA CO CHE -- do voi CUNG mot sigma de loai bien sigma
+(poisson@0.925, tau=0.5, seed=101, sigma=0.0096, CUNG hang, CUNG z, cung mot
+ xep hang theo twin CU tren thang chi phi):
+
+    LEVEL=all_action  SCALE=delay  ->  0.3061 ms
+    LEVEL=margin      SCALE=delay  ->  0.1316 ms      doi MUC
+    LEVEL=margin      SCALE=cost   ->  2.1106 ms      doi THANG
+                                       (~2.1400 tren 5 seed cua artifact)
+
+    doi MUC   all_action -> margin :  x0.4298   GIAM 2.33 lan
+    doi THANG delay      -> cost   :  x16.0422  TANG 16 lan
+    tich                           :  x6.8947
+
+CO CHE cua tung thua so:
+  MUC   margin la HIEU cua hai duong. Sai so mo hinh co phan CHUNG giua cac
+        duong (cung truth table, cung twin fit) nen phan chung TRIET TIEU khi
+        lay hieu -- common-mode rejection.
+  THANG cost = delay + w_loss * loss, va w_loss = 3222.244682 o o nay. Mot sai
+        so loss co 1e-3 thanh sai so cost co 3.2 ms. Thang cost KHUECH DAI sai
+        so loss hon ba nghin lan.
+
+=> HAI TRUONG cua so dang ky, moi truong mot dong gop DO DUOC, hai huong NGUOC
+   nhau, tich khop dung ti so quan sat. Day khong con la "hai so khac nhau";
+   day la "hai so khac nhau VI dung hai truong ta vua dang ky".
+   Tai lap: docs/phase-T2/00-preregistration.md muc A-T2-3, tieu muc
+   "TAI LAP PHAN RA CO CHE".
 ```
 
 Dang thuc `sqrt(rms_e_model^2 + 2*cov_e + rms_e_stale^2) = rms_total` DUNG
