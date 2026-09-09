@@ -1,0 +1,586 @@
+{
+  "A1_aoi_harness_table": [
+    {
+      "calls": [
+        {
+          "axis_explicit": false,
+          "callee": "sawtooth_age_steps",
+          "keywords": [],
+          "line": 680,
+          "n_positional": 2
+        }
+      ],
+      "harness": "measurements/decision_error_v2.py",
+      "is_generator_module": false,
+      "registry_label": "UNREGISTERED",
+      "role": "do err(z), d_sla -- ESTIMAND CHINH",
+      "silent_default_sites": [],
+      "source_sha256": "d29edaed46b87c9a43620df6cb0e1a47029ae1f85508e3285674e881a633fdea"
+    },
+    {
+      "calls": [
+        {
+          "axis_explicit": false,
+          "callee": "base_age_steps",
+          "keywords": [],
+          "line": 287,
+          "n_positional": 2
+        },
+        {
+          "axis_explicit": true,
+          "callee": "sawtooth_age_steps",
+          "keywords": [],
+          "line": 289,
+          "n_positional": 4
+        },
+        {
+          "axis_explicit": true,
+          "callee": "_valid_rows",
+          "keywords": [
+            "aoi",
+            "axis"
+          ],
+          "line": 330,
+          "n_positional": 3
+        },
+        {
+          "axis_explicit": true,
+          "callee": "sawtooth_age_steps",
+          "keywords": [],
+          "line": 424,
+          "n_positional": 4
+        },
+        {
+          "axis_explicit": false,
+          "callee": "_valid_rows",
+          "keywords": [],
+          "line": 689,
+          "n_positional": 2
+        }
+      ],
+      "harness": "cert/build_calib_set_v3.py",
+      "is_generator_module": false,
+      "registry_label": "UNREGISTERED",
+      "role": "dung tap calib conformal",
+      "silent_default_sites": [
+        689
+      ],
+      "source_sha256": "19039503cfe2446fed18f68670f2e2caee6f1fed1fa4d3571f2dffb2162a97e7"
+    },
+    {
+      "calls": [
+        {
+          "axis_explicit": false,
+          "callee": "_valid_rows",
+          "keywords": [],
+          "line": 159,
+          "n_positional": 2
+        }
+      ],
+      "harness": "cert/tau_sweep.py",
+      "is_generator_module": false,
+      "registry_label": "UNREGISTERED",
+      "role": "quet tau (RMS_MARGIN_COST)",
+      "silent_default_sites": [
+        159
+      ],
+      "source_sha256": "d2cdfea1776c0da6e301cf003118617991ed237a831119c688dbe283079aa387"
+    },
+    {
+      "calls": [],
+      "harness": "cert/realizability_gate.py",
+      "is_generator_module": false,
+      "registry_label": "UNREGISTERED",
+      "role": "gate kha thi",
+      "silent_default_sites": [],
+      "source_sha256": "e527cef0806129526a173567ddb01bcfc3befd82ada2e299cc1ffed7ac6fd2a2"
+    },
+    {
+      "calls": [
+        {
+          "axis_explicit": true,
+          "callee": "process_mode",
+          "keywords": [],
+          "line": 196,
+          "n_positional": 4
+        },
+        {
+          "axis_explicit": false,
+          "callee": "instrument_mode",
+          "keywords": [],
+          "line": 269,
+          "n_positional": 1
+        }
+      ],
+      "harness": "measurements/aoi_model_v7.py",
+      "is_generator_module": true,
+      "registry_label": "measured_v7_uniform",
+      "role": "BO SINH truc do duoc",
+      "silent_default_sites": [],
+      "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151"
+    },
+    {
+      "calls": [
+        {
+          "axis_explicit": true,
+          "callee": "sawtooth_age_steps",
+          "keywords": [],
+          "line": 253,
+          "n_positional": 4
+        },
+        {
+          "axis_explicit": true,
+          "callee": "sawtooth_age_steps",
+          "keywords": [],
+          "line": 262,
+          "n_positional": 4
+        },
+        {
+          "axis_explicit": false,
+          "callee": "sawtooth_age_steps",
+          "keywords": [
+            "d_sync_s",
+            "sync_period_s"
+          ],
+          "line": 496,
+          "n_positional": 2
+        }
+      ],
+      "harness": "measurements/decision_error.py",
+      "is_generator_module": true,
+      "registry_label": "assumed_sawtooth_51ms",
+      "role": "BO SINH truc ke thua",
+      "silent_default_sites": [],
+      "source_sha256": "6197c74c16816d2d2b37c6310bb7bce147babcab69bebfc22ec8c5dac8bab92e"
+    }
+  ],
+  "A2_sla_axis_table": [
+    {
+      "approved_for_live": false,
+      "exists_on_disk": true,
+      "label": "self_calibrated",
+      "path": "results/LIVE/phase-20R/sla_calibration.json",
+      "sha_matches": true,
+      "status": "DEPRECATED"
+    },
+    {
+      "approved_for_live": true,
+      "exists_on_disk": true,
+      "label": "exogenous_g114_S-B",
+      "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+      "sha_matches": true,
+      "status": "ACTIVE"
+    },
+    {
+      "approved_for_live": true,
+      "exists_on_disk": true,
+      "label": "exogenous_g114_S-B",
+      "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json",
+      "sha_matches": true,
+      "status": "ACTIVE"
+    },
+    {
+      "approved_for_live": true,
+      "exists_on_disk": true,
+      "label": "exogenous_g114_S-B",
+      "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_20cells_A069.json",
+      "sha_matches": true,
+      "status": "ACTIVE"
+    },
+    {
+      "approved_for_live": true,
+      "exists_on_disk": true,
+      "label": "exogenous_g114_S-B",
+      "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_32cells_A070.json",
+      "sha_matches": true,
+      "status": "ACTIVE"
+    }
+  ],
+  "A3_axis_divergence_MODEL": {
+    "legacy": {
+      "axis": "legacy",
+      "cv": 0.4771357578631245,
+      "domain_kind": "MODEL_SUPPORT",
+      "n_rows": 19989,
+      "source": {
+        "T_s": 0.5,
+        "d_s": 0.051,
+        "module": "measurements/decision_error.py"
+      },
+      "z_max": 0.55,
+      "z_mean": 0.3023775576567112,
+      "z_median": 0.3,
+      "z_min": 0.055,
+      "z_p05": 0.07700000000000046,
+      "z_p95": 0.525
+    },
+    "measured": {
+      "axis": "measured",
+      "cv": 0.3945064432942707,
+      "domain_kind": "MODEL_SUPPORT",
+      "n_rows": 19899,
+      "source": {
+        "T_s": 0.5002922,
+        "d_s": 0.1159,
+        "module": "measurements/aoi_model_v7.py"
+      },
+      "z_max": 0.615,
+      "z_mean": 0.36594627870747276,
+      "z_median": 0.365,
+      "z_min": 0.115,
+      "z_p05": 0.14,
+      "z_p95": 0.59
+    },
+    "median_ratio_measured_over_legacy": 1.2166666666666668
+  },
+  "A3b_axis_EMPIRICAL": {
+    "domain_kind": "EMPIRICAL_MEASURED",
+    "locked_prediction_misses": [
+      [
+        "M-72",
+        "CV CLEAN=0.419529 ngoai [0.32,0.41]"
+      ],
+      [
+        "M-72b",
+        "CV sawtooth ky vong=0.367286; gap=0.052243 >0.05"
+      ],
+      [
+        "M-77",
+        "corr(AoI,rho) PROD=-0.041954, abs khong >0.2"
+      ]
+    ],
+    "model_vs_empirical_CLEAN": {
+      "cv_empirical": 0.419529,
+      "cv_model": 0.3945064432942707,
+      "cv_rel_gap": -0.05964440290356399,
+      "max_empirical_s": 1.5688510000000002,
+      "max_model_s": 0.615,
+      "note": "Mo hinh uniform-phase HEP HON thuc nghiem o CA HAI dau: CV thap hon (MISS M-72) va duoi phai ket thuc som hon p99 do duoc. Luoi z phu het mien MO HINH van KHONG phu het mien THUC NGHIEM.",
+      "p99_empirical_s": 0.62751
+    },
+    "modes": {
+      "CLEAN": {
+        "cv": 0.419529,
+        "max_ms": 1568.851,
+        "mean_ms": 368.924,
+        "p05_ms": 143.072,
+        "p50_ms": 358.278,
+        "p95_ms": 587.935,
+        "p99_ms": 627.51
+      },
+      "PROD": {
+        "cv": 0.454192,
+        "max_ms": 2001.215,
+        "mean_ms": 342.54,
+        "p05_ms": 124.536,
+        "p50_ms": 345.295,
+        "p95_ms": 558.502,
+        "p99_ms": 577.229
+      }
+    },
+    "source_doc": "docs/phase-23/20-aoi-on-topology-v7.md",
+    "source_sha256": "9d608505c8b9aa1337c062e69e257ac67e1c20a9171d6960c79ae803405e0139"
+  },
+  "A4_ga020_transfer": {
+    "conditions": [
+      {
+        "dimension": "dt",
+        "ga020": "0.1 s",
+        "match": false,
+        "phase_20r2": "0.005 s"
+      },
+      {
+        "dimension": "tau",
+        "ga020": "co dinh 3 s",
+        "match": false,
+        "phase_20r2": "TRUC QUET [0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0]"
+      },
+      {
+        "dimension": "estimand",
+        "ga020": "rank-slot coverage/acceptance",
+        "match": false,
+        "phase_20r2": "RMS_ALLACTION_DELAY (err(z), d_sla)"
+      },
+      {
+        "dimension": "quy tac xep hang",
+        "ga020": "4 hanh dong / 3 khe xep hang",
+        "match": false,
+        "phase_20r2": "4 duong, argmin top-1, khong xep hang khe"
+      },
+      {
+        "dimension": "so claim",
+        "ga020": "<= 3 claim",
+        "match": false,
+        "phase_20r2": "5 RQ (a-e)"
+      },
+      {
+        "dimension": "alpha",
+        "ga020": "0.10",
+        "match": true,
+        "phase_20r2": "0.10"
+      }
+    ],
+    "expiry_clause_present": true,
+    "master_plan_v10_absent_per_amendment": true,
+    "n_mismatch": 5,
+    "source_doc": "docs/phase-G/76-amendment-G-A020-omega-reduction.md",
+    "source_sha256": "a1f63f609c598a3b096306d8ee5839934537ad31ade9c9b586259d1fbbdb24ea",
+    "verdict": "FAIL -- G-A020 KHONG chuyen giao sang 20R2"
+  },
+  "A6_grid_domain_check": {
+    "Z_EDGES_V7 (da khoa)": {
+      "grid": [
+        0.1,
+        0.241,
+        0.366,
+        0.491,
+        0.641
+      ],
+      "vs_empirical_CLEAN": {
+        "E1_p05_s": 0.143072,
+        "max_grid_z": 0.641,
+        "max_s": 1.5688510000000002,
+        "p95_s": 0.587935,
+        "p99_s": 0.62751,
+        "reaches_max": false,
+        "reaches_p95": true,
+        "reaches_p99": true
+      },
+      "vs_model_legacy": {
+        "domain": [
+          0.055,
+          0.55
+        ],
+        "max_grid_z": 0.641,
+        "outside_domain": [
+          0.641
+        ],
+        "reaches_max": true,
+        "reaches_p95": true
+      },
+      "vs_model_measured": {
+        "domain": [
+          0.115,
+          0.615
+        ],
+        "max_grid_z": 0.641,
+        "outside_domain": [
+          0.1,
+          0.641
+        ],
+        "reaches_max": true,
+        "reaches_p95": true
+      }
+    },
+    "Z_GRID_20R2_MEASURED (de xuat)": {
+      "grid": [
+        0.115,
+        0.17,
+        0.241,
+        0.305,
+        0.366,
+        0.43,
+        0.491,
+        0.555,
+        0.615
+      ],
+      "vs_empirical_CLEAN": {
+        "E1_p05_s": 0.143072,
+        "max_grid_z": 0.615,
+        "max_s": 1.5688510000000002,
+        "p95_s": 0.587935,
+        "p99_s": 0.62751,
+        "reaches_max": false,
+        "reaches_p95": true,
+        "reaches_p99": false
+      },
+      "vs_model_legacy": {
+        "domain": [
+          0.055,
+          0.55
+        ],
+        "max_grid_z": 0.615,
+        "outside_domain": [
+          0.555,
+          0.615
+        ],
+        "reaches_max": true,
+        "reaches_p95": true
+      },
+      "vs_model_measured": {
+        "domain": [
+          0.115,
+          0.615
+        ],
+        "max_grid_z": 0.615,
+        "outside_domain": [],
+        "reaches_max": true,
+        "reaches_p95": true
+      }
+    },
+    "Z_GRID_hien_tai (decision_error_v2.Z_GRID)": {
+      "grid": [
+        0.0,
+        0.05,
+        0.1,
+        0.2,
+        0.3,
+        0.55
+      ],
+      "vs_empirical_CLEAN": {
+        "E1_p05_s": 0.143072,
+        "max_grid_z": 0.55,
+        "max_s": 1.5688510000000002,
+        "p95_s": 0.587935,
+        "p99_s": 0.62751,
+        "reaches_max": false,
+        "reaches_p95": false,
+        "reaches_p99": false
+      },
+      "vs_model_legacy": {
+        "domain": [
+          0.055,
+          0.55
+        ],
+        "max_grid_z": 0.55,
+        "outside_domain": [
+          0.0,
+          0.05
+        ],
+        "reaches_max": true,
+        "reaches_p95": true
+      },
+      "vs_model_measured": {
+        "domain": [
+          0.115,
+          0.615
+        ],
+        "max_grid_z": 0.55,
+        "outside_domain": [
+          0.0,
+          0.05,
+          0.1
+        ],
+        "reaches_max": false,
+        "reaches_p95": false
+      }
+    }
+  },
+  "A7_cpu_budget": {
+    "harness_seconds": {
+      "sweep_r2 (decision_error_v2 --run-fixed, 1 tau x 1 seed)": {
+        "hours_for_960_cells": 2.94662791638968,
+        "hours_two_branches": 5.89325583277936,
+        "max": 15.30286455154419,
+        "mean": 11.0498546864613,
+        "median": 10.86933982372284,
+        "min": 9.247747898101807,
+        "n_cmd": 166,
+        "path": "results/PENDING/phase-T2/sweep_r2/run_log.jsonl"
+      },
+      "sweep_r3 (cert.tau_sweep, 8 tau x 5 seed)": {
+        "hours_for_960_cells": 10.63111111111111,
+        "hours_two_branches": 21.26222222222222,
+        "max": 41.73,
+        "mean": 39.86666666666667,
+        "median": 40.035,
+        "min": 37.77,
+        "n_cmd": 18,
+        "path": "results/PENDING/phase-T2/sweep_r3/run_log.jsonl"
+      }
+    },
+    "n_floor_dominates_upto_tau": 20.0,
+    "n_for_tau": {
+      "0.5": 200000,
+      "1.0": 200000,
+      "10.0": 200000,
+      "2.0": 200000,
+      "20.0": 200000,
+      "28.0": 280000,
+      "3.0": 200000,
+      "5.0": 200000
+    },
+    "ratio_tau28_over_tau0p5": 1.4,
+    "rt20_4_claimed_ratio": 56.0
+  },
+  "generated_utc": "2026-09-09T11:55:25Z",
+  "note": "Bang nay SINH BOI CONG CU (gate 0-1). Moi nhan AoI SUY RA tu sha256 ma nguon, khong go tay.",
+  "schema": "dt4n.axis_audit.20r2_0.v1",
+  "sheppard_recomputed": {
+    "empirical_CLEAN_p50": {
+      "err": {
+        "0.5": 0.33756921098600284,
+        "1.0": 0.25368268992777654,
+        "10.0": 0.08469911111813161,
+        "2.0": 0.18489426434277953,
+        "20.0": 0.060070711977856774,
+        "28.0": 0.05081238828293074,
+        "3.0": 0.15248879384998865,
+        "5.0": 0.11906706667204212
+      },
+      "note": "trung vi DO DUOC (358.278 ms), khac trung vi MO HINH.",
+      "z_median": 0.35827800000000004
+    },
+    "legacy": {
+      "err": {
+        "0.5": 0.31508042009939485,
+        "1.0": 0.2344379881467126,
+        "10.0": 0.07758042274952426,
+        "2.0": 0.17002129104364866,
+        "20.0": 0.05499516124579102,
+        "28.0": 0.04651263413869176,
+        "3.0": 0.1399922505654741,
+        "5.0": 0.10916649989111228
+      },
+      "z_median": 0.3
+    },
+    "measured": {
+      "err": {
+        "0.5": 0.3399435802272874,
+        "1.0": 0.25575980450216135,
+        "10.0": 0.08548038011616414,
+        "2.0": 0.18651510326385234,
+        "20.0": 0.0606282153232081,
+        "28.0": 0.05128478957929956,
+        "3.0": 0.1538547555180896,
+        "5.0": 0.12015179467723106
+      },
+      "z_median": 0.365
+    },
+    "plan_z_0.369_DO_NOT_COPY": {
+      "err": {
+        "0.5": 0.34133684701187794,
+        "1.0": 0.2569830631424593,
+        "10.0": 0.08594174623045639,
+        "2.0": 0.1874711632179465,
+        "20.0": 0.060957485111818414,
+        "28.0": 0.05156380763109929,
+        "3.0": 0.1546608714793871,
+        "5.0": 0.12079218568627964
+      },
+      "note": "MASTER_PLAN chep tu link_corr_matrix.py:62. CHI dung neu A5 chon truc co z_median = 0.369.",
+      "z_median": 0.369
+    }
+  },
+  "validity": {
+    "aoi_axis": {
+      "label": "UNREGISTERED",
+      "note": "cong cu KIEM TOAN: chay CA HAI bo sinh de DO do lech giua chung; ket qua khong dieu kien theo mot truc nao",
+      "z_grid_s": []
+    },
+    "axis_role": "axis_audit",
+    "note": "cho A5 trong docs/phase-20R2/00-preregistration.md muc 3. Khi A5 duoc ky, artifact nay van o PENDING/: no la kiem toan TIEN quyet dinh, khong phai ket qua cua quyet dinh do.",
+    "omega": null,
+    "pending_on": [
+      "aoi_axis",
+      "sla_axis"
+    ],
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "UNREGISTERED",
+      "match_method": "none",
+      "note": "chi LIET KE bang truc SLA tu registry; khong chay tren mot truc SLA nao"
+    },
+    "w_loss": null
+  }
+}
