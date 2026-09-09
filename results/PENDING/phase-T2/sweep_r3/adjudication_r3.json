@@ -243,132 +243,13 @@
   "D-T2.6-3": {
    "per_cell": {
     "cbr@0.700": {
-     "a=0.5": {
-      "PRIMARY_level_matched": {
-       "R": [
-        0.9585066630184579,
-        0.9497377345155824,
-        1.0133211365019084,
-        0.9842926313324049,
-        0.9952589504248369,
-        1.001622856732149,
-        1.004502719393457,
-        0.9983272616731911
-       ],
-       "amplitude_over_noise": 11.910261935235077,
-       "hump_amplitude": 0.06358340198632595,
-       "is_hump": true,
-       "noise_floor": 0.005338539348007293,
-       "peak_tau": 2.0,
-       "power_scope": "READABLE",
-       "power_scope_declared_before_run": null,
-       "signed_peak_s": null,
-       "taus": [
-        0.5,
-        1.0,
-        2.0,
-        3.0,
-        5.0,
-        10.0,
-        20.0,
-        28.0
-       ]
-      },
-      "SENSITIVITY_full_data": {
-       "R": [
-        1.0042635192410738,
-        1.0013538146113885,
-        0.9910447569996779,
-        0.9954737921027479,
-        0.9839054363455696,
-        1.0017034040733628,
-        1.004502719393457,
-        0.9983272616731911
-       ],
-       "amplitude_over_noise": 3.8582244515207607,
-       "hump_amplitude": 0.020597283047887438,
-       "is_hump": true,
-       "noise_floor": 0.005338539348007293,
-       "peak_tau": 20.0,
-       "power_scope": "WEAK",
-       "power_scope_declared_before_run": null,
-       "signed_peak_s": null,
-       "taus": [
-        0.5,
-        1.0,
-        2.0,
-        3.0,
-        5.0,
-        10.0,
-        20.0,
-        28.0
-       ]
-      },
-      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
-     },
-     "a=0.9": {
-      "PRIMARY_level_matched": {
-       "R": [
-        1.0260878298740674,
-        0.9981452456669153,
-        1.0091666613408088,
-        0.980653777485848,
-        0.9919146144866308,
-        1.0101257163759534,
-        0.999647799577765,
-        1.0011210035612665
-       ],
-       "amplitude_over_noise": 8.54362870189307,
-       "hump_amplitude": 0.045434052388219404,
-       "is_hump": false,
-       "noise_floor": 0.005317887044664321,
-       "peak_tau": 0.5,
-       "power_scope": "READABLE",
-       "power_scope_declared_before_run": null,
-       "signed_peak_s": null,
-       "taus": [
-        0.5,
-        1.0,
-        2.0,
-        3.0,
-        5.0,
-        10.0,
-        20.0,
-        28.0
-       ]
-      },
-      "SENSITIVITY_full_data": {
-       "R": [
-        0.9896691718684524,
-        0.9982181066942385,
-        0.9976920447781743,
-        0.9987967047063917,
-        1.0124112082768684,
-        0.9923928258400903,
-        0.999647799577765,
-        1.0011210035612665
-       ],
-       "amplitude_over_noise": 4.276517386963702,
-       "hump_amplitude": 0.02274203640841599,
-       "is_hump": true,
-       "noise_floor": 0.005317887044664321,
-       "peak_tau": 5.0,
-       "power_scope": "WEAK",
-       "power_scope_declared_before_run": null,
-       "signed_peak_s": null,
-       "taus": [
-        0.5,
-        1.0,
-        2.0,
-        3.0,
-        5.0,
-        10.0,
-        20.0,
-        28.0
-       ]
-      },
-      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
-     }
+     "A_range": [
+      0.0003233856860581978,
+      0.0003625905053884609
+     ],
+     "state": "EXCLUDED_BY_QD3_QD7",
+     "threshold_A": 0.01,
+     "why": "doi chung AM; buou doc duoc o day la chu ky o suy bien, khong phai co che. Phep kiem doi chung am that la D-T2.6-7."
     },
     "h2@0.700": {
      "a=0.5": {
@@ -756,8 +637,6 @@
     }
    },
    "power_scopes": [
-    "READABLE",
-    "READABLE",
     "READABLE",
     "READABLE",
     "READABLE",

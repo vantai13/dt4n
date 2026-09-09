@@ -259,6 +259,14 @@ def independence_criterion(cell: Dict[str, Any]) -> Dict[str, Any]:
     return out
 
 
+# A-T2-3.3 (f): NGUON DUY NHAT cua hai nguong nay. Cong cu phan quyet phai
+# IMPORT chung, khong duoc chep lai con so. Mot ban chep 10.0/3.0 da lot vao
+# mot ban nhap adjudicator va cho DUNG NHAN tren du lieu 22.6 -- nhan trung
+# nhau KHONG chung minh nguong trung nhau.
+POWER_READABLE = 5.0
+POWER_WEAK = 2.0
+
+
 def power_scope_hump(cell: Dict[str, Any]) -> Dict[str, Any]:
     """D-T2.6-3: pham vi DOC DUOC, khai TRUOC khi chay.
 
@@ -273,8 +281,9 @@ def power_scope_hump(cell: Dict[str, Any]) -> Dict[str, Any]:
     diff = statistics.fmean(abs(a - b) for a, b in zip(rm, sim))
     amp = max(rm) - min(rm)
     ratio = amp / diff if diff else None
-    scope = ("READABLE" if ratio and ratio >= 5.0
-             else "WEAK" if ratio and ratio >= 2.0 else "INSUFFICIENT_POWER")
+    scope = ("READABLE" if ratio and ratio >= POWER_READABLE
+             else "WEAK" if ratio and ratio >= POWER_WEAK
+             else "INSUFFICIENT_POWER")
     return {"mean_abs_diff_two_estimators": diff, "hump_amplitude": amp,
             "amplitude_over_noise": ratio, "declared_scope": scope}
 

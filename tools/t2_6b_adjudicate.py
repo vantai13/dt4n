@@ -42,7 +42,8 @@ OUT = SWEEP / "adjudication_r3.json"
 Z_FIXED = (0.05, 0.10, 0.30, 0.55)
 TAU_LO, TAU_HI = 0.5, 28.0
 LIFT_MIN_GRID = (0.05, 0.10, 0.20)          # QD-2
-POWER_READABLE, POWER_WEAK = 5.0, 2.0       # DA KY, xem docstring
+# A-T2-3.3 (f): IMPORT, KHONG CHEP. Mot nguon duy nhat cho hai nguong nay.
+from tools.t2_1_prediction import POWER_READABLE, POWER_WEAK   # noqa: E402
 CONFIRMATORY = ("h2@0.700", "poisson@0.850", "poisson@0.925")
 NEG_CONTROL = ("cbr@0.700",)
 
@@ -166,6 +167,20 @@ def adj_3(runs, signed) -> Dict[str, Any]:
     per = {}
     for r in runs:
         cell = r["cell"]
+        # QD-3 + QD-7 (DA KY): cbr bi LOAI khoi tap song theo CO CHE (S37) va
+        # theo TIEU CHI DO DUOC (A < 0.01). No la DOI CHUNG AM cua D-T2.6-7,
+        # KHONG phai mot o de doc buou. Tieu chi cong suat la mot TI SO: o o
+        # suy bien tu va mau CUNG co lai nen ti so co the van lon du ca hai
+        # dai luong vo nghia. Xem ERRATUM A-T2-3.3 muc (a).
+        if cell in NEG_CONTROL:
+            A_all = [x["ar1_fit"]["A"] for x in r["rows"]]
+            per[cell] = {"state": "EXCLUDED_BY_QD3_QD7",
+                         "A_range": [min(A_all), max(A_all)],
+                         "threshold_A": 0.01,
+                         "why": ("doi chung AM; buou doc duoc o day la chu ky o "
+                                 "suy bien, khong phai co che. Phep kiem doi "
+                                 "chung am that la D-T2.6-7.")}
+            continue
         if scope_of(cell) == "EXPLORATORY":
             continue
         a = _a_of(r)
@@ -211,12 +226,16 @@ def adj_3(runs, signed) -> Dict[str, Any]:
                      "du chi BAO CAO, khong lat verdict."),
         }
 
-    scopes = [v[k]["PRIMARY_level_matched"]["power_scope"]
-              for v in per.values() for k in v
-              if v[k]["PRIMARY_level_matched"]]
-    conf = [v[k]["PRIMARY_level_matched"]["power_scope"]
-            for c, v in per.items() for k in v
-            if scope_of(c) == "CONFIRMATORY" and v[k]["PRIMARY_level_matched"]]
+    def _arms(v):
+        return {k: x for k, x in v.items()
+                if isinstance(x, dict) and "PRIMARY_level_matched" in x}
+
+    scopes = [x["PRIMARY_level_matched"]["power_scope"]
+              for v in per.values() for x in _arms(v).values()
+              if x["PRIMARY_level_matched"]]
+    conf = [x["PRIMARY_level_matched"]["power_scope"]
+            for c, v in per.items() for x in _arms(v).values()
+            if scope_of(c) == "CONFIRMATORY" and x["PRIMARY_level_matched"]]
     if not conf:
         state = "NOT_EVALUATED"
     elif all(s == "INSUFFICIENT_POWER" for s in conf):
