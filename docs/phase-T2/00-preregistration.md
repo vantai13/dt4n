@@ -1674,6 +1674,105 @@ Trang thai: KHONG dat mot nguong moi nao. Chi khai TRUOC cach ap cac luat DA KY.
     sach tren legacy moi tro vao luoi chinh. Chay xong ma sua adjudicator roi
     chay lai KHONG phai sua co hoc -- do la TUNING PHAN QUYET va bi CAM.
 
+### ERRATUM A-T2-3.3 -- CACH DOC KET QUA VONG 3; VIET TRUOC KHI CHAY THEM
+
+Ngay: 2026-09-09, SAU adjudication_r3.json, TRUOC arm chan doan sigma va
+      truoc moi hinh. Khong dat nguong moi; ap luat da ky va sua LOI PHAN
+      LOAI trong cong cu.
+
+### (a) cbr@0.700 BI LOAI KHOI D-T2.6-3 THEO QD-3 + QD-7
+
+    Adjudicator ban dau ap tieu chi cong suat cua D-T2.6-3 len cbr@0.700 va
+    cho "hump READABLE" (bien do 0.0636 quanh R ~ 1, san nhieu 0.00534,
+    ti so 11.91). Do la LOI PHAN LOAI TRONG CONG CU, khong phai phat hien.
+
+    Hai luat DA KY deu loai o nay khoi tap song:
+        QD-3  loai mode = cbr theo CO CHE (S37: delay(rho) phang tren cbr)
+        QD-7  loai neu err_baseline < 0.01 HOAC A < 0.01
+              A do duoc vong 3: [2.20e-04, 3.63e-04]  <<  0.01  => LOAI
+    cbr GIU vai tro DOI CHUNG AM, va phep kiem doi chung am that la
+    D-T2.6-7 (da PASS: max|R-1| = 0.0161 < 0.05).
+
+    GIOI HAN DA BIET, dang vao Discussion: mot tieu chi cong suat dang TI SO
+    (bien do / nhieu) KHONG co khai niem "qua nho de quan tam". Tren o suy
+    bien, tu va mau CUNG co lai nen ti so co the van qua nguong du ca hai
+    dai luong vo nghia. O day o suy bien da bi loai bang mot tieu chi TUYET
+    DOI doc lap (A < 0.01, QD-7) nen khiem khuyet nay khong anh huong ket
+    qua -- nhung mot tieu chi ti so nen luon di kem mot san tuyet doi.
+
+### (b) h2@0.700: HAI PHAM VI CONG SUAT CHO HAI DIEM THIET KE
+
+    khai TRUOC tai diem 22.6 (sigma = 0.0096):  bien do/nhieu = 1.1
+                                                 INSUFFICIENT_POWER
+    do duoc tai diem vong 3:  a=0.5 (sigma = 0.0257, 2.68x) -> 11.84 READABLE
+                              a=0.9 (sigma = 0.0462, 4.81x) -> 23.45 READABLE
+
+    Day KHONG phai lat mot gioi han da khai. Cong thuc tinh scope va hai
+    nguong (5.0 / 2.0) KHONG DOI; chi DAU VAO doi. sigma lon hon 2.7-4.8 lan
+    => bien do buou lon hon => ti so tin/nhieu tot hon. Do la CO CHE.
+
+    LUAT VIET: hai pham vi PHAI xuat hien CANH NHAU o moi cho nhac toi
+    h2@0.700; khong bao gio chi mot.
+    HEADLINE VAN LA poisson@0.925: no READABLE o CA HAI diem thiet ke
+    (10.9 tai 22.6; 18.7-35.7 tai vong 3). Dung mot o vua moi tro nen doc
+    duoc lam headline la moi nguoi tham dinh dat dung cau hoi bat loi.
+
+### (c) VI TRI DINH BAO CAO DANG KHOANG BOC, KHONG PHAI "2 s"
+
+    Luoi tau = {0.5, 1, 2, 3, 5, 10, 20, 28}. argmax roi vao o tau=2 o 7/8
+    arm. Thong tin thu duoc la: dinh that nam trong KHOANG BOC (1, 3) s --
+    vi neu dinh < 1 thi argmax se la 1 hoac 0.5; neu > 3 thi la 3 hoac 5.
+
+        o                dinh KY    khoang boc DO DUOC   phan quyet
+        h2@0.700         0.9285     (1, 3)               NGOAI  -- lech that
+        poisson@0.850    1.4277     (1, 3)               TRONG
+        poisson@0.925    1.5575     (1, 3)               TRONG
+
+    CAM:  viet "dinh dich sang 2 s"        (luoi khong phan giai duoc)
+          noi suy parabol qua 3 diem       (khong co co so ve dang R quanh dinh)
+          them diem tau in {1.5, 1.75}     (mo rong luoi de di tim, T2-6(c) cam)
+    DUOC: ghi vao ban giao "phan giai dinh trong (1,3) s can luoi min hon,
+          tien dang ky o 21R2". De xuat tuong lai KHAC mo rong luoi hien tai.
+
+### (d) ARM CHAN DOAN SIGMA -- BON RAO CHAN, KY TRUOC KHI CHAY
+
+    Ly do ton tai: diem ky cua D-T2.6-2 o sigma = 0.0096, con vong 3 do o
+    sigma = a*sigma_max (lon hon 1.3-4.8 lan). Arm legacy chi chay tau
+    {0.5..5} nen KHONG co diem nao do D-T2.6-2 o dung sigma da ky. Do la
+    mot khiem khuyet THIET KE cua chinh A-T2-3 (d2).
+
+    (1) D-T2.6-2 = FAIL. PHAN QUYET DA DONG. Arm nay KHONG lat duoc no,
+        ke ca neu no cho 8/8 trong bang.
+    (2) Ket qua di DUY NHAT vao Threats to Validity. Khong vao bang verdict,
+        khong vao ti le k/7, khong vao hinh nao cua Evaluation tru khi mang
+        ky hieu RIENG va chu thich "hau nghiem".
+    (3) Nhan POST_HOC_SIGMA_PROBE tren moi dong.
+    (4) Cau hoi khai TRUOC, va CHI mot cau:
+        "FAIL cua D-T2.6-2 do truc sigma moi hay do truc tau?"
+        Ket qua khac ky vong thi GHI NGUYEN. KHONG chay lan hai.
+
+    KHONG ngoai suy tuyen tinh theo sigma de tra loi cau nay: dai sigma rong
+    2.7 lan, ngoai suy hau nghiem qua do khong du de viet vao paper. DO.
+
+### (e) G-T2-8 KHONG DAT -- khai lai TRUOC khi viet bao cao
+
+    3 PASS / 7. Mau so 7 giu nguyen (A-T2-3.2 muc 4). KHONG doi mau so,
+    KHONG doi nguong, KHONG chuyen mot muc "doc rieng" thanh "dung".
+    Hai FAIL deu quy duoc trach nhiem:
+        D-T2.6-2  lan voi sai khac sigma do chinh (d2) tao ra
+        D-T2.6-4  kiem lai mot gia dinh von DA FAIL 3/9 tren 22.6
+
+### (f) NGUON DUY NHAT CHO HANG SO PHAN QUYET
+
+    Bon lan trong bon luot, mot con so bi CHEP LAI thay vi DOC LAI tu nguon
+    da gay loi (8.2359; bang level tau=3; nguong 10/3 vs 5/2; max vs mean).
+    Bon loi, MOT co che.
+    => POWER_READABLE / POWER_WEAK duoc nang thanh hang so CO TEN trong
+       tools/t2_1_prediction.py va adjudicator IMPORT chung. Sau thay doi
+       nay KHONG TON TAI kha nang hai noi bat dong.
+    => Moi hang so phan quyet moi phai theo cung quy tac: mot nguon, import,
+       khong chep.
+
 ### CHU KY
 
 ```text
