@@ -1,0 +1,112 @@
+{
+ "approximation_declared": "se do tren khoang [0.5, 5] dung lam SAN cho ti so tren khoang [0.5, 28]. se cua log-ti so on dinh theo do dai khoang => san BAO THU. Khai TRUOC khi chay luoi chinh.",
+ "authority": "docs/phase-T2/00-preregistration.md muc A-T2-3 (e)",
+ "branch": "z_fixed",
+ "dispersion": {
+  "cbr@0.700": {
+   "dof": 4,
+   "n_seed": 5,
+   "per_seed": [
+    0.9928447986862738,
+    1.0123923299922715,
+    0.9556375940605669,
+    0.9934364214714244,
+    1.0964926395974264
+   ],
+   "ratio_mean": 1.0101607567615924,
+   "sd_between_seed": 0.052465452868889574,
+   "se": 0.02346326381702969
+  },
+  "h2@0.700": {
+   "dof": 4,
+   "n_seed": 5,
+   "per_seed": [
+    0.45409519600261733,
+    0.4559430532191799,
+    0.4571690991134617,
+    0.44927639561136695,
+    0.4680773277832462
+   ],
+   "ratio_mean": 0.4569122143459744,
+   "sd_between_seed": 0.0069265132143668745,
+   "se": 0.0030976308788749807
+  },
+  "poisson@0.850": {
+   "dof": 4,
+   "n_seed": 5,
+   "per_seed": [
+    0.40298769866118916,
+    0.4039294867558991,
+    0.40797063537974215,
+    0.40905435125979434,
+    0.40249157346841324
+   ],
+   "ratio_mean": 0.4052867491050076,
+   "sd_between_seed": 0.0030140866112058737,
+   "se": 0.0013479405105456625
+  },
+  "poisson@0.925": {
+   "dof": 4,
+   "n_seed": 5,
+   "per_seed": [
+    0.3942965554428767,
+    0.3903487736902696,
+    0.39656607152099277,
+    0.3942483004739186,
+    0.40120839701046707
+   ],
+   "ratio_mean": 0.3953336196277049,
+   "sd_between_seed": 0.003972847082863772,
+   "se": 0.0017767112282990269
+  }
+ },
+ "estimand_id": "RMS_MARGIN_COST",
+ "no_circularity": "moi so o day suy tu luoi tau CU (22.6 da cong bo, sigma=0.0096, n=200000), phan tich lai theo tung seed. KHONG dung du lieu sweep_r3 luoi moi.",
+ "parameters": {
+  "band_floor": 0.05,
+  "k_sigma": 3.0,
+  "n_seed": 5,
+  "tau_hi": 5.0,
+  "tau_lo": 0.5,
+  "z_fixed_s": [
+   0.05,
+   0.1,
+   0.3,
+   0.55
+  ]
+ },
+ "provenance": {
+  "amendment": "A-T2-3",
+  "git_commit": "6e3d86df884aba16bbc290ac878e8637440497e0",
+  "git_dirty": true,
+  "script": "tools/t2_6b_band.py"
+ },
+ "schema": "dt4n.band_window.v2",
+ "supersedes": "docs/phase-T2/02-band-window.json",
+ "windows": {
+  "cbr@0.700": {
+   "band_floor_from_noise": 0.07038979145108906,
+   "binding_constraint": "noise",
+   "recommended_band": 0.07038979145108906,
+   "se_used": 0.02346326381702969
+  },
+  "h2@0.700": {
+   "band_floor_from_noise": 0.009292892636624943,
+   "binding_constraint": "floor",
+   "recommended_band": 0.05,
+   "se_used": 0.0030976308788749807
+  },
+  "poisson@0.850": {
+   "band_floor_from_noise": 0.004043821531636987,
+   "binding_constraint": "floor",
+   "recommended_band": 0.05,
+   "se_used": 0.0013479405105456625
+  },
+  "poisson@0.925": {
+   "band_floor_from_noise": 0.005330133684897081,
+   "binding_constraint": "floor",
+   "recommended_band": 0.05,
+   "se_used": 0.0017767112282990269
+  }
+ }
+}
