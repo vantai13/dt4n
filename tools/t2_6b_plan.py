@@ -16,6 +16,7 @@ import hashlib
 import json
 import pathlib
 import subprocess
+import sys
 from typing import Any, Dict, List
 
 import numpy as np
@@ -63,8 +64,13 @@ def plan() -> List[Dict[str, Any]]:
 
 
 def command_for(run: Dict[str, Any], out_dir: str) -> List[str]:
-    """Lenh cu the. Khong chua nguong nao."""
-    return ["python3", "-m", "cert.tau_sweep",
+    """Lenh cu the. Khong chua nguong nao.
+
+    DUNG sys.executable, KHONG dung chuoi "python3": tren may nay `python3`
+    tro toi miniforge base va KHONG co pandas, nen ca 18 lenh se chet ngay.
+    Cung quy uoc voi luot 2 (sweep_r2/run_log.jsonl luu cmd bat dau bang -m).
+    """
+    return [sys.executable, "-m", "cert.tau_sweep",
             "--mode", run["mode"],
             "--rho-bar", "%g" % run["rho_bar"],
             "--taus", ",".join("%g" % t for t in TAUS),
