@@ -23,6 +23,7 @@ from __future__ import annotations
 import argparse
 import ast
 import hashlib
+import glob
 import json
 import os
 import re
@@ -294,7 +295,67 @@ def ga020_transfer_check() -> dict:
 
 
 # --------------------------------------------------------------- A7 -------
-def cpu_budget(n_cells: int = 960) -> dict:
+def feasible_grid() -> dict:
+    """P2 -- kich thuoc luoi SUY TU bang kha thi, khong nhan bon so.
+
+    `sigma = a * sigma_max`. O nao co `sigma_max = 0` thi sigma = 0 voi MOI a:
+    truc sigma SUP xuong mot diem, va o do khong con la mot o cua thi nghiem nay.
+    Do duoc 2026-09-09: cbr@0.925 va cbr@0.960 deu co sigma_max = 0 va
+    role = "pc1_excluded_by_q8" -> 10/12 to hop (c_a, rho_bar) kha thi.
+    Luu y: ten truong la `sigma_max`; chuoi "sigma_max_regime" chi nam trong
+    van ban `reason`, khong phai mot khoa.
+    """
+    path = os.path.join(REPO, "results/LIVE/phase-20R/sla_calibration.json")
+    with open(path, encoding="utf-8") as fh:
+        cells = json.load(fh)["cells"]
+    rows = []
+    for c in cells:
+        rows.append({
+            "mode": c["mode"], "rho_bar": c.get("rho_bar", c.get("rho")),
+            "feasible": bool(c["feasible"]),
+            "sigma_max": c.get("sigma_max"),
+            "sigma_rho": c.get("sigma_rho"),
+            "role": c.get("role"),
+            "reason": c.get("infeasible_reason") or c.get("reason") or None,
+        })
+    n_feasible = sum(r["feasible"] for r in rows)
+    return {
+        "source": "results/LIVE/phase-20R/sla_calibration.json",
+        "cells_mode_rho": rows,
+        "n_design_mode_rho": len(rows),
+        "n_feasible_mode_rho": n_feasible,
+        "axes": {"mode_rho": n_feasible, "tau": len(TAUS), "sigma_a": 2, "seed": 5},
+        "n_grid_cells": n_feasible * len(TAUS) * 2 * 5,
+        "n_grid_cells_if_all_mode_rho_used": len(rows) * len(TAUS) * 2 * 5,
+        "cell_definition": "mot o = (rho_bar, c_a, tau, sigma, seed); seed LA MOT CHIEU",
+    }
+
+
+def cells_per_command(sweep_rel: str) -> dict:
+    """P1 -- MOT LENH phu bao nhieu o? Dem tu chinh report, khong gia dinh.
+
+    `decision_error_v2` lap qua toan bo `feasible_cells()` trong MOT tien trinh,
+    nen 1 lenh != 1 o. Day la sai so lon nhat trong uoc tinh ngan sach cu.
+    """
+    root = os.path.join(REPO, sweep_rel)
+    sets, rows_total, n_rep = set(), 0, 0
+    for name in sorted(glob.glob(os.path.join(root, "*_report.json"))):
+        with open(name, encoding="utf-8") as fh:
+            rep = json.load(fh)
+        sets.add(tuple(rep.get("cells", ())))
+        rows_total += int(rep.get("n_rows") or 0)
+        n_rep += 1
+    uniform = len(sets) == 1
+    return {
+        "source_dir": sweep_rel, "n_reports": n_rep,
+        "cells_per_command": len(next(iter(sets))) if uniform else None,
+        "cell_lists_uniform": uniform,
+        "cells": sorted(next(iter(sets))) if uniform else None,
+        "total_rows": rows_total,
+    }
+
+
+def cpu_budget(n_cells: int | None = None) -> dict:
     """A7 -- ngan sach CPU tu run_log THAT, khong tu ti le n_for_tau.
 
     RT20-4 gia dinh n ~ tau nen ket luan tau=28 ton 56x. `n_for_tau` co SAN
@@ -302,8 +363,12 @@ def cpu_budget(n_cells: int = 960) -> dict:
     ngan sach phai do bang giay tren lenh THAT.
     """
     from measurements.sla_calib_v2 import n_for_tau, DEFAULT_DT
+    grid = feasible_grid()
+    if n_cells is None:
+        n_cells = grid["n_grid_cells"]
     n_by_tau = {str(t): n_for_tau(t, DEFAULT_DT) for t in TAUS}
     out: dict = {
+        "grid": grid,
         "n_for_tau": n_by_tau,
         "n_floor_dominates_upto_tau": max(
             [t for t in TAUS if n_for_tau(t, DEFAULT_DT) == min(n_by_tau.values())],
@@ -313,6 +378,11 @@ def cpu_budget(n_cells: int = 960) -> dict:
         "rt20_4_claimed_ratio": 56.0,
         "harness_seconds": {},
     }
+    coverage = {}
+    for label, rel in RUN_LOGS.items():
+        if "sweep_r2" in rel:
+            coverage[label] = cells_per_command(os.path.dirname(rel))
+    out["cells_per_command"] = coverage
     for label, rel in RUN_LOGS.items():
         p = os.path.join(REPO, rel)
         if not os.path.exists(p):
@@ -329,13 +399,40 @@ def cpu_budget(n_cells: int = 960) -> dict:
                     continue
         if not secs:
             continue
-        out["harness_seconds"][label] = {
+        entry = {
             "path": rel, "n_cmd": len(secs),
             "min": min(secs), "max": max(secs),
             "mean": statistics.mean(secs), "median": statistics.median(secs),
-            "hours_for_%d_cells" % n_cells: n_cells * statistics.mean(secs) / 3600.0,
-            "hours_two_branches": 2 * n_cells * statistics.mean(secs) / 3600.0,
+            "total_seconds": sum(secs),
+            # ĐINH CHINH: uoc tinh CU coi 1 lenh = 1 o va luoi = 960 o. Giu lai
+            # de doi chieu, KHONG dung de ky. Xem `corrected` ben duoi.
+            "superseded_hours_for_960_cells_1cmd_per_cell":
+                960 * statistics.mean(secs) / 3600.0,
+            "superseded_hours_two_branches":
+                2 * 960 * statistics.mean(secs) / 3600.0,
         }
+        cov = coverage.get(label)
+        if cov and cov.get("cells_per_command"):
+            per_cmd = cov["cells_per_command"]
+            non_canary = [float(json.loads(l)["seconds"])
+                          for l in open(os.path.join(REPO, rel), encoding="utf-8")
+                          if l.strip() and not json.loads(l).get("is_canary")]
+            base = non_canary or secs
+            grid_points = len(base) * per_cmd
+            per_cell = sum(base) / grid_points
+            entry["corrected"] = {
+                "cells_per_command": per_cmd,
+                "n_cmd_non_canary": len(base),
+                "total_seconds_non_canary": sum(base),
+                "grid_points_covered": grid_points,
+                "seconds_per_cell": per_cell,
+                "n_grid_cells": n_cells,
+                "seconds_one_branch": n_cells * per_cell,
+                "minutes_one_branch": n_cells * per_cell / 60.0,
+                "minutes_two_branches": 2 * n_cells * per_cell / 60.0,
+                "minutes_two_branches_plus_30pct": 2 * n_cells * per_cell * 1.3 / 60.0,
+            }
+        out["harness_seconds"][label] = entry
     return out
 
 
@@ -347,7 +444,8 @@ def sheppard(z: float, tau: float) -> float:
 def main() -> None:
     ap = argparse.ArgumentParser()
     ap.add_argument("--out", required=True)
-    ap.add_argument("--n-cells", type=int, default=960)
+    ap.add_argument("--n-cells", type=int, default=None,
+                    help="mac dinh: SUY TU bang kha thi (P2), khong go tay")
     args = ap.parse_args()
 
     with open(REGISTRY, encoding="utf-8") as fh:

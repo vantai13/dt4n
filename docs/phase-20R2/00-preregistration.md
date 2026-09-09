@@ -28,12 +28,70 @@ MASTER_PLAN_v10.md   khong co trong checkout
 |---|---|
 | A1–A4, A6, A7 (kiểm toán trục, CPU) | ✅ đo được, số trong artifact |
 | Danh sách 5 RQ (a–e) | ⚠️ chép từ lesson, **không kiểm được** |
-| Lưới **960 ô** | ⚠️ chép từ lesson, **không kiểm được** |
-| Định nghĩa "một ô" | ❌ **chưa xác định** — xem mục 5 |
+| Lưới ~~960 ô~~ → **800 ô** | ✅ **suy ra từ bảng khả thi** — mục 0.1 |
+| Định nghĩa "một ô" | ✅ **đã xác định từ artifact** — mục 0.1 |
 
-Ba dòng ⚠️/❌ phải được điền từ `PHASE_20R2.md` **trước khi ký**. Ký mà để
+Dòng ⚠️ còn lại phải được điền từ `PHASE_20R2.md` **trước khi ký**. Ký mà để
 nguyên là lặp lại đúng lỗi mà phase này tồn tại để chống: nhận một con số
 không có nguồn kiểm được.
+
+### 0.1 ★ Định nghĩa "một ô" và kích thước lưới — GIẢI ĐƯỢC TỪ CHECKOUT
+
+Hai dòng trên **không cần** `PHASE_20R2.md` nữa. Chúng suy được từ chính các
+artifact đang có trong repo, đúng nguyên tắc "chỉ từ những gì có trong checkout".
+Sinh bởi `tools/20r2_0_axis_audit.py`, số nằm ở `axis_audit.json` khoá
+`A7_cpu_budget.grid` và `A7_cpu_budget.cells_per_command`.
+
+**(a) Một ô = `(ρ̄, c_a, τ, σ, seed)` — `seed` là MỘT CHIỀU, không phải lần lặp.**
+
+Đo từ `results/PENDING/phase-T2/sweep_r2/run_log.jsonl` (160 lệnh không phải
+canary): các trục có mặt là τ (8 giá trị: 0,5 · 1 · 2 · 3 · 5 · 10 · 20 · 28),
+`a` (2: 0,5 và 0,9), `seed` (5: 101–105), `branch` (2). Số tổ hợp
+(τ, a, seed, branch) đếm được = **160 = 8×2×5×2**, mỗi tổ hợp **đúng một lần**
+→ thiết kế đầy đủ giai thừa, không có lần lặp nào.
+
+Trục τ còn được **kiểm chéo độc lập** từ 9 lưới z trong `parquet_recovery.json`:
+8 lưới 4 điểm đều thoả `z = τ · {0,1; 0,3; 0,55; 1,0}`, cho đúng tập
+τ = {0,5; 1; 2; 3; 5; 10; 20; 28}. Hai nguồn khác nhau, cùng một tập τ.
+
+**(b) MỘT LỆNH `decision_error_v2` phủ 10 ô, không phải 1 ô.**
+
+Cả 166 `*_report.json` đều liệt kê **cùng một danh sách 10 ô** `(c_a, ρ̄)` và
+`n_rows` = 10 × (số điểm z). Lệnh lặp qua toàn bộ `feasible_cells()` trong một
+tiến trình. Đây là giả định sai nặng nhất của mục 5.2 cũ.
+
+**(c) Lưới là 800 ô, không phải 960 — `cbr@0.925` và `cbr@0.960` KHÔNG khả thi.**
+
+Đọc `results/LIVE/phase-20R/sla_calibration.json`:
+
+| `c_a` | ρ̄=0,700 | ρ̄=0,850 | ρ̄=0,925 | ρ̄=0,960 |
+|---|---|---|---|---|
+| `cbr` | ✅ | ✅ | ❌ `sigma_max = 0` | ❌ `sigma_max = 0` |
+| `poisson` | ✅ | ✅ | ✅ | ✅ |
+| `h2` | ✅ | ✅ | ✅ | ✅ |
+
+`summary.n_feasible = 10` trên `n_design_cells = 12`, khớp đúng danh sách 10 ô
+mà 166 report đã dùng — **lưới đo thật xưa nay vẫn là 10, không phải 12.**
+
+Hai ô đó còn mang sẵn `role = "pc1_excluded_by_q8"` và `reason =
+"sigma_max_regime = 0 (het headroom den tran do tin cay)"` — nghĩa là **chính
+artifact hiệu chuẩn đã ghi rõ chúng bị loại**, không cần ai suy diễn.
+
+> ⚠️ Tên trường thật là **`sigma_max`** (và `sigma_rho`), cả hai bằng `0.0`.
+> Chuỗi `sigma_max_regime` **chỉ xuất hiện trong văn bản `reason`**, không phải
+> tên khoá. Đọc theo câu chữ sẽ tra nhầm khoá và nhận `None`.
+
+Vì `σ = a · sigma_max`, khi `sigma_max = 0` thì σ = 0 với **mọi**
+`a`: trục σ **sụp xuống một điểm**, ô mất một chiều nên không còn là ô của thí
+nghiệm này. Đây là lý do **loại ô**, không phải "một ô có σ nhỏ".
+
+```text
+LUOI DUNG = 10 (c_a x rho kha thi) x 8 tau x 2 sigma x 5 seed = 800 o
+960 = 12 x 8 x 2 x 5  -- nhan bon so ma KHONG tra bang kha thi
+```
+
+Tên phase là *"Decision error trên chế độ **KHẢ THI**"*; chạy 160 ô không khả
+thi mâu thuẫn với chính tên phase.
 
 ---
 
@@ -248,10 +306,15 @@ diem giao o dung tau = 20
 Đây là chỗ lesson 20R2.0 kết luận vội. Ngân sách phải đo bằng **giây trên
 lệnh thật**, và hai harness trong repo lệch nhau **3.6 lần**:
 
-| run_log | lệnh | n | giây/lệnh (min–max, mean) | 960 ô |
+| run_log | lệnh | n | giây/lệnh (min–max, mean) | ~~960 ô~~ (ĐÃ BỎ) |
 |---|---|---:|---|---:|
-| `sweep_r2` | `decision_error_v2 --run-fixed`, **1 τ × 1 seed** | 166 | 9.25 – 15.30, **mean 11.05** | **2.95 h** |
-| `sweep_r3` | `cert.tau_sweep --taus 0.5..28`, **8 τ × 5 seed** | 18 | 37.77 – 41.73, **mean 39.87** | **10.63 h** |
+| `sweep_r2` | `decision_error_v2 --run-fixed`, **1 τ × 1 seed** | 166 | 9.25 – 15.30, **mean 11.05** | ~~2.95 h~~ |
+| `sweep_r3` | `cert.tau_sweep --taus 0.5..28`, **8 τ × 5 seed** | 18 | 37.77 – 41.73, **mean 39.87** | ~~10.63 h~~ |
+
+> ⛔ **Cột cuối đã bị bác bỏ** — nó nhân `mean` với 960 và giả định 1 lệnh = 1 ô.
+> Cả hai giả định đều sai (mục 0.1). Giữ lại để đối chiếu, **không dùng để ký**.
+> Nhãn "1 τ × 1 seed" của `sweep_r2` cũng thiếu: mỗi lệnh còn quét **10 ô**
+> `(c_a, ρ̄)` bên trong.
 
 > **Đính chính lesson.** Lesson ghi *"11.6–15.0 s/lệnh"*. Khoảng thật của
 > `sweep_r2` là **9.25–15.30 s** (mean 11.05); `11.62` là **bản ghi đầu tiên**
@@ -259,19 +322,44 @@ lệnh thật**, và hai harness trong repo lệch nhau **3.6 lần**:
 > thủ** (thật là 2.95 h), nhưng con số trích dẫn thì sai. [W4 — hằng số phán
 > quyết: một nguồn, IMPORT, không chép]
 
-**Điều kiện để kết luận "không cần fractional design" đứng vững:**
+**★ ĐÃ KẾT LUẬN ĐƯỢC (2026-09-09).** Điều kiện chặn ở mục 0 nay đã giải xong,
+nên phần dưới đây thay cho lập luận "nếu/thì" cũ.
+
+Uớc tính cũ **2,95 h/nhánh sai 12 lần**, do **hai** sai số cùng chiều nhân lên:
 
 ```text
-NEU  mot "o" = MOT lenh decision_error_v2 --run-fixed (1 tau, 1 seed)
-     -> 960 o = 2.95 h/nhanh; hai nhanh = 5.89 h  < 8 h    KHONG can E4  ✅
-
-NEU  mot "o" = mot lenh cert.tau_sweep (8 tau x 5 seed)
-     -> 960 o = 10.63 h/nhanh; hai nhanh = 21.3 h  > 8 h   CAN E4       ❌
+sai so (1)  coi 1 LENH = 1 O                he so 10.0
+            thuc te 1 lenh decision_error_v2 phu 10 o (muc 0.1b)
+sai so (2)  coi luoi = 960 O                he so  1.2
+            thuc te 800 o (muc 0.1c)
+                                   tich  =  12.0x
 ```
 
-⟹ **`PHASE_20R2.md` phải định nghĩa "một ô" trước khi ký mục này.** Không có
-tài liệu đó trong repo nên **không kết luận được**. Ghi ❌ ở mục 0, không ghi
-"không cần fractional design" như một sự thật.
+Ngân sách thật, đo từ `sweep_r2/run_log.jsonl`, 160 lệnh không phải canary
+(sinh bởi `tools/20r2_0_axis_audit.py`, khoá `A7_cpu_budget.harness_seconds.*.corrected`):
+
+| Đại lượng | Giá trị |
+|---|---:|
+| Tổng thời gian 160 lệnh không canary | 1.764,4 s |
+| Điểm lưới đã phủ (160 lệnh × 10 ô) | 1.600 |
+| **Chi phí một ô** | **1,1028 s** |
+| Lưới 20R2 = 800 ô → một nhánh | 882 s = **14,7 phút** |
+| Hai nhánh | 1.764 s = **29,4 phút** |
+| Hai nhánh + 30% dự phòng | **38,2 phút** |
+
+Chú ý một điều làm con số này **mạnh hơn một phép ngoại suy**: 160 lệnh × 10 ô
+= 1.600 = **đúng 800 ô × 2 nhánh**. Chiến dịch đã chạy có **cùng kích thước**
+với lưới 20R2, nên 1.764 s là một **phép đo của chính khối lượng đó**, không
+phải suy rộng từ mẫu nhỏ. Dự phòng 30% dành cho lưới z 20R2 dày hơn (mục 4)
+chứ không phải cho bất trắc về kích thước lưới.
+
+⟹ **KẾT LUẬN CÓ NGUỒN: không cần fractional design (E4).** 38 phút so với trần
+8 h — dư hai bậc độ lớn. Kết luận này neo vào `axis_audit.json`, đo lại được
+bằng lệnh ở mục 10; nó không phải một lời khai.
+
+⚠️ Cảnh báo khi ký gate `20R2-5` ("CPU khớp ước tính ±30%"): ước tính được ký
+phải là **29,4 phút hai nhánh**, không phải 5,89 h. Ký con số cũ là tự đặt bẫy —
+một lần chạy 40 phút sẽ "vượt ước tính" theo hướng ngược lại.
 
 Ghi chú: `sweep_r3` amortize tốt hơn (39.87 s / 40 tổ hợp ≈ **1.0 s** mỗi
 (τ, seed), so với 11.05 s của `sweep_r2` cho 1 tổ hợp) — chi phí khởi động
@@ -389,11 +477,48 @@ T2-L8 ★ DINH CHINH co che: T2 KHONG chay qua sawtooth_age_steps trong
         do boi luoi z nao dang de xuat. CV mo hinh thap hon thuc nghiem
         5.96% (MISS M-72 / M-72b da ghi tu Lesson 23.20).
 
-20R2-L2 ★ MOI: don vi "mot o" chua duoc dinh nghia -> ngan sach CPU chua
-        ket luan duoc (muc 5.2). Khong ghi "khong can fractional design"
-        cho den khi PHASE_20R2.md xac dinh don vi o.
-        QD-33: KHONG tru 166 lenh khoi ngan sach moi (reuse = 0), du da
-        bao ton du 166/166 parquet. Chua xac nhan gate CPU +/-30%.
+20R2-L2 [DA GIAI -- 2026-09-09] don vi "mot o" chua duoc dinh nghia.
+        GO BO vi da xac dinh duoc TU CHECKOUT, khong can PHASE_20R2.md:
+        mot o = (rho_bar, c_a, tau, sigma, seed); 1 lenh = 10 o; luoi = 800
+        (muc 0.1). Ngan sach = 29,4 phut hai nhanh -> KHONG can fractional
+        design (muc 5.2). Ly do go: dieu kien chan da duoc do, khong phai
+        duoc mien.
+        CON HIEU LUC: QD-33 -- KHONG tru 166 lenh khoi ngan sach moi
+        (reuse = 0) du da bao ton du 166/166 parquet, vi truc SLA khac.
+        Gate CPU +/-30% van CHUA xac nhan (chua chay luoi that).
+
+20R2-L4 ★ MOI: `results/PENDING/phase-T2/realizability_grid.json` bao
+        96/96 REALIZABLE, n_rejected = 0, rejected_by_reason = {}.
+        DEN XANH RONG. Do duoc 2026-09-09 boi
+        tools/20r2_4_realizability_audit.py:
+          - 3/9 tieu chi KHONG CHAY o BAT KY o nao trong 96 o:
+            censoring_ok, mondrian_cells_populated, sigma_feasible
+          - `failed = []` o ca 96 o, nhung `passed` cung RONG o ca 96 o
+          - verdict xanh vi KHONG AI HOI, khong phai vi DA TRA LOI
+          - doi chung cheo: 16 o duoc gan REALIZABLE trong khi
+            sla_calibration.json da noi cbr@0.925 va cbr@0.960 KHONG kha thi
+            (sigma_max = 0, sigma_rho = 0, role = pc1_excluded_by_q8)
+            -- dung tieu chi `sigma_feasible` bi bo qua
+        ⟹ KHONG ke thua ket luan kha thi cua T2. Lesson 20R2.4 phai CHAY LAI
+          gate voi DU tham so (sigma, clip_fraction, min_cell_blocks) va
+          assert not_evaluated == [].
+        Song song voi T2-L6 (tieu chi headroom khong hoat dong cho toi
+        T2.4-fix): cung mot co che, khac tieu chi.
+        [W5, RT20-7, gate 20R2-4 muc 4-2]
+        Nguyen tac rut ra: mot verdict PASS chi co nghia khi biet BAO NHIEU
+        tieu chi da thuc su chay. Phu luc B ghi "mot co che phong thu DO
+        THUONG TRUC thi da chet"; day la mat kia cua dong xu -- XANH THUONG
+        TRUC cung da chet, va nguy hiem hon vi khong ai di kiem den xanh.
+
+20R2-L5 ★ MOI: nhan truc BIA DAT qua duoc test_no_stale_axes mot cach RONG.
+        Do duoc 2026-09-09: gan `MIXED_OR_MISSING` vao
+        parquet_recovery.json -> `pytest -k parquet_recovery` VAN XANH
+        (1 passed), vi test PENDING chi hoi "nhan KHONG nam trong
+        approved_for_live" -- ma mot chuoi bia thi dung la khong nam trong.
+        Da bit bang test/test_axis_label_vocabulary.py (nhan phai thuoc TU
+        VUNG suy tu axis_registry.json). `null` van hop le: do la cach noi
+        "khong ap dung" bang co che DA CO, khac han voi mot tu moi.
+        [cung lop loi voi `vacuous pass` o test_no_stale_axes.py]
 
 20R2-L3 Hai he ten truc cung ton tai: measured_v7 -> measured_v7_uniform;
         legacy_sawtooth_51ms -> assumed_sawtooth_51ms. Anh xa 1-1 khoa boi
@@ -430,7 +555,56 @@ IMPORT, không chép; dùng ở mục 5.2 và 6).
 ## 10. Trạng thái sau khắc phục 20R2.1 (2026-09-09)
 
 Gate 0-5 PASS trong phạm vi `_valid_rows` và đường gọi đã kiểm.
-Gate 0-3 **CHƯA ĐẠT**: chưa có PHASE_20R2.md, định nghĩa một ô và các chiều
-tạo lưới 960 ô; người ký chưa được xác định. Không tạo tag
-`phase-20R2-prereg-signed` khi chưa đáp ứng §0. Không chạy lưới kết quả 20R2.
-QD-33 và báo cáo `01-recovery-and-remediation.md` ghi công việc đã hoàn tất.
+
+**Cập nhật 2026-09-09.** Hai trong ba mục chặn ở §0 **đã giải xong bằng số đo
+từ chính checkout**, không cần `PHASE_20R2.md`:
+
+| Mục chặn §0 | Trước | Nay | Nguồn |
+|---|---|---|---|
+| Định nghĩa "một ô" | ❌ | ✅ `(ρ̄, c_a, τ, σ, seed)` | §0.1a, `axis_audit.json` |
+| Kích thước lưới | ⚠️ 960 | ✅ **800** | §0.1c, `sla_calibration.json` |
+| Ngân sách CPU | ⚠️ 2,95 h/nhánh | ✅ **14,7 phút/nhánh** | §5.2, `axis_audit.json` |
+| Danh sách 5 RQ (a–e) | ⚠️ | ⚠️ **vẫn chưa kiểm được** | cần `PHASE_20R2.md` |
+
+Gate 0-3 **VẪN CHƯA ĐẠT**, nhưng nay chỉ còn **hai** lý do, không phải bốn:
+
+1. Danh sách 5 RQ (a–e) vẫn chỉ chép từ lesson, chưa có nguồn kiểm được.
+2. **Người ký chưa được xác định.** Prereg là một cam kết của *người*; không ai
+   khác ký thay được. Ô chữ ký ở §11 để trống chờ điền.
+
+Không tạo tag `phase-20R2-prereg-signed` khi chưa đáp ứng §0. Không chạy lưới
+kết quả 20R2. QD-33 và báo cáo `01-recovery-and-remediation.md` ghi công việc
+đã hoàn tất.
+
+### Lệnh sinh lại mọi số trong bản này
+
+```bash
+PYTHON=/home/ubuntu/miniforge3/envs/sdn_rl/bin/python
+$PYTHON -m tools.20r2_0_axis_audit          --out results/PENDING/phase-20R2/axis_audit.json
+$PYTHON -m tools.20r2_1_parquet_recovery    --out results/PENDING/phase-20R2/parquet_recovery.json
+$PYTHON -m tools.20r2_1_canary_span         --out results/PENDING/phase-20R2/canary_span.json
+$PYTHON -m tools.20r2_4_realizability_audit --out results/PENDING/phase-20R2/realizability_audit.json
+```
+
+---
+
+## 11. Chữ ký (gate 0-3)
+
+Điền tay. Không công cụ nào điền hộ mục này — đó chính là điểm của việc ký.
+
+```text
+Nguoi ky        : ______________________________
+Ngay            : ______________________________
+Commit sha      : ______________________________   (sha CUA BAN prereg duoc ky)
+Xac nhan        : [ ] toi da doc §0 va chap nhan muc ⚠️ con lai (danh sach 5 RQ)
+                  [ ] toi ky ngan sach 29,4 phut hai nhanh (KHONG phai 5,89 h)
+                  [ ] toi ky luoi 800 o (KHONG phai 960)
+                  [ ] toi KHONG ke thua ket luan kha thi cua T2 (20R2-L4)
+
+Sau khi dien:
+    git add docs/phase-20R2/00-preregistration.md
+    git commit -m "20R2 prereg: ky gate 0-3"
+    git tag -a phase-20R2-prereg-signed -m "20R2 prereg signed"
+    git push origin main && git push origin phase-20R2-prereg-signed
+    git ls-remote --tags origin | grep prereg-signed   # BANG CHUNG
+```

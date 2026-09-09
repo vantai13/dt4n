@@ -581,26 +581,185 @@
     }
   },
   "A7_cpu_budget": {
+    "cells_per_command": {
+      "sweep_r2 (decision_error_v2 --run-fixed, 1 tau x 1 seed)": {
+        "cell_lists_uniform": true,
+        "cells": [
+          "cbr@0.700",
+          "cbr@0.850",
+          "h2@0.700",
+          "h2@0.850",
+          "h2@0.925",
+          "h2@0.960",
+          "poisson@0.700",
+          "poisson@0.850",
+          "poisson@0.925",
+          "poisson@0.960"
+        ],
+        "cells_per_command": 10,
+        "n_reports": 166,
+        "source_dir": "results/PENDING/phase-T2/sweep_r2",
+        "total_rows": 10940
+      }
+    },
+    "grid": {
+      "axes": {
+        "mode_rho": 10,
+        "seed": 5,
+        "sigma_a": 2,
+        "tau": 8
+      },
+      "cell_definition": "mot o = (rho_bar, c_a, tau, sigma, seed); seed LA MOT CHIEU",
+      "cells_mode_rho": [
+        {
+          "feasible": true,
+          "mode": "cbr",
+          "reason": null,
+          "rho_bar": 0.7,
+          "role": "pc1",
+          "sigma_max": 0.0513565891472868,
+          "sigma_rho": 0.046220930232558126
+        },
+        {
+          "feasible": true,
+          "mode": "cbr",
+          "reason": null,
+          "rho_bar": 0.85,
+          "role": "pc1",
+          "sigma_max": 0.014534883720930224,
+          "sigma_rho": 0.013081395348837201
+        },
+        {
+          "feasible": false,
+          "mode": "cbr",
+          "reason": "sigma_max_regime = 0 (het headroom den tran do tin cay)",
+          "rho_bar": 0.925,
+          "role": "pc1_excluded_by_q8",
+          "sigma_max": 0.0,
+          "sigma_rho": 0.0
+        },
+        {
+          "feasible": false,
+          "mode": "cbr",
+          "reason": "sigma_max_regime = 0 (het headroom den tran do tin cay)",
+          "rho_bar": 0.96,
+          "role": "pc1_excluded_by_q8",
+          "sigma_max": 0.0,
+          "sigma_rho": 0.0
+        },
+        {
+          "feasible": true,
+          "mode": "poisson",
+          "reason": null,
+          "rho_bar": 0.7,
+          "role": "gate",
+          "sigma_max": 0.0513565891472868,
+          "sigma_rho": 0.046220930232558126
+        },
+        {
+          "feasible": true,
+          "mode": "poisson",
+          "reason": null,
+          "rho_bar": 0.85,
+          "role": "gate",
+          "sigma_max": 0.05329457364341088,
+          "sigma_rho": 0.04796511627906979
+        },
+        {
+          "feasible": true,
+          "mode": "poisson",
+          "reason": null,
+          "rho_bar": 0.925,
+          "role": "gate",
+          "sigma_max": 0.024224806201550386,
+          "sigma_rho": 0.021802325581395346
+        },
+        {
+          "feasible": true,
+          "mode": "poisson",
+          "reason": null,
+          "rho_bar": 0.96,
+          "role": "gate",
+          "sigma_max": 0.010658914728682202,
+          "sigma_rho": 0.009593023255813982
+        },
+        {
+          "feasible": true,
+          "mode": "h2",
+          "reason": null,
+          "rho_bar": 0.7,
+          "role": "gate",
+          "sigma_max": 0.0513565891472868,
+          "sigma_rho": 0.046220930232558126
+        },
+        {
+          "feasible": true,
+          "mode": "h2",
+          "reason": null,
+          "rho_bar": 0.85,
+          "role": "gate",
+          "sigma_max": 0.05329457364341088,
+          "sigma_rho": 0.04796511627906979
+        },
+        {
+          "feasible": true,
+          "mode": "h2",
+          "reason": null,
+          "rho_bar": 0.925,
+          "role": "gate",
+          "sigma_max": 0.024224806201550386,
+          "sigma_rho": 0.021802325581395346
+        },
+        {
+          "feasible": true,
+          "mode": "h2",
+          "reason": null,
+          "rho_bar": 0.96,
+          "role": "gate",
+          "sigma_max": 0.010658914728682202,
+          "sigma_rho": 0.009593023255813982
+        }
+      ],
+      "n_design_mode_rho": 12,
+      "n_feasible_mode_rho": 10,
+      "n_grid_cells": 800,
+      "n_grid_cells_if_all_mode_rho_used": 960,
+      "source": "results/LIVE/phase-20R/sla_calibration.json"
+    },
     "harness_seconds": {
       "sweep_r2 (decision_error_v2 --run-fixed, 1 tau x 1 seed)": {
-        "hours_for_960_cells": 2.94662791638968,
-        "hours_two_branches": 5.89325583277936,
+        "corrected": {
+          "cells_per_command": 10,
+          "grid_points_covered": 1600,
+          "minutes_one_branch": 14.703727473815283,
+          "minutes_two_branches": 29.407454947630566,
+          "minutes_two_branches_plus_30pct": 38.22969143191973,
+          "n_cmd_non_canary": 160,
+          "n_grid_cells": 800,
+          "seconds_one_branch": 882.2236484289169,
+          "seconds_per_cell": 1.1027795605361461,
+          "total_seconds_non_canary": 1764.4472968578339
+        },
         "max": 15.30286455154419,
         "mean": 11.0498546864613,
         "median": 10.86933982372284,
         "min": 9.247747898101807,
         "n_cmd": 166,
-        "path": "results/PENDING/phase-T2/sweep_r2/run_log.jsonl"
+        "path": "results/PENDING/phase-T2/sweep_r2/run_log.jsonl",
+        "superseded_hours_for_960_cells_1cmd_per_cell": 2.94662791638968,
+        "superseded_hours_two_branches": 5.89325583277936,
+        "total_seconds": 1834.2758779525757
       },
       "sweep_r3 (cert.tau_sweep, 8 tau x 5 seed)": {
-        "hours_for_960_cells": 10.63111111111111,
-        "hours_two_branches": 21.26222222222222,
         "max": 41.73,
         "mean": 39.86666666666667,
         "median": 40.035,
         "min": 37.77,
         "n_cmd": 18,
-        "path": "results/PENDING/phase-T2/sweep_r3/run_log.jsonl"
+        "path": "results/PENDING/phase-T2/sweep_r3/run_log.jsonl",
+        "superseded_hours_for_960_cells_1cmd_per_cell": 10.63111111111111,
+        "superseded_hours_two_branches": 21.26222222222222,
+        "total_seconds": 717.6
       }
     },
     "n_floor_dominates_upto_tau": 20.0,
@@ -617,7 +776,7 @@
     "ratio_tau28_over_tau0p5": 1.4,
     "rt20_4_claimed_ratio": 56.0
   },
-  "generated_utc": "2026-09-09T14:02:11Z",
+  "generated_utc": "2026-09-09T15:21:00Z",
   "note": "Bang nay SINH BOI CONG CU (gate 0-1). Moi nhan AoI SUY RA tu sha256 ma nguon, khong go tay.",
   "schema": "dt4n.axis_audit.20r2_0.v1",
   "sheppard_recomputed": {

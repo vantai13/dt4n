@@ -2,6 +2,7 @@
 import ast
 import importlib
 import inspect
+import json
 from pathlib import Path
 import subprocess
 import sys
@@ -91,3 +92,49 @@ def test_audit_distinguishes_direct_generator_and_axis_guard():
              and c['callee'] in ('sawtooth_age_steps', 'base_age_steps')]
     assert len(calls) == 2
     assert all(c['direct_generator_call'] and c['enclosing_axis_guards'] for c in calls)
+
+
+def test_frozen_smoke_artifact_satisfies_the_z_axis_invariant():
+    """Bat bien z tren ARTIFACT DA DONG BANG, khong phai tren ban dung lai.
+
+    `test_metadata_age_steps_agree_with_generated_rows` o tren kiem cung bat
+    bien nay nhung tren metadata VUA DUNG trong bo nho. Con
+    `results/SMOKE/phase-20R2/remediation_smoke.json` la ban ghi DA LUU: khong
+    ai dung lai no, nen khong test nao cham toi -- trong khi no chinh la bang
+    chung duoc trich dan cho ban sua D1.
+
+    Hai truong trong ban ghi de bi doc lan vi ten gan giong nhau:
+        after_k_min/max  TUOI CO SO, don vi BUOC        (chua cong lech link)
+        z_min/max_s      TUOI TRUNG BINH 8 LINK, don vi GIAY (da cong lech)
+    Cau noi giua chung la `z_shift_ms`. Chinh cho nay D1 da vi pham lang le.
+
+    Ban ghi KHONG luu `dt`, nen thay vi go tay 0.005 (mot loi khai) ta GIAI ra
+    dt tu chinh ban ghi: 4 dong x 2 bien = 8 phuong trinh cho 1 an. He qua
+    xac dinh; neu ban ghi tu mau thuan thi 8 nghiem se khong trung nhau.
+    Do duoc 2026-09-09: ca 8 deu cho dt = 0.005.
+    """
+    path = Path(__file__).resolve().parents[1] / 'results/SMOKE/phase-20R2/remediation_smoke.json'
+    rows = json.loads(path.read_text())['builder_rows']
+    assert len(rows) == 4, 'ban ghi smoke phai co du 4 dong (legacy U0, measured U0/U1/U3)'
+
+    solved = []
+    for r in rows:
+        shift = r['z_shift_ms'] / 1000
+        for bound in ('min', 'max'):
+            k = r['after_k_' + bound]
+            assert k, f"{r['axis']}/{r['profile']}: k_{bound} = {k!r}, khong giai duoc dt"
+            solved.append((r['z_%s_s' % bound] - shift) / k)
+
+    assert max(solved) - min(solved) < 1e-12, (
+        f"ban ghi TU MAU THUAN: 8 phuong trinh cho ra dt khac nhau {solved}")
+    dt = solved[0]
+    assert dt == pytest.approx(B.DT, abs=1e-12), (
+        f"dt giai tu ban ghi = {dt}, nhung cert.build_calib_set_v3.DT = {B.DT}")
+
+    for r in rows:
+        shift = r['z_shift_ms'] / 1000
+        for bound in ('min', 'max'):
+            assert r['after_k_%s' % bound] * dt + shift == pytest.approx(
+                r['z_%s_s' % bound], abs=1e-12), f"{r['axis']}/{r['profile']}/{bound}"
+        assert r['data_bit_exact'] is True, (
+            f"{r['axis']}/{r['profile']}: sua metadata KHONG duoc doi byte du lieu")

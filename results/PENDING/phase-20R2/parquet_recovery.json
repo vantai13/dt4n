@@ -1,6 +1,6 @@
 {
   "audit_kind": "artifact_integrity",
-  "generated_utc": "2026-09-09T14:11:46.628451+00:00",
+  "generated_utc": "2026-09-09T15:05:43.579279+00:00",
   "rows": [
     {
       "bytes": 19646,
@@ -1850,7 +1850,70 @@
   },
   "validity": {
     "aoi_axis": {
-      "label": "MIXED_OR_MISSING"
+      "label": "aoi_axis_free",
+      "note": "luoi z CO DINH, tien dang ky; khong goi bo sinh AoI nao",
+      "z_grid_s_absent_because": "9 distinct pre-registered z grids across the 166 source reports; enumerated in z_grids_s. Blocks promotion to LIVE/ by design.",
+      "z_grids_s": [
+        [
+          0.0,
+          0.05,
+          0.1,
+          0.2,
+          0.3,
+          0.55,
+          1.0,
+          2.0,
+          4.0
+        ],
+        [
+          0.2,
+          0.6,
+          1.1,
+          2.0
+        ],
+        [
+          0.5,
+          1.5,
+          2.75,
+          5.0
+        ],
+        [
+          2.0,
+          6.0,
+          11.0,
+          20.0
+        ],
+        [
+          1.0,
+          3.0,
+          5.5,
+          10.0
+        ],
+        [
+          0.1,
+          0.3,
+          0.55,
+          1.0
+        ],
+        [
+          2.8,
+          8.4,
+          15.4,
+          28.0
+        ],
+        [
+          0.3,
+          0.9,
+          1.65,
+          3.0
+        ],
+        [
+          0.05,
+          0.15,
+          0.275,
+          0.5
+        ]
+      ]
     },
     "axis_role": "aoi_axis_free",
     "note": "Source scope inherited from reports; this audit checks bytes and readability only. A5 proposes exogenous SLA; recovered self_calibrated outcomes cannot supply that grid.",
@@ -1860,7 +1923,9 @@
     ],
     "schema": "dt4n.validity.v1",
     "sla_axis": {
-      "label": "MIXED_OR_MISSING"
+      "label": "self_calibrated",
+      "source_path": "results/LIVE/phase-20R/sla_calibration.json",
+      "source_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
     },
     "w_loss": null
   }

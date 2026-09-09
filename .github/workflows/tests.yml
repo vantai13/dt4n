@@ -9,8 +9,13 @@ jobs:
       - uses: actions/checkout@v4
       - uses: actions/setup-python@v5
         with:
-          python-version: "3.11"
-      - run: pip install pytest
+          # 3.12 = phien ban da do requirements-test.txt (env sdn_rl).
+          # Ghim thu vien ma khong ghim python thi van la hai moi truong khac nhau.
+          python-version: "3.12"
+      # Truoc 2026-09-09 dong nay chi cai `pytest`, nen buoc chay ca bo test
+      # ben duoi khong the co numpy/pandas/pyarrow. Ghim moi truong o
+      # requirements-test.txt de con so loi cua CI so sanh duoc voi local.
+      - run: pip install -r requirements-test.txt
       # Lesson 23.17 -- chan artifact truc SAI vao results/LIVE/.
       # Chay RIENG va chay TRUOC: neu kho bi nhiem mot truc chua duyet thi
       # khong can biet 1060 test con lai noi gi.

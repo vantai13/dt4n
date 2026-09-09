@@ -20,6 +20,71 @@ SWEEP = Path('results/PENDING/phase-T2/sweep_r2')
 EXPECTED_REPORTS = 166
 
 
+NO_COMMON_VALUE = object()
+
+
+def _reduce_field(source_axes: list, key: str) -> dict:
+    """Derive one axis block from many, or fail loud. Never invent a label.
+
+    `source_axes` de-duplicates whole {aoi_axis, sla_axis} dicts, so a single
+    differing sub-field (here: z_grid_s) splits it into many entries even when
+    the LABELS agree. Reducing per field recovers the fact that was there all
+    along. If the entries genuinely disagree we raise instead of writing a
+    placeholder: an unregistered label passes test_no_stale_axes vacuously
+    (that test only asserts label NOT IN approved_for_live), so a made-up
+    string would buy a green test and lose the fact. See measurements/validity.py
+    -- "nhan duoc SUY RA, khong duoc KHAI BAO".
+    """
+    if not source_axes:
+        # Khong co report nao -> khong co gi de SUY RA. Tra khoi rong, KHONG bia
+        # nhan: goi y "chua biet" phai la vang mat, khong phai mot tu moi.
+        return {}
+    values = [entry.get(key, {}) for entry in source_axes]
+    first = values[0]
+    if all(v == first for v in values):
+        return dict(first)
+    raise ValueError(
+        '%s disagrees across %d source reports; refusing to invent a label. '
+        'Distinct values: %r' % (key, len(source_axes), values))
+
+
+def _reduce_aoi_axis(source_axes: list) -> dict:
+    """Same reduction, but z_grid_s is allowed to differ and is enumerated.
+
+    The 166 artifacts share one AoI ROLE (fixed, pre-registered z grid, no AoI
+    generator called) while running on several such grids -- 8 tau-scaled
+    4-point grids plus 1 fixed 9-point grid, measured 2026-09-09. That is
+    "uniform in role, plural in grid", which is a fact, not a gap.
+    """
+    if not source_axes:
+        return {}
+    axes = [entry.get('aoi_axis', {}) for entry in source_axes]
+    grids = []
+    for a in axes:
+        g = a.get('z_grid_s')
+        if g is not None and list(g) not in grids:
+            grids.append(list(g))
+    stripped = [{k: v for k, v in a.items() if k != 'z_grid_s'} for a in axes]
+    first = stripped[0]
+    if not all(v == first for v in stripped):
+        raise ValueError(
+            'aoi_axis disagrees beyond z_grid_s; refusing to invent a label. %r' % stripped)
+    out = dict(first)
+    if len(grids) == 1:
+        out['z_grid_s'] = grids[0]
+    else:
+        # Plural grids: `z_grids_s` does NOT satisfy the `z_grid_s` assertion in
+        # test_no_stale_axes for role aoi_axis_free. That assertion only runs for
+        # LIVE/, and this audit is PENDING/ with reusable_for_main_grid=False, so
+        # promoting it would be the actual error. Debt recorded here, at the line
+        # that creates it, rather than in a notebook nobody greps.
+        out['z_grids_s'] = grids
+        out['z_grid_s_absent_because'] = (
+            '%d distinct pre-registered z grids across the 166 source reports; '
+            'enumerated in z_grids_s. Blocks promotion to LIVE/ by design.' % len(grids))
+    return out
+
+
 def sha256_file(path: Path) -> str:
     h = hashlib.sha256()
     with path.open('rb') as fh:
@@ -79,8 +144,8 @@ def audit(repo: Path = REPO) -> dict:
     # Inherit source scope, not an invented approval for new measurements.
     validity = {
         'schema': 'dt4n.validity.v1', 'axis_role': ROLE_AXIS_FREE,
-        'aoi_axis': source_axes[0]['aoi_axis'] if len(source_axes) == 1 else {'label': 'MIXED_OR_MISSING'},
-        'sla_axis': source_axes[0]['sla_axis'] if len(source_axes) == 1 else {'label': 'MIXED_OR_MISSING'},
+        'aoi_axis': _reduce_aoi_axis(source_axes),
+        'sla_axis': _reduce_field(source_axes, 'sla_axis'),
         'pending_on': ['sla_axis'], 'w_loss': None, 'omega': None,
         'note': 'Source scope inherited from reports; this audit checks bytes and readability only. '
                 'A5 proposes exogenous SLA; recovered self_calibrated outcomes cannot supply that grid.',

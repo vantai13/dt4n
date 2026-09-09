@@ -1,0 +1,137 @@
+{
+ "audit_kind": "environmental_drift",
+ "canary_cmd_normalised_distinct": [
+  "-m measurements.decision_error_v2 --run-fixed --tau 3 --z-mode fixed --seeds 999 --out <OUT>"
+ ],
+ "canary_elapsed_s": 1711.0,
+ "canary_identical_bytes": true,
+ "canary_params": {
+  "a": [
+   0.9
+  ],
+  "branch": [
+   "fixed"
+  ],
+  "seed": [
+   999
+  ],
+  "tau": [
+   3.0
+  ]
+ },
+ "canary_run_index": [
+  0,
+  31,
+  62,
+  93,
+  124,
+  155
+ ],
+ "canary_seconds": [
+  11.618315935134888,
+  11.642023086547852,
+  11.556741714477539,
+  11.720296621322632,
+  11.612564086914062,
+  11.678639650344849
+ ],
+ "canary_sha256_distinct": [
+  "9fb07f1adc87043c4b877f497a379df6a04c968f95d5537428a59645a00dc2a3"
+ ],
+ "canary_span": 0,
+ "generated_utc": "2026-09-09T15:10:39.505316+00:00",
+ "git_commit_distinct": [
+  "d8956cf5650c023c809659aa0c58886b79388b4a"
+ ],
+ "n_canary": 6,
+ "n_non_canary": 160,
+ "n_runs": 166,
+ "negative_control": {
+  "n_non_canary_sha_distinct": 160,
+  "parameters_discriminate": true,
+  "why": "neu tham so KHONG tao ra byte khac nhau thi span=0 la tam thuong; 160/160 sha khac nhau chung minh tham so CO tac dung, nen 6 canary trung nhau la do LENH GIONG NHAU, khong phai do tham so bi bo qua."
+ },
+ "schema": "dt4n.canary_span.v1",
+ "source_dir": "/home/ubuntu/dt4n/results/PENDING/phase-T2/sweep_r2",
+ "validity": {
+  "aoi_axis": {
+   "label": "aoi_axis_free",
+   "note": "luoi z CO DINH, tien dang ky; khong goi bo sinh AoI nao",
+   "z_grids_s": [
+    [
+     0.0,
+     0.05,
+     0.1,
+     0.2,
+     0.3,
+     0.55,
+     1.0,
+     2.0,
+     4.0
+    ],
+    [
+     0.2,
+     0.6,
+     1.1,
+     2.0
+    ],
+    [
+     0.5,
+     1.5,
+     2.75,
+     5.0
+    ],
+    [
+     2.0,
+     6.0,
+     11.0,
+     20.0
+    ],
+    [
+     1.0,
+     3.0,
+     5.5,
+     10.0
+    ],
+    [
+     0.1,
+     0.3,
+     0.55,
+     1.0
+    ],
+    [
+     2.8,
+     8.4,
+     15.4,
+     28.0
+    ],
+    [
+     0.3,
+     0.9,
+     1.65,
+     3.0
+    ],
+    [
+     0.05,
+     0.15,
+     0.275,
+     0.5
+    ]
+   ]
+  },
+  "axis_role": "aoi_axis_free",
+  "note": "Audit do ON DINH MOI TRUONG tren dung 166 run cua sweep_r2; pham vi hieu luc ke thua tu chinh cac report do, khong tu khai.",
+  "omega": null,
+  "pending_on": [
+   "sla_axis"
+  ],
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "self_calibrated",
+   "source_path": "results/LIVE/phase-20R/sla_calibration.json",
+   "source_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
+  },
+  "w_loss": null
+ },
+ "verdict": "CANARY_SPAN_0_WITH_DISCRIMINATING_CONTROL"
+}

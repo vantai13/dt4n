@@ -36,6 +36,11 @@ UNRESOLVED_DOC_CLAIMS: dict[str, str] = {
         "'Moc' viet thieu chu '-a'; `A070`, `A070b` va ca bon artifact deu "
         "dung ten day du. Tao tag thu hai tren cung commit se bia ra mot moc "
         "thu hai khong ton tai. Tai lieu DA KY khong sua -- anh xa o day.",
+    "phase-20R2-prereg-signed":
+        "(4) CHUA KY. `docs/phase-20R2/00-preregistration.md` §10 tu khai gate "
+        "0-3 CHUA DAT va §11 de trong o chu ky; ten tag chi xuat hien trong "
+        "khoi lenh HUONG DAN cach ky, khong phai mot claim rang moc da co. "
+        "Tag duoc tao DUNG LUC ky -- xoa dong nay khi do.",
     "phase-20-complete": "(3) MOC CHUA XAC DINH",
     "phase-20-stage-frozen": "(3) MOC CHUA XAC DINH",
     "phase-20R-campaign-grid": "(3) MOC CHUA XAC DINH",

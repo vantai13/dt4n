@@ -1,0 +1,149 @@
+{
+ "all_cells_share_one_not_evaluated_pattern": true,
+ "audit_kind": "vacuous_pass_detection",
+ "criteria_never_evaluated_on_any_cell": [
+  "censoring_ok",
+  "mondrian_cells_populated",
+  "sigma_feasible"
+ ],
+ "cross_check_sigma_feasible": {
+  "examples": [
+   {
+    "alpha": 0.1,
+    "dt": 0.005,
+    "mode": "cbr",
+    "n": 200000,
+    "omega": 0.0,
+    "rho_bar": 0.925,
+    "tau": 0.5
+   },
+   {
+    "alpha": 0.1,
+    "dt": 0.005,
+    "mode": "cbr",
+    "n": 200000,
+    "omega": 0.0,
+    "rho_bar": 0.96,
+    "tau": 0.5
+   },
+   {
+    "alpha": 0.1,
+    "dt": 0.005,
+    "mode": "cbr",
+    "n": 200000,
+    "omega": 0.0,
+    "rho_bar": 0.925,
+    "tau": 1.0
+   }
+  ],
+  "infeasible_mode_rho_per_calibration": [
+   [
+    "cbr",
+    0.925
+   ],
+   [
+    "cbr",
+    0.96
+   ]
+  ],
+  "n_rows_marked_realizable_but_infeasible": 16,
+  "why": "sigma = a * sigma_max; sigma_max = 0 lam truc sigma SUP xuong mot diem, nen o do khong con la mot o cua thi nghiem. (Ten truong la `sigma_max`; \"sigma_max_regime\" chi la van ban trong `reason`.)"
+ },
+ "cross_checked_against": "/home/ubuntu/dt4n/results/LIVE/phase-20R/sla_calibration.json",
+ "gate_4_2_not_evaluated_is_empty": false,
+ "generated_utc": "2026-09-09T15:21:00.345833+00:00",
+ "headline_counts": {
+  "n_cells": 96,
+  "n_realizable": 96,
+  "n_rejected": 0,
+  "rejected_by_reason": {}
+ },
+ "n_criteria": 9,
+ "n_criteria_never_evaluated": 3,
+ "n_rows": 96,
+ "not_evaluated_patterns": {
+  "censoring_ok, mondrian_cells_populated, sigma_feasible": 96
+ },
+ "note": "3/9 tieu chi KHONG CHAY o BAT KY o nao; verdict xanh vi khong ai hoi. KHONG ke thua ket luan kha thi cua T2.",
+ "per_criterion": {
+  "censoring_ok": {
+   "evaluated_on_any_cell": false,
+   "n_fail": 0,
+   "n_not_evaluated": 96,
+   "n_pass": 0
+  },
+  "enough_blocks": {
+   "evaluated_on_any_cell": true,
+   "n_fail": 0,
+   "n_not_evaluated": 0,
+   "n_pass": 96
+  },
+  "mondrian_cells_populated": {
+   "evaluated_on_any_cell": false,
+   "n_fail": 0,
+   "n_not_evaluated": 96,
+   "n_pass": 0
+  },
+  "n_meets_budget": {
+   "evaluated_on_any_cell": true,
+   "n_fail": 0,
+   "n_not_evaluated": 0,
+   "n_pass": 96
+  },
+  "omega_in_domain": {
+   "evaluated_on_any_cell": true,
+   "n_fail": 0,
+   "n_not_evaluated": 0,
+   "n_pass": 96
+  },
+  "run_covers_tau": {
+   "evaluated_on_any_cell": true,
+   "n_fail": 0,
+   "n_not_evaluated": 0,
+   "n_pass": 96
+  },
+  "sigma_feasible": {
+   "evaluated_on_any_cell": false,
+   "n_fail": 0,
+   "n_not_evaluated": 96,
+   "n_pass": 0
+  },
+  "tau_positive": {
+   "evaluated_on_any_cell": true,
+   "n_fail": 0,
+   "n_not_evaluated": 0,
+   "n_pass": 96
+  },
+  "tau_resolves_dt": {
+   "evaluated_on_any_cell": true,
+   "n_fail": 0,
+   "n_not_evaluated": 0,
+   "n_pass": 96
+  }
+ },
+ "schema": "dt4n.realizability_audit.v1",
+ "source": "/home/ubuntu/dt4n/results/PENDING/phase-T2/realizability_grid.json",
+ "validity": {
+  "aoi_axis": {
+   "label": "aoi_axis_free",
+   "note": "audit so sach cua gate; khong dung truc tuoi z, khong goi bo sinh AoI nao"
+  },
+  "axis_role": "aoi_axis_free",
+  "note": "Bang kha thi doi chieu den tu sla_calibration.json (truc SLA DEPRECATED, loi S14), nen ket luan kha thi cua audit nay cung cho truc SLA duoc thay.",
+  "omega": null,
+  "pending_on": [
+   "sla_axis"
+  ],
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "self_calibrated",
+   "source_path": "results/LIVE/phase-20R/sla_calibration.json",
+   "source_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
+  },
+  "w_loss": null
+ },
+ "verdict": "VACUOUS_GREEN",
+ "verdict_counts": {
+  "REALIZABLE": 96
+ }
+}

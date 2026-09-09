@@ -1,0 +1,37 @@
+# Moi truong chay bo test dt4n.
+# Do duoc 2026-09-09 tren env `sdn_rl` (python 3.12.13) -- la moi truong da
+# sinh ra MOI con so trong docs/phase-20R2/.
+#
+# VI SAO CO TEP NAY: con so "N loi" chi so sanh duoc giua hai lan chay CUNG
+# moi truong. Truoc tep nay, "25 loi" la mot con so tren MAY TAC GIA, khong ai
+# ngoai kiem duoc -- dung cung loai van de ma 20R2.1 vua sua cho DU LIEU.
+
+numpy==2.4.3
+pandas==3.0.2
+scipy==1.17.1
+pyarrow==25.0.1
+matplotlib==3.10.8
+networkx==3.6.1
+pytest==9.0.3
+
+# ---------------------------------------------------------------------------
+# MININET -- doc ky, day la cho de sai nhat trong repo nay.
+#
+# Thu muc `mininet/` trong repo NAY LA GOI CUA CHINH DU AN (load_spec.py,
+# rho_schedule.py, topology_tandem.py, ...) va DA NAM TRONG GIT (33 tep).
+# No TRUNG TEN voi goi Mininet that. `mininet/__init__.py` xu ly bang cach
+# noi them `__path__` toi Mininet he thong khi co.
+#
+# He qua tren mot CLONE SACH KHONG CO Mininet he thong:
+#   `from mininet.topo import Topo` (trong mininet/topology*.py) THAT BAI,
+#   va that bai o thoi diem THU GOM (collect), khong phai luc chay. Marker
+#   `live` trong pytest.ini KHONG cuu duoc: marker chi bo qua luc CHAY, con
+#   import loi thi da no truoc do -> bao cao ra "collect error", khong phai
+#   "skip".
+#
+# Mininet KHONG cai duoc bang pip. Cai bang:
+#   sudo apt-get install mininet          # hoac
+#   git clone https://github.com/mininet/mininet && mininet/util/install.sh -a
+#
+# Test can Mininet that da duoc danh dau `live` trong pytest.ini; CI chay
+# `-m "not live and not custody"`.
