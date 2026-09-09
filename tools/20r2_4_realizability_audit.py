@@ -22,11 +22,26 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+import os
+
 from measurements.validity import ROLE_AXIS_FREE
 
 REPO = Path(__file__).resolve().parents[1]
 GRID = Path('results/PENDING/phase-T2/realizability_grid.json')
 CALIB = Path('results/LIVE/phase-20R/sla_calibration.json')
+
+
+def rel(path) -> str:
+    """Duong dan TUONG DOI voi goc repo, de ghi VAO artifact.
+
+    Vi sao bat buoc: mot artifact chua "/home/<ai do>/..." khong tai lap
+    bit-exact tren may khac, nen no khong bao gio lam GOLDEN duoc (20R2.3 doi
+    bit-exact), va no ro bo cuc may vao thu se cong bo. `20r2_0_axis_audit.py`
+    da lam dung tu dau (os.path.relpath(..., REPO)); hai cong cu nay thi khong
+    -- do duoc 2026-09-09, 3 truong lech khi chay lai tren may khac.
+    """
+    return os.path.relpath(os.path.abspath(str(path)), REPO).replace(os.sep, '/')
+
 
 
 def audit(grid_path: Path, calib_path: Path) -> dict:
@@ -63,8 +78,8 @@ def audit(grid_path: Path, calib_path: Path) -> dict:
         'schema': 'dt4n.realizability_audit.v1',
         'audit_kind': 'vacuous_pass_detection',
         'generated_utc': datetime.now(timezone.utc).isoformat(),
-        'source': str(grid_path),
-        'cross_checked_against': str(calib_path),
+        'source': rel(grid_path),
+        'cross_checked_against': rel(calib_path),
         'headline_counts': {k: grid.get(k) for k in
                             ('n_cells', 'n_realizable', 'n_rejected', 'rejected_by_reason')},
         'n_rows': len(rows),
@@ -92,7 +107,7 @@ def audit(grid_path: Path, calib_path: Path) -> dict:
             },
             'sla_axis': {
                 'label': 'self_calibrated',
-                'source_path': str(CALIB),
+                'source_path': rel(CALIB),
                 'source_sha256': hashlib.sha256((REPO / CALIB).read_bytes()).hexdigest(),
             },
             'pending_on': ['sla_axis'],

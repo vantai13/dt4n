@@ -22,10 +22,25 @@ from collections import Counter
 from datetime import datetime, timezone
 from pathlib import Path
 
+import os
+
 from measurements.validity import ROLE_AXIS_FREE
 
 REPO = Path(__file__).resolve().parents[1]
 SWEEP = Path('results/PENDING/phase-T2/sweep_r2')
+
+
+def rel(path) -> str:
+    """Duong dan TUONG DOI voi goc repo, de ghi VAO artifact.
+
+    Vi sao bat buoc: mot artifact chua "/home/<ai do>/..." khong tai lap
+    bit-exact tren may khac, nen no khong bao gio lam GOLDEN duoc (20R2.3 doi
+    bit-exact), va no ro bo cuc may vao thu se cong bo. `20r2_0_axis_audit.py`
+    da lam dung tu dau (os.path.relpath(..., REPO)); hai cong cu nay thi khong
+    -- do duoc 2026-09-09, 3 truong lech khi chay lai tren may khac.
+    """
+    return os.path.relpath(os.path.abspath(str(path)), REPO).replace(os.sep, '/')
+
 
 
 def _norm_cmd(cmd) -> str:
@@ -100,7 +115,7 @@ def measure(sweep: Path) -> dict:
         'schema': 'dt4n.canary_span.v1',
         'audit_kind': 'environmental_drift',
         'generated_utc': datetime.now(timezone.utc).isoformat(),
-        'source_dir': str(sweep),
+        'source_dir': rel(sweep),
         'validity': _inherited_validity(sweep),
         'n_runs': len(records),
         'n_canary': len(canary),

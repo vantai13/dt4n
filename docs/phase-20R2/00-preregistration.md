@@ -27,13 +27,14 @@ MASTER_PLAN_v10.md   khong co trong checkout
 | Mục | Trạng thái |
 |---|---|
 | A1–A4, A6, A7 (kiểm toán trục, CPU) | ✅ đo được, số trong artifact |
-| Danh sách 5 RQ (a–e) | ⚠️ chép từ lesson, **không kiểm được** |
+| Danh sách 5 RQ (a–e) | ⚠️ đã điền, **nguồn NGOÀI REPO** — mục 1 |
 | Lưới ~~960 ô~~ → **800 ô** | ✅ **suy ra từ bảng khả thi** — mục 0.1 |
 | Định nghĩa "một ô" | ✅ **đã xác định từ artifact** — mục 0.1 |
 
-Dòng ⚠️ còn lại phải được điền từ `PHASE_20R2.md` **trước khi ký**. Ký mà để
-nguyên là lặp lại đúng lỗi mà phase này tồn tại để chống: nhận một con số
-không có nguồn kiểm được.
+Dòng ⚠️ còn lại **đã được điền** (mục 1) nhưng từ một nguồn **không nằm trong
+repo**, nên nó được **gắn nhãn nguồn yếu** thay vì được coi là đã kiểm. Đó là
+mức trung thực cao nhất đạt được mà không đưa `PHASE_20R2.md` vào git — và đưa
+nó vào git là cách đóng hẳn dòng này.
 
 ### 0.1 ★ Định nghĩa "một ô" và kích thước lưới — GIẢI ĐƯỢC TỪ CHECKOUT
 
@@ -97,13 +98,69 @@ thi mâu thuẫn với chính tên phase.
 
 ## 1. RQ và estimand
 
+| Mã | Câu hỏi | Đo bằng gì |
+|---|---|---|
+| `RQ-20R2a` | Twin sai quyết định bao nhiêu theo tuổi `z`? | `err(z \| chế độ)` |
+| `RQ-20R2b` | Sai đó **giá** bao nhiêu? | `d_sla(z)` — vi phạm SLA |
+| `RQ-20R2c` | `err` biến thiên thế nào theo `τ` trên miền khả thi? | trục chính của v10 |
+| `RQ-20R2d` | Twin có khớp Sheppard không? | `err = arccos(exp(−z/τ))/π` |
+| `RQ-20R2e` | ★ Kết quả điều kiện theo **trục nào**? | ⟵ `20R2.0` trả lời |
+
+**Nguồn 5 RQ: `PHASE_20R2.md` MỤC 1**, chép qua phiên hướng dẫn 2026-09-09.
+
+> ⚠️ Tài liệu này **không có trong checkout** và **chưa từng được thêm vào git**.
+> Đo lại 2026-09-09, chính xác đến từng lệnh:
+>
+> ```text
+> git log --all --diff-filter=A -- '**/PHASE_20R2.md'     -> 0 commit
+> git log --all --diff-filter=A -- '**/MASTER_PLAN_v10.md' -> 0 commit
+> git log -S"RQ-20R2" -- .                                 -> 1 commit (665bebe9)
+> git grep -l "RQ-20R2" HEAD  -> docs/phase-20R2/00-preregistration.md  (CHỈ MỘT)
+> ```
+>
+> Lệnh thứ ba **không** phản chứng hai lệnh đầu — nó chỉ tìm thấy **chính tài
+> liệu này**, tức bản đã chép. Nói cách khác danh sách 5 RQ trong repo là
+> **tự quy chiếu**: nguồn duy nhất của nó là bản chép của chính nó. Đó đúng là
+> định nghĩa của "không tự kiểm được".
+>
+> Cách duy nhất để ai đó kiểm là đưa `PHASE_20R2.md` vào git. Ghi nhãn nguồn
+> yếu là đủ để dùng — giấu nó thì không.
+>
+> `RQ-20R2e` là mục **được thêm**, không có trong `MASTER_PLAN_v10`: T2 đã chứng
+> minh nó quyết định mọi câu còn lại (T2-L5, T2-L8).
+
+### 1.1 ★ CÂU HỎI MỞ — `cbr` là một MỨC hay một ĐỐI CHỨNG? (phải trả lời ở 20R2.2)
+
+`PHASE_20R2.md` §0.1 coi `c_a ∈ {cbr, poisson, h2}` là **một trục ba mức**, tức
+ba mức **cùng loại**. Nhưng `sla_calibration.json` nói khác — `role` đo được:
+
+| `c_a` | ρ̄=0,700 | ρ̄=0,850 | ρ̄=0,925 | ρ̄=0,960 |
+|---|---|---|---|---|
+| `cbr` | `pc1` | `pc1` | `pc1_excluded_by_q8` | `pc1_excluded_by_q8` |
+| `poisson` | `gate` | `gate` | `gate` | `gate` |
+| `h2` | `gate` | `gate` | `gate` | `gate` |
+
+Và `summary` của chính artifact đã **phân hoạch sẵn**: `n_gate_cells = 8`,
+`n_pc1_cells = 4`. `pc1` = *positive control 1* — **nhánh đối chứng**, không
+phải một mức điều trị.
+
 ```text
-RQ-20R2a  err(z | che do) theo tuoi z
-RQ-20R2b  d_sla(z) -- gia cua sai
-RQ-20R2c  err theo tau tren mien kha thi
-RQ-20R2d  err co khop Sheppard khong
-RQ-20R2e  ★ ket qua dieu kien theo TRUC NAO
+NEU cbr CUNG population voi poisson/h2
+    -> c_a la truc 3 muc; luoi KET QUA = 800 o
+NEU KHONG
+    -> luoi KET QUA  = 2 (poisson,h2) x 4 rho x 8 tau x 2 sigma x 5 seed = 640
+       luoi DOI CHUNG= 2 (cbr kha thi)         x 8 tau x 2 sigma x 5 seed = 160
+       va 160 o cbr duoc bao cao RIENG nhu doi chung duong
+                                                        640 + 160 = 800
 ```
+
+⚠️ **Ngân sách KHÔNG đổi trong cả hai trường hợp** (vẫn 800 ô, 29,4 phút hai
+nhánh) — cái đổi là **POPULATION của estimand**, tức được phép kết luận về ai.
+Nên câu hỏi này **không chặn việc ký**, nhưng **chặn việc khai estimand**:
+`POPULATION` là một trong 7 trường bắt buộc của `estimand_id` (H4), nên phải
+trả lời **trước** khi đo, không phải sau.
+
+**Chưa quyết ở đây.** Ghi làm câu hỏi mở của Lesson 20R2.2.
 
 `estimand_id` khai ở Lesson 20R2.2. **⛔ KHÔNG tái dùng `RMS_ALLACTION_DELAY`**
 cho claim về margin: khác LEVEL (`all_action` vs `margin`) và khác SCALE
@@ -519,6 +576,61 @@ T2-L8 ★ DINH CHINH co che: T2 KHONG chay qua sawtooth_age_steps trong
         VUNG suy tu axis_registry.json). `null` van hop le: do la cach noi
         "khong ap dung" bang co che DA CO, khac han voi mot tu moi.
         [cung lop loi voi `vacuous pass` o test_no_stale_axes.py]
+
+20R2-L6 ★ MOI: phan loai `axis_role` THIEU O cho hai truong hop that.
+        Do duoc 2026-09-09. Nhanh LIVE cua test_no_stale_axes.py:201 doi
+        `assert "z_grid_s" in aoi_axis` cho MOI artifact khai aoi_axis_free.
+        Ba artifact 20R2 deu KHONG thoa, vi HAI ly do KHAC NHAU:
+
+          (1) LUOI SO NHIEU -- artifact chay tren NHIEU luoi z co dinh:
+              parquet_recovery.json, canary_span.json  -> co `z_grids_s`
+              (so nhieu), khong co `z_grid_s`. Dinh nghia AXIS_FREE trong
+              measurements/validity.py viet "luoi z CO DINH" o so it, nen
+              khong mo ta duoc artifact tong hop nhieu run.
+          (2) KHONG CO LUOI NAO -- artifact KIEM TOAN SO SACH:
+              realizability_audit.json khong dung truc z, ke ca co dinh.
+              No khong phai consumes (khong dung z), khong phai measures
+              (khong do z), khong phai axis_free (khong co luoi nao de ghim).
+              Ba vai tro hien co khong vai tro nao mo ta dung no.
+
+        Hien ca ba o PENDING/ nen nhanh LIVE khong cham toi -> XANH. Chung se
+        DO khi promote, va luc do cam do la gan mot `z_grid_s` GIA cho qua --
+        DUNG MOT TOI voi `MIXED_OR_MISSING` (20R2-L5): bia mot gia tri de mua
+        mot den xanh, thay vi khai dung rang phan loai chua co o cho minh.
+
+        ⟹ KHONG gan z_grid_s gia. Hai loi thoat hop le:
+           (a) them vai tro `bookkeeping_audit` va cho phep `z_grids_s`
+               QUA MOT AMENDMENT, hoac
+           (b) giu ba artifact o PENDING/ vinh vien va ghi ly do tai day.
+        Chua chon; phai chon TRUOC khi promote bat ky cai nao.
+        [lien quan: 20R2-L5, test_no_stale_axes.py:201]
+
+20R2-L7 ★ MOI: artifact chua DUONG DAN TUYET DOI cua may sinh ra no.
+        Do duoc 2026-09-09: hai cong cu 20R2 moi (`20r2_1_canary_span.py`,
+        `20r2_4_realizability_audit.py`) ghi 3 truong dang
+        "/home/ubuntu/dt4n/..." vao artifact. Chay lai tren may khac cho DUNG
+        MOI CON SO nhung KHAC BYTE.
+        Ba ly do phai sua, khong phai mot:
+          (1) TAI LAP  -- 20R2.3 doi golden BIT-EXACT. Artifact khong tai lap
+              lien may khong lam golden duoc; no se do moi lan CI chay.
+          (2) RO       -- ten nguoi dung + bo cuc may di theo thu se cong bo.
+          (3) NHAT QUAN-- `20r2_0_axis_audit.py` DA lam dung tu dau
+              (os.path.relpath(..., REPO)). Mot phase co hai quy uoc la mot
+              phase chua co quy uoc nao.
+        DA SUA ca ba truong; da them test/test_no_absolute_paths_in_artifacts.py.
+
+        ★ Va no lo ra mot NO LON HON: quet ca cay results/ thay 39 artifact
+        thua ke cung mac loi nay -- 15 SMOKE/phase-20R, 7 PENDING/phase-23,
+        7 LIVE/phase-23, 5 SMOKE/phase-G2, 5 PENDING/phase-T2. Bay trong so do
+        o LIVE/ (sha duoc trich dan noi khac) nen phai qua amendment.
+        Xu ly HAI TANG, co chu dich:
+          TANG 1 CHAN     phase-20R2 -- do tuyet doi neu vi pham.
+          TANG 2 BANH COC 39 tep ghim thanh danh sach; danh sach CHI DUOC NGAN
+                          DI. Them tep moi -> do; sua duoc mot tep -> cung do,
+                          kem loi nhac xoa khoi danh sach.
+        Vi sao khong bat ca 39 do ngay: 39 dong do thuong truc se lam ca bo
+        test bi lo di -- dung loi "DO THUONG TRUC thi da chet" (Phu luc B), va
+        la mat kia cua 20R2-L4 (XANH THUONG TRUC).
 
 20R2-L3 Hai he ten truc cung ton tai: measured_v7 -> measured_v7_uniform;
         legacy_sawtooth_51ms -> assumed_sawtooth_51ms. Anh xa 1-1 khoa boi

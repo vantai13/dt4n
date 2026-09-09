@@ -1,0 +1,49 @@
+# Baseline loi cua dt4n -- DANH SACH TEN, khong phai so dem
+# Sinh boi tools/20r2_baseline_failures.py, 2026-09-09T16:35:04.823302+00:00
+#
+# Doi chieu bang `diff`, khong bang so dem. Hai tap cung luc luong van co
+# the khac nhau hoan toan.
+#
+# Dieu kien doc: env sdn_rl, Python 3.12, requirements-test.txt, VA co san
+# cay results/. Mot clone sach KHONG cho cung con so -- xem
+# docs/phase-20R2/01-recovery-and-remediation.md.
+
+## pytest: 25 failed, 3295 passed, 198 skipped, 13 deselected, 2 warnings in 677.05s (0:11:17)
+
+## NHOM N7 -- 17 artifact, MOT test duy nhat
+## test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for
+   results/PENDING/phase-T2/adjudication_r2.json
+   results/PENDING/phase-T2/calib_p0925_tau10_report.json
+   results/PENDING/phase-T2/calib_p0925_tau10_v3_report.json
+   results/PENDING/phase-T2/clip_direction_r2.json
+   results/PENDING/phase-T2/conformal_u_cond.json
+   results/PENDING/phase-T2/conformal_u_cond_load.json
+   results/PENDING/phase-T2/conformal_u_main.json
+   results/PENDING/phase-T2/hygiene_checks.json
+   results/PENDING/phase-T2/hygiene_checks_r2.json
+   results/PENDING/phase-T2/preservation_r2.json
+   results/PENDING/phase-T2/realizability_grid.json
+   results/PENDING/phase-T2/rms_reference_check_r2.json
+   results/PENDING/phase-T2/traces/rho_p0925_tau10_s101.meta.json
+   results/PENDING/phase-T2/traces/rho_p0925_tau10_s102.meta.json
+   results/PENDING/phase-T2/traces/rho_p0925_tau10_s103.meta.json
+   results/PENDING/phase-T2/traces/rho_p0925_tau10_s104.meta.json
+   results/PENDING/phase-T2/traces/rho_p0925_tau10_s105.meta.json
+
+## CAC LOI CON LAI -- 8, ghi DU TEN
+   test/test_cli_flags_are_wired.py::test_every_declared_flag_is_read_somewhere[tools/g2_kill_test.py]
+   test/test_cli_flags_are_wired.py::test_every_declared_flag_is_read_somewhere[tools/g3a_omega_sweep.py]
+   test/test_cli_flags_are_wired.py::test_every_declared_flag_is_read_somewhere[tools/g3b_sigma_tau_grid.py]
+   test/test_g3_dryrun.py::test_mixture_acf_has_the_signed_endpoints
+   test/test_g3_dryrun.py::test_quantization_step_is_smaller_in_dangerous_persistent_cell
+   test/test_g3_dryrun.py::test_quantize_target_is_independent_per_window_rounding
+   test/test_no_dangling_parquet_refs.py::test_known_dangling_only_shrinks
+   test/test_phase23_cell_margins.py::test_G23_225_canonical_input_preserves_published_numbers[g23-17c]
+
+## TONG: 25 ten (N7 tinh la 17 dong)
+
+## Phan bo cac loi con lai theo tep
+     3  test/test_cli_flags_are_wired.py
+     3  test/test_g3_dryrun.py
+     1  test/test_no_dangling_parquet_refs.py
+     1  test/test_phase23_cell_margins.py

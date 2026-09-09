@@ -428,8 +428,31 @@ Khôi phục đủ không đồng nghĩa đã đạt gate bit-exact v8 của 20R
 
 **Không chạy lại 166 lệnh (lối a).** Dữ liệu đã nguyên vẹn và trục không
 phù hợp lưới chính. Chọn (c) cho tái dùng: số lệnh được trừ = 0.
-Ước tính từ run_log vẫn là 2,95 h/nhánh hoặc 10,63 h/nhánh tùy đơn vị ô;
-không thể xác nhận ngân sách ±30% trước khi định nghĩa lưới/harness.
+
+★ **Đính chính ngân sách (2026-09-09).** Câu "2,95 h/nhánh hoặc 10,63 h/nhánh
+tùy đơn vị ô" đã **hết hiệu lực**: đơn vị ô nay xác định được (prereg §0.1),
+và ngân sách đo được là **14,7 phút/nhánh · 29,4 phút hai nhánh**
+(1,1028 s/ô × 800 ô). Ước tính 2,95 h sai 12 lần = 10 (ô mỗi lệnh) × 1,2
+(960/800). Nguồn: `axis_audit.json` khoá `A7_cpu_budget.*.corrected`.
+
+★ **Cái giá của việc KHÔNG bảo tồn — đo được, không suy đoán.**
+Đo bởi người hướng dẫn trên một **clone sạch** (điều kiện của người phản biện:
+không Mininet hệ thống, không dữ liệu ngoài git), so hai commit:
+
+| | pass | fail |
+|---|---:|---:|
+| `665bebe9` — trước khi commit parquet | 2343 | 94 |
+| `ccc4aa64` — sau khi commit parquet | 2846 | 43 |
+| **chênh lệch** | **+503** | **−51** |
+
+3,10 MB đổi lấy **503 test chạy được** và **51 lỗi biến mất**. Trước đó, hơn
+nửa số lỗi mà một clone sạch báo là do **thiếu dữ liệu**, không do mã sai — và
+một người phản biện sẽ đọc chúng đúng nghĩa đen là "repo hỏng".
+
+⚠️ Hai con số này đo trên **máy của người hướng dẫn**, không phải máy tác giả;
+chúng chưa tái lập được từ checkout này (máy tác giả có sẵn dữ liệu nên không
+dựng lại được điều kiện "clone sạch" một cách trung thực). Ghi kèm nhãn nguồn
+đúng như vậy, không nâng lên thành số tự đo.
 
 Bằng chứng: `results/PENDING/phase-20R2/parquet_recovery.json`, sinh bởi
 `tools/20r2_1_parquet_recovery.py`; mỗi dòng ghi SHA kỳ vọng/thực tế,

@@ -213,10 +213,14 @@ là cách nói "không áp dụng" bằng cơ chế **đã có**, khác hẳn m�
 
 ## Kiểm thử toàn repo và đối chiếu mã gốc
 
-`pytest -q`: **25 failed, 3287 passed, 197 skipped, 13 deselected**,
-679,96 giây (11 phút 20 giây). Không báo toàn repo xanh.
+`pytest -q`: **25 failed, 3295 passed, 198 skipped, 13 deselected**,
+677,05 giây (11 phút 17 giây). Không báo toàn repo xanh.
 
-Số `passed` tăng 2842 → 3287 so với lần đo trước là do **test mới thêm trong
+Danh sách tên **sinh bởi công cụ**, không gõ tay:
+`docs/phase-20R2/baseline_failures.txt` ← `tools/20r2_baseline_failures.py`.
+Lần sau `diff` tệp đó, đừng so số đếm.
+
+Số `passed` tăng 2842 → 3295 so với lần đo trước là do **test mới thêm trong
 đợt này** (từ vựng nhãn trục, bất biến z trên artifact đông lạnh, lưới và ngân
 sách), không phải do lỗi cũ tự khỏi: **danh sách 25 tên bên dưới khớp từng
 dòng** với danh sách trước.
@@ -303,6 +307,41 @@ dùng lại cây results hiện có, chạy lại các nhóm lỗi; **không** c
 suite lần thứ hai trên baseline. `verification.json` ghi danh tính từng
 lỗi và tập lỗi mới rỗng.
 
+### Đường dẫn tuyệt đối trong artifact — nợ riêng và nợ thừa kế
+
+Hai công cụ mới của đợt này ghi **3 trường** dạng `/home/ubuntu/dt4n/...` vào
+artifact. Chạy lại trên máy khác cho **đúng mọi con số** nhưng **khác byte** —
+nên artifact đó **không dùng làm golden bit-exact cho 20R2.3 được**, và nó rò
+tên người dùng vào thứ sẽ công bố. Đã sửa cả ba, dùng lại đúng quy ước mà
+`tools/20r2_0_axis_audit.py` có sẵn (`os.path.relpath(..., REPO)`).
+
+Quét cả cây `results/` thì lộ ra nợ lớn hơn — **39 artifact thừa kế** cùng mắc:
+
+| Tầng | Số tệp |
+|---|---:|
+| `SMOKE/phase-20R` | 15 |
+| `PENDING/phase-23` | 7 |
+| `LIVE/phase-23` | **7** |
+| `SMOKE/phase-G2` | 5 |
+| `PENDING/phase-T2` | 5 |
+
+`test/test_no_absolute_paths_in_artifacts.py` xử lý **hai tầng, có chủ đích**:
+tầng 1 **chặn tuyệt đối** trong `phase-20R2`; tầng 2 ghim 39 tệp thành danh
+sách **chỉ được ngắn đi**. Thêm tệp mới → đỏ; sửa được một tệp → cũng đỏ, kèm
+lời nhắc xoá khỏi danh sách.
+
+Không bắt cả 39 đỏ ngay là **cố ý**: 39 dòng đỏ thường trực sẽ làm cả bộ test
+bị lờ đi — đúng lỗi *"một cơ chế phòng thủ ĐỎ THƯỜNG TRỰC thì đã chết"*, và là
+mặt kia của đèn xanh rỗng ở `20R2-L4`. Bảy tệp ở `LIVE/` có sha được trích dẫn
+nơi khác nên phải qua amendment, không sửa lặng.
+
+**Kill test cho chính cái chắn này** (2026-09-09) — cả hai chiều đều nổ:
+
+```text
+tiêm 1 đường dẫn tuyệt đối vào artifact 20R2   ->  tầng 1 ĐỎ   ✅
+giả vờ 1 nợ cũ đã được sửa                     ->  bánh cóc ĐỎ ✅
+```
+
 ## Tệp kết quả và cách chạy lại
 
 - `results/PENDING/phase-20R2/parquet_recovery.json`: 166 dòng SHA, số hàng, byte.
@@ -311,6 +350,7 @@ lỗi và tập lỗi mới rỗng.
 - `results/PENDING/phase-20R2/axis_audit.json`: audit trục và ngân sách.
 - `results/PENDING/phase-20R2/canary_span.json`: canary span và đối chứng âm.
 - `results/PENDING/phase-20R2/realizability_audit.json`: phát hiện đèn xanh rỗng.
+- `docs/phase-20R2/baseline_failures.txt`: danh sách TÊN 25 lỗi baseline.
 - `results/SMOKE/phase-20R2/remediation_smoke.json`: số trước/sau và bit-exact.
 - `results/SMOKE/phase-20R2/tau_sweep_cli.json`: kết quả CLI smoke thực tế.
 - `results/SMOKE/phase-20R2/verification.json`: tổng hợp kết quả kiểm thử.
