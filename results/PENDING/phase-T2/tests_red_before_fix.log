@@ -1,0 +1,64 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ubuntu/miniforge3/envs/sdn_rl/bin/python
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/dt4n
+configfile: pytest.ini
+plugins: anyio-4.13.0
+collecting ... collected 14 items
+
+test/test_t2_estimand_registry.py::test_glossary_registers_both_estimands_with_all_seven_fields PASSED [  7%]
+test/test_t2_estimand_registry.py::test_glossary_no_longer_claims_the_two_harnesses_match PASSED [ 14%]
+test/test_t2_estimand_registry.py::test_the_two_estimands_are_numerically_different_on_the_same_cell PASSED [ 21%]
+test/test_t2_estimand_registry.py::test_glossary_warns_against_the_number_that_was_cited_by_mistake PASSED [ 28%]
+test/test_t2_estimand_registry.py::test_descriptor_points_at_the_signed_artifact_by_hash PASSED [ 35%]
+test/test_t2_estimand_registry.py::test_signed_artifact_is_not_mutated_by_the_erratum PASSED [ 42%]
+test/test_t2_estimand_registry.py::test_prereg_hash_still_matches_the_signed_artifact PASSED [ 50%]
+test/test_t2_estimand_registry.py::test_every_signed_prediction_declares_an_estimand_id PASSED [ 57%]
+test/test_t2_estimand_registry.py::test_the_six_reopened_predictions_all_live_on_the_margin_estimand PASSED [ 64%]
+test/test_t2_estimand_registry.py::test_harness_map_sends_each_estimand_to_exactly_one_module PASSED [ 71%]
+test/test_t2_estimand_registry.py::test_tau_sweep_declares_its_estimand_in_code FAILED [ 78%]
+test/test_t2_estimand_registry.py::test_decision_error_v2_declares_its_estimand_in_code FAILED [ 85%]
+test/test_t2_estimand_registry.py::test_the_two_modules_do_not_declare_the_same_estimand FAILED [ 92%]
+test/test_t2_estimand_registry.py::test_the_old_band_window_is_marked_superseded PASSED [100%]
+
+=================================== FAILURES ===================================
+_________________ test_tau_sweep_declares_its_estimand_in_code _________________
+
+    def test_tau_sweep_declares_its_estimand_in_code():
+        """cert/tau_sweep.py DA ghi scale/level; A-T2-3 doi hoi them ESTIMAND_ID."""
+        import cert.tau_sweep as TS
+>       assert getattr(TS, "ESTIMAND_ID", None) == "RMS_MARGIN_COST"
+E       AssertionError: assert None == 'RMS_MARGIN_COST'
+E        +  where None = getattr(<module 'cert.tau_sweep' from '/home/ubuntu/dt4n/cert/tau_sweep.py'>, 'ESTIMAND_ID', None)
+
+test/test_t2_estimand_registry.py:154: AssertionError
+_____________ test_decision_error_v2_declares_its_estimand_in_code _____________
+
+    def test_decision_error_v2_declares_its_estimand_in_code():
+        """TEST NAY PHAI DO TRUOC KHI SUA CODE (TDD).
+    
+        decision_error_v2 hien KHONG khai estimand nao -- do dung la lo hong da
+        gay ra loi. Sau khi sua, no phai tu to cao chinh no.
+        """
+        import measurements.decision_error_v2 as DE
+>       assert getattr(DE, "ESTIMAND_ID", None) == "RMS_ALLACTION_DELAY"
+E       AssertionError: assert None == 'RMS_ALLACTION_DELAY'
+E        +  where None = getattr(<module 'measurements.decision_error_v2' from '/home/ubuntu/dt4n/measurements/decision_error_v2.py'>, 'ESTIMAND_ID', None)
+
+test/test_t2_estimand_registry.py:164: AssertionError
+____________ test_the_two_modules_do_not_declare_the_same_estimand _____________
+
+    def test_the_two_modules_do_not_declare_the_same_estimand():
+        import cert.tau_sweep as TS
+        import measurements.decision_error_v2 as DE
+>       assert getattr(TS, "ESTIMAND_ID", None) != getattr(DE, "ESTIMAND_ID", None)
+E       AssertionError: assert None != None
+E        +  where None = getattr(<module 'cert.tau_sweep' from '/home/ubuntu/dt4n/cert/tau_sweep.py'>, 'ESTIMAND_ID', None)
+E        +  and   None = getattr(<module 'measurements.decision_error_v2' from '/home/ubuntu/dt4n/measurements/decision_error_v2.py'>, 'ESTIMAND_ID', None)
+
+test/test_t2_estimand_registry.py:170: AssertionError
+=========================== short test summary info ============================
+FAILED test/test_t2_estimand_registry.py::test_tau_sweep_declares_its_estimand_in_code
+FAILED test/test_t2_estimand_registry.py::test_decision_error_v2_declares_its_estimand_in_code
+FAILED test/test_t2_estimand_registry.py::test_the_two_modules_do_not_declare_the_same_estimand
+========================= 3 failed, 11 passed in 0.39s =========================

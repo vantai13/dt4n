@@ -1,0 +1,67 @@
+{
+ "schema": "dt4n.estimand_descriptor.v1",
+ "authority": "docs/phase-T2/00-preregistration.md#AMENDMENT-A-T2-3",
+ "why_a_separate_file": "01-prediction-signed.json DA KY va hash cua no bi ghim trong 00-preregistration.md:587 va trong test/test_t2_1_prediction.py. Sua no = pha custody. File nay TRO VAO no bang hash va khai estimand ho no.",
+ "describes": {
+  "path": "docs/phase-T2/01-prediction-signed.json",
+  "sha256": "68e975c2c08247e208cabc29f6e7f7710eeb01e46ba8018be0d9fda885608d7f"
+ },
+ "erratum": {
+  "field": "provenance.estimand",
+  "as_signed": "quy uoc HIEU (1-exp(-z/tau)), khop e_stale cua measurements/decision_error_v2.py:402. Xem docs/GLOSSARY.md.",
+  "verdict": "SAI VE MUC VA THANG; dung ve dang ham",
+  "corrected_estimand_id": "RMS_MARGIN_COST",
+  "evidence": [
+   "provenance.inputs cua chinh no la 4 tep results/SUPERSEDED/phase-22/tau_sweep_*.json",
+   "moi hang cua chung mang level = margin, scale = cost_ms (do duoc: rows[0].level, rows[0].scale)",
+   "results/PENDING/phase-T2/rms_reference_check_r2.json: cross_phase_estimand_verdict = INCOMPATIBLE"
+  ],
+  "numbers_unchanged": true,
+  "why_numbers_unchanged": "A, c, em duoc doc tu rows[].ar1_fit cua 22.6, von la margin/cost. So DUNG; chi NHAN sai."
+ },
+ "numeric_anchors": {
+  "cell": "poisson@0.925",
+  "tau": 0.5,
+  "seeds": [101, 102, 103, 104, 105],
+  "RMS_MARGIN_COST": {
+   "value_ms": 2.1400081935285336,
+   "sigma": 0.0096,
+   "source": "results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json rows[0].ar1_fit.rms_e_model"
+  },
+  "RMS_ALLACTION_DELAY": {
+   "value_ms": 0.34049,
+   "sigma": 0.021802,
+   "a": 0.9,
+   "value_ms_a05": 0.312916,
+   "sigma_a05": 0.012112,
+   "source": "results/PENDING/phase-T2/sweep_r2/*.parquet, nhanh fixed, tau_rho = 0.5, mode = poisson, rho_bar = 0.925"
+  },
+  "reading": "sigma lon hon 2.27 lan ma so do nho hon 6.29 lan. Voi cung mot estimand RMS phai TANG theo sigma; huong nguoc nhau la bang chung manh hon ti so.",
+  "do_not_cite": {
+   "value": 8.235915145897662,
+   "what_it_really_is": "rms_total CUA CHINH 22.6 tai z = 0.055, tau = 0.5 -- ve trai cua phep kiem dong nhat thuc trong rms_reference_check_r2.json muc example. KHONG phai so do cua T2.6, KHONG phai RMS_ALLACTION_DELAY."
+  }
+ },
+ "predictions": {
+  "D-T2.6-1": {"estimand_id": "RMS_MARGIN_COST", "branch": "z_fixed"},
+  "D-T2.6-2": {"estimand_id": "RMS_MARGIN_COST", "branch": "z_fixed"},
+  "D-T2.6-3": {"estimand_id": "RMS_MARGIN_COST", "branch": "z_fixed",
+               "note": "R(tau) = q_hat[3]/q_hat[0]; ti so TRONG cung mot tau nen muc conformal triet tieu (A-T2-3 muc L3)"},
+  "D-T2.6-4": {"estimand_id": "RMS_MARGIN_COST", "branch": "z_fixed"},
+  "D-T2.6-5": {"estimand_id": "RMS_ALLACTION_DELAY", "branch": "both",
+               "note": "KHONG nam trong signed_predictions cua 01-prediction-signed.json: day la doi chung VE SINH noi giua hai nhanh cua decision_error_v2 (NC-T2-2), DA PASS o luot 2 voi rel_span = 0.0"},
+  "D-T2.6-6": {"estimand_id": "RMS_MARGIN_COST", "branch": "z_fixed"},
+  "D-T2.6-7": {"estimand_id": "RMS_MARGIN_COST", "branch": "z_fixed"}
+ },
+ "harness_map": {
+  "RMS_MARGIN_COST": "cert/tau_sweep.py",
+  "RMS_ALLACTION_DELAY": "measurements/decision_error_v2.py"
+ },
+ "superseded": {
+  "docs/phase-T2/02-band-window.json": {
+   "reason": "se suy tu ti so err_total tren khoa z_over_tau co dinh = RMS_ALLACTION_DELAY / nhanh A; diem du doan la RMS_MARGIN_COST / nhanh B. Lech ba cho: dai luong, muc/thang, nhanh.",
+   "by": "A-T2-3 muc (e)",
+   "action": "GIU FILE, khong xoa; KHONG dung lam bang chap nhan"
+  }
+ }
+}
