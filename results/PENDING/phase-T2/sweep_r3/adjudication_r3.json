@@ -1,0 +1,1073 @@
+{
+ "R_tau_primary_arm": "level_matched (bien phap DA KY, nhanh (c))",
+ "amendment": "A-T2-3 (+ ERRATUM A-T2-3.1, A-T2-3.2)",
+ "estimand_id": "RMS_MARGIN_COST",
+ "exploratory_cells": {
+  "cells": [
+   "h2@0.850",
+   "h2@0.925",
+   "h2@0.960",
+   "poisson@0.700",
+   "poisson@0.960"
+  ],
+  "rule": "khong sinh verdict, khong vao ti le dung, khong lat verdict cua o CONFIRMATORY; chi de RA CAU HOI cho 21R2",
+  "state": "REPORTED_ONLY"
+ },
+ "hygiene": {
+  "D-T2.6-10_level_matching_cancels_in_the_ratio": {
+   "driver": {
+    "cell": "poisson@0.850",
+    "tau": 2.0
+   },
+   "max_rel_diff": 0.15962190938121168,
+   "note": "FAIL KHONG phai loi: no co nghia gia thuyet 'muc triet tieu trong ti so' SAI => phai bao cao va chuyen MOI phep doc R(tau) sang ban khop muc.",
+   "pass": false,
+   "threshold": 0.01
+  },
+  "D-T2.6-8_level_matches_signed_table": {
+   "n_violations": 0,
+   "note": "FAIL => loi CO HOC (chia calib/test lech ti le). Dung ngay.",
+   "pass": true,
+   "violations": []
+  },
+  "gate": {
+   "n_rejected": 0,
+   "n_still_not_evaluated": 0,
+   "not_evaluated": [],
+   "note": "not_evaluated PHAI rong: A-T2-3 (d3) doi hoi gate nhan du 9 tham so.",
+   "pass": true,
+   "rejected": []
+  },
+  "may_open_outcome_curves": true,
+  "n_artifacts": 18
+ },
+ "phase": "T2.6 round 3",
+ "provenance": {
+  "band_window": "docs/phase-T2/05-band-window-v2.json",
+  "estimand_descriptor": "docs/phase-T2/04-estimand-descriptor.json",
+  "n_artifacts": 18,
+  "script": "tools/t2_6b_adjudicate.py",
+  "signed_prediction": "docs/phase-T2/01-prediction-signed.json"
+ },
+ "summary": {
+  "denominator_declared_before_reading": 7,
+  "n_fail": 2,
+  "n_insufficient_power": 0,
+  "n_pass": 3,
+  "n_total": 7,
+  "note": "INSUFFICIENT_POWER KHONG vao TU SO va VAN o MAU SO. Mau so = 7, khai TRUOC khi doc (ERRATUM A-T2-3.2 muc 4).",
+  "states": {
+   "D-T2.6-1": "PASS",
+   "D-T2.6-2": "FAIL",
+   "D-T2.6-3": "READ_BELOW_PER_CELL",
+   "D-T2.6-4": "FAIL",
+   "D-T2.6-5": "PASS",
+   "D-T2.6-6": "REPORTED",
+   "D-T2.6-7": "PASS"
+  }
+ },
+ "tau_star": {
+  "handoff": "thiet ke do lift ban giao cho 21R2; xem T2.7",
+  "lift_min_grid_signed": [
+   0.05,
+   0.1,
+   0.2
+  ],
+  "state": "NOT_MEASURABLE_BY_THIS_INSTRUMENT",
+  "why": "tau* doi hoi lift(tau) = (err_baseline - err_certified)/err_baseline. err_* song o RMS_ALLACTION_DELAY (measurements/decision_error_v2.py); q_hat song o RMS_MARGIN_COST (cert/tau_sweep.py). Khong harness nao co ca hai (do bang grep, ERRATUM A-T2-3.2 muc 6). Suy tau* tu R(tau) la DUNG loai loi vua sua."
+ },
+ "verdicts": {
+  "D-T2.6-1": {
+   "basis": "luat rms voi A,c,em DO DUOC vong 3; luat da gate 2%",
+   "n_checked": 16,
+   "n_violations": 0,
+   "skipped_law_invalid": [
+    {
+     "a": 0.5,
+     "cell": "poisson@0.850",
+     "why": "ar1_rms_total_fit_within_2pct = false"
+    },
+    {
+     "a": 0.9,
+     "cell": "poisson@0.850",
+     "why": "ar1_rms_total_fit_within_2pct = false"
+    }
+   ],
+   "state": "PASS",
+   "violations": []
+  },
+  "D-T2.6-2": {
+   "band_source": "docs/phase-T2/05-band-window-v2.json (A-T2-3 e)",
+   "n_inside": 6,
+   "n_outside": 10,
+   "per_cell": {
+    "h2@0.700": {
+     "a=0.5": {
+      "0.05": {
+       "abs_diff": 0.20445322724042603,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.2566243034587625,
+       "signed": 0.46107753069918855
+      },
+      "0.10": {
+       "abs_diff": 0.15132345616654025,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.21180831589660198,
+       "signed": 0.36313177206314223
+      },
+      "0.30": {
+       "abs_diff": 0.08440416392246655,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.1835780511606587,
+       "signed": 0.26798221508312525
+      },
+      "0.55": {
+       "abs_diff": 0.05991576360994749,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.18926793005966147,
+       "signed": 0.24918369366960896
+      }
+     },
+     "a=0.9": {
+      "0.05": {
+       "abs_diff": 0.264541283096112,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.1965362476030765,
+       "signed": 0.46107753069918855
+      },
+      "0.10": {
+       "abs_diff": 0.18928555854724438,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.17384621351589785,
+       "signed": 0.36313177206314223
+      },
+      "0.30": {
+       "abs_diff": 0.10090265957558886,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.1670795555075364,
+       "signed": 0.26798221508312525
+      },
+      "0.55": {
+       "abs_diff": 0.07005566847932468,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.17912802519028428,
+       "signed": 0.24918369366960896
+      }
+     }
+    },
+    "poisson@0.925": {
+     "a=0.5": {
+      "0.05": {
+       "abs_diff": 0.036924797590057845,
+       "band": 0.05,
+       "inside": true,
+       "measured": 0.2647471551410086,
+       "signed": 0.30167195273106645
+      },
+      "0.10": {
+       "abs_diff": 0.02544722942885569,
+       "band": 0.05,
+       "inside": true,
+       "measured": 0.21732685671001475,
+       "signed": 0.24277408613887044
+      },
+      "0.30": {
+       "abs_diff": 0.01293715233028958,
+       "band": 0.05,
+       "inside": true,
+       "measured": 0.18636213172221788,
+       "signed": 0.19929928405250746
+      },
+      "0.55": {
+       "abs_diff": 0.008893073250578837,
+       "band": 0.05,
+       "inside": true,
+       "measured": 0.1912111022694598,
+       "signed": 0.20010417552003865
+      }
+     },
+     "a=0.9": {
+      "0.05": {
+       "abs_diff": 0.10275920002477903,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.19891275270628742,
+       "signed": 0.30167195273106645
+      },
+      "0.10": {
+       "abs_diff": 0.06697008039839253,
+       "band": 0.05,
+       "inside": false,
+       "measured": 0.17580400574047791,
+       "signed": 0.24277408613887044
+      },
+      "0.30": {
+       "abs_diff": 0.03051404829616805,
+       "band": 0.05,
+       "inside": true,
+       "measured": 0.1687852357563394,
+       "signed": 0.19929928405250746
+      },
+      "0.55": {
+       "abs_diff": 0.019209532569046256,
+       "band": 0.05,
+       "inside": true,
+       "measured": 0.1808946429509924,
+       "signed": 0.20010417552003865
+      }
+     }
+    }
+   },
+   "skipped": [
+    {
+     "a": 0.5,
+     "cell": "poisson@0.850",
+     "why": "ar1_rms_total_fit_within_2pct = false"
+    },
+    {
+     "a": 0.9,
+     "cell": "poisson@0.850",
+     "why": "ar1_rms_total_fit_within_2pct = false"
+    }
+   ],
+   "state": "FAIL"
+  },
+  "D-T2.6-3": {
+   "per_cell": {
+    "cbr@0.700": {
+     "a=0.5": {
+      "PRIMARY_level_matched": {
+       "R": [
+        0.9585066630184579,
+        0.9497377345155824,
+        1.0133211365019084,
+        0.9842926313324049,
+        0.9952589504248369,
+        1.001622856732149,
+        1.004502719393457,
+        0.9983272616731911
+       ],
+       "amplitude_over_noise": 11.910261935235077,
+       "hump_amplitude": 0.06358340198632595,
+       "is_hump": true,
+       "noise_floor": 0.005338539348007293,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": null,
+       "signed_peak_s": null,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "SENSITIVITY_full_data": {
+       "R": [
+        1.0042635192410738,
+        1.0013538146113885,
+        0.9910447569996779,
+        0.9954737921027479,
+        0.9839054363455696,
+        1.0017034040733628,
+        1.004502719393457,
+        0.9983272616731911
+       ],
+       "amplitude_over_noise": 3.8582244515207607,
+       "hump_amplitude": 0.020597283047887438,
+       "is_hump": true,
+       "noise_floor": 0.005338539348007293,
+       "peak_tau": 20.0,
+       "power_scope": "WEAK",
+       "power_scope_declared_before_run": null,
+       "signed_peak_s": null,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
+     },
+     "a=0.9": {
+      "PRIMARY_level_matched": {
+       "R": [
+        1.0260878298740674,
+        0.9981452456669153,
+        1.0091666613408088,
+        0.980653777485848,
+        0.9919146144866308,
+        1.0101257163759534,
+        0.999647799577765,
+        1.0011210035612665
+       ],
+       "amplitude_over_noise": 8.54362870189307,
+       "hump_amplitude": 0.045434052388219404,
+       "is_hump": false,
+       "noise_floor": 0.005317887044664321,
+       "peak_tau": 0.5,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": null,
+       "signed_peak_s": null,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "SENSITIVITY_full_data": {
+       "R": [
+        0.9896691718684524,
+        0.9982181066942385,
+        0.9976920447781743,
+        0.9987967047063917,
+        1.0124112082768684,
+        0.9923928258400903,
+        0.999647799577765,
+        1.0011210035612665
+       ],
+       "amplitude_over_noise": 4.276517386963702,
+       "hump_amplitude": 0.02274203640841599,
+       "is_hump": true,
+       "noise_floor": 0.005317887044664321,
+       "peak_tau": 5.0,
+       "power_scope": "WEAK",
+       "power_scope_declared_before_run": null,
+       "signed_peak_s": null,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
+     }
+    },
+    "h2@0.700": {
+     "a=0.5": {
+      "PRIMARY_level_matched": {
+       "R": [
+        2.1722159987149547,
+        2.0755333080411016,
+        2.455453625155969,
+        2.025208692403331,
+        2.125749589674724,
+        2.077504003862347,
+        1.829175606365483,
+        1.6597258860483437
+       ],
+       "amplitude_over_noise": 11.836491748036082,
+       "hump_amplitude": 0.7957277391076254,
+       "is_hump": true,
+       "noise_floor": 0.0672266543200736,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "INSUFFICIENT_POWER",
+       "signed_peak_s": 0.9285333333333333,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "SENSITIVITY_full_data": {
+       "R": [
+        1.95931419976741,
+        2.1266690331228912,
+        2.167542253200457,
+        2.14586056431998,
+        2.1724422179872493,
+        1.9759317170297495,
+        1.829175606365483,
+        1.6597258860483437
+       ],
+       "amplitude_over_noise": 7.626682260548115,
+       "hump_amplitude": 0.5127163319389056,
+       "is_hump": true,
+       "noise_floor": 0.0672266543200736,
+       "peak_tau": 5.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "INSUFFICIENT_POWER",
+       "signed_peak_s": 0.9285333333333333,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
+     },
+     "a=0.9": {
+      "PRIMARY_level_matched": {
+       "R": [
+        1.9787979265220894,
+        1.970840500442002,
+        2.4171035679780286,
+        2.056661048876194,
+        2.297916702793352,
+        2.1790306613906605,
+        2.026013369603303,
+        1.9109197352622627
+       ],
+       "amplitude_over_noise": 23.445278880528917,
+       "hump_amplitude": 0.506183832715766,
+       "is_hump": true,
+       "noise_floor": 0.021590011161528422,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "INSUFFICIENT_POWER",
+       "signed_peak_s": 0.9285333333333333,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "SENSITIVITY_full_data": {
+       "R": [
+        2.001922541833339,
+        2.1574595713382525,
+        2.2174626501423855,
+        2.2260701251643793,
+        2.2686697236620037,
+        2.1824864098411902,
+        2.026013369603303,
+        1.9109197352622627
+       ],
+       "amplitude_over_noise": 16.570162271950156,
+       "hump_amplitude": 0.35774998839974104,
+       "is_hump": true,
+       "noise_floor": 0.021590011161528422,
+       "peak_tau": 5.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "INSUFFICIENT_POWER",
+       "signed_peak_s": 0.9285333333333333,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
+     }
+    },
+    "poisson@0.850": {
+     "a=0.5": {
+      "PRIMARY_level_matched": {
+       "R": [
+        1.9974142310716279,
+        2.0245498051357367,
+        2.5707526365734252,
+        2.116748885026161,
+        2.1266867965349485,
+        2.1622068658150297,
+        2.049499030077409,
+        1.8710591087340382
+       ],
+       "amplitude_over_noise": 13.34435610807441,
+       "hump_amplitude": 0.699693527839387,
+       "is_hump": true,
+       "noise_floor": 0.052433667250232935,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "WEAK",
+       "signed_peak_s": 1.4277,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "SENSITIVITY_full_data": {
+       "R": [
+        1.999594935323968,
+        2.1652986140434023,
+        2.2530970986756214,
+        2.2452591706298146,
+        2.2440706505751167,
+        2.1251573337638914,
+        2.049499030077409,
+        1.8710591087340382
+       ],
+       "amplitude_over_noise": 7.286119967889256,
+       "hump_amplitude": 0.3820379899415831,
+       "is_hump": true,
+       "noise_floor": 0.052433667250232935,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "WEAK",
+       "signed_peak_s": 1.4277,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
+     },
+     "a=0.9": {
+      "PRIMARY_level_matched": {
+       "R": [
+        2.142163700376861,
+        2.3201240885415473,
+        2.7369189246100945,
+        2.238394727589548,
+        2.304103151848611,
+        2.2839846328460323,
+        2.1547373199681434,
+        2.0665017081789707
+       ],
+       "amplitude_over_noise": 6.8946636901881195,
+       "hump_amplitude": 0.6704172164311237,
+       "is_hump": true,
+       "noise_floor": 0.09723711649419575,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "WEAK",
+       "signed_peak_s": 1.4277,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "SENSITIVITY_full_data": {
+       "R": [
+        2.1310062972327852,
+        2.31431662134706,
+        2.3601821442564392,
+        2.3326108933845506,
+        2.3526155861552063,
+        2.226232993247896,
+        2.1547373199681434,
+        2.0665017081789707
+       ],
+       "amplitude_over_noise": 3.020250359799581,
+       "hump_amplitude": 0.2936804360774685,
+       "is_hump": true,
+       "noise_floor": 0.09723711649419575,
+       "peak_tau": 2.0,
+       "power_scope": "WEAK",
+       "power_scope_declared_before_run": "WEAK",
+       "signed_peak_s": 1.4277,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
+     }
+    },
+    "poisson@0.925": {
+     "a=0.5": {
+      "PRIMARY_level_matched": {
+       "R": [
+        2.1064035007986672,
+        2.129883176012247,
+        2.4066126147876603,
+        1.9810347363552343,
+        2.130491794407165,
+        1.9275286301654717,
+        1.8071294616107216,
+        1.6597503728339584
+       ],
+       "amplitude_over_noise": 35.743068428698614,
+       "hump_amplitude": 0.7468622419537019,
+       "is_hump": true,
+       "noise_floor": 0.020895302915684644,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "READABLE",
+       "signed_peak_s": 1.5574833333333333,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "SENSITIVITY_full_data": {
+       "R": [
+        1.9675624616588523,
+        2.1195104660249102,
+        2.160625608338077,
+        2.126695904396875,
+        2.106067183550887,
+        1.930526805502668,
+        1.8071294616107216,
+        1.6597503728339584
+       ],
+       "amplitude_over_noise": 23.970709471177198,
+       "hump_amplitude": 0.5008752355041184,
+       "is_hump": true,
+       "noise_floor": 0.020895302915684644,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "READABLE",
+       "signed_peak_s": 1.5574833333333333,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
+     },
+     "a=0.9": {
+      "PRIMARY_level_matched": {
+       "R": [
+        2.0562367681817495,
+        1.9919030608278023,
+        2.4554107209261984,
+        2.0193398146408668,
+        2.2139036374944103,
+        2.129543259222358,
+        2.0913378343282623,
+        1.9002866288548463
+       ],
+       "amplitude_over_noise": 18.735423902500827,
+       "hump_amplitude": 0.555124092071352,
+       "is_hump": true,
+       "noise_floor": 0.029629652094354447,
+       "peak_tau": 2.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "READABLE",
+       "signed_peak_s": 1.5574833333333333,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "SENSITIVITY_full_data": {
+       "R": [
+        1.9881104922132544,
+        2.1393216590289925,
+        2.225274142368724,
+        2.2255412157966394,
+        2.2262218619560947,
+        2.1392882495245593,
+        2.0913378343282623,
+        1.9002866288548463
+       ],
+       "amplitude_over_noise": 11.00030577690621,
+       "hump_amplitude": 0.3259352331012484,
+       "is_hump": true,
+       "noise_floor": 0.029629652094354447,
+       "peak_tau": 5.0,
+       "power_scope": "READABLE",
+       "power_scope_declared_before_run": "READABLE",
+       "signed_peak_s": 1.5574833333333333,
+       "taus": [
+        0.5,
+        1.0,
+        2.0,
+        3.0,
+        5.0,
+        10.0,
+        20.0,
+        28.0
+       ]
+      },
+      "note": "NHANH CHINH la ban khop muc theo bien phap DA KY o A-T2-3 nhanh (c) va ERRATUM A-T2-3.2 muc (2). Arm day du chi BAO CAO, khong lat verdict."
+     }
+    }
+   },
+   "power_scopes": [
+    "READABLE",
+    "READABLE",
+    "READABLE",
+    "READABLE",
+    "READABLE",
+    "READABLE",
+    "READABLE",
+    "READABLE"
+   ],
+   "power_scopes_confirmatory": [
+    "READABLE",
+    "READABLE",
+    "READABLE",
+    "READABLE",
+    "READABLE",
+    "READABLE"
+   ],
+   "power_thresholds": {
+    "READABLE": 5.0,
+    "WEAK": 2.0,
+    "source": "tools/t2_1_prediction.py:276-277"
+   },
+   "state": "READ_BELOW_PER_CELL"
+  },
+  "D-T2.6-4": {
+   "n_fail": 11,
+   "n_pass": 7,
+   "note": "khong thu nguyen, tu hieu chuan, khong can ky nguong",
+   "per_cell": {
+    "h2@0.700": {
+     "a=0.5": {
+      "A": {
+       "passes": true,
+       "ratio_span_over_spread": 0.9660882674981138,
+       "span_between_tau_pct": 1.7162708024467443,
+       "spread_within_tau_pct_max": 2.9307875387295064,
+       "spread_within_tau_pct_mean": 1.7765155216007167
+      },
+      "c": {
+       "passes": true,
+       "ratio_span_over_spread": 0.4463080104612872,
+       "span_between_tau_pct": 1.0526228718947757,
+       "spread_within_tau_pct_max": 3.8837734288433845,
+       "spread_within_tau_pct_mean": 2.3585121647420673
+      },
+      "em": {
+       "passes": false,
+       "ratio_span_over_spread": 2.7559804969360076,
+       "span_between_tau_pct": 5.029985326744404,
+       "spread_within_tau_pct_max": 4.263267481101483,
+       "spread_within_tau_pct_mean": 1.8251164448865103
+      }
+     },
+     "a=0.9": {
+      "A": {
+       "passes": true,
+       "ratio_span_over_spread": 0.9658496993784484,
+       "span_between_tau_pct": 1.7499852704698307,
+       "spread_within_tau_pct_max": 2.503223783161765,
+       "spread_within_tau_pct_mean": 1.811860863647828
+      },
+      "c": {
+       "passes": true,
+       "ratio_span_over_spread": 0.7997245118928933,
+       "span_between_tau_pct": 1.2716566522871011,
+       "spread_within_tau_pct_max": 2.532798913108893,
+       "spread_within_tau_pct_mean": 1.5901183887401134
+      },
+      "em": {
+       "passes": false,
+       "ratio_span_over_spread": 2.6457811442652326,
+       "span_between_tau_pct": 5.401095647516139,
+       "spread_within_tau_pct_max": 4.340071816095959,
+       "spread_within_tau_pct_mean": 2.0413992514925465
+      }
+     }
+    },
+    "poisson@0.850": {
+     "a=0.5": {
+      "A": {
+       "passes": true,
+       "ratio_span_over_spread": 0.7652960968702038,
+       "span_between_tau_pct": 1.8505549471148557,
+       "spread_within_tau_pct_max": 3.6425931981082615,
+       "spread_within_tau_pct_mean": 2.4180901414275926
+      },
+      "c": {
+       "passes": false,
+       "ratio_span_over_spread": 1.2788960965317597,
+       "span_between_tau_pct": 2.391388176829261,
+       "spread_within_tau_pct_max": 3.006020145847028,
+       "spread_within_tau_pct_mean": 1.8698846476382798
+      },
+      "em": {
+       "passes": false,
+       "ratio_span_over_spread": 2.409938016512241,
+       "span_between_tau_pct": 31.11741927508243,
+       "spread_within_tau_pct_max": 26.98771088396815,
+       "spread_within_tau_pct_mean": 12.912124320988475
+      }
+     },
+     "a=0.9": {
+      "A": {
+       "passes": false,
+       "ratio_span_over_spread": 1.735720776762447,
+       "span_between_tau_pct": 8.954284885904901,
+       "spread_within_tau_pct_max": 9.223331340986158,
+       "spread_within_tau_pct_mean": 5.158827966907719
+      },
+      "c": {
+       "passes": false,
+       "ratio_span_over_spread": 1.4538251838426863,
+       "span_between_tau_pct": 4.066314976828465,
+       "spread_within_tau_pct_max": 4.547097008121922,
+       "spread_within_tau_pct_mean": 2.7969765705121175
+      },
+      "em": {
+       "passes": false,
+       "ratio_span_over_spread": 2.519755539813392,
+       "span_between_tau_pct": 32.06313770570926,
+       "spread_within_tau_pct_max": 24.2135194824899,
+       "spread_within_tau_pct_mean": 12.724701741536318
+      }
+     }
+    },
+    "poisson@0.925": {
+     "a=0.5": {
+      "A": {
+       "passes": true,
+       "ratio_span_over_spread": 0.8626463336302643,
+       "span_between_tau_pct": 1.433819776336787,
+       "spread_within_tau_pct_max": 2.067823709539432,
+       "spread_within_tau_pct_mean": 1.6621177421607536
+      },
+      "c": {
+       "passes": true,
+       "ratio_span_over_spread": 0.7599142500704026,
+       "span_between_tau_pct": 1.1878533341054143,
+       "spread_within_tau_pct_max": 3.207588645848512,
+       "spread_within_tau_pct_mean": 1.56314128073709
+      },
+      "em": {
+       "passes": false,
+       "ratio_span_over_spread": 3.191598845848354,
+       "span_between_tau_pct": 2.6447580269223434,
+       "spread_within_tau_pct_max": 1.4425264917011014,
+       "spread_within_tau_pct_mean": 0.8286624211443918
+      }
+     },
+     "a=0.9": {
+      "A": {
+       "passes": false,
+       "ratio_span_over_spread": 1.3587574850962811,
+       "span_between_tau_pct": 2.73050449725566,
+       "spread_within_tau_pct_max": 3.1186685942901238,
+       "spread_within_tau_pct_mean": 2.009559856858619
+      },
+      "c": {
+       "passes": false,
+       "ratio_span_over_spread": 1.2537486375288456,
+       "span_between_tau_pct": 1.8519378179262427,
+       "spread_within_tau_pct_max": 2.1750350111384487,
+       "spread_within_tau_pct_mean": 1.4771205028596766
+      },
+      "em": {
+       "passes": false,
+       "ratio_span_over_spread": 3.0910250827998023,
+       "span_between_tau_pct": 5.930327054527189,
+       "spread_within_tau_pct_max": 4.306479405348255,
+       "spread_within_tau_pct_mean": 1.9185632260077268
+      }
+     }
+    }
+   },
+   "state": "FAIL"
+  },
+  "D-T2.6-5": {
+   "carried_from": "results/PENDING/phase-T2/adjudication_r2.json",
+   "estimand_id": "RMS_ALLACTION_DELAY",
+   "evidence": {
+    "max_rel_span_err_total": 0.0,
+    "max_rel_span_rms_e_model": 0.0,
+    "source": "hygiene_checks_r2.json",
+    "state": "PASS",
+    "threshold": 0.01
+   },
+   "state": "PASS",
+   "why_a_different_estimand_is_legitimate_here": "D-T2.6-5 la doi chung noi giua HAI NHANH cua measurements/decision_error_v2.py, khong phai mot khang dinh ve lop chung nhan. No song tren estimand cua chinh harness do."
+  },
+  "D-T2.6-6": {
+   "note": "Du doan DA BAO TRUOC rang phan lon knee nam NGOAI luoi. 'Ngoai luoi' la KET QUA HOP LE; KHONG mo rong luoi de di tim knee (T2-6 nhanh c).",
+   "per_cell": {
+    "h2@0.700": {
+     "a=0.5": {
+      "0.05": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": false,
+       "signed_knee_s": 20.797175725402564
+      },
+      "0.10": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 41.59435145080513
+      },
+      "0.30": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 124.78305435241536
+      },
+      "0.55": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 228.7689329794282
+      }
+     },
+     "a=0.9": {
+      "0.05": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": false,
+       "signed_knee_s": 20.797175725402564
+      },
+      "0.10": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 41.59435145080513
+      },
+      "0.30": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 124.78305435241536
+      },
+      "0.55": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 228.7689329794282
+      }
+     }
+    },
+    "poisson@0.925": {
+     "a=0.5": {
+      "0.05": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 64.45959844237584
+      },
+      "0.10": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 128.91919688475167
+      },
+      "0.30": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 386.757590654255
+      },
+      "0.55": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 709.0555828661343
+      }
+     },
+     "a=0.9": {
+      "0.05": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 64.45959844237584
+      },
+      "0.10": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 128.91919688475167
+      },
+      "0.30": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 386.757590654255
+      },
+      "0.55": {
+       "measured_knee_s": null,
+       "measured_note": "> 28 s (ngoai luoi)",
+       "signed_is_outside_grid": true,
+       "signed_knee_s": 709.0555828661343
+      }
+     }
+    }
+   },
+   "state": "REPORTED"
+  },
+  "D-T2.6-7": {
+   "A_range_measured": [
+    0.00022006653760928187,
+    0.0003625905053884609
+   ],
+   "A_signed_at_22_6": 9.969118646066259e-05,
+   "max_abs_ratio_minus_one": 0.016094563654430405,
+   "note": "doi chung AM: cbr phai tiep tuc cho R ~ 1 o moi tau",
+   "state": "PASS"
+  }
+ }
+}
