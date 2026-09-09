@@ -1546,6 +1546,119 @@ D-T2.6-10 FAIL LA MOT KET QUA, KHONG PHAI LOI (theo dung nhanh (c) da ky):
 KHONG DOI GI KHAC: khong dong toi n_for_tau, TAU_GRID, k, san, lift_min,
 01-prediction-signed.json hay 05-band-window-v2.json.
 
+### ERRATUM A-T2-3.2 -- CHINH SACH DOC CHO VONG 3; KHAI TRUOC KHI PHAN QUYET
+
+Ngay      : 2026-09-09, SAU khi ba kiem co hoc xong, TRUOC khi chay
+            tools/t2_6b_adjudicate.py va tools/t2_6b_level_probe.py.
+Trang thai: KHONG dat mot nguong moi nao. Chi khai TRUOC cach ap cac luat DA KY.
+
+### (1) D-T2.6-10 VAN LA FAIL -- khong co PASS hoi to
+
+    max_rel_diff = 0.15962 tai poisson@0.850, tau=2, nguong 0.01.
+    Phan quyet GIU NGUYEN va ghi vinh vien. Moi chan doan ve THANH PHAN cua
+    con so nay deu la POST_HOC va KHONG duoc dung de lat phan quyet.
+
+    Ghi them mot khiem khuyet CUA CHINH PHEP KIEM, de nguoi doc tu danh gia:
+    D-T2.6-10 so R(day du, level goc) voi R(25 block, level 0.96), tuc doi
+    HAI thu cung luc (muc VA co mau) roi quy ca chenh lech cho MOT thu (muc).
+    Do la mot confound -- dung loai loi ma phase nay ton tai de chong. Phep
+    kiem bi DAC TA SAI. Nhung no VAN FAIL theo dung dieu da ky, va bien phap
+    da ky o nhanh (c) VAN duoc ap DAY DU. Khong sua dac ta sau khi thay so.
+
+### (2) NHANH DOC CHINH CUA R(tau) -- ap bien phap da ky o nhanh (c)
+
+    NHANH CHINH   level_matched (25 block/bin o MOI tau, level 0.96)
+    ARM DO NHAY   du lieu day du (level goc) -- BAO CAO, KHONG phan quyet
+    CAM           dung arm do nhay de lat mot verdict cua nhanh chinh.
+                  Neu hai nhanh cho verdict khac nhau => do la KET QUA,
+                  ghi ca hai, verdict cuoi = verdict cua NHANH CHINH.
+
+### (3) TIEU CHI CONG SUAT -- DUNG NGUONG DA KY, KHONG DAT NGUONG MOI
+
+    san nhieu = mean |ratio_measured - ratio_measured_sim|
+                (hai uoc luong DOC LAP cua cung mot ti so)
+    bien do   = max R - min R tren luoi tau
+    NGUONG:   >= 5.0  READABLE
+              >= 2.0  WEAK
+              <  2.0  INSUFFICIENT_POWER
+
+    NGUON cua ba nguong nay, khong phai tu van ban nay:
+        tools/t2_1_prediction.py:276-277   (ham power_scope_hump)
+        test/test_t2_1_prediction.py:185-186  ghim > 5.0 va < 2.0
+        00-preregistration.md:643-645  ghi "3.2 YEU", "1.1 INSUFFICIENT_POWER"
+
+    MOT DE XUAT DUNG 10.0 / 3.0 DA BI TU CHOI o day. Ly do: no nghiem khac
+    HON nguong da ky, nhung no CHUA DUOC KY. Doi nguong sau khi thay so --
+    du la doi theo huong nghiem khac hon -- van la doi nguong sau khi thay so.
+    Ghi lai de nguoi doc biet lua chon nay da duoc can nhac va bi tu choi.
+
+### (4) MAU SO CUA G-T2-8 -- khai TRUOC khi doc
+
+    mau so = 7  (D-T2.6-1 .. -7)
+    INSUFFICIENT_POWER KHONG vao TU SO va VAN o MAU SO.
+    Neu >= 2 muc INSUFFICIENT_POWER thi gate ">= 5/7" khong dat duoc VE MAT
+    SO HOC; khai dieu do THANG, KHONG doi mau so.
+    D-T2.6-5 mang sang tu vong 2, va PHAI ghi ro no song tren estimand KHAC
+    (RMS_ALLACTION_DELAY): no la doi chung noi HAI NHANH cua
+    measurements/decision_error_v2.py, khong phai mot khang dinh ve lop
+    chung nhan. Ngoai le nay hop le va phai hien ro tren moi bang.
+
+### (5) O EXPLORATORY
+
+    Tinh day du moi dai luong; gan nhan scope = EXPLORATORY tren MOI dong.
+    KHONG sinh verdict PASS/FAIL -- chi REPORTED_ONLY.
+    KHONG cong vao bat ky ti le "k/7" nao. KHONG dung de lat verdict cua o
+    CONFIRMATORY. Duoc dung de RA CAU HOI cho 21R2.
+    h2@0.960 giu nhan INSUFFICIENT_POWER da co tu 02-band-window.
+
+### (6) tau* KHONG DO DUOC BANG DUNG CU NAY
+
+    QD-2 dinh nghia tau* = inf { tau : lift(tau) < lift_min }, voi
+    lift = (err_baseline - err_certified) / err_baseline.
+
+    DO DUOC BANG GREP (2026-09-09), khong phai suy doan:
+        "lift", "err_certified", "err_baseline" KHONG xuat hien trong
+        cert/tau_sweep.py, KHONG trong measurements/decision_error_v2.py,
+        va "err_certified" KHONG xuat hien trong bat ky tep .py nao cua repo.
+
+    Truc tau nam o harness chung nhan (RMS_MARGIN_COST); sai so quyet dinh
+    nam o harness quyet dinh (RMS_ALLACTION_DELAY). Hai estimand khong so
+    sanh duoc (xem SO DANG KY ESTIMAND). Nen lift KHONG suy duoc tu vong nay.
+
+    => tau_star = NOT_MEASURABLE_BY_THIS_INSTRUMENT, kem THIET KE BAN GIAO
+       cho 21R2. CAM suy tau* tu R(tau): R la ti so BAN KINH KHOANG, lift la
+       ti so SAI SO QUYET DINH. Quy doi giua chung dung loai loi ma A-T2-3
+       vua sua xong.
+    tau* CHUA BAO GIO nam trong bay du doan da ky D-T2.6-1..7, nen dieu nay
+    KHONG lam thay doi mau so o muc (4).
+
+### (7) GIA TRI R DA LO KHI CHAN DOAN -- ghi de khong ai noi la giau
+
+    Kiem ve sinh da ky va chan doan D-T2.6-10 buoc phai tinh ti so. Ba diem
+    da nhin thay TRUOC khi phan quyet, tat ca o a = 0.9:
+
+        h2@0.700       tau=2     R_day_du = 2.2175   R_khop_muc = 2.4171
+        poisson@0.850  tau=0.5   R_day_du = 2.1310   R_khop_muc = 2.1422
+        poisson@0.850  tau=2     R_day_du = 2.3602   R_khop_muc = 2.7369
+
+    KHONG doc R nhu mot ham cua tau, KHONG tim dinh, KHONG so voi diem ky.
+
+### (8) tools/t2_6b_level_probe.py LA POST_HOC
+
+    Cong cu nay hinh thanh SAU khi D-T2.6-10 FAIL. No tach chenh lech thanh
+    thanh phan MUC (doi level tren du lieu DAY DU, khong rut) va thanh phan
+    RUT MAU (nhieu hat rut khac nhau). No KHONG sua nguong, KHONG doi
+    artifact, KHONG lat phan quyet. Moi so cua no phai mang nhan POST_HOC
+    trong bao cao va chi duoc dung cho muc Threats.
+
+### (9) NGAN SACH -- adjudicator chi chay MOT LAN CO HIEU LUC
+
+    Ngan sach sua co hoc = 0 (da tieu o A-T2-3.1). Do do:
+    tools/t2_6b_adjudicate.py duoc kiem CO HOC trên arm legacy truoc (no co
+    chay khong, co doc dung khoa khong, co sinh du 7 muc khong). Chi khi
+    sach tren legacy moi tro vao luoi chinh. Chay xong ma sua adjudicator roi
+    chay lai KHONG phai sua co hoc -- do la TUNING PHAN QUYET va bi CAM.
+
 ### CHU KY
 
 ```text
