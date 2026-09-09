@@ -10,81 +10,10 @@
   "threshold": 0.01
  },
  "D-T2.6-8_level_matches_signed_table": {
-  "n_violations": 18,
+  "n_violations": 0,
   "note": "FAIL => loi CO HOC (chia calib/test lech ti le). Dung ngay.",
-  "pass": false,
-  "violations": [
-   {
-    "cell": "poisson@0.960",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "h2@0.700",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "h2@0.960",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "poisson@0.850",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "poisson@0.700",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "poisson@0.925",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "h2@0.925",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "poisson@0.850",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "poisson@0.925",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   },
-   {
-    "cell": "poisson@0.700",
-    "expected": 0.9096385542168675,
-    "got": 0.9101796407185628,
-    "min_calib_blocks": 167,
-    "tau": 3.0
-   }
-  ]
+  "pass": true,
+  "violations": []
  },
  "gate": {
   "n_rejected": 0,
@@ -94,6 +23,6 @@
   "pass": true,
   "rejected": []
  },
- "may_open_outcome_curves": false,
+ "may_open_outcome_curves": true,
  "n_artifacts": 18
 }

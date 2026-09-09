@@ -1488,6 +1488,64 @@ LENH TAI LAP (do duoc 2026-09-09 tren repo nay):
    nhau" ma la "hai so khac nhau VI dung hai truong da dang ky".
 ```
 
+### ERRATUM A-T2-3.1 -- BANG (L3) SAI MOT O; DUNG LAN SUA CO HOC DUY NHAT
+
+Ngay   : 2026-09-09, SAU khi chay sweep_r3, TRUOC khi mo bat ky duong cong nao.
+Trang thai: day la LAN SUA CO HOC theo nhanh (b) cua muc "NEU FAIL THI SAO".
+            Sau erratum nay, ngan sach sua CO HOC = 0. Neu D-T2.6-8 con FAIL,
+            dong phase o INSTRUMENT_LIMIT theo dung T2-7.
+
+DO DUOC (18/18 artifact, 8 tau moi artifact):
+    gate        PASS   0 REJECTED; not_evaluated RONG  => (d3) dat
+    D-T2.6-8    FAIL   18 vi pham, TAT CA tai tau = 3.0
+                       do duoc level 0.9101796  vs bang da ky 0.9096386
+    D-T2.6-10   FAIL   max_rel_diff = 0.1596  (nguong 0.01)
+
+CHAN DOAN theo dung nhanh (b) da ky ("in n_calib_blocks_total va
+n_test_blocks_total, doi chieu"):
+
+    tau   n_blocks  calib  test   calib/tong
+    0.5   2000      1000   1000   0.5000
+    1     1000      500    500    0.5000
+    2     500       250    250    0.5000
+    3     335       167    168    0.4985   <-- DUY NHAT
+    5     200       100    100    0.5000
+    10    100       50     50     0.5000
+    20    50        25     25     0.5000
+    28    50        25     25     0.5000
+
+    Nguyen nhan suy TU (n, dt, tau), KHONG can mot byte ket qua nao:
+        block_len_for_tau(3.0, 0.005) = 3000 mau
+        200000 / 3000 = 66.67  KHONG NGUYEN
+        block_id = t_idx // lb  =>  ceil(200000/3000) = 67 id moi seed
+        67 x 5 seed = 335 block, mot SO LE  =>  khong chia doi duoc
+        335 -> 167 calib / 168 test = 0.4985
+    Moi tau khac deu cho so block/seed NGUYEN nen tong chan va chia dung 50/50.
+    Nhanh (b) da du doan DUNG ban chat: "chia calib/test khac ti le 50/50".
+
+=> LOI NAM O BANG DA KY, KHONG o may do. So dung tai tau=3 la:
+       n_calib = 167   va   conformal_level(167, 0.10) = 0.9101796407185628
+   Bang (L3) o tren ghi 166 va 0.9096. Doc bang (L3) voi dinh chinh nay.
+
+TAI SAO KIEM CHUNG TRUOC KHI KY KHONG BAT DUOC -- ghi lai, khong giau:
+    Script kiem nhanh truoc khi ky tinh calib = (T_sim/(5*tau))*5/2 = 166.67,
+    IN ra bang "%.0f" thanh "167" nhung TRUYEN int(166.67) = 166 vao
+    conformal_level. No HIEN THI so dung va TINH so sai, nen mot bang sai
+    lai "tai hien chinh xac". Mot phep kiem chung ma dau ra hien thi khong
+    phai dau vao tinh toan thi khong kiem chung gi ca.
+
+D-T2.6-10 FAIL LA MOT KET QUA, KHONG PHAI LOI (theo dung nhanh (c) da ky):
+    Gia thuyet o (L3) -- "muc conformal TRIET TIEU trong ti so R(tau) vi hai
+    bin cung mot tau dung cung n_calib" -- BI BAC BO bang so do:
+        max_rel_diff = 0.1596 tai poisson@0.850, tau = 2   (nguong 0.01)
+    Muc co triet tieu neu q_hat hai bin ti le voi nhau khi doi muc; do duoc
+    thi khong. Nen ke tu day, MOI phep doc R(tau) phai dung BAN KHOP MUC
+    (level_matched), va con so nay phai vao muc Threats.
+    D-T2.6-3 KHONG con duoc doc tren du lieu day du.
+
+KHONG DOI GI KHAC: khong dong toi n_for_tau, TAU_GRID, k, san, lift_min,
+01-prediction-signed.json hay 05-band-window-v2.json.
+
 ### CHU KY
 
 ```text

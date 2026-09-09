@@ -21,8 +21,14 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SWEEP = ROOT / "results/PENDING/phase-T2/sweep_r3"
 OUT = SWEEP / "hygiene_r3.json"
 
-# D-T2.6-8: bang DA KY o A-T2-3 muc (L3). 5 seed, n = n_for_tau.
-EXPECTED_CALIB = {0.5: 1000, 1.0: 500, 2.0: 250, 3.0: 166,
+# D-T2.6-8: bang DA KY o A-T2-3 muc (L3), voi ERRATUM A-T2-3.1 tai tau=3.
+#
+# tau=3 la o DUY NHAT co 200000/3000 = 66.67 khong nguyen => 67 block id moi
+# seed => 335 block, SO LE => 167 calib / 168 test = 0.4985, khong the 50/50.
+# Bang da ky ghi 166 (level 0.9096386); so DUNG suy tu (n, dt, tau) la 167
+# (level 0.9101796). Xem 00-preregistration.md muc ERRATUM A-T2-3.1.
+# Day la LAN SUA CO HOC DUY NHAT theo nhanh (b); ngan sach sua gio = 0.
+EXPECTED_CALIB = {0.5: 1000, 1.0: 500, 2.0: 250, 3.0: 167,
                   5.0: 100, 10.0: 50, 20.0: 25, 28.0: 25}
 
 
