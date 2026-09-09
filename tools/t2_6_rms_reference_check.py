@@ -7,7 +7,7 @@ import numpy as np
 from cert import tau_sweep as TS
 source=Path('results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json')
 ref=json.loads(source.read_text());cfg=ref['provenance'];tau=ref['rows'][0]['tau']
-df=TS.build_at_tau('poisson',.925,tau,seeds=cfg['seeds'],n=cfg['n'],dt=cfg['dt'],sigma=cfg['sigma_rho'])
+df=TS.build_at_tau('poisson',.925,tau,seeds=cfg['seeds'],n=cfg['n'],dt=cfg['dt'],sigma=cfg['sigma_rho'], axis=TS.V3.AXIS_LEGACY)
 dec=TS.decompose(df)
 computed=np.sqrt(dec.rms_e_model**2+2*dec.cov_e+dec.rms_e_stale**2)
 max_diff=float(np.max(np.abs(computed-dec.rms_total)))

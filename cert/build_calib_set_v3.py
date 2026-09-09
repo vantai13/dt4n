@@ -273,10 +273,12 @@ def y_hat_rho_shift(
 
 
 def _valid_rows(
-    n: int, dt: float, d_sync: float = D_SYNC, axis: str = AXIS_LEGACY,
+    n: int, dt: float, d_sync: float = D_SYNC, *, axis: str,
     aoi: "AoIModelV7 | None" = None,
 ) -> Tuple[np.ndarray, np.ndarray, int]:
     """Chon hang: bo z=0, giu t >= age.
+
+    axis bat buoc, keyword-only (20R2.0 gate 0-5; T2-L8).
 
     axis = AXIS_LEGACY   rang cua ke thua d = 51 ms  -> NEGATIVE CONTROL
     axis = AXIS_MEASURED truc do duoc, d_base + Uniform[0, T]
@@ -421,7 +423,12 @@ def build_one_v3(
         data["a_rank_%d" % (j + 1)] = order[:, j + 1].astype(np.int8)
 
     z_bin = np.asarray(data["z_bin"], dtype=np.int8)
-    age_steps = sawtooth_age_steps(n, dt, SYNC_PERIOD, d_sync)
+    if axis == AXIS_MEASURED:
+        age_steps = aoi_model.base_age_steps(n, dt)
+    elif axis == AXIS_LEGACY:
+        age_steps = sawtooth_age_steps(n, dt, SYNC_PERIOD, d_sync)
+    else:
+        raise ValueError("axis khong hop le: %r" % (axis,))
     meta = {
         # amendment 23-49: truc phai HIEN trong metadata, khong duoc de an
         "axis": axis,
@@ -681,17 +688,19 @@ def staleness_path_diagnostic(
     seed: int = 101,
     n: int = 20_000,
     calibration_path: str = CALIBRATION,
+    *, axis: str,
 ) -> Dict[str, Any]:
     tt = TruthTable(TRUTH_TABLE)
     cv = C.CostV2(strict_reliable=False)
     cell = _load_cell(mode, rho_bar, calibration_path=calibration_path)
     arr = _cell_arrays(tt, cv, cell, seed=seed, n=n, dt=DT, sigma_override=SIGMA)
-    cur, old, _n_z0 = _valid_rows(n, DT)
+    aoi = AoIModelV7(d_s=d_base_s((0.0,) * 8, DT), profile="U0")
+    cur, old, _n_z0 = _valid_rows(n, DT, axis=axis, aoi=aoi)
     keep = old >= int(offset_steps("PC4").max())
     old = old[keep]
     rho = rho_matrix_from_cell(mode, rho_bar, SIGMA, seed, tau=TAU, n=n, dt=DT)
     row = y_hat_row_shift(arr["c_fresh"], old)
-    out: Dict[str, Any] = {"seed": int(seed), "n_rows": int(len(old)), "max_abs_row_vs_rho": {}}
+    out: Dict[str, Any] = {"axis": axis, "seed": int(seed), "n_rows": int(len(old)), "max_abs_row_vs_rho": {}}
     for profile in ("U0", "U1", "U2", "PC4"):
         y = y_hat_rho_shift(cv, rho, old, offset_steps(profile), mode, float(arr["w_loss"]))
         out["max_abs_row_vs_rho"][profile] = float(np.abs(row - y).max())
@@ -821,6 +830,7 @@ def main() -> None:
                 str(args.mode),
                 float(args.rho_bar),
                 calibration_path=str(args.calibration),
+                axis=str(args.axis),
             ) if args.aoi_profile == "U0" else {},
             # GIU float32 -- KHONG ep float64. Amendment 23-58 muc 3 gia thiet phan
             # du 5.7e-06 o `p90` la do tich luy float32, va DA THU ep float64.

@@ -192,3 +192,7 @@ results/RAW/phase-G/g3*/
 # la sai lam da lam results/phase-20/rho_offered_long*.csv khong version hoa
 # duoc (docs/phase-20/99-gate-decision.md:319). Giu .meta.json, bo CSV.
 results/**/phase-T2/traces/*.csv
+
+# Lesson 20R2.1 B4: preserve original sweep_r2 parquet only.
+# Verified: 166 files, 10,940 rows, 3,097,390 bytes; SHA matches reports.
+!results/PENDING/phase-T2/sweep_r2/*.parquet

@@ -138,7 +138,7 @@ def zero_offset_path_diagnostic(mode: str, rho_bar: float, seed: int = 101, n: i
     cv = V3.C.CostV2(strict_reliable=False)
     cell = V3._load_cell(str(mode), float(rho_bar))
     arr = V3._cell_arrays(tt, cv, cell, seed=int(seed), n=int(n), dt=V3.DT, sigma_override=V3.SIGMA)
-    cur, old, _n_z0 = V3._valid_rows(int(n), V3.DT)
+    cur, old, _n_z0 = V3._valid_rows(int(n), V3.DT, axis=V3.AXIS_LEGACY)
     rho = V3.rho_matrix_from_cell(str(mode), float(rho_bar), V3.SIGMA, int(seed), tau=V3.TAU, n=int(n), dt=V3.DT)
     row = V3.y_hat_row_shift(arr["c_fresh"], old)
     shifted = V3.y_hat_rho_shift(cv, rho, old, V3.offset_steps("U0"), str(mode), float(arr["w_loss"]))
@@ -179,7 +179,7 @@ def build_profile(
             dt=float(dt),
             sigma_override=float(sigma),
         )
-        cur, old, _n_z0 = V3._valid_rows(int(n), float(dt))
+        cur, old, _n_z0 = V3._valid_rows(int(n), float(dt), axis=V3.AXIS_LEGACY)
         old_adj = old + int(shift)
         need = int(off.max()) + 1
         keep = (old_adj >= need) & (old_adj <= cur)

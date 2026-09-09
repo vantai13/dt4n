@@ -48,7 +48,7 @@ def _git(*a: str) -> str:
 
 def _fit(mode, rho_bar, tau, seed):
     df = TS.build_at_tau(mode, rho_bar, tau, seeds=(seed,),
-                         n=200_000, sigma=TS.SIGMA_LEGACY_22_6)
+                         n=200_000, sigma=TS.SIGMA_LEGACY_22_6, axis=TS.V3.AXIS_LEGACY)
     return TS.fit_ar1(TS.decompose(df), tau)
 
 

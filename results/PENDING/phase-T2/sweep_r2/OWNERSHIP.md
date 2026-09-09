@@ -1,3 +1,10 @@
+> **20R2.1 / QD-33 (2026-09-09): BẢO TỒN ĐƯỢC; KHÔNG TÁI DÙNG CHO LƯỚI CHÍNH A5.**
+> Đã kiểm trên checkout này: 166/166 parquet khớp SHA-256, đọc được 10.940 hàng,
+> tổng 3.097.390 byte. Bằng chứng: `results/PENDING/phase-20R2/parquet_recovery.json`.
+> Các tuyên bố chuyển quyền bên dưới là lịch sử. Trục SLA `self_calibrated`
+> không khớp `exogenous_g114_S-B` ở cả hai nhánh A5 đang đề xuất.
+> Giữ làm neo hồi quy ứng viên; chưa chứng nhận gate bit-exact v8 của 20R2.3.
+
 # QUYEN SO HUU CUA 166 LENH T2.6 LUOT 2   (A-T2-3)
 
 estimand_id = RMS_ALLACTION_DELAY   (all_action / delay_ms, xem docs/GLOSSARY.md)

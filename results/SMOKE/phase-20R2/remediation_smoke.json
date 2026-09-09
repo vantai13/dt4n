@@ -1,0 +1,182 @@
+{
+  "baseline_commit": "665bebe9817c4df517ba1bc80ffc617fc5048ced",
+  "builder_rows": [
+    {
+      "after_k_max": 110,
+      "after_k_min": 11,
+      "axis": "legacy_sawtooth_51ms",
+      "before_k_max": 110,
+      "before_k_min": 11,
+      "data_bit_exact": true,
+      "n_rows": 19989,
+      "profile": "U0",
+      "validity": {
+        "aoi_axis": {
+          "d_sync_s": 0.051,
+          "generator_module": "measurements.decision_error",
+          "generator_name": "sawtooth_age_steps",
+          "generator_source_sha256": "a60d7fe50a6672cd3f529f22904dd138764a80d18520731f24f463ccdba1bcae",
+          "label": "assumed_sawtooth_51ms",
+          "source_path": "measurements/decision_error.py",
+          "source_sha256": "6197c74c16816d2d2b37c6310bb7bce147babcab69bebfc22ec8c5dac8bab92e",
+          "sync_period_s": 0.5
+        },
+        "axis_role": "consumes_axis",
+        "omega": null,
+        "schema": "dt4n.validity.v1",
+        "sla_axis": {
+          "label": "self_calibrated",
+          "source_path": "results/LIVE/phase-20R/sla_calibration.json",
+          "source_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
+        },
+        "w_loss": 3222.244681647411,
+        "z_edges": [
+          0.055,
+          0.1,
+          0.2,
+          0.3,
+          0.5501
+        ]
+      },
+      "z_max_s": 0.55,
+      "z_min_s": 0.055,
+      "z_shift_ms": 0.0
+    },
+    {
+      "after_k_max": 123,
+      "after_k_min": 23,
+      "axis": "measured_v7",
+      "before_k_max": 110,
+      "before_k_min": 11,
+      "data_bit_exact": true,
+      "n_rows": 19899,
+      "profile": "U0",
+      "validity": {
+        "aoi_axis": {
+          "d_sync_s": null,
+          "generator_module": "measurements.aoi_model_v7",
+          "generator_name": "AoIModelV7",
+          "generator_source_sha256": null,
+          "label": "measured_v7_uniform",
+          "source_path": "measurements/aoi_model_v7.py",
+          "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+          "sync_period_s": null
+        },
+        "axis_role": "consumes_axis",
+        "omega": null,
+        "schema": "dt4n.validity.v1",
+        "sla_axis": {
+          "label": "self_calibrated",
+          "source_path": "results/LIVE/phase-20R/sla_calibration.json",
+          "source_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
+        },
+        "w_loss": 3222.244681647411,
+        "z_edges": [
+          0.1,
+          0.241,
+          0.366,
+          0.491,
+          0.641
+        ]
+      },
+      "z_max_s": 0.615,
+      "z_min_s": 0.115,
+      "z_shift_ms": 0.0
+    },
+    {
+      "after_k_max": 119,
+      "after_k_min": 19,
+      "axis": "measured_v7",
+      "before_k_max": 110,
+      "before_k_min": 11,
+      "data_bit_exact": true,
+      "n_rows": 19899,
+      "profile": "U1",
+      "validity": {
+        "aoi_axis": {
+          "d_sync_s": null,
+          "generator_module": "measurements.aoi_model_v7",
+          "generator_name": "AoIModelV7",
+          "generator_source_sha256": null,
+          "label": "measured_v7_uniform",
+          "source_path": "measurements/aoi_model_v7.py",
+          "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+          "sync_period_s": null
+        },
+        "axis_role": "consumes_axis",
+        "omega": null,
+        "schema": "dt4n.validity.v1",
+        "sla_axis": {
+          "label": "self_calibrated",
+          "source_path": "results/LIVE/phase-20R/sla_calibration.json",
+          "source_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
+        },
+        "w_loss": 3222.244681647411,
+        "z_edges": [
+          0.1,
+          0.241,
+          0.366,
+          0.491,
+          0.641
+        ]
+      },
+      "z_max_s": 0.6174999999999999,
+      "z_min_s": 0.1175,
+      "z_shift_ms": 22.5
+    },
+    {
+      "after_k_max": 122,
+      "after_k_min": 22,
+      "axis": "measured_v7",
+      "before_k_max": 110,
+      "before_k_min": 11,
+      "data_bit_exact": true,
+      "n_rows": 19899,
+      "profile": "U3",
+      "validity": {
+        "aoi_axis": {
+          "d_sync_s": null,
+          "generator_module": "measurements.aoi_model_v7",
+          "generator_name": "AoIModelV7",
+          "generator_source_sha256": null,
+          "label": "measured_v7_uniform",
+          "source_path": "measurements/aoi_model_v7.py",
+          "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
+          "sync_period_s": null
+        },
+        "axis_role": "consumes_axis",
+        "omega": null,
+        "schema": "dt4n.validity.v1",
+        "sla_axis": {
+          "label": "self_calibrated",
+          "source_path": "results/LIVE/phase-20R/sla_calibration.json",
+          "source_sha256": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db"
+        },
+        "w_loss": 3222.244681647411,
+        "z_edges": [
+          0.1,
+          0.241,
+          0.366,
+          0.491,
+          0.641
+        ]
+      },
+      "z_max_s": 0.618125,
+      "z_min_s": 0.11812500000000001,
+      "z_shift_ms": 8.125
+    }
+  ],
+  "schema": "dt4n.20r2.remediation_smoke.v1",
+  "scope": "Regression smoke on inherited self_calibrated SLA; not a 20R2 outcome grid.",
+  "source_sha256": {
+    "cert/build_calib_set_v3.py": "d33ecd0737c8f16718e97519796bde63926b092e8855ffa97c0eb943265d2139",
+    "cert/tau_sweep.py": "7723910d70f1e3e695a8bf343b87464393a29d5122fa5b10b148f44cd9850488"
+  },
+  "tau_sweep": {
+    "axis": "legacy_sawtooth_51ms",
+    "data_bit_exact": true,
+    "dataframe_sha256": "25b42e8c8ae4cd9af297f4394cfc542e66f673805b2a7d497661b25a141c38bd",
+    "n_rows": 19989,
+    "tau": 1.0
+  }
+}

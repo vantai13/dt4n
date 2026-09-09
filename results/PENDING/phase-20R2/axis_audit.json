@@ -5,6 +5,9 @@
         {
           "axis_explicit": false,
           "callee": "sawtooth_age_steps",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "_sawtooth_metric_series",
           "keywords": [],
           "line": 680,
           "n_positional": 2
@@ -22,39 +25,77 @@
         {
           "axis_explicit": false,
           "callee": "base_age_steps",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [
+            "axis == AXIS_MEASURED"
+          ],
+          "enclosing_function": "_valid_rows",
           "keywords": [],
-          "line": 287,
+          "line": 289,
           "n_positional": 2
         },
         {
-          "axis_explicit": true,
+          "axis_explicit": false,
           "callee": "sawtooth_age_steps",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [
+            "axis == AXIS_LEGACY",
+            "axis == AXIS_MEASURED"
+          ],
+          "enclosing_function": "_valid_rows",
           "keywords": [],
-          "line": 289,
+          "line": 291,
           "n_positional": 4
         },
         {
           "axis_explicit": true,
           "callee": "_valid_rows",
+          "direct_generator_call": false,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "build_one_v3",
           "keywords": [
             "aoi",
             "axis"
           ],
-          "line": 330,
+          "line": 332,
           "n_positional": 3
         },
         {
-          "axis_explicit": true,
-          "callee": "sawtooth_age_steps",
+          "axis_explicit": false,
+          "callee": "base_age_steps",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [
+            "axis == AXIS_MEASURED"
+          ],
+          "enclosing_function": "build_one_v3",
           "keywords": [],
-          "line": 424,
-          "n_positional": 4
+          "line": 427,
+          "n_positional": 2
         },
         {
           "axis_explicit": false,
-          "callee": "_valid_rows",
+          "callee": "sawtooth_age_steps",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [
+            "axis == AXIS_LEGACY",
+            "axis == AXIS_MEASURED"
+          ],
+          "enclosing_function": "build_one_v3",
           "keywords": [],
-          "line": 689,
+          "line": 429,
+          "n_positional": 4
+        },
+        {
+          "axis_explicit": true,
+          "callee": "_valid_rows",
+          "direct_generator_call": false,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "staleness_path_diagnostic",
+          "keywords": [
+            "aoi",
+            "axis"
+          ],
+          "line": 698,
           "n_positional": 2
         }
       ],
@@ -62,18 +103,21 @@
       "is_generator_module": false,
       "registry_label": "UNREGISTERED",
       "role": "dung tap calib conformal",
-      "silent_default_sites": [
-        689
-      ],
-      "source_sha256": "19039503cfe2446fed18f68670f2e2caee6f1fed1fa4d3571f2dffb2162a97e7"
+      "silent_default_sites": [],
+      "source_sha256": "d33ecd0737c8f16718e97519796bde63926b092e8855ffa97c0eb943265d2139"
     },
     {
       "calls": [
         {
-          "axis_explicit": false,
+          "axis_explicit": true,
           "callee": "_valid_rows",
-          "keywords": [],
-          "line": 159,
+          "direct_generator_call": false,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "build_at_tau",
+          "keywords": [
+            "axis"
+          ],
+          "line": 165,
           "n_positional": 2
         }
       ],
@@ -81,10 +125,65 @@
       "is_generator_module": false,
       "registry_label": "UNREGISTERED",
       "role": "quet tau (RMS_MARGIN_COST)",
-      "silent_default_sites": [
-        159
+      "silent_default_sites": [],
+      "source_sha256": "7723910d70f1e3e695a8bf343b87464393a29d5122fa5b10b148f44cd9850488"
+    },
+    {
+      "calls": [
+        {
+          "axis_explicit": true,
+          "callee": "_valid_rows",
+          "direct_generator_call": false,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "zero_offset_path_diagnostic",
+          "keywords": [
+            "axis"
+          ],
+          "line": 141,
+          "n_positional": 2
+        },
+        {
+          "axis_explicit": true,
+          "callee": "_valid_rows",
+          "direct_generator_call": false,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "build_profile",
+          "keywords": [
+            "axis"
+          ],
+          "line": 182,
+          "n_positional": 2
+        }
       ],
-      "source_sha256": "d2cdfea1776c0da6e301cf003118617991ed237a831119c688dbe283079aa387"
+      "harness": "cert/aoi_profiles.py",
+      "is_generator_module": false,
+      "registry_label": "UNREGISTERED",
+      "role": "ho so Phase 22, doi chung legacy",
+      "silent_default_sites": [],
+      "source_sha256": "84ed736c642f9149bbb594c5b12d036a77f4a789ced2c9a3aa0acc829a1cfc1f"
+    },
+    {
+      "calls": [
+        {
+          "axis_explicit": true,
+          "callee": "_valid_rows",
+          "direct_generator_call": false,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "cell_matrices",
+          "keywords": [
+            "aoi",
+            "axis"
+          ],
+          "line": 215,
+          "n_positional": 2
+        }
+      ],
+      "harness": "cert/cell_matrices.py",
+      "is_generator_module": false,
+      "registry_label": "UNREGISTERED",
+      "role": "ma tran cac o, phan phoi axis",
+      "silent_default_sites": [],
+      "source_sha256": "1e68ab1c656508595e644de3e0b7ff6f234318f3fc5c7c92aa20be60f7ad753c"
     },
     {
       "calls": [],
@@ -98,8 +197,11 @@
     {
       "calls": [
         {
-          "axis_explicit": true,
+          "axis_explicit": false,
           "callee": "process_mode",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "age_steps",
           "keywords": [],
           "line": 196,
           "n_positional": 4
@@ -107,6 +209,9 @@
         {
           "axis_explicit": false,
           "callee": "instrument_mode",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "selfcheck",
           "keywords": [],
           "line": 269,
           "n_positional": 1
@@ -122,15 +227,21 @@
     {
       "calls": [
         {
-          "axis_explicit": true,
+          "axis_explicit": false,
           "callee": "sawtooth_age_steps",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "sawtooth_age_level_count",
           "keywords": [],
           "line": 253,
           "n_positional": 4
         },
         {
-          "axis_explicit": true,
+          "axis_explicit": false,
           "callee": "sawtooth_age_steps",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "reference_sawtooth_mean_age_s",
           "keywords": [],
           "line": 262,
           "n_positional": 4
@@ -138,6 +249,9 @@
         {
           "axis_explicit": false,
           "callee": "sawtooth_age_steps",
+          "direct_generator_call": true,
+          "enclosing_axis_guards": [],
+          "enclosing_function": "evaluate",
           "keywords": [
             "d_sync_s",
             "sync_period_s"
@@ -503,7 +617,7 @@
     "ratio_tau28_over_tau0p5": 1.4,
     "rt20_4_claimed_ratio": 56.0
   },
-  "generated_utc": "2026-09-09T11:55:25Z",
+  "generated_utc": "2026-09-09T14:02:11Z",
   "note": "Bang nay SINH BOI CONG CU (gate 0-1). Moi nhan AoI SUY RA tu sha256 ma nguon, khong go tay.",
   "schema": "dt4n.axis_audit.20r2_0.v1",
   "sheppard_recomputed": {

@@ -64,17 +64,22 @@ Nguồn: `docs/GLOSSARY.md:145-192`, `cert/tau_sweep.py:35`,
 
 ## 2. Kết quả kiểm toán trục (Lesson 20R2.0)
 
-### A1 — Mặc định im lặng của `axis`: **2 chỗ**, đã xác nhận bằng AST
+### A1 — Đã khắc phục mặc định `_valid_rows` (20R2.1)
 
-```text
-cert/tau_sweep.py:159             V3._valid_rows(int(n), float(dt))
-                                  -> DUONG CHAY CHINH
-cert/build_calib_set_v3.py:689    _valid_rows(n, DT)
-                                  -> ham chan doan staleness_path_diagnostic
-```
+`axis` là keyword-only bắt buộc; gọi thiếu hoặc truyền theo vị trí sẽ lỗi
+trước khi sinh dữ liệu. Audit mới ghi **0 caller thiếu axis** trong các
+harness, kể cả `cert/aoi_profiles.py` và `cert/cell_matrices.py`.
+`tau_sweep` nhận `--axis` bắt buộc qua `sweep` → `build_at_tau` → `_valid_rows`.
+Harness Phase 22 chỉ nhận legacy vì z-bin/z-rep/ratio bands đã khóa theo
+trục ấy; measured bị từ chối tường minh, cần prereg mới.
+Các API builder cấp cao còn giữ mặc định tương thích Phase 22;
+không diễn giải gate này là đã xóa mọi mặc định axis trong toàn repo.
 
-Cả hai rơi vào mặc định `axis: str = AXIS_LEGACY`
-(`cert/build_calib_set_v3.py:276`) — tức trục **DEPRECATED**.
+Audit bổ sung caller trực tiếp bộ sinh, hàm chứa và điều kiện `axis` bao
+quanh. Đây là bằng chứng phục vụ rà soát, không phải chứng minh luồng điều
+khiển tổng quát. Metadata `build_one_v3` đã chọn đúng bộ sinh theo axis.
+Test: `test/test_axis_label_agreement.py`; số đo trước/sau:
+`results/SMOKE/phase-20R2/remediation_smoke.json`.
 
 ### A2 — Trục SLA
 
@@ -212,8 +217,8 @@ chạm p95 và max mô hình. ✅
 
 1. **Không chạm p99 thực nghiệm (0.6275 s) và không chạm max (1.5689 s).**
    Đuôi phải của tuổi thật **không được đo** bởi lưới này.
-2. `Z_EXTRAP = (1.0, 2.0)` **không phải ngoại suy trên trục thực nghiệm**
-   (nằm dưới max đo được 1.5689 s); chỉ `4.0` là ngoại suy trên cả hai miền.
+2. `z = 1.0` nằm dưới max thực nghiệm 1.5689 s; `z = 2.0` và `4.0`
+   nằm ngoài cả miền mô hình lẫn miền thực nghiệm đã đo.
    Gắn cờ `extrapolated=True` phải nói rõ **ngoại suy so với miền nào**.
 
 > Cả hai cờ đã có sẵn trong code: `measurements/decision_error_v2.py:489`
@@ -387,6 +392,12 @@ T2-L8 ★ DINH CHINH co che: T2 KHONG chay qua sawtooth_age_steps trong
 20R2-L2 ★ MOI: don vi "mot o" chua duoc dinh nghia -> ngan sach CPU chua
         ket luan duoc (muc 5.2). Khong ghi "khong can fractional design"
         cho den khi PHASE_20R2.md xac dinh don vi o.
+        QD-33: KHONG tru 166 lenh khoi ngan sach moi (reuse = 0), du da
+        bao ton du 166/166 parquet. Chua xac nhan gate CPU +/-30%.
+
+20R2-L3 Hai he ten truc cung ton tai: measured_v7 -> measured_v7_uniform;
+        legacy_sawtooth_51ms -> assumed_sawtooth_51ms. Anh xa 1-1 khoa boi
+        test/test_axis_label_agreement.py, doi chieu validity suy tu SHA.
 ```
 
 ---
@@ -414,3 +425,12 @@ IMPORT, không chép; dùng ở mục 5.2 và 6).
 > Chính nó cũng có thể sai theo CẢ HAI chiều."*
 > Lesson 20R2.0 là một bản kiểm toán. Nó cũng phải chịu luật đó — và
 > mục 9 này là kết quả của việc áp luật đó lên chính nó.
+
+
+## 10. Trạng thái sau khắc phục 20R2.1 (2026-09-09)
+
+Gate 0-5 PASS trong phạm vi `_valid_rows` và đường gọi đã kiểm.
+Gate 0-3 **CHƯA ĐẠT**: chưa có PHASE_20R2.md, định nghĩa một ô và các chiều
+tạo lưới 960 ô; người ký chưa được xác định. Không tạo tag
+`phase-20R2-prereg-signed` khi chưa đáp ứng §0. Không chạy lưới kết quả 20R2.
+QD-33 và báo cáo `01-recovery-and-remediation.md` ghi công việc đã hoàn tất.

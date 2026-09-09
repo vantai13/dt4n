@@ -50,6 +50,8 @@ HARNESSES = {
     "measurements/decision_error_v2.py": "do err(z), d_sla -- ESTIMAND CHINH",
     "cert/build_calib_set_v3.py":        "dung tap calib conformal",
     "cert/tau_sweep.py":                 "quet tau (RMS_MARGIN_COST)",
+    "cert/aoi_profiles.py":              "ho so Phase 22, doi chung legacy",
+    "cert/cell_matrices.py":             "ma tran cac o, phan phoi axis",
     "cert/realizability_gate.py":        "gate kha thi",
     "measurements/aoi_model_v7.py":      "BO SINH truc do duoc",
     "measurements/decision_error.py":    "BO SINH truc ke thua",
@@ -78,6 +80,8 @@ def scan_calls(path: str) -> list[dict]:
     with open(path, encoding="utf-8") as fh:
         tree = ast.parse(fh.read())
     found = []
+    parents = {child: parent for parent in ast.walk(tree)
+               for child in ast.iter_child_nodes(parent)}
     for node in ast.walk(tree):
         if not isinstance(node, ast.Call):
             continue
@@ -87,11 +91,25 @@ def scan_calls(path: str) -> list[dict]:
         if name not in AOI_GENERATORS:
             continue
         kw = {k.arg for k in node.keywords if k.arg}
+        enclosing = []
+        ancestor = parents.get(node)
+        while ancestor is not None:
+            enclosing.append(ancestor)
+            ancestor = parents.get(ancestor)
+        owner = next((p.name for p in enclosing
+                      if isinstance(p, (ast.FunctionDef, ast.AsyncFunctionDef))), None)
+        axis_guards = [ast.unparse(p.test) for p in enclosing
+                       if isinstance(p, ast.If)
+                       and any(isinstance(x, ast.Name) and x.id == "axis"
+                               for x in ast.walk(p.test))]
         found.append({
             "line": node.lineno,
             "callee": name,
-            # _valid_rows(n, dt, d_sync, axis, aoi) -> axis la THAM SO VI TRI 4
-            "axis_explicit": ("axis" in kw) or (len(node.args) >= 4),
+            "axis_explicit": "axis" in kw,
+            "enclosing_function": owner,
+            "direct_generator_call": name != "_valid_rows",
+            # Review evidence, not proof that arbitrary control flow is safe.
+            "enclosing_axis_guards": axis_guards,
             "n_positional": len(node.args),
             "keywords": sorted(kw),
         })

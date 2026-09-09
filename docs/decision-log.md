@@ -399,3 +399,39 @@ artifact has 200 paired bootstrap draws, and 5/24 delta intervals contain zero.
 
 GO-3: Amendment 1, studentized max-score, was signed but not run in Phase 22.
 It must be recorded as future work or run as exploratory.
+
+
+## 2026-09-09 — Lesson 20R2.1
+
+### QD-33: 166 lệnh sweep_r2 — bảo tồn được, không tái dùng cho lưới chính A5
+
+**Tái dùng: KHÔNG.** A5 đang đề xuất nhánh chính
+`(measured_v7_uniform, exogenous_g114_S-B)` và đối chứng
+`(assumed_sawtooth_51ms, exogenous_g114_S-B)`. Cả hai giữ cùng SLA.
+166 lệnh dùng lưới z cố định neo miền legacy và SLA `self_calibrated`;
+không khớp nhánh nào. Đây là lý do về trục, không phải thiếu tệp.
+A5 chưa được ký: xem các điều kiện còn thiếu trong prereg §0.
+
+`err_total` phụ thuộc argmin bảng chi phí và `w_loss`. A2 đo
+`w_loss=1245.6355…4722.6901` so với `5000` ngoại sinh. Các đại lượng
+`rms_e_model/rms_e_stale/cov_e` trên delay thuộc estimand khác; không
+thay cho claim err của 20R2.
+
+**Bảo tồn: CÓ, lối (b).** Đo trên checkout `/home/ubuntu/dt4n`:
+166 report, 166 parquet khớp SHA-256; 0 thiếu, 0 lệch SHA;
+đọc được 10.940 hàng; 3.097.390 byte (3,097390 MB thập phân).
+`.gitignore` mở đúng `results/PENDING/phase-T2/sweep_r2/*.parquet`.
+Giữ nguyên các byte parquet/report lịch sử; thêm banner vào OWNERSHIP.
+Ứng dụng: neo hồi quy ứng viên cho 20R2.3, so SLA ghép cặp nếu cùng
+z-grid/cell/tau/seed/cấu hình còn lại, và dữ liệu thời gian cho ngân sách.
+Khôi phục đủ không đồng nghĩa đã đạt gate bit-exact v8 của 20R2.3.
+
+**Không chạy lại 166 lệnh (lối a).** Dữ liệu đã nguyên vẹn và trục không
+phù hợp lưới chính. Chọn (c) cho tái dùng: số lệnh được trừ = 0.
+Ước tính từ run_log vẫn là 2,95 h/nhánh hoặc 10,63 h/nhánh tùy đơn vị ô;
+không thể xác nhận ngân sách ±30% trước khi định nghĩa lưới/harness.
+
+Bằng chứng: `results/PENDING/phase-20R2/parquet_recovery.json`, sinh bởi
+`tools/20r2_1_parquet_recovery.py`; mỗi dòng ghi SHA kỳ vọng/thực tế,
+số hàng báo cáo/đọc được và dung lượng. Công cụ kiểm đủ chính xác 166,
+không chấp nhận một tập con tự khớp.

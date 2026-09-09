@@ -86,6 +86,13 @@ H7  Ket qua do vong 3: results/PENDING/phase-T2/sweep_r3/
 
 ## KHONG GIAO DUOC -- no khoa hoc, khai thang
 
+**Đính chính 20R2.1 / QD-33:** `err_total(τ,z)`, `d_sla(τ,z)` và `err theo τ`
+của sweep_r2 KHÔNG giao làm kết quả lưới chính A5. Dữ liệu còn nguyên
+(166/166 SHA khớp, 10.940 hàng), nhưng SLA là `self_calibrated`, trong khi
+A5 đề xuất `exogenous_g114_S-B` cho cả nhánh measured và legacy.
+Bảo tồn 166 parquet làm ứng viên neo hồi quy; không trừ 166 lệnh khỏi
+ngân sách lưới mới. Xem `results/PENDING/phase-20R2/parquet_recovery.json`.
+
 ```text
 N1  *** err(tau), lift(tau), tau* ***
     THIEU: err_certified -- chua ai cai. Do duoc bang grep: `lift`,

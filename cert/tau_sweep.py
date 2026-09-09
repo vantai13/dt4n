@@ -114,6 +114,7 @@ def build_at_tau(
     sigma: float | None = None,
     a: float | None = None,
     return_diagnostics: bool = False,
+    *, axis: str,
 ):
     """Build the v3 U0 calibration rows with ``tau`` overridden.
 
@@ -136,6 +137,11 @@ def build_at_tau(
        doi chung legacy (D-T2.6-9) vi mot ly do TAM THUONG.
     """
     tau = float(tau)
+    # Phase 22 bands, z representatives and bins are frozen on legacy.
+    # Selecting measured needs a new preregistration, not just a generator swap.
+    if axis != V3.AXIS_LEGACY:
+        raise ValueError("tau_sweep chi ho tro axis=legacy_sawtooth_51ms; "
+                         "measured can prereg moi cho z-bin/z-rep/ratio bands")
     if (sigma is None) == (a is None):
         raise ValueError(
             "phai truyen DUNG MOT trong hai: sigma= (tuyet doi) hoac "
@@ -156,7 +162,7 @@ def build_at_tau(
             tt, cv, cell,
             seed=int(seed), tau=tau, n=int(n), dt=float(dt), **sig_kw,
         )
-        cur, old, _n_z0 = V3._valid_rows(int(n), float(dt))
+        cur, old, _n_z0 = V3._valid_rows(int(n), float(dt), axis=axis)
         y_true = arr["c_true"][cur]
         y_hat = arr["c_fresh"][old]
         y_mid = arr["c_fresh"][cur]
@@ -421,6 +427,7 @@ def sweep(
     a: float | None = None,
     n_mode: str = "per_tau",
     level_matched_blocks: int | None = None,
+    *, axis: str,
 ) -> Dict[str, Any]:
     """A-T2-3.
 
@@ -452,7 +459,8 @@ def sweep(
 
         df, diag = build_at_tau(str(mode), float(rho_bar), tau,
                                 seeds=seeds, n=n_tau, dt=float(dt),
-                                sigma=sigma, a=a, return_diagnostics=True)
+                                sigma=sigma, a=a, return_diagnostics=True,
+                                axis=axis)
         dec = decompose(df)
         fit = fit_ar1(dec, tau)
         q_margin = qhat_by_bin(df, "s_margin", alpha)
@@ -548,6 +556,7 @@ def sweep(
     summary = summarize(rows, alpha)
     return {
         "cell": "%s@%.3f" % (str(mode), float(rho_bar)),
+        "axis": axis,
         "estimand_id": ESTIMAND_ID,
         "branch": "z_fixed",
         "z_source": ("sawtooth_age_steps(n, dt, SYNC_PERIOD=%.3f, d_sync); "
@@ -575,6 +584,8 @@ def main() -> None:
     parser.add_argument("--mode", required=True)
     parser.add_argument("--rho-bar", type=float, required=True)
     parser.add_argument("--out", required=True)
+    parser.add_argument("--axis", required=True, choices=(V3.AXIS_LEGACY,),
+                        help="truc Phase 22 da khoa; measured can prereg moi")
     parser.add_argument("--taus", default=",".join(str(x) for x in TAU_GRID))
     parser.add_argument("--seeds", type=int, nargs="+", default=list(V3.SEEDS))
     parser.add_argument("--alpha", type=float, default=ALPHA)
@@ -602,6 +613,7 @@ def main() -> None:
         a=args.a,
         n_mode=str(args.n_mode),
         level_matched_blocks=args.level_matched_blocks,
+        axis=str(args.axis),
     )
     out = {
         **result,
@@ -615,6 +627,7 @@ def main() -> None:
             "n_mode": str(args.n_mode),
             "n_arg": args.n,
             "dt": float(args.dt),
+            "axis": str(args.axis),
             "sigma_arg": args.sigma,
             "a_arg": args.a,
             "truth_table": V3.TRUTH_TABLE,

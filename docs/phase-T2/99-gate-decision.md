@@ -134,6 +134,11 @@ T2-L6  tieu chi headroom cua gate khong hoat dong cho toi T2.4-fix; anh
 T2-L7  truc tau chay trong twin; realizability neo boi Phase G tai
        tau thuoc {2, 5, 30} s (|sai so| round-trip <= 4.94% cho tau va
        3.82% cho sigma, T_run = 205*tau)
+T2-L8  T2 decision_error_v2.run_cell dung k = round(z/dt), KHONG goi bo
+       sinh sawtooth. Ket qua neo vao luoi z trung mien legacy
+       [0.055, 0.550] s; sawtooth nam o _sawtooth_metric_series, duong khac.
+       Khong ke thua err/d_sla cho truc measured + exogenous cua A5.
+       Dinh chinh 20R2.0/20R2.1; xem QD-33 va axis_audit.json.
 ```
 
 ---

@@ -1,0 +1,107 @@
+{
+  "all_full_failures_reproduced_on_original_code": true,
+  "axes_after": {
+    "errors": 0,
+    "failures": 17,
+    "passed": 628,
+    "seconds": 1.089,
+    "skipped": 42,
+    "tests": 687
+  },
+  "axes_baseline": {
+    "failures": 17,
+    "passed": 627,
+    "skipped": 42
+  },
+  "baseline_reproduction_scope": "Original tracked source extracted from HEAD to isolated directory; shared existing results. Re-ran failing groups, not entire baseline suite. G3 requires joint collection with test_g3b_sigma_tau_grid.",
+  "baseline_reproductions": {
+    "baseline_g3_order": {
+      "errors": 0,
+      "failures": 3,
+      "passed": 14,
+      "seconds": 1.116,
+      "skipped": 0,
+      "tests": 17
+    },
+    "baseline_margins": {
+      "errors": 0,
+      "failures": 1,
+      "passed": 3,
+      "seconds": 3.424,
+      "skipped": 0,
+      "tests": 4
+    },
+    "baseline_other": {
+      "errors": 0,
+      "failures": 4,
+      "passed": 223,
+      "seconds": 4.211,
+      "skipped": 90,
+      "tests": 317
+    }
+  },
+  "followup_tests": {
+    "new_tests_final": "14 passed",
+    "new_tool_cli_flags": "...                                                                      [100%]\n3 passed, 299 deselected in 0.06s",
+    "recovery_after_final_update": "2 passed"
+  },
+  "full": {
+    "errors": 0,
+    "failures": 25,
+    "passed": 2842,
+    "seconds": 687.977,
+    "skipped": 138,
+    "tests": 3005
+  },
+  "full_failures": [
+    "test/test_cli_flags_are_wired.py::test_every_declared_flag_is_read_somewhere[<repo>/tools/g2_kill_test.py]",
+    "test/test_cli_flags_are_wired.py::test_every_declared_flag_is_read_somewhere[<repo>/tools/g3a_omega_sweep.py]",
+    "test/test_cli_flags_are_wired.py::test_every_declared_flag_is_read_somewhere[<repo>/tools/g3b_sigma_tau_grid.py]",
+    "test/test_g3_dryrun.py::test_mixture_acf_has_the_signed_endpoints",
+    "test/test_g3_dryrun.py::test_quantization_step_is_smaller_in_dangerous_persistent_cell",
+    "test/test_g3_dryrun.py::test_quantize_target_is_independent_per_window_rounding",
+    "test/test_no_dangling_parquet_refs.py::test_known_dangling_only_shrinks",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/adjudication_r2.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/calib_p0925_tau10_report.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/calib_p0925_tau10_v3_report.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/clip_direction_r2.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/conformal_u_cond.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/conformal_u_cond_load.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/conformal_u_main.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/hygiene_checks.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/hygiene_checks_r2.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/preservation_r2.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/realizability_grid.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/rms_reference_check_r2.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/traces/rho_p0925_tau10_s101.meta.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/traces/rho_p0925_tau10_s102.meta.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/traces/rho_p0925_tau10_s103.meta.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/traces/rho_p0925_tau10_s104.meta.json]",
+    "test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[<repo>/results/PENDING/phase-T2/traces/rho_p0925_tau10_s105.meta.json]",
+    "test/test_phase23_cell_margins.py::test_G23_225_canonical_input_preserves_published_numbers[g23-17c]"
+  ],
+  "main_grid_run": false,
+  "new_failure_ids": [],
+  "python": "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python",
+  "same_17_axis_failures": true,
+  "schema": "dt4n.20r2.verification.v1",
+  "signature_blockers": [
+    "definition of one cell and dimensions forming 960 cells",
+    "preregistration signer"
+  ],
+  "signed_preregistration": false,
+  "source_baseline_commit": "665bebe9817c4df517ba1bc80ffc617fc5048ced",
+  "source_sha256": {
+    "cert/build_calib_set_v3.py": "d33ecd0737c8f16718e97519796bde63926b092e8855ffa97c0eb943265d2139",
+    "cert/tau_sweep.py": "7723910d70f1e3e695a8bf343b87464393a29d5122fa5b10b148f44cd9850488",
+    "tools/20r2_1_parquet_recovery.py": "b9401133d68a427f5c033839f424ededafe2aaa5d6e20dab2ca6cfbb6b2e16ef"
+  },
+  "targeted": {
+    "errors": 0,
+    "failures": 0,
+    "passed": 61,
+    "seconds": 9.974,
+    "skipped": 0,
+    "tests": 61
+  }
+}

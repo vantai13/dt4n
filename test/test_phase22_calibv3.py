@@ -30,7 +30,7 @@ def small():
     cv = C.CostV2(strict_reliable=False)
     cell = V3._load_cell(CELL_MODE, CELL_RHO)
     arr = _cell_arrays(tt, cv, cell, seed=101, n=N_SMALL, sigma_override=V3.SIGMA)
-    cur, old, _ = V3._valid_rows(N_SMALL, DT)
+    cur, old, _ = V3._valid_rows(N_SMALL, DT, axis=V3.AXIS_LEGACY)
     keep = old >= 200
     rho = rho_matrix_from_cell(CELL_MODE, CELL_RHO, V3.SIGMA, 101, tau=TAU, n=N_SMALL, dt=DT)
     return {

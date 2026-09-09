@@ -71,6 +71,7 @@ def command_for(run: Dict[str, Any], out_dir: str) -> List[str]:
     Cung quy uoc voi luot 2 (sweep_r2/run_log.jsonl luu cmd bat dau bang -m).
     """
     return [sys.executable, "-m", "cert.tau_sweep",
+            "--axis", "legacy_sawtooth_51ms",  # historical T2/22.6 design
             "--mode", run["mode"],
             "--rho-bar", "%g" % run["rho_bar"],
             "--taus", ",".join("%g" % t for t in TAUS),

@@ -11,7 +11,7 @@ from cert.build_calib_set_v2 import (
     assign_bin,
     z_edges_for,
 )
-from cert.build_calib_set_v3 import DT, N, _valid_rows
+from cert.build_calib_set_v3 import AXIS_LEGACY, DT, N, _valid_rows
 from cert.dsync_sensitivity import D_SYNC_VALUES, labelled_payload
 
 
@@ -20,7 +20,7 @@ ARTIFACT = ROOT / "results/LIVE/phase-23/dsync_sensitivity.json"
 
 
 def _shares(d_sync: float) -> np.ndarray:
-    cur, old, _ = _valid_rows(N, DT, d_sync)
+    cur, old, _ = _valid_rows(N, DT, d_sync, axis=AXIS_LEGACY)
     z_s = (cur - old) * DT
     edges = z_edges_for(d_sync, N, DT, offsets=Z_STEP_OFFSETS_PRIMARY)
     bins = assign_bin(z_s, edges)
@@ -41,7 +41,7 @@ def test_bin_shares_invariant_to_dsync():
 def test_dsync_changes_absolute_age_but_not_number_of_primary_bins():
     extrema = []
     for d_sync in D_SYNC_VALUES:
-        cur, old, _ = _valid_rows(N, DT, d_sync)
+        cur, old, _ = _valid_rows(N, DT, d_sync, axis=AXIS_LEGACY)
         z_s = (cur - old) * DT
         bins = assign_bin(
             z_s,

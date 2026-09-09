@@ -52,7 +52,7 @@ def main() -> int:
     for mode, rb in CELLS:
         for tau in TAUS:
             df = TS.build_at_tau(mode, rb, tau, seeds=SEEDS,
-                                 n=n_for_tau(tau, 0.005), a=0.9)
+                                 n=n_for_tau(tau, 0.005), a=0.9, axis=TS.V3.AXIS_LEGACY)
             cal = df[df["is_calib"]]
             ids = np.sort(cal["block_id"].unique())
             nb = len(ids)

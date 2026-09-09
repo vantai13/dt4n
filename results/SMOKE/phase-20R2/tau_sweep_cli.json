@@ -1,0 +1,223 @@
+{
+ "alpha": 0.1,
+ "axis": "legacy_sawtooth_51ms",
+ "block_rule": "block_s = 5*tau",
+ "blocks_per_tau": 5.0,
+ "branch": "z_fixed",
+ "cell": "poisson@0.925",
+ "estimand_id": "RMS_MARGIN_COST",
+ "gates": {
+  "G22_10_preregistered_ratio_bands": false,
+  "G22_11_A_independent_of_tau": false,
+  "ar1_rms_total_fit_within_2pct": false,
+  "block_s_equals_5tau": true,
+  "c_independent_of_tau": true,
+  "coverage_drift_matches_finite_sample_level": true,
+  "min_calib_blocks_at_least_9": true,
+  "ratio_is_hump_not_monotone": false,
+  "rms_em_independent_of_tau": true,
+  "saturated_ratio_above_measured": false,
+  "saturated_ratio_monotone_increasing": true
+ },
+ "level_matched_blocks": null,
+ "min_blocks": 9,
+ "n_mode": "fixed",
+ "preregistered_ratio_bands": {
+  "0.5": [
+   1.77,
+   2.16
+  ],
+  "1.0": [
+   1.87,
+   2.29
+  ],
+  "2.0": [
+   1.88,
+   2.3
+  ],
+  "2.87": [
+   1.86,
+   2.27
+  ],
+  "5.0": [
+   1.77,
+   2.17
+  ]
+ },
+ "provenance": {
+  "a_arg": null,
+  "amendment": "A-T2-3",
+  "axis": "legacy_sawtooth_51ms",
+  "calibration": "results/LIVE/phase-20R/sla_calibration.json",
+  "dt": 0.005,
+  "git_dirty": true,
+  "git_hash": "665bebe9817c4df517ba1bc80ffc617fc5048ced",
+  "n_arg": 20000,
+  "n_mode": "fixed",
+  "script": "cert/tau_sweep.py",
+  "seeds": [
+   101
+  ],
+  "sigma_arg": 0.0096,
+  "timestamp_utc": "2026-09-09T14:07:41.728105+00:00",
+  "truth_table": "results/LIVE/phase-20R/truth_table.parquet"
+ },
+ "rows": [
+  {
+   "ar1_diagnostics": [
+    {
+     "ar1_clip_ratio": 0.0,
+     "ar1_cycles": 100.0,
+     "ar1_sigma_hat": 0.009339517277482227,
+     "seed": 101,
+     "sigma_rho": 0.0096,
+     "sigma_rho_source": "override",
+     "tt_domain_clip_max": 0.0
+    }
+   ],
+   "ar1_fit": {
+    "A": 25.18049166050084,
+    "A_max": 26.472417779834046,
+    "A_min": 23.901249879038286,
+    "A_over_em": 11.70992888697135,
+    "A_spread_pct": 10.210951936371444,
+    "c": 0.8904783480689082,
+    "c_max": 0.9121142788617339,
+    "c_min": 0.8672319449136974,
+    "c_spread_pct": 5.040249888766907,
+    "max_rel_err_vs_measured": 0.05411536302589304,
+    "rms_e_model": 2.1503539349856386,
+    "rms_em_max": 2.2371517999242707,
+    "rms_em_min": 2.0889640893527406,
+    "rms_em_spread_pct": 6.891317199487898,
+    "tau": 1.0
+   },
+   "block_len_samples": 1000,
+   "block_s": 5.0,
+   "branch": "z_fixed",
+   "conformal_level": {
+    "0": 1.0,
+    "1": 1.0,
+    "2": 1.0,
+    "3": 1.0
+   },
+   "conformal_level_used": 1.0,
+   "coverage": {
+    "0": 0.9988888888888889,
+    "1": 0.9995,
+    "2": 0.991,
+    "3": 0.9990174887011201
+   },
+   "coverage_mean_by_bin": 0.9971015943975023,
+   "dt": 0.005,
+   "enough_blocks": true,
+   "estimand_id": "RMS_MARGIN_COST",
+   "level": "margin",
+   "level_matched": null,
+   "min_calib_blocks": 10,
+   "n": 20000,
+   "n_blocks": 20,
+   "n_calib_blocks": {
+    "0": 10,
+    "1": 10,
+    "2": 10,
+    "3": 10
+   },
+   "n_calib_blocks_total": 10,
+   "n_rows": 19989,
+   "n_test_blocks_total": 10,
+   "qhat_margin": {
+    "0": 19.146255493164062,
+    "1": 31.537179946899414,
+    "2": 32.57170104980469,
+    "3": 46.40171432495117
+   },
+   "qhat_sim": {
+    "0": 24.554174423217773,
+    "1": 32.53278350830078,
+    "2": 45.17531204223633,
+    "3": 54.14186096191406
+   },
+   "ratio_measured": 2.423539910533333,
+   "ratio_measured_sim": 2.204996186339662,
+   "ratio_pred_finite": 2.0751980052444665,
+   "ratio_pred_saturated": 2.1614423029135748,
+   "realizability": {
+    "derived": {
+     "block_s": 5.0,
+     "blocks_per_seed": 20.0,
+     "blocks_per_tau": 5.0,
+     "cycles": 100.0,
+     "gate_version": 2,
+     "min_blocks": 9,
+     "sigma_max_regime": 0.024224806201550386,
+     "t_sim_s": 100.0
+    },
+    "failed": [
+     "n_meets_budget"
+    ],
+    "not_evaluated": [],
+    "verdict": "REJECTED"
+   },
+   "rowset": "test rows",
+   "scale": "cost_ms",
+   "t_sim_s": 100.0,
+   "tau": 1.0
+  }
+ ],
+ "sigma_axis": {
+  "kind": "absolute",
+  "sigma": 0.0096
+ },
+ "summary": {
+  "A_range": [
+   25.18049166050084,
+   25.18049166050084
+  ],
+  "A_span_pct": 0.0,
+  "c_range": [
+   0.8904783480689082,
+   0.8904783480689082
+  ],
+  "c_span_pct": 0.0,
+  "gates": {
+   "G22_10_preregistered_ratio_bands": false,
+   "G22_11_A_independent_of_tau": false,
+   "ar1_rms_total_fit_within_2pct": false,
+   "block_s_equals_5tau": true,
+   "c_independent_of_tau": true,
+   "coverage_drift_matches_finite_sample_level": true,
+   "min_calib_blocks_at_least_9": true,
+   "ratio_is_hump_not_monotone": false,
+   "rms_em_independent_of_tau": true,
+   "saturated_ratio_above_measured": false,
+   "saturated_ratio_monotone_increasing": true
+  },
+  "ratio_measured": [
+   2.423539910533333
+  ],
+  "ratio_pred_finite": [
+   2.0751980052444665
+  ],
+  "ratio_pred_peak_from_tau1_fit": {
+   "ratio": 2.092367285613727,
+   "tau": 1.5019755197551974
+  },
+  "ratio_pred_saturated": [
+   2.1614423029135748
+  ],
+  "rms_em_range": [
+   2.1503539349856386,
+   2.1503539349856386
+  ],
+  "rms_em_span_pct": 0.0
+ },
+ "tau_grid": [
+  1.0
+ ],
+ "z_rep": [
+  0.077,
+  0.425
+ ],
+ "z_source": "sawtooth_age_steps(n, dt, SYNC_PERIOD=0.500, d_sync); gia tri z DOC LAP voi tau"
+}
