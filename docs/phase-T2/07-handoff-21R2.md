@@ -136,6 +136,12 @@ N6  Artifact vong 3 KHONG mang khoi `validity`, nen truot
     21R2 PHAI: quyet dinh truc `pending_on` dung cho artifact chung nhan, roi
     cho cert/tau_sweep.py ghi validity NGAY TU LUC SINH. Khi do xoa 30 muc
     grandfather -- danh sach do chi duoc NGAN DI.
+    Cap nhat T2.4-fix: them MOT muc nua (gate_v2_retro_audit.json), tong 31.
+    Muc moi co DIEU KIEN XOA ghi ngay trong test: xoa khi truc `tau_axis`
+    duoc dang ky. Lua chon nay duoc can nhac va ghi lai: phuong an sach hon
+    la dang ky `tau_axis` ngay, nhung do la mot quyet dinh KHOA HOC ve truc
+    co anh huong cheo phase va chua co dac ta -- doan mot nhan truc chi de
+    qua mot test la dung loai loi A-T2-3.
 ```
 
 ---

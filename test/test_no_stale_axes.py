@@ -258,6 +258,21 @@ _T2_R3_REASON = (
     "A-T2-3/N6: tau_sweep chua ghi validity; KHONG sinh lai vi run_log da ghi "
     "sha256 va adjudication_r3 da phan quyet tren chinh artifact nay"
 )
+# T2.4-fix: artifact audit hoi to. Muc nay CO DIEU KIEN XOA, khong phai
+# mien tru vinh vien. Vi sao khong sua ngay tai nguon: de ghi `pending_on`
+# dung, phai dang ky mot truc moi ("tau_axis") vao docs/phase-23/
+# axis_registry.json -- do la mot quyet dinh KHOA HOC ve truc, co anh huong
+# cheo phase (test_registry_readable, test_live_artifact_has_approved_axes),
+# va no chua co dac ta. Doan mot nhan truc chi de qua mot test la dung loai
+# loi A-T2-3 vua sua.
+# DIEU KIEN XOA: ngay khi "tau_axis" duoc dang ky, cho
+# tools/t2_gate_v2_retro_audit.py ghi khoi validity voi pending_on tuong ung
+# va XOA muc nay. Danh sach grandfather chi duoc NGAN DI.
+PENDING_NO_VALIDITY_GRANDFATHERED["phase-T2/gate_v2_retro_audit.json"] = (
+    "T2.4-fix: audit hoi to; cho truc `tau_axis` duoc dang ky vao "
+    "axis_registry.json roi ghi validity tai nguon -- XOA muc nay khi do xong"
+)
+
 PENDING_NO_VALIDITY_GRANDFATHERED.update({
     "phase-T2/sweep_r3/adjudication_r3.json":
         _T2_R3_REASON,
