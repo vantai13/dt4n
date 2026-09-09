@@ -295,6 +295,10 @@ def provenance() -> Dict[str, Any]:
         "derivation": ("A, c, em = trung binh tren luoi tau cua 22.6 (chung doc "
                        "lap voi tau, gate G22_11/S3). KHONG fit lai. "
                        "Luat: rms = sqrt(em^2 + c*A^2*(1-exp(-z/tau)))."),
+        # !! CAU NAY SAI VE MUC VA THANG va KHONG DUOC SUA: no la mot phan
+        #    cua artifact DA KY (sha256 68e975c2... ghim o prereg:587). Dinh
+        #    chinh nam o docs/phase-T2/04-estimand-descriptor.json; estimand
+        #    dung la RMS_MARGIN_COST (margin / cost_ms). Xem A-T2-3.
         "estimand": ("quy uoc HIEU (1-exp(-z/tau)), khop e_stale cua "
                      "measurements/decision_error_v2.py:402. Xem docs/GLOSSARY.md."),
         "predicts": ("rms_total. KHONG du doan err_total (ti le quyet dinh sai): "
