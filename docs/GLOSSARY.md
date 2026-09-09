@@ -97,8 +97,9 @@ Estimand  phuong sai cua HIEU rho(t) - rho(t-z)
           Var[rho(t) - rho(t-z)] = 2 sigma^2 (1 - phi_z),  bien do A tu do
 Vai tro   fit luat AR(1) cho rms_e_stale; sinh ratio(tau)
 Goc       cert/tau_sweep.py:203,218
-Khop voi  measurements/decision_error_v2.py:402
-          e_stale = d_fresh[t] - d_fresh[t-z]   <- dung la HIEU
+Khop voi  measurements/decision_error_v2.py CHI VE DANG HAM (ca hai la HIEU).
+          KHONG TUONG THICH VE ESTIMAND -- xem muc "SO DANG KY ESTIMAND"
+          va "DINH CHINH MUC `sat`" o cuoi file (A-T2-3).
 ```
 
 ## Quan he giua hai cong thuc tren -- doc ky truoc khi thiet ke T2.6
@@ -126,3 +127,121 @@ MIN_BLOCKS ceil(1/alpha) - 1 = 9 voi alpha = 0.10. Ap cho MOI SEED.
 tau_hat    uoc luong cua tau tu chuoi. CHI phuc vu gate V-T2-2. Do chech cua
            no theo T_sim/tau (so chu ky doc lap), KHONG theo tau. Nen so voi
            KY VONG HUU HAN MAU, khong voi gia tri thiet ke (nguyen tac T-G2).
+
+---
+
+## SO DANG KY ESTIMAND -- BAT BUOC (A-T2-3)
+
+LUAT: moi artifact ghi mot dai luong o day PHAI mang truong `estimand_id`.
+Mot artifact khong co `estimand_id` KHONG duoc dung de phan quyet bat ky du
+doan da ky nao. Test canh: test/test_t2_estimand_registry.py
+
+LY DO TON TAI CUA MUC NAY: hai dai luong khac han da cung mang ten cot
+`rms_e_model` va da lam T2.6 luot 2 do sai dai luong so voi du doan da ky.
+Dang ky theo DANG HAM la KHONG DU. Phai dang ky theo MUC va THANG.
+
+```text
+--------------------------------------------------------------------------
+ID              RMS_MARGIN_COST
+LEVEL           margin
+POPULATION      chenh lech CHI PHI giua HAI hanh dong: hang nhat va hang nhi
+                theo xep hang cua twin CU (stale). m = y[a2] - y[a1].
+SCALE           cost_ms   -- chi phi = delay + w_loss * loss
+UNIT            ms
+BRANCH          z_fixed  -- z_s = (cur - old)*dt tu V3._valid_rows, phu thuoc
+                n va dt, DOC LAP voi tau  =>  NHANH B
+CODE            cert/tau_sweep.py : build_at_tau -> decompose -> fit_ar1
+ARTIFACT_FIELD  rows[].ar1_fit.rms_e_model ; rows[].ar1_fit.A ; .c
+                rows[].scale = "cost_ms" ; rows[].level = "margin"
+DUNG CHO        moi du doan cua docs/phase-T2/01-prediction-signed.json
+                (D-T2.6-1, -2, -3, -4, -6, -7) va moi ti so
+                R(tau) = q_hat[bin3] / q_hat[bin0]
+GIA TRI MOC     rms_e_model = 2.1400 ms
+                poisson@0.925, tau = 0.5, seed 101..105, sigma = 0.0096
+                nguon: results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json
+                       rows[0].ar1_fit.rms_e_model = 2.1400081935285336
+--------------------------------------------------------------------------
+ID              RMS_ALLACTION_DELAY
+LEVEL           all_action
+POPULATION      MOI phan tu cua ma tran (n_hang, 4 duong). KHONG chon cap,
+                KHONG xep hang.
+SCALE           delay_ms  -- do tre THUAN; w_loss KHONG cham toi duoc
+UNIT            ms
+BRANCH          z_fixed HOAC z_scaled, theo co --z-mode
+CODE            measurements/decision_error_v2.py : run_cell
+ARTIFACT_FIELD  cot parquet rms_e_model / rms_e_stale / cov_e
+DUNG CHO        err_total, d_sla va cac cau hoi decision-error cua 20R2.
+                KHONG dung de phan quyet du doan T2-5.
+GIA TRI MOC     rms_e_model = 0.3405 ms
+                poisson@0.925, tau = 0.5, seed 101..105, nhanh fixed,
+                a = 0.9 => sigma = 0.021802   (tung seed: 0.3394 .. 0.3426)
+                va 0.3129 ms khi a = 0.5 => sigma = 0.012112
+                nguon: results/PENDING/phase-T2/sweep_r2/*.parquet
+                       (chi so lenh trong sweep_r2/run_log.jsonl)
+--------------------------------------------------------------------------
+```
+
+### HAI ID TREN KHONG SO SANH DUOC -- va day la BANG CHUNG SO
+
+```text
+    2.1400 ms   RMS_MARGIN_COST      sigma = 0.0096
+    0.3405 ms   RMS_ALLACTION_DELAY  sigma = 0.021802
+    CUNG o poisson@0.925, CUNG tau = 0.5, CUNG seed 101..105.
+
+Doc theo HUONG, khong chi theo do lon: cai do sau chay voi sigma LON HON
+2.27 lan ma cho so NHO HON 6.29 lan. Voi CUNG mot estimand, RMS phai TANG
+theo sigma. Huong nguoc nhau la bang chung manh hon mot ti so don thuan.
+```
+
+Dang thuc `sqrt(rms_e_model^2 + 2*cov_e + rms_e_stale^2) = rms_total` DUNG
+cho CA HAI harness, sai lech lon nhat 7.105e-15 (do chinh xac may) tren 100
+hang tai tao cua 22.6. No la `Var(X+Y) = VarX + 2Cov + VarY`, mot dong nhat
+thuc DAI SO -- no dung du hai ve dang do hai dai luong khac nhau.
+
+```text
+>>> MOT CONG THUC DUNG KHONG LAM HAI DAI LUONG BANG NHAU. <<<
+```
+
+CANH BAO VE MOT CON SO HAY BI DAN NHAM: `8.235915145897662` trong
+results/PENDING/phase-T2/rms_reference_check_r2.json muc "example" la
+`rms_total` CUA CHINH 22.6 tai z = 0.055, tau = 0.5 -- ve trai cua phep kiem
+dong nhat thuc tren. No KHONG phai mot so do cua T2.6 va KHONG phai
+RMS_ALLACTION_DELAY. Dung no lam bang chung "hai estimand lech nhau" la so
+sanh rms_e_model voi rms_total, tuc mot loi cung ho voi loi dang duoc sua.
+
+Bang chung: results/PENDING/phase-T2/rms_reference_check_r2.json
+            cross_phase_estimand_verdict = "INCOMPATIBLE"
+
+### DINH CHINH MUC `sat` (A-T2-3)
+
+Dong cu trong muc `sat`:
+
+```text
+Khop voi  measurements/decision_error_v2.py:402
+          e_stale = d_fresh[t] - d_fresh[t-z]   <- dung la HIEU
+```
+
+DONG NAY DA GAY MOT LOI THAT. Doc dung phai la:
+
+```text
+KHOP VE DANG HAM   ca hai deu la HIEU, ca hai theo luat sqrt(1 - exp(-z/tau)).
+                   Dieu nay DUNG.
+KHONG TUONG THICH VE ESTIMAND
+                   cert/tau_sweep.py       -> RMS_MARGIN_COST
+                   decision_error_v2.py    -> RMS_ALLACTION_DELAY
+                   Xem SO DANG KY ESTIMAND o tren.
+=> KHONG duoc suy tu "cung dang ham" ra "so sanh duoc".
+   Dang ham la DIEU KIEN CAN, khong phai DIEU KIEN DU.
+```
+
+Ghi them: so dong ":402" cung DA TROI. Trong ban hien tai dong 402 nam trong
+CHU KY cua `run_cell`; `e_stale` o dong 466 (run_cell) va 681 (fixed_summary).
+Vi vay so dang ky nay neo bang ARTIFACT_FIELD va CODE theo TEN HAM, khong
+theo so dong.
+
+### QUY TAC BO SUNG MOT ID MOI
+
+Truoc khi them mot dai luong vao mot artifact, tra loi DU 7 truong. Neu mot
+truong khong tra loi duoc thi dai luong do CHUA DUOC DINH NGHIA XONG va
+khong duoc do. Day la NT 65 (dat ten estimand truoc khi do) mo rong: dat DU
+BAY TRUONG truoc khi do.
