@@ -1,0 +1,99 @@
+{
+ "D-T2.6-10_level_matching_cancels_in_the_ratio": {
+  "driver": {
+   "cell": "poisson@0.850",
+   "tau": 2.0
+  },
+  "max_rel_diff": 0.15962190938121168,
+  "note": "FAIL KHONG phai loi: no co nghia gia thuyet 'muc triet tieu trong ti so' SAI => phai bao cao va chuyen MOI phep doc R(tau) sang ban khop muc.",
+  "pass": false,
+  "threshold": 0.01
+ },
+ "D-T2.6-8_level_matches_signed_table": {
+  "n_violations": 18,
+  "note": "FAIL => loi CO HOC (chia calib/test lech ti le). Dung ngay.",
+  "pass": false,
+  "violations": [
+   {
+    "cell": "poisson@0.960",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "h2@0.700",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "h2@0.960",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "poisson@0.850",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "poisson@0.700",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "poisson@0.925",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "h2@0.925",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "poisson@0.850",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "poisson@0.925",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   },
+   {
+    "cell": "poisson@0.700",
+    "expected": 0.9096385542168675,
+    "got": 0.9101796407185628,
+    "min_calib_blocks": 167,
+    "tau": 3.0
+   }
+  ]
+ },
+ "gate": {
+  "n_rejected": 0,
+  "n_still_not_evaluated": 0,
+  "not_evaluated": [],
+  "note": "not_evaluated PHAI rong: A-T2-3 (d3) doi hoi gate nhan du 9 tham so.",
+  "pass": true,
+  "rejected": []
+ },
+ "may_open_outcome_curves": false,
+ "n_artifacts": 18
+}
