@@ -372,11 +372,108 @@ LIMITATIONS: List[Dict[str, str]] = [
         "resolved_by": "larger truth-table measurement campaign",
     },
     {
-        "id": "L3",
-        "title": "Guarantees are for synthetic rho",
-        "text": "The main experiments use AR(1), tau=1.0, while measured telemetry has a different time scale.",
+        "id": "T-1",
+        "title": "tau is a design parameter, not a measured property of the system",
+        "text": (
+            "tau is SET in the generator, not ESTIMATED from deployment telemetry. "
+            "The tau axis is swept entirely in the twin (NumPy) over "
+            "{0.5, 1, 2, 3, 5, 10, 20, 28} s. Feasibility is anchored by Phase G, "
+            "where tau in {2, 5, 30} s was realised on the kernel datapath: worst "
+            "round-trip error 4.94% for tau and 3.82% for sigma, each cell a median "
+            "over links and rounds, with T_run = 205*tau "
+            "(docs/phase-G/66-g3b-results.md, docs/phase-G/77-g-closeout.md). "
+            "tau < 2 s is examined ONLY in the twin, because the testbed dt = 0.1 s "
+            "and the signed resolution rule is dt <= tau/20."
+        ),
         "scope": "external validity",
-        "resolved_by": "Phase 23",
+        "resolved_by": "21R2: estimate tau from telemetry instead of setting it",
+    },
+    {
+        "id": "T-2",
+        "title": "Two estimands carried the same column name",
+        "text": (
+            "`rms_e_model` exists in two harnesses with two meanings: margin/cost_ms "
+            "(cert/tau_sweep.py) and all_action/delay_ms "
+            "(measurements/decision_error_v2.py). Measured on the same cell, tau and "
+            "seeds at sigma = 0.0096: 2.1106 ms versus 0.3061 ms. The gap decomposes "
+            "into two opposing mechanisms: changing LEVEL all_action -> margin gives "
+            "x0.43 (common-mode model error cancels in the difference of two paths), "
+            "changing SCALE delay -> cost gives x16.04 (w_loss = 3222.24 amplifies "
+            "loss error). One campaign was executed on the wrong estimand and caught "
+            "before any outcome curve was read. docs/GLOSSARY.md now registers every "
+            "estimand by LEVEL and SCALE, and test/test_t2_estimand_registry.py "
+            "blocks a recurrence."
+        ),
+        "scope": "construct validity",
+        "resolved_by": "estimand registry + guard tests (A-T2-3)",
+    },
+    {
+        "id": "T-3",
+        "title": "The signed point and the measured point do not share sigma",
+        "text": (
+            "D-T2.6-2 was signed at sigma = 0.0096, the single constant used across "
+            "all cells in 22.6; round 3 measured at sigma = a*sigma_max with "
+            "a in {0.5, 0.9}, i.e. 1.3-4.8x larger depending on the cell. The sigma "
+            "axis was added because 0.0096 fits rho_bar = 0.96 exactly and is wrong "
+            "by 5.00x at rho_bar = 0.850 -- a known defect of the certification layer. "
+            "D-T2.6-2 = FAIL (6 inside / 10 outside the signed band). A post-hoc "
+            "diagnostic arm re-measured the same quantity at the signed sigma = 0.0096 "
+            "over the full tau grid and found 12/12 points INSIDE the band, worst "
+            "|deviation| 0.0048 against a band of 0.05. The failure is therefore "
+            "attributable to the sigma axis, not to the tau axis. That arm is post-hoc "
+            "and does not reopen the verdict."
+        ),
+        "scope": "internal validity",
+        "resolved_by": "21R2: sign predictions at the sigma actually swept",
+    },
+    {
+        "id": "T-4",
+        "title": "The conformal level depends on tau through the block count",
+        "text": (
+            "n_calib = T_sim/(5*tau) falls as tau grows, so the finite-sample level "
+            "drifts from 0.901 at tau = 0.5 s to 0.960 at tau = 20 and 28 s. The "
+            "ratio R(tau) is taken within one tau, so the level nearly cancels: "
+            "measured bias <= 2.67% over 18 points. The level-matched arm removes "
+            "that bias but injects subsampling noise with cv up to 12.4%, larger "
+            "than the bias it removes at 18/18 points. We report both arms; the "
+            "primary arm is the level-matched one because that was the remedy signed "
+            "BEFORE the numbers were read. Quantifying the trade-off happened AFTER "
+            "the D-T2.6-10 verdict and did not change it."
+        ),
+        "scope": "statistical conclusion validity",
+        "resolved_by": "21R2: hold n_calib fixed across tau by design",
+    },
+    {
+        "id": "T-5",
+        "title": "The peak location is limited by grid resolution",
+        "text": (
+            "argmax of R(tau) falls in the tau = 2 s cell for 7 of 8 arms, which "
+            "locates the peak inside the bracket (1, 3) s. The grid has no point "
+            "between 1 and 2 s. The signed peaks of poisson@0.850 (1.43 s) and "
+            "poisson@0.925 (1.56 s) lie inside that bracket; the signed peak of "
+            "h2@0.700 (0.93 s) lies outside it. We do not report a peak at 2 s and "
+            "we did not extend the grid after seeing the numbers."
+        ),
+        "scope": "statistical conclusion validity",
+        "resolved_by": "21R2: pre-register a grid with points inside (1, 3) s",
+    },
+    {
+        "id": "T-6",
+        "title": "tau* is not measurable with this instrument",
+        "text": (
+            "tau* = inf{tau : lift(tau) < lift_min} requires lift, i.e. decision error "
+            "with and without the trust gate. Decision error lives on "
+            "RMS_ALLACTION_DELAY; q_hat lives on RMS_MARGIN_COST. No harness produces "
+            "both: `lift`, `err_certified` and `err_baseline` appear in neither "
+            "cert/tau_sweep.py nor measurements/decision_error_v2.py, and "
+            "`err_certified` appears in no Python file in the repository. Deriving "
+            "tau* from R(tau) would be exactly the error T-2 describes, since R is a "
+            "ratio of interval radii and lift is a ratio of decision errors. We hand "
+            "the measurement design to a later phase instead of converting between "
+            "two incomparable estimands."
+        ),
+        "scope": "construct validity",
+        "resolved_by": "21R2: one harness emitting q_hat and err on one estimand",
     },
     {
         "id": "L4",
@@ -409,9 +506,16 @@ LIMITATIONS: List[Dict[str, str]] = [
     {
         "id": "L8",
         "title": "The 2.17 age-shape ratio is not proven as a law",
-        "text": "It is observed on synthetic AR(1), tau=1.0, over the current AoI range.",
+        "text": (
+            "It was observed on synthetic AR(1) at a single tau. Phase T2 swept tau "
+            "over {0.5 .. 28} s and found the ratio is NOT flat: R(tau) has an "
+            "interior maximum bracketed in (1, 3) s, and the AR(1) rms law itself "
+            "loses validity at larger sigma (gate ar1_rms_total_fit_within_2pct is "
+            "false at poisson@0.850 for a in {0.5, 0.9} while true at sigma = 0.0096). "
+            "Treat the ratio as regime-dependent, not as a law."
+        ),
         "scope": "external validity",
-        "resolved_by": "Phase 22/23 sensitivity checks",
+        "resolved_by": "Phase T2 tau sweep (measured); 21R2 for real telemetry",
     },
     {
         "id": "L9",

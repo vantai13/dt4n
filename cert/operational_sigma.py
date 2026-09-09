@@ -272,8 +272,14 @@ def invariance_report(results: Mapping[str, Mapping[str, Any]]) -> Dict[str, Any
         "qhat_scale_spread_factor": float(firsts.max() / firsts.min()),
         "note": (
             "q_hat(first bin) varies strongly across traffic regimes, but the age "
-            "shape ratio stays narrow. This is observed on synthetic AR(1), tau=1.0; "
-            "it is a Phase 23 hypothesis for real telemetry, not a proven law."
+            "shape ratio stays narrow at a single tau. Phase T2 swept tau over "
+            "{0.5 .. 28} s on the margin/cost estimand and measured an interior "
+            "maximum of R(tau) bracketed in (1, 3) s, so the narrowness is a "
+            "property of the operating point, not a law. tau is a design parameter "
+            "set in the generator, not estimated from telemetry; feasibility on the "
+            "kernel datapath is anchored only for tau in {2, 5, 30} s (Phase G, "
+            "worst round-trip error 4.94% for tau and 3.82% for sigma, T_run = "
+            "205*tau). See cert/gate_report.py limitations T-1 and T-5."
         ),
     }
 

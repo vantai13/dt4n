@@ -183,3 +183,31 @@ def test_the_old_band_window_is_marked_superseded(descriptor):
     assert (ROOT / "docs/phase-T2/02-band-window.json").is_file(), (
         "KHONG duoc xoa artifact cu -- no la bang chung cua amendment"
     )
+
+
+# ------------------------------------------------ Threats: khong duoc quay lai
+
+def test_the_two_legacy_tau_threat_sentences_are_gone():
+    """Neu T2 xong ma hai cau nay con nguyen thi T2 chua lam gi ca (B11)."""
+    for path in ("cert/gate_report.py", "cert/operational_sigma.py"):
+        txt = (ROOT / path).read_text()
+        assert "while measured telemetry has a different time scale" not in txt, path
+        assert "It is observed on synthetic AR(1), tau=1.0" not in txt, path
+        assert "This is observed on synthetic AR(1), tau=1.0" not in txt, path
+
+
+def test_the_new_threats_carry_numbers_not_adjectives():
+    """Mot Threat khong co so la mot loi thu nhan, khong phai mot gioi han."""
+    txt = (ROOT / "cert/gate_report.py").read_text()
+    for token in ("2.67", "12.4", "0.901", "0.960", "205", "4.94", "3.82"):
+        assert token in txt, "Threat thieu so: %s" % token
+
+
+def test_every_new_threat_id_is_present_with_a_scope():
+    """Sau T2 phai co du sau Threat T-1..T-6, moi cai mot scope."""
+    import re
+    txt = (ROOT / "cert/gate_report.py").read_text()
+    for i in range(1, 7):
+        assert '"id": "T-%d"' % i in txt, "thieu Threat T-%d" % i
+    block = txt[txt.index('"id": "T-1"'):txt.index('"id": "L4"')]
+    assert block.count('"scope"') == 6, "moi Threat phai khai scope"
