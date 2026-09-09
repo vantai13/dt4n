@@ -1592,6 +1592,21 @@ Trang thai: KHONG dat mot nguong moi nao. Chi khai TRUOC cach ap cac luat DA KY.
     du la doi theo huong nghiem khac hon -- van la doi nguong sau khi thay so.
     Ghi lai de nguoi doc biet lua chon nay da duoc can nhac va bi tu choi.
 
+### (3b) D-T2.6-4 DUNG SPREAD TRUNG BINH, KHONG PHAI SPREAD LON NHAT
+
+    Ban DA KY: tools/t2_1_prediction.py:256-257
+        passes = span_GIUA_tau(X) < mean( spread_TRONG_tau(X) qua cac tau )
+    Mot de xuat dung max(...) thay cho mean(...) DA BI TU CHOI o day: max >=
+    mean nen no NOI LONG tieu chi, va no la mot nguong KHAC voi nguong da ky.
+
+    KIEM TU THAN cua adjudicator (chay TRUOC khi phan quyet luoi chinh):
+        adj_4 tren results/PENDING/phase-T2/sweep_r3/legacy_*.json (22.6)
+        do lai : n_checks = 9,  n_fail = 3
+        da ky  : n_checks = 9,  n_fail_on_22_6 = 3      => KHOP
+    Voi max() no cho n_fail = 1, tuc BO SOT hai truong hop that bai that.
+    Mot adjudicator khong tai tao duoc con so da ky tren du lieu cu thi khong
+    duoc phep cham du lieu moi.
+
 ### (4) MAU SO CUA G-T2-8 -- khai TRUOC khi doc
 
     mau so = 7  (D-T2.6-1 .. -7)
