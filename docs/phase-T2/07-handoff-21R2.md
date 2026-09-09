@@ -17,12 +17,35 @@ H1  measurements/sla_calib_v2.py
     n = n_for_tau(tau, dt) bao dam T_sim >= 50*tau;
     dem kep qua return_diagnostics (co OPT-IN, giu bit-exact NC-T2-1).
 
-H2  cert/realizability_gate.py -- 9 tieu chi. MOI o phai qua truoc khi chay.
-    PHAI truyen du sigma, clip_fraction, min_cell_blocks. Neu thieu, tieu chi
-    ghi "not_evaluated" va KHONG duoc coi la PASS.
-    !! GIOI HAN: gate KHONG chan tren theo sigma -- tieu chi sigma_feasible
-       chi kiem sigma > 0 (do duoc: sigma = 99.0 van REALIZABLE). Tran sigma
-       den tu twin/cost_v2.sigma_max_regime va phai ap RIENG.
+H2  cert/realizability_gate.py -- 9 tieu chi, GATE_VERSION = 2.
+    MOI o phai qua truoc khi chay. PHAI truyen du sigma, clip_fraction,
+    min_cell_blocks. Neu thieu, tieu chi ghi "not_evaluated" va KHONG duoc
+    coi la PASS.
+
+    NGU NGHIA CUA `sigma` -- doc truoc khi goi:
+      `sigma` la SIGMA THIET KE cua o (a*sigma_max, hoac sigma tuyet doi cua
+      arm legacy). KHONG phai sigma do duoc, KHONG phai tran. Gate TU tra
+      tran bang C.sigma_max_regime(mode, rho_bar) va so
+      `0 < sigma <= sigma_max`. Tieu chi ten `sigma_within_headroom`.
+      `derived.sigma_max_regime` ghi tran da dung, de artifact TU CHUNG MINH
+      no so voi cai gi.
+
+    !! LICH SU -- doc de khong dung nham artifact cu:
+       Ban v1 (moi artifact cua sweep/, sweep_r2/, sweep_r3/) co tieu chi ten
+       `sigma_feasible` chi kiem `sigma > 0`. Do la mot TIEU CHI MA:
+       cert/tau_sweep.py truyen vao sigma thiet ke, von luon duong, nen no
+       khong bao gio fail duoc tren duong chay that. Do duoc:
+           (cbr,     0.96,  sigma=0.05) -> REALIZABLE   (sigma_max = 0.0)
+           (poisson, 0.925, sigma=99.0) -> REALIZABLE
+       Nguyen nhan co hoc: `from twin import cost_v2 as C` la dead import,
+       `grep -c "C\."` = 0 -- y dinh co, thuc thi khong.
+       Sua o commit T2.4-fix. Anh huong len vong 3 = 0 verdict doi
+       (results/PENDING/phase-T2/gate_v2_retro_audit.json: 26 artifact,
+        196 o, sat tran nhat sigma/sigma_max = 0.9000).
+       Ly do khong o nao vuot tran: truc a <= 1 (QD-7) va viec QD-3 loai cbr
+       khoi luoi chinh -- tuc HAI quyet dinh khac che duoc lo hong, KHONG
+       phai gate lam viec. Vong sau dung sigma TUYET DOI tren o suy bien se
+       khong duoc che nua.
 
 H3  cert/tau_sweep.py
     truc sigma tuong minh: sigma= XOR a=, KHONG co mac dinh im lang;
@@ -134,6 +157,17 @@ W3  Tieu chi cong suat dang TI SO (bien do / nhieu) khong co khai niem
     van co the qua nguong. Luon di kem mot SAN TUYET DOI (o T2 la
     A < 0.01 cua QD-7).
 
+W5  GOI GATE PHAI TRUYEN DU BA THAM SO TUY CHON.
+    sigma, clip_fraction, min_cell_blocks deu MAC DINH None, va None =>
+    "not_evaluated". Mot loi goi thieu tham so KHONG do -- no im lang bo qua
+    tieu chi. `not_evaluated` phai duoc DOC va bao cao, khong duoc gop vao
+    "khong co failed nen REALIZABLE".
+    Do la mot nua ly do lo hong headroom song sot ba vong sweep: tieu chi CO
+    trong bao cao, KHONG co tac dung. Nua con lai la khong ai viet test ghim
+    cho no.
+    => 21R2 assert `realizability.not_evaluated == []` cho MOI o cua ket qua
+       chinh, khong chi assert verdict == "REALIZABLE".
+
 W4  Hang so phan quyet: MOT nguon, IMPORT, khong chep.
     Bon loi trong bon luot cua T2 deu tu mot co che: chep lai mot con so
     thay vi doc lai no tu nguon. Vi du: hai bo nguong 10/3 va 5/2 cho DUNG
@@ -146,6 +180,32 @@ W4  Hang so phan quyet: MOT nguon, IMPORT, khong chep.
 ## KET QUA CUA PHASE, VIET THANG
 
 ```text
+TIEU CHI HEADROOM CUA GATE: KHONG HOAT DONG luc phase duoc dong; DA SUA sau do.
+  prereg:388 ghi "LOAI moi o bi realizability_gate tu choi [dinh nghia o T2.4]",
+  tuc toan bo viec loai o dua vao gate nay. Gate co ba loai tu choi:
+      phan giai luoi    tau >= 20*dt          CO test ghim, hoat dong
+      ngan sach block   T_sim >= 50*tau       CO test ghim, hoat dong
+      headroom          sigma <= sigma_max    KHONG co test ghim, KHONG hoat dong
+  Loai thu ba chi kiem `sigma > 0`. Do duoc: (cbr, 0.96, sigma=0.05) va
+  (poisson, 0.925, sigma=99.0) deu REALIZABLE.
+
+  CACH GOI TEN -- kiem truoc khi viet: KHONG co ma cong "G-T2-6" nao trong
+  repo (grep toan bo = 0 ket qua). prereg dung ma T2.2-1..9 va chi co G-T2-8.
+  Nen day duoc khai la mot KHIEM KHUYET CUA GATE phat hien sau khi dong
+  phase, KHONG phai mot cong da ky bi truot. Dat cho no mot ma cong khong
+  ton tai se la them mot cai ten khong co nguon -- dung loai loi A-T2-3.
+
+  KHAC LOAI VOI G-T2-8, va su khac do la trong tam:
+      G-T2-8   la OUTCOME.  Truot hop le, la du lieu            [NT 21]
+      headroom la VALIDITY. Hong KHONG hop le, phai sua         [NT 56]
+  Phase T2 bao cao rat ky cai thu nhat va khong nhan ra cai thu hai, vi tieu
+  chi headroom chua bao gio duoc kiem bang SO -- dung co che da sinh ra S12:
+  mot rang buoc duoc TIN la dang hoat dong, thuc te khong.
+
+  DA SUA: commit T2.4-fix (GATE_VERSION = 2, doi ten tieu chi thanh
+  `sigma_within_headroom`, 4 test ghim moi) + audit hoi to (0 verdict doi).
+  Phan quyet khoa hoc cua vong 3 KHONG doi.
+
 G-T2-8 ">= 5/7 du doan dinh tinh dung": KHONG DAT. 3 PASS / 7.
   PASS       D-T2.6-1  don dieu giam, 16/16
              D-T2.6-5  giao hai nhanh (estimand KHAC, ghi ro)

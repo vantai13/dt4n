@@ -1297,6 +1297,24 @@ theo TEN HAM, khong theo so dong.
         DO DUOC sau khi truyen du: verdict REALIZABLE, failed [],
         not_evaluated [] -- rong.
 
+    d3-post  DINH CHINH SAU KHI DONG PHASE (T2.4-fix, 2026-09-09)
+        Muc d3 tren DUNG ve SO LUONG tieu chi duoc danh gia (9/9, khong con
+        "not_evaluated") va SAI ve NOI DUNG cua mot trong so do: tieu chi
+        `sigma_feasible` chi kiem `sigma > 0`, khong so voi headroom. Tieu chi
+        duoc DANH GIA nhung khong DO cai no khai la do.
+        Do duoc: (cbr, 0.96, sigma=0.05) va (poisson, 0.925, sigma=99.0) deu
+        REALIZABLE duoi gate v1. Nguyen nhan co hoc: `from twin import
+        cost_v2 as C` la dead import, `grep -c "C\."` = 0.
+        Da sua: GATE_VERSION = 2, tieu chi doi ten thanh
+        `sigma_within_headroom`, bon test ghim moi. Anh huong len vong 3 do
+        bang AUDIT HOI TO (chi doc, khong sinh lai): 26 artifact, 196 o,
+        0 verdict doi -- results/PENDING/phase-T2/gate_v2_retro_audit.json.
+        => Ghi o day thay vi sua muc d3, vi d3 la ban ghi TRANG THAI TAI
+           THOI DIEM KY. Sua no se xoa dau vet cua chinh sai lam -- cung ky
+           luat da ap o ERRATUM A-T2-3.1 ("ghi lai vi dau vet quan trong hon
+           su sach se").
+        Xem: docs/phase-T2/07-handoff-21R2.md muc H2, W5 va "KET QUA CUA PHASE".
+
 (e) BANG CHAP NHAN TINH LAI TREN DUNG ESTIMAND        [sua L2]
     Chay cert/tau_sweep.py tren luoi tau CU {0.5, 1, 2, 2.87, 5}, MOI SEED
     MOT LAN, lay sd giua seed cua rms(tau=5)/rms(tau=0.5).
