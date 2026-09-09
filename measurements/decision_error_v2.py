@@ -40,6 +40,13 @@ TAU = TAU_LOAD_LEGACY
 N = 200_000
 CONTROL_N = 50_000
 
+# --- A-T2-3: module nay PHAI tu khai estimand cua no --------------------
+# Lich su: cot `rms_e_model` cua module nay (all_action / delay_ms) da bi doc
+# nham thanh `rms_e_model` cua cert/tau_sweep.py (margin / cost_ms), lam T2.6
+# luot 2 do sai dai luong so voi du doan da ky.
+# Xem docs/GLOSSARY.md muc "SO DANG KY ESTIMAND".
+ESTIMAND_ID = "RMS_ALLACTION_DELAY"
+
 # Kenh (c): block conformal PHAI theo thoi gian tuong quan, khong phai
 # theo giay. cert/tau_sweep.py da lam dung tu 22.6; day la day bi thieu.
 BLOCKS_PER_TAU = 5.0
@@ -443,6 +450,7 @@ def run_cell(
         "n": int(n),
         "dt": float(dt),
         "rho_source": str(rho_source),
+        "estimand_id": ESTIMAND_ID,
         "tt_domain_clip": dict(arrays["tt_domain_clip"]),
         "ar1_clip_ratio": float(arrays["ar1_clip_ratio"]),
         "ar1_cycles": float(arrays["ar1_cycles"]),
@@ -1014,18 +1022,23 @@ def write_validity_sidecar(
                 {"%s@%.3f" % (r.mode, r.rho_bar) for r in table.itertuples()}
             ),
             "w_loss_values": w_set,
-            "validity": sla_only_validity_block(
-                sla_path=calibration_path,
-                w_loss=w_set[0] if len(w_set) == 1 else float("nan"),
-                z_grid=z_values,
-                note=(
-                    "err_total/err_stale/d_sla PHU THUOC truc SLA; "
-                    "rms_e_model/rms_e_stale/cov_e KHONG -- chung tinh tren "
-                    "DELAY THUAN (d_true - d_fresh), khong qua ham chi phi, "
-                    "nen w_loss khong cham toi duoc. Do duoc (G23-203): "
-                    "max|diff| = 0.0 qua doi truc SLA."
+            "validity": {
+                # A-T2-3: artifact nao khong khai estimand_id thi khong duoc
+                # dung de phan quyet mot du doan da ky.
+                "estimand_id": ESTIMAND_ID,
+                **sla_only_validity_block(
+                    sla_path=calibration_path,
+                    w_loss=w_set[0] if len(w_set) == 1 else float("nan"),
+                    z_grid=z_values,
+                    note=(
+                        "err_total/err_stale/d_sla PHU THUOC truc SLA; "
+                        "rms_e_model/rms_e_stale/cov_e KHONG -- chung tinh tren "
+                        "DELAY THUAN (d_true - d_fresh), khong qua ham chi phi, "
+                        "nen w_loss khong cham toi duoc. Do duoc (G23-203): "
+                        "max|diff| = 0.0 qua doi truc SLA."
+                    ),
                 ),
-            ),
+            },
         },
     )
     return side

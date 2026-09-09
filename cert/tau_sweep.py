@@ -31,6 +31,15 @@ Z0_REP = 0.077
 Z3_REP = 0.425
 MIN_BLOCKS = int(np.ceil(1.0 / ALPHA)) - 1
 
+# --- A-T2-3 -------------------------------------------------------------
+ESTIMAND_ID = "RMS_MARGIN_COST"     # xem docs/GLOSSARY.md "SO DANG KY ESTIMAND"
+SIGMA_LEGACY_22_6 = V3.SIGMA        # 0.0096 -- hang so CUA 22.6, giu de tai lap
+
+# !! TAU_GRID o tren la CHU KY CUA PHASE 22 DA DONG.
+#    test/test_phase22_tau.py::test_GT1 ghim no. KHONG SUA.
+#    Luoi cua T2 truyen qua --taus; ten rieng o day chi de trich dan.
+TAU_GRID_T2 = (0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0)
+
 PREREG_RATIO_BANDS: Dict[float, tuple[float, float]] = {
     0.5: (1.77, 2.16),
     1.0: (1.87, 2.29),
