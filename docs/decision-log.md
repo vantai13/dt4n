@@ -555,3 +555,45 @@ Guard co 6 nhanh dung. Nhanh "dung cu doi sau tag" nam SAU nhanh "tag co tren
 remote", nen trong clone thuong khong bao gio cham toi -- tuc MA CHUA TUNG CHAY.
 Cach cham ma khong lam yeu cai chan: dung mot bare repo cuc bo lam `origin`,
 push tag len do. Ca 6 nhanh da duoc cham bang CHINH MA THAT (xem prereg §16.11).
+
+## 2026-09-10 - Lesson 20R2.6: chuan bi phan quyet
+
+### QD-20R2.6-1: su co lan chay 1 phai nam trong GIT, khong chi trong log cuc bo
+
+`logs/` bi .gitignore:31 loai, va so cai KHONG co dong nao ve lan chet dau
+(PermissionError o lenh 2). So cai dung ve TRANG THAI nhung thieu ve LICH SU.
+
+Da vá hai dau:
+  - chep log vao docs/phase-20R2/04b-attempt1-permerror.md (vao git duoc)
+  - boc phan CHUAN BI truoc subprocess trong tools/20r2_5_run.py bang
+    try/except, ghi {"kind":"run","returncode":-1,"stage":"prepare_output_path",
+    "error":...} roi nem lai. Da kiem bang cach ep PermissionError that:
+    dong so duoc ghi, duong dan may duoc che thanh <REPO>.
+
+Runner se dung lai cho chien dich N3/N4 nen va luon.
+
+⚠️ Ban va nay DOI tools/20r2_5_run.py, von nam trong INSTRUMENT cua guard
+20R2.5. Chien dich 20R2.5 DA XONG nen khong con gi de resume; ai muon phat lai
+phai checkout commit a92f062d (so cai ghi dung commit do o moi dong).
+
+### QD-20R2.6-2: hai bay ha tang cua 2026-09-10
+
+BAY 1 -- `| tee` nuot ma thoat. Chay `python ... | tee log` roi doc `$?` cho ra
+ma thoat cua `tee`, KHONG phai cua python. Mot lan chay CHET bi ghi thanh
+"rc=0". Luon `set -o pipefail` + `${PIPESTATUS[0]}`, va doi chieu SO CAI thay vi
+tin dong exit.
+
+BAY 2 -- `results/SUPERSEDED` co mode 555 (khoa ghi CO Y tu 2026-08-23). Owner
+cung khong ghi duoc. Sua: mo tam -> tao thu muc phase moi -> TRA LAI khoa 555.
+
+⚠️ ĐIỀU PHẢI GHI RÕ: mode 555 la trang thai FILESYSTEM CUC BO. **Git khong luu
+quyen cua thu muc** (chi luu bit thuc thi cua file). Mot clone cua nguoi khac
+SE KHONG co khoa nay, va cung se khong gap loi nay. Ai tai lap tren may khac
+can biet: cai bao ve do khong di theo repo.
+
+### QD-20R2.6-3: 20R2-D2 QUA HAN
+
+"GIA TRI MOC" cua hai estimand ghi han la "dien SAU pilot, TRUOC chien dich".
+Chien dich da chay xong ma van `null`. Khai la QUA HAN o prereg §17-D2, khong
+lang le dien roi coi nhu dung han. Neu can gia tri moc thi lay tu pilot (von co
+TRUOC chien dich) va dan nhan DIEN MUON.

@@ -104,6 +104,11 @@ NEEDS_SIGNED_CAMPAIGN = {
     "tools.20r2_5_run": "doi tag da ky + 75-97 phut; kiem guard tu choi o duoi",
     # Doc so cai cua mot chien dich DA CHAY. Truoc do khong co gi de kiem.
     "tools.20r2_5_hygiene": "can chien dich da chay xong (04-campaign-log.jsonl)",
+    # 20R2.6 -- doi tag phase-20R2-adjudicator-frozen CO tren remote + du lieu
+    # chien dich. Duoc kiem RIENG tren du lieu GIA o
+    # test/test_20r2_6_adjudicator.py (12 test, 8 mutation deu bi bat).
+    "tools.20r2_6_adjudicate": "doi tag adjudicator-frozen + du lieu chien dich; "
+                               "kiem tren du lieu GIA o test_20r2_6_adjudicator.py",
 }
 
 # Truong doi theo THOI DIEM chay, khong theo NOI DUNG. Loai truoc khi so.

@@ -183,10 +183,29 @@ def main(argv=None) -> int:
                 raise SystemExit("DUNG: %s -- file tren dia KHAC so cai (bang chung bi sua)."
                                  % r["out"])
             continue
-        for p in (target, side):      # MO COI: co file ma khong co dong so
-            if p.exists():
-                p.unlink()
-        target.parent.mkdir(parents=True, exist_ok=True)
+        try:
+            for p in (target, side):      # MO COI: co file ma khong co dong so
+                if p.exists():
+                    p.unlink()
+            target.parent.mkdir(parents=True, exist_ok=True)
+        except OSError as exc:
+            # [20R2.6-0.1] Phan CHUAN BI nay chay TRUOC append_log, nen truoc
+            # ban va mot ngoai le o day (vd PermissionError khi tang SUPERSEDED
+            # bi khoa 555) van ra khoi runner ma KHONG de lai mot dong so nao.
+            # So cai khi do dung ve TRANG THAI nhung thieu ve LICH SU -- da xay
+            # ra that 2026-09-10, xem docs/phase-20R2/04b-attempt1-permerror.md.
+            # Gio moi lan chet deu co dong so.
+            append_log({"kind": "run",
+                        **{k: r[k] for k in ("run_index", "is_canary", "tau", "branch",
+                                             "a", "seed", "n", "out", "cmd")},
+                        "returncode": -1, "seconds": 0.0,
+                        "sha256": None, "sidecar_sha256": None,
+                        "sidecar": sidecar_of(pathlib.Path(r["out"])).as_posix(),
+                        "git_commit": fp["git_commit"], "timestamp_utc": _now(),
+                        "stage": "prepare_output_path",
+                        "error": _clean("%s: %s" % (type(exc).__name__, exc))})
+            print(head + "  LOI CHUAN BI: %s" % _clean(str(exc)))
+            raise
         t0 = time.time()
         proc = subprocess.run([sys.executable, *r["cmd"]], cwd=ROOT,
                               capture_output=True, text=True)

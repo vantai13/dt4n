@@ -1855,3 +1855,193 @@ Cần khoá GPG nên để người ký quyết.)*
 8. tools.20r2_5_run  ->  tools.20r2_5_hygiene  ->  commit NHAN CHUNG
 9. chi sau do moi mo 20R2.6
 ```
+
+---
+
+## 17. Cách đọc — KHOÁ trước khi mở chiến dịch (gate 20R2.6)
+
+Chiến dịch đã chạy xong (167/167, vệ sinh PASS 9/9, tag
+`phase-20R2-campaign-hygiene` → `82be66d7`). **Chưa một cột kết quả nào được
+mở.** Mục này khoá cách đọc **trước** khi mở, để lúc mở chỉ còn **một** cách đọc.
+
+### 17.0 ★ CÔNG KHAI — pilot đã cho XEM TRƯỚC
+
+`02-se-pilot.json` (seed 201–205, trục exogenous) chứa `err_bar` theo τ. So với
+bảng Sheppard đã ký, nó **đã cho xem trước** hình dạng của kết quả:
+
+```text
+tau     0,5      1       2       3       5      10      20      28
+rel   -9,9%   -6,9%   -4,5%   -3,8%   -2,9%   -0,1%   +4,2%   +6,2%
+band   2,73%   3,86%   5,45%   6,68%   8,62%   8,62%   8,62%   8,62%
+```
+
+⚠️ **Mọi quyết định trong §17 được viết KHI bản xem trước ĐÃ tồn tại.** Điều đó
+không làm chúng vô hiệu — pilot (seed 201–205) và chiến dịch (seed 101–105) là
+hai mẫu **độc lập**, đúng thiết kế **tách mẫu**: pilot là mẫu *khám phá*, chiến
+dịch là mẫu *khẳng định*. Nhưng nó **phải được khai**, và người đọc tự đánh giá.
+
+Hệ quả cụ thể, phải nói thẳng: theo pilot, cách đọc §17-G2 cho **2 MISS**, còn
+cách đọc nguyên văn cho **6 MISS**. G2 là lựa chọn **có hậu quả thật**. Vì vậy
+§17-G2 bắt buộc báo cáo **cả hai** con số.
+
+**Chưa đọc một con số chiến dịch nào khi viết mục này.**
+
+### 17-G1 Quần thể và estimator chính
+
+```text
+CHINH   a = 0.9, 8 o gate (poisson/h2 x 4 rho_bar), z = 0.366 (diem luoi)
+        estimator: trung binh qua O cho TUNG seed, ROI qua seed
+        -- dung estimator da dung de dung luat se, khong duoc doi
+a = 0.5 MO TA. Bang CHUA duoc kiem o a = 0.5 (no 20R2-D6) -> khong phan quyet.
+```
+
+Lý do `a = 0.9` là chính: băng được dựng **tại** điều kiện đó. Một băng đo ở điều
+kiện này không được kế thừa sang điều kiện khác mà không đo lại — chính nguyên
+tắc đã dùng ở §16.3.
+
+### 17-G2 ★ Ba mức, không phải hai
+
+```text
+rel >= 0            AT_OR_ABOVE         dung huong
+-band <= rel < 0    BELOW_WITHIN_BAND   thap hon, nhung TRONG nhieu
+rel < -band         BELOW_BEYOND_BAND   thap hon CO Y NGHIA  -> MISS
+HIT = khong phai BELOW_BEYOND_BAND
+```
+
+**Vì sao ba mức, không phải đọc nguyên văn.** Đọc nguyên văn ("ước lượng điểm
+≥ Sheppard") hỏng về mặt thống kê: nếu sự thật *đúng bằng* Sheppard ở mọi τ, mỗi
+ước lượng vẫn có ~50% khả năng rơi xuống dưới chỉ vì nhiễu — trung bình ~4/8 MISS
+**dù dự đoán hoàn toàn đúng**. Một tiêu chí mà lý thuyết đúng vẫn trượt một nửa
+thì không kiểm được gì.
+
+**Ngưỡng này KHÔNG phải phát minh mới.** Đã đo: `band_rel = 3 · se_rel` **đúng ở
+cả 8 τ** (mọi τ đều ràng buộc bởi `mc_noise`, `K_MC = 3`). Nên "rel < −band"
+chính là kiểm định **3σ có hướng**, và `band_rel` chính là thứ §12.4 đã ký với
+tên **"băng chấp nhận"**. G2 chỉ đọc đúng cái đã ký.
+
+⚠️ **BẮT BUỘC** báo cáo kèm `n_hit_literal_point_reading` (số τ có `rel ≥ 0`).
+Gộp ba mức thành hai là chỗ sự thật bị giấu — cùng bài học với đèn xanh rỗng.
+
+### 17-G3 z: bảng ký tại 0,365, lưới có 0,366
+
+Bảng Sheppard đã ký tính tại `z = 0,365`; lưới chiến dịch có `0,366`. **Bảng ký
+là CHÍNH.** Giá trị tại `0,366` là **kiểm độ vững**. Nếu một phán quyết **lật**
+giữa hai giá trị thì phải khai rõ (`verdict_changes`). Độ dời tương đối ~0,10–0,14%,
+nhỏ so với băng ≥ 2,73%, nên không kỳ vọng lật.
+
+### 17-G4 Cặp đơn điệu: ba giá trị, mẫu số 7 CỐ ĐỊNH
+
+```text
+DECREASING / INCREASING / UNREADABLE (sigma < 3)
+UNREADABLE KHONG duoc tinh la don dieu. Mau so GIU 7.
+PASS = DECREASING >= 6/7.  INCREASING >= 2 cap -> HOLD_SUSPECT_ESTIMATOR.
+```
+
+`UNREADABLE` là **thiếu thông tin**, không phải bằng chứng. Cho cặp không đọc
+được rời khỏi mẫu số sẽ làm mẫu số **co lại sau khi thấy dữ liệu** — đúng một
+lối rẽ.
+
+⚠️ **σ là ước lượng BẢO THỦ (phải khai).** `ar1_matrix` rút cú sốc theo thứ tự
+cố định từ cùng seed; với τ ≤ 5 mọi τ có cùng `n` nên dùng **cùng dãy cú sốc**,
+chỉ khác φ. Các ước lượng ở τ gần nhau vì thế **tương quan dương**, trong khi
+`se_diff = √(se_i² + se_j²)` giả định độc lập. Tương quan dương làm `se_diff`
+thật **nhỏ hơn**, nên σ ta tính là **ước lượng thấp**. Hướng sai số này an toàn
+(khó tuyên bố "đọc được" hơn thực tế), nhưng phải khai.
+
+### 17-G5 RQ-20R2e: MÔ TẢ, không phán quyết
+
+Không có luật phán quyết nào được ký cho RQ-20R2e. Nên nó **chỉ mô tả**, không
+vào gate. `z` legacy dùng **0,30** (điểm lưới) thay `0,30237` (đã ký) — phải khai.
+Ghép cặp **theo seed** (CRN) để tương phản chính xác hơn.
+
+### 17-G6 cbr: chẩn đoán, báo cáo RIÊNG
+
+§13.5 ký "báo cáo cơ chế nào thắng" nhưng không định nghĩa "thắng". Khoá:
+
+```text
+err(cbr) < min(8 o gate)  -> CO CHE 1 (cbr deu theo thoi gian -> twin cu van dung)
+err(cbr) > max(8 o gate)  -> CO CHE 2 (bien ~ 0 -> argmin tuy y)
+nam trong dai              -> KHONG XAC DINH
+```
+
+cbr **không bao giờ** vào trung bình của 8 ô gate (`AGGREGATION_FALLACY_GUARD`).
+
+### 17-G7 Nhánh "(b) estimator có bug" — ĐÃ THOẢ
+
+`PRIMARY_directional.if_violated` có nhánh "(b) estimator có bug — chạy đối chứng
+TRƯỚC khi diễn giải". Nhánh này **đã được thoả**: H4 đã chạy đối chứng
+twin-hoàn-hảo **cả trước và sau** chiến dịch, cả hai `rc=0`. Vì vậy một MISS
+**không** kéo theo những lần chạy lại tuỳ hứng.
+
+### 17-H THĂM DÒ CÓ ĐĂNG KÝ (không vào gate)
+
+Đăng ký **trước khi mở**, nên hợp lệ để kiểm trên mẫu khẳng định:
+
+```text
+H-B  err_stale(z) / Sheppard(z) < 1 tai MOI tau
+     Co che: bien chi phi co KY VONG KHAC 0. Theo Rice (1944), tan suat mot qua
+     trinh Gaussian cat muc 0 ti le voi exp(-mu^2 / 2s^2); khi mot duong THUONG
+     XUYEN tot nhat, dau cua bien it doi hon truong hop Sheppard (ky vong 0).
+     Gioi han o do tre lon cung giam tu 1/2 xuong 2*Phi(m)*Phi(-m).
+     Doi tuong so: err_stale (thuan do CU), KHONG phai err_total.
+
+H-A  err_total / Sheppard TANG theo tau, va err_model / err_total TANG theo tau
+     Co che: SAN mo hinh. err_model > 0 khong phu thuoc z, trong khi Sheppard -> 0
+     khi tau lon. Ti so vi the tang, va co the CAT QUA 1.
+```
+
+Hai cơ chế **ngược chiều nhau**: H-B kéo xuống ở mọi τ, H-A đẩy lên ở τ lớn. Đó
+đúng là hình dạng pilot đã cho xem trước (âm ở τ nhỏ, dương ở τ lớn).
+
+### 17-S Đính chính bảng vi phạm Sheppard đã ký
+
+Dự đoán đã ký **không được sửa**. Nhưng bảng lý do của nó có hai lỗi, và nhánh
+"(a) phải nêu tên vi phạm đẩy lỗi XUỐNG" được thực hiện **ở đây, trước khi mở**:
+
+```text
+1. "ky vong khac 0 => co san" gop HAI hieu ung NGUOC DAU.
+   - san mo hinh (err_model) day err_total LEN  -- da ghi
+   - bien co ky vong != 0 day err_stale XUONG   -- BI BO SOT (Rice, xem H-B)
+2. "nugget MA(1)" KHONG TON TAI trong harness nay.
+   Da doc ma: measurements/sla_calib_v2.ar1_matrix sinh AR(1) THUAN, moi link
+   mot dong cu soc RIENG, khong co thanh phan MA nao. Clip co, nhung ti le
+   clip < 0,09%.
+```
+
+⇒ Lập luận "3/4 vi phạm đẩy cùng MỘT hướng" **không đứng vững**. Dự đoán có
+hướng vẫn là dự đoán có hướng, nhưng cơ sở của nó yếu hơn bản đã ký tuyên bố.
+
+### 17-W ω₀ = 0 theo cấu tạo — và vì sao đó là GIỚI HẠN
+
+§7 ký "cố định ω = ω₀" nhưng không nêu giá trị. Thực tế `ar1_matrix` sinh **8
+link ĐỘC LẬP**, không có tham số tương quan chung nào. Đo được (n = 200 000,
+seed 7): **max |r| chéo = 0,023**. Vậy:
+
+```text
+omega_0 = 0  .  c(0) = 1 theo dinh nghia  .  sigma_eff_proxy = sigma
+```
+
+Gate 20R2-3′ được thoả **một cách TẦM THƯỜNG**. Đây **không** phải tin tốt: nó
+nghĩa là mọi kết luận của 20R2 chỉ đúng **có điều kiện theo giả định các link
+độc lập**. Tải chung giữa các link (Q7 đã cảnh báo) **chưa hề được đo**. Vào
+Threats to Validity.
+
+### 17-D2 20R2-D2 QUÁ HẠN
+
+`GIA TRI MOC` của hai estimand vẫn `null`, trong khi hạn ghi là *"điền SAU pilot,
+TRƯỚC chiến dịch"*. Chiến dịch đã chạy xong. **Khai là QUÁ HẠN**, không lặng lẽ
+điền rồi coi như đúng hạn. Nếu cần giá trị mốc, lấy từ pilot (vốn có trước chiến
+dịch) và **dán nhãn ĐIỀN MUỘN**.
+
+### 17-P Thứ tự bắt buộc (blind analysis)
+
+```text
+1. §17 + bo cham + test tren du lieu GIA  -> commit -> tag
+   phase-20R2-adjudicator-frozen -> push        [CHUA mo mot o nao]
+2. chay bo cham. Guard doi: tag co tren REMOTE; bo cham/du doan/prereg KHONG
+   doi tu tag; hygiene 05 = PASS (gate VALIDITY truoc gate OUTCOME, NT 56)
+3. commit artifact + bao cao. MOI MISS giu nguyen, cung do chi tiet nhu HIT.
+```
+
+⚠️ Nếu sau khi mở phát hiện bộ chấm có lỗi: **không sửa rồi chạy lại im lặng**.
+Amendment + tag mới + giữ **cả hai** artifact. Cùng quy tắc với chiến dịch.
