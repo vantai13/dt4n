@@ -196,3 +196,16 @@ results/**/phase-T2/traces/*.csv
 # Lesson 20R2.1 B4: preserve original sweep_r2 parquet only.
 # Verified: 166 files, 10,940 rows, 3,097,390 bytes; SHA matches reports.
 !results/PENDING/phase-T2/sweep_r2/*.parquet
+
+# [20R2.5-P6] Chien dich 20R2: parquet vao git qua ngoai le CO PHAM VI, theo
+# dung tien le 60a88784 (bao ton 166 parquet cua T2). Quyet TRUOC khi chay,
+# vi "mot ban giao chi co that khi no nam trong git" -- quyet sau khi da co
+# du lieu la de mo cua cho viec chon giu cai nao.
+# Uoc luong: 167 file x 20-25 KB ~ 4 MB, cung bac voi T2 (166 file, 4.1 MB).
+!results/LIVE/phase-20R2/campaign/*.parquet
+!results/SUPERSEDED/phase-20R2/campaign/*.parquet
+!results/SMOKE/phase-20R2/canary/*.parquet
+# Pilot se_rel do lai tren truc SLA exogenous [20R2.5-P3]. Ban self_calibrated
+# (se_pilot/) da duoc bao ton tu truoc; ban nay la BANG CHUNG cua bang chap
+# nhan DA SUA, nen cung phai kiem lai duoc.
+!results/RAW/phase-20R2/se_pilot_exo/*.parquet

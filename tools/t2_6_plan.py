@@ -146,6 +146,10 @@ def command_for(run: Dict[str, Any], out_dir: str) -> List[str]:
            # gio phai khai TUONG MINH. Gia tri KHONG doi -- chi loi khai doi,
            # va do la diem: lua chon luoi z gio nam trong lenh, doc duoc.
            "--z-grid", "legacy",
+           # [20R2.5-P2] T2 chay tren SLA self_calibrated. Truoc 20R2.5 day
+           # la MAC DINH IM LANG; gio khai TUONG MINH vi CLI da bo mac dinh.
+           # GIA TRI KHONG DOI -- chi loi khai doi, nen neo bit-exact giu nguyen.
+           "--calibration", "results/LIVE/phase-20R/sla_calibration.json",
            "--z-mode", run["branch"],
            "--seeds", str(run["seed"]),
            "--out", "%s/t2_6_r%04d.parquet" % (out_dir, run["run_index"])]

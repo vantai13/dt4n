@@ -59,6 +59,11 @@ TOOLS = {
     "tools.20r2_4_grid_and_gate": (PENDING_DIR, "grid_prescreen"),
     "tools.20r2_4_em_over_a": (PENDING_DIR, "em_over_a"),
     "tools.20r2_4_n3_n4_recheck": (PENDING_DIR, "n3_n4_baseline"),
+    # 20R2.5 -- ke hoach chien dich. TAT DINH CO CHU DICH: khong mang
+    # git_commit/git_dirty, nen sinh lai bao gio cung ra cung sha256. Chinh vi
+    # the no vao duoc bang nay, khac t2_6_plan (mang provenance thoi diem nen
+    # sinh lai ra hash khac, va guard phai do hai bien the hash).
+    "tools.20r2_5_plan": (DOCS_DIR, "03-run-plan"),
 }
 
 # tools.20r2_4_cpu_pilot CO Y DE NGOAI: no DO THOI GIAN, nen KHONG tat dinh --
@@ -85,6 +90,20 @@ REQUIRES_LOCAL_RAW: dict = {}
 # thuong truc. No duoc kiem RIENG bang mot phep chay --limit nho.
 TOO_SLOW_FOR_SUITE = {
     "tools.20r2_3_bit_exact_regression": (PENDING_DIR, "bit_exact_regression"),
+}
+
+# 20R2.5 -- ba tool KHONG chay duoc trong bo test, moi cai mot ly do KHAC nhau.
+# Chung van phai duoc CANH, nen moi cai ghi ro no duoc kiem O DAU.
+NEEDS_SIGNED_CAMPAIGN = {
+    # Tat dinh, nhung ~3-4 phut (2 luoi x 8 tau x 10 o). Duoc kiem bang HANH VI
+    # o test_20r2_3_anchors.py: mot test chay that qua run_cell, mot test cay
+    # loi lech-mot va DOI doi chung phai do (mutation testing).
+    "tools.20r2_5_perfect_twin": "cham (~3-4 phut); kiem hanh vi o test_20r2_3_anchors.py",
+    # Guard doi tag DA KY co tren remote, roi chay 75-97 phut va ghi 167 file.
+    # Kiem o duoi: guard phai TU CHOI khi chua ky.
+    "tools.20r2_5_run": "doi tag da ky + 75-97 phut; kiem guard tu choi o duoi",
+    # Doc so cai cua mot chien dich DA CHAY. Truoc do khong co gi de kiem.
+    "tools.20r2_5_hygiene": "can chien dich da chay xong (04-campaign-log.jsonl)",
 }
 
 # Truong doi theo THOI DIEM chay, khong theo NOI DUNG. Loai truoc khi so.
@@ -203,7 +222,8 @@ def test_every_20r2_tool_is_covered_by_one_of_the_two_tables():
     covered = ({m.split(".")[-1] for m in TOOLS}
                | {m.split(".")[-1] for m in NON_DETERMINISTIC}
                | {m.split(".")[-1] for m in REQUIRES_LOCAL_RAW}
-               | {m.split(".")[-1] for m in TOO_SLOW_FOR_SUITE})
+               | {m.split(".")[-1] for m in TOO_SLOW_FOR_SUITE}
+               | {m.split(".")[-1] for m in NEEDS_SIGNED_CAMPAIGN})
     on_disk = {p.stem for p in (ROOT / "tools").glob("20r2_*.py")}
     # cong cu chi chay mot lan (sinh baseline / smoke) khong sinh artifact ky
     ONE_SHOT = {"20r2_baseline_failures", "20r2_remediation_smoke"}
@@ -211,7 +231,68 @@ def test_every_20r2_tool_is_covered_by_one_of_the_two_tables():
     assert not missing, (
         "tool 20R2 chua duoc dang ky trong test tai lap: " + str(missing)
         + "\n-> them vao TOOLS (neu tat dinh) hoac NON_DETERMINISTIC (neu do "
-        "thoi gian / co nguon ngau nhien), KEM LY DO.")
+        "thoi gian / co nguon ngau nhien) hoac NEEDS_SIGNED_CAMPAIGN, KEM LY DO.")
+
+
+def test_campaign_runner_refuses_until_the_prereg_is_signed():
+    """[20R2.5] Guard cua chien dich phai chan TRUOC khi tieu mot giay CPU nao.
+
+    Day la phep kiem THAT cho tools.20r2_5_run trong bo test: khong chay 75
+    phut, nhung ep cai chan phai lam viec. Neu tag DA duoc ky (chien dich that
+    su duoc phep chay) thi test tu bo qua -- luc do guard dung la PHAI cho qua.
+    """
+    import subprocess
+    tag = "phase-20R2-prereg-signed"
+    signed = subprocess.run(["git", "tag", "-l", tag], cwd=str(ROOT),
+                            capture_output=True, text=True).stdout.strip()
+    if signed:
+        pytest.skip("prereg da ky -- guard dung ra phai cho qua")
+    r = subprocess.run([sys.executable, "-m", "tools.20r2_5_run"], cwd=str(ROOT),
+                       capture_output=True, text=True)
+    assert r.returncode != 0, "guard CHO QUA du prereg chua ky -- den xanh rong"
+    assert "chua ky" in (r.stdout + r.stderr), (
+        "guard dung nhung khong noi VI SAO:\n" + (r.stdout + r.stderr)[-800:])
+
+
+def test_pin_chain_has_no_cycle():
+    """[20R2.5-C1] Chuoi ghim sha256 phai KHONG CO VONG.
+
+    prereg ghim 01-prediction-signed.json va 03-run-plan.json. Neu ai do them
+    prereg vao `inputs_sha256` cua ke hoach, vong khep lai va KHONG FILE NAO
+    KY DUOC NUA: sha cua prereg phu thuoc ke hoach, ma ke hoach lai ghim sha
+    cua prereg. Cung ban chat voi o "Commit sha cua ban duoc ky" o §11 -- mot
+    file khong the chua sha256 cua chinh no.
+
+    TRICH DAN duong dan (vd "authority": ".../00-preregistration.md") thi KHONG
+    tao vong -- no khong phu thuoc NOI DUNG. Chi GHIM SHA moi tao vong.
+    """
+    import json as _json
+    plan_p = ROOT / "docs/phase-20R2/03-run-plan.json"
+    if not plan_p.is_file():
+        pytest.skip("chua sinh ke hoach")
+    pinned = _json.loads(plan_p.read_text(encoding="utf-8"))["inputs_sha256"]
+    for path in pinned:
+        assert "preregistration" not in path, (
+            "ke hoach GHIM SHA cua prereg (%s) -> vong tu quy chieu: prereg "
+            "ghim ke hoach, ke hoach ghim prereg. Khong ai ky duoc nua." % path)
+
+
+def test_campaign_plan_is_a_pure_function_of_its_inputs():
+    """[20R2.5] Ke hoach KHONG duoc mang git_commit/git_dirty.
+
+    t2_6_plan ghi provenance thoi diem VAO ke hoach, nen sinh lai cho cung thu
+    tu nhung KHAC hash, va guard phai do hai bien the hash. Thoi diem thuoc ve
+    SO CAI va TAG. Test nay giu cho bai hoc do khong bi hoan tac.
+    """
+    import json as _json
+    p = ROOT / "docs/phase-20R2/03-run-plan.json"
+    if not p.is_file():
+        pytest.skip("chua sinh ke hoach")
+    blob = _json.loads(p.read_text(encoding="utf-8"))
+    for banned in ("git_commit", "git_dirty", "generated_utc", "generated_at"):
+        assert banned not in blob, (
+            "ke hoach mang truong theo THOI DIEM (%s) -> khong con tat dinh"
+            % banned)
 
 
 @pytest.mark.parametrize("module,spec", sorted(REQUIRES_LOCAL_RAW.items()))

@@ -19,7 +19,10 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SIGNED = ROOT / "docs/phase-20R2/01-prediction-signed.json"
 
 # Ghim sha256 cua artifact DA KY. Doi artifact = pha custody => phai amendment.
-SIGNED_SHA256 = "8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c"
+# [20R2.5-P3] AMENDMENT §16.3: bang chap nhan do lai tren truc SLA exogenous
+# (ban cu do tren self_calibrated do mac dinh im lang cua --calibration).
+# Hash cu, de doi chieu: 8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c
+SIGNED_SHA256 = "d9eef23b75c26881f5df2ad7c44a12017593aad2eb92323f7297b42d4462beac"
 
 
 @pytest.fixture(scope="module")

@@ -4,6 +4,18 @@
 Compared with Phase 20, the true cost comes from the measured truth table while
 the twin still uses ``link_model_v2``. Therefore ``err(z=0)`` is model error,
 not a bug. Only the perfect-twin control is required to be exactly zero.
+
+[20R2.5-P4] DAI LUONG NAO bang 0 -- cau tren MO HO, va chinh su mo ho do da
+cho mot MENH DE LUON DUNG dung ten "doi chung" (NC1b: so c_true.argmin voi
+chinh no). "Twin hoan hao" KHONG co nghia err = 0 o moi z: twin hoan hao ve
+MO HINH van dung du lieu CU. Hop dong DUNG, cuong che boi perfect_twin_control:
+
+    err_model == 0 . rms_e_model == 0 . err_total(z) == err_stale(z) moi z
+    err_total(z = 0) == 0
+    + doi chung cua doi chung: ton tai z > 0 co err_total > 0
+
+Tuc "exactly zero" o tren la noi ve err_model va ve err_total TAI z = 0, KHONG
+phai ve err_total tai moi z.
 """
 
 from __future__ import annotations
@@ -97,6 +109,24 @@ Z_ALL_20R2 = Z_CONTROL_20R2 + Z_GRID_20R2_MEASURED + Z_EXTRAP    # 13 diem
 # scoring_window_start ve loi "hai nhanh cham tren hai dai hang khac nhau".
 Z_GRIDS = {"legacy": Z_ALL, "20r2_measured": Z_ALL_20R2}
 Z_SCALED_RATIOS = (0.10, 0.30, 0.55, 1.00)
+
+
+def z_grid_id_of(z_values: Sequence[float]) -> str:
+    """SUY RA ten luoi tu CHINH cac diem z da chay -- khong nhan loi khai.
+
+    Trong decision_error_v2, truc AoI KHONG di qua mot bo sinh nao; no di vao
+    DUY NHAT qua VIEC CHON LUOI z (T2-L8 dinh chinh co che). Nen ten luoi LA
+    nhan truc AoI cua artifact nay, va no phai duoc SUY RA nhu moi nhan khac
+    (validity.py, Luat 2: nhan phai duoc suy ra, khong duoc khai bao).
+
+    Do duoc 20R2.5-P5: mot sidecar sinh voi luoi LEGACY qua MOI kiem tang LIVE
+    vi khong cai nao nhin thay truc AoI. Ham nay la thu cai chan can.
+    """
+    got = tuple(round(float(z), 12) for z in z_values)
+    for name, grid in Z_GRIDS.items():
+        if got == tuple(round(float(z), 12) for z in grid):
+            return name
+    return "UNREGISTERED_Z_GRID"
 
 TRUTH_TABLE = "results/LIVE/phase-20R/truth_table.parquet"
 CALIBRATION = "results/LIVE/phase-20R/sla_calibration.json"
@@ -543,6 +573,77 @@ def run_cell(
     return out
 
 
+class PerfectTwin:
+    """Twin HOAN HAO VE MO HINH: tra dung bang chi phi cua CHINH su that.
+
+    Day la DOI CHUNG DUNG CU (do duong ong run_cell), khong phai do khoa hoc.
+    Vi twin == su that nen err_model PHAI = 0. Nhung twin van dung du lieu CU
+    (lag k buoc), nen err_total(z) = err_stale(z), KHONG phai 0 -- chi tai
+    z = 0 moi bang 0.
+
+    Thay cho NC1b [20R2.5-P4], von so `c_true.argmin` voi CHINH `a_true =
+    c_true.argmin`, tuc mot MENH DE LUON DUNG, va khong he goi run_cell.
+    """
+
+    def __init__(self, tt: "TruthTable"):
+        self.tt = tt
+
+    def tables_batch(self, rho_mat: np.ndarray, mode: str, w_loss: float):
+        return self.tt.path_tables(mode, rho_mat, w_loss)
+
+
+def perfect_twin_control(
+    calibration_path: str,
+    *,
+    tau: float,
+    n: int,
+    seed: int,
+    z_values: Sequence[float],
+    a_override: float,
+    truth_path: str = TRUTH_TABLE,
+) -> Dict[str, Any]:
+    """Doi chung dung cu chay QUA CHINH run_cell -- nen no cham toi lag,
+    cua so cham diem va dispatch luoi z, la nhung thu NC1b khong cham toi.
+
+    HOP DONG (moi o, moi z):
+      err_model == 0 . rms_e_model == 0 . err_total == err_stale
+      err_total(z = 0) == 0
+      + DOI CHUNG CUA DOI CHUNG: ton tai z > 0 co err_total > 0, neu khong thi
+        lag khong lam gi ca va hop dong thoa mot cach TAM THUONG.
+
+    Kill test 2026-09-10, cay loi lech-mot `lag_rows = current - k - 1`:
+      doi chung nay err_total(z=0) = 0.026315 (BAT duoc) . NC1b = 0.0 (MU).
+    """
+    tt = TruthTable(truth_path)
+    twin = PerfectTwin(tt)
+    violations: List[Dict[str, Any]] = []
+    max_err_pos = 0.0
+    n_checked = 0
+    for cell in feasible_cells(calibration_path, include_pc1=True):
+        r = run_cell(tt, twin, cell, seed=seed, tau=tau, n=n,
+                     z_values=z_values, a_override=a_override)
+        for zk, m in r["per_z"].items():
+            n_checked += 1
+            broken = []
+            if m["err_model"] != 0.0:
+                broken.append("err_model != 0")
+            if m["rms_e_model"] != 0.0:
+                broken.append("rms_e_model != 0")
+            if m["err_total"] != m["err_stale"]:
+                broken.append("err_total != err_stale")
+            if m["z_steps"] == 0 and m["err_total"] != 0.0:
+                broken.append("err_total(z=0) != 0")
+            if m["z_steps"] > 0:
+                max_err_pos = max(max_err_pos, float(m["err_total"]))
+            if broken:
+                violations.append({
+                    "cell": "%s@%.3f" % (cell["mode"], float(cell["rho_bar"])),
+                    "z": zk, "broken": broken})
+    return {"tau": float(tau), "n": int(n), "seed": int(seed),
+            "n_checked": n_checked, "violations": violations,
+            "max_err_total_z_positive": max_err_pos}
+
+
 def block_bootstrap_paired(
     indicators: Mapping[str, np.ndarray],
     block_len: int,
@@ -906,6 +1007,12 @@ def _control_one(
     _d_true, _l_true, c_true = tt.path_tables(mode, rho_mat, float(cal_cell["w_loss"]))
     a_true = c_true.argmin(axis=1)
 
+    # [20R2.5-P4] MENH DE LUON DUNG: `a_true` o tren CHINH LA c_true.argmin,
+    # nen bieu thuc nay bang 0 vi DAI SO, khong vi dung cu dung. No cung khong
+    # goi run_cell, nen khong cham toi lag / cua so cham diem / dispatch luoi z.
+    # Kill test (lech-mot trong run_cell): cai nay 0.0, doi chung that 0.026315.
+    # GIU LAI de khong pha bang so lich su; phep kiem dung cu THAT la
+    # perfect_twin_control (tools/20r2_5_perfect_twin.py).
     nc1b = float((c_true.argmin(axis=1) != a_true).mean())
     rng = np.random.default_rng(99)
     nc2 = float((rng.integers(0, T7.K, size=int(n)) != a_true).mean())
@@ -994,7 +1101,7 @@ def flatten_cell_result(result: Mapping[str, Any]) -> List[Dict[str, Any]]:
 
 def run_fixed_grid(
     truth_path: str = TRUTH_TABLE,
-    calibration_path: str = CALIBRATION,
+    calibration_path: Optional[str] = None,   # [20R2.5-P2] khong con mac dinh
     out_path: str = FIXED_OUT,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103, 104, 105),
@@ -1006,6 +1113,13 @@ def run_fixed_grid(
     w_loss_override: Optional[float] = None,
     rho_bar_extra: Sequence[float] = (),
 ) -> pd.DataFrame:
+    if calibration_path is None:
+        # [20R2.5-P2] PHAM VI: chi duong goi nay. fixed_summary_with_bootstrap,
+        # sawtooth_summary va compute_margin_cv VAN con mac dinh -- xem §16.
+        raise ValueError(
+            "calibration_path phai truyen TUONG MINH: no CHON TRUC SLA. Mac dinh "
+            "cu (self_calibrated) da lam se pilot 20R2 do bang chap nhan tren "
+            "truc SAI ma khong bao mot loi nao [20R2.5-P2].")
     tt = TruthTable(truth_path)
     cv2 = C.CostV2(strict_reliable=False)
     rows = []
@@ -1074,10 +1188,23 @@ def write_validity_sidecar(
                 {"%s@%.3f" % (r.mode, r.rho_bar) for r in table.itertuples()}
             ),
             "w_loss_values": w_set,
+            "run_config": {          # [20R2.5] SUY RA tu bang vua sinh, khong khai
+                "tau_rho": sorted({float(x) for x in table["tau_rho"]}),
+                "n": sorted({int(x) for x in table["n"]}),
+                "seeds": sorted({int(x) for x in table["seed"]}),
+                "sigma_rho_source": sorted({str(x) for x in table["sigma_rho_source"]}),
+            },
             "validity": {
                 # A-T2-3: artifact nao khong khai estimand_id thi khong duoc
                 # dung de phan quyet mot du doan da ky.
                 "estimand_id": ESTIMAND_ID,
+                # [20R2.5-P5] §12.7 da phat hien nhan muc-artifact KHONG du do
+                # phan giai va da them ESTIMAND_BY_FIELD -- nhung khong noi nao
+                # GHI no ra. Artifact van mang mot nhan cho ba dai luong khac
+                # thang. Day la cho ghi no.
+                "estimand_by_field": dict(ESTIMAND_BY_FIELD),
+                # [20R2.5-P5] SUY RA tu diem z THUC SU chay, khong nhan loi khai.
+                "z_grid_id": z_grid_id_of(z_values),
                 **sla_only_validity_block(
                     sla_path=calibration_path,
                     w_loss=w_set[0] if len(w_set) == 1 else float("nan"),
@@ -1351,7 +1478,15 @@ def parse_float_list(text: str) -> Tuple[float, ...]:
 def main(argv: Optional[Sequence[str]] = None) -> int:
     ap = argparse.ArgumentParser(description=__doc__)
     ap.add_argument("--truth-table", default=TRUTH_TABLE)
-    ap.add_argument("--calibration", default=CALIBRATION)
+    # [20R2.5-P2] KHONG CO MAC DINH. Mac dinh cu = sla_calibration.json, tuc
+    # truc SLA self_calibrated (DEPRECATED, S14). Day la lan thu NAM cung mot
+    # co che: DEFAULT_TAU, axis=AXIS_LEGACY, sigma=V3.SIGMA, --z-grid, va gio
+    # --calibration. Do duoc: se pilot 20R2 da chay tren no du prereg §3 ky
+    # exogenous -- xem docs/phase-20R2/00-preregistration.md §16.
+    ap.add_argument("--calibration", required=True,
+                    help="file SLA -- CHON TRUC SLA. 20R2: "
+                         "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json. "
+                         "Phat lai T2: results/LIVE/phase-20R/sla_calibration.json")
     ap.add_argument("--control", action="store_true", help="run mandatory controls first")
     ap.add_argument("--control-out", default=CONTROLS_OUT)
     ap.add_argument("--run-fixed", action="store_true", help="run fixed-z grid artifact")

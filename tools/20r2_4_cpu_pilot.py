@@ -76,12 +76,23 @@ def _n_multiplier() -> dict:
             for k, v in doc["acceptance_band"]["n_multiplier"].items()}
 
 
+# [20R2.5-P2] Truc SLA cua CHIEN DICH. Ngan sach da ky (74.53 phut) do TRUOC
+# 20R2.5 nen chay tren mac dinh im lang self_calibrated -- xem prereg §16.
+# KHONG can do lai, va ly do manh hon "thoi gian khong nhay voi truc":
+# HAI truc cho DUNG 10 o kha thi nhu nhau (do duoc 2026-09-10), cung n, cung
+# luoi z, nen moi mang co CUNG HINH DANG. Chi hang so vo huong w_loss doi,
+# ma no khong doi khoi luong tinh. Ngan sach la ham cua hinh dang, khong phai
+# cua gia tri.
+CALIBRATION = "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json"
+
+
 def _time_one(tau: float, z_values, out_path: str, multiplier: int = 1) -> float:
     import measurements.decision_error_v2 as DE
     from measurements.sla_calib_v2 import DEFAULT_DT, n_for_tau
     DE.Z_EXTRAP = (1.0, 2.0, 4.0)
     t0 = time.time()
     DE.run_fixed_grid(tau=tau, seeds=[SEEDS[0]], out_path=out_path,
+                      calibration_path=CALIBRATION,          # [20R2.5-P2]
                       z_values=list(z_values),
                       n=n_for_tau(tau, DEFAULT_DT) * multiplier)
     return time.time() - t0

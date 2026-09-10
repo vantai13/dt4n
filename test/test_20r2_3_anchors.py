@@ -80,7 +80,13 @@ def test_shared_z_points_agree_across_grids(DE, tau, tmp_path):
         r = subprocess.run(
             [sys.executable, "-m", "measurements.decision_error_v2",
              "--run-fixed", "--tau", "%g" % tau, "--z-mode", "fixed",
-             "--z-grid", grid, "--seeds", "101", "--out", str(p)],
+             "--z-grid", grid,
+             # [20R2.5-P2] --calibration khong con mac dinh. NEO B doi MOT yeu
+             # to (luoi z) nen truc SLA phai GIONG NHAU o hai nhanh, va phai la
+             # truc DA KY o §3 -- dung truc cua chien dich.
+             "--calibration",
+             "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+             "--seeds", "101", "--out", str(p)],
             cwd=str(ROOT), capture_output=True, text=True)
         assert r.returncode == 0, grid + ":\n" + r.stderr[-1200:]
         out[grid] = pd.read_parquet(p)
@@ -175,6 +181,51 @@ def test_perfect_twin_control_is_guaranteed_exactly_zero_in_the_contract(DE):
     assert "perfect-twin control is required to be exactly zero" in src, (
         "hop dong doi chung twin-hoan-hao da bien mat khoi docstring -- "
         "phep kiem dung cu cua 20R2 mat cho dua")
+
+
+def test_perfect_twin_control_actually_runs_through_run_cell(DE):
+    """[20R2.5-P4] Test tren CHI kiem mot CAU VAN co trong ma. Mot cau van
+    khong bao gio do duoc.
+
+    Ban cu cua doi chung (NC1b) so `c_true.argmin` voi CHINH `a_true =
+    c_true.argmin` -- luon bang 0, va khong goi run_cell. Kill test (cay loi
+    lech-mot `lag_rows = current - k - 1`) cho: NC1b 0.0 (MU), doi chung qua
+    run_cell 0.026315 (BAT duoc).
+
+    Test nay kiem HANH VI, khong kiem van ban.
+    """
+    n = 20000
+    rep = DE.perfect_twin_control(
+        "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+        tau=3.0, n=n, seed=999, z_values=DE.Z_ALL_20R2, a_override=0.9)
+
+    assert rep["violations"] == [], (
+        "hop dong twin-hoan-hao vo: %r" % rep["violations"][:3])
+    # DOI CHUNG CUA DOI CHUNG: neu khong o dau co err > 0 tai z > 0 thi lag
+    # khong lam gi ca, va "0 vi pham" thoa mot cach TAM THUONG -- den xanh rong.
+    assert rep["max_err_total_z_positive"] > 0.0, (
+        "doi chung thoa TAM THUONG: khong diem z > 0 nao cho err > 0")
+    assert rep["n_checked"] >= 10 * len(DE.Z_ALL_20R2)
+
+
+def test_perfect_twin_control_is_not_a_tautology(DE):
+    """Doi chung phai DO cai gi do: neu duong ong bi cay loi lech-mot thi no
+    PHAI do. Day la mutation testing (DeMillo, Lipton & Sayward 1978) -- mot
+    test chua tung do truoc mot loi that thi chua chung minh duoc gi."""
+    import types
+    src = (ROOT / "measurements/decision_error_v2.py").read_text(encoding="utf-8")
+    marker = "        lag_rows = current - k\n"
+    assert src.count(marker) == 1, "diem cay loi da doi -- cap nhat test nay"
+    mod = types.ModuleType("de_mutant_offbyone")
+    mod.__file__ = str(ROOT / "measurements/decision_error_v2.py")
+    exec(compile(src.replace(marker, "        lag_rows = current - k - 1\n"),
+                 mod.__file__, "exec"), mod.__dict__)
+
+    rep = mod.perfect_twin_control(
+        "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+        tau=3.0, n=20000, seed=999, z_values=mod.Z_ALL_20R2, a_override=0.9)
+    assert rep["violations"], (
+        "doi chung KHONG bat duoc loi lech-mot -- no la mot den xanh rong")
 
 
 # ------------------------------------------------- do phu duoc KHAI

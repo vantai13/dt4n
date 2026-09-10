@@ -727,18 +727,37 @@ $PYTHON -m tools.20r2_4_realizability_audit --out results/PENDING/phase-20R2/rea
 ```text
 Nguoi ky        : ______________________________
 Ngay            : ______________________________
-Commit sha      : ______________________________   (sha CUA BAN prereg duoc ky)
+Commit sha      : = DICH cua tag `phase-20R2-prereg-signed`  -- KHONG dien tay
+                  kiem: git rev-parse phase-20R2-prereg-signed^{commit}
+                  ^ O nay TRUOC DAY doi "sha CUA BAN prereg duoc ky". O do
+                    KHONG THE dien dung: sha cua commit phu thuoc noi dung
+                    prereg, ma prereg lai chua sha do -- vong TU QUY CHIEU,
+                    nhu mot file khong the chua sha256 cua chinh no. TAG moi
+                    la thu gan chu ky voi commit. [20R2.5-C1]
 Xac nhan        : [ ] toi da doc §0 va chap nhan muc ⚠️ con lai (danh sach 5 RQ)
-                  [ ] toi ky ngan sach 29,4 phut hai nhanh (KHONG phai 5,89 h)
+                  [ ] toi ky ngan sach 74,53 phut hai nhanh (+30% = 96,89)
+                      -- DO DUOC o cpu_pilot.json. Con so 29,4 phut o ban truoc
+                         la A7 KE THUA, da bi 20R2.4 thay. Xem §16.1.
                   [ ] toi ky luoi 800 o (KHONG phai 960)
                   [ ] toi KHONG ke thua ket luan kha thi cua T2 (20R2-L4)
+                  [ ] toi da doc §16 va ky BANG DA SUA: C_upper = 0,406418
+                      tren truc exogenous (ban cu 0,409554 do tren truc SAI)
+                  [ ] toi ky KE HOACH docs/phase-20R2/03-run-plan.json
+                      sha256 a984020e104bb13b4743be5aca2d5e0eabf0d49558f53cc5f0d70c6ce4fdf662
+                      (sinh lai bat cu luc nao de doi chieu: tool TAT DINH)
 
 Sau khi dien:
     git add docs/phase-20R2/00-preregistration.md
-    git commit -m "20R2 prereg: ky gate 0-3"
+    git commit -m "20R2 prereg: ky gate 0-3 + §16"
     git tag -a phase-20R2-prereg-signed -m "20R2 prereg signed"
     git push origin main && git push origin phase-20R2-prereg-signed
     git ls-remote --tags origin | grep prereg-signed   # BANG CHUNG
+
+Roi moi duoc chay:
+    python -m tools.20r2_5_run          # guard doi tag CO tren remote
+    python -m tools.20r2_5_hygiene --out docs/phase-20R2/05-hygiene.json
+    git add -A && git commit -m "20R2.5: chien dich + ve sinh"   # NHAN CHUNG
+    #  ^ chi SAU commit nay moi duoc mo 20R2.6  [F5, NT 56]
 ```
 
 ---
@@ -749,7 +768,9 @@ Sau khi dien:
 
 ```text
 docs/phase-20R2/01-prediction-signed.json
-sha256 = 8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c
+sha256 = d9eef23b75c26881f5df2ad7c44a12017593aad2eb92323f7297b42d4462beac
+  ^ CAP NHAT boi amendment §16.3 (20R2.5-P3): bang do lai tren truc SLA
+    exogenous. Hash truoc do: 8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c
 sinh bởi: tools/20r2_2_predictions.py     (gate 0-1: SINH BỞI CÔNG CỤ)
 test canh: test/test_20r2_2_prediction.py
 ```
@@ -1470,3 +1491,367 @@ Một test không ai chạy là một test đã chết — cùng kết cục v�
 trực. Nên `bit_exact_regression` **không** vào `TOOLS`: nó sẽ làm bộ test chậm
 hơn 15 lần. Nó được kiểm bằng lát mỏng, và bản đầy đủ đã commit kèm test đòi
 artifact phải là **bản đầy đủ và tươi** (`n_runs == 166`, `rows_are_fresh`).
+
+---
+
+## 16. Sửa trước khi ký — gate 20R2.5 (2026-09-10)
+
+Sáu phát hiện tiền-chiến dịch. Tất cả được sửa **trước** khi ký và **trước**
+khi có một con số kết quả nào — nên đây là amendment hợp lệ, không phải HARKing.
+Làm đúng những việc này *sau* chiến dịch thì mới là HARKing.
+
+### 16.1 P1 — prereg chưa ký (⛔ đã chặn)
+
+`git tag` không có `phase-20R2-prereg-signed`, §11 còn nguyên mẫu trống. Vì
+chưa ký nên prereg **còn được sửa tự do**: mọi thay đổi ở 16.2–16.6 vào thẳng
+bản ký lần này, không cần amendment sau ký.
+
+⚠️ Checklist §11 còn ghi *"ngân sách 29,4 phút"* — số đó là bản **A7 kế thừa**
+đã bị 20R2.4 thay bằng **74,53 phút hai nhánh** (đo thật, `cpu_pilot.json`).
+Người ký phải ký con số 74,53 (+30% = 96,89), không phải 29,4.
+
+### 16.2 P2 — mặc định im lặng lần thứ NĂM: `--calibration` (⛔ đã sửa)
+
+```text
+TRUOC  ap.add_argument("--calibration", default=CALIBRATION)
+       CALIBRATION = results/LIVE/phase-20R/sla_calibration.json
+       -> axis_registry: "self_calibrated", status DEPRECATED (S14)
+SAU    required=True; run_fixed_grid(calibration_path=None) -> ValueError
+```
+
+§3 ký SLA = `exogenous_g114_S-B` nhưng **không một dòng mã nào bắt buộc** điều
+đó. Cùng một cơ chế với `DEFAULT_TAU`, `axis=AXIS_LEGACY`, `sigma=V3.SIGMA`,
+`--z-grid`. Lỗi này **đã gây hậu quả thật** — xem 16.3.
+
+**Phạm vi (khai đúng, không tuyên bố quá):** chỉ `main()` và `run_fixed_grid`.
+`fixed_summary_with_bootstrap`, `sawtooth_summary`, `compute_margin_cv` **vẫn
+còn** mặc định `CALIBRATION`. Chúng không nằm trên đường chạy của 20R2.5.
+
+### 16.3 P3 — băng chấp nhận đã đo trên trục SLA SAI (⛔ đã đo lại)
+
+`tools/20r2_2_se_pilot.py::_measure` gọi `run_fixed_grid(...)` **không truyền
+`calibration_path`**, nên rơi về `self_calibrated`.
+
+**Bằng chứng máy móc** (không phải suy luận): parquet đã commit
+`results/RAW/phase-20R2/se_pilot/se_3.0.parquet` có cột `w_loss` mang **9 giá
+trị khác nhau**, từ 1245,64 đến 4722,69. Trục exogenous có **một** giá trị
+duy nhất `w_loss = 5000,0` cho mọi ô. Một bảng đo trên trục exogenous không
+thể có 9 giá trị w_loss.
+
+**Đã đo lại** trên `sla_manifest_exogenous_S-B.json`, giữ nguyên seed 201–205
+(độc lập với chiến dịch dùng 101–105), cùng công thức đã ký, ghi vào thư mục
+MỚI `results/RAW/phase-20R2/se_pilot_exo/` — **không ghi đè** bản cũ, vì tầng
+RAW không bao giờ ghi đè và bản cũ là **bằng chứng của chính lỗi này**.
+
+```text
+                     self_calibrated      exogenous        doi
+C_mean                      0.292206       0.307328     +5.18%
+C_sd                        0.117348       0.099090    -15.56%
+C_upper                     0.409554       0.406418     -0.77%   <- THAM SO BANG
+fitted_exponent            -0.532115      -0.592585    +11.36%
+do phu C_upper                  8/10           9/10     TOT HON
+
+bang chap nhan   band_rel(tau) hep di DUNG -0.77% o CA 8 tau
+                 (rang buoc van la mc_noise o moi tau)
+n_multiplier     KHONG DOI  -> luoi 800 o va ngan sach CPU KHONG bi cham
+K_MC, cycle_floor KHONG DOI
+```
+
+**Đọc kết quả này cho trung thực.** Từng điểm τ dịch nhiều (đo được ở τ=3:
+C 0,165 → 0,220, +34%), nhưng tham số **gộp** `C_upper` chỉ dịch −0,77%. Đó
+đúng là việc mà luật gộp sinh ra để làm. Điều đó **không** làm lỗi trở nên vô
+hại: ta chỉ biết nó nhỏ **vì đã đo lại**. Một băng mà không ai biết nó đo ở
+điều kiện nào thì không phải một băng đã ký.
+
+Chính docstring `cpu_pilot.py` đã viết: *"Một hằng số KHÔNG được kế thừa qua
+ranh giới điều kiện mà không đo lại."*
+
+```text
+sha256 ban cu (self_calibrated), de doi chieu:
+  02-se-pilot.json          418ce31fe9247e2402d1746da9c9c72319ec43ec409606faa53663e343296048
+  01-prediction-signed.json 8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c
+```
+
+**Đối chứng ×4 vẫn NGƯỢC HƯỚNG ở τ=28** trên trục mới (tỉ số 0,94 thay vì
+2,00; τ=20 cho 1,88 đúng hướng). Kết luận của §12 giữ nguyên: ước lượng se từ
+5 seed không dùng làm sàn băng được, nên phải gộp. Lỗi trục **không** phải
+nguyên nhân của hiện tượng đó.
+
+### 16.4 P4 — "phép kiểm dụng cụ thật" là đèn xanh rỗng (⛔ đã thay)
+
+§13.5 gọi đối chứng twin-hoàn-hảo là *phép kiểm dụng cụ thật* của 20R2. Mã của
+nó, `_control_one`:
+
+```python
+a_true = c_true.argmin(axis=1)
+nc1b   = float((c_true.argmin(axis=1) != a_true).mean())   # so X voi CHINH X
+```
+
+Đây là **mệnh đề luôn đúng**: bằng 0 vì đại số, không vì dụng cụ đúng. Nó còn
+**không gọi `run_cell`**, nên không chạm tới lag, cửa sổ chấm điểm, hay dispatch
+lưới z. Test canh nó chỉ kiểm rằng **một câu văn** có mặt trong docstring.
+
+**Kill test (mutation testing) — đã chạy, cấy lỗi lệch-một `lag_rows =
+current - k - 1` vào `run_cell`, ô h2@0.700, τ=3, lưới 20r2_measured:**
+
+```text
+doi chung MOI (qua run_cell)   err_total(z=0) = 0.026315   BAT DUOC
+NC1b CU                                         0.0        MU
+```
+
+**Hợp đồng đúng** (điểm người mới hay sai: "twin hoàn hảo" **không** nghĩa là
+err = 0 ở mọi z — twin hoàn hảo về *mô hình* vẫn dùng dữ liệu *cũ*):
+
+```text
+err_model == 0 . rms_e_model == 0 . err_total(z) == err_stale(z) moi z
+err_total(z = 0) == 0
++ DOI CHUNG CUA DOI CHUNG: ton tai z > 0 co err_total > 0
+  (khong co thi lag khong lam gi, va hop dong thoa mot cach TAM THUONG)
+```
+
+Đã chạy trên mã hiện tại, **hai lưới × 8 τ × 10 ô**: 0 vi phạm, và nontrivial
+(max err tại z > 0 lên tới 0,65). Docstring dòng 6 đã được nói rõ **đại lượng
+nào** bằng 0 — chính sự mơ hồ đó cho phép một mệnh đề luôn đúng đứng tên
+"đối chứng". `NC1b` được giữ lại để không phá bảng số lịch sử, nhưng đã dán
+nhãn đúng bản chất trong mã.
+
+Test canh cũng được nâng từ "một câu văn có trong mã" thành **kiểm hành vi**:
+`test_perfect_twin_control_actually_runs_through_run_cell` và
+`test_perfect_twin_control_is_not_a_tautology` (test thứ hai tự cấy lỗi
+lệch-một và đòi đối chứng phải ĐỎ).
+
+### 16.5 P5 — sidecar và tầng LIVE không nhìn thấy trục AoI (⚠️ đã sửa)
+
+**(a)** §12.7 đã phát hiện nhãn mức-artifact không đủ độ phân giải và thêm
+`ESTIMAND_BY_FIELD` — nhưng `write_validity_sidecar` **không bao giờ ghi nó**.
+Artifact vẫn mang một nhãn `RMS_ALLACTION_DELAY` cho ba đại lượng khác thang
+(đúng va chạm A-T2-3). Nay sidecar ghi cả `estimand_by_field`.
+
+**(b)** Một sidecar sinh với lưới **legacy** qua **mọi** kiểm tầng LIVE:
+`axis_role = aoi_axis_free`, có `z_grid_s`, SLA đã duyệt → `True`. Tức đúng
+cái phân biệt mà A5 được ký để bảo vệ lại **vô hình** với cái chắn. Lý do:
+`decision_error_v2` không gọi bộ sinh AoI nào — trục AoI chỉ đi vào **qua việc
+chọn lưới z** (T2-L8).
+
+**Sửa:** `z_grid_id_of()` **suy ra** tên lưới từ chính các điểm z đã chạy,
+không nhận lời khai (validity.py, Luật 2), và sidecar ghi `z_grid_id`. Hygiene
+H7 đòi giá trị suy ra phải khớp nhánh trong kế hoạch.
+
+### 16.6 P6 — lưu trữ quyết TRƯỚC khi chạy (⚠️ đã quyết)
+
+`.gitignore` loại parquet trong `results/`. Chiến dịch ~167 file × 20–25 KB
+≈ 4 MB, cùng bậc với T2 (166 file, 4,1 MB). Mở ngoại lệ **có phạm vi** cho ba
+thư mục của chiến dịch + `se_pilot_exo/`, đúng tiền lệ `60a88784`. Quyết
+trước khi có dữ liệu, vì quyết sau là mở cửa cho việc chọn giữ cái nào.
+
+### 16.7 Ghi chú đã kiểm, không chặn
+
+```text
+a=0.9 ngam        Ke hoach 20R2.5 LUON truyen --a-override tuong minh, ke ca 0.9.
+ngan sach         74,53 phut do TREN self_calibrated. KHONG do lai, ly do manh
+                  hon "thoi gian khong nhay voi truc": HAI truc cho DUNG 10 o
+                  kha thi NHU NHAU (do duoc), cung n, cung luoi z => moi mang
+                  CUNG HINH DANG. Chi hang so vo huong w_loss doi. Ngan sach la
+                  ham cua HINH DANG, khong phai cua gia tri.
+subprocess        cpu_pilot do in-process; chien dich chay subprocess. Chi phi
+                  khoi dong ~0,43 s/lenh ~ +1,5% tren 160 lenh. Nho, CO HUONG,
+                  nen khai. Dung sai 30% van phu.
+realizability     Luot 2 can min_cell_blocks ma 20R2 khong co conformal. Anh xa
+                  "so do nao cam vao tieu chi nao" DA KY trong 03-run-plan.json
+                  (realizability_pass2_mapping), khong chon sau.
+lenh lich su      Cac khoi lenh trong docs/phase-20R/ (06-decision-error.md,
+                  07-design-validation.md, 00i-amendment-8.md) sinh TRUOC P2 nen
+                  khong co --calibration. Chung KHONG duoc sua: do la ban ghi
+                  lich su, khong phai huong dan. Muon phat lai thi them
+                  `--calibration results/LIVE/phase-20R/sla_calibration.json`
+                  (DUNG truc chung da chay ngam). Loi "required" bay ra khi phat
+                  lai la CO ICH: no bat nguoi phat lai phai CHON truc, thay vi
+                  thua ke im lang.
+Sheppard          Du doan ky tai z = 0,365; luoi co 0,366. Do doi tuong doi
+                  ~0,10-0,14%, khong dang ke so voi bang >= 2,73%. De 20R2.6 khai.
+D8                Dong MIEN PHI o hygiene H6: CRN cho phep kiem "hai nhanh trung
+                  tung bit tai 4 diem z chung" tren MOI (tau, a, seed) -- 80 cap
+                  x 10 o, thay vi chi tau=3 nhu NEO B.
+```
+
+### 16.8 Băng cũ/mới đủ 8 τ, và vì sao dịch ĐỀU −0,77%
+
+```text
+tau      band_rel CU    band_rel MOI      doi    rang buoc
+0,5         2,7474%        2,7263%     -0,77%   mc_noise
+1,0         3,8854%        3,8556%     -0,77%   mc_noise
+2,0         5,4947%        5,4527%     -0,77%   mc_noise
+3,0         6,7297%        6,6781%     -0,77%   mc_noise
+5,0         8,6880%        8,6214%     -0,77%   mc_noise
+10,0        8,6880%        8,6214%     -0,77%   mc_noise
+20,0        8,6880%        8,6214%     -0,77%   mc_noise
+28,0        8,6880%        8,6214%     -0,77%   mc_noise
+```
+
+Dịch **đều** vì `band_rel = max(AXIS_FLOOR, K_MC · se)` mà số hạng `mc_noise`
+**chi phối ở mọi τ** (không τ nào bị `AXIS_FLOOR` ràng buộc). Khi đó
+`band_rel ∝ C_upper`, nên mọi τ thừa hưởng đúng tỉ lệ −0,77%. Nếu có τ nào bị
+sàn trục ràng buộc thì τ đó sẽ **không** dịch — đó là cách đọc bảng này.
+
+`K_MC = 3,0`, `cycle_floor = 200`, `n_multiplier` đều **KHÔNG đổi**.
+
+**Vì sao `C_upper` gần như đứng yên dù từng điểm dịch ~34%.** `C_upper =
+mean + 1·sd` trên 10 điểm. Nếu mọi điểm cùng dịch một chiều thì `C_upper` dịch
+theo đúng chừng ấy. Nó chỉ dịch −0,77%, nên các dịch chuyển phải **ngược dấu
+nhau và triệt tiêu**. Điều đó **ủng hộ** chẩn đoán §14.2: `C` của từng điểm bị
+**nhiễu 5-seed chi phối** (sd 0,117 trên mean 0,292 ≈ 40% hệ số biến thiên).
+Đổi trục SLA xáo các ước lượng đó **trong dải nhiễu của chính chúng**. Luật gộp
+được thiết kế đúng để hấp thụ loại dao động này.
+
+Đây là một **phép đo độ nhạy (sensitivity analysis) có kết quả**, không phải
+một lời bào chữa:
+
+```text
+CHUNG MINH      tham so GOP ben voi doi truc SLA -- da DO, khong phai suy doan
+KHONG CHUNG MINH `se` cua tung tau la dung. Nhung bang KHONG dung so tung tau,
+                 no dung LUAT -- va do la thiet ke CO CHU DICH.
+```
+
+Phân biệt phải giữ cho đúng thì tự:
+
+```text
+"loi vo hai"                       = loi khai TRUOC khi do        -> KHONG duoc noi
+"loi co hau qua NHO, DA DUOC DO"   = phat bieu SAU khi do         -> cai ta noi
+```
+
+**Độ phủ 9/10 — điểm còn chưa phủ là gì.**
+
+```text
+CHUA PHU:  tau = 28,  n_multiplier = x4,  200 chu ky,
+           is_campaign_config = TRUE          <- CHINH la cau hinh chien dich
+           C = 0,4812   se_rel do duoc = 3,402%   3sigma rieng = 10,207%
+```
+
+So với bản cũ (2 điểm chưa phủ): điểm τ=20 ×1 nay **đã được phủ** — nó vốn là
+cấu hình **pilot**, không còn dùng. Điểm τ=28 ×4 **vẫn chưa phủ**, và nó **là**
+cấu hình chiến dịch.
+
+⇒ Chính sách đọc đã ký ở `C_coverage` **vẫn áp dụng nguyên vẹn cho ô τ=28**:
+một trượt riêng ở ô này, trong phạm vi đã ghi, là **ứng viên của nhiều bằng**,
+không phải một phát hiện. Băng tại τ=28 (8,6214%) vẫn **hẹp hơn** 3σ riêng của
+ô đó (10,207%) — đúng như `why_accepted` đã ký. **20R2.6 không phải tra lại.**
+
+### 16.9 Hai loại bằng chứng cho P3 — dùng đúng từ
+
+```text
+BANG CHUNG LOAI TRU  (exclusion)   9 gia tri w_loss (1245-4722)
+                                   -> chung minh KHONG PHAI exogenous (chi co 1 gia tri)
+BANG CHUNG DINH DANH (identification) 9 gia tri do KHOP DUNG file self_calibrated
+                                   -> chung minh CHINH LA self_calibrated
+```
+
+Ở đây ta có **cả hai**, nên kết luận đóng kín. Nhưng hai loại này không thay
+nhau: loại trừ một mình chỉ nói "không phải X", không nói "là Y". Trong văn
+bản phải dùng đúng từ cho từng loại.
+
+### 16.10 Ngân sách: lập luận CẤU TRÚC + phép đo, và giả định ngầm của nó
+
+```text
+LAP LUAN  sigma_max giong het o hai file (do bit-exact) -> dong rho(t) giong het
+          10 o giong nhau . n giong nhau . luoi z giong nhau
+          SLA chi doi vai hang so VO HUONG (w_loss, t_delay, t_loss)
+          => moi mang CUNG HINH DANG => ngan sach la ham cua HINH DANG
+```
+
+⚠️ **Giả định ngầm phải gọi tên: KHÔNG có đường điều khiển phụ thuộc DỮ LIỆU.**
+Tức không vòng lặp dừng sớm theo giá trị, không sắp xếp mà thời gian phụ thuộc
+giá trị, không nhánh `if` theo giá trị. Trong `run_cell` giả định này **đúng**:
+`argmin`, `np.interp` và phép so ngưỡng đều có chi phí theo **kích thước** mảng.
+
+Nhưng nó có thể bị phá bởi một thay đổi mã hoàn toàn hợp lý — ví dụ thêm một
+đường tắt "nếu mọi chi phí bằng nhau thì bỏ qua", hoặc một `while` lặp đến khi
+hội tụ. Vì vậy dạng **mạnh nhất là cả hai đi cặp**:
+
+```text
+LAP LUAN giai thich VI SAO hai so phai gan nhau  (co the sai neu co duong
+                                                  phu thuoc du lieu chua ai thay)
+PHEP DO  xac nhan RANG chung gan nhau            (khong biet co tong quat khong)
+```
+
+Ngân sách 74,53 phút giữ nguyên, **và** H9 sẽ đo lại trên chính chiến dịch —
+đó là phép đo xác nhận. H9 là hạng BUDGET nên một trượt ở đó không làm kết quả
+sai.
+
+### 16.11 Kill test các nhánh dừng của guard — ĐÃ TỰ TAY CHẠM
+
+"Guard chặn khi chưa ký" chỉ chứng minh **một** nhánh. Mã chưa từng chạy là mã
+chưa chứng minh được gì. Đã chạm **đủ 6 nhánh** trong một **clone tạm có
+`origin` GIẢ** (một bare repo cục bộ) — nhờ vậy chạm được nhánh sau kiểm remote
+**bằng chính mã thật**, không phải bằng cách vô hiệu hoá cái chắn:
+
+```text
+1  chua co tag (local)              -> DUNG: chua co tag ... §11 chua ky        OK
+2  co tag local, CHUA co tren remote-> DUNG: tag chua co tren REMOTE            OK
+3  worktree BAN ngoai chien dich    -> DUNG: worktree ban ... (?? README.md)    OK
+3b BAN trong results/               -> KHONG chan (dung: resume phai chay duoc) OK
+4a DUNG CU doi SAU tag              -> DUNG: ... AMENDMENT: measurements/...    OK
+4b KE HOACH doi SAU tag             -> DUNG: ... AMENDMENT: 03-run-plan.json    OK
+5  moi truong/commit KHAC phien truoc -> DUNG: moi truong/commit KHAC ...       OK
+6  sha tren dia LECH so cai         -> DUNG: ... file tren dia KHAC so cai      OK
+```
+
+Nhánh **4** là khó chạm nhất: nó nằm **sau** nhánh 2, nên trong một clone
+thường không bao giờ tới được. `origin` giả giải quyết đúng chỗ đó.
+
+Clone tạm đã xoá; repo thật không bị chạm (0 tag, HEAD `c42f7367`, `origin` vẫn
+là remote thật, không tiến trình nào còn chạy).
+
+### 16.12 C1 — ô "Commit sha" ở §11 là VÒNG TỰ QUY CHIẾU (đã sửa)
+
+Ô cũ ghi *"sha CỦA BẢN prereg được ký"*. Ô đó **không thể điền đúng**: sha của
+commit phụ thuộc nội dung prereg, mà prereg lại chứa sha đó — như một file
+không thể chứa sha256 của chính nó. **TAG** mới là thứ gắn chữ ký với commit:
+
+```text
+Commit sha : = DICH cua tag `phase-20R2-prereg-signed`
+             kiem: git rev-parse phase-20R2-prereg-signed^{commit}
+```
+
+**Chuỗi ghim đã kiểm là KHÔNG CÓ VÒNG:**
+
+```text
+prereg ──ghim sha──► 01-prediction-signed.json ◄──ghim sha── 03-run-plan.json
+prereg ──ghim sha──► 03-run-plan.json
+01-prediction ──TRICH DAN duong dan (KHONG ghim sha)──► prereg     [an toan]
+```
+
+`01-prediction-signed.json` có trường `"authority": ".../00-preregistration.md"`
+— đó là **trích dẫn đường dẫn**, không phụ thuộc **nội dung**, nên không tạo
+vòng. Đã thêm test canh `test_pin_chain_has_no_cycle`: nếu ai đó thêm prereg vào
+`inputs_sha256` của kế hoạch, vòng khép lại và **không file nào ký được nữa**.
+
+### 16.13 C3 — tag có thể BỊ DỜI (đã gia cố)
+
+`git ls-remote` chỉ chứng minh tag **tồn tại lúc kiểm**, không chứng minh nó
+**bất biến**: một annotated tag có thể bị xoá rồi tạo lại (`git push -f --tags`).
+
+**Gia cố:** `env_fingerprint()` nay ghi `signed_tag_commit` (đích của tag) vào
+sổ cái, và hygiene **H2** đòi `signed_tag_commit == git_commit`. Nhờ vậy **sổ
+cái TỰ chứng minh** chiến dịch chạy đúng commit đã ký — không cần ai tin rằng
+tag chưa bị dời.
+
+Đã kill test: dời tag sang commit khác ⇒ `tag_ok = False` ⇒ H2 **FAIL**.
+
+*(Tuỳ chọn chưa làm: `git tag -s` ký GPG, thêm bằng chứng mật mã về AI đã ký.
+Cần khoá GPG nên để người ký quyết.)*
+
+### 16.14 Thứ tự thi công đã dùng
+
+```text
+1. sua P2/P4/P5 trong measurements/decision_error_v2.py
+2. khai tuong minh gia tri lich su o t2_6_plan/run + bit_exact_regression
+   (GIA TRI khong doi -> NEO A giu nguyen: da chay lai --limit 3, KHOP 3/3)
+3. do lai se pilot tren exogenous -> 02-se-pilot.json -> 01-prediction-signed.json
+4. sinh 03-run-plan.json (tat dinh: hai lan sinh cung sha256)
+5. sinh lai axis_audit.json (harness doi sha -> khong sinh lai thi full suite
+   bao "loi moi" gia)
+6. .gitignore ngoai le co pham vi
+7. ★ NGUOI KY dien §11, commit, tag, push   <- KHONG cong cu nao lam ho
+8. tools.20r2_5_run  ->  tools.20r2_5_hygiene  ->  commit NHAN CHUNG
+9. chi sau do moi mo 20R2.6
+```

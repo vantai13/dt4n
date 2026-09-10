@@ -23,87 +23,87 @@
   "per_tau": [
    {
     "axis_floor_rel": 0.011091507574358533,
-    "band_rel": 0.027473746101739385,
+    "band_rel": 0.027263380821957173,
     "binding_term": "mc_noise",
     "independent_cycles": 2000.0,
     "n_multiplier": 1,
-    "se_rel_from_law": 0.009157915367246462,
+    "se_rel_from_law": 0.009087793607319058,
     "tau": 0.5
    },
    {
     "axis_floor_rel": 0.012913919245296989,
-    "band_rel": 0.03885374434627479,
+    "band_rel": 0.03855624291455438,
     "binding_term": "mc_noise",
     "independent_cycles": 1000.0,
     "n_multiplier": 1,
-    "se_rel_from_law": 0.01295124811542493,
+    "se_rel_from_law": 0.012852080971518126,
     "tau": 1.0
    },
    {
     "axis_floor_rel": 0.013826433188149972,
-    "band_rel": 0.05494749220347877,
+    "band_rel": 0.054526761643914345,
     "binding_term": "mc_noise",
     "independent_cycles": 500.0,
     "n_multiplier": 1,
-    "se_rel_from_law": 0.018315830734492923,
+    "se_rel_from_law": 0.018175587214638116,
     "tau": 2.0
    },
    {
     "axis_floor_rel": 0.014128337036320973,
-    "band_rel": 0.06729665927203995,
+    "band_rel": 0.0667813716769757,
     "binding_term": "mc_noise",
     "independent_cycles": 333.3333333333333,
     "n_multiplier": 1,
-    "se_rel_from_law": 0.02243221975734665,
+    "se_rel_from_law": 0.02226045722565857,
     "tau": 3.0
    },
    {
     "axis_floor_rel": 0.014368628101984025,
-    "band_rel": 0.08687961353866856,
+    "band_rel": 0.0862143801139382,
     "binding_term": "mc_noise",
     "independent_cycles": 200.0,
     "n_multiplier": 1,
-    "se_rel_from_law": 0.028959871179556188,
+    "se_rel_from_law": 0.028738126704646066,
     "tau": 5.0
    },
    {
     "axis_floor_rel": 0.014548009976824514,
-    "band_rel": 0.08687961353866856,
+    "band_rel": 0.0862143801139382,
     "binding_term": "mc_noise",
     "independent_cycles": 200.0,
     "n_multiplier": 2,
-    "se_rel_from_law": 0.028959871179556188,
+    "se_rel_from_law": 0.028738126704646066,
     "tau": 10.0
    },
    {
     "axis_floor_rel": 0.01463740576784418,
-    "band_rel": 0.08687961353866856,
+    "band_rel": 0.0862143801139382,
     "binding_term": "mc_noise",
     "independent_cycles": 200.0,
     "n_multiplier": 4,
-    "se_rel_from_law": 0.028959871179556188,
+    "se_rel_from_law": 0.028738126704646066,
     "tau": 20.0
    },
    {
     "axis_floor_rel": 0.01466290944168761,
-    "band_rel": 0.08687961353866856,
+    "band_rel": 0.0862143801139382,
     "binding_term": "mc_noise",
     "independent_cycles": 200.0,
     "n_multiplier": 4,
-    "se_rel_from_law": 0.028959871179556188,
+    "se_rel_from_law": 0.028738126704646066,
     "tau": 28.0
    }
   ],
   "se_law": {
-   "C_mean": 0.2922059434508306,
+   "C_mean": 0.30732810823037,
    "C_observed_range": [
-    0.12783158319563534,
-    0.4708412245891922
+    0.20984809467854737,
+    0.4811847840642597
    ],
-   "C_sd": 0.11734848241623021,
-   "C_spread_ratio": 3.683293383518609,
-   "C_upper": 0.4095544258670608,
-   "fitted_exponent": -0.5321150074354413,
+   "C_sd": 0.09909037719869893,
+   "C_spread_ratio": 2.2930147867263475,
+   "C_upper": 0.4064184854290689,
+   "fitted_exponent": -0.5925849737488361,
    "form": "se_rel = C / sqrt(so chu ky doc lap)",
    "n_points": 10,
    "theoretical_exponent": -0.5,
@@ -176,13 +176,13 @@
  "estimands": {
   "DECISION_ERR_BY_AGE": {
    "ARTIFACT_FIELD": "per_z[<z_key>].err_total",
-   "ARTIFACT_FIELD_LINE": 534,
+   "ARTIFACT_FIELD_LINE": 564,
    "BRANCH": "z_fixed -- lag TAT DINH k = round(z/dt), measurements/decision_error_v2.py (lag TAT DINH). KHONG goi bo sinh AoI nao trong run_cell (T2-L8 dinh chinh co che). Truc AoI vao qua VIEC CHON z, khong qua bo sinh.",
    "CODE": "measurements/decision_error_v2.py : run_cell",
    "DECOMPOSITION": {
-    "per_z[<z_key>].err_model": 535,
-    "per_z[<z_key>].err_stale": 536,
-    "per_z[<z_key>].extrapolated": 541
+    "per_z[<z_key>].err_model": 565,
+    "per_z[<z_key>].err_stale": 566,
+    "per_z[<z_key>].extrapolated": 571
    },
    "DUNG CHO": [
     "RQ-20R2a",
@@ -199,7 +199,7 @@
   },
   "SLA_VIOL_BY_AGE": {
    "ARTIFACT_FIELD": "per_z[<z_key>].d_sla",
-   "ARTIFACT_FIELD_LINE": 537,
+   "ARTIFACT_FIELD_LINE": 567,
    "BRANCH": "z_fixed",
    "CODE": "measurements/decision_error_v2.py : run_cell",
    "DUNG CHO": [
@@ -214,7 +214,7 @@
   }
  },
  "generated_by": "tools/20r2_2_predictions.py",
- "generated_utc": "2026-09-10T05:25:35.979718+00:00",
+ "generated_utc": "2026-09-10T11:17:35.917183+00:00",
  "reading_policy": {
   "AGGREGATION_FALLACY_GUARD": "Gop cbr vao trung binh se KEO err trung binh XUONG (cbr la che do de nhat), nen bao cao 'twin sai 12%' trong khi o che do kho that (h2@0.960) co the la 20%. Hop phap ve so hoc, sai lech ve khoa hoc. Vi vay POPULATION = 8 o gate, cbr bao cao RIENG.",
   "DENOMINATOR": {

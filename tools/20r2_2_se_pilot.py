@@ -48,7 +48,15 @@ import pathlib
 import re
 
 REPO = pathlib.Path(__file__).resolve().parents[1]
-RAW_REL = "results/RAW/phase-20R2/se_pilot"
+# [20R2.5-P3] THU MUC MOI. Ban cu (se_pilot/) da do tren truc SLA
+# self_calibrated vi _measure khong truyen calibration_path -- BANG CHUNG cua
+# chinh loi do, va tang RAW "khong bao gio ghi de". Nen ban exogenous di ra
+# mot thu muc RIENG.
+RAW_REL = "results/RAW/phase-20R2/se_pilot_exo"
+RAW_REL_SELF_CALIBRATED = "results/RAW/phase-20R2/se_pilot"   # ban cu, GIU LAI
+# Truc SLA da KY o prereg §3. Truoc 20R2.5 cho nay bo trong nen roi ve mac
+# dinh self_calibrated (DEPRECATED, S14) ma khong bao loi nao.
+CALIBRATION = "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json"
 
 SEEDS = [201, 202, 203, 204, 205]
 TAUS = [0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0]
@@ -67,11 +75,13 @@ def _measure(out_dir: pathlib.Path) -> None:
     out_dir.mkdir(parents=True, exist_ok=True)
     for tau in TAUS:
         DE.run_fixed_grid(tau=tau, seeds=SEEDS,
+                          calibration_path=CALIBRATION,      # [20R2.5-P3]
                           out_path=str(out_dir / ("se_%s.parquet" % tau)),
                           z_values=list(DE.Z_ALL_20R2),
                           n=n_for_tau(tau, DEFAULT_DT))
     for tau in CONTROL_TAUS:
         DE.run_fixed_grid(tau=tau, seeds=SEEDS,
+                          calibration_path=CALIBRATION,      # [20R2.5-P3]
                           out_path=str(out_dir / ("se4_%s.parquet" % tau)),
                           z_values=list(DE.Z_ALL_20R2),
                           n=n_for_tau(tau, DEFAULT_DT) * CONTROL_MULTIPLIER)

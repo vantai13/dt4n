@@ -458,3 +458,100 @@ Bằng chứng: `results/PENDING/phase-20R2/parquet_recovery.json`, sinh bởi
 `tools/20r2_1_parquet_recovery.py`; mỗi dòng ghi SHA kỳ vọng/thực tế,
 số hàng báo cáo/đọc được và dung lượng. Công cụ kiểm đủ chính xác 166,
 không chấp nhận một tập con tự khớp.
+
+## 2026-09-10 - Lesson 20R2.5: chien dich (chuan bi truoc ky)
+
+### QD-20R2.5-1: `--calibration` khong con mac dinh (lan thu NAM cung co che)
+
+`decision_error_v2 --calibration` mac dinh ve `sla_calibration.json`, tuc truc
+SLA `self_calibrated` (DEPRECATED, S14), du prereg §3 ky `exogenous_g114_S-B`.
+Khong mot dong ma nao bat buoc loi ky do. Nay `required=True`, va
+`run_fixed_grid(calibration_path=None)` nem ValueError.
+
+Pham vi khai dung: chi `main()` va `run_fixed_grid`. Ba ham summary khac VAN
+con mac dinh -- chung khong nam tren duong chay cua 20R2.5.
+
+Lenh lich su (t2_6_plan/run, bit_exact_regression) duoc them `--calibration`
+TUONG MINH voi DUNG gia tri chung da chay ngam. Gia tri khong doi, chi loi
+khai doi -- da chay lai neo bit-exact `--limit 3`: KHOP 3/3.
+
+### QD-20R2.5-2: bang chap nhan do lai tren truc dung, TRUOC khi ky
+
+`20r2_2_se_pilot._measure` khong truyen `calibration_path` nen do bang tren
+truc SAI. Bang chung: parquet da commit co 9 gia tri `w_loss` (1245-4722);
+truc exogenous chi co MOT (5000).
+
+Do lai, cung seed 201-205, cung cong thuc: C_upper 0.409554 -> 0.406418
+(-0.77%), do phu 8/10 -> 9/10, `n_multiplier` KHONG DOI (nen luoi 800 o va
+ngan sach CPU khong bi cham). Ban cu giu nguyen o `se_pilot/` lam bang chung;
+ban moi vao `se_pilot_exo/` (tang RAW khong bao gio ghi de).
+
+Doi gia tri cam vao mot cong thuc DA KY, vi ly do co bang chung, TRUOC khi co
+du lieu ket qua, la hop le. Lam viec do SAU chien dich moi la HARKing.
+
+### QD-20R2.5-3: doi chung dung cu phai chay QUA run_cell
+
+NC1b so `c_true.argmin` voi CHINH no -- menh de luon dung, va khong goi
+run_cell. Test canh no chi kiem MOT CAU VAN co trong docstring.
+
+Kill test (cay `lag_rows = current - k - 1`): doi chung moi bat duoc
+(err_total(z=0) = 0.026315), NC1b mu (0.0). Thay bang `perfect_twin_control`,
+cuong che hop dong day du va KEM doi chung cua doi chung (phai ton tai z > 0
+co err > 0, neu khong hop dong thoa TAM THUONG).
+
+### QD-20R2.5-4: nhan truc AoI phai SUY RA tu diem z da chay
+
+Trong `decision_error_v2`, truc AoI khong di qua bo sinh nao -- no di vao qua
+VIEC CHON LUOI z. Nen sidecar sinh voi luoi legacy van qua MOI kiem tang LIVE.
+`z_grid_id_of()` suy ra ten luoi tu chinh cac diem z (Luat 2), sidecar ghi no,
+va hygiene H7 doi no khop nhanh trong ke hoach. Sidecar cung ghi
+`ESTIMAND_BY_FIELD` -- da co tu §12.7 nhung chua bao gio duoc GHI RA.
+
+### QD-20R2.5-5: ke hoach la ham thuan; so cai la nguon su that
+
+`03-run-plan.json` KHONG mang git_commit/git_dirty (khac t2_6_plan), nen tat
+dinh va vao duoc bang TOOLS. Thoi diem thuoc ve so cai va tag.
+`04-campaign-log.jsonl` la write-ahead log: parquet khong co dong so = mo coi
+-> xoa, chay lai; co dong so ma sha lech -> DUNG. Runner T2 bo qua moi file
+"> 0 byte", ma mot parquet cat cut do mat dien cung > 0 byte.
+
+### QD-20R2.5-6: doi giao dien => phai liet ke MOI noi goi, KE CA test/
+
+Khi dat `--calibration` thanh `required=True`, lenh grep dung de tim noi goi
+chi quet `tools runbooks scripts` va BO SOT `test/`. Hau qua: 4 loi test moi,
+trong do `test_shared_z_points_agree_across_grids` (NEO B) vo vi no tu dung
+CLI ma khong co co do.
+
+Bon loi moi day du, de doi chieu ve sau:
+  1. test_20r2_2_prediction::test_signed_prediction_hash_is_pinned
+  2. test_20r2_2_prediction::test_prereg_pins_the_same_hash_as_the_signed_artifact
+     (ca hai: ghim sha cua artifact da ky -- SU KIEN CUSTODY, xem QD-20R2.5-2)
+  3. test_20r2_3_anchors::test_shared_z_points_agree_across_grids[3.0]
+     (NEO B goi CLI khong co --calibration)
+  4. test_20r2_tools_run_and_reproduce::test_every_20r2_tool_is_covered_by_one_of_the_two_tables
+     (ba tool 20r2_5 moi chua dang ky vao bang nao)
+
+Bai hoc: pham vi grep cho mot thay doi giao dien phai la CA REPO, khong phai
+cac thu muc "san xuat". Test cung la NGUOI GOI.
+
+NEO B duoc sua bang truc EXOGENOUS (khong phai self_calibrated): NEO B doi MOT
+yeu to (luoi z), nen truc SLA phai giong nhau o hai nhanh VA phai la truc ma
+chien dich se chay -- neu khong no kiem bat bien tren mot truc DEPRECATED va
+khong noi gi ve dieu kien chien dich.
+
+### QD-20R2.5-7: chu ky gan voi commit qua TAG, khong qua o "commit sha"
+
+O "Commit sha cua ban prereg duoc ky" o §11 la VONG TU QUY CHIEU -- khong the
+dien dung. Thay bang "= dich cua tag". Them test `test_pin_chain_has_no_cycle`
+de khong ai khep vong bang cach ghim prereg vao inputs_sha256 cua ke hoach.
+
+`ls-remote` chi chung minh tag TON TAI, khong chung minh BAT BIEN (tag co the
+bi `push -f`). Nen so cai ghi `signed_tag_commit`, va hygiene H2 doi no bang
+`git_commit`: SO CAI TU chung minh chien dich chay dung commit da ky.
+
+### QD-20R2.5-8: kill test guard bang `origin` GIA, khong bang cach tat kiem
+
+Guard co 6 nhanh dung. Nhanh "dung cu doi sau tag" nam SAU nhanh "tag co tren
+remote", nen trong clone thuong khong bao gio cham toi -- tuc MA CHUA TUNG CHAY.
+Cach cham ma khong lam yeu cai chan: dung mot bare repo cuc bo lam `origin`,
+push tag len do. Ca 6 nhanh da duoc cham bang CHINH MA THAT (xem prereg §16.11).

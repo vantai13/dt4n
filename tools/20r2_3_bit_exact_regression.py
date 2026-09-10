@@ -54,6 +54,9 @@ RUN_LOG_REL = "results/PENDING/phase-T2/sweep_r2/run_log.jsonl"
 
 # T2 chay tren luoi legacy. Truoc G4 do la mac dinh IM LANG.
 REPLAY_Z_GRID = "legacy"
+# [20R2.5-P2] truc SLA ma T2 da chay ngam. KHONG doi sang exogenous: neo
+# hoi quy do "ma HOM NAY co con lam nhu HOM QUA", nen phai giu dieu kien cu.
+REPLAY_CALIBRATION = "results/LIVE/phase-20R/sla_calibration.json"
 
 
 def _sha256(path: pathlib.Path) -> str:
@@ -81,6 +84,12 @@ def _replay_cmd(entry: dict, out_path: str) -> list:
         # cmd = ["-m", "<module>", ...] -- chen SAU ten module, khong phai sau "-m"
         assert cmd[0] == "-m", "dang cmd la khac: %r" % cmd[:2]
         cmd = cmd[:2] + ["--z-grid", REPLAY_Z_GRID] + cmd[2:]
+    if "--calibration" not in cmd:
+        # [20R2.5-P2] CUNG mot co che voi --z-grid o tren. Lenh lich su sinh
+        # TRUOC 20R2.5 nen khong mang --calibration, ma CLI gio required=True.
+        # Chen DUNG gia tri T2 da chay NGAM (self_calibrated) -- neo hoi quy
+        # phai giu nguyen tung byte, nen o day KHONG duoc dung truc exogenous.
+        cmd = cmd[:2] + ["--calibration", REPLAY_CALIBRATION] + cmd[2:]
     # thay --out bang duong dan tam
     i = cmd.index("--out")
     cmd[i + 1] = out_path
