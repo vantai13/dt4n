@@ -1,0 +1,92 @@
+{
+ "WHAT_THIS_IS": "Gate VALIDITY -- 'dung cu va so sach co sach khong'. KHONG chua mot cot ket qua nao. Phai COMMIT truoc khi mo 20R2.6 [F5, NT 56].",
+ "checks": {
+  "H1_complete_and_matches_plan": {
+   "category": "VALIDITY",
+   "mismatched": [],
+   "missing": [],
+   "n_logged_ok": 167,
+   "n_planned": 167,
+   "verdict": "PASS"
+  },
+  "H2_single_commit_single_env": {
+   "category": "VALIDITY",
+   "commits": [
+    "a92f062d06a413295b0d4c1fd5201f6f3d6e6d5f"
+   ],
+   "guard_skipped": false,
+   "n_env": 1,
+   "signed_tag_commit": "a92f062d06a413295b0d4c1fd5201f6f3d6e6d5f",
+   "tag_points_at_campaign_commit": true,
+   "verdict": "PASS"
+  },
+  "H3_sha_on_disk_matches_log": {
+   "bad": [],
+   "category": "VALIDITY",
+   "n_checked": 167,
+   "verdict": "PASS"
+  },
+  "H4_perfect_twin_brackets_campaign": {
+   "category": "VALIDITY",
+   "note": "thay NC1b (menh de luon dung) bang doi chung qua run_cell [20R2.5-P4]",
+   "verdict": "PASS"
+  },
+  "H5_canary_span_zero_with_negative_control": {
+   "category": "VALIDITY",
+   "n_canary": 7,
+   "n_distinct_canary_sha": 1,
+   "n_distinct_non_canary": 160,
+   "n_non_canary": 160,
+   "note": "so sha PARQUET; sidecar mang duong dan nen khac nhau theo cau tao",
+   "verdict": "PASS"
+  },
+  "H6_crn_shared_z_bit_identical": {
+   "category": "VALIDITY",
+   "closes": "20R2-D8 o quy mo chien dich (80 cap x 10 o), mien phi nho CRN",
+   "differing": [],
+   "n_pairs": 80,
+   "shared_z": [
+    0.0,
+    1.0,
+    2.0,
+    4.0
+   ],
+   "verdict": "PASS"
+  },
+  "H7_validity_at_source": {
+   "category": "VALIDITY",
+   "n_checked": 160,
+   "note": "z_grid_id SUY RA tu diem z, khong nhan loi khai [20R2.5-P5]",
+   "verdict": "PASS",
+   "violations": []
+  },
+  "H8_realizability_pass2_on_measured": {
+   "category": "VALIDITY",
+   "mapping": {
+    "clip_fraction": "max ar1_clip_ratio qua 5 seed cua (nhanh, o, tau, sigma)",
+    "min_cell_blocks": "floor(n*dt/(BLOCKS_PER_TAU*tau)) cua CHINH lan chay",
+    "sigma": "sigma_rho cua hang (= a * sigma_max)",
+    "why_signed_here": "20R2 KHONG co conformal, nhung realizability_gate van doi min_cell_blocks. Anh xa 'so do nao cam vao tieu chi nao' phai KY TRUOC, khong duoc chon sau."
+   },
+   "n_cells": 320,
+   "rejected": [],
+   "verdict": "PASS"
+  },
+  "H9_cpu_within_budget": {
+   "category": "BUDGET",
+   "measured_minutes": 70.08365024725596,
+   "note": "chi lenh khong-canary; doi chung twin-hoan-hao khong tinh vao",
+   "ratio": 0.9403598197566875,
+   "signed_minutes": 74.52854617436726,
+   "tolerance": 0.3,
+   "verdict": "PASS"
+  }
+ },
+ "generated_by": "tools/20r2_5_hygiene.py",
+ "log_sha256": "bb68c48853f1c84e61594ef10516c17421dd7214db6a148d3682c172af63ea1e",
+ "n_validity_checks": 8,
+ "n_validity_failed": 0,
+ "plan_sha256": "a984020e104bb13b4743be5aca2d5e0eabf0d49558f53cc5f0d70c6ce4fdf662",
+ "schema": "dt4n.hygiene_20r2_5.v1",
+ "verdict": "PASS"
+}

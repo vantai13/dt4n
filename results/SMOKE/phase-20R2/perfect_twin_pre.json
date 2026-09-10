@@ -1,0 +1,164 @@
+{
+ "WHAT_THIS_IS": "DOI CHUNG DUNG CU qua run_cell -- KHONG phai ket qua khoa hoc. No khong tra loi mot RQ nao.",
+ "blocks": [
+  {
+   "max_err_total_z_positive": 0.6517068273092369,
+   "n": 200000,
+   "n_checked": 130,
+   "seed": 999,
+   "tau": 0.5,
+   "violations": [],
+   "z_grid": "20r2_measured"
+  },
+  {
+   "max_err_total_z_positive": 0.64554718875502,
+   "n": 200000,
+   "n_checked": 130,
+   "seed": 999,
+   "tau": 1.0,
+   "violations": [],
+   "z_grid": "20r2_measured"
+  },
+  {
+   "max_err_total_z_positive": 0.6104216867469879,
+   "n": 200000,
+   "n_checked": 130,
+   "seed": 999,
+   "tau": 2.0,
+   "violations": [],
+   "z_grid": "20r2_measured"
+  },
+  {
+   "max_err_total_z_positive": 0.5589608433734939,
+   "n": 200000,
+   "n_checked": 130,
+   "seed": 999,
+   "tau": 3.0,
+   "violations": [],
+   "z_grid": "20r2_measured"
+  },
+  {
+   "max_err_total_z_positive": 0.4842562814070352,
+   "n": 200000,
+   "n_checked": 130,
+   "seed": 999,
+   "tau": 5.0,
+   "violations": [],
+   "z_grid": "20r2_measured"
+  },
+  {
+   "max_err_total_z_positive": 0.3618989898989899,
+   "n": 200000,
+   "n_checked": 130,
+   "seed": 999,
+   "tau": 10.0,
+   "violations": [],
+   "z_grid": "20r2_measured"
+  },
+  {
+   "max_err_total_z_positive": 0.2468469387755102,
+   "n": 200000,
+   "n_checked": 130,
+   "seed": 999,
+   "tau": 20.0,
+   "violations": [],
+   "z_grid": "20r2_measured"
+  },
+  {
+   "max_err_total_z_positive": 0.25009475218658894,
+   "n": 280000,
+   "n_checked": 130,
+   "seed": 999,
+   "tau": 28.0,
+   "violations": [],
+   "z_grid": "20r2_measured"
+  },
+  {
+   "max_err_total_z_positive": 0.6517068273092369,
+   "n": 200000,
+   "n_checked": 90,
+   "seed": 999,
+   "tau": 0.5,
+   "violations": [],
+   "z_grid": "legacy"
+  },
+  {
+   "max_err_total_z_positive": 0.64554718875502,
+   "n": 200000,
+   "n_checked": 90,
+   "seed": 999,
+   "tau": 1.0,
+   "violations": [],
+   "z_grid": "legacy"
+  },
+  {
+   "max_err_total_z_positive": 0.6104216867469879,
+   "n": 200000,
+   "n_checked": 90,
+   "seed": 999,
+   "tau": 2.0,
+   "violations": [],
+   "z_grid": "legacy"
+  },
+  {
+   "max_err_total_z_positive": 0.5589608433734939,
+   "n": 200000,
+   "n_checked": 90,
+   "seed": 999,
+   "tau": 3.0,
+   "violations": [],
+   "z_grid": "legacy"
+  },
+  {
+   "max_err_total_z_positive": 0.4842562814070352,
+   "n": 200000,
+   "n_checked": 90,
+   "seed": 999,
+   "tau": 5.0,
+   "violations": [],
+   "z_grid": "legacy"
+  },
+  {
+   "max_err_total_z_positive": 0.3618989898989899,
+   "n": 200000,
+   "n_checked": 90,
+   "seed": 999,
+   "tau": 10.0,
+   "violations": [],
+   "z_grid": "legacy"
+  },
+  {
+   "max_err_total_z_positive": 0.2468469387755102,
+   "n": 200000,
+   "n_checked": 90,
+   "seed": 999,
+   "tau": 20.0,
+   "violations": [],
+   "z_grid": "legacy"
+  },
+  {
+   "max_err_total_z_positive": 0.25009475218658894,
+   "n": 280000,
+   "n_checked": 90,
+   "seed": 999,
+   "tau": 28.0,
+   "violations": [],
+   "z_grid": "legacy"
+  }
+ ],
+ "calibration": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+ "contract": [
+  "err_model == 0",
+  "rms_e_model == 0",
+  "err_total == err_stale",
+  "err_total(z=0) == 0",
+  "ton tai z > 0 co err_total > 0 (doi chung cua doi chung)"
+ ],
+ "control_of_control_nontrivial": true,
+ "generated_by": "tools/20r2_5_perfect_twin.py",
+ "n_checked": 1760,
+ "n_violations": 0,
+ "replaces": "NC1b_perfect_twin trong decision_error_v2.controls, von la mot menh de luon dung va khong goi run_cell [20R2.5-P4]",
+ "schema": "dt4n.perfect_twin_20r2_5.v1",
+ "verdict": "PASS"
+}

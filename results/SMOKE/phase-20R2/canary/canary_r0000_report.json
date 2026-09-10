@@ -1,0 +1,77 @@
+{
+  "cells": [
+    "cbr@0.700",
+    "cbr@0.850",
+    "h2@0.700",
+    "h2@0.850",
+    "h2@0.925",
+    "h2@0.960",
+    "poisson@0.700",
+    "poisson@0.850",
+    "poisson@0.925",
+    "poisson@0.960"
+  ],
+  "n_rows": 130,
+  "parquet": "results/SMOKE/phase-20R2/canary/canary_r0000.parquet",
+  "parquet_sha256": "1a7c65e6dfa13ba4bcb1fe11d7f91f84dd3465a6d00e97ec8a32c99072eeb26f",
+  "run_config": {
+    "n": [
+      200000
+    ],
+    "seeds": [
+      999
+    ],
+    "sigma_rho_source": [
+      "a_override"
+    ],
+    "tau_rho": [
+      3.0
+    ]
+  },
+  "schema": "dt4n.decision_error.v2_report",
+  "validity": {
+    "aoi_axis": {
+      "label": "aoi_axis_free",
+      "note": "luoi z CO DINH, tien dang ky; khong goi bo sinh AoI nao",
+      "z_grid_s": [
+        0.0,
+        0.115,
+        0.17,
+        0.241,
+        0.305,
+        0.366,
+        0.43,
+        0.491,
+        0.555,
+        0.615,
+        1.0,
+        2.0,
+        4.0
+      ]
+    },
+    "axis_role": "aoi_axis_free",
+    "estimand_by_field": {
+      "cov_e": "RMS_ALLACTION_DELAY",
+      "d_sla": "SLA_VIOL_BY_AGE",
+      "err_model": "DECISION_ERR_BY_AGE",
+      "err_stale": "DECISION_ERR_BY_AGE",
+      "err_total": "DECISION_ERR_BY_AGE",
+      "rms_e_model": "RMS_ALLACTION_DELAY",
+      "rms_e_stale": "RMS_ALLACTION_DELAY"
+    },
+    "estimand_id": "RMS_ALLACTION_DELAY",
+    "note": "err_total/err_stale/d_sla PHU THUOC truc SLA; rms_e_model/rms_e_stale/cov_e KHONG -- chung tinh tren DELAY THUAN (d_true - d_fresh), khong qua ham chi phi, nen w_loss khong cham toi duoc. Do duoc (G23-203): max|diff| = 0.0 qua doi truc SLA.",
+    "omega": null,
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "exogenous_g114_S-B",
+      "source_path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+      "source_sha256": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606"
+    },
+    "w_loss": 5000.0,
+    "z_grid_id": "20r2_measured"
+  },
+  "w_loss_values": [
+    5000.0
+  ]
+}
