@@ -781,7 +781,7 @@ nhiên). Gộp nó vào trung bình sẽ **kéo `err` xuống** và cho ra một
 "twin sai 12%" trong khi ở chế độ khó thật (`h2@0.960`) có thể là 20%. Hợp
 pháp về số học, sai lệch về khoa học — **ngụy biện gộp**.
 
-**Chi phí của lối B = 0.** Ngân sách vẫn 800 ô (29,4 phút ước tính kế thừa; **đo được 35.3 phút** — §13.4). Cái đổi là
+**Chi phí của lối B = 0.** Ngân sách vẫn 800 ô (29,4 phút ước tính kế thừa; **đo được 74.5 phút (đã nâng n)** — §14.7). Cái đổi là
 **phạm vi kết luận**, không phải chi phí tính toán. Hai trục độc lập.
 
 Kỳ vọng đối chứng: **ĐÃ RÚT — xem §13.5.**
@@ -1257,16 +1257,33 @@ max(legacy) == max(20r2_measured) == 4.0   CO CHU DICH
 minh**. Giá trị không đổi; chỉ lời khai đổi — và đó là điểm: lựa chọn lưới z
 giờ nằm trong chính dòng lệnh.
 
-### 14.7 Ngân sách sau khi nâng `n`
+### 14.7 Ngân sách sau khi nâng `n` — ĐO, không ngoại suy
 
 ```text
-nen (chua nang)          35.30 phut / hai nhanh
-them do duoc             tau=10 x2  +127 s
-                         tau=20 x4  +396 s
-                         tau=28 x4  +635 s
-                         = 19.3 phut MOT nhanh
-TONG                     73.9 phut hai nhanh  =  15.4% nguong 8 gio
+nen (chua nang)          35.83 phut / hai nhanh
+he so nang n             {'0.5': 1, '1.0': 1, '10.0': 2, '2.0': 1, '20.0': 4, '28.0': 4, '3.0': 1, '5.0': 1}
+chi phi DO DUOC cua ban da nang:
+  tau=10    x2   24.86s   ti so do duoc 2.06  (tuyen tinh: 2)
+  tau=20    x4   52.20s   ti so do duoc 4.35  (tuyen tinh: 4)
+  tau=28    x4   80.22s   ti so do duoc 4.67  (tuyen tinh: 4)
+TONG (da nang)           74.53 phut hai nhanh  (+30%: 96.89)  =  15.5% nguong 8 gio
 ```
+
+⚠️ **Chi phí KHÔNG tỉ lệ tuyến tính với `n`.** Đo được `2,06×` (τ=10), `4,35×`
+(τ=20), `4,67×` (τ=28) cho các hệ số `2/4/4`. Ngoại suy tuyến tính cho **68.62
+phút**, tức **thấp hơn 7.9%** — và một ước tính **thấp** chính là thứ làm
+gate 4-3 trượt khi chạy thật.
+
+> ⛔ **NT 50, và lần này là của tôi.** Bản đầu của §14.7 ghi con số **gõ tay**
+> trong khi `cpu_pilot.json` vẫn ghi ngân sách **nền** (chưa nâng `n`) và
+> **không có trường nào biết về `n_multiplier`**. Gate 4-3 đối chiếu **artifact**
+> (gate 0-1: sinh bởi công cụ), nên nó sẽ đọc 35,08 phút, so với thời gian chạy
+> thật ~74.53 phút, thấy lệch ~110% và **TRƯỢT OAN** — một FAIL do sổ sách,
+> không do khoa học.
+>
+> Sửa: công cụ đọc `n_multiplier` từ artifact dự đoán đã ký và **tự đo** bản đã
+> nâng. Số trong văn bản này **trích** từ `cpu_pilot.json`, có test khoá hai
+> nguồn lại với nhau.
 
 E4 vẫn **KHÔNG CẦN** thiết kế phân đoạn.
 
@@ -1321,3 +1338,135 @@ Và khi sửa thì lộ tiếp một tầng nữa: tôi định commit parquet t
 nguồn, nhưng `.gitignore:64` loại parquet **có chủ đích**. Nếu không kiểm, test
 tái lập sẽ **xanh trên máy tôi và đỏ trên clone sạch** — một lỗi chỉ xuất hiện ở
 nơi khác, đúng loại khó tìm nhất.
+
+---
+
+## 15. Đối chứng hồi quy bit-exact — gate 20R2.3 (2026-09-10)
+
+### 15.1 ⚠️ ĐÂY LÀ ĐỐI CHỨNG HỒI QUY, KHÔNG PHẢI KẾT QUẢ KHOA HỌC  [gate 3-3, S26]
+
+Nó trả lời **đúng một** câu:
+
+```text
+"Ma hom nay co con lam DUNG NHUNG GI no lam hom qua khong?"
+```
+
+Nó **không** trả lời *"hôm qua làm có đúng không"*. Một golden **chép lại cả
+lỗi**: nếu hôm qua sai, hôm nay sai y hệt ⟹ PASS.
+
+Một dòng "bit-exact PASS" trong luận văn **không kèm nhãn này** sẽ được đọc
+thành "kết quả đã được xác nhận". Hai chuyện khác hẳn nhau.
+
+### 15.2 Hai neo, khác cấp — khai CẢ HAI kèm độ phủ  [D1]
+
+```text
+A1  results/RAW/phase-T2/golden/ar1_tau1.0_poisson_0.925_s101.json
+    NEO       bo sinh dau vao `sla_calib_v2.ar1_matrix`
+    PHU       bo sinh AR(1); KHONG cham truc AoI hay SLA  -> TRUC-DOC-LAP
+    do duoc   sha256 dbe26ba7...cba8   BIT-EXACT ✅
+
+A2  results/PENDING/phase-T2/sweep_r2/*.parquet  (166 tep)
+    NEO       TOAN duong ong tren nhanh LEGACY
+    PHU       nhanh legacy DAY DU; nhanh 20r2_measured KHONG
+    do duoc   166/166 KHOP, 1866.8 s   BIT-EXACT ✅
+```
+
+**Vì sao A1 lưu DIGEST chứ không lưu mảng:** mảng `200000×8 float64` = 12,8 MB,
+mà `.gitignore:64` chỉ cho qua `*.json` trong `results/`. Digest 64 ký tự cho
+đối chứng **bit-exact y hệt** (sha khác ⟺ bytes khác) **và** chạy được trên
+clone sạch. *Một golden không nằm trong git là một đối chứng không tồn tại với
+người khác.*
+
+### 15.3 ★★ ĐỘ PHỦ — và vì sao "PASS" ở đây là một câu ĐÚNG dẫn tới kết luận SAI  [gate 3-4]
+
+> **Đối chứng hồi quy neo chính xác những đoạn mã mà bạn KHÔNG đổi.**
+
+```text
+NEO A2 di qua      Z_ALL (9 diem legacy) · nhanh SLA cu · lag k = round(z/dt)
+CHIEN DICH di qua  Z_ALL_20R2 (13 diem) · SLA exogenous · dispatch --z-grid MOI
+
+giao cua hai  =  phan KHONG doi
+=> ma MOI cua G4 KHONG duoc bat ky artifact lich su nao neo
+```
+
+Và mã mới chính là **chỗ rủi ro cao nhất** — nó vừa được viết hôm qua.
+
+```text
+doi chung hoi quy  -> bao ve QUA KHU
+doi chung duong    -> bao ve HIEN TAI
+du doan ky truoc   -> bao ve TUONG LAI
+Ba thu KHONG thay the nhau. 20R2.3 chi mua duoc cai dau.
+```
+
+### 15.4 ★ NEO B — bất biến TẤT ĐỊNH cho mã mới  [D3]
+
+Neo B **không dựa vào quá khứ** (không có quá khứ để dựa). Nó dựa vào ràng buộc
+đúng theo suy luận. `test/test_20r2_3_anchors.py`:
+
+```text
+1. bon diem z CHUNG giua hai luoi: {0.0, 1.0, 2.0, 4.0}
+   -> hai luoi PHAI cho CUNG ket qua tai do, vi lag k = round(z/dt) KHONG
+      biet minh den tu luoi nao.
+   -> do duoc: 7 cot so (err_total, err_model, err_stale, d_sla, rms_e_model,
+      rms_e_stale, cov_e) TRUNG TUNG BIT tren ca hai luoi.
+   -> KILL TEST: lam dispatch ro ri mot `a_override` -> test DO dung cho.
+
+2. cua so cham diem TRUNG NHAU vi max(ca hai luoi) = 4.0 CO CHU DICH.
+
+3. doi chung twin-hoan-hao PHAI cho dung 0 -- rang buoc TAT DINH, khong phu
+   thuoc che do luu luong (khac `cbr`, von da bi rut vi suy bien).
+```
+
+> 💡 **Nguyên tắc:** khi thêm một nhánh mới song song nhánh cũ, tìm những điểm
+> **hai nhánh phải trùng** và khoá chúng. Một nhánh mới ít khi sai ở chỗ *mới* —
+> nó sai ở chỗ nó **khác** nhánh cũ trong khi lẽ ra phải giống.
+
+### 15.5 Cờ `--z-grid` làm lệnh lịch sử không phát lại được
+
+```text
+run_log.jsonl sinh TRUOC G4 -> `cmd` KHONG co --z-grid
+--z-grid gio la required=True             -> phat lai nguyen van THAT BAI
+```
+
+Công cụ **thêm `--z-grid legacy`** khi phát lại — đúng giá trị T2 vẫn chạy ngầm.
+Giá trị không đổi; chỉ lời khai đổi. Ghi trong `replay.why` của artifact.
+
+> Đây là **giá phải trả** của `required=True`, và nó đáng trả: đổi lại, không
+> lệnh mới nào có thể im lặng chọn nhầm lưới.
+
+### 15.6 Tự chấm gate 20R2.3
+
+```text
+✅ 3-1  Bit-exact PASS                      166/166 + A1 digest
+✅ 3-2  Golden trong git + test canh        NC-T2-1 (digest, clone-sach-chay-duoc)
+✅ 3-3  Ghi rõ ĐỐI CHỨNG HỒI QUY  [S26]     WHAT_THIS_IS trong artifact
+✅ 3-4  ĐỘ PHỦ được khai  ★ THÊM            coverage.NOT_anchored + NEO B
+```
+
+### 15.7 Nợ sau 20R2.3
+
+```text
+20R2-D7  ĐÃ ĐÓNG: 10 parquet của se pilot (444 KB) đã `git add -f` vào
+         results/RAW/phase-20R2/se_pilot/ — đúng tiền lệ commit 60a88784 đặt
+         ra khi bảo tồn 166 parquet của T2. Lý do bảo tồn: chúng là BẰNG CHỨNG
+         của luật `se_rel = C/√N`, mà luật đó là tham số của BĂNG ĐÃ KÝ.
+         Một băng người khác không kiểm lại được thì không phải một băng đã ký.
+20R2-D8  MỚI: NEO B kiểm điểm z chung tại τ = 3.0 (một τ). Ràng buộc "hai lưới
+         trùng tại z chung" đúng với MỌI τ theo suy luận, nhưng chỉ ĐO tại một.
+         Mở rộng khi rẻ; không chặn.
+```
+
+### 15.8 Ba bảng công cụ — mỗi bảng một lý do
+
+```text
+TOOLS               tất định, tái lập được trên clone sạch          9 tool
+NON_DETERMINISTIC   cpu_pilot — đo thời gian; kiểm mã thoát + lược đồ + bất biến
+TOO_SLOW_FOR_SUITE  bit_exact_regression — tất định nhưng 31 phút;
+                    kiểm bằng lát mỏng `--limit 3`, bản đầy đủ chạy tay
+REQUIRES_LOCAL_RAW  (rỗng — D7 đã đóng, giữ cấu trúc)
+```
+
+Một test không ai chạy là một test đã chết — cùng kết cục với test đỏ thường
+trực. Nên `bit_exact_regression` **không** vào `TOOLS`: nó sẽ làm bộ test chậm
+hơn 15 lần. Nó được kiểm bằng lát mỏng, và bản đầy đủ đã commit kèm test đòi
+artifact phải là **bản đầy đủ và tươi** (`n_runs == 166`, `rows_are_fresh`).

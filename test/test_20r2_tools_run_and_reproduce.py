@@ -55,6 +55,7 @@ TOOLS = {
     "tools.20r2_1_parquet_recovery": (PENDING_DIR, "parquet_recovery"),
     # 20R2.2 / 20R2.4
     "tools.20r2_2_predictions": (DOCS_DIR, "01-prediction-signed"),
+    "tools.20r2_2_se_pilot": (DOCS_DIR, "02-se-pilot"),
     "tools.20r2_4_grid_and_gate": (PENDING_DIR, "grid_prescreen"),
     "tools.20r2_4_em_over_a": (PENDING_DIR, "em_over_a"),
     "tools.20r2_4_n3_n4_recheck": (PENDING_DIR, "n3_n4_baseline"),
@@ -67,14 +68,24 @@ TOOLS = {
 # bit-exact. Ghi ly do o day de nguoi sau khong "sua" bang cach them no vao.
 NON_DETERMINISTIC = {"tools.20r2_4_cpu_pilot": (PENDING_DIR, "cpu_pilot")}
 
-# tools.20r2_2_se_pilot CAN DU LIEU THO KHONG NAM TRONG GIT.
-# Parquet pilot o results/RAW/phase-20R2/se_pilot/ bi .gitignore:64 loai (results/
-# chi cho qua json/md/csv/png/sha256 vi co the chua tep nang), nen tren mot clone
-# sach thu muc do RONG va tool KHONG chay lai duoc neu khong do lai (~20 phut).
-# Cung tinh chat voi docs/phase-20R2/baseline_failures.txt.
-# Ghi ra day de khong ai "sua" bang cach them no vao TOOLS roi thay no DO tren CI
-# -- mot test do vi thieu du lieu tho la mot test do SAI LY DO.
-REQUIRES_LOCAL_RAW = {"tools.20r2_2_se_pilot": (DOCS_DIR, "02-se-pilot")}
+# Bang nay HIEN RONG, va do la trang thai TOT -- giu lai vi cau truc.
+#
+# `tools.20r2_2_se_pilot` TUNG o day: parquet pilot bi .gitignore:64 loai, nen
+# tren clone sach tool khong chay lai duoc. Da sua bang cach `git add -f` 10
+# parquet (444 KB) vao results/RAW/phase-20R2/se_pilot/ -- dung tien le ma
+# commit 60a88784 dat ra khi bao ton 166 parquet cua T2.
+# Ly do bao ton: 10 parquet nay la BANG CHUNG cua luat se_rel = C/sqrt(N), va
+# luat do la tham so cua BANG CHAP NHAN DA KY. Mot bang ma nguoi khac khong
+# kiem lai duoc thi khong phai mot bang da ky.
+REQUIRES_LOCAL_RAW: dict = {}
+
+# tools.20r2_3_bit_exact_regression TAT DINH nhung CHAY 31 PHUT (phat lai 166
+# lenh). Dua vao TOOLS se lam bo test cham hon 15 lan va khong ai chay no nua
+# -- mot test khong ai chay la mot test da chet, cung ket cuc voi test do
+# thuong truc. No duoc kiem RIENG bang mot phep chay --limit nho.
+TOO_SLOW_FOR_SUITE = {
+    "tools.20r2_3_bit_exact_regression": (PENDING_DIR, "bit_exact_regression"),
+}
 
 # Truong doi theo THOI DIEM chay, khong theo NOI DUNG. Loai truoc khi so.
 VOLATILE = ("generated_utc", "generated_at")
@@ -191,7 +202,8 @@ def test_every_20r2_tool_is_covered_by_one_of_the_two_tables():
     import re
     covered = ({m.split(".")[-1] for m in TOOLS}
                | {m.split(".")[-1] for m in NON_DETERMINISTIC}
-               | {m.split(".")[-1] for m in REQUIRES_LOCAL_RAW})
+               | {m.split(".")[-1] for m in REQUIRES_LOCAL_RAW}
+               | {m.split(".")[-1] for m in TOO_SLOW_FOR_SUITE})
     on_disk = {p.stem for p in (ROOT / "tools").glob("20r2_*.py")}
     # cong cu chi chay mot lan (sinh baseline / smoke) khong sinh artifact ky
     ONE_SHOT = {"20r2_baseline_failures", "20r2_remediation_smoke"}
@@ -219,3 +231,37 @@ def test_local_raw_tool_fails_loudly_when_the_raw_data_is_absent(module, spec, t
     assert "gitignore" in msg.lower(), "thong bao khong noi VI SAO thu muc rong"
     assert "--measure" in msg, "thong bao khong chi cach khac phuc"
     assert not out.exists(), "tool da ghi artifact du that bai"
+
+
+@pytest.mark.parametrize("module,spec", sorted(TOO_SLOW_FOR_SUITE.items()))
+def test_slow_tool_runs_on_a_small_slice(module, spec, tmp_path):
+    """Tool qua cham cho ca bo test van phai duoc kiem -- bang mot lat mong.
+
+    Phat lai 3 lenh dau thay vi 166. Kiem DAY CHUYEN (chay duoc, so sha dung)
+    ma khong tra 31 phut. Ban day du duoc chay tay va artifact cua no da commit.
+    """
+    import json as _json
+    out = tmp_path / (spec[1] + ".json")
+    r = _run(module, out, "--limit", "3")
+    assert r.returncode == 0, (
+        module + " thoat ma " + str(r.returncode) + ":\n" + r.stderr[-1200:])
+    d = _json.loads(out.read_text(encoding="utf-8"))
+    assert d["summary"]["n_runs"] == 3
+    assert d["summary"]["all_match"], (
+        "lat mong 3 lenh KHONG tai lap bit-exact: %s"
+        % d["summary"]["mismatched_run_index"])
+    assert d["summary"]["rows_are_fresh"] is True
+
+
+def test_the_committed_regression_artifact_is_a_full_fresh_run():
+    """Artifact da commit phai la ban DAY DU va TUOI, khong phai lat mong hay
+    ban tai dung hang cu -- neu khong no khong con la mot doi chung."""
+    import json as _json
+    p = ROOT / "results/PENDING/phase-20R2/bit_exact_regression.json"
+    if not p.is_file():
+        pytest.skip("chua chay doi chung hoi quy")
+    d = _json.loads(p.read_text(encoding="utf-8"))
+    s = d["summary"]
+    assert s["n_runs"] == 166, "ban da commit chi co %d lenh" % s["n_runs"]
+    assert s["rows_are_fresh"] is True, "hang bi TAI DUNG tu artifact khac"
+    assert s["all_match"]

@@ -390,6 +390,55 @@ def test_the_pilot_reads_the_grid_from_code_not_a_local_copy():
         "tool van giu ban chep cua luoi 20R2 -- doc tu DE.Z_ALL_20R2")
 
 
+def test_prereg_budget_number_comes_from_the_artifact(): 
+    """Con so ngan sach trong prereg phai TRICH tu artifact, khong go tay.
+
+    Do duoc 2026-09-10: artifact ghi 35.08 phut (ngan sach NEN, chua nang n)
+    trong khi prereg §14.7 ghi mot con so GO TAY cho ban da nang. Hai nguon,
+    hai so, khong ai canh.
+
+    Hau qua CU THE, khong phai ly thuyet: gate 4-3 doi chieu ARTIFACT (gate
+    0-1: sinh boi cong cu), nen no doc con so NEN roi so voi thoi gian chay
+    THAT (~74.5 phut), thay lech ~110% va TRUOT OAN. Mot FAIL do so sach,
+    khong do khoa hoc.  [NT 50]
+    """
+    d = _load(CPU_PILOT)
+    b = d["budget"]
+    scaled = b["minutes_two_branches_scaled"]
+    assert scaled, "artifact khong ghi ngan sach DA NANG"
+    prereg = (ROOT / "docs/phase-20R2/00-preregistration.md").read_text(
+        encoding="utf-8")
+    assert "%.2f" % scaled in prereg, (
+        "prereg khong chua %.2f phut (ngan sach da nang tu artifact). "
+        "Sinh lai muc 14.7 tu cpu_pilot.json." % scaled)
+
+
+def test_the_gate_number_is_the_scaled_one_not_the_base():
+    """Chien dich chay VOI he so nang n. So nen chi de truy nguon."""
+    d = _load(CPU_PILOT)
+    b = d["budget"]
+    assert b["which_number_the_campaign_will_take"] == "minutes_two_branches_scaled"
+    assert b["minutes_two_branches_scaled"] > b["minutes_two_branches"], (
+        "ban da nang phai TON HON ban nen")
+
+
+def test_scaling_is_measured_because_cost_is_not_linear_in_n():
+    """Ngoai suy tuyen tinh UOC THAP, va uoc thap lam gate 4-3 truot khi chay that.
+
+    Do duoc: he so 2 ton 2.06x; he so 4 ton 4.35x va 4.67x. Deu TREN tuyen tinh.
+    """
+    d = _load(CPU_PILOT)
+    b = d["budget"]
+    assert b["scaling_is_measured_not_extrapolated"] is True
+    lifted = [r for r in b["scaled_per_tau_measured"] if r["n_multiplier"] > 1]
+    assert lifted, "khong co tau nao duoc nang -- san chu ky da bien mat?"
+    for r in lifted:
+        assert r["ratio_vs_x1"] >= r["n_multiplier"] * 0.95, (
+            "tau=%g: ti so %.2f THAP hon he so %d -- kiem lai phep do"
+            % (r["tau"], r["ratio_vs_x1"], r["n_multiplier"]))
+        assert r["how"].startswith("measured_x"), "khong phai phep do that"
+
+
 def test_prereg_quotes_the_pilot_artifact_not_a_stale_number():
     """Van ban chi TRICH artifact; artifact la nguon dung.
 

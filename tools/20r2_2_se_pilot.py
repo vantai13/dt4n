@@ -77,6 +77,17 @@ def _measure(out_dir: pathlib.Path) -> None:
                           n=n_for_tau(tau, DEFAULT_DT) * CONTROL_MULTIPLIER)
 
 
+def _campaign_multiplier(tau: float) -> int:
+    """He so nang n ma CHIEN DICH se dung (san 200 chu ky) -- de biet mot quan
+    sat co phai cau hinh THAT hay chi la diem pilot."""
+    from measurements.sla_calib_v2 import DEFAULT_DT, n_for_tau
+    cycles = n_for_tau(tau, DEFAULT_DT) * DEFAULT_DT / float(tau)
+    mul = 1
+    while cycles * mul < 200.0:
+        mul *= 2
+    return mul
+
+
 def _one(path: str) -> tuple:
     """(err_bar, se) tren o GATE tai z tham chieu. cbr LOAI -- no suy bien."""
     import pandas as pd
@@ -131,6 +142,22 @@ def build(raw_dir: pathlib.Path) -> dict:
     sxx = sum((x - xb) ** 2 for x in xs)
     slope = sxy / sxx
 
+    # --- DO PHU cua C_upper. Khai TRUOC, khong giai thich sau.
+    c_upper = c_mean + c_sd
+    uncovered = []
+    for o, cv in zip(obs, C):
+        if cv > c_upper:
+            campaign = (o["n_multiplier"] == _campaign_multiplier(o["tau"]))
+            uncovered.append({
+                "tau": o["tau"], "n_multiplier": o["n_multiplier"],
+                "cycles": o["cycles"], "C": cv,
+                "is_campaign_config": campaign,
+                "note": ("CAU HINH CHIEN DICH" if campaign
+                         else "cau hinh PILOT, khong con dung"),
+                "se_rel_measured": o["se_rel"],
+                "three_sigma": 3 * o["se_rel"],
+            })
+
     ctrl = {}
     for tau in CONTROL_TAUS:
         a = next(o for o in obs if o["tau"] == tau and o["n_multiplier"] == 1)
@@ -172,6 +199,21 @@ def build(raw_dir: pathlib.Path) -> dict:
             "why_pool": (
                 "se uoc tu 5 seed co ~35% do bat dinh; gop de uoc MOT tham so "
                 "on dinh hon 10 uoc luong doc lap."),
+        },
+        "C_coverage": {
+            "n_observations": n,
+            "n_covered_by_C_upper": n - len(uncovered),
+            "uncovered": uncovered,
+            "why_accepted": (
+                "C_upper = trung binh + 1sd CO CHU DICH. Bam theo max quan sat "
+                "duoc la KHOP THEO NHIEU -- chinh cai ma luat gop sinh ra de "
+                "tranh (C tu no bat dinh ~35% o 5 seed). Doi lai: o cau hinh "
+                "chien dich khong duoc phu, bang HEP HON 3 sigma rieng cua o do."),
+            "if_an_uncovered_cell_fails_the_band": (
+                "KIEM C_coverage TRUOC khi dien giai. Mot truot rieng o o nam "
+                "trong danh sach nay, trong pham vi da ghi, la UNG VIEN CUA "
+                "NHIEU BANG -- khong phai mot phat hien. Cach giai thich canh "
+                "tranh nay duoc KY TRUOC, nen dung no khong phai la HARKing."),
         },
         "control_check": {
             "question": "nang n x4 co lam se giam sqrt(4) = 2 lan khong?",
@@ -218,6 +260,14 @@ def main() -> None:
           % (law["C_mean"], law["C_sd"], law["C_upper"]))
     print("so mu do duoc %.3f  (ly thuyet %.1f)  tren %d diem"
           % (law["fitted_exponent"], law["theoretical_exponent"], law["n_points"]))
+    cov = doc["C_coverage"]
+    print("\nDO PHU C_upper: %d/%d quan sat"
+          % (cov["n_covered_by_C_upper"], cov["n_observations"]))
+    for u in cov["uncovered"]:
+        print("  tau=%-5g x%-2d %5.0f chu ky  C=%.4f  %s%s"
+              % (u["tau"], u["n_multiplier"], u["cycles"], u["C"], u["note"],
+                 "  <- 3sigma = %.3f%%" % (u["three_sigma"] * 100)
+                 if u["is_campaign_config"] else ""))
     print("\nDOI CHUNG (nang n x4 -> se phai giam 2 lan):")
     for k, v in doc["control_check"]["per_tau"].items():
         print("  %-10s se %.6f -> %.6f  ti so %.2f (mong doi %.2f)  %s"

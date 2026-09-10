@@ -404,3 +404,62 @@ def test_the_prediction_tool_still_runs_and_reproduces_the_signed_content():
     assert not diff, (
         "cong cu khong con sinh ra artifact da ky. Khoa lech: " + str(diff)
         + "\n-> hoac cong cu doi hanh vi, hoac artifact bi sua tay.")
+
+
+# ------------------------------------------------- C_coverage (khai TRUOC)
+
+def test_c_upper_coverage_is_declared_not_assumed():
+    """C_upper = trung binh + 1sd KHONG phu het quan sat. Khai ra, dung im.
+
+    Bam theo max quan sat duoc la KHOP THEO NHIEU -- chinh cai ma luat gop sinh
+    ra de tranh (C tu no bat dinh ~35% o 5 seed). Nhung "chap nhan khong phu
+    het" la mot QUYET DINH, va mot quyet dinh khong duoc khai thi sau nay se
+    duoc GIAI THICH -- do la HARKing.
+    """
+    import json
+    p = ROOT / "docs/phase-20R2/02-se-pilot.json"
+    d = json.loads(p.read_text(encoding="utf-8"))
+    cov = d["C_coverage"]
+    assert cov["n_covered_by_C_upper"] < cov["n_observations"], (
+        "gio C_upper phu het -- cap nhat lai lap luan, dung de assert nay do im")
+    assert cov["why_accepted"], "khong khai VI SAO chap nhan"
+    assert cov["if_an_uncovered_cell_fails_the_band"], (
+        "khong ky truoc cach doc khi mot o khong duoc phu bi truot")
+
+
+def test_the_campaign_config_cell_that_is_uncovered_is_flagged():
+    """Trong cac diem khong duoc phu, diem nao la CAU HINH CHIEN DICH?
+
+    Mot diem pilot khong duoc phu thi vo hai -- cau hinh do khong con dung.
+    Mot diem CHIEN DICH khong duoc phu thi bang o do HEP HON nhieu rieng cua
+    no, va o do co the truot vi bang chu khong vi hien tuong.
+    """
+    import json
+    d = json.loads((ROOT / "docs/phase-20R2/02-se-pilot.json").read_text())
+    unc = d["C_coverage"]["uncovered"]
+    campaign = [u for u in unc if u["is_campaign_config"]]
+    assert campaign, (
+        "khong con diem chien dich nao ngoai vung phu -- neu that thi tot, "
+        "nhung phai cap nhat §14 va bo canh bao di")
+    for u in campaign:
+        assert u["three_sigma"] > 0
+        assert "CHIEN DICH" in u["note"]
+
+
+def test_band_at_the_uncovered_campaign_cell_is_narrower_than_its_own_noise(pred):
+    """Hau qua SO HOC cua viec khong phu, tinh ra chu khong noi chung chung.
+
+    Neu bang o tau do HEP HON 3x se do duoc cua chinh no, thi o do de truot hon
+    cac tau khac -- va do la mot ung vien giai thich DA KY TRUOC.
+    """
+    import json
+    d = json.loads((ROOT / "docs/phase-20R2/02-se-pilot.json").read_text())
+    bands = {r["tau"]: r["band_rel"] for r in pred["acceptance_band"]["per_tau"]}
+    for u in d["C_coverage"]["uncovered"]:
+        if not u["is_campaign_config"]:
+            continue
+        band = bands[u["tau"]]
+        assert u["three_sigma"] > band, (
+            "tau=%g: 3sigma %.4f%% KHONG con vuot bang %.4f%% -- canh bao het "
+            "hieu luc, cap nhat lap luan" % (u["tau"], u["three_sigma"] * 100,
+                                             band * 100))

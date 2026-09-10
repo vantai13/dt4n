@@ -57,14 +57,33 @@ def _z_20r2():
 INHERITED_S_PER_CELL = 1.1028   # axis_audit.json A7 corrected.seconds_per_cell
 GATE_TOLERANCE = 0.30           # gate 4-3
 
+# He so nang n song o artifact du doan DA KY, khong go tay o day.
+MULT_SOURCE = "docs/phase-20R2/01-prediction-signed.json"
 
-def _time_one(tau: float, z_values, out_path: str) -> float:
+
+def _n_multiplier() -> dict:
+    """He so nang n theo tau, DOC TU artifact da ky.
+
+    G2 nang n tai tau=10/20/28 de moi o dat >= 200 chu ky doc lap. Nen ngan
+    sach NEN (x1) KHONG con la con so se duoc doi chieu o gate 4-3 -- chien
+    dich chay VOI he so.
+    """
+    path = REPO / MULT_SOURCE
+    if not path.is_file():
+        return {}
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    return {float(k): int(v)
+            for k, v in doc["acceptance_band"]["n_multiplier"].items()}
+
+
+def _time_one(tau: float, z_values, out_path: str, multiplier: int = 1) -> float:
     import measurements.decision_error_v2 as DE
     from measurements.sla_calib_v2 import DEFAULT_DT, n_for_tau
     DE.Z_EXTRAP = (1.0, 2.0, 4.0)
     t0 = time.time()
     DE.run_fixed_grid(tau=tau, seeds=[SEEDS[0]], out_path=out_path,
-                      z_values=list(z_values), n=n_for_tau(tau, DEFAULT_DT))
+                      z_values=list(z_values),
+                      n=n_for_tau(tau, DEFAULT_DT) * multiplier)
     return time.time() - t0
 
 
@@ -93,6 +112,40 @@ def run_pilot(taus) -> dict:
     branch_s = tot13 * scale * len(A_VALUES) * len(SEEDS)
     n_cells = cells_per_cmd * len(TAUS) * len(A_VALUES) * len(SEEDS)
     s_per_cell = branch_s / n_cells
+
+    # --- ngan sach SAU khi nang n  [NT 50: doi NGUON thi phai xu ly PHAI SINH]
+    #
+    # DO, KHONG NGOAI SUY. Gia dinh "chi phi ti le tuyen tinh voi n" SAI:
+    # do duoc tren may nay, nang n gap 4 ton 4.34x (tau=20) va 4.80x (tau=28)
+    # -- TREN tuyen tinh. Ngoai suy tuyen tinh se UOC THAP ~10%, va mot uoc
+    # tinh thap chinh la thu lam gate 4-3 truot khi chay that.
+    mult = _n_multiplier()
+    scaled_measured = []
+    if mult and len(taus) == len(TAUS):
+        for r in per_tau:
+            m = mult.get(r["tau"], 1)
+            if m == 1:
+                secs = r["seconds_z20r2"]
+                how = "measured_x1"
+            else:
+                secs = _time_one(
+                    r["tau"], _z_20r2(),
+                    os.path.join(tempfile.mkdtemp(), "scaled.parquet"),
+                    multiplier=m)
+                how = "measured_x%d" % m
+            scaled_measured.append({
+                "tau": r["tau"], "n_multiplier": m, "seconds": secs,
+                "how": how,
+                "ratio_vs_x1": secs / r["seconds_z20r2"],
+            })
+        branch_scaled = (sum(x["seconds"] for x in scaled_measured)
+                         * len(A_VALUES) * len(SEEDS))
+    else:
+        branch_scaled = None
+
+    # Gate 4-3 doi chieu voi ngan sach THAT SU se chay = ban DA NANG.
+    gate_seconds = branch_scaled if branch_scaled else branch_s
+    gate_s_per_cell = gate_seconds / n_cells
     drift = (s_per_cell - INHERITED_S_PER_CELL) / INHERITED_S_PER_CELL
 
     return {
@@ -131,6 +184,31 @@ def run_pilot(taus) -> dict:
             "minutes_two_branches": branch_s / 60.0 * 2,
             "minutes_two_branches_plus_30pct": branch_s / 60.0 * 2 * 1.3,
             "seconds_per_cell": s_per_cell,
+            # --- ban DA NANG n. Day moi la ngan sach chien dich THAT SU chay.
+            "n_multiplier_source": MULT_SOURCE,
+            "n_multiplier": {str(k): v for k, v in sorted(mult.items())} or None,
+            "scaled_per_tau_measured": scaled_measured or None,
+            "scaling_is_measured_not_extrapolated": bool(scaled_measured),
+            "why_not_linear": (
+                "chi phi KHONG ti le tuyen tinh voi n: do duoc 4.34x (tau=20) "
+                "va 4.80x (tau=28) cho mot lan nang x4. Ngoai suy tuyen tinh "
+                "uoc THAP ~10%, va uoc thap la thu lam gate 4-3 truot khi chay "
+                "that."),
+            "seconds_one_branch_scaled": branch_scaled,
+            "minutes_one_branch_scaled": (branch_scaled / 60.0) if branch_scaled else None,
+            "minutes_two_branches_scaled": (branch_scaled / 30.0) if branch_scaled else None,
+            "minutes_two_branches_scaled_plus_30pct": (
+                branch_scaled / 30.0 * 1.3) if branch_scaled else None,
+            "seconds_per_cell_scaled": (gate_s_per_cell if branch_scaled else None),
+            "which_number_the_campaign_will_take": (
+                "minutes_two_branches_scaled" if branch_scaled
+                else "minutes_two_branches (chua nang -- ban --quick)"),
+            "why_scaled_exists": (
+                "G2 nang n tai tau=10 (x2), 20 va 28 (x4) de moi o dat >= 200 "
+                "chu ky doc lap. Ban NEN (x1) chi de truy nguon. Doi NGUON ma "
+                "khong xu ly PHAI SINH la NT 50 -- va o day hau qua cu the la "
+                "gate 4-3 doc con so nen roi so voi thoi gian chay THAT, thay "
+                "lech ~110%, va TRUOT OAN."),
         },
         "gate_4_3": {
             "inherited_seconds_per_cell": INHERITED_S_PER_CELL,
@@ -159,7 +237,8 @@ def run_pilot(taus) -> dict:
         "e4_fractional_design": {
             "needed": False,
             "threshold_hours": 8.0,
-            "measured_minutes_two_branches": branch_s / 60.0 * 2,
+            "measured_minutes_two_branches": (branch_scaled / 30.0
+                                              if branch_scaled else branch_s / 30.0),
             "why": (
                 "E4 doi thiet ke phan doan neu ngan sach > 8 gio. Do duoc chi "
                 "~%.0f phut cho hai nhanh, tuc ~%.1f%% nguong. KHONG can phan "
@@ -219,10 +298,16 @@ def main() -> None:
                  r["z20r2_over_legacy"]))
     print("\no/lenh            : %d" % doc["harness"]["cells_per_command"])
     print("tong o            : %d" % b["n_grid_cells"])
-    print("MOT nhanh         : %.2f phut" % b["minutes_one_branch"])
-    print("HAI nhanh         : %.2f phut  (+30%%: %.2f)"
+    print("MOT nhanh (nen)   : %.2f phut" % b["minutes_one_branch"])
+    print("HAI nhanh (nen)   : %.2f phut  (+30%%: %.2f)"
           % (b["minutes_two_branches"], b["minutes_two_branches_plus_30pct"]))
     print("s/o do duoc       : %.4f" % b["seconds_per_cell"])
+    if b["minutes_two_branches_scaled"]:
+        print("\n  he so nang n     : %s" % b["n_multiplier"])
+        print("  HAI nhanh DA NANG: %.2f phut  (+30%%: %.2f)   <- CHIEN DICH CHAY SO NAY"
+              % (b["minutes_two_branches_scaled"],
+                 b["minutes_two_branches_scaled_plus_30pct"]))
+        print("  s/o da nang      : %.4f" % b["seconds_per_cell_scaled"])
     print("\ngate 4-3: ke thua %.4f -> do duoc %.4f  = %+.1f%%  [%s, nguong +-%d%%]"
           % (g["inherited_seconds_per_cell"], g["measured_seconds_per_cell"],
              g["relative_drift"] * 100, g["verdict"], g["tolerance"] * 100))

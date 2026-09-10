@@ -1,4 +1,32 @@
 {
+ "C_coverage": {
+  "if_an_uncovered_cell_fails_the_band": "KIEM C_coverage TRUOC khi dien giai. Mot truot rieng o o nam trong danh sach nay, trong pham vi da ghi, la UNG VIEN CUA NHIEU BANG -- khong phai mot phat hien. Cach giai thich canh tranh nay duoc KY TRUOC, nen dung no khong phai la HARKing.",
+  "n_covered_by_C_upper": 8,
+  "n_observations": 10,
+  "uncovered": [
+   {
+    "C": 0.41267737505703894,
+    "cycles": 50.0,
+    "is_campaign_config": false,
+    "n_multiplier": 1,
+    "note": "cau hinh PILOT, khong con dung",
+    "se_rel_measured": 0.05836139406901929,
+    "tau": 20.0,
+    "three_sigma": 0.17508418220705785
+   },
+   {
+    "C": 0.4708412245891922,
+    "cycles": 200.0,
+    "is_campaign_config": true,
+    "n_multiplier": 4,
+    "note": "CAU HINH CHIEN DICH",
+    "se_rel_measured": 0.0332935022769196,
+    "tau": 28.0,
+    "three_sigma": 0.0998805068307588
+   }
+  ],
+  "why_accepted": "C_upper = trung binh + 1sd CO CHU DICH. Bam theo max quan sat duoc la KHOP THEO NHIEU -- chinh cai ma luat gop sinh ra de tranh (C tu no bat dinh ~35% o 5 seed). Doi lai: o cau hinh chien dich khong duoc phu, bang HEP HON 3 sigma rieng cua o do."
+ },
  "control_check": {
   "per_tau": {
    "tau_20": {
