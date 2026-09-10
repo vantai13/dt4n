@@ -142,6 +142,10 @@ def command_for(run: Dict[str, Any], out_dir: str) -> List[str]:
     """Lenh cu the cho mot muc ke hoach. Khong chua nguong nao."""
     cmd = ["python3", "-m", "measurements.decision_error_v2", "--run-fixed",
            "--tau", "%g" % run["tau"],
+           # T2 chay tren luoi LEGACY. Truoc 20R2-D3 day la mac dinh IM LANG;
+           # gio phai khai TUONG MINH. Gia tri KHONG doi -- chi loi khai doi,
+           # va do la diem: lua chon luoi z gio nam trong lenh, doc duoc.
+           "--z-grid", "legacy",
            "--z-mode", run["branch"],
            "--seeds", str(run["seed"]),
            "--out", "%s/t2_6_r%04d.parquet" % (out_dir, run["run_index"])]

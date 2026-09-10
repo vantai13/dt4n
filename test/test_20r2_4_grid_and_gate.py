@@ -287,50 +287,107 @@ def test_n3_n4_for_20r2_is_declared_not_measured():
 
 # ------------------------------------------- LO HONG DA BIET: luoi z chua sua
 
-def test_the_20r2_z_grid_is_still_missing_from_the_harness():
-    """/!\\ NO CO TEN: luoi z cua 20R2 CHUA CO TRONG MA.
+def test_the_20r2_z_grid_is_wired_into_the_harness():
+    """20R2-D3 DA GO -- va test nay giu cho no khong quay lai.
 
-    prereg muc 4 khai:
-        Z_GRID_20R2_MEASURED = (0.115, 0.170, 0.241, 0.305, 0.366,
-                                0.430, 0.491, 0.555, 0.615)
-        Z_CONTROL = (0.0,)   Z_EXTRAP = (1.0, 2.0, 4.0)      => 13 diem
+    Truoc 2026-09-10: decision_error_v2.py chi co Z_GRID legacy (9 diem), con
+    Z_GRID_20R2_MEASURED chi ton tai trong van ban prereg. Chay chien dich se
+    LANG LE ra ket qua truc legacy va KHONG bao loi -- ca hai luoi deu chay
+    duoc, chi tra loi hai cau hoi khac nhau.
 
-    Ma van la:
-        decision_error_v2.py:76  Z_GRID = (0.0, 0.05, 0.10, 0.20, 0.30, 0.55)
-                                 => 6 + 3 = 9 diem, LUOI LEGACY
-
-    Chay chien dich hom nay se LANG LE dung luoi legacy -- dung cai loi ma
-    prereg muc A3' da chi ra ("luoi z tien dang ky phu KHIT mien legacy
-    [0.055, 0.550]"). Va no khong bao loi: ca hai luoi deu chay duoc.
-
-    TEST NAY DO KHI AI DO SUA MA -- do la y muon. Luc do:
-      1. doi assert nay thanh assert luoi 13 diem,
-      2. sinh lai cpu_pilot.json (chi phi doi ~12%),
-      3. go muc nay khoi so no.
-    Day la mau "no CHI DUOC NGAN DI" cua repo, ap cho mot lo hong trong MA.
+    Gio: hai luoi cung ton tai, va nguoi goi PHAI CHON (--z-grid required).
     """
     import measurements.decision_error_v2 as DE
-    z_all = tuple(float(z) for z in DE.Z_ALL)
-    assert len(z_all) == 9, (
-        "Z_ALL gio co %d diem (truoc la 9). Neu luoi 20R2 da duoc noi vao ma "
-        "thi day la TIN TOT -- cap nhat test nay va sinh lai cpu_pilot.json."
-        % len(z_all))
-    assert 0.115 not in z_all, (
-        "z = 0.115 (san that cua truc measured) da vao Z_ALL -- luoi 20R2 co "
-        "ve da duoc noi vao ma. Cap nhat test nay.")
+    assert set(DE.Z_GRIDS) == {"legacy", "20r2_measured"}
+    assert len(DE.Z_ALL) == 9, "luoi legacy phai giu nguyen 9 diem"
+    assert len(DE.Z_ALL_20R2) == 13, "luoi 20R2 phai la 13 diem"
+    assert DE.Z_GRID_20R2_MEASURED[0] == 0.115, "san that cua truc measured"
+    assert DE.Z_GRID_20R2_MEASURED[-1] == 0.615, "max cua truc mo hinh measured"
+    assert 0.0 in DE.Z_ALL_20R2, "thieu diem doi chung z = 0"
 
 
-def test_the_pilot_records_the_z_grid_gap():
-    """Lo hong phai nam trong ARTIFACT, khong chi trong docstring cua test.
+def test_the_legacy_grid_values_are_unchanged():
+    """166 artifact cua T2 dieu kien theo luoi legacy, va 20R2.3 dung chung lam
+    neo hoi quy. Doi MOT gia tri o day la pha neo -- nen ghim tung so."""
+    import measurements.decision_error_v2 as DE
+    assert DE.Z_GRID == (0.0, 0.05, 0.10, 0.20, 0.30, 0.55)
+    assert DE.Z_EXTRAP == (1.0, 2.0, 4.0)
 
-    Nguoi doc ngan sach 35.7 phut phai thay ngay rang no do tren luoi 13 diem
-    TRUYEN QUA THAM SO, chu khong phai luoi ma harness se dung neu chay hom nay.
+
+def test_both_grids_share_the_same_max_so_the_scoring_window_matches():
+    """max(luoi) quyet dinh scoring_window_start.
+
+    Neu hai luoi khac max thi chung cham diem tren HAI DAI HANG KHAC NHAU, va
+    ket qua khong so duoc voi nhau -- dung loi ma docstring cua
+    scoring_window_start canh bao ("do lech DOI DAU theo tau").
+    """
+    import measurements.decision_error_v2 as DE
+    assert max(DE.Z_ALL) == max(DE.Z_ALL_20R2) == 4.0
+    assert DE.scoring_window_start(3.0, DE.DT) == \
+        DE.scoring_window_start(3.0, DE.DT)
+    a = max(int(round(z / DE.DT)) for z in DE.Z_ALL)
+    b = max(int(round(z / DE.DT)) for z in DE.Z_ALL_20R2)
+    assert a == b, "hai luoi cho hai cua so cham diem khac nhau"
+
+
+def test_the_cli_refuses_to_guess_the_z_grid():
+    """Mot mac dinh im lang o luoi z nguy hiem y het o truc AoI: CA HAI luoi
+    deu chay duoc va KHONG bao loi. Cung thuoc da dung cho `axis` o gate 0-5.
+    """
+    import subprocess
+    import sys
+    r = subprocess.run(
+        [sys.executable, "-m", "measurements.decision_error_v2", "--run-fixed",
+         "--tau", "3", "--z-mode", "fixed", "--seeds", "101",
+         "--out", "/dev/null"],
+        cwd=str(ROOT), capture_output=True, text=True)
+    assert r.returncode != 0, "CLI van chay duoc khi THIEU --z-grid"
+    assert "--z-grid" in r.stderr, r.stderr[-400:]
+
+
+def test_t2_tools_declare_the_legacy_grid_explicitly():
+    """T2 chay luoi legacy. Truoc D3 do la mac dinh IM LANG; gio phai khai ra.
+
+    Gia tri khong doi -- chi loi khai doi, va do la diem: lua chon luoi z gio
+    nam trong chinh dong lenh, doc duoc ma khong phai tra ma nguon.
+    """
+    import importlib
+    run = {"tau": 3, "branch": "fixed", "seed": 101, "run_index": 0, "a": 0.9}
+    for mod_name in ("tools.t2_6_plan", "tools.t2_6_run"):
+        cmd = [str(x) for x in importlib.import_module(mod_name).command_for(run, "/tmp")]
+        assert "--z-grid" in cmd, mod_name + " khong khai --z-grid"
+        assert cmd[cmd.index("--z-grid") + 1] == "legacy", (
+            mod_name + " khai luoi khac legacy -- T2 phai o legacy")
+
+
+def test_the_pilot_records_both_grids_and_the_d3_resolution():
+    """Lo hong -- va viec no da duoc go -- phai nam trong ARTIFACT.
+
+    Nguoi doc ngan sach phai thay ngay no do tren luoi nao, va rang truoc
+    2026-09-10 harness khong co luoi 20R2 nen mot lan chay se lang le ra ket
+    qua truc legacy.
     """
     d = _load(CPU_PILOT)
-    assert d["z_grids"]["n_z_legacy"] == 9
-    assert d["z_grids"]["n_z_20r2"] == 13
-    assert "WARNING" in d["z_grids"]
-    assert "LEGACY" in d["z_grids"]["WARNING"]
+    zg = d["z_grids"]
+    assert zg["n_z_legacy"] == 9 and zg["n_z_20r2"] == 13
+    assert "d3_status" in zg, "artifact khong ghi trang thai 20R2-D3"
+    assert "DA GO" in zg["d3_status"]
+    assert max(zg["z_20r2_prereg"]) == max(zg["z_legacy_in_code"]) == 4.0
+
+
+def test_the_pilot_reads_the_grid_from_code_not_a_local_copy():
+    """Mot hang so song o hai noi la mot hang so se lech.
+
+    Truoc D3, tool giu BAN CHEP cua luoi 20R2 vi ma chua co ten do. Gio ma da
+    co, ban chep phai bien mat -- neu khong ta co hai nguon su that.
+    """
+    import importlib
+    import measurements.decision_error_v2 as DE
+    m = importlib.import_module("tools.20r2_4_cpu_pilot")
+    assert tuple(m._z_20r2()) == tuple(float(z) for z in DE.Z_ALL_20R2)
+    src = (ROOT / "tools/20r2_4_cpu_pilot.py").read_text(encoding="utf-8")
+    assert "0.115, 0.170, 0.241" not in src, (
+        "tool van giu ban chep cua luoi 20R2 -- doc tu DE.Z_ALL_20R2")
 
 
 def test_prereg_quotes_the_pilot_artifact_not_a_stale_number():

@@ -73,9 +73,29 @@ BLOCKS_PER_TAU = 5.0
 # `BLOCK_S`. Gio no TU DAN ra tu quy tac 5*tau thay vi la hang so 5 giay.
 BLOCK_S = BLOCKS_PER_TAU * TAU_LOAD_LEGACY
 N_BOOT = 2000
+# --- LUOI z: HAI luoi, chon TUONG MINH  [20R2-D3] --------------------------
+#
+# Luoi LEGACY. GIU NGUYEN GIA TRI: 166 artifact cua T2 dieu kien theo no, va
+# 20R2.3 dung chung lam neo hoi quy. Doi so o day = pha neo.
+# A3' cua prereg 20R2 chi ra: luoi nay phu KHIT mien LEGACY [0.055, 0.550],
+# nen chay 20R2 tren no la lang le tra loi cau hoi cua truc cu.
 Z_GRID = (0.0, 0.05, 0.10, 0.20, 0.30, 0.55)
 Z_EXTRAP = (1.0, 2.0, 4.0)
 Z_ALL = Z_GRID + Z_EXTRAP
+
+# Luoi 20R2, KY tai docs/phase-20R2/00-preregistration.md muc 4.
+# Phu KHIT mien MEASURED [0.115, 0.615] (san that d_base = 0.115) thay vi
+# mien legacy.
+Z_GRID_20R2_MEASURED = (0.115, 0.170, 0.241, 0.305, 0.366,
+                        0.430, 0.491, 0.555, 0.615)
+Z_CONTROL_20R2 = (0.0,)          # doi chung: err(z=0) = err_model = SAN mo hinh
+Z_ALL_20R2 = Z_CONTROL_20R2 + Z_GRID_20R2_MEASURED + Z_EXTRAP    # 13 diem
+
+# max(Z_ALL) == max(Z_ALL_20R2) == 4.0 CO CHU DICH: scoring_window_start lay
+# max cua luoi, nen HAI luoi cham diem tren CUNG dai hang. Doi max cua mot
+# ben se lam hai luoi khong so duoc voi nhau -- xem docstring
+# scoring_window_start ve loi "hai nhanh cham tren hai dai hang khac nhau".
+Z_GRIDS = {"legacy": Z_ALL, "20r2_measured": Z_ALL_20R2}
 Z_SCALED_RATIOS = (0.10, 0.30, 0.55, 1.00)
 
 TRUTH_TABLE = "results/LIVE/phase-20R/truth_table.parquet"
@@ -126,9 +146,22 @@ def block_s_for_tau(tau: float) -> float:
     return BLOCKS_PER_TAU * tau
 
 
-def z_values_for(tau: float = TAU, scaled: bool = False) -> Tuple[float, ...]:
+def z_values_for(tau: float = TAU, scaled: bool = False,
+                 z_grid: str = "legacy") -> Tuple[float, ...]:
+    """Luoi z cua mot nhanh.
+
+    `z_grid` CHI anh huong nhanh fixed. Nhanh scaled sinh z tu ti so nhan tau
+    nen no khong doc luoi nao ca -- ghi ra day de khong ai tuong `--z-grid`
+    doi duoc nhanh scaled.
+    """
     if not scaled:
-        return tuple(float(z) for z in Z_ALL)
+        try:
+            grid = Z_GRIDS[z_grid]
+        except KeyError:
+            raise ValueError(
+                "z_grid khong hop le: %r. Chon mot trong %s"
+                % (z_grid, sorted(Z_GRIDS))) from None
+        return tuple(float(z) for z in grid)
     return tuple(round(float(ratio) * float(tau), 12) for ratio in Z_SCALED_RATIOS)
 
 
@@ -1343,6 +1376,12 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
                          "mac dinh (mot mac dinh im lang chinh la nguyen nhan F4). "
                          "Nhan mot tau hoac danh sach ngan cach bang dau phay cho "
                          "--compute-margin-cv.")
+    ap.add_argument("--z-grid", choices=sorted(Z_GRIDS), required=True,
+                    help="luoi z cho nhanh fixed. KHONG CO MAC DINH: mot mac "
+                         "dinh im lang o day da dat dieu kien len toan bo T2 "
+                         "ma khong ai ky [20R2-D3]. `legacy` phu mien "
+                         "[0.055,0.550]; `20r2_measured` phu mien measured "
+                         "[0.115,0.615] theo prereg 20R2 muc 4.")
     ap.add_argument("--z-mode", choices=("fixed", "scaled"), required=True,
                     help="fixed = NHANH B: z co dinh theo sync_period, KHONG co gian "
                          "theo tau (che do van hanh that, chua ai quet). "
@@ -1364,7 +1403,8 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if not (args.compute_margin_cv or args.compute_margin_cv_ci) and len(tau_values) != 1:
         ap.error("--tau may be a list only with --compute-margin-cv or --compute-margin-cv-ci")
     tau = tau_values[0]
-    z_values = z_values_for(tau, scaled=(args.z_mode == "scaled"))
+    z_values = z_values_for(tau, scaled=(args.z_mode == "scaled"),
+                            z_grid=args.z_grid)
     if args.n is None:
         args.n = SLA.n_for_tau(tau, DT)
     if args.block_s is None:

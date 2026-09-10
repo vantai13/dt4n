@@ -87,6 +87,10 @@ def command_for(run: dict, out_dir: str) -> list[str]:
     """Giong het tools/t2_6_plan.command_for, nhung dung sys.executable."""
     cmd = [sys.executable, "-m", "measurements.decision_error_v2", "--run-fixed",
            "--tau", "%g" % run["tau"],
+           # T2 chay tren luoi LEGACY. Truoc 20R2-D3 day la mac dinh IM LANG;
+           # gio phai khai TUONG MINH. Gia tri KHONG doi -- chi loi khai doi,
+           # va do la diem: lua chon luoi z gio nam trong lenh, doc duoc.
+           "--z-grid", "legacy",
            "--z-mode", run["branch"],
            "--seeds", str(run["seed"]),
            "--out", "%s/t2_6_r%04d.parquet" % (out_dir, run["run_index"])]

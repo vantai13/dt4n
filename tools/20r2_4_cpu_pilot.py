@@ -11,18 +11,18 @@ VI SAO VAN PHAI PILOT DU DA CO 1.1028 s/o
 Mot hang so KHONG duoc ke thua qua ranh gioi dieu kien ma khong do lai. Do la
 cung ky luat da bat loi RT20-4 (ti le 56x suy dien vs 1.4x do duoc).
 
-CANH BAO -- LUOI z 20R2 CHUA CO TRONG MA
-========================================
-Do duoc 2026-09-10:
-    measurements/decision_error_v2.py:76  Z_GRID = (0.0, 0.05, 0.10, 0.20,
-                                                    0.30, 0.55)
-    -> 6 diem + 3 ngoai suy = 9. Day la luoi LEGACY.
-    prereg muc 4 khai Z_GRID_20R2_MEASURED = 9 diem measured + 1 doi chung
-    + 3 ngoai suy = 13, nhung KHONG co ten do trong ma.
+HAI LUOI z -- va vi sao pilot do CA HAI
+=======================================
+    legacy         9 diem, phu mien [0.055, 0.550]
+    20r2_measured 13 diem, phu mien measured [0.115, 0.615]   (prereg muc 4)
 
-=> Chay chien dich HOM NAY se lang le dung luoi LEGACY, dung cai loi ma
-   prereg muc A3' da chi ra ("luoi z tien dang ky phu KHIT mien legacy").
-   Pilot nay do CA HAI luoi de tach chi phi cua luoi khoi chi phi cua may.
+Do ca hai de TACH chi phi cua LUOI khoi chi phi cua MAY: neu chi do mot luoi
+thi khong biet chenh lech den tu 13 diem hay tu may khac.
+
+20R2-D3 (da go 2026-09-10): truoc day luoi 20R2 chi ton tai trong van ban
+prereg, con ma chi co luoi legacy -- nen chay chien dich se lang le ra ket qua
+truc legacy MA KHONG BAO LOI (ca hai luoi deu chay duoc). Gio CLI doi
+`--z-grid` va khong co mac dinh.
 
 Chay:
     python -m tools.20r2_4_cpu_pilot --out results/PENDING/phase-20R2/cpu_pilot.json
@@ -46,10 +46,13 @@ QUICK_TAUS = [0.5, 3.0, 28.0]
 A_VALUES = [0.5, 0.9]
 SEEDS = [101, 102, 103, 104, 105]
 
-# Luoi z cua 20R2 -- prereg muc 4. Ghi o day vi ma CHUA co ten nay.
-Z_20R2 = (0.0,
-          0.115, 0.170, 0.241, 0.305, 0.366, 0.430, 0.491, 0.555, 0.615,
-          1.0, 2.0, 4.0)
+# Luoi z cua 20R2 -- DOC TU MA, khong chep lai.
+# Truoc 2026-09-10 tool nay giu mot BAN CHEP vi ma chua co ten nay (20R2-D3).
+# Gio D3 da go, nen chep lai la tao mot nguon su that thu hai -- dung lop loi
+# ma GLOSSARY canh bao khi mot hang so song o hai noi.
+def _z_20r2():
+    import measurements.decision_error_v2 as DE
+    return tuple(float(z) for z in DE.Z_ALL_20R2)
 
 INHERITED_S_PER_CELL = 1.1028   # axis_audit.json A7 corrected.seconds_per_cell
 GATE_TOLERANCE = 0.30           # gate 4-3
@@ -72,7 +75,7 @@ def run_pilot(taus) -> dict:
     tmp = tempfile.mkdtemp()
     per_tau = []
     for tau in taus:
-        s13 = _time_one(tau, Z_20R2, os.path.join(tmp, "p13_%g.parquet" % tau))
+        s13 = _time_one(tau, _z_20r2(), os.path.join(tmp, "p13_%g.parquet" % tau))
         s9 = _time_one(tau, legacy_z, os.path.join(tmp, "p09_%g.parquet" % tau))
         per_tau.append({"tau": tau,
                         "seconds_z20r2": s13,
@@ -99,14 +102,19 @@ def run_pilot(taus) -> dict:
         "measured_taus": list(taus),
         "extrapolated_from_subset": len(taus) != len(TAUS),
         "z_grids": {
-            "z_20r2_prereg": list(Z_20R2),
-            "n_z_20r2": len(Z_20R2),
+            "z_20r2_prereg": list(_z_20r2()),
+            "n_z_20r2": len(_z_20r2()),
             "z_legacy_in_code": list(legacy_z),
             "n_z_legacy": len(legacy_z),
-            "WARNING": (
-                "Luoi 20R2 KHONG co trong ma (decision_error_v2.py:76 van la "
-                "Z_GRID legacy 6+3). Pilot nay TRUYEN luoi 20R2 qua tham so "
-                "z_values. Chay chien dich ma khong sua ma se dung luoi LEGACY."),
+            "d3_status": (
+                "20R2-D3 DA GO 2026-09-10: ca hai luoi nam trong "
+                "decision_error_v2.Z_GRIDS va CLI doi --z-grid (required=True). "
+                "Truoc do luoi 20R2 chi ton tai trong van ban prereg, nen chay "
+                "chien dich se lang le ra ket qua truc legacy MA KHONG BAO LOI."),
+            "same_max_by_design": (
+                "max(legacy) == max(20r2_measured) == 4.0 CO CHU DICH: "
+                "scoring_window_start lay max cua luoi, nen hai luoi cham diem "
+                "tren CUNG dai hang va so duoc voi nhau."),
         },
         "per_tau": per_tau,
         "harness": {
@@ -129,7 +137,20 @@ def run_pilot(taus) -> dict:
             "measured_seconds_per_cell": s_per_cell,
             "relative_drift": drift,
             "tolerance": GATE_TOLERANCE,
-            "verdict": "PASS" if abs(drift) <= GATE_TOLERANCE else "FAIL",
+            # --quick do 3 tau roi nhan 8/3. Nhung QUICK_TAUS chua tau=28 --
+            # tau DAT NHAT -- nen mau 3 diem THIEN LECH LEN va uoc tinh cao hon
+            # thuc. Do duoc: quick cho FAIL trong khi ban day du cho PASS.
+            # Mot uoc tinh thien lech KHONG duoc phep phan quyet mot gate, nen
+            # ban quick tu khai la khong co tham quyen thay vi im lang tra
+            # mot verdict sai.
+            "verdict": ("NOT_AUTHORITATIVE" if len(taus) != len(TAUS)
+                        else ("PASS" if abs(drift) <= GATE_TOLERANCE else "FAIL")),
+            "authoritative": len(taus) == len(TAUS),
+            "why_quick_is_not_authoritative": (
+                "QUICK_TAUS = %s chua tau dat nhat (%g), nen ngoai suy x%.2f "
+                "thien lech LEN. Dung --quick de kiem DAY CHUYEN, khong de "
+                "phan quyet gate." % (QUICK_TAUS, max(QUICK_TAUS),
+                                      len(TAUS) / len(QUICK_TAUS))),
             "why_it_drifts": (
                 "luoi z 13 diem thay vi 9 (+~12%%, DUOI tuyen tinh vi sinh "
                 "trace moi la phan dat, khong phai vong z) va may khac voi may "

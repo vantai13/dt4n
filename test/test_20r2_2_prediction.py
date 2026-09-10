@@ -19,7 +19,7 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 SIGNED = ROOT / "docs/phase-20R2/01-prediction-signed.json"
 
 # Ghim sha256 cua artifact DA KY. Doi artifact = pha custody => phai amendment.
-SIGNED_SHA256 = "3d036d1173bb1c630c5c2eb1deee6b2fe06e731d0075d2b28cd0cc1d7c306d4f"
+SIGNED_SHA256 = "8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c"
 
 
 @pytest.fixture(scope="module")
@@ -126,28 +126,104 @@ def test_band_floor_uses_the_residual_not_the_negative_control(pred):
 
     Do nhay 'measured vs legacy' (~9%) KHONG phai do bat dinh cua ket qua
     chinh: legacy la doi chung am co chu dich. Lay no lam san se cho mot bang
-    rong gap ~6 lan muc can, va mot bang qua rong lam gate MAT LUC PHAN GIAI
-    -- cai gi cung PASS, nen gate khong con noi len dieu gi.
+    rong gap ~6 lan muc can, va bang qua rong lam gate MAT LUC PHAN GIAI.
     """
     ax = pred["axis_sensitivity"]
     band = pred["acceptance_band"]
-    assert band["AXIS_FLOOR"] == pytest.approx(
+    floors = [r["axis_floor_rel"] for r in band["per_tau"]]
+    assert max(floors) == pytest.approx(
         ax["worst_measured_family_residual_rel"], abs=1e-12)
-    assert band["AXIS_FLOOR"] < ax["worst_legacy_contrast_rel"]
+    assert max(floors) < ax["worst_legacy_contrast_rel"]
     assert band["DO_NOT_USE"]["value_rel"] == pytest.approx(
         ax["worst_legacy_contrast_rel"], abs=1e-12)
 
 
-def test_band_formula_is_signed_with_no_free_parameters_left(pred):
-    """K_MC va AXIS_FLOOR phai co gia tri TRUOC pilot.
+def test_band_is_per_tau_because_power_is_not_uniform(pred):
+    """Mot bang DUY NHAT gia dinh luc thong ke deu nhau tren luoi. Khong dung.
 
-    Neu chung con None thi pilot co the tu chon he so cho minh -- do chinh la
-    'garden of forking paths' o dang tinh vi nhat.
+    `n_for_tau` giu CHI PHI phang nhung khong giu LUC: chu ky doc lap = T_sim/tau
+    di tu 2000 (tau=0.5) xuong 50 (tau=20,28) -- 40 lan. Mot so duy nhat se hoac
+    qua chat o tau lon hoac qua long o tau nho.
+    """
+    band = pred["acceptance_band"]
+    assert len(band["per_tau"]) == len(pred["taus"])
+    bands = [r["band_rel"] for r in band["per_tau"]]
+    assert len(set(round(b, 9) for b in bands)) > 1, (
+        "bang giong nhau o moi tau -- vay thi no khong theo tau")
+    assert "superseded_scalar_band" in band, "mat dau vet ban vo huong cu"
+
+
+def test_cycle_floor_makes_power_uniform_in_the_tail(pred):
+    """SAN CHU KY: co mau hieu dung la T_sim/tau, KHONG phai n.
+
+    Khong co san, cap 20->28 chi dat 2.20 sigma (do duoc) -- duoi nguong 3.
+    """
+    band = pred["acceptance_band"]
+    assert band["cycle_floor"] == 200.0
+    for r in band["per_tau"]:
+        assert r["independent_cycles"] >= band["cycle_floor"] - 1e-9, (
+            "tau=%g chi co %.1f chu ky, duoi san" % (r["tau"], r["independent_cycles"]))
+    muls = {r["tau"]: r["n_multiplier"] for r in band["per_tau"]}
+    assert muls[0.5] == 1 and muls[5.0] == 1, "khong duoc nang tau nho"
+    assert muls[10.0] == 2 and muls[20.0] == 4 and muls[28.0] == 4
+
+
+def test_band_uses_the_pooled_law_not_noisy_per_tau_estimates(pred):
+    """se tu 5 seed KHONG dung lam san bang duoc -- co bang chung doi chung.
+
+    Nang n gap 4 o tau=28 le ra lam se GIAM 2 lan; do duoc no TANG 1.7 lan.
+    Mot dai luong ma phep do khong theo kip huong DA BIET thi khong dung duoc
+    lam tham so. Vi vay dung LUAT GOP se_rel = C/sqrt(chu ky), uoc MOT tham so
+    tu 10 phep do.
+    """
+    law = pred["acceptance_band"]["se_law"]
+    assert law["form"].startswith("se_rel = C / sqrt")
+    assert law["which_C_is_used"].startswith("C_upper")
+    assert law["C_upper"] > law["C_mean"], "phai bao thu hon trung binh"
+    assert abs(law["fitted_exponent"] - law["theoretical_exponent"]) < 0.10, (
+        "so mu do duoc %.3f lech xa -0.5 -- luat 1/sqrt(N) khong con dung"
+        % law["fitted_exponent"])
+    assert law["n_points"] >= 10
+
+
+def test_band_formula_is_signed_with_no_free_parameters_left(pred):
+    """K_MC va CYCLE_FLOOR phai co gia tri TRUOC chien dich.
+
+    Neu chung con mo thi so do co the tu chon he so cho minh -- 'garden of
+    forking paths' o dang tinh vi nhat.
     """
     b = pred["acceptance_band"]
-    assert b["AXIS_FLOOR"] is not None and b["AXIS_FLOOR"] > 0
     assert b["K_MC"] == 3.0
-    assert b["se_pilot_rel"] is None, "se_pilot_rel chi duoc dien SAU pilot"
+    assert b["cycle_floor"] == 200.0
+    for r in b["per_tau"]:
+        assert r["band_rel"] is not None and r["band_rel"] > 0
+        assert r["band_rel"] >= r["axis_floor_rel"], (
+            "tau=%g: bang hep hon san truc" % r["tau"])
+
+
+def test_the_widest_band_still_has_resolving_power(pred):
+    """Bang rong nhat phai VAN hep hon tuong phan legacy (~9%).
+
+    Neu no rong bang tuong phan doi chung thi gate khong con phan biet duoc
+    nhanh measured voi nhanh legacy -- den xanh rong dang 4.
+    """
+    b = pred["acceptance_band"]
+    widest = max(r["band_rel"] for r in b["per_tau"])
+    assert widest < pred["axis_sensitivity"]["worst_legacy_contrast_rel"], (
+        "bang rong nhat %.3f%% >= tuong phan legacy %.3f%%"
+        % (widest * 100,
+           pred["axis_sensitivity"]["worst_legacy_contrast_rel"] * 100))
+
+
+def test_monotonicity_is_counted_in_pairs_not_points(pred):
+    """8 tau cho 7 CAP. Don dieu la tinh chat cua mot CAP, khong phai mot DIEM.
+
+    Ban ky dau viet '>= 7/8 diem' -- vua sai don vi vua sai mau so.
+    """
+    sp = pred["reading_policy"]["SECONDARY_shape"]
+    assert sp["n_pairs"] == len(pred["taus"]) - 1 == 7
+    assert "6/7" in sp["pass_rule"] and "CAP" in sp["pass_rule"]
+    assert "sigma" in sp["statistic"]
 
 
 # ------------------------------------------------------- POPULATION / doi chung

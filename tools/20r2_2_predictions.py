@@ -49,6 +49,8 @@ Z_LEGACY_CONTRAST = 0.30237
 
 TAUS = [0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0]
 
+K_MC = 3.0
+
 REPO = pathlib.Path(__file__).resolve().parents[1]
 HARNESS_REL = "measurements/decision_error_v2.py"
 
@@ -196,42 +198,131 @@ def estimands() -> dict:
     }
 
 
-def acceptance_band(axis: dict) -> dict:
-    """Bang chap nhan -- CONG THUC ky truoc, khong phai con so chon sau.
+SE_PILOT_REL = "docs/phase-20R2/02-se-pilot.json"
 
-    Chi mot phan cua bang tinh duoc TRUOC khi chay (thanh phan truc). Thanh
-    phan Monte Carlo phai do tu pilot. De viec do KHONG tro thanh "chon bang
-    sau khi thay so", ta ky CONG THUC bay gio va chi cam gia tri pilot vao:
+# SAN CHU KY DOC LAP moi o. Co mau hieu dung la T_sim/tau, KHONG phai n.
+# `n_for_tau` giu CHI PHI gan nhu phang nhung KHONG giu LUC: chu ky di tu 2000
+# (tau=0.5) xuong 50 (tau=20, 28) -- bien thien 40 lan. San nay lam LUC deu
+# nhau thay vi de no roi 40 lan theo tau.
+# 200 duoc chon vi do la muc tau=5 DA co san; no lam san ma khong nang bat ky
+# tau nao <= 5. KY TRUOC chien dich.
+CYCLE_FLOOR = 200.0
 
-        band_rel = max(AXIS_FLOOR, K_MC * se_pilot_rel)
 
-    AXIS_FLOOR va K_MC deu co gia tri o day, TRUOC pilot. Pilot chi cung cap
-    se_pilot_rel. Khong co bac tu do nao con mo sau khi nhin so.
+def n_multiplier(tau: float) -> int:
+    """Nhan n (luy thua 2) de o dat CYCLE_FLOOR chu ky doc lap.
+
+    Suy tu QUY TAC, khong go tay tung tau -- de khi ai doi CYCLE_FLOOR thi ca
+    bang tu cap nhat thay vi lech am tham.
     """
+    from measurements.sla_calib_v2 import DEFAULT_DT, n_for_tau
+    cycles = n_for_tau(tau, DEFAULT_DT) * DEFAULT_DT / float(tau)
+    mul = 1
+    while cycles * mul < CYCLE_FLOOR:
+        mul *= 2
+    return mul
+
+
+def _se_law() -> dict:
+    """se_rel(tau) tu LUAT GOP, khong tu tung uoc luong 5-seed roi rac.
+
+    VI SAO KHONG DUNG TUNG UOC LUONG: se uoc tu 5 seed co ~35% do bat dinh, va
+    do duoc thi te hon the. Chung minh bang phep do doi chung: nang n gap 4 lan
+    o tau=28 le ra phai lam se GIAM 2 lan, nhung se do duoc lai TANG 1.7 lan
+    (0.000908 -> 0.001569). Mot dai luong ma phep do khong theo kip huong da
+    biet thi khong dung lam san bang duoc.
+
+    LUAT: se_rel = C / sqrt(so chu ky).  Do duoc tren 10 diem (8 tau x1 + 2
+    tau x4): so mu khop -0.532 so voi -0.5 cua ly thuyet. Gop 10 phep do de
+    uoc MOT tham so C thi on dinh hon nhieu so voi 10 uoc luong doc lap.
+    Dung C + 1sd (bao thu vua phai), khong dung C trung binh.
+    """
+    path = REPO / SE_PILOT_REL
+    if not path.is_file():
+        return {}
+    doc = json.loads(path.read_text(encoding="utf-8"))
+    return doc["law"]
+
+
+def acceptance_band(axis: dict) -> dict:
+    """Bang chap nhan THEO TUNG TAU -- cong thuc ky truoc, gia tri cam sau.
+
+    VI SAO KHONG PHAI MOT SO DUY NHAT (sua 2026-09-10):
+    `n_for_tau` giu CHI PHI gan nhu phang (~1.32 s/o) nhung KHONG giu LUC
+    THONG KE. Co mau hieu dung la SO CHU KY DOC LAP = T_sim/tau, va no bien
+    thien 40 lan tren luoi:
+
+        tau=0.5 -> 2000 chu ky        tau=20 -> 50 chu ky
+        tau=28  ->   50 chu ky  (n da co gian x1.4 de giu dung san 50)
+
+    Do duoc tren pilot 5 seed: se_rel di tu 0.64% (tau=0.5) den 5.84%
+    (tau=20) -- bien thien ~9 lan. Mot bang DUY NHAT se:
+        lay theo tau nho -> qua chat o tau lon -> TRUOT GIA
+        lay theo tau lon -> qua long o tau nho -> MAT LUC PHAN GIAI
+        lay trung binh   -> ca hai benh cung luc
+    Benh thu hai chinh la thu DO_NOT_USE ben duoi canh bao.
+
+    BANG NAY GATE CAI GI: muc do KHOP giua err do duoc va duong tham chieu
+    Sheppard TAI TUNG tau. No KHONG phai phep kiem don dieu -- phep do dung
+    thong ke KHAC (sigma tung cap, xem reading_policy), vi hai cau hoi khac
+    nhau thi khong dung chung mot con so.
+    """
+    from measurements.sla_calib_v2 import DEFAULT_DT, n_for_tau
+    law = _se_law()
+    C = law.get("C_upper") if law else None
+    per_tau = []
+    for row in axis["per_tau"]:
+        t = float(row["tau"])
+        floor = float(row["measured_family_residual_rel"])
+        mul = n_multiplier(t)
+        cycles = n_for_tau(t, DEFAULT_DT) * mul * DEFAULT_DT / t
+        s = (C / math.sqrt(cycles)) if C else None
+        band = max(floor, K_MC * s) if s is not None else None
+        per_tau.append({
+            "tau": t,
+            "axis_floor_rel": floor,
+            "n_multiplier": mul,
+            "independent_cycles": cycles,
+            "se_rel_from_law": s,
+            "band_rel": band,
+            "binding_term": (None if band is None
+                             else ("axis_floor" if floor >= K_MC * s else "mc_noise")),
+        })
     return {
-        "formula": "band_rel = max(AXIS_FLOOR, K_MC * se_pilot_rel)",
-        "AXIS_FLOOR": axis["worst_measured_family_residual_rel"],
-        "AXIS_FLOOR_why": (
-            "do nhay CON LAI trong ho measured sau khi truc da ky, lay o tau "
-            "xau nhat (tau = 28). Bang khong the hep hon chinh do bat dinh cua "
-            "truc, neu khong gate se do LUA CHON TRUC chu khong do hien tuong."),
-        "K_MC": 3.0,
+        "formula": "band_rel(tau) = max(AXIS_FLOOR(tau), K_MC * se_pilot_rel(tau))",
+        "K_MC": K_MC,
         "K_MC_why": (
             "3 sai so chuan. Ky TRUOC pilot de so pilot khong the tu chon he so "
             "cho minh."),
-        "se_pilot_rel": None,
-        "se_pilot_rel_source": (
-            "pilot 3 o cua 20R2.4; se cua err_total qua 5 seed, chuan hoa theo "
-            "err trung binh cua chinh o do."),
+        "AXIS_FLOOR_why": (
+            "do nhay CON LAI trong ho measured sau khi truc da ky, THEO TUNG tau "
+            "(1.109% o tau=0.5 den 1.466% o tau=28). Bang khong the hep hon "
+            "chinh do bat dinh cua truc."),
+        "per_tau": per_tau,
+        "se_source": SE_PILOT_REL,
+        "se_law": law,
+        "cycle_floor": CYCLE_FLOOR,
+        "cycle_floor_why": (
+            "co mau hieu dung la T_sim/tau, KHONG phai n. Khong co san nay thi "
+            "luc thong ke roi 40 lan tren luoi trong khi chi phi gan nhu phang, "
+            "va cap 20->28 chi dat 2.20 sigma (do duoc) -- duoi nguong 3 sigma."),
+        "n_multiplier": {str(t): n_multiplier(t) for t in TAUS},
+        "superseded_scalar_band": {
+            "was": "band_rel = max(AXIS_FLOOR_worst, K_MC * se_pilot_rel)",
+            "AXIS_FLOOR_worst": axis["worst_measured_family_residual_rel"],
+            "why_replaced": (
+                "mot so duy nhat gia dinh luc thong ke deu nhau tren luoi. Do "
+                "duoc: se_rel bien thien ~9 lan, va co mau hieu dung 40 lan. "
+                "Giu ban cu o day de dau vet khong mat."),
+        },
         "DO_NOT_USE": {
             "value_rel": axis["worst_legacy_contrast_rel"],
             "what_it_really_is": (
                 "tuong phan measured vs LEGACY (~9%). Legacy la DOI CHUNG AM co "
                 "chu dich, khong phai mot lua chon truc dang mo. Lay no lam san "
-                "cho bang (vi du '+-15% vi do nhay truc la 10.3%') la nham lan "
-                "DOI CHUNG voi DO BAT DINH: no cho mot bang rong gap ~6 lan muc "
-                "can, va mot bang qua rong lam gate MAT LUC PHAN GIAI -- cai gi "
-                "cung PASS, nen gate khong con noi len dieu gi."),
+                "cho bang la nham lan DOI CHUNG voi DO BAT DINH: no cho mot bang "
+                "rong gap ~6 lan muc can, va mot bang qua rong lam gate MAT LUC "
+                "PHAN GIAI -- cai gi cung PASS, nen gate khong con noi len dieu gi."),
         },
     }
 
@@ -263,9 +354,24 @@ def reading_policy() -> dict:
         },
         "SECONDARY_shape": {
             "claim": "err don dieu GIAM theo tau tai z da ky",
-            "pass_rule": "don dieu o >= 7/8 diem => 20R2-2 PASS",
-            "one_break": "vo don dieu o DUNG MOT tau => bao cao la DU LIEU, KHONG sua luoi",
-            "two_breaks": "vo o >= 2 tau => nghi estimator, chay doi chung TRUOC khi dien giai",
+            "unit_of_comparison": (
+                "CAP LIEN KE, khong phai DIEM. 8 tau cho 7 cap. Ban ky dau viet "
+                ">= 7/8 diem, ma don dieu khong phai tinh chat cua mot diem -- "
+                "no la tinh chat cua mot CAP. Sua 2026-09-10."),
+            "n_pairs": len(TAUS) - 1,
+            "pass_rule": "don dieu o >= 6/7 CAP => 20R2-2 PASS",
+            "one_break": "vo don dieu o DUNG MOT cap => bao cao la DU LIEU, KHONG sua luoi",
+            "two_breaks": "vo o >= 2 cap => nghi estimator, chay doi chung TRUOC khi dien giai",
+            "statistic": (
+                "sigma = |err_i - err_j| / sqrt(se_i^2 + se_j^2). Mot cap chi "
+                "DOC DUOC neu sigma >= 3. Day la thong ke KHAC voi band_rel: "
+                "band_rel hoi 'co khop Sheppard khong', cap sigma hoi 'hai tau "
+                "co phan biet duoc khong'. Hai cau hoi khac nhau."),
+            "power_note": (
+                "Do duoc tren pilot (5 seed, truoc khi nang n): moi cap >= 4.82 "
+                "sigma TRU cap 20->28 chi dat 2.20 sigma -- khoang cach nho nhat "
+                "(13.3%) gap it chu ky nhat (50). Vi vay n tai tau=20 va 28 duoc "
+                "NANG x4, ky TRUOC chien dich. Xem acceptance_band.n_multiplier."),
         },
         "POSITIVE_CONTROL": {
             "status": "DOWNGRADED_TO_DIAGNOSTIC",
@@ -388,9 +494,18 @@ def main() -> None:
           % (ax["worst_legacy_contrast_rel"] * 100))
     b = doc["acceptance_band"]
     print("\nbang: %s" % b["formula"])
-    print("  AXIS_FLOOR = %.4f (%.2f%%)   K_MC = %.1f   se_pilot_rel = %s"
-          % (b["AXIS_FLOOR"], b["AXIS_FLOOR"] * 100, b["K_MC"], b["se_pilot_rel"]))
-    print("\nPOPULATION = 8 o gate; cbr = DOI CHUNG DUONG, bao cao RIENG")
+    print("  K_MC = %.1f   san chu ky = %g   C = %.4f (trung binh + 1sd)"
+          % (b["K_MC"], b["cycle_floor"], b["se_law"]["C_upper"]))
+    print("\n  tau   nhan  chu ky   san truc   se(luat)    BANG")
+    for r in b["per_tau"]:
+        print("  %5.1f  x%-3d %7.1f   %6.3f%%    %6.3f%%    %6.3f%%"
+              % (r["tau"], r["n_multiplier"], r["independent_cycles"],
+                 r["axis_floor_rel"] * 100, r["se_rel_from_law"] * 100,
+                 r["band_rel"] * 100))
+    pc = doc["reading_policy"]["POSITIVE_CONTROL"]
+    print("\nPOPULATION = 8 o gate; cbr = %s, bao cao RIENG" % pc["status"])
+    sp = doc["reading_policy"]["SECONDARY_shape"]
+    print("don dieu   : %s  (%d cap)" % (sp["pass_rule"], sp["n_pairs"]))
     print("\n-> %s" % args.out)
 
 

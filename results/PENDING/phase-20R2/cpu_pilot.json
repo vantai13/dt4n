@@ -1,31 +1,33 @@
 {
  "budget": {
-  "minutes_one_branch": 17.649079481760662,
-  "minutes_two_branches": 35.298158963521324,
-  "minutes_two_branches_plus_30pct": 45.88760665257772,
+  "minutes_one_branch": 17.541188438733418,
+  "minutes_two_branches": 35.082376877466835,
+  "minutes_two_branches_plus_30pct": 45.607089940706885,
   "n_grid_cells": 800,
-  "seconds_8tau_one_a_one_seed_z20r2": 105.89447689056396,
-  "seconds_8tau_one_a_one_seed_zlegacy": 95.1575996875763,
-  "seconds_one_branch": 1058.9447689056396,
-  "seconds_per_cell": 1.3236809611320495
+  "seconds_8tau_one_a_one_seed_z20r2": 105.24713063240051,
+  "seconds_8tau_one_a_one_seed_zlegacy": 94.08448767662048,
+  "seconds_one_branch": 1052.4713063240051,
+  "seconds_per_cell": 1.3155891329050065
  },
  "e4_fractional_design": {
-  "measured_minutes_two_branches": 35.298158963521324,
+  "measured_minutes_two_branches": 35.082376877466835,
   "needed": false,
   "threshold_hours": 8.0,
-  "why": "E4 doi thiet ke phan doan neu ngan sach > 8 gio. Do duoc chi ~35 phut cho hai nhanh, tuc ~7.4% nguong. KHONG can phan doan -- va ly do duoc GHI RA thay vi de trong."
+  "why": "E4 doi thiet ke phan doan neu ngan sach > 8 gio. Do duoc chi ~35 phut cho hai nhanh, tuc ~7.3% nguong. KHONG can phan doan -- va ly do duoc GHI RA thay vi de trong."
  },
  "extrapolated_from_subset": false,
  "gate_4_3": {
+  "authoritative": true,
   "inherited_seconds_per_cell": 1.1028,
-  "measured_seconds_per_cell": 1.3236809611320495,
-  "relative_drift": 0.20029104201310252,
+  "measured_seconds_per_cell": 1.3155891329050065,
+  "relative_drift": 0.1929535118833936,
   "tolerance": 0.3,
   "verdict": "PASS",
-  "why_it_drifts": "luoi z 13 diem thay vi 9 (+~12%%, DUOI tuyen tinh vi sinh trace moi la phan dat, khong phai vong z) va may khac voi may da sinh run_log cua sweep_r2."
+  "why_it_drifts": "luoi z 13 diem thay vi 9 (+~12%%, DUOI tuyen tinh vi sinh trace moi la phan dat, khong phai vong z) va may khac voi may da sinh run_log cua sweep_r2.",
+  "why_quick_is_not_authoritative": "QUICK_TAUS = [0.5, 3.0, 28.0] chua tau dat nhat (28), nen ngoai suy x2.67 thien lech LEN. Dung --quick de kiem DAY CHUYEN, khong de phan quyet gate."
  },
  "generated_by": "tools/20r2_4_cpu_pilot.py",
- "generated_utc": "2026-09-10T04:15:13.440561+00:00",
+ "generated_utc": "2026-09-10T05:30:50.507893+00:00",
  "harness": {
   "cells_per_command": 10,
   "rows_per_command": 130,
@@ -43,52 +45,52 @@
  ],
  "per_tau": [
   {
-   "seconds_z20r2": 13.763447284698486,
-   "seconds_zlegacy": 12.601112365722656,
+   "seconds_z20r2": 13.471673250198364,
+   "seconds_zlegacy": 11.898057222366333,
    "tau": 0.5,
-   "z20r2_over_legacy": 1.0922406598117158
+   "z20r2_over_legacy": 1.1322582332915578
   },
   {
-   "seconds_z20r2": 13.156046390533447,
-   "seconds_zlegacy": 11.761223077774048,
+   "seconds_z20r2": 12.979916095733643,
+   "seconds_zlegacy": 11.744102001190186,
    "tau": 1.0,
-   "z20r2_over_legacy": 1.1185950902840445
+   "z20r2_over_legacy": 1.105228487833145
   },
   {
-   "seconds_z20r2": 13.046029806137085,
-   "seconds_zlegacy": 11.636524677276611,
+   "seconds_z20r2": 13.022497177124023,
+   "seconds_zlegacy": 11.474475383758545,
    "tau": 2.0,
-   "z20r2_over_legacy": 1.121127670670686
+   "z20r2_over_legacy": 1.134910027830694
   },
   {
-   "seconds_z20r2": 13.03248906135559,
-   "seconds_zlegacy": 11.629916429519653,
+   "seconds_z20r2": 12.938532829284668,
+   "seconds_zlegacy": 11.469783544540405,
    "tau": 3.0,
-   "z20r2_over_legacy": 1.1206004050274907
+   "z20r2_over_legacy": 1.1280537927364274
   },
   {
-   "seconds_z20r2": 12.163325071334839,
-   "seconds_zlegacy": 10.890828371047974,
+   "seconds_z20r2": 12.167911767959595,
+   "seconds_zlegacy": 10.908376693725586,
    "tau": 5.0,
-   "z20r2_over_legacy": 1.1168411306223183
+   "z20r2_over_legacy": 1.1154649412646782
   },
   {
-   "seconds_z20r2": 11.96638298034668,
-   "seconds_zlegacy": 10.800033330917358,
+   "seconds_z20r2": 12.018359661102295,
+   "seconds_zlegacy": 10.889289379119873,
    "tau": 10.0,
-   "z20r2_over_legacy": 1.1079950046163656
+   "z20r2_over_legacy": 1.1036863143840594
   },
   {
-   "seconds_z20r2": 11.863911867141724,
-   "seconds_zlegacy": 10.63691234588623,
+   "seconds_z20r2": 11.86751389503479,
+   "seconds_zlegacy": 10.65928339958191,
    "tau": 20.0,
-   "z20r2_over_legacy": 1.1153529785107263
+   "z20r2_over_legacy": 1.1133500677447297
   },
   {
-   "seconds_z20r2": 16.902844429016113,
-   "seconds_zlegacy": 15.201049089431763,
+   "seconds_z20r2": 16.780725955963135,
+   "seconds_zlegacy": 15.041120052337646,
    "tau": 28.0,
-   "z20r2_over_legacy": 1.1119524928557392
+   "z20r2_over_legacy": 1.1156566730118695
   }
  ],
  "schema": "dt4n.cpu_pilot.v1",
@@ -114,9 +116,10 @@
   "w_loss": null
  },
  "z_grids": {
-  "WARNING": "Luoi 20R2 KHONG co trong ma (decision_error_v2.py:76 van la Z_GRID legacy 6+3). Pilot nay TRUYEN luoi 20R2 qua tham so z_values. Chay chien dich ma khong sua ma se dung luoi LEGACY.",
+  "d3_status": "20R2-D3 DA GO 2026-09-10: ca hai luoi nam trong decision_error_v2.Z_GRIDS va CLI doi --z-grid (required=True). Truoc do luoi 20R2 chi ton tai trong van ban prereg, nen chay chien dich se lang le ra ket qua truc legacy MA KHONG BAO LOI.",
   "n_z_20r2": 13,
   "n_z_legacy": 9,
+  "same_max_by_design": "max(legacy) == max(20r2_measured) == 4.0 CO CHU DICH: scoring_window_start lay max cua luoi, nen hai luoi cham diem tren CUNG dai hang va so duoc voi nhau.",
   "z_20r2_prereg": [
    0.0,
    0.115,

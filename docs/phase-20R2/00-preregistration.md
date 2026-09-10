@@ -749,7 +749,7 @@ Sau khi dien:
 
 ```text
 docs/phase-20R2/01-prediction-signed.json
-sha256 = 3d036d1173bb1c630c5c2eb1deee6b2fe06e731d0075d2b28cd0cc1d7c306d4f
+sha256 = 8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c
 sinh bởi: tools/20r2_2_predictions.py     (gate 0-1: SINH BỞI CÔNG CỤ)
 test canh: test/test_20r2_2_prediction.py
 ```
@@ -1112,3 +1112,212 @@ không báo lỗi**: cả hai lưới đều chạy được, chỉ trả lời 
 20R2-D4    N3/N4 phần 20R2 chưa đo — cần chiến dịch thứ hai (§13.6)
 20R2-D5    cbr@0.850 chưa có em/A — T2 không đo ô này    (§13.5)
 ```
+
+---
+
+## 14. Băng theo τ, sàn chu kỳ, và lưới z vào mã — G1–G4 (2026-09-10)
+
+### 14.1 ★ Lực thống kê biến thiên 40 lần trong khi chi phí gần như phẳng
+
+`n_for_tau` giữ **chi phí** phẳng (~1,32 s/ô) nhưng **không** giữ **lực**. Cỡ mẫu
+hiệu dụng là **số chu kỳ độc lập** `T_sim/τ`, không phải `n`:
+
+```text
+tau     n_for_tau   T_sim     chu ky
+0.5        200000    1000     2000.0
+20         200000    1000       50.0
+28         280000    1400       50.0    <- n co gian x1.4 de giu DUNG san 50
+                              ────────
+                              bien thien 40 lan
+```
+
+⚠️ Con số "35,7 chu kỳ ở τ=28" **không tồn tại**: nó giả định `n = 200.000`, mà
+ở τ=28 `n_for_tau` trả **280.000**. Ở `n = 200.000` ô đó **trượt**
+`run_covers_tau` (35,7 < 50) nên không bao giờ vào lưới.
+
+### 14.2 ★★ Đo được: `se` từ 5 seed KHÔNG dùng làm sàn băng được
+
+Pilot 8 τ × 5 seed (**seed 201–205**, không phải 101–105 của chiến dịch — dùng
+chung seed sẽ chọn băng từ chính dữ liệu sẽ được chấm):
+
+```text
+se_rel di tu 0.639% (tau=0.5) den 5.836% (tau=20)  -- bien thien ~9 lan
+```
+
+Rồi tôi chạy **đối chứng**: nâng `n` gấp 4 thì `se` **phải giảm 2 lần**.
+
+```text
+tau=20   se 0.003381 -> 0.001699   GIAM 1.99x   dung huong
+tau=28   se 0.000908 -> 0.001569   TANG 1.73x   NGUOC huong
+```
+
+Một đại lượng mà phép đo **không theo kịp hướng đã biết** thì không dùng làm
+tham số của băng. Nguyên nhân: `se` ước từ 5 seed có ~35% bất định danh nghĩa,
+và thực tế còn tệ hơn (`F(4,4)` cho `p ≈ 0,02`).
+
+⟹ **Dùng LUẬT GỘP thay vì 8 ước lượng rời rạc:**
+
+```text
+se_rel = C / sqrt(so chu ky doc lap)
+
+so mu do duoc  -0.532     (ly thuyet -0.5)      10 diem, R2 = 0.69
+C trung binh    0.2922    sd 0.1173
+C dung          0.4096    (= trung binh + 1sd, bao thu vua phai)
+C do duoc trai  0.1278 .. 0.4708  (3.7 lan)  <- chinh la nhieu 5-seed
+```
+
+Gộp 10 phép đo để ước **một** tham số ổn định hơn hẳn 10 ước lượng độc lập.
+
+### 14.3 ★ SÀN CHU KỲ = 200, và bảng nhân `n` — KÝ TRƯỚC
+
+Đo σ từng cặp liền kề (thống kê đúng cho câu hỏi đơn điệu):
+
+```text
+cap        sigma dat duoc
+0.5->1        26.15        3->5      13.75
+1->2          24.76        5->10      8.18
+2->3          13.73        10->20     4.82
+                           20->28     2.20   <- DUOI 3 sigma
+```
+
+Mắt xích yếu **xác nhận bằng số đo**: khoảng cách nhỏ nhất gặp ít chu kỳ nhất.
+Nhưng ràng buộc là `se(20)`, **không phải** `se(28)` — τ=28 đã được `n_for_tau`
+nâng 1,4× nên nó không phải chỗ yếu.
+
+**Quy tắc ký: mọi ô phải đạt ≥ 200 chu kỳ độc lập.** 200 là mức τ=5 *đã* có, nên
+nó không nâng bất kỳ τ ≤ 5 nào.
+
+```text
+tau <= 5   x1        tau = 10   x2        tau = 20, 28   x4
+```
+
+Kiểm lại sau khi nâng (đo thật, không ngoại suy): cặp `20→28` đạt **5,87 σ**.
+
+> Vì sao ×4 chứ không ×2 ở τ=20/28: ×2 chỉ cho 3,11 σ — mà `se` chỉ biết đến
+> ~35%, nên 3,11 có thể thực sự dưới 3. ×4 sống sót qua chính độ bất định đó.
+
+### 14.4 Băng chấp nhận THEO TỪNG τ
+
+```text
+band_rel(tau) = max( AXIS_FLOOR(tau), K_MC x se_rel(tau) )     K_MC = 3.0
+
+tau   nhan  chu ky    san truc   se(luat)     BANG
+  0.5   x1    2000.0     1.109%     0.916%     2.747%
+  1.0   x1    1000.0     1.291%     1.295%     3.885%
+  2.0   x1     500.0     1.383%     1.832%     5.495%
+  3.0   x1     333.3     1.413%     2.243%     6.730%
+  5.0   x1     200.0     1.437%     2.896%     8.688%
+ 10.0   x2     200.0     1.455%     2.896%     8.688%
+ 20.0   x4     200.0     1.464%     2.896%     8.688%
+ 28.0   x4     200.0     1.466%     2.896%     8.688%
+```
+
+Băng rộng nhất **8,69%** — vẫn hẹp hơn tương phản legacy (8,95%), nên gate
+**giữ được lực phân giải**. Băng bị ràng buộc bởi nhiễu MC ở **mọi** τ; sàn trục
+không bao giờ là ràng buộc.
+
+Bản vô hướng cũ giữ trong `acceptance_band.superseded_scalar_band` — không xoá
+dấu vết.
+
+### 14.5 Đính chính: đơn điệu đếm theo **CẶP**, không theo **ĐIỂM**
+
+```text
+ban ky dau:  "don dieu o >= 7/8 DIEM"    sai ca don vi lan mau so
+sua:         "don dieu o >= 6/7 CAP"     8 tau -> 7 cap lien ke
+```
+
+Đơn điệu là tính chất của một **cặp**. Và nó dùng thống kê **khác** với băng:
+
+```text
+band_rel(tau)                     "co khop Sheppard tai tau nay khong?"
+sigma = |e_i - e_j| / se_diff     "hai tau co phan biet duoc khong?"
+```
+
+Hai câu hỏi khác nhau thì không dùng chung một con số.
+
+### 14.6 20R2-D3 ĐÃ GỠ — lưới z vào mã
+
+```python
+Z_GRIDS = {"legacy": Z_ALL, "20r2_measured": Z_ALL_20R2}
+
+ap.add_argument("--z-grid", choices=sorted(Z_GRIDS), required=True, ...)
+```
+
+`required=True` — cùng thuốc đã dùng cho `axis` ở gate 0-5. Một mặc định im lặng
+ở lưới z nguy hiểm y hệt ở trục AoI vì **cả hai lưới đều chạy được và không báo
+lỗi**.
+
+```text
+max(legacy) == max(20r2_measured) == 4.0   CO CHU DICH
+  scoring_window_start lay max cua luoi => hai luoi cham diem tren CUNG dai
+  hang, nen so duoc voi nhau. Doi max mot ben la pha tinh chat do.
+```
+
+`tools/t2_6_plan.py` và `tools/t2_6_run.py` giờ khai `--z-grid legacy` **tường
+minh**. Giá trị không đổi; chỉ lời khai đổi — và đó là điểm: lựa chọn lưới z
+giờ nằm trong chính dòng lệnh.
+
+### 14.7 Ngân sách sau khi nâng `n`
+
+```text
+nen (chua nang)          35.30 phut / hai nhanh
+them do duoc             tau=10 x2  +127 s
+                         tau=20 x4  +396 s
+                         tau=28 x4  +635 s
+                         = 19.3 phut MOT nhanh
+TONG                     73.9 phut hai nhanh  =  15.4% nguong 8 gio
+```
+
+E4 vẫn **KHÔNG CẦN** thiết kế phân đoạn.
+
+### 14.8 G3 — test tái lập phủ hết tool
+
+`TOOLS` giờ có đủ 4 tool tất định mới. `20r2_4_cpu_pilot` **cố ý** nằm ở bảng
+`NON_DETERMINISTIC` (nó đo thời gian; đòi bit-exact sẽ đỏ thường trực) và được
+kiểm bằng **mã thoát + lược đồ + bất biến phán quyết**. Thêm một test đỏ khi có
+tool `20r2_*` mới chưa đăng ký ở **một trong hai** bảng.
+
+`SyntaxWarning: invalid escape sequence` — nguyên nhân là `/!\` ở dòng 23 (không
+phải chuỗi `grep -c "C\."`, vốn đã escape đúng). Sửa bằng docstring raw.
+
+**Và test đó bắt ngay một lỗi thật của chính công cụ.** Bản `--quick` đo 3 τ rồi
+nhân 8/3, nhưng `QUICK_TAUS = [0.5, 3, 28]` **chứa τ đắt nhất**, nên ngoại suy
+**thiên lệch lên**: nó trả `FAIL` trong khi bản đầy đủ trả `PASS`.
+
+```text
+Mot uoc tinh THIEN LECH khong duoc phep phan quyet mot gate.
+=> ban --quick TU KHAI `verdict = NOT_AUTHORITATIVE`, `authoritative = False`,
+   thay vi im lang tra mot verdict sai.
+=> test doi artifact DA COMMIT phai la ban DAY DU (authoritative = True).
+```
+
+Đây là cùng hình dạng với đèn xanh rỗng, nhưng **ngược dấu**: một cơ chế phán
+quyết trả lời `NO` khi nó không có tư cách trả lời gì cả. Cách chữa giống nhau —
+bắt nó **khai phạm vi thẩm quyền** thay vì phát ra một phán quyết.
+
+### 14.9 Nợ sau G1–G4
+
+```text
+20R2-D3  ĐÃ GỠ (§14.6)
+20R2-D4     N3/N4 phần 20R2 chưa đo — cần chiến dịch thứ hai
+20R2-D5     cbr@0.850 chưa có em/A
+20R2-D6  MỚI: se pilot đo tại MỘT điểm z (0.366) và MỘT giá trị a (0.9).
+            Luật C/sqrt(N) giả định C không đổi theo z và a. CHƯA kiểm.
+            Nếu C phụ thuộc z thì băng ở z khác phải tính lại.
+20R2-D7  MỚI: parquet thô của se pilot KHÔNG nằm trong git (.gitignore:64 chỉ
+            cho qua json/md/csv/png/sha256 trong results/). Trên clone sạch
+            `tools/20r2_2_se_pilot.py` phải chạy lại phép đo (~20 phút).
+            Cùng tính chất với baseline_failures.txt. Tool BÁO TO khi thiếu,
+            và nằm ở bảng REQUIRES_LOCAL_RAW chứ không phải TOOLS.
+```
+
+### 14.10 ⚠️ Một lỗi của chính tôi, ghi lại vì nó suýt lọt
+
+`02-se-pilot.json` ban đầu được sinh bởi **một script tạm trong scratchpad**, không
+phải công cụ đã commit — **vi phạm gate 0-1** mà chính phase này đặt ra. Đã sửa:
+`tools/20r2_2_se_pilot.py`.
+
+Và khi sửa thì lộ tiếp một tầng nữa: tôi định commit parquet thô làm dữ liệu
+nguồn, nhưng `.gitignore:64` loại parquet **có chủ đích**. Nếu không kiểm, test
+tái lập sẽ **xanh trên máy tôi và đỏ trên clone sạch** — một lỗi chỉ xuất hiện ở
+nơi khác, đúng loại khó tìm nhất.

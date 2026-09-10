@@ -1,0 +1,145 @@
+{
+ "control_check": {
+  "per_tau": {
+   "tau_20": {
+    "direction_ok": true,
+    "ratio_expected": 2.0,
+    "ratio_observed": 1.9901467801466537,
+    "se_x1": 0.003381223940209414,
+    "se_x4": 0.001698982192640209
+   },
+   "tau_28": {
+    "direction_ok": false,
+    "ratio_expected": 2.0,
+    "ratio_observed": 0.578653548838409,
+    "se_x1": 0.0009081189693298473,
+    "se_x4": 0.0015693655921627165
+   }
+  },
+  "question": "nang n x4 co lam se giam sqrt(4) = 2 lan khong?",
+  "verdict": "tau=20 giam DUNG huong; tau=28 TANG -- NGUOC huong da biet. Day la bang chung truc tiep rang uoc luong se tu 5 seed KHONG dung lam san bang duoc, va vi sao phai dung LUAT GOP."
+ },
+ "estimator": "trung binh err_total tren o gate cho TUNG seed, roi se qua 5 seed",
+ "generated_by": "tools/20r2_2_se_pilot.py",
+ "law": {
+  "C_mean": 0.2922059434508306,
+  "C_observed_range": [
+   0.12783158319563534,
+   0.4708412245891922
+  ],
+  "C_sd": 0.11734848241623021,
+  "C_spread_ratio": 3.683293383518609,
+  "C_upper": 0.4095544258670608,
+  "fitted_exponent": -0.5321150074354413,
+  "form": "se_rel = C / sqrt(so chu ky doc lap)",
+  "n_points": 10,
+  "theoretical_exponent": -0.5,
+  "which_C_is_used": "C_upper (= trung binh + 1sd), bao thu vua phai",
+  "why_pool": "se uoc tu 5 seed co ~35% do bat dinh; gop de uoc MOT tham so on dinh hon 10 uoc luong doc lap."
+ },
+ "limitation": "Do tai MOT diem z (0.366) va MOT gia tri a (mac dinh 0.9). Luat C/sqrt(N) gia dinh C khong doi theo z va a -- CHUA KIEM [20R2-D6].",
+ "observations": [
+  {
+   "cycles": 2000.0,
+   "err_bar": 0.2887649347389558,
+   "n_multiplier": 1,
+   "se": 0.0018447856922634818,
+   "se_rel": 0.006388537770111085,
+   "source": "results/RAW/phase-20R2/se_pilot/se_0.5.parquet",
+   "tau": 0.5
+  },
+  {
+   "cycles": 1000.0,
+   "err_bar": 0.22488027108433734,
+   "n_multiplier": 1,
+   "se": 0.0016011741179911075,
+   "se_rel": 0.007120118231228099,
+   "source": "results/RAW/phase-20R2/se_pilot/se_1.0.parquet",
+   "tau": 1.0
+  },
+  {
+   "cycles": 500.0,
+   "err_bar": 0.168144452811245,
+   "n_multiplier": 1,
+   "se": 0.0016393515388271184,
+   "se_rel": 0.009749661742736265,
+   "source": "results/RAW/phase-20R2/se_pilot/se_2.0.parquet",
+   "tau": 2.0
+  },
+  {
+   "cycles": 333.3333333333333,
+   "err_bar": 0.13972991967871484,
+   "n_multiplier": 1,
+   "se": 0.0012626121175594678,
+   "se_rel": 0.009036089911613986,
+   "source": "results/RAW/phase-20R2/se_pilot/se_3.0.parquet",
+   "tau": 3.0
+  },
+  {
+   "cycles": 200.0,
+   "err_bar": 0.10964937185929649,
+   "n_multiplier": 1,
+   "se": 0.0017859637922401305,
+   "se_rel": 0.016287952789477925,
+   "source": "results/RAW/phase-20R2/se_pilot/se_5.0.parquet",
+   "tau": 5.0
+  },
+  {
+   "cycles": 100.0,
+   "err_bar": 0.08015782828282828,
+   "n_multiplier": 1,
+   "se": 0.0031317899655268528,
+   "se_rel": 0.039070294600256246,
+   "source": "results/RAW/phase-20R2/se_pilot/se_10.0.parquet",
+   "tau": 10.0
+  },
+  {
+   "cycles": 50.0,
+   "err_bar": 0.0579359693877551,
+   "n_multiplier": 1,
+   "se": 0.003381223940209414,
+   "se_rel": 0.05836139406901929,
+   "source": "results/RAW/phase-20R2/se_pilot/se_20.0.parquet",
+   "tau": 20.0
+  },
+  {
+   "cycles": 50.0,
+   "err_bar": 0.05023305393586006,
+   "n_multiplier": 1,
+   "se": 0.0009081189693298473,
+   "se_rel": 0.018078115865489214,
+   "source": "results/RAW/phase-20R2/se_pilot/se_28.0.parquet",
+   "tau": 28.0
+  },
+  {
+   "cycles": 200.0,
+   "err_bar": 0.06070348618090453,
+   "n_multiplier": 4,
+   "se": 0.001698982192640209,
+   "se_rel": 0.02798821450842237,
+   "source": "results/RAW/phase-20R2/se_pilot/se4_20.0.parquet",
+   "tau": 20.0
+  },
+  {
+   "cycles": 200.0,
+   "err_bar": 0.0471372936109117,
+   "n_multiplier": 4,
+   "se": 0.0015693655921627165,
+   "se_rel": 0.0332935022769196,
+   "source": "results/RAW/phase-20R2/se_pilot/se4_28.0.parquet",
+   "tau": 28.0
+  }
+ ],
+ "population": "8 o gate (poisson x4, h2 x4); cbr LOAI vi suy bien",
+ "schema": "dt4n.se_pilot.v2",
+ "seeds": [
+  201,
+  202,
+  203,
+  204,
+  205
+ ],
+ "why_fresh_seeds": "seed 201-205, KHONG phai 101-105 cua chien dich. Dung chung seed se lam bang chap nhan duoc chon tu CHINH du lieu se duoc cham -- mot dang vong tron.",
+ "why_this_z": "diem luoi 20r2_measured gan z tham chieu 0.3650 nhat (lech 0.001). Luoi khong chua dung 0.3650.",
+ "z_reference_grid_point": 0.366
+}

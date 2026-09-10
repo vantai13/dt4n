@@ -1,4 +1,4 @@
-"""Artifact khong duoc chua duong dan tuyet doi cua may da sinh ra no.
+r"""Artifact khong duoc chua duong dan tuyet doi cua may da sinh ra no.
 
 Ba ly do, khong phai mot (do duoc 2026-09-09 tren phase-20R2):
 
