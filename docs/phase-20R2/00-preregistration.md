@@ -725,8 +725,8 @@ $PYTHON -m tools.20r2_4_realizability_audit --out results/PENDING/phase-20R2/rea
 Điền tay. Không công cụ nào điền hộ mục này — đó chính là điểm của việc ký.
 
 ```text
-Nguoi ky        : ______________________________
-Ngay            : ______________________________
+Nguoi ky        : doan van tai
+Ngay            : 2026-09-10
 Commit sha      : = DICH cua tag `phase-20R2-prereg-signed`  -- KHONG dien tay
                   kiem: git rev-parse phase-20R2-prereg-signed^{commit}
                   ^ O nay TRUOC DAY doi "sha CUA BAN prereg duoc ky". O do
@@ -734,15 +734,15 @@ Commit sha      : = DICH cua tag `phase-20R2-prereg-signed`  -- KHONG dien tay
                     prereg, ma prereg lai chua sha do -- vong TU QUY CHIEU,
                     nhu mot file khong the chua sha256 cua chinh no. TAG moi
                     la thu gan chu ky voi commit. [20R2.5-C1]
-Xac nhan        : [ ] toi da doc §0 va chap nhan muc ⚠️ con lai (danh sach 5 RQ)
-                  [ ] toi ky ngan sach 74,53 phut hai nhanh (+30% = 96,89)
+Xac nhan        : [x] toi da doc §0 va chap nhan muc ⚠️ con lai (danh sach 5 RQ)
+                  [x] toi ky ngan sach 74,53 phut hai nhanh (+30% = 96,89)
                       -- DO DUOC o cpu_pilot.json. Con so 29,4 phut o ban truoc
                          la A7 KE THUA, da bi 20R2.4 thay. Xem §16.1.
-                  [ ] toi ky luoi 800 o (KHONG phai 960)
-                  [ ] toi KHONG ke thua ket luan kha thi cua T2 (20R2-L4)
-                  [ ] toi da doc §16 va ky BANG DA SUA: C_upper = 0,406418
+                  [x] toi ky luoi 800 o (KHONG phai 960)
+                  [x] toi KHONG ke thua ket luan kha thi cua T2 (20R2-L4)
+                  [x] toi da doc §16 va ky BANG DA SUA: C_upper = 0,406418
                       tren truc exogenous (ban cu 0,409554 do tren truc SAI)
-                  [ ] toi ky KE HOACH docs/phase-20R2/03-run-plan.json
+                  [x] toi ky KE HOACH docs/phase-20R2/03-run-plan.json
                       sha256 a984020e104bb13b4743be5aca2d5e0eabf0d49558f53cc5f0d70c6ce4fdf662
                       (sinh lai bat cu luc nao de doi chieu: tool TAT DINH)
 
