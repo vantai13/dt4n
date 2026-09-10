@@ -1,0 +1,3009 @@
+{
+ "gate_version": 2,
+ "generated_by": "tools/20r2_4_grid_and_gate.py",
+ "generated_utc": "2026-09-10T04:11:37.877879+00:00",
+ "grid": {
+  "a_values": [
+   0.5,
+   0.9
+  ],
+  "cell_definition": "mot o = (mode, rho_bar, tau, a, seed)",
+  "cells_mode_rho": [
+   {
+    "mode": "cbr",
+    "rho_bar": 0.7,
+    "role": "pc1",
+    "sigma_max_regime": 0.0513565891472868
+   },
+   {
+    "mode": "cbr",
+    "rho_bar": 0.85,
+    "role": "pc1",
+    "sigma_max_regime": 0.014534883720930224
+   },
+   {
+    "mode": "poisson",
+    "rho_bar": 0.7,
+    "role": "gate",
+    "sigma_max_regime": 0.0513565891472868
+   },
+   {
+    "mode": "poisson",
+    "rho_bar": 0.85,
+    "role": "gate",
+    "sigma_max_regime": 0.05329457364341088
+   },
+   {
+    "mode": "poisson",
+    "rho_bar": 0.925,
+    "role": "gate",
+    "sigma_max_regime": 0.024224806201550386
+   },
+   {
+    "mode": "poisson",
+    "rho_bar": 0.96,
+    "role": "gate",
+    "sigma_max_regime": 0.010658914728682202
+   },
+   {
+    "mode": "h2",
+    "rho_bar": 0.7,
+    "role": "gate",
+    "sigma_max_regime": 0.0513565891472868
+   },
+   {
+    "mode": "h2",
+    "rho_bar": 0.85,
+    "role": "gate",
+    "sigma_max_regime": 0.05329457364341088
+   },
+   {
+    "mode": "h2",
+    "rho_bar": 0.925,
+    "role": "gate",
+    "sigma_max_regime": 0.024224806201550386
+   },
+   {
+    "mode": "h2",
+    "rho_bar": 0.96,
+    "role": "gate",
+    "sigma_max_regime": 0.010658914728682202
+   }
+  ],
+  "dt": 0.005,
+  "n_cells_mode_rho": 10,
+  "n_combos_without_seed": 160,
+  "n_grid_cells": 800,
+  "seeds": [
+   101,
+   102,
+   103,
+   104,
+   105
+  ],
+  "taus": [
+   0.5,
+   1.0,
+   2.0,
+   3.0,
+   5.0,
+   10.0,
+   20.0,
+   28.0
+  ]
+ },
+ "pass_meaning": "TIEN SANG: 7 tieu chi quyet duoc tu tham so thiet ke. Hai tieu chi hau-kiem (censoring_ok, mondrian_cells_populated) CHUA chay o buoc nay -- do la DUNG. Gate 4-2 (not_evaluated == []) noi ve LAN 2, chay sau chien dich.",
+ "pass_number": 1,
+ "rows": [
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "pc1",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.007267441860465112,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.013081395348837201,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.007267441860465112,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.013081395348837201,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.007267441860465112,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.013081395348837201,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.007267441860465112,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.013081395348837201,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.007267441860465112,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.013081395348837201,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.007267441860465112,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.013081395348837201,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.007267441860465112,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.013081395348837201,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.007267441860465112,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "cbr",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "pc1",
+   "sigma": 0.013081395348837201,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "poisson",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.0256782945736434,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.7,
+   "role": "gate",
+   "sigma": 0.046220930232558126,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.02664728682170544,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.85,
+   "role": "gate",
+   "sigma": 0.04796511627906979,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.012112403100775193,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.925,
+   "role": "gate",
+   "sigma": 0.021802325581395346,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 2000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 0.5,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 1000.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 1.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 500.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 2.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 333.3333333333333,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 3.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 200.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 5.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 100.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 10.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 200000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1000.0,
+   "tau": 20.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.5,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.005329457364341101,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  },
+  {
+   "a": 0.9,
+   "cycles": 50.0,
+   "failed": [],
+   "gate_version": 2,
+   "mode": "h2",
+   "n": 280000,
+   "not_evaluated": [
+    "censoring_ok",
+    "mondrian_cells_populated"
+   ],
+   "rho_bar": 0.96,
+   "role": "gate",
+   "sigma": 0.009593023255813982,
+   "t_sim_s": 1400.0,
+   "tau": 28.0,
+   "verdict": "REALIZABLE"
+  }
+ ],
+ "schema": "dt4n.grid_prescreen.v1",
+ "summary": {
+  "n_realizable": 160,
+  "n_rejected": 0,
+  "not_evaluated_shapes": {
+   "censoring_ok|mondrian_cells_populated": 160
+  },
+  "rejected_by_reason": {}
+ },
+ "validity": {
+  "aoi_axis": {
+   "label": "UNREGISTERED",
+   "note": "tien sang LAN 1: 7/9 tieu chi. Cho A5 (muc 3 prereg) VA cho 20R2-D3 -- luoi z 20R2 chua co trong decision_error_v2.py:76. Chua duoc promote khi con mot trong hai.",
+   "z_grid_s": []
+  },
+  "axis_role": "grid_prescreen",
+  "note": "tien sang LAN 1: 7/9 tieu chi. Cho A5 (muc 3 prereg) VA cho 20R2-D3 -- luoi z 20R2 chua co trong decision_error_v2.py:76. Chua duoc promote khi con mot trong hai.",
+  "omega": null,
+  "pending_on": [
+   "aoi_axis",
+   "sla_axis"
+  ],
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "UNREGISTERED",
+   "match_method": "none",
+   "note": "cho A5 (prereg muc 3) duoc KY; chua chay tren mot truc SLA nao"
+  },
+  "w_loss": null
+ }
+}

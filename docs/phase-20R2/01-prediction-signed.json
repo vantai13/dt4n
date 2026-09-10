@@ -1,0 +1,241 @@
+{
+ "acceptance_band": {
+  "AXIS_FLOOR": 0.01466290944168761,
+  "AXIS_FLOOR_why": "do nhay CON LAI trong ho measured sau khi truc da ky, lay o tau xau nhat (tau = 28). Bang khong the hep hon chinh do bat dinh cua truc, neu khong gate se do LUA CHON TRUC chu khong do hien tuong.",
+  "DO_NOT_USE": {
+   "value_rel": 0.0894895195011969,
+   "what_it_really_is": "tuong phan measured vs LEGACY (~9%). Legacy la DOI CHUNG AM co chu dich, khong phai mot lua chon truc dang mo. Lay no lam san cho bang (vi du '+-15% vi do nhay truc la 10.3%') la nham lan DOI CHUNG voi DO BAT DINH: no cho mot bang rong gap ~6 lan muc can, va mot bang qua rong lam gate MAT LUC PHAN GIAI -- cai gi cung PASS, nen gate khong con noi len dieu gi."
+  },
+  "K_MC": 3.0,
+  "K_MC_why": "3 sai so chuan. Ky TRUOC pilot de so pilot khong the tu chon he so cho minh.",
+  "formula": "band_rel = max(AXIS_FLOOR, K_MC * se_pilot_rel)",
+  "se_pilot_rel": null,
+  "se_pilot_rel_source": "pilot 3 o cua 20R2.4; se cua err_total qua 5 seed, chuan hoa theo err trung binh cua chinh o do."
+ },
+ "authority": "docs/phase-20R2/00-preregistration.md",
+ "axis_sensitivity": {
+  "note": "residual_rel = bien do trong HO measured / err tai z da ky. legacy_contrast_rel = tuong phan voi truc DOI CHUNG AM, KHONG phai do bat dinh cua ket qua chinh.",
+  "per_tau": [
+   {
+    "err_at_signed_z": 0.3399435802272874,
+    "legacy_contrast_rel": -0.07023507833073431,
+    "measured_family_residual_rel": 0.011091507574358533,
+    "tau": 0.5
+   },
+   {
+    "err_at_signed_z": 0.25575980450216135,
+    "legacy_contrast_rel": -0.08012196661580574,
+    "measured_family_residual_rel": 0.012913919245296989,
+    "tau": 1.0
+   },
+   {
+    "err_at_signed_z": 0.18651510326385234,
+    "legacy_contrast_rel": -0.08502022613369668,
+    "measured_family_residual_rel": 0.013826433188149972,
+    "tau": 2.0
+   },
+   {
+    "err_at_signed_z": 0.1538547555180896,
+    "legacy_contrast_rel": -0.08663522504882164,
+    "measured_family_residual_rel": 0.014128337036320973,
+    "tau": 3.0
+   },
+   {
+    "err_at_signed_z": 0.12015179467723106,
+    "legacy_contrast_rel": -0.08791900607202734,
+    "measured_family_residual_rel": 0.014368628101984025,
+    "tau": 5.0
+   },
+   {
+    "err_at_signed_z": 0.08548038011616414,
+    "legacy_contrast_rel": -0.08887653533032497,
+    "measured_family_residual_rel": 0.014548009976824514,
+    "tau": 10.0
+   },
+   {
+    "err_at_signed_z": 0.0606282153232081,
+    "legacy_contrast_rel": -0.08935348028860834,
+    "measured_family_residual_rel": 0.01463740576784418,
+    "tau": 20.0
+   },
+   {
+    "err_at_signed_z": 0.05128478957929956,
+    "legacy_contrast_rel": -0.0894895195011969,
+    "measured_family_residual_rel": 0.01466290944168761,
+    "tau": 28.0
+   }
+  ],
+  "worst_legacy_contrast_rel": 0.0894895195011969,
+  "worst_measured_family_residual_rel": 0.01466290944168761
+ },
+ "estimands": {
+  "DECISION_ERR_BY_AGE": {
+   "ARTIFACT_FIELD": "per_z[<z_key>].err_total",
+   "ARTIFACT_FIELD_LINE": 501,
+   "BRANCH": "z_fixed -- lag TAT DINH k = round(z/dt), measurements/decision_error_v2.py (lag TAT DINH). KHONG goi bo sinh AoI nao trong run_cell (T2-L8 dinh chinh co che). Truc AoI vao qua VIEC CHON z, khong qua bo sinh.",
+   "CODE": "measurements/decision_error_v2.py : run_cell",
+   "DECOMPOSITION": {
+    "per_z[<z_key>].err_model": 502,
+    "per_z[<z_key>].err_stale": 503,
+    "per_z[<z_key>].extrapolated": 508
+   },
+   "DUNG CHO": [
+    "RQ-20R2a",
+    "RQ-20R2c",
+    "RQ-20R2d"
+   ],
+   "EXTRAPOLATED_MEANS": "z nam NGOAI mien tuoi that cua truc measured [0.115, 0.615]. CO NGHIA 'so nay dung nhung no noi ve mot trang thai he chua bao gio o', KHONG co nghia 'so nay sai'.",
+   "GIA TRI MOC": null,
+   "GIA TRI MOC NOTE": "dien SAU pilot 3 o cua 20R2.4, TRUOC chien dich",
+   "LEVEL": "all_action",
+   "POPULATION": "8 o `gate` cua luoi 20R2: mode c_a thuoc {poisson, h2} x rho_bar thuoc {0.700, 0.850, 0.925, 0.960}. Nguon phan hoach: results/LIVE/phase-20R/sla_calibration.json summary.n_gate_cells = 8. Luoi KET QUA = 8 o x 8 tau x 2 sigma x 5 seed = 640 o. 2 o `cbr` kha thi (rho_bar 0.700, 0.850) la DOI CHUNG DUONG, bao cao RIENG, KHONG gop vao bat ky trung binh nao. 2 o cbr con lai bi loai boi q8 (sigma_max_regime = 0).",
+   "SCALE": "ti le (khong thu nguyen), trong [0, 1]. KHONG phai delay_ms: `err` la TI LE hang sai, khong phai mot do tre. KHONG duoc dat cung nguong voi d_sla.",
+   "UNIT": "dimensionless"
+  },
+  "SLA_VIOL_BY_AGE": {
+   "ARTIFACT_FIELD": "per_z[<z_key>].d_sla",
+   "ARTIFACT_FIELD_LINE": 504,
+   "BRANCH": "z_fixed",
+   "CODE": "measurements/decision_error_v2.py : run_cell",
+   "DUNG CHO": [
+    "RQ-20R2b"
+   ],
+   "GIA TRI MOC": null,
+   "GIA TRI MOC NOTE": "dien sau pilot",
+   "LEVEL": "all_action",
+   "POPULATION": "8 o `gate` cua luoi 20R2: mode c_a thuoc {poisson, h2} x rho_bar thuoc {0.700, 0.850, 0.925, 0.960}. Nguon phan hoach: results/LIVE/phase-20R/sla_calibration.json summary.n_gate_cells = 8. Luoi KET QUA = 8 o x 8 tau x 2 sigma x 5 seed = 640 o. 2 o `cbr` kha thi (rho_bar 0.700, 0.850) la DOI CHUNG DUONG, bao cao RIENG, KHONG gop vao bat ky trung binh nao. 2 o cbr con lai bi loai boi q8 (sigma_max_regime = 0). (GIONG DECISION_ERR_BY_AGE co chu dich: hai estimand phai noi ve cung mot quan the thi moi doc chung duoc trong mot ket luan.)",
+   "SCALE": "cost_ms -- DI QUA ham chi phi (delay + w_loss * loss), nen NHAY voi w_loss va voi truc SLA. Day la khac biet CHINH voi DECISION_ERR_BY_AGE: err la TI LE, d_sla la CHI PHI. Khac ca THANG va DON VI.",
+   "UNIT": "ms"
+  }
+ },
+ "generated_by": "tools/20r2_2_predictions.py",
+ "generated_utc": "2026-09-10T03:54:30.481429+00:00",
+ "reading_policy": {
+  "AGGREGATION_FALLACY_GUARD": "Gop cbr vao trung binh se KEO err trung binh XUONG (cbr la che do de nhat), nen bao cao 'twin sai 12%' trong khi o che do kho that (h2@0.960) co the la 20%. Hop phap ve so hoc, sai lech ve khoa hoc. Vi vay POPULATION = 8 o gate, cbr bao cao RIENG.",
+  "DENOMINATOR": {
+   "declared_before_run": true,
+   "n_predictions_scored": 8,
+   "rule": "MOI tau trong TAUS deu duoc cham, ke ca khi truot. Giu nguyen moi miss trong bao cao -- T2 cham 21/32 = 65.6% va GIU ca 10 miss; lam y het."
+  },
+  "POSITIVE_CONTROL": {
+   "cells": "2 o cbr kha thi (rho_bar 0.700, 0.850)",
+   "claim": null,
+   "claim_withdrawn": "err(cbr) < err(poisson) < err(h2) tai cung (z, tau)",
+   "evidence": "results/PENDING/phase-20R2/em_over_a.json",
+   "instrument_check_instead": "Phep kiem DUNG CU that su cua 20R2 la doi chung twin-hoan-hao (--control), von PHAI cho dung 0 theo docstring cua decision_error_v2. Do la mot rang buoc TAT DINH, khong phu thuoc che do luu luong, nen no khong bi suy bien lam hong.",
+   "reported": "RIENG, KHONG gop vao trung binh cua 8 o gate",
+   "signed_before_run": {
+    "both_recorded_before_measurement": true,
+    "mechanism_1_low_err": "cbr deu theo thoi gian -> twin cu con dung",
+    "mechanism_2_high_err": "bien ~ 0 -> argmin tuy y"
+   },
+   "status": "DOWNGRADED_TO_DIAGNOSTIC",
+   "what_it_becomes": "CHAN DOAN co dieu kien, bao cao RIENG, KHONG dung de phan quyet bat ky RQ nao. Ghi ca hai co che TRUOC, roi bao cao co che nao thang -- do la mot quan sat, khong phai mot phep kiem dung cu.",
+   "why_withdrawn": "Mot doi chung DUONG chi co gia tri khi ta BIET TRUOC ket qua phai ra sao. Du kien do duoc o 20R2.4 (E2) cho thay ta KHONG biet truoc, vi cbr suy bien tren truc bien:\n  cbr@0.700  A_bar = 3.50e-04 (a=0.9), 2.24e-04 (a=0.5)\n             nho hon o khong-cbr nho nhat ~3213 lan\n             span/pure = 0.0067 / 0.0047 -> duong cong theo tuoi gan nhu PHANG\n  cbr@0.850  T2 KHONG do -> CHUA BIET\nVoi bien ~ 0, HAI co che keo err ve HAI HUONG NGUOC NHAU:\n  (1) cbr deu theo thoi gian -> twin cu VAN dung -> err THAP\n  (2) bien giua 4 duong ~ 0 -> argmin gan nhu tuy y, lat vi mot nhieu rat nho -> err CAO\nKhong co co so tien nghiem de noi co che nao thang. Ky mot bat dang thuc mot chieu trong tinh huong do la doan, khong phai doi chung."
+  },
+  "PRIMARY_directional": {
+   "claim": "err_do >= err_sheppard tai MOI tau",
+   "if_violated": [
+    "(a) mot vi pham chua nghi toi day err XUONG -- phai neu ten no",
+    "(b) estimator co bug -- chay doi chung TRUOC khi dien giai"
+   ],
+   "note": "Vi pham thu 4 (bien chuan hai chieu) KHONG doan duoc dau, nen day la du doan mot phia co dieu kien, khong phai dinh ly.",
+   "why": "3 trong 4 gia dinh Sheppard bi vi pham theo cung MOT huong (ky vong khac 0 => co san; 4 hanh dong thay vi 2 => nhieu co hoi sai hon; nugget MA(1) + clip => them nhieu). Nen du doan CO DINH HUONG manh hon du doan diem: no co the sai theo mot cach CHO BIET cai gi sai."
+  },
+  "SECONDARY_shape": {
+   "claim": "err don dieu GIAM theo tau tai z da ky",
+   "one_break": "vo don dieu o DUNG MOT tau => bao cao la DU LIEU, KHONG sua luoi",
+   "pass_rule": "don dieu o >= 7/8 diem => 20R2-2 PASS",
+   "two_breaks": "vo o >= 2 tau => nghi estimator, chay doi chung TRUOC khi dien giai"
+  }
+ },
+ "schema": "dt4n.prediction_signed.v1",
+ "sheppard": [
+  {
+   "err": 0.3399435802272874,
+   "rho": 0.48190899009020244,
+   "tau": 0.5
+  },
+  {
+   "err": 0.25575980450216135,
+   "rho": 0.6941966508779789,
+   "tau": 1.0
+  },
+  {
+   "err": 0.18651510326385234,
+   "rho": 0.8331846439283305,
+   "tau": 2.0
+  },
+  {
+   "err": 0.1538547555180896,
+   "rho": 0.8854434671391683,
+   "tau": 3.0
+  },
+  {
+   "err": 0.12015179467723106,
+   "rho": 0.9296008300257927,
+   "tau": 5.0
+  },
+  {
+   "err": 0.08548038011616414,
+   "rho": 0.964158093896324,
+   "tau": 10.0
+  },
+  {
+   "err": 0.0606282153232081,
+   "rho": 0.9819155227901859,
+   "tau": 20.0
+  },
+  {
+   "err": 0.05128478957929956,
+   "rho": 0.9870488826449759,
+   "tau": 28.0
+  }
+ ],
+ "sheppard_is_a_reference_line_not_truth": {
+  "net": "3/4 day cung mot huong => du doan CO DINH HUONG",
+  "violations": [
+   {
+    "assumption": "bien chuan hai chieu",
+    "pushes_err": "khong doan duoc dau",
+    "reality": "bien = hieu chi phi PHI TUYEN theo rho"
+   },
+   {
+    "assumption": "ky vong 0",
+    "pushes_err": "TANG (co san, err(z->0) > 0)",
+    "reality": "err_model != 0 => co thien lech"
+   },
+   {
+    "assumption": "chi 2 hanh dong",
+    "pushes_err": "TANG (nhieu co hoi sai hon)",
+    "reality": "4 duong, argmin trong 4"
+   },
+   {
+    "assumption": "AR(1) thuan",
+    "pushes_err": "TANG (nhieu them)",
+    "reality": "co nugget MA(1) + clip o RELIABLE_CEILING"
+   }
+  ],
+  "what_the_800_cells_buy": "Sheppard cho GIOI HAN DUOI ly tuong duoi 4 gia dinh, khong cai nao dung trong he that. 800 o do KHOANG CACH giua ly tuong va thuc te -- chinh khoang cach do la dong gop, khong phai con so err."
+ },
+ "taus": [
+  0.5,
+  1.0,
+  2.0,
+  3.0,
+  5.0,
+  10.0,
+  20.0,
+  28.0
+ ],
+ "z_legacy_contrast": 0.30237,
+ "z_measured_family": {
+  "empirical_clean_p50": 0.35827,
+  "empirical_p50_alt": 0.36728,
+  "link_corr_matrix_Z_MEDIAN_S": 0.369,
+  "model_mean": 0.36594,
+  "model_median_U0": 0.365
+ },
+ "z_reference_s": 0.365,
+ "z_reference_why": "trung vi cua MO HINH measured (base_age_steps, U0). KHONG 0.369: 0.369 thuoc ho measured nhung la hang so Z_MEDIAN_S cua measurements/link_corr_matrix.py, khong phai trung vi cua bo sinh ma pipeline THUC SU goi."
+}

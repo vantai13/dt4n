@@ -182,6 +182,84 @@ GIA TRI MOC     rms_e_model = 0.3405 ms
                 nguon: results/PENDING/phase-T2/sweep_r2/*.parquet
                        (chi so lenh trong sweep_r2/run_log.jsonl)
 --------------------------------------------------------------------------
+ID              DECISION_ERR_BY_AGE
+LEVEL           all_action
+POPULATION      8 o `gate` cua luoi 20R2: c_a thuoc {poisson, h2} x rho_bar
+                thuoc {0.700, 0.850, 0.925, 0.960}. Luoi KET QUA =
+                8 o x 8 tau x 2 sigma x 5 seed = 640 o.
+                Nguon phan hoach: results/LIVE/phase-20R/sla_calibration.json
+                summary.n_gate_cells = 8 (KHONG suy tu `role`, artifact da
+                phan hoach san).
+                2 o `cbr` kha thi (rho_bar 0.700, 0.850) = DOI CHUNG DUONG,
+                bao cao RIENG, KHONG gop vao bat ky trung binh nao. 2 o cbr
+                con lai bi loai boi q8 (sigma_max_regime = 0).
+                => Gop cbr vao trung binh la NGUY BIEN GOP: cbr la che do de
+                   nhat, no KEO err trung binh XUONG.
+SCALE           ti le (khong thu nguyen), trong [0, 1]
+                /!\ KHONG phai delay_ms. `err` la TI LE hang sai, khong phai
+                    mot do tre. KHONG duoc dat cung nguong voi d_sla.
+UNIT            dimensionless
+BRANCH          z_fixed -- lag TAT DINH k = round(z/dt),
+                measurements/decision_error_v2.py:465. run_cell KHONG goi bo
+                sinh AoI nao (T2-L8 dung ve tinh than, dinh chinh ve co che).
+                Truc AoI vao qua VIEC CHON z, khong qua bo sinh.
+CODE            measurements/decision_error_v2.py : run_cell
+ARTIFACT_FIELD  per_z[<z_key>].err_total                        (dong 482)
+                kem .err_model (483) va .err_stale (484) de phan ra
+                kem .extrapolated (489) -- CO NGHIA "z ngoai mien tuoi that
+                    [0.115, 0.615] cua truc measured", KHONG co nghia "sai".
+DUNG CHO        RQ-20R2a, RQ-20R2c, RQ-20R2d
+GIA TRI MOC     <dien SAU pilot 3 o cua 20R2.4, TRUOC chien dich>
+--------------------------------------------------------------------------
+ID              SLA_VIOL_BY_AGE
+LEVEL           all_action
+POPULATION      GIONG DECISION_ERR_BY_AGE (co chu dich: hai estimand phai noi
+                ve cung mot quan the thi moi doc chung duoc trong mot ket luan)
+SCALE           cost_ms -- DI QUA ham chi phi (delay + w_loss * loss), nen
+                NHAY voi w_loss va voi truc SLA.
+                /!\ Day la khac biet CHINH voi DECISION_ERR_BY_AGE:
+                    err la TI LE, d_sla la CHI PHI. Khac ca THANG va DON VI.
+                    Bang chung do duoc: G23-203 cho max|diff| = 0.0 tren
+                    rms_e_*/cov_e (thang delay_ms) khi doi truc SLA, con
+                    err_total/d_sla (di qua argmin bang chi phi) thi KHONG.
+UNIT            ms
+BRANCH          z_fixed
+CODE            measurements/decision_error_v2.py : run_cell
+ARTIFACT_FIELD  per_z[<z_key>].d_sla                            (dong 485)
+DUNG CHO        RQ-20R2b
+GIA TRI MOC     <dien sau pilot>
+--------------------------------------------------------------------------
+```
+
+### VI SAO 20R2 KHONG TAI DUNG `RMS_ALLACTION_DELAY`
+
+```text
+RMS_ALLACTION_DELAY  DUNG  LEVEL          (all_action -- cung muc)
+                     SAI   SCALE          (delay_ms  vs  ti le khong thu nguyen)
+                     SAI   ARTIFACT_FIELD (rms_e_model  vs  err_total)
+
+Hai truong sai la du. Tai dung no la lap lai DUNG loi A-T2-3: mot ten phu
+len hai dai luong. Lan truoc cai gia la T2.6 luot 2 do sai dai luong so voi
+du doan da ky.
+```
+
+/!\ CANH BAO CO CHE -- `estimand_id` STAMP O MUC ARTIFACT, KHONG O MUC TRUONG:
+
+```text
+measurements/decision_error_v2.py:48   ESTIMAND_ID = "RMS_ALLACTION_DELAY"
+                              :453     "estimand_id": ESTIMAND_ID   <- dong vao artifact
+                              :1028    "estimand_id": ESTIMAND_ID   <- va vao validity
+
+Nghia la MOT artifact cua run_cell se mang MOT nhan, trong khi per_z[] cua no
+chua BA estimand khac nhau:
+    rms_e_model / rms_e_stale / cov_e  -> RMS_ALLACTION_DELAY  (delay_ms)
+    err_total / err_model / err_stale  -> DECISION_ERR_BY_AGE  (ti le)
+    d_sla                              -> SLA_VIOL_BY_AGE      (cost_ms)
+
+Nhan o muc artifact KHONG DU DO PHAN GIAI de phan biet ba cai do. Vi vay
+`ESTIMAND_BY_FIELD` duoc them vao module: no khai theo TRUONG, va no la thu
+phai duoc trich dan khi phan quyet mot du doan 20R2.
+Test canh: test/test_20r2_2_prediction.py, test/test_t2_estimand_registry.py
 ```
 
 ### HAI ID TREN KHONG SO SANH DUOC -- va day la BANG CHUNG SO

@@ -1,0 +1,189 @@
+{
+ "N3": {
+  "arm_glob": "t2_6b_*.json",
+  "criterion": "moi hang: ar1_fit.max_rel_err_vs_measured < 0.02",
+  "fail_by_cell": {
+   "h2@0.850": 1,
+   "poisson@0.700": 1,
+   "poisson@0.850": 2
+  },
+  "gate": "ar1_rms_total_fit_within_2pct",
+  "n_arms": 18,
+  "n_fail": 4,
+  "n_pass": 14,
+  "per_arm": [
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r000.json",
+    "cell": "poisson@0.960",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.010895485693856233
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r001.json",
+    "cell": "h2@0.700",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.010957298443822872
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r002.json",
+    "cell": "h2@0.960",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.00849543548837195
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r003.json",
+    "cell": "poisson@0.850",
+    "passes": false,
+    "worst_max_rel_err_vs_measured": 0.022417300737680668
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r004.json",
+    "cell": "poisson@0.700",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.013795475630186793
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r005.json",
+    "cell": "poisson@0.925",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.013851296247476719
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r006.json",
+    "cell": "h2@0.925",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.01080777800783217
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r007.json",
+    "cell": "poisson@0.850",
+    "passes": false,
+    "worst_max_rel_err_vs_measured": 0.04349876486175197
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r008.json",
+    "cell": "poisson@0.925",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.010286019658560797
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r009.json",
+    "cell": "poisson@0.700",
+    "passes": false,
+    "worst_max_rel_err_vs_measured": 0.052143800701873744
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r010.json",
+    "cell": "h2@0.850",
+    "passes": false,
+    "worst_max_rel_err_vs_measured": 0.024265390045392854
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r011.json",
+    "cell": "h2@0.850",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.01058098007114372
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r012.json",
+    "cell": "cbr@0.700",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.011401140848869451
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r013.json",
+    "cell": "cbr@0.700",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.016511506057198533
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r014.json",
+    "cell": "h2@0.700",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.010860296974761208
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r015.json",
+    "cell": "poisson@0.960",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.009865900933997196
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r016.json",
+    "cell": "h2@0.960",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.008703677931677922
+   },
+   {
+    "artifact": "results/PENDING/phase-T2/sweep_r3/t2_6b_r017.json",
+    "cell": "h2@0.925",
+    "passes": true,
+    "worst_max_rel_err_vs_measured": 0.007958497030572942
+   }
+  ]
+ },
+ "N3_including_controls": {
+  "arm_glob": "*.json",
+  "n_arms": 26,
+  "n_fail": 4,
+  "n_pass": 22,
+  "note": "gop ca legacy_*.json (doi chung truc cu). Ghi ra de minh bach, KHONG dung de doi chieu moc: moc 14/4 la cua arm CHINH. Hai tap khac nhau thi khong so duoc."
+ },
+ "N4": {
+  "assumption": "A, c, em doc lap voi tau (NEN cua luat RMS)",
+  "criterion": "ratio_span_over_spread: bien thien GIUA cac tau so voi bien thien TRONG cung mot tau. Khong thu nguyen, tu hieu chuan -- khong can ky nguong.",
+  "fail_by_cell": {
+   "h2@0.700": 2,
+   "poisson@0.850": 5,
+   "poisson@0.925": 4
+  },
+  "fail_by_parameter": {
+   "A": 2,
+   "c": 3,
+   "em": 6
+  },
+  "n_fail": 11,
+  "n_pass": 7,
+  "n_total": 18,
+  "prediction": "D-T2.6-4"
+ },
+ "T2_baseline_pinned": {
+  "n3_fail": 4,
+  "n3_pass": 14,
+  "n4_fail": 11,
+  "n4_pass": 7
+ },
+ "baseline_drift": [],
+ "generated_by": "tools/20r2_4_n3_n4_recheck.py",
+ "generated_utc": "2026-09-10T04:11:38.094663+00:00",
+ "label": "T2_baseline",
+ "n3_scope_correction": "N4 cua handoff viet 'chu yeu o poisson@0.850'. Do lai: 4 FAIL trai tren 3 o khac nhau (h2@0.850, poisson@0.700, poisson@0.850). Pham vi hong RONG HON cau chu.",
+ "schema": "dt4n.n3_n4_recheck.v1",
+ "source_sweep_dir": "results/PENDING/phase-T2/sweep_r3",
+ "status_20r2": {
+  "measured": false,
+  "must_not": "KHONG duoc chep ket qua T2 sang 20R2. Mot gia dinh vo 11/18 o dieu kien A co the vo 3/18 hoac 17/18 o dieu kien B.",
+  "why": "can cert/tau_sweep.py chay tren luoi 20R2 (exogenous SLA) -- mot chien dich thu hai, ~53 phut theo run_log sweep_r3. Chay SAU 20R2.5."
+ },
+ "validity": {
+  "aoi_axis": {
+   "label": "UNREGISTERED",
+   "note": "moc T2, KHONG phai ket qua 20R2. Phan 20R2 can tau_sweep chay tren luoi 20R2 -- chien dich thu hai, sau 20R2.5.",
+   "z_grid_s": []
+  },
+  "axis_role": "n3_n4_baseline",
+  "note": "moc T2, KHONG phai ket qua 20R2. Phan 20R2 can tau_sweep chay tren luoi 20R2 -- chien dich thu hai, sau 20R2.5.",
+  "omega": null,
+  "pending_on": [
+   "aoi_axis",
+   "sla_axis"
+  ],
+  "schema": "dt4n.validity.v1",
+  "sla_axis": {
+   "label": "UNREGISTERED",
+   "match_method": "none",
+   "note": "cho A5 (prereg muc 3) duoc KY; chua chay tren mot truc SLA nao"
+  },
+  "w_loss": null
+ }
+}

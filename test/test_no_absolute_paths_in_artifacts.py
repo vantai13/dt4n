@@ -20,6 +20,10 @@ HAI TANG, VI SAO KHONG PHAI MOT:
                     2026-09-09. Chung co truoc quy uoc nay. Ghim thanh DANH
                     SACH -- danh sach CHI DUOC NGAN DI: them mot tep moi vao se
                     lam do test `..._only_shrinks`.
+                    /!\ 39 la so TRONG PHAM VI ba tang, KHONG phai tong cay:
+                    toan cay results/ co 100 tep mang duong dan tuyet doi, 60
+                    trong so do nam o RAW/ va SUPERSEDED/ va bi loai CO CHU
+                    DICH. Xem khoi PHAM VI ngay tren `_artifacts()`.
 
 Vi sao khong bat ca 39 do ngay: sua chung doi sinh lai artifact cua bon phase
 khac, va 7 trong so do o LIVE/ (sha duoc trich dan noi khac) nen phai qua
@@ -95,9 +99,43 @@ INHERITED_ABSOLUTE_PATHS = {
 }
 
 
+# PHAM VI CUA CAI CHAN NAY -- ba tang, va CHI ba tang.
+#
+# Do duoc 2026-09-10 tren toan cay results/ voi CHINH ABSOLUTE_PREFIXES duoi
+# day: 100 tep JSON mang duong dan tuyet doi.
+#
+#     TRONG pham vi (LIVE/ PENDING/ SMOKE/)                40
+#         SMOKE/phase-20R    15      PENDING/phase-23        7
+#         LIVE/phase-23       7      PENDING/phase-T2        5
+#         SMOKE/phase-G2      5      SMOKE/phase-20R2        1  <- GRANDFATHERED
+#                                                          ----
+#                              39 no thua ke  +  1 mien tru co ly do
+#
+#     NGOAI pham vi (KHONG ai canh)                        60
+#         RAW/phase-23       37      SUPERSEDED/phase-21    14
+#         SUPERSEDED/phase-20R 8     results/DATA_MANIFEST.json  1
+#
+# LOAI HAI TANG DUOI DAY LA CO CHU DICH, khong phai bo sot:
+#   RAW/         log tho. Duong dan may O DAY LA PROVENANCE THAT (chay o dau),
+#                khong phai duong dan du lieu. Sua chung la XOA bang chung.
+#   SUPERSEDED/  da nghi huu, khong ai duoc trich dan. Sinh lai chung khong
+#                mang lai gia tri nao ma lai lam trong chuoi custody.
+#
+# VI SAO PHAI GHI RA: khong ghi thi con so 39 trong docstring doc NHU LA TONG
+# SO, trong khi no la tong so TRONG PHAM VI. Nguoi dem doc lap ra 100 va
+# khong doi chieu duoc voi 39 -- do la mot khoang toi, va khoang toi trong
+# mot cai chan la thu bien no thanh PASS RONG.
+#
+# /!\ PROMOTE mot tep tu RAW/ hoac SUPERSEDED/ len ba tang tren = no BUOC VAO
+#     pham vi, va test_..._only_shrinks se do voi mot tep ma khong ai biet vi
+#     sao no xuat hien. SINH LAI voi duong dan tuong doi TRUOC KHI promote.
+IN_SCOPE_TIERS = ('LIVE', 'PENDING', 'SMOKE')
+OUT_OF_SCOPE_TIERS = ('RAW', 'SUPERSEDED')
+
+
 def _artifacts():
     out = []
-    for tier in ('LIVE', 'PENDING', 'SMOKE'):
+    for tier in IN_SCOPE_TIERS:
         root = REPO / 'results' / tier
         if root.is_dir():
             out += sorted(root.rglob('*.json'))
@@ -155,3 +193,40 @@ def test_grandfather_list_only_names_files_that_exist():
     for rel in GRANDFATHERED:
         assert (REPO / 'results' / rel).exists(), (
             rel + ': co trong danh sach mien tru nhung tep khong ton tai -> xoa dong do')
+
+
+def test_the_guard_declares_which_tiers_it_does_not_watch():
+    """Mot cai chan phai noi ro no KHONG canh cai gi.
+
+    Day khong phai test hinh thuc. `_artifacts()` quet ba tang; hai tang RAW/
+    va SUPERSEDED/ bi loai CO CHU DICH. Neu ai do them mot tang moi vao
+    results/ ma khong quyet dinh no thuoc ben nao, test nay do va bat ho
+    quyet -- thay vi de tang moi roi vao khoang toi khong ai canh.
+    """
+    present = {p.name for p in (REPO / 'results').iterdir() if p.is_dir()}
+    declared = set(IN_SCOPE_TIERS) | set(OUT_OF_SCOPE_TIERS)
+    undecided = sorted(present - declared)
+    assert not undecided, (
+        'tang moi trong results/ chua duoc phan loai: ' + str(undecided)
+        + '\n-> them vao IN_SCOPE_TIERS (duoc trich dan => phai sach) hoac '
+        'OUT_OF_SCOPE_TIERS (log tho / da nghi huu), KEM LY DO.'
+    )
+    assert not (set(IN_SCOPE_TIERS) & set(OUT_OF_SCOPE_TIERS)), (
+        'mot tang khong the vua trong vua ngoai pham vi')
+
+
+def test_the_inherited_debt_list_is_the_in_scope_count_not_the_tree_count():
+    """39 la con so TRONG PHAM VI. Ghim no de khoi doc nham thanh tong cay.
+
+    Neu ai do mo rong pham vi sang RAW/ hoac SUPERSEDED/ ma quen cap nhat
+    danh sach thua ke, test nay do TRUOC khi ca bo test ngap trong 60 loi do
+    thuong truc -- dung loi "DO THUONG TRUC thi da chet" ma Phu luc B ghi.
+    """
+    assert len(INHERITED_ABSOLUTE_PATHS) == 39, (
+        'danh sach no thua ke da doi kich thuoc: %d (ky la 39). '
+        'Danh sach CHI DUOC NGAN DI.' % len(INHERITED_ABSOLUTE_PATHS))
+    in_scope_hits = {_rel(p) for p in _artifacts() if _has_absolute(p)}
+    assert len(in_scope_hits) == 40, (
+        'so tep TRONG PHAM VI mang duong dan tuyet doi = %d (ky la 40 = 39 no '
+        'thua ke + 1 mien tru SMOKE/phase-20R2). Neu con so nay TANG, mot '
+        'artifact moi da mang duong dan tuyet doi vao.' % len(in_scope_hits))

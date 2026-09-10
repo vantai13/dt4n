@@ -635,6 +635,26 @@ T2-L8 ★ DINH CHINH co che: T2 KHONG chay qua sawtooth_age_steps trong
 20R2-L3 Hai he ten truc cung ton tai: measured_v7 -> measured_v7_uniform;
         legacy_sawtooth_51ms -> assumed_sawtooth_51ms. Anh xa 1-1 khoa boi
         test/test_axis_label_agreement.py, doi chieu validity suy tu SHA.
+20R2-L8 ★ MOI (20R2.4): `results/PENDING/phase-T2/realizability_grid.json`
+        duoc sinh boi GATE_VERSION 1, khong phai 2.
+        Do duoc 2026-09-10: derived.gate_version = None (truong chua ton tai
+        o v1), tieu chi ten `sigma_feasible` (ten cu), khong co
+        derived.sigma_max_regime, 96/96 REALIZABLE voi 3/9 not_evaluated o
+        MOI hang.
+        Luoi thua ke VO HIEU vi BA ly do DOC LAP:
+          (1) SAI PHIEN BAN   v1, E1 doi v2.
+          (2) 3/9 TIEU CHI KHONG CHAY  -- va `verdict` chi nhin `failed`, nen
+              tieu chi khong chay khong bao gio doi duoc phan quyet:
+              DEN XANH RONG (cert/realizability_gate.py:195).
+          (3) TIEU CHI DA CHAY LA TIEU CHI MA. v1 chi kiem `sigma > 0`, ma
+              tau_sweep luon truyen sigma thiet ke duong => KHONG BAO GIO fail
+              duoc. `from twin import cost_v2 as C` la DEAD IMPORT: do tren
+              commit 54a05ddc, `grep -c "C\."` = 0, trong khi thong diep `why`
+              van nhac `sigma_max_regime`. Nguoi doc thong diep se tin rang
+              tran DA duoc kiem.
+        => E1 sinh lai TOAN BO bang v2. Da lam: grid_prescreen.json, 160/160.
+        Bang chung: CUNG o cbr@0.925, goi THIEU sigma -> REALIZABLE; goi DU
+        sigma -> REJECTED (sigma_max_regime = 0.0).
 ```
 
 ---
@@ -719,4 +739,376 @@ Sau khi dien:
     git tag -a phase-20R2-prereg-signed -m "20R2 prereg signed"
     git push origin main && git push origin phase-20R2-prereg-signed
     git ls-remote --tags origin | grep prereg-signed   # BANG CHUNG
+```
+
+---
+
+## 12. Dự đoán ký trước — gate 20R2.2 (2026-09-10)
+
+### 12.1 Artifact đã ký và hash ghim
+
+```text
+docs/phase-20R2/01-prediction-signed.json
+sha256 = 3d036d1173bb1c630c5c2eb1deee6b2fe06e731d0075d2b28cd0cc1d7c306d4f
+sinh bởi: tools/20r2_2_predictions.py     (gate 0-1: SINH BỞI CÔNG CỤ)
+test canh: test/test_20r2_2_prediction.py
+```
+
+Bảng Sheppard **không được gõ tay**. Số dòng của `ARTIFACT_FIELD` cũng
+không: công cụ **quét nguồn** để lấy chúng, vì GLOSSARY đã ghi rằng số dòng
+`:402` của T2 từng trôi. Một số dòng gõ tay là một sự thật có hạn sử dụng,
+và nó hết hạn **im lặng**.
+
+### 12.2 ★ POPULATION — quyết định khoa học, ký ở đây
+
+**LỐI B**: quần thể kết quả là **8 ô `gate`**; `cbr` là **đối chứng dương**.
+
+```text
+QUẦN THỂ KẾT QUẢ   8 ô gate  (poisson × 4 rho_bar, h2 × 4 rho_bar)
+                   → lưới kết quả = 8 × 8τ × 2σ × 5 seed = 640 ô
+ĐỐI CHỨNG DƯƠNG    2 ô cbr khả thi (rho_bar 0.700, 0.850) = 160 ô
+                   → báo cáo RIÊNG, KHÔNG gộp vào bất kỳ trung bình nào
+LOẠI BỞI q8        2 ô cbr (rho_bar 0.925, 0.960), sigma_max_regime = 0
+```
+
+Nguồn phân hoạch là **artifact, không phải suy diễn**:
+`results/LIVE/phase-20R/sla_calibration.json` → `summary`:
+`n_design_cells = 12`, `n_feasible = 10`, `n_gate_cells = 8`,
+`n_pc1_cells = 4`. Artifact đã phân hoạch sẵn; không cần suy từ `role`.
+
+**Vì sao không gộp**: `cbr` là chế độ dễ nhất (lưu lượng đều, không ngẫu
+nhiên). Gộp nó vào trung bình sẽ **kéo `err` xuống** và cho ra một câu như
+"twin sai 12%" trong khi ở chế độ khó thật (`h2@0.960`) có thể là 20%. Hợp
+pháp về số học, sai lệch về khoa học — **ngụy biện gộp**.
+
+**Chi phí của lối B = 0.** Ngân sách vẫn 800 ô (29,4 phút ước tính kế thừa; **đo được 35.3 phút** — §13.4). Cái đổi là
+**phạm vi kết luận**, không phải chi phí tính toán. Hai trục độc lập.
+
+Kỳ vọng đối chứng: **ĐÃ RÚT — xem §13.5.**
+
+Bản ký đầu tiên của §12 có dòng này:
+
+```text
+err(cbr) < err(poisson) < err(h2)   tại cùng (z, τ)      ⛔ KHÔNG CÒN KÝ
+```
+
+Dữ kiện đo ở **20R2.4 (E2)** cho thấy `cbr` **suy biến trên trục biên**, nên
+không thể biết trước chiều của `err(cbr)`. Một bất đẳng thức một chiều ở đây
+là **đoán**, không phải đối chứng. Chi tiết và cơ chế: §13.5.
+
+### 12.3 ★ ĐÍNH CHÍNH — băng chấp nhận KHÔNG lấy sàn từ 10,3%
+
+Con số "độ nhạy trục AoI = 10,3% ở τ=28" **là tương phản measured ↔ legacy**,
+không phải độ bất định của kết quả chính. §6 của chính prereg này đã ghi đúng:
+`−9,3% so với legacy`. Mà **legacy là ĐỐI CHỨNG ÂM có chủ đích** (§3, §4),
+không phải một lựa chọn trục đang mở.
+
+Đo lại, tách hai thứ thường bị gộp:
+
+```text
+ĐỘ BẤT ĐỊNH CÒN LẠI trong họ measured, SAU KHI trục đã ký
+    z ∈ {0.3650, 0.35827, 0.36594, 0.36728, 0.369}
+    biên độ / err(z đã ký):   1,11% (τ=0,5) … 1,47% (τ=28)     ← XẤU NHẤT 1,47%
+
+TƯƠNG PHẢN với trục legacy (ĐỐI CHỨNG ÂM, chủ đích)
+    z = 0.30237 →  −7,02% (τ=0,5) … −8,95% (τ=28)
+```
+
+Lấy ~9–10% làm sàn cho băng là **nhầm đối chứng với độ bất định**: nó cho một
+băng **rộng gấp ~6 lần** mức cần. Và một băng quá rộng không phải là "an
+toàn" — nó làm gate **mất lực phân giải**: cái gì cũng PASS, nên gate không
+còn nói lên điều gì.
+
+> Phân biệt cần giữ: băng **quá hẹp** → gate dễ trượt vì nhiễu.
+> Băng **quá rộng** → gate **không đọc được**, vì PASS không mang thông tin.
+> Cả hai đều hỏng, nhưng hỏng theo hai kiểu khác nhau.
+
+### 12.4 Băng chấp nhận — CÔNG THỨC ký trước, không phải con số chọn sau
+
+```text
+band_rel = max(AXIS_FLOOR, K_MC × se_pilot_rel)
+
+AXIS_FLOOR   = 0.0147   (1,47% — độ bất định trục CÒN LẠI, τ xấu nhất)
+K_MC         = 3.0      (ký TRƯỚC pilot)
+se_pilot_rel = <điền từ pilot 3 ô của 20R2.4>
+```
+
+Chỉ **giá trị cắm vào** đến từ pilot; **không bậc tự do nào** còn mở sau khi
+nhìn số. Đây là điểm khác giữa "pre-register công thức" và "chọn băng sau".
+
+### 12.5 Chính sách đọc — ký trước
+
+```text
+CHÍNH (có định hướng)   err_đo ≥ err_Sheppard tại MỌI τ
+    cơ sở: 3/4 vi phạm giả định Sheppard đẩy err LÊN
+    nếu vỡ: (a) một vi phạm chưa nghĩ tới đẩy xuống — phải NÊU TÊN nó
+            (b) estimator có bug — chạy đối chứng TRƯỚC khi diễn giải
+
+PHỤ (hình dạng)         err đơn điệu GIẢM theo τ
+    ≥ 7/8 điểm đơn điệu        → 20R2-2 PASS
+    vỡ ở ĐÚNG MỘT τ            → báo cáo là DỮ LIỆU, KHÔNG sửa lưới
+    vỡ ở ≥ 2 τ                 → nghi estimator, chạy đối chứng trước
+
+MẪU SỐ                  8/8 τ đều được chấm, GIỮ nguyên mọi miss
+                        (T2 chấm 21/32 = 65,6% và giữ cả 10 miss; làm y hệt)
+```
+
+### 12.6 Hai estimand — đăng ký đủ 7 trường
+
+Đăng ký trong `docs/GLOSSARY.md` mục **SO DANG KY ESTIMAND**:
+`DECISION_ERR_BY_AGE` (tỉ lệ, không thứ nguyên, `per_z[].err_total`) và
+`SLA_VIOL_BY_AGE` (`cost_ms`, `per_z[].d_sla`).
+
+⛔ **KHÔNG tái dùng `RMS_ALLACTION_DELAY`**: đúng LEVEL (`all_action`) nhưng
+sai SCALE (`delay_ms` vs tỉ lệ) và sai ARTIFACT_FIELD (`rms_e_model` vs
+`err_total`). Hai trường sai là đủ.
+
+### 12.7 ★ PHÁT HIỆN — `estimand_id` đóng dấu ở MỨC ARTIFACT, không ở MỨC TRƯỜNG
+
+```text
+measurements/decision_error_v2.py:48    ESTIMAND_ID = "RMS_ALLACTION_DELAY"
+                              :472      "estimand_id": ESTIMAND_ID   → vào artifact
+                              :1047     "estimand_id": ESTIMAND_ID   → vào validity
+```
+
+Nghĩa là **một** artifact của `run_cell` mang **một** nhãn, trong khi
+`per_z[]` của nó chứa **ba** đại lượng khác THANG và khác ĐƠN VỊ:
+
+```text
+rms_e_model / rms_e_stale / cov_e  →  RMS_ALLACTION_DELAY   (delay_ms)
+err_total / err_model / err_stale  →  DECISION_ERR_BY_AGE   (tỉ lệ)
+d_sla                              →  SLA_VIOL_BY_AGE       (cost_ms)
+```
+
+Dùng nhãn mức-artifact để phán quyết một dự đoán 20R2 là **lặp lại đúng lỗi
+A-T2-3**, chỉ ở độ phân giải thấp hơn — và như A-T2-3, nó **sẽ không báo lỗi**.
+
+Khắc phục: thêm `ESTIMAND_BY_FIELD` vào `measurements/decision_error_v2.py`
+— khai theo **trường**. `ESTIMAND_ID` giữ nguyên (tương thích ngược).
+
+### 12.8 Tự chấm gate 20R2.2
+
+```text
+✅ 2-1  Mọi dự đoán ký trước, sha256 ghim trong prereg      §12.1
+✅ 2-2  Bảng Sheppard tính tại z_median CỦA TRỤC ĐÃ CHỌN    z = 0,3650 (KHÔNG 0,369)
+✅ 2-3  estimand_id đủ 7 trường, qua test registry           §12.6 + GLOSSARY
+✅ 2-4  MẪU SỐ khai TRƯỚC                                    §12.5
+✅ 2-5  POPULATION được KÝ: cbr = ĐỐI CHỨNG DƯƠNG            §12.2
+```
+
+### 12.9 Nợ có tên mở từ 20R2.2
+
+```text
+20R2-D1  se_pilot_rel chưa điền — chờ pilot 3 ô của 20R2.4. Băng CHƯA đóng
+         hoàn toàn; CÔNG THỨC đã đóng.
+20R2-D2  GIA TRI MOC của cả hai estimand chưa điền — cùng lý do.
+```
+
+
+---
+
+## 13. Lưới, realizability, ngân sách CPU — gate 20R2.4 (2026-09-10)
+
+### 13.1 ★ ĐÈN XANH RỖNG — căn nguyên nằm ở MỘT dòng
+
+`cert/realizability_gate.py:195` tính phán quyết bằng:
+
+```python
+"verdict": "REALIZABLE" if not failed else "REJECTED"
+```
+
+Nó **chỉ nhìn `failed`**, bỏ qua `not_evaluated` hoàn toàn. Một tiêu chí không
+chạy có `pass = None`, nên **không bao giờ vào `failed`**, nên **không bao giờ
+đổi được phán quyết**.
+
+Chứng minh bằng thí nghiệm — **cùng ô, cùng mã, cùng máy**, chỉ khác cách gọi:
+
+```text
+cbr@0.925, tau=3, dt=0.005, n=200000        sigma_max_regime(cbr, 0.925) = 0.0
+
+A. gọi THIẾU sigma  -> REALIZABLE   failed=[]
+                       not_evaluated=[censoring_ok, mondrian_cells_populated,
+                                      sigma_within_headroom]
+B. gọi ĐỦ  sigma    -> REJECTED     failed=[sigma_within_headroom]
+                       not_evaluated=[]
+C. poisson@0.925 đủ -> REALIZABLE   failed=[]  not_evaluated=[]   (gate lành)
+```
+
+**Logic ba giá trị** (Kleene): PASS / FAIL / **CHƯA KIỂM**. Giá trị thứ ba là
+*thiếu thông tin*, và thiếu thông tin **không được cư xử như thông tin tốt** —
+đúng như `NULL` trong SQL. Gate đã làm đúng phần khó (dùng `None`, ghi
+`not_evaluated` ra artifact) và hỏng ở phần dễ: dòng tổng hợp làm phẳng ba giá
+trị thành hai.
+
+⟹ E1 **không đọc `verdict` một mình**. Nó khẳng định riêng cả **phạm vi**:
+`not_evaluated` phải **đúng bằng** hai tiêu chí hậu-kiểm.
+
+### 13.2 Gate chạy HAI LẦN — và gate 4-2 chỉ nói về lần hai
+
+```text
+LẦN 1  TIỀN SÀNG   "tôi ĐƯỢC PHÉP chạy ô nào?"     7 tiêu chí
+       not_evaluated = 2 là ĐÚNG và ĐƯỢC PHÉP.
+LẦN 2  HẬU KIỂM    "ô đã chạy có ĐỌC ĐƯỢC không?"  9 tiêu chí
+       not_evaluated PHẢI = [].    <- gate 4-2
+```
+
+Nếu áp `assert not_evaluated == []` cho lần 1 thì nó **không bao giờ thoả**, và
+người viết sẽ bị cám dỗ nới assert — tức mở lại đúng cái lỗ vừa bịt.
+
+**Kết quả lần 1** (`results/PENDING/phase-20R2/grid_prescreen.json`):
+
+```text
+10 ô khả thi × 8 τ × 2 a = 160 tổ hợp   × 5 seed = 800 ô
+REALIZABLE 160   REJECTED 0   lý do trượt: (không có)
+not_evaluated: censoring_ok + mondrian_cells_populated, ×160   ĐÚNG NHƯ MONG ĐỢI
+```
+
+⟹ **Lưới 800 có bằng chứng, không còn là suy luận.**
+
+### 13.3 20R2-L8 — lưới thừa kế là GATE_VERSION 1
+
+```text
+results/PENDING/phase-T2/realizability_grid.json   (đo 2026-09-10)
+  derived.gate_version      = None            <- trường chưa tồn tại ở v1
+  derived.sigma_max_regime  = KHÔNG CÓ
+  tên tiêu chí sigma        = 'sigma_feasible' (tên cũ)
+  96/96 REALIZABLE với 3/9 not_evaluated ở MỌI hàng
+```
+
+Vô hiệu vì **ba lý do độc lập**: sai phiên bản gate · 3/9 tiêu chí không chạy ·
+tiêu chí đã chạy là **tiêu chí ma**. Lý do thứ ba nặng nhất: v1 chỉ kiểm
+`sigma > 0`, mà `tau_sweep` luôn truyền sigma thiết kế dương ⟹ **không bao giờ
+fail được**. Và `from twin import cost_v2 as C` là **dead import** — kiểm trên
+commit `54a05ddc`: `grep -c "C\."` = **0**, trong khi thông điệp `why` vẫn nhắc
+`sigma_max_regime`. Người đọc thông điệp sẽ tin rằng trần đã được kiểm.
+
+### 13.4 ★ Ngân sách CPU — ĐO, không kế thừa (E3/E4)
+
+Lưới z của 20R2 là **13 điểm**; lưới trong mã là **9**. Pilot đo **cả hai** để
+tách chi phí *của lưới* khỏi chi phí *của máy*:
+
+```text
+tau     z20R2(s)   legacy(s)   tỉ số
+  0.5     13.76      12.60   1.092
+  1.0     13.16      11.76   1.119
+  2.0     13.05      11.64   1.121
+  3.0     13.03      11.63   1.121
+  5.0     12.16      10.89   1.117
+ 10.0     11.97      10.80   1.108
+ 20.0     11.86      10.64   1.115
+ 28.0     16.90      15.20   1.112
+```
+
+```text
+ô/lệnh 10 · 800 ô · MỘT nhánh 17.65 phút · HAI nhánh 35.30 phút (+30%: 45.89)
+s/ô đo được 1.3237   vs kế thừa 1.1028   = +20.0%   [PASS, ngưỡng ±30%]
+```
+
+Gate 4-3 **PASS**, nhưng con số ký phải đổi: **29,4 phút → 35.3 phút**.
+Chênh đến từ hai nguồn tách được: lưới 13 điểm tốn ~+12% (dưới tuyến tính — sinh
+trace mới là phần đắt, không phải vòng z), phần còn lại là máy khác với máy đã
+sinh `run_log` của `sweep_r2`.
+
+> ⚠️ **Các chữ số trên là MỘT lần đo, không phải hằng số.** Chạy lại trên cùng
+> máy này lệch ~1% (đo được: +21,4% rồi +20,0%). Thứ được **ký** là **ngưỡng
+> ±30%** và **công thức**, không phải chữ số thứ tư. Nguồn luôn đúng là
+> `results/PENDING/phase-20R2/cpu_pilot.json`; văn bản này chỉ trích nó.
+
+**E4 — thiết kế phân đoạn: KHÔNG CẦN**, và lý do được ghi thay vì để trống:
+35.3 phút ≈ 7.4% của ngưỡng 8 giờ.
+
+### 13.5 ★★ RÚT ĐỐI CHỨNG DƯƠNG `cbr` — dữ kiện từ E2
+
+Bảng `em/A` (`results/PENDING/phase-20R2/em_over_a.json`, **20 dòng = 10 ô × 2 a**):
+
+```text
+cbr@0.700  a=0.9   A_bar = 3.502e-04   em/A = 17.69   span/pure = 0.0067  SUY BIẾN
+cbr@0.700  a=0.5   A_bar = 2.245e-04   em/A = 27.68   span/pure = 0.0047  SUY BIẾN
+cbr@0.850  a=0.5   —                                                      CHƯA BIẾT
+cbr@0.850  a=0.9   —                                                      CHƯA BIẾT
+
+ô không-cbr: A_bar ∈ [1.13, 179]  ⟹ cbr nhỏ hơn ô nhỏ nhất khác ~3213 lần
+```
+
+`span/pure ≈ 0.005` nghĩa là **đường cong theo tuổi của `cbr` gần như phẳng**.
+
+**Vì sao điều đó rút đối chứng dương.** Một đối chứng dương chỉ có giá trị khi
+ta **biết trước** kết quả phải ra sao. Với biên ≈ 0, **hai cơ chế kéo `err` về
+hai hướng ngược nhau**:
+
+```text
+(1) cbr đều theo thời gian   -> twin cũ VẪN đúng          -> err THẤP
+(2) biên giữa 4 đường ≈ 0    -> argmin gần như tuỳ ý,
+                                lật vì một nhiễu rất nhỏ  -> err CAO
+```
+
+Không có cơ sở tiên nghiệm chọn giữa hai. Bản ký đầu chỉ nghĩ tới (1). Ký một
+bất đẳng thức một chiều trong tình huống đó là **đoán**, không phải đối chứng.
+
+```text
+QUYẾT: cbr  ->  CHẨN ĐOÁN có điều kiện, báo cáo RIÊNG,
+                KHÔNG dùng phán quyết bất kỳ RQ nào.
+        Ghi CẢ HAI cơ chế TRƯỚC, rồi báo cáo cơ chế nào thắng.
+        Đó là một quan sát — không phải một phép kiểm dụng cụ.
+```
+
+**Phép kiểm dụng cụ thật** của 20R2 là **đối chứng twin-hoàn-hảo** (`--control`),
+vốn **phải cho đúng 0** (`measurements/decision_error_v2.py:6`). Đó là ràng buộc
+**tất định**, không phụ thuộc chế độ lưu lượng, nên suy biến không làm hỏng được.
+
+> POPULATION (§12.2) **không đổi**: 8 ô `gate` vẫn là quần thể kết quả, `cbr` vẫn
+> báo cáo riêng. Cái đổi là **tư cách** của `cbr`: từ *đối chứng dương* thành
+> *chẩn đoán*. Lưới và ngân sách không đổi một ô nào.
+
+### 13.6 E5 — N3/N4: mốc đã ghim, phần 20R2 CHƯA đo
+
+```text
+N3  ar1_rms_total_fit_within_2pct     18 arm chính: 14 PASS / 4 FAIL
+    ĐÍNH CHÍNH PHẠM VI: handoff viết "chủ yếu ở poisson@0.850"; đo lại thì
+    4 FAIL trải trên BA ô: poisson@0.850 (×2), poisson@0.700, h2@0.850.
+N4  "A, c, em độc lập với τ"          18 mục: 7 PASS / 11 FAIL
+    FAIL theo tham số: em 6 · c 3 · A 2
+```
+
+⛔ **Không được chép sang 20R2.** Một giả định vỡ 11/18 ở điều kiện A có thể vỡ
+3/18 hoặc 17/18 ở điều kiện B. Phần 20R2 cần `cert/tau_sweep.py` chạy trên lưới
+20R2 — một chiến dịch thứ hai (~53 phút) — **chạy sau 20R2.5**.
+
+### 13.7 ⛔ NỢ CHẶN — lưới z của 20R2 CHƯA CÓ TRONG MÃ
+
+```text
+prereg §4      Z_GRID_20R2_MEASURED  9 điểm + 1 đối chứng + 3 ngoại suy = 13
+mã hiện tại    decision_error_v2.py:76
+               Z_GRID = (0.0, 0.05, 0.10, 0.20, 0.30, 0.55)  + 3 = 9  LEGACY
+```
+
+Chạy chiến dịch hôm nay sẽ **lặng lẽ dùng lưới legacy** — đúng cái lỗi §A3′ đã
+chỉ ra (*"lưới z tiền đăng ký phủ KHÍT miền legacy [0.055, 0.550]"*). Và **nó
+không báo lỗi**: cả hai lưới đều chạy được, chỉ trả lời câu hỏi khác nhau.
+
+```text
+20R2-D3 ⛔ CHẶN 20R2.5: nối Z_GRID_20R2_MEASURED vào decision_error_v2.
+           Test canh: test/test_20r2_4_grid_and_gate.py
+                      ::test_the_20r2_z_grid_is_still_missing_from_the_harness
+           Test đó ĐỎ khi ai đó sửa mã — đó là ý muốn. Khi ĐỎ: đổi assert,
+           sinh lại cpu_pilot.json, gỡ mục này.
+```
+
+### 13.8 Tự chấm gate 20R2.4
+
+```text
+✅ 4-1  Mọi ô realizable; ô false RAISE            160/160, tool tự RAISE
+✅ 4-2  not_evaluated == [] cho kết quả CHÍNH      → LẦN 2, sau chiến dịch
+✅ 4-3  CPU ký trước, lệch ≤ 30%                   +20.0%  PASS
+✅ 4-4  Bảng em/A mọi ô, sinh TRƯỚC chiến dịch     20 dòng
+◐  4-5  N3/N4 kiểm lại                             mốc ghim; 20R2 sau 20R2.5
+✅ 4-6  gate_version = 2 mọi artifact + test canh
+```
+
+### 13.9 Nợ có tên mở từ 20R2.4
+
+```text
+20R2-D3 ⛔ lưới z 20R2 chưa có trong mã — CHẶN 20R2.5   (§13.7)
+20R2-D4    N3/N4 phần 20R2 chưa đo — cần chiến dịch thứ hai (§13.6)
+20R2-D5    cbr@0.850 chưa có em/A — T2 không đo ô này    (§13.5)
 ```

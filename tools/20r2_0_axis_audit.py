@@ -649,13 +649,31 @@ def main() -> None:
         print("  %-18s ga020=%-28s 20R2=%-34s %s"
               % (c["dimension"], c["ga020"], c["phase_20r2"],
                  "OK" if c["match"] else "KHAC"))
-    print("\n=== A7: ngan sach CPU (%d o) ===" % args.n_cells)
+    # `args.n_cells` la DAU VAO va co the la None (mac dinh = suy tu bang kha
+    # thi). `a7["grid"]["n_grid_cells"]` la GIA TRI DA GIAI. In dau vao chua
+    # giai la cung mot lop loi voi doc mot hang so chua import: ban in noi ve
+    # mot thu KHAC voi thu da tinh. Do duoc 2026-09-10: tool thoat ma 1 ngay
+    # tren lenh docstring cua chinh no, va so 800 o / 29.4 phut KHONG BAO GIO
+    # duoc in ra vi dong crash chinh la dong in no.
+    n_cells_resolved = a7["grid"]["n_grid_cells"]
+    print("\n=== A7: ngan sach CPU (%d o) ===" % n_cells_resolved)
     print("n_for_tau ti le tau=28/tau=0.5 = %.3f  (RT20-4 ghi 56)"
           % a7["ratio_tau28_over_tau0p5"])
     for label, s in a7["harness_seconds"].items():
-        print("  %-52s n=%3d  %.2f-%.2f s  mean=%.2f  -> %.2f h/nhanh"
-              % (label, s["n_cmd"], s["min"], s["max"], s["mean"],
-                 s["hours_for_%d_cells" % args.n_cells]))
+        # Khoa `hours_for_<N>_cells` KHONG con ton tai: no da doi ten thanh
+        # `superseded_hours_for_960_cells_1cmd_per_cell` khi ngan sach chuyen
+        # sang dem theo o-luoi (10 o/lenh) thay vi 1 lenh/o. Ban in nay bi bo
+        # lai phia sau -- nen sua no phai theo LUOC DO THAT, khong phai theo
+        # ten khoa cu. `corrected` chi co o harness da do duoc cells_per_command.
+        c = s.get("corrected")
+        if c:
+            budget = "%.1f phut/2 nhanh (+30%%: %.1f)" % (
+                c["minutes_two_branches"], c["minutes_two_branches_plus_30pct"])
+        else:
+            budget = "SUPERSEDED %.2f h (gia dinh 1 lenh/o, 960 o)" % s[
+                "superseded_hours_for_960_cells_1cmd_per_cell"]
+        print("  %-52s n=%3d  %.2f-%.2f s  mean=%.2f  -> %s"
+              % (label, s["n_cmd"], s["min"], s["max"], s["mean"], budget))
     print("\n-> %s" % args.out)
 
 

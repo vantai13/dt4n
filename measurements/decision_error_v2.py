@@ -47,6 +47,25 @@ CONTROL_N = 50_000
 # Xem docs/GLOSSARY.md muc "SO DANG KY ESTIMAND".
 ESTIMAND_ID = "RMS_ALLACTION_DELAY"
 
+# ESTIMAND_ID o tren la nhan MUC ARTIFACT, va no KHONG DU DO PHAN GIAI: mot
+# artifact cua run_cell mang MOT nhan, trong khi per_z[] cua no chua BA dai
+# luong khac THANG va khac DON VI. Dung nhan muc-artifact de phan quyet mot
+# du doan la lap lai DUNG loi A-T2-3, chi o do phan giai thap hon.
+#
+# Vi vay 20R2 khai theo TRUONG. Day moi la thu duoc trich dan khi phan quyet.
+ESTIMAND_BY_FIELD = {
+    # ti le hang sai, khong thu nguyen, [0, 1]
+    "err_total": "DECISION_ERR_BY_AGE",
+    "err_model": "DECISION_ERR_BY_AGE",
+    "err_stale": "DECISION_ERR_BY_AGE",
+    # chi phi, ms -- DI QUA ham chi phi nen nhay voi w_loss
+    "d_sla": "SLA_VIOL_BY_AGE",
+    # do tre thuan, ms -- w_loss KHONG cham toi duoc
+    "rms_e_model": "RMS_ALLACTION_DELAY",
+    "rms_e_stale": "RMS_ALLACTION_DELAY",
+    "cov_e": "RMS_ALLACTION_DELAY",
+}
+
 # Kenh (c): block conformal PHAI theo thoi gian tuong quan, khong phai
 # theo giay. cert/tau_sweep.py da lam dung tu 22.6; day la day bi thieu.
 BLOCKS_PER_TAU = 5.0
