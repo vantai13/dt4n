@@ -1,0 +1,56 @@
+{
+ "HOW_ENFORCED": "test/test_inherited_restrictions.py: prereg cua MOI phase trong `phases_in_scope` phai chua mot dong `<id>: ACCEPT` hoac `<id>: OVERRIDE -- <ly do>`. Khong nhac = test DO.",
+ "WHAT_THIS_IS": "So dang ky cac HAN CHE con hieu luc, ke thua qua ranh gioi phase. Doi ngau voi 'mac dinh im lang': mac dinh im lang la mot GIA TRI duoc ke thua ma khong ai khai; han che roi im lang la mot RANG BUOC DA KY bi MAT khi sang phase moi ma khong ai khai. Cai thu hai khong co cong cu nao bat -- nen co file nay.",
+ "restrictions": [
+  {
+   "applies_to": [
+    "poisson@0.960",
+    "h2@0.960"
+   ],
+   "detectable_flag": "cot `extrapolation_contaminated` = True trong parquet (do duoc: tt_domain_clip_max = 5.03%)",
+   "id": "T2-R7",
+   "phases_in_scope": [
+    "docs/phase-20R2"
+   ],
+   "reason_independent_of_results": "Link `ad` co mu = rho_bar + 0.0625 = 1.0225, chi cach tran mien bang su that (1.04) dung 1.82 sigma. np.interp KEP PHANG ngoai mien va IM LANG. Do duoc tt_domain_clip 1.80-8.56% qua 5 seed.",
+   "scope": "KHONG dung lam headline. KHONG loai khoi luoi chay.",
+   "signed_date": "2026-09-08",
+   "source": "docs/phase-T2/00-preregistration.md :: AMENDMENT A-T2-1 muc (c) va (e)",
+   "status": "ACTIVE",
+   "title": "rho_bar = 0.96 danh dau EXTRAPOLATION_CONTAMINATED -- KHONG dung lam headline",
+   "why_not_excluded": "Loai mot o SAU khi thay so cua no la cherry-picking. Danh dau duoc vi ly do phat bieu duoc DOC LAP voi ket qua."
+  },
+  {
+   "applies_to": [
+    "results/PENDING/**"
+   ],
+   "id": "D-PENDING",
+   "phases_in_scope": [
+    "docs/phase-20R2"
+   ],
+   "reason_independent_of_results": "PENDING nghia la CHUA duoc tham dinh. Mot so chua tham dinh khong duoc mang ra lam ket luan.",
+   "scope": "Artifact trong results/PENDING khong duoc dung lam headline; chua duoc tham dinh.",
+   "signed_date": "2026-08-22",
+   "source": "docs/phase-D/01-data-classification.md",
+   "status": "ACTIVE",
+   "title": "results/PENDING = khong dung lam headline"
+  },
+  {
+   "applies_to": [
+    "artifact co is_smoke = true"
+   ],
+   "id": "20R-SMOKE-CITE",
+   "note_naming_collision": "TANG results/SMOKE (phan tang tu 2026-08-22) KHAC co is_smoke (n < 50000). Mot artifact nam trong tang SMOKE ma n >= 50000 thi KHONG phai is_smoke artifact. Doi chung twin-hoan-hao cua 20R2.5 nam trong tang SMOKE nhung n >= 200000 -> khong thuoc han che nay.",
+   "phases_in_scope": [
+    "docs/phase-20R2"
+   ],
+   "reason_independent_of_results": "n nho khong du chu ky doc lap de la mot phep do.",
+   "scope": "is_smoke duoc dinh nghia la (n < 50000). Artifact nhu vay khong duoc trich vao paper hoac ket luan.",
+   "signed_date": "2026-08-26",
+   "source": "docs/phase-20R/00o-amendment-14.md :: muc 16",
+   "status": "ACTIVE",
+   "title": "artifact co is_smoke = true chi de debug, KHONG duoc trich"
+  }
+ ],
+ "schema": "dt4n.inherited_restrictions.v1"
+}

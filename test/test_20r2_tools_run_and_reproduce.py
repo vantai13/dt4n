@@ -109,6 +109,11 @@ NEEDS_SIGNED_CAMPAIGN = {
     # test/test_20r2_6_adjudicator.py (12 test, 8 mutation deu bi bat).
     "tools.20r2_6_adjudicate": "doi tag adjudicator-frozen + du lieu chien dich; "
                                "kiem tren du lieu GIA o test_20r2_6_adjudicator.py",
+    # 20R2.6b -- phu luc THAM DO. Can du lieu chien dich + artifact phan quyet.
+    # Tu doi chung: cot gop phai TAI LAP 06-adjudication.json (lech < 1e-9),
+    # neu khong tool tu nem AssertionError -- nen no tu canh chinh no.
+    "tools.20r2_6b_per_cell": "can du lieu chien dich + 06-adjudication.json; "
+                              "tu doi chung bang cach tai lap cot gop da ky",
 }
 
 # Truong doi theo THOI DIEM chay, khong theo NOI DUNG. Loai truoc khi so.

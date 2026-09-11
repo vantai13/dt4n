@@ -597,3 +597,60 @@ can biet: cai bao ve do khong di theo repo.
 Chien dich da chay xong ma van `null`. Khai la QUA HAN o prereg §17-D2, khong
 lang le dien roi coi nhu dung han. Neu can gia tri moc thi lay tu pilot (von co
 TRUOC chien dich) va dan nhan DIEN MUON.
+
+### QD-20R2.6-4: HAN CHE KE THUA roi im lang -- doi ngau cua mac dinh im lang
+
+T2-R7 (docs/phase-T2/00-preregistration.md A-T2-1 muc (c) va (e), ky 2026-09-08,
+TRUOC 20R2) cam dung rho_bar = 0.96 lam headline. Ly do DOC LAP ket qua: link
+`ad` co mu = 1.0225, cach tran mien bang su that (1.04) chi 1.82 sigma, va
+np.interp KEP PHANG ngoai mien mot cach IM LANG.
+
+prereg 20R2 KHONG nhac R7 mot dong nao (da grep: 0 ket qua). Quan the headline
+8 o cua §12.2 GOM CA HAI o 0.96. Do duoc (06b): bo MOT o h2@0.960 thi CA 3 MISS
+cua phan quyet 20R2.6 bien mat (0.896 -> 1.023 tai tau=0.5).
+
+    mac dinh im lang     mot GIA TRI ke thua ma khong ai khai
+                         -> da bat 5 lan, CO cong cu (axis_audit, required=True)
+    han che roi im lang  mot RANG BUOC DA KY bi MAT khi sang phase moi
+                         -> CHUA co cong cu. Lan dau bi bat, va bat MUON.
+
+Kiem toan tien-chien dich 20R2.5 chi san mac dinh im lang, khong doi chieu quan
+the voi han che con hieu luc tu T2. AGGREGATION_FALLACY_GUARD duoc viet CHI cho
+cbr, trong khi le ra phai ap cho CA quan the.
+
+XU LY (khong doi estimand sau khi mo):
+  - phan quyet CHINH GIU 5/8 tren 8 o DA KY
+  - do nhay theo R7 dung NGAY CANH, hop le vi R7 co truoc va ly do doc lap
+  - docs/inherited_restrictions.json + test/test_inherited_restrictions.py:
+    prereg cua phase trong scope phai tra loi TUNG han che bang ACCEPT hoac
+    OVERRIDE + ly do. Khong nhac = DO. Da xac nhan test DO truoc khi viet §18.
+  - tim them 2 han che (D-PENDING, 20R-SMOKE-CITE): ca hai KHONG bi vi pham,
+    da kiem chu khong gia dinh.
+
+### QD-20R2.6-5: ba cho doc sai trong 06.md -- da sua
+
+(1) "chien dich KHONG lap lai pilot": SAI. Ca 8 tau cung dau; tai tau=2 hai lan
+    do lech 1.66 diem phan tram = 0.65 sigma, tuc NHIEU. Ban xem truoc THUC SU
+    thong tin. Thu bao ve §17.0 la: luat chon tren co so thong ke (band = 3*se,
+    DO DUOC), bao ca hai cach doc, va cong khai -- khong phai mot khac biet nhieu.
+(2) "hai co che giai thich CHINH XAC": chi dung o muc GOP. Xet tung o, 4/8 o co
+    err_stale CAO HON Sheppard o moi tau. Rice la cau chuyen cua o IT duong canh
+    tranh, khong phai cua ca quan the.
+(3) cap [20,28] UNREADABLE: van de la CO HIEU UNG, khong phai thieu n. Neu
+    Sheppard dung thi sigma = 4.10 (doc duoc); thuc do 2.52. Power analysis dua
+    tren chinh mo hinh dang bi kiem la VONG TRON.
+(4) RQ-20R2e trong THEO CAU TAO: CRN + lag tat dinh + H6 (trung tung bit tai z
+    chung) => nhanh legacy la CUNG MOT duong err(z), chi lay mau o z khac. Muon
+    estimand co nghia ve truc phai dung E_{Z~truc}[err(Z)]; err(z) LOM nen theo
+    Jensen no KHAC err(trung vi Z). Phai dang ky truoc o 20R2.8/21R2.
+
+### QD-20R2.6-6: "kho ve tai" KHONG phai "kho ve quyet dinh"
+
+prereg dong 802 viet "o che do kho that (h2@0.960) co the la 20%". Thuc do:
+0.19% / 0.14% / 0.14% -- lech HAI BAC DO LON. Ly do: tai cang nang thi MOT duong
+cang ap dao (argmin 100% thoi gian, m = 3.11), nen quyet dinh gan nhu khong bao
+gio lat va twin cu van dung.
+
+Hieu biet (THAM DO): do nhay cua quyet dinh do CAU TRUC CANH TRANH giua cac duong
+quyet dinh, KHONG do muc tai. Twin cu nguy hiem nhat o vung tai VUA, noi 3-4
+duong gan hoa nhau.

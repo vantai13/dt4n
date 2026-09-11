@@ -2045,3 +2045,97 @@ dịch) và **dán nhãn ĐIỀN MUỘN**.
 
 ⚠️ Nếu sau khi mở phát hiện bộ chấm có lỗi: **không sửa rồi chạy lại im lặng**.
 Amendment + tag mới + giữ **cả hai** artifact. Cùng quy tắc với chiến dịch.
+
+---
+
+## 18. Hạn chế KẾ THỪA — trả lời từng cái (bổ sung SAU 20R2.6)
+
+⚠️ **Mục này lẽ ra phải có TRƯỚC chiến dịch.** Nó được thêm sau khi phán quyết
+20R2.6 phát hiện rằng một ràng buộc đã ký ở T2 **đã rơi im lặng** qua ranh giới
+phase. Đây là **trả lời muộn**, và được khai đúng như vậy.
+
+Sổ đăng ký: `docs/inherited_restrictions.json`. Cái chặn:
+`test/test_inherited_restrictions.py` — prereg không nhắc một hạn chế thì test **đỏ**.
+
+### 18.1 Đây là mặt đối ngẫu của "mặc định im lặng"
+
+```text
+mac dinh im lang     mot GIA TRI duoc ke thua ma khong ai khai
+                     -> da bat duoc 5 lan (DEFAULT_TAU, axis, sigma, --z-grid,
+                        --calibration). Co cong cu: axis_audit, required=True.
+han che roi im lang  mot RANG BUOC DA KY bi MAT khi sang phase moi
+                     -> CHUA co cong cu nao bat. Day la lan dau bi bat, va bi
+                        bat MUON (sau khi da mo hop).
+```
+
+Kiểm toán tiền-chiến dịch ở 20R2.5 **chỉ săn mặc định im lặng**, không đối chiếu
+quần thể §12.2 với các hạn chế còn hiệu lực từ T2. Bộ chấm 20R2.6 cũng không
+bắt buộc in bảng theo từng ô. Phép chặn `AGGREGATION_FALLACY_GUARD` được viết
+**chỉ cho cbr**, trong khi lẽ ra phải áp cho **cả** quần thể.
+
+### 18.2 Trả lời từng hạn chế
+
+**T2-R7: ACCEPT** — `ρ̄ = 0.96` (poisson và h2) đánh dấu `EXTRAPOLATION_CONTAMINATED`,
+**không dùng làm headline**, **không loại khỏi lưới chạy**
+(`docs/phase-T2/00-preregistration.md` A-T2-1 mục (c) và (e), ký 2026-09-08).
+
+```text
+⚠️ TRA LOI MUON. Prereg 20R2 KHONG nhac R7 mot dong nao, va quan the headline
+   8 o cua §12.2 GOM CA HAI o 0.96. Phan quyet 20R2.6 da cong bo voi quan the do.
+
+HE QUA DO DUOC (tham do, xem 06b):
+   ti so err_total/Sheppard theo tung o trai tu 0,006 den 1,655
+   gop 8 o (DA KY)            0,896 ... 1,099   -> 3 MISS tai tau <= 2
+   trung vi 8 o               1,017 ... 1,342   -> KHONG MISS nao
+   gop 6 o (bo 2 o R7)        1,048 ... 1,293   -> KHONG MISS nao
+   gop 7 o (chi bo h2@0.960)  1,023 ... 1,252   -> KHONG MISS nao
+   => TOAN BO 3 MISS phu thuoc MOT o: h2@0.960, noi quyet dinh gan nhu khoa cung
+      (mot duong la argmin 100% thoi gian, m = 3,11, Rice e^(-m^2/2) = 0,008).
+
+XU LY (dung thu tu, KHONG doi estimand sau khi mo):
+   1. Phan quyet CHINH GIU NGUYEN 5/8 tren quan the 8 o DA KY. Doi quan the
+      BAY GIO -- ke ca sang mot luat co san tu truoc -- van la doi estimand
+      SAU khi thay du lieu.
+   2. Do nhay theo R7 dung NGAY CANH phan quyet, KHONG thay the no. Duoc phep
+      vi R7 co TRUOC 20R2 va ly do cua no DOC LAP voi ket qua.
+   3. Tu 20R2.7 tro di: bang theo TUNG O la BAT BUOC, dung canh so gop.
+```
+
+**D-PENDING: ACCEPT** — artifact trong `results/PENDING` không dùng làm headline
+(`docs/phase-D/01-data-classification.md`).
+
+```text
+DA KIEM: chuoi dau vao HEADLINE cua 20R2 (06-adjudication.inputs_sha256) gom
+   01-prediction-signed.json . 02-se-pilot.json . 03-run-plan.json
+   04-campaign-log.jsonl . 05-hygiene.json
+-> TAT CA nam trong docs/, KHONG file nao trong results/PENDING. KHONG vi pham.
+   (cpu_pilot.json va grid_prescreen.json trong PENDING chi dung cho THIET KE
+    -- ngan sach, luoi kha thi -- khong phai ket luan khoa hoc.)
+```
+
+**20R-SMOKE-CITE: ACCEPT** — artifact có `is_smoke = true` chỉ để debug, không
+được trích (`docs/phase-20R/00o-amendment-14.md` mục 16).
+
+```text
+DA KIEM: is_smoke duoc DINH NGHIA la (n < 50000). Doi chung twin-hoan-hao cua
+   20R2.5 nam trong TANG results/SMOKE nhung chay n >= 200000, nen no KHONG
+   phai mot is_smoke artifact. KHONG vi pham.
+⚠️ TRUNG TEN phai ghi ro: TANG `results/SMOKE` (phan tang tu 2026-08-22) KHAC
+   co `is_smoke` (n < 50000). Hai thu nay khong lien quan, va mot nguoi doc
+   nhanh se nham -- da ghi vao so dang ky.
+```
+
+### 18.3 Cách tôi đi tìm, để người sau lặp lại được
+
+```text
+1. grep cac cum tu chi HAN CHE qua MOI prereg/amendment cua cac phase truoc:
+     "khong dung lam headline" . "khong duoc trich" . "chi dung de chan doan"
+     "DOWNGRADED" . "khong vao gate" . "CHI MO TA" . "khong duoc dung lam"
+2. Voi TUNG han che tim duoc: doi chieu voi (a) QUAN THE cua phase hien tai,
+   va (b) CHUOI DAU VAO HEADLINE (inputs_sha256 cua artifact phan quyet).
+3. Han che nao co CO DO DUOC trong du lieu thi them mot test HANH VI kiem co
+   do -- va kiem ca chieu nguoc: neu MOI o deu mang co thi co do vo nghia.
+```
+
+Bước 3 đã làm cho T2-R7: `test_T2_R7_cells_are_flagged_in_the_campaign_data`
+đòi **đúng** hai ô 0,96 mang cờ, không nhiều hơn, không ít hơn.

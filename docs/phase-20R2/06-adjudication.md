@@ -69,10 +69,22 @@ verdict: PASS   {'DECREASING': 6, 'INCREASING': 0, 'UNREADABLE': 1}   mau so = 7
 
 `UNREADABLE` **không** được tính là đơn điệu và **không** rời khỏi mẫu số (§17-G4).
 
-⚠️ Cặp `[20, 28]` không đọc được (σ = 2,53 < 3). Đây **đúng là cặp** mà
-`power_note` đã ký cảnh báo trước chiến dịch: khoảng cách nhỏ nhất, ít chu kỳ
-nhất. `n` tại τ = 20 và 28 đã được nâng ×4 **trước** chiến dịch vì lý do đó, và
-vẫn không đủ. Đó là **dữ liệu**, không phải lỗi — và nó được báo cáo nguyên trạng.
+⚠️ Cặp `[20, 28]` không đọc được (σ = 2,53 < 3). `n` tại τ = 20 và 28 đã được
+nâng ×4 **trước** chiến dịch vì `power_note` đã cảnh báo, và vẫn không đủ.
+
+**SỬA cách đọc: vấn đề là CỠ HIỆU ỨNG, không phải thiếu n.**
+
+```text
+neu thuc te theo Sheppard : 0,0606 vs 0,0513  (cach nhau 15,4%)  -> sigma = 4,10  DOC DUOC
+thuc do                   : 0,0625 vs 0,0564  (cach nhau  9,8%)  -> sigma = 2,52  KHONG
+```
+
+Nâng `n` ×4 **đã đủ — NẾU Sheppard đúng**. Khoảng cách thật bị **sàn mô hình**
+(cơ chế H-A) nén lại. Tức phép tính công suất đã **giả định chính giả thuyết đang
+được kiểm**: *power analysis dựa trên mô hình đang bị kiểm là VÒNG TRÒN*, và khi
+giả thuyết lệch thì công suất tính trước sẽ lạc quan.
+
+⚠️ **Không** được đổi sang dùng `se` thực nghiệm từ 5 seed sau khi đã mở hộp.
 
 ⚠️ **σ là ước lượng THẤP (bảo thủ).** CRN qua τ làm các ước lượng ở τ gần nhau
 tương quan dương, trong khi `se_diff = √(se_i² + se_j²)` giả định độc lập. Hướng
@@ -85,8 +97,8 @@ sai số này an toàn: nó khiến ta **khó** tuyên bố "đọc được" h�
 `02-se-pilot.json` (seed 201–205) đã cho xem trước hình dạng kết quả **trước khi**
 §17 được viết. Theo pilot, §17-G2 cho **2 MISS**, đọc nguyên văn cho **6 MISS**.
 
-**Chiến dịch KHÔNG lặp lại pilot.** Kết quả thật cho **3 MISS** (§17-G2) và
-**4 HIT** nguyên văn — τ = 2 đã **vượt qua** băng, điều pilot không cho thấy:
+**Chiến dịch lặp lại pilot rất sát** (sửa sau 20R2.6b — bản đầu của mục này
+đọc sai chỗ này):
 
 ```text
 tau          0,5      1        2        3        5       10       20       28
@@ -94,8 +106,23 @@ pilot      -9,9%   -6,9%   -4,5%   -3,8%   -2,9%   -0,1%   +4,2%   +6,2%
 chien dich -10,4%   -7,7%   -6,2%   -3,9%   +0,2%   +2,2%   +3,0%   +9,9%
 ```
 
-Đây là bằng chứng trực tiếp rằng pilot (seed 201–205) và chiến dịch (seed 101–105)
-là hai mẫu **độc lập**: bản xem trước **không** quyết định kết quả.
+⚠️ **SỬA CÁCH ĐỌC.** Bản đầu của mục này viết *"chiến dịch KHÔNG lặp lại pilot,
+nên bản xem trước không quyết định kết quả"*. Điều đó **không đứng vững**:
+
+```text
+ca 8 tau DEU cung dau.
+tai tau = 2, hai lan do lech 1,66 diem phan tram.
+se cua HIEU hai lan do = sqrt(2) x 1,82% = 2,57%
+=> do lech chi 0,65 sigma -- HOAN TOAN la nhieu.
+```
+
+Thực tế **ngược lại: bản xem trước rất THÔNG TIN**, và đó chính là lý do phải
+công khai nó. Thứ bảo vệ cho §17.0 là **ba việc khác**: chọn luật trên cơ sở
+thống kê (band = 3·se, đã đo), báo cáo **cả hai** cách đọc, và ghi công khai.
+Việc hai mẫu tình cờ lệch ở τ=2 **không bảo vệ gì cả**.
+
+**Bài học:** đừng đọc một khác biệt nằm trong nhiễu như một bằng chứng, kể cả khi
+nó có lợi cho mình.
 
 ---
 
@@ -144,8 +171,21 @@ hình đối xứng của Sheppard giả định.
 **6,8% → 38,3%**.
 
 Hai cơ chế **ngược chiều nhau**, đúng như §17-H đã đăng ký: H-B kéo xuống ở mọi τ;
-H-A đẩy lên ở τ lớn. Chỗ giao nhau giải thích vì sao MISS **chỉ** xuất hiện ở τ nhỏ
-— nơi sàn mô hình còn bé (6,8%) nên `err_total ≈ err_stale`, tức nằm dưới Sheppard.
+H-A đẩy lên ở τ lớn.
+
+⚠️ **SỬA: điều này chỉ đúng ở mức GỘP.** Bản đầu viết hai cơ chế "giải thích
+chính xác" vì sao MISS chỉ ở τ nhỏ. Xét **từng ô** (xem `06b-per-cell.md`):
+
+```text
+4/8 o co err_stale CAO HON Sheppard o MOI tau  -- Rice KHONG giai thich duoc
+3/8 o co err_stale THAP HON Sheppard o MOI tau
+ti so theo tung o trai tu 0,006 den 1,655 (chenh gan 300 lan)
+```
+
+Rice là câu chuyện của các ô **ít đường cạnh tranh**, không phải của cả quần thể.
+MISS ở τ nhỏ là kết quả của một **HỖN HỢP**: vài ô bị Rice nén rất mạnh, cộng với
+nhiều ô bị **giãn** vì có 3 đường cạnh tranh (vi phạm "4 đường thay vì 2", đẩy
+lỗi LÊN). Xem `06b-per-cell.md` mục 3.
 
 ⚠️ **Đính chính đã ghi ở §17-S:** bảng lý do của dự đoán đã ký nói *"3/4 vi phạm
 đẩy cùng MỘT hướng"*. Điều đó **không đứng vững**: (a) "kỳ vọng khác 0" thực ra
@@ -195,7 +235,21 @@ toàn bộ** chênh lệch đó được giải thích **chỉ bằng việc z k
 dấu theo τ.
 
 ⚠️ **Không có luật phán quyết nào được ký cho RQ-20R2e**, nên đây **chỉ là mô tả**.
-Ghép cặp theo seed (CRN) để tương phản chính xác hơn.
+
+⚠️ **SỬA: nó trống THEO CẤU TẠO, không phải "gần như trống".** Hai nhánh dùng
+**cùng** dòng ρ(t) (CRN) và độ trễ là **tất định** (`k = round(z/dt)`); H6 đã
+chứng minh hai nhánh **trùng từng bit** tại các z chung. Vậy nhánh legacy chính là
+**CÙNG MỘT đường cong `err(z)`**, chỉ lấy mẫu ở những điểm z khác.
+
+"Tương phản trục" ở đây vì thế **đúng bằng** `err(0,30) − err(0,366)` trên **một**
+đường duy nhất. Phần dư 0,1–1,2 điểm phần trăm so với cột Sheppard chỉ phản ánh
+độ dốc của đường **đo** khác độ dốc **Sheppard**. Nó **không mang thông tin nào
+về trục AoI**.
+
+Muốn một estimand có nghĩa về trục thì cần **kỳ vọng theo phân phối tuổi của từng
+trục**: `E_{Z~truc}[err(Z)]`. Vì `err(z)` lõm, bất đẳng thức **Jensen** cho thấy
+giá trị đó **khác** `err(trung vị Z)`. Nếu dùng, phải **đăng ký trước** ở 20R2.8
+hoặc 21R2.
 
 ---
 
@@ -242,7 +296,22 @@ PILOT XEM TRUOC  §17.0: §17 duoc viet khi pilot da cho xem truoc hinh dang.
                  Chien dich cho ket qua KHAC pilot (3 MISS thay vi 2), nen ban
                  xem truoc khong quyet dinh ket qua.
 cbr SUY BIEN     err = 0 tuyet doi -> khong dung lam doi chung duong duoc.
+T2-R7 ROI       ★ Han che DA KY cua T2 (2026-09-08) cam dung rho_bar = 0.96 lam
+                 headline. prereg 20R2 KHONG nhac. Quan the headline 8 o GOM CA
+                 HAI o 0.96, va TOAN BO 3 MISS phu thuoc mot trong hai o do
+                 (h2@0.960). Phan quyet GIU NGUYEN 5/8 (khong doi estimand sau
+                 khi mo); do nhay theo R7 dung CANH no. Xem §18 va 06b.
+QUAN THE PHAN HOA ★ Ti so theo tung o trai 0,006 - 1,655 (chenh gan 300 lan).
+                 So GOP che mat dieu do. Tu 20R2.7: bang theo TUNG O la BAT BUOC.
 ```
+
+---
+
+## 9b. ★ Phụ lục bắt buộc đọc kèm
+
+`06b-per-cell.md` — số gộp ở mục 2 che một quần thể **phân hoá gần 300 lần**, và
+toàn bộ 3 MISS phụ thuộc **một** ô mà T2 đã cấm dùng làm headline. Không đọc 06b
+thì mục 2 sẽ bị hiểu sai.
 
 ---
 
