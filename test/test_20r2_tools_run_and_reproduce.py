@@ -59,11 +59,30 @@ TOOLS = {
     "tools.20r2_4_grid_and_gate": (PENDING_DIR, "grid_prescreen"),
     "tools.20r2_4_em_over_a": (PENDING_DIR, "em_over_a"),
     "tools.20r2_4_n3_n4_recheck": (PENDING_DIR, "n3_n4_baseline"),
-    # 20R2.5 -- ke hoach chien dich. TAT DINH CO CHU DICH: khong mang
-    # git_commit/git_dirty, nen sinh lai bao gio cung ra cung sha256. Chinh vi
-    # the no vao duoc bang nay, khac t2_6_plan (mang provenance thoi diem nen
-    # sinh lai ra hash khac, va guard phai do hai bien the hash).
-    "tools.20r2_5_plan": (DOCS_DIR, "03-run-plan"),
+}
+
+# 20R2.5 -- ke hoach chien dich. TAT DINH, nhung KHONG tai lap duoc TAI HEAD nua.
+#
+# LY DO -- mot bai hoc that: 03-run-plan.json GHIM sha256 cua
+# 01-prediction-signed.json trong `inputs_sha256`. Amendment §20.1 (20R2.7-B1) da
+# sua UNIT/SCALE cua SLA_VIOL_BY_AGE trong prediction, nen prediction doi sha, nen
+# ke hoach SINH LAI HOM NAY ra sha khac (4e9f71a3) so voi ban DA KY (a984020e).
+#
+#   => MOT ARTIFACT GHIM HASH CUA ARTIFACT KHAC THI KHONG THE TAI LAP TUNG BYTE
+#      SAU KHI CAI BI GHIM DUOC SUA. Day la gia phai tra cua chuoi ghim, va no
+#      KHONG tranh duoc bang cach "sua cho khac di".
+#
+# Ke hoach tren dia KHONG duoc sinh lai: no la BAN GHI LICH SU cua chien dich da
+# chay (167 lenh, so cai ghi tung lenh, hygiene H1 da doi chieu tung truong).
+# Sinh lai se LAM SAI ban ghi do.
+#
+# Tai lap van KIEM DUOC, nhung DIEU KIEN THEO COMMIT. Da kiem 2026-09-11 bang
+# worktree tai commit da ky a92f062d:
+#     python -m tools.20r2_5_plan  ->  a984020e104bb13b4743be5aca2d5e0eabf0d495...
+#   tuc KHOP DUNG sha da ky. Nen tinh chat "artifact la san pham cua tool" con
+#   nguyen; chi la no phai kiem tai commit cua no.
+REPRODUCIBLE_ONLY_AT_ITS_SIGNING_COMMIT = {
+    "tools.20r2_5_plan": (DOCS_DIR, "03-run-plan", "a92f062d"),
 }
 
 # tools.20r2_4_cpu_pilot CO Y DE NGOAI: no DO THOI GIAN, nen KHONG tat dinh --
@@ -242,7 +261,8 @@ def test_every_20r2_tool_is_covered_by_one_of_the_two_tables():
                | {m.split(".")[-1] for m in NON_DETERMINISTIC}
                | {m.split(".")[-1] for m in REQUIRES_LOCAL_RAW}
                | {m.split(".")[-1] for m in TOO_SLOW_FOR_SUITE}
-               | {m.split(".")[-1] for m in NEEDS_SIGNED_CAMPAIGN})
+               | {m.split(".")[-1] for m in NEEDS_SIGNED_CAMPAIGN}
+               | {m.split(".")[-1] for m in REPRODUCIBLE_ONLY_AT_ITS_SIGNING_COMMIT})
     on_disk = {p.stem for p in (ROOT / "tools").glob("20r2_*.py")}
     # cong cu chi chay mot lan (sinh baseline / smoke) khong sinh artifact ky
     ONE_SHOT = {"20r2_baseline_failures", "20r2_remediation_smoke"}
@@ -271,6 +291,26 @@ def test_campaign_runner_refuses_until_the_prereg_is_signed():
     assert r.returncode != 0, "guard CHO QUA du prereg chua ky -- den xanh rong"
     assert "chua ky" in (r.stdout + r.stderr), (
         "guard dung nhung khong noi VI SAO:\n" + (r.stdout + r.stderr)[-800:])
+
+
+@pytest.mark.parametrize("module,spec", sorted(REPRODUCIBLE_ONLY_AT_ITS_SIGNING_COMMIT.items()))
+def test_historical_artifact_still_carries_its_signed_hash(module, spec, tmp_path):
+    """Artifact LICH SU khong duoc sinh lai, nhung PHAI giu dung sha da ky.
+
+    Day la thu thay the cho phep tai lap tai HEAD: ta khong doi tool hom nay ra
+    dung bytes do nua, nhung ta VAN doi file tren dia khong bi ai sua tay.
+    """
+    import hashlib
+    subdir, artifact, signed_commit = spec
+    p = ROOT / subdir / (artifact + ".json")
+    if not p.is_file():
+        pytest.skip("chua co artifact")
+    got = hashlib.sha256(p.read_bytes()).hexdigest()
+    prereg = (ROOT / "docs/phase-20R2/00-preregistration.md").read_text(encoding="utf-8")
+    assert got in prereg, (
+        "%s co sha %s nhung prereg KHONG ghim sha do -> file da bi sua tay hoac "
+        "sinh lai. Artifact lich su phai giu nguyen (xem "
+        "REPRODUCIBLE_ONLY_AT_ITS_SIGNING_COMMIT)." % (artifact, got[:16]))
 
 
 def test_pin_chain_has_no_cycle():

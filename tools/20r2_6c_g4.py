@@ -49,7 +49,12 @@ ROOT = pathlib.Path(__file__).resolve().parents[1]
 PLAN = "docs/phase-20R2/03-run-plan.json"
 PRED_OUT = "docs/phase-20R2/06c-g4-predictions.json"
 EXO = "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json"
-TAG = "phase-20R2-g4-frozen"
+# [20R2.7] AMENDMENT a1: doi sang tag moi vi tool da sua (doc `a.score` tuong
+# minh -- test_cli_flags_are_wired bat mot CO CHET). Dung quy trinh runbook:
+# amendment -> TAG MOI -> doi TAG trong tool. KHONG doi tag cu (tag bat bien, C3).
+# Ban sua KHONG doi mot con so nao -- da chung minh: --score chay lai ra file
+# GIONG TUNG BYTE voi ban da commit.
+TAG = "phase-20R2-g4-frozen-a1"
 TAUS = (0.5, 1.0, 2.0, 3.0, 5.0, 10.0, 20.0, 28.0)
 Z, Z_SIGNED = 0.366, 0.365
 STRUCT_SEEDS, STRUCT_TAU, STRUCT_N = (901, 902, 903), 3.0, 200_000
@@ -183,6 +188,11 @@ def main(argv=None):
         return 0
 
     # ---- --score: MOI duoc doc a=0.5
+    # [20R2.7] Doc `a.score` TUONG MINH thay vi dung `else` ngam. Ban truoc khai
+    # --score roi khong bao gio doc no; test_cli_flags_are_wired bat dung: mot co
+    # khai ma khong doc la mot CO CHET -- neu sau nay them che do thu ba, nhanh
+    # `else` se AM THAM bat lay no. Doi ho tro, KHONG doi mot con so nao.
+    assert a.score, "khong o che do --score"
     git = lambda *x: subprocess.run(["git", *x], cwd=ROOT, capture_output=True,
                                     text=True).stdout.strip()
     if not git("ls-remote", "--tags", "origin", TAG):
