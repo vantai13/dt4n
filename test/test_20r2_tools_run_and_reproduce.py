@@ -117,6 +117,12 @@ NEEDS_SIGNED_CAMPAIGN = {
     # 20R2.6c -- G4. --predict chay ~8 phut (MC 1e6 x 8 tau x 8 o x 2 gia tri a)
     # nen qua cham cho bo test; --score doi tag g4-frozen tren remote.
     "tools.20r2_6c_g4": "cham (~8 phut, MC 1e6); --score doi tag phase-20R2-g4-frozen",
+    # 20R2.7 -- 07a chi doc MOI TRUONG (khong doc d_sla) nhung chay ~9 phut
+    # (20 to hop x 3 seed x n=200k). 07 doi tag dsla-frozen + du lieu chien dich;
+    # duoc kiem RIENG tren du lieu GIA o test_20r2_7_dsla.py (6 test, 4 mutation).
+    "tools.20r2_7_structure": "cham (~9 phut); chi doc moi truong, khong doc d_sla",
+    "tools.20r2_7_dsla": "doi tag phase-20R2-dsla-frozen + du lieu chien dich; "
+                         "kiem tren du lieu GIA o test_20r2_7_dsla.py",
 }
 
 # Truong doi theo THOI DIEM chay, khong theo NOI DUNG. Loai truoc khi so.

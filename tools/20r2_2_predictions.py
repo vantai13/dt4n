@@ -182,11 +182,28 @@ def estimands() -> dict:
             "POPULATION": pop_gate + " (GIONG DECISION_ERR_BY_AGE co chu dich: "
                           "hai estimand phai noi ve cung mot quan the thi moi "
                           "doc chung duoc trong mot ket luan.)",
-            "SCALE": ("cost_ms -- DI QUA ham chi phi (delay + w_loss * loss), "
-                      "nen NHAY voi w_loss va voi truc SLA. Day la khac biet "
-                      "CHINH voi DECISION_ERR_BY_AGE: err la TI LE, d_sla la "
-                      "CHI PHI. Khac ca THANG va DON VI."),
-            "UNIT": "ms",
+            # [20R2.7-B1] DINH CHINH. Ban truoc ghi SCALE = "cost_ms" va
+            # UNIT = "ms", noi d_sla "DI QUA ham chi phi". MA NOI KHAC:
+            #   decision_error_v2.py:388  _viol = (delay > T_d) | (loss > T_l)  -> BOOLEAN
+            #   decision_error_v2.py:567  d_sla = viol[a_twin].mean() - viol[a_truth].mean()
+            # tuc HIEU HAI TI LE VI PHAM: KHONG thu nguyen, trong [-1, 1], KHONG
+            # phai ms. Ham chi phi chi cham vao GIAN TIEP qua viec chon argmin.
+            # Day la NT 64 lan nua: mot ten, hai dai luong -- lan nay LOI KHAI
+            # trong so dang ky sai so voi MA. Sua duoc vi cot d_sla CHUA duoc doc.
+            "SCALE": ("hieu TI LE VI PHAM SLA giua duong twin chon va duong dung: "
+                      "mean_t[viol(t, a_twin)] - mean_t[viol(t, a_truth)], voi "
+                      "viol = (delay > T_delay) OR (loss > T_loss) (dong 388). "
+                      "PHU THUOC truc SLA TRUC TIEP qua hai NGUONG, va GIAN TIEP "
+                      "qua w_loss (vi w_loss quyet dinh argmin). KHAC "
+                      "DECISION_ERR_BY_AGE: err dem SAI QUYET DINH, d_sla dem "
+                      "HAU QUA SLA cua sai do."),
+            "UNIT": "dimensionless -- hieu hai ti le, trong [-1, 1]",
+            "IDENTITY": ("d_sla = err_total * Delta_cond, voi Delta_cond = "
+                         "E[viol_twin - viol_truth | twin SAI] in [-1, 1]. Suy ra "
+                         "tu dinh nghia: tai moi t co a_twin == a_truth thi hieu = 0. "
+                         "He qua CHINH XAC: |d_sla| <= err_total."),
+            "CORRECTED": ("20R2.7-B1: UNIT va SCALE cua ban truoc SAI so voi ma "
+                          "(khai 'ms'/'cost_ms'). ARTIFACT_FIELD_LINE thi DUNG tu dau."),
             "BRANCH": "z_fixed",
             "CODE": "measurements/decision_error_v2.py : run_cell",
             "ARTIFACT_FIELD": "per_z[<z_key>].d_sla",

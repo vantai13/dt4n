@@ -176,13 +176,13 @@
  "estimands": {
   "DECISION_ERR_BY_AGE": {
    "ARTIFACT_FIELD": "per_z[<z_key>].err_total",
-   "ARTIFACT_FIELD_LINE": 564,
+   "ARTIFACT_FIELD_LINE": 567,
    "BRANCH": "z_fixed -- lag TAT DINH k = round(z/dt), measurements/decision_error_v2.py (lag TAT DINH). KHONG goi bo sinh AoI nao trong run_cell (T2-L8 dinh chinh co che). Truc AoI vao qua VIEC CHON z, khong qua bo sinh.",
    "CODE": "measurements/decision_error_v2.py : run_cell",
    "DECOMPOSITION": {
-    "per_z[<z_key>].err_model": 565,
-    "per_z[<z_key>].err_stale": 566,
-    "per_z[<z_key>].extrapolated": 571
+    "per_z[<z_key>].err_model": 568,
+    "per_z[<z_key>].err_stale": 569,
+    "per_z[<z_key>].extrapolated": 574
    },
    "DUNG CHO": [
     "RQ-20R2a",
@@ -199,22 +199,24 @@
   },
   "SLA_VIOL_BY_AGE": {
    "ARTIFACT_FIELD": "per_z[<z_key>].d_sla",
-   "ARTIFACT_FIELD_LINE": 567,
+   "ARTIFACT_FIELD_LINE": 570,
    "BRANCH": "z_fixed",
    "CODE": "measurements/decision_error_v2.py : run_cell",
+   "CORRECTED": "20R2.7-B1: UNIT va SCALE cua ban truoc SAI so voi ma (khai 'ms'/'cost_ms'). ARTIFACT_FIELD_LINE thi DUNG tu dau.",
    "DUNG CHO": [
     "RQ-20R2b"
    ],
    "GIA TRI MOC": null,
    "GIA TRI MOC NOTE": "dien sau pilot",
+   "IDENTITY": "d_sla = err_total * Delta_cond, voi Delta_cond = E[viol_twin - viol_truth | twin SAI] in [-1, 1]. Suy ra tu dinh nghia: tai moi t co a_twin == a_truth thi hieu = 0. He qua CHINH XAC: |d_sla| <= err_total.",
    "LEVEL": "all_action",
    "POPULATION": "8 o `gate` cua luoi 20R2: mode c_a thuoc {poisson, h2} x rho_bar thuoc {0.700, 0.850, 0.925, 0.960}. Nguon phan hoach: results/LIVE/phase-20R/sla_calibration.json summary.n_gate_cells = 8. Luoi KET QUA = 8 o x 8 tau x 2 sigma x 5 seed = 640 o. 2 o `cbr` kha thi (rho_bar 0.700, 0.850) la DOI CHUNG DUONG, bao cao RIENG, KHONG gop vao bat ky trung binh nao. 2 o cbr con lai bi loai boi q8 (sigma_max_regime = 0). (GIONG DECISION_ERR_BY_AGE co chu dich: hai estimand phai noi ve cung mot quan the thi moi doc chung duoc trong mot ket luan.)",
-   "SCALE": "cost_ms -- DI QUA ham chi phi (delay + w_loss * loss), nen NHAY voi w_loss va voi truc SLA. Day la khac biet CHINH voi DECISION_ERR_BY_AGE: err la TI LE, d_sla la CHI PHI. Khac ca THANG va DON VI.",
-   "UNIT": "ms"
+   "SCALE": "hieu TI LE VI PHAM SLA giua duong twin chon va duong dung: mean_t[viol(t, a_twin)] - mean_t[viol(t, a_truth)], voi viol = (delay > T_delay) OR (loss > T_loss) (dong 388). PHU THUOC truc SLA TRUC TIEP qua hai NGUONG, va GIAN TIEP qua w_loss (vi w_loss quyet dinh argmin). KHAC DECISION_ERR_BY_AGE: err dem SAI QUYET DINH, d_sla dem HAU QUA SLA cua sai do.",
+   "UNIT": "dimensionless -- hieu hai ti le, trong [-1, 1]"
   }
  },
  "generated_by": "tools/20r2_2_predictions.py",
- "generated_utc": "2026-09-10T11:17:35.917183+00:00",
+ "generated_utc": "2026-09-11T01:55:19.132475+00:00",
  "reading_policy": {
   "AGGREGATION_FALLACY_GUARD": "Gop cbr vao trung binh se KEO err trung binh XUONG (cbr la che do de nhat), nen bao cao 'twin sai 12%' trong khi o che do kho that (h2@0.960) co the la 20%. Hop phap ve so hoc, sai lech ve khoa hoc. Vi vay POPULATION = 8 o gate, cbr bao cao RIENG.",
   "DENOMINATOR": {

@@ -1,0 +1,659 @@
+{
+ "WHAT_THIS_IS": "Tinh chat MOI TRUONG, KHONG phai ket qua. Khong doc mot cot d_sla nao. spread la CAN TREN cua |d_sla|.",
+ "classes": {
+  "DEGENERATE": "spread < 0.01",
+  "INFORMATIVE": "spread >= 0.05",
+  "WEAK": "0.01 <= spread < 0.05"
+ },
+ "generated_by": "tools/20r2_7_structure.py",
+ "n": 200000,
+ "rows": [
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "cbr@0.700",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "cbr@0.700",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "cbr@0.850",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "cbr@0.850",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "poisson@0.700",
+   "class": "DEGENERATE",
+   "spread": 0.005015,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.0,
+    0.005,
+    0.0,
+    0.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "poisson@0.700",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.0,
+    0.0,
+    0.0,
+    0.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "poisson@0.850",
+   "class": "INFORMATIVE",
+   "spread": 0.8856333333333334,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.3507,
+    0.7346,
+    0.3454,
+    0.4692
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "poisson@0.850",
+   "class": "INFORMATIVE",
+   "spread": 0.918805,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.2137,
+    0.8526,
+    0.1949,
+    0.3672
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "poisson@0.925",
+   "class": "DEGENERATE",
+   "spread": 0.004755,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.9962,
+    1.0,
+    0.9991,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "poisson@0.925",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "poisson@0.960",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "poisson@0.960",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "h2@0.700",
+   "class": "INFORMATIVE",
+   "spread": 0.12257833333333334,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.9214,
+    0.9989,
+    0.9594,
+    0.9913
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "h2@0.700",
+   "class": "WEAK",
+   "spread": 0.011863333333333332,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    0.9903,
+    1.0,
+    0.9979,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "h2@0.850",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "h2@0.850",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "h2@0.925",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "h2@0.925",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "exogenous_g114_S-B",
+   "cell": "h2@0.960",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.5,
+   "axis": "exogenous_g114_S-B",
+   "cell": "h2@0.960",
+   "class": "DEGENERATE",
+   "spread": 0.0,
+   "t_delay_ms": 50.0,
+   "t_loss": 0.01,
+   "viol_share_per_path": [
+    1.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 5000.0
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "cbr@0.700",
+   "class": "INFORMATIVE",
+   "spread": 0.8309133333333333,
+   "t_delay_ms": 12.456355455410035,
+   "t_loss": 0.0,
+   "viol_share_per_path": [
+    0.1691,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 1245.6355455410035
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "cbr@0.700",
+   "class": "INFORMATIVE",
+   "spread": 0.9118266666666667,
+   "t_delay_ms": 12.456355455410035,
+   "t_loss": 0.0,
+   "viol_share_per_path": [
+    0.0882,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 1245.6355455410035
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "cbr@0.850",
+   "class": "INFORMATIVE",
+   "spread": 1.0,
+   "t_delay_ms": 12.456355455410035,
+   "t_loss": 0.0,
+   "viol_share_per_path": [
+    0.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 1245.6355455410035
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "cbr@0.850",
+   "class": "INFORMATIVE",
+   "spread": 1.0,
+   "t_delay_ms": 12.456355455410035,
+   "t_loss": 0.0,
+   "viol_share_per_path": [
+    0.0,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 1245.6355455410035
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "poisson@0.700",
+   "class": "INFORMATIVE",
+   "spread": 0.8233083333333333,
+   "t_delay_ms": 16.56443258442343,
+   "t_loss": 0.00042402543671409665,
+   "viol_share_per_path": [
+    0.2397,
+    0.9994,
+    0.8119,
+    0.9409
+   ],
+   "w_loss": 1656.4432584423428
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "poisson@0.700",
+   "class": "INFORMATIVE",
+   "spread": 0.9229683333333334,
+   "t_delay_ms": 16.56443258442343,
+   "t_loss": 0.00042402543671409665,
+   "viol_share_per_path": [
+    0.0888,
+    1.0,
+    0.9167,
+    0.9943
+   ],
+   "w_loss": 1656.4432584423428
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "poisson@0.850",
+   "class": "INFORMATIVE",
+   "spread": 0.7942766666666667,
+   "t_delay_ms": 24.243596038611255,
+   "t_loss": 0.0072216594767288275,
+   "viol_share_per_path": [
+    0.4882,
+    0.9018,
+    0.5566,
+    0.7456
+   ],
+   "w_loss": 2424.3596038611254
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "poisson@0.850",
+   "class": "INFORMATIVE",
+   "spread": 0.8316366666666667,
+   "t_delay_ms": 24.243596038611255,
+   "t_loss": 0.0072216594767288275,
+   "viol_share_per_path": [
+    0.4281,
+    0.9839,
+    0.4706,
+    0.8191
+   ],
+   "w_loss": 2424.3596038611254
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "poisson@0.925",
+   "class": "INFORMATIVE",
+   "spread": 0.816935,
+   "t_delay_ms": 32.22244681647411,
+   "t_loss": 0.029211978731282062,
+   "viol_share_per_path": [
+    0.3924,
+    0.9715,
+    0.518,
+    0.9079
+   ],
+   "w_loss": 3222.244681647411
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "poisson@0.925",
+   "class": "INFORMATIVE",
+   "spread": 0.8842833333333333,
+   "t_delay_ms": 32.22244681647411,
+   "t_loss": 0.029211978731282062,
+   "viol_share_per_path": [
+    0.2751,
+    0.9995,
+    0.4362,
+    0.988
+   ],
+   "w_loss": 3222.244681647411
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "poisson@0.960",
+   "class": "INFORMATIVE",
+   "spread": 0.8296549999999999,
+   "t_delay_ms": 36.558944289989974,
+   "t_loss": 0.047909909856780536,
+   "viol_share_per_path": [
+    0.2461,
+    1.0,
+    0.7004,
+    0.9992
+   ],
+   "w_loss": 3655.8944289989972
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "poisson@0.960",
+   "class": "INFORMATIVE",
+   "spread": 0.935355,
+   "t_delay_ms": 36.558944289989974,
+   "t_loss": 0.047909909856780536,
+   "viol_share_per_path": [
+    0.0868,
+    1.0,
+    0.7837,
+    1.0
+   ],
+   "w_loss": 3655.8944289989972
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "h2@0.700",
+   "class": "INFORMATIVE",
+   "spread": 0.857665,
+   "t_delay_ms": 28.613953008919122,
+   "t_loss": 0.02645414317289722,
+   "viol_share_per_path": [
+    0.324,
+    0.9217,
+    0.4946,
+    0.7526
+   ],
+   "w_loss": 2861.395300891912
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "h2@0.700",
+   "class": "INFORMATIVE",
+   "spread": 0.9459749999999999,
+   "t_delay_ms": 28.613953008919122,
+   "t_loss": 0.02645414317289722,
+   "viol_share_per_path": [
+    0.1582,
+    0.9912,
+    0.3624,
+    0.8486
+   ],
+   "w_loss": 2861.395300891912
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "h2@0.850",
+   "class": "INFORMATIVE",
+   "spread": 0.8414783333333333,
+   "t_delay_ms": 40.214160578887494,
+   "t_loss": 0.11025989783402412,
+   "viol_share_per_path": [
+    0.2604,
+    0.9171,
+    0.5641,
+    0.8208
+   ],
+   "w_loss": 4021.4160578887495
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "h2@0.850",
+   "class": "INFORMATIVE",
+   "spread": 0.9541266666666667,
+   "t_delay_ms": 40.214160578887494,
+   "t_loss": 0.11025989783402412,
+   "viol_share_per_path": [
+    0.0769,
+    0.9909,
+    0.529,
+    0.9379
+   ],
+   "w_loss": 4021.4160578887495
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "h2@0.925",
+   "class": "INFORMATIVE",
+   "spread": 0.8282283333333332,
+   "t_delay_ms": 45.15904012589387,
+   "t_loss": 0.16684268425713278,
+   "viol_share_per_path": [
+    0.1872,
+    1.0,
+    0.8463,
+    0.9978
+   ],
+   "w_loss": 4515.904012589386
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "h2@0.925",
+   "class": "INFORMATIVE",
+   "spread": 0.9576466666666666,
+   "t_delay_ms": 45.15904012589387,
+   "t_loss": 0.16684268425713278,
+   "viol_share_per_path": [
+    0.0431,
+    1.0,
+    0.9569,
+    1.0
+   ],
+   "w_loss": 4515.904012589386
+  },
+  {
+   "a": 0.9,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "h2@0.960",
+   "class": "INFORMATIVE",
+   "spread": 0.8179233333333333,
+   "t_delay_ms": 47.226901390520645,
+   "t_loss": 0.19460632743369513,
+   "viol_share_per_path": [
+    0.1821,
+    1.0,
+    0.9996,
+    1.0
+   ],
+   "w_loss": 4722.690139052064
+  },
+  {
+   "a": 0.5,
+   "axis": "self_calibrated (DEPRECATED)",
+   "cell": "h2@0.960",
+   "class": "INFORMATIVE",
+   "spread": 0.97208,
+   "t_delay_ms": 47.226901390520645,
+   "t_loss": 0.19460632743369513,
+   "viol_share_per_path": [
+    0.0279,
+    1.0,
+    1.0,
+    1.0
+   ],
+   "w_loss": 4722.690139052064
+  }
+ ],
+ "schema": "dt4n.dsla_structure_20r2_7.v1",
+ "seeds": [
+  901,
+  902,
+  903
+ ],
+ "tau": 3.0
+}

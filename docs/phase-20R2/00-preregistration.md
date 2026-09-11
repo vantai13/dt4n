@@ -768,7 +768,9 @@ Roi moi duoc chay:
 
 ```text
 docs/phase-20R2/01-prediction-signed.json
-sha256 = d9eef23b75c26881f5df2ad7c44a12017593aad2eb92323f7297b42d4462beac
+sha256 = 6ec81b2584779f128d33bc20e3cd55bf57f7ebc5b545fcc8de8795d303897291
+  ^ CAP NHAT lan 2 boi amendment §20.1 (20R2.7-B1): dinh chinh
+    UNIT/SCALE cua SLA_VIOL_BY_AGE. Hash truoc do: d9eef23b75c26881f5df2ad7c44a12017593aad2eb92323f7297b42d4462beac
   ^ CAP NHAT boi amendment §16.3 (20R2.5-P3): bang do lai tren truc SLA
     exogenous. Hash truoc do: 8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c
 sinh bởi: tools/20r2_2_predictions.py     (gate 0-1: SINH BỞI CÔNG CỤ)
@@ -2270,3 +2272,130 @@ mở**, không tính vào phán quyết.
 Một FAIL cho biết G4 chỉ khớp được dữ liệu mà nó **đã được chọn trên đó** — tức
 lối rẽ ở §19.2 đã sinh ra một mô hình không tổng quát. Đó là thông tin thật, và
 là lý do holdout tồn tại.
+
+---
+
+## 20. `d_sla` — KHOÁ trước khi mở (gate 20R2.7)
+
+### 20.1 ★ Đính chính sổ đăng ký: đơn vị đang bị khai SAI
+
+Sổ đăng ký ghi `SLA_VIOL_BY_AGE`: **UNIT = ms**, **SCALE = cost_ms**, *"đi qua hàm
+chi phí `delay + w_loss·loss`"*. **Mã nói khác:**
+
+```python
+# decision_error_v2.py:388
+def _viol(delay, loss, t_delay_ms, t_loss):
+    return (delay > t_delay_ms) | (loss > t_loss)        # BOOLEAN
+# decision_error_v2.py:567
+"d_sla": viol[current, a_twin].mean() - viol[current, a_truth].mean()
+```
+
+⇒ `d_sla` là **hiệu hai TỈ LỆ vi phạm**: **không thứ nguyên**, nằm trong `[−1, 1]`,
+**không phải ms**. Hàm chi phí chỉ chạm vào **gián tiếp** qua việc chọn `argmin`;
+trục SLA chạm vào **trực tiếp** qua hai **ngưỡng** `T_delay`, `T_loss`.
+
+Đây là **NT 64 lần nữa — một tên, hai đại lượng** — nhưng lần này **lời khai trong
+sổ đăng ký sai so với MÃ**, chứ không phải hai chỗ trong mã lệch nhau.
+
+**Sửa hợp lệ vì cột `d_sla` CHƯA được đọc, và mã là sự thật.** Giữ nguyên ID, sửa
+`UNIT` + `SCALE`, thêm `IDENTITY`. `ARTIFACT_FIELD_LINE: 567` **đúng từ đầu**. Sửa
+ở **nguồn sinh** (`tools/20r2_2_predictions.py`) rồi sinh lại — không gõ tay vào
+artifact. Chú thích sai trong `ESTIMAND_BY_FIELD` cũng đã sửa. Hash cũ ghi ở §12.1.
+
+### 20.2 Đồng nhất thức, hai cận, và dấu
+
+**Đồng nhất thức (CHÍNH XÁC, suy ra từ định nghĩa).** Tại mọi `t` có
+`a_twin = a_truth`, hiệu vi phạm **bằng 0**. Vậy tổng chỉ còn các `t` mà twin sai:
+
+```text
+d_sla = (1/T) Σ_t [viol(t, a_twin) − viol(t, a_truth)]
+      = (n_sai/T) · (1/n_sai) Σ_{t: twin sai} [viol_twin − viol_truth]
+      = err_total · Δ_cond ,   Δ_cond = E[viol_twin − viol_truth | twin SAI]
+```
+
+`Δ_cond` là **"giá của MỘT lần sai"**. Đây là thông tin **mới** mà `d_sla` mang
+lại, ngoài những gì `err` đã cho biết.
+
+**Hai cận (chính xác).** Vì `viol ∈ {0,1}` nên hiệu `∈ {−1,0,1}`, do đó `|Δ_cond| ≤ 1`:
+
+```text
+|d_sla| <= err_total                                  (tu dong nhat thuc)
+|d_sla| <= spread = mean_t[max_p viol − min_p viol]    (can tren cau truc)
+```
+
+**Dấu.** Trục exogenous đặt `w_loss = T_d/T_l = 50 ms / 1% = 5000`, tức hàm chi
+phí được **căn thẳng hàng** với SLA: 1% loss "đắt" đúng bằng 50 ms trễ. Vì vậy
+`Δ_cond ≥ 0` gần như chắc chắn: twin chọn sai sẽ không "may mắn" chọn được đường
+**ít** vi phạm hơn.
+
+### 20.3 Lớp cấu trúc — ĐO TRƯỚC KHI MỞ (07a, seed 901–903)
+
+```text
+DEGENERATE  spread < 0,01     WEAK  0,01 <= spread < 0,05     INFORMATIVE  >= 0,05
+```
+
+**Kết quả trên 16 tổ hợp gate (8 ô × 2 giá trị a):**
+
+```text
+TRUC EXOGENOUS (T_d = 50 ms, T_l = 1%)      12 DEGENERATE . 1 WEAK . 3 INFORMATIVE
+  poisson@0.700  a=0,9/0,5   spread 0,005 / 0,000   KHONG duong nao vi pham
+  poisson@0.850  a=0,9/0,5   spread 0,886 / 0,919   VUNG BIEN   <- INFORMATIVE
+  h2@0.700       a=0,9       spread 0,123           VUNG BIEN   <- INFORMATIVE
+  h2@0.700       a=0,5       spread 0,012           WEAK
+  poisson@0.925/0.960 . h2@0.850/0.925/0.960        MOI duong vi pham ~100%
+
+TRUC SELF_CALIBRATED (DEPRECATED)           16/16 INFORMATIVE (spread 0,79-0,97)
+```
+
+**Ba điều phải rút ra:**
+
+1. **ĐO ĐƯỢC ≠ MANG THÔNG TIN.** Trên trục exogenous, **13/16** tổ hợp có `d_sla`
+   bằng 0 **theo cấu trúc** (12 DEGENERATE + 1 WEAK), bất kể twin sai nhiều hay ít.
+   Hai nguyên nhân **khác nhau**: SLA **không bao giờ bị chạm** (poisson@0.700), và
+   SLA **không thể đạt được** (từ h2@0.850 trở lên, *mọi* đường vượt 50 ms gần như
+   mọi lúc). ⇒ Số gộp 8 ô gần bằng **1/8** giá trị của poisson@0.850, và **hoàn
+   toàn không phải "giá của sai"**.
+
+2. **Đây là S14 hiện hình trên `d_sla`.** Trục exogenous **trung thực** nhưng **mù
+   ở hầu hết các ô**. Trục self_calibrated **nhìn thấy mọi ô** — nhưng chỉ vì
+   ngưỡng của nó được dựng **từ chính phân phối của từng ô**, tức **vòng tròn**.
+
+3. **Hàm ý cho digital twin (THĂM DÒ):** "giá của sai" chỉ tồn tại ở **vùng biên**,
+   nơi SLA *đạt được nhưng không được bảo đảm*. Ở **cả hai phía** của vùng đó, độ
+   cũ của twin **không ảnh hưởng gì** đến SLA.
+
+### 20.4 Dự đoán — và severity của từng cái
+
+```text
+S0  DUNG CU, CHINH XAC   |d_sla| <= err_total o MOI hang, MOI z
+    -> severity CAO: vi pham = loi dung cu, vi day la HE QUA DAI SO cua dinh nghia.
+S1  o DEGENERATE         |d_sla| < 0,01 o moi tau
+    -> ⚠️ severity THAP, phai khai: spread da la CAN TREN va no ~ 0, nen S1 gan
+       nhu chac chan dat. No la mot phep kiem NHAT QUAN, khong phai mot phat hien.
+S2  o INFORMATIVE        d_sla > 0 o moi tau
+    -> severity VUA: co the truot neu Delta_cond < 0, tuc twin sai lai chon duoc
+       duong IT vi pham hon. Ly do tin la dung: w_loss = T_d/T_l (§20.2).
+```
+
+### 20.5 Báo cáo
+
+Bảng theo **từng ô** kèm `Δ_cond`, **đứng cạnh** số gộp; số gộp 8 ô **bắt buộc**
+dán nhãn *"bị chi phối bởi các số 0 THEO CẤU TRÚC — không đọc như giá của sai"*.
+Đây là bài học §18.1 áp dụng ngay: bảng theo từng ô là **bắt buộc** từ 20R2.7.
+
+### 20.6 Trục: CHỈ exogenous
+
+H3 ("đo trên cả hai trục") **đã đạt ở mức CẤU TRÚC** với **0 phút CPU** (07a).
+**Không** chạy thêm nhánh self_calibrated (~35–40 phút), vì mọi con số trên đó đều
+điều kiện theo một trục **vòng tròn**. Khai vào Threats (gate 7-3).
+
+### 20.7 Nếu S0 FAIL
+
+⇒ **lỗi dụng cụ**, **DỪNG** diễn giải. S0 là hệ quả đại số của định nghĩa; nó
+không thể sai vì "khoa học", chỉ vì mã.
+
+### 20.8 Nói thẳng: 20R2.7 có rất ít nội dung khẳng định
+
+Kết quả **chính** của gate này là **cấu trúc** (§20.3), và nó có được **trước khi**
+mở một cột nào. Phần mở cột chủ yếu để **xác nhận dụng cụ** (S0) và **mô tả**
+`Δ_cond` ở ba tổ hợp INFORMATIVE.

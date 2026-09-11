@@ -22,7 +22,10 @@ SIGNED = ROOT / "docs/phase-20R2/01-prediction-signed.json"
 # [20R2.5-P3] AMENDMENT §16.3: bang chap nhan do lai tren truc SLA exogenous
 # (ban cu do tren self_calibrated do mac dinh im lang cua --calibration).
 # Hash cu, de doi chieu: 8eff683ff4fe115a322b8639bd17d2dd71c58829fefcbf4b2df3670d83bf1d9c
-SIGNED_SHA256 = "d9eef23b75c26881f5df2ad7c44a12017593aad2eb92323f7297b42d4462beac"
+# [20R2.7-B1] AMENDMENT §20.1: UNIT/SCALE cua SLA_VIOL_BY_AGE khai SAI so voi
+# ma (ghi "ms"/"cost_ms"; thuc chat la HIEU TI LE VI PHAM, khong thu nguyen).
+# Sua duoc vi cot d_sla CHUA duoc doc. Hash truoc do: d9eef23b75c26881f5df2ad7c44a12017593aad2eb92323f7297b42d4462beac
+SIGNED_SHA256 = "6ec81b2584779f128d33bc20e3cd55bf57f7ebc5b545fcc8de8795d303897291"
 
 
 @pytest.fixture(scope="module")

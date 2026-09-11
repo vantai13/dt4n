@@ -70,7 +70,10 @@ ESTIMAND_BY_FIELD = {
     "err_total": "DECISION_ERR_BY_AGE",
     "err_model": "DECISION_ERR_BY_AGE",
     "err_stale": "DECISION_ERR_BY_AGE",
-    # chi phi, ms -- DI QUA ham chi phi nen nhay voi w_loss
+    # [20R2.7-B1] HIEU TI LE VI PHAM, KHONG thu nguyen, [-1, 1]. Chu thich cu
+    # ghi "chi phi, ms -- DI QUA ham chi phi" la SAI: _viol (dong 388) la mot
+    # phep so NGUONG tra BOOLEAN, va dong 567 lay HIEU HAI TRUNG BINH cua no.
+    # Ham chi phi chi cham vao GIAN TIEP qua viec chon argmin.
     "d_sla": "SLA_VIOL_BY_AGE",
     # do tre thuan, ms -- w_loss KHONG cham toi duoc
     "rms_e_model": "RMS_ALLACTION_DELAY",
