@@ -654,3 +654,63 @@ gio lat va twin cu van dung.
 Hieu biet (THAM DO): do nhay cua quyet dinh do CAU TRUC CANH TRANH giua cac duong
 quyet dinh, KHONG do muc tai. Twin cu nguy hiem nhat o vung tai VUA, noi 3-4
 duong gan hoa nhau.
+
+### QD-20R2.7-1: `d_sla` khong phai ms -- so dang ky khai sai so voi MA
+
+SLA_VIOL_BY_AGE tung khai UNIT = "ms", SCALE = "cost_ms -- DI QUA ham chi phi".
+Ma noi khac: _viol (dong 388) la (delay > T_d) | (loss > T_l) -> BOOLEAN, va dong
+567 lay HIEU HAI TRUNG BINH cua no. Vay d_sla la HIEU TI LE VI PHAM: khong thu
+nguyen, [-1, 1]. Ham chi phi chi cham GIAN TIEP qua viec chon argmin; truc SLA
+cham TRUC TIEP qua hai NGUONG.
+
+Sua o NGUON SINH (20r2_2_predictions.py) roi sinh lai, khong go tay artifact.
+Chu thich sai trong ESTIMAND_BY_FIELD cung sua. ARTIFACT_FIELD_LINE 567 DUNG tu dau.
+
+Dong nhat thuc them vao so dang ky: d_sla = err_total * Delta_cond, suy ra tu dinh
+nghia (tai moi t co a_twin == a_truth thi hieu = 0). He qua CHINH XAC:
+|d_sla| <= err_total, vi viol in {0,1} nen |Delta_cond| <= 1.
+
+### QD-20R2.7-2: DO DUOC khong co nghia la MANG THONG TIN
+
+Do TRUOC khi mo (07a, chi doc moi truong): tren truc exogenous, 13/16 to hop gate
+co d_sla = 0 THEO CAU TRUC (12 DEGENERATE + 1 WEAK), vi HAI ly do KHAC NHAU:
+SLA khong bao gio bi cham (poisson@0.700), va SLA khong the dat duoc (tu h2@0.850
+tro len moi duong vuot 50 ms ~100% thoi gian).
+
+Day la S14 hien hinh tren d_sla: exogenous TRUNG THUC nhung MU o hau het o;
+self_calibrated nhin thay 16/16 o nhung chi vi nguong dung tu CHINH phan phoi
+tung o, tuc VONG TRON. => KHONG chay nhanh self_calibrated (~35-40 phut); H3 da
+dat o muc CAU TRUC voi 0 phut CPU. Khai vao Threats (gate 7-3).
+
+### QD-20R2.7-3: ARTIFACT GHIM HASH ARTIFACT KHAC -- gia phai tra
+
+03-run-plan.json ghim sha256 cua 01-prediction-signed.json trong inputs_sha256.
+Amendment §20.1 sua UNIT/SCALE cua prediction -> prediction doi sha -> ke hoach
+SINH LAI HOM NAY ra 4e9f71a3 thay vi a984020e DA KY.
+
+MOT ARTIFACT GHIM HASH CUA ARTIFACT KHAC THI KHONG THE TAI LAP TUNG BYTE SAU KHI
+CAI BI GHIM DUOC SUA. Khong tranh duoc bang cach "sua cho khac di".
+
+KHONG sinh lai ke hoach: no la BAN GHI LICH SU cua chien dich da chay (167 lenh,
+so cai ghi tung lenh, hygiene H1 doi chieu tung truong). Sinh lai = lam SAI ban ghi.
+Da KIEM bang worktree tai commit da ky a92f062d: tool tai lap DUNG a984020e...
+=> tai lap khong MAT, no DIEU KIEN THEO COMMIT.
+Chuyen 20r2_5_plan sang bang REPRODUCIBLE_ONLY_AT_ITS_SIGNING_COMMIT va THAY phep
+kiem o HEAD bang test doi file tren dia VAN GIU dung sha da ky.
+
+### QD-20R2.7-4: hai bay ky thuat trong chinh quy trinh kiem
+
+BAY 1 -- .pyc cu lam mutation test cho ket qua GIA. Doi "/" thanh "*" giu NGUYEN
+kich thuoc file; neu khoi phuc trong cung mot tick mtime thi Python dung lai
+bytecode cu, nen mot dot bien co the TRONG NHU khong bi bat. Phat hien vi buoc
+khoi phuc con 1 test do du file da dung. Chan: xoa __pycache__ MOI buoc. Da chay
+lai co xoa cache: 4/4 dot bien van bi bat.
+
+BAY 2 -- `git add -A` truoc khi commit ban sua a1 da GOP artifact 20R2.7
+(07-dsla.json, 07-dsla.md) va bang cong cu vao commit 84ba0af0, ma thong diep
+commit do CHI mo ta ban sua a1. Day la mot khiem khuyet provenance do toi gay ra.
+Khong viet lai lich su (da push, va lich su la bang chung); ghi dinh chinh o day:
+  84ba0af0 chua CA HAI: amendment a1 CUNG VOI artifact + bao cao 20R2.7.
+  §20 va 07a-dsla-structure.json nam o commit dong bang truoc do.
+Bai hoc: `git add -A` trong mot chuoi nhieu buoc se gop cac buoc lai; stage TUNG
+duong dan khi mot commit can noi dung mot viec.
