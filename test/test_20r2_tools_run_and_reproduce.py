@@ -114,6 +114,9 @@ NEEDS_SIGNED_CAMPAIGN = {
     # neu khong tool tu nem AssertionError -- nen no tu canh chinh no.
     "tools.20r2_6b_per_cell": "can du lieu chien dich + 06-adjudication.json; "
                               "tu doi chung bang cach tai lap cot gop da ky",
+    # 20R2.6c -- G4. --predict chay ~8 phut (MC 1e6 x 8 tau x 8 o x 2 gia tri a)
+    # nen qua cham cho bo test; --score doi tag g4-frozen tren remote.
+    "tools.20r2_6c_g4": "cham (~8 phut, MC 1e6); --score doi tag phase-20R2-g4-frozen",
 }
 
 # Truong doi theo THOI DIEM chay, khong theo NOI DUNG. Loai truoc khi so.

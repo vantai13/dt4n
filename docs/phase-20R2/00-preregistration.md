@@ -2139,3 +2139,134 @@ DA KIEM: is_smoke duoc DINH NGHIA la (n < 50000). Doi chung twin-hoan-hao cua
 
 Bước 3 đã làm cho T2-R7: `test_T2_R7_cells_are_flagged_in_the_campaign_data`
 đòi **đúng** hai ô 0,96 mang cờ, không nhiều hơn, không ít hơn.
+
+---
+
+## 19. G4 — mô hình cơ chế, holdout a = 0.5 (gate 20R2.6c)
+
+Biến các phát hiện **thăm dò** của 06b thành một phép thử **khẳng định**. Khoá
+trước khi mở `err_stale` của a = 0.5.
+
+### 19.0 Hai dung sai đề xuất ban đầu ĐỀU HỎNG — đã đo
+
+```text
+UNG VIEN 1  +-0,15 TUYET DOI, o h2@0.960
+            rice = 0,0080 | quan sat 0,0024-0,0076 | khoang qua duoc [0; 0,158]
+            => MOI gia tri >= 0 deu qua. PHEP THU KHONG THE TRUOT -> den xanh rong.
+
+UNG VIEN 2  +-20% TUONG DOI, o h2@0.925
+            rice = 0,4040 | lech -25,5% .. -14,6%
+            => vuot 20% o 3/8 tau. DA TRUOT SAN tren du lieu kham pha
+               -> chay mot phep "xac nhan" ma ket cuc da biet truoc la that bai.
+```
+
+**P2 bị RÚT.** Luật đề xuất *"ô ≥ 3 đường sống ⇒ tỉ số > 1"* có **phản ví dụ nằm
+sẵn** trong bảng 06b: `poisson@0.700` có 3 đường sống nhưng tỉ số 0,945–1,385,
+tức ≤ 1 ở 2/8 τ.
+
+### 19.1 Nguyên lý: phép thử phải CÓ KHẢ NĂNG trượt (severity)
+
+Mayo (*Statistical Inference as Severe Testing*, 2018): một phép thử chỉ có giá
+trị khi, **nếu giả thuyết sai**, nó có khả năng cao cho kết quả **trượt**.
+
+```text
+seed moi 301-305 tren cung 8 o  =  PHEP THU YEU
+   m, so duong song va bang chi phi la tinh chat cua O, khong cua SEED.
+   Seed moi chi kiem nhieu lay mau -> gan nhu chac chan "qua".
+
+holdout a = 0.5 theo TUNG O     =  PHEP THU MANH
+   - DA CHAY trong chien dich -> ton 0 phut CPU
+   - CHUA AI MO theo tung o: bo cham 06 chi in so GOP cua a=0.5 (phai khai)
+   - CAU TRUC bien KHAC HAN: m tang, so duong song doi. Mo hinh phai du doan
+     dung o dieu kien no CHUA THAY.
+   - Luu y CRN: a=0.5 dung CUNG dong cu soc voi a=0.9, chi nhan ti le. Nhieu la
+     CHUNG, nhung CAU TRUC la khac -- va cau truc moi la thu ta muon kiem.
+```
+
+### 19.2 ⚠️ CÔNG KHAI: G4 được CHỌN trên dữ liệu khám phá
+
+**Ba** mô hình đã được so trên dữ liệu khám phá (a = 0.9) rồi G4 được chọn vì
+khớp tốt nhất: Rice xấp xỉ độ trễ nhỏ; Gauss **hai** chiều chính xác cho 2 đường
+đầu; và G4. Đây là một **lối rẽ** (garden of forking paths). Mô hình Gauss hai
+chiều thật ra khớp `poisson@0.700` tốt hơn (0,93) nhưng **trượt nặng** ở mọi ô có
+3 đường sống.
+
+Chính vì lối rẽ đó mà holdout là **bắt buộc**, và phải là **điều kiện mới**.
+
+### 19.3 Mô hình G4 — không có tham số nào được khớp
+
+```text
+c(t) in R^4 ~ N(mu, Sigma), tu tuong quan r = exp(-z/tau) cho moi thanh phan
+du doan: err_stale = P(argmin c(t) != argmin c(t-z))      -- Monte Carlo 1e6
+(mu, Sigma) uoc tu seed 901-903 (NGOAI thiet ke), tu chi phi TWIN c_fresh
+```
+
+⚠️ **Đính chính so với 06b:** `err_stale` so twin với **chính nó** ở thời điểm cũ,
+nên cấu trúc biên phải lấy từ `c_fresh` (chi phí **twin**), không phải `c_true`.
+06b tính `m` từ `c_true` — dùng được để *mô tả*, nhưng G4 phải dùng `c_fresh`.
+
+Các trường hợp đã biết là **trường hợp riêng**: `m = 0` và 2 hành động → đúng
+Sheppard; kỳ vọng khác 0 → nén (Rice); ≥ 3 đường sống → giãn.
+
+### 19.4 Dung sai DẪN XUẤT, không chọn tay
+
+```text
+Thong ke : trung binh qua 8 tau cua err_stale/Sheppard(0,365), tai z = 0,366,
+           a = 0.5, TUNG o gate
+Dat o    : |quan sat - G4| <= max(0,10 * G4 ; 0,02)
+Dat P1   : >= 7/8 o
+
+Dan xuat:
+  0,10 = bien sai so lon nhat cua 7 o kham pha (7,6%) + nhieu seed (~1-2%)
+  0,02 = SAN tuyet doi, vi hai du doan gan 0 (0,022 va 0,000) -- o do sai so
+         TUONG DOI vo nghia
+  7/8  = khop DUNG hieu nang tren kham pha (7/8, mot o di thuong)
+```
+
+### 19.5 ⚠️ GIỚI HẠN SEVERITY: chỉ 6/8 ô mang rủi ro thật
+
+Đã đo, và phải khai:
+
+```text
+o               G4      tol   tol/G4   phep thu
+poisson@0.850  1,491   0,149     10%   RUI RO THAT
+h2@0.700       1,126   0,113     10%   RUI RO THAT
+poisson@0.925  1,121   0,112     10%   RUI RO THAT
+poisson@0.960  0,699   0,070     10%   RUI RO THAT
+poisson@0.700  0,650   0,065     10%   RUI RO THAT
+h2@0.850       0,635   0,063     10%   RUI RO THAT
+h2@0.925       0,022   0,020     91%   YEU  <- san tuyet doi chi phoi
+h2@0.960       0,000   0,020   vo cuc   YEU  <- moi gia tri trong [0; 0,02] deu qua
+```
+
+Sàn tuyệt đối 0,02 **cần thiết** (không có nó thì hai ô gần 0 không kiểm được),
+nhưng nó làm hai ô đó gần như **không thể trượt** — đúng bệnh của ứng viên 1, chỉ
+ở phạm vi nhỏ hơn. Hệ quả thật: ngưỡng `7/8` nghĩa là **5/6 ô rủi ro thật**.
+Không được đọc "7/8" như thể tám ô đều khắt khe.
+
+### 19.6 Dự đoán ĐÃ ĐÓNG BĂNG cho holdout a = 0.5
+
+Sinh **trước** khi đọc một dòng `err_stale` nào của a = 0.5:
+
+```text
+poisson@0.850  1,491 (3 duong song)   poisson@0.960  0,699 (2)
+h2@0.700       1,126 (2)              poisson@0.700  0,650 (2)
+poisson@0.925  1,121 (2)              h2@0.850       0,635 (2)
+h2@0.925       0,022 (1)              h2@0.960       0,000 (1)
+```
+
+Đây là phép thử **rủi ro thật**: `h2@0.850` ở a=0.9 có tỉ số 1,15, còn G4 dự đoán
+ở a=0.5 nó **rơi xuống 0,64**. Đảo chiều như vậy không thể đúng do tình cờ.
+
+### 19.7 Câu hỏi mở (KHÔNG phải điều kiện đạt)
+
+`poisson@0.700` là ô **dị thường** duy nhất trên khám phá: G4 = 1,556 nhưng quan
+sát 0,952 (lệch −38,8%). Chưa giải thích được. G4 dự đoán ở a=0.5 nó là 0,650.
+Kết quả ở ô này cho biết dị thường **còn tồn tại hay không** — ghi thành **câu hỏi
+mở**, không tính vào phán quyết.
+
+### 19.8 Nếu FAIL thì đó vẫn là kết quả tốt
+
+Một FAIL cho biết G4 chỉ khớp được dữ liệu mà nó **đã được chọn trên đó** — tức
+lối rẽ ở §19.2 đã sinh ra một mô hình không tổng quát. Đó là thông tin thật, và
+là lý do holdout tồn tại.
