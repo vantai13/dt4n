@@ -2127,6 +2127,43 @@ DA KIEM: is_smoke duoc DINH NGHIA la (n < 50000). Doi chung twin-hoan-hao cua
    nhanh se nham -- da ghi vao so dang ky.
 ```
 
+### 18.2b Hạn chế do CHÍNH 20R2 sinh ra — trả lời ngay ở đây
+
+Hai hạn chế dưới đây được ghi vào sổ đăng ký khi đóng phase 20R2. Chúng ràng buộc
+**cả 20R2 (hồi tố)** và **21R2**. Trả lời hồi tố cho 20R2:
+
+**20R2-R1: ACCEPT** — quần thể 8 ô gate **không đồng nhất**; mọi số gộp phải đứng
+**cạnh** một bảng theo từng ô.
+
+```text
+DA TUAN THU HOI TO, nhung MUON:
+  06-adjudication.md  ban dau CHI co so gop -> da them con tro "bat buoc doc kem
+                      06b" va hai dong Threats moi
+  06b-per-cell.md     bang theo tung o, do nhay theo T2-R7
+  07-dsla.json        bang theo tung o + Delta_cond, so gop DAN NHAN "bi so 0
+                      CAU TRUC chi phoi"
+  08-handoff           bang em 20 hang theo tung (o, a)
+LY DO DOC LAP KET QUA: ti so theo tung o trai 0,006-1,655 (chenh ~300 lan). Mot
+  trung binh tren quan the phan hoa co do khong dai dien cho o nao.
+```
+
+**20R2-R2: ACCEPT** — `rms_e_model` có **hai** nghĩa; không so sánh, không thay thế
+nhau.
+
+```text
+decision_error_v2.rms_e_model = RMS_ALLACTION_DELAY (all_action, delay_ms)
+cert/tau_sweep.rms_e_model    = margin, cost_ms     (DI QUA w_loss)
+
+⚠️ KHI DONG PHASE TOI DA SUYT LAP LAI DUNG LOI NAY: tinh em tu du lieu chien dich,
+   so voi em_bar cua T2, thay lech toi -99%, va gan nhu bao do la MOT PHAT HIEN.
+   No KHONG phai phat hien -- no la LOI PHAM TRU (A-T2-3). Bang em/A cua §13.5
+   lay nguon tu results/PENDING/phase-T2/sweep_r3 = cert.tau_sweep, tuc estimand
+   THU HAI.
+=> D4/D5 KHONG dong duoc bang du lieu chien dich. Chan co hoc:
+   test/test_20r2_8_handoff.py (5 test, gom mot test doi KHONG duoc bia ra em/A
+   va mot test doi D5 KHONG bi go nham thanh "da dong").
+```
+
 ### 18.3 Cách tôi đi tìm, để người sau lặp lại được
 
 ```text

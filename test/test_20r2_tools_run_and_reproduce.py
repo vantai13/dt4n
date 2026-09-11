@@ -142,6 +142,9 @@ NEEDS_SIGNED_CAMPAIGN = {
     "tools.20r2_7_structure": "cham (~9 phut); chi doc moi truong, khong doc d_sla",
     "tools.20r2_7_dsla": "doi tag phase-20R2-dsla-frozen + du lieu chien dich; "
                          "kiem tren du lieu GIA o test_20r2_7_dsla.py",
+    # 20R2.8 -- ban giao. Can du lieu chien dich. Tu doi chung: nem AssertionError
+    # neu em PHU THUOC z (luat rms se sai). Kiem o test_20r2_8_handoff.py.
+    "tools.20r2_8_handoff": "can du lieu chien dich; kiem o test_20r2_8_handoff.py",
 }
 
 # Truong doi theo THOI DIEM chay, khong theo NOI DUNG. Loai truoc khi so.

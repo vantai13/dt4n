@@ -1,0 +1,243 @@
+{
+ "ESTIMAND_WARNING": {
+  "consequence": "D4/D5 KHONG dong duoc bang du lieu chien dich. Chung CHI dong duoc bang cert.tau_sweep chay tren dieu kien 20R2.",
+  "t2_em_over_A_table": "margin / cost_ms (cert.tau_sweep) -- KHAC estimand, KHONG so sanh duoc",
+  "this_table": "RMS_ALLACTION_DELAY",
+  "why_not_comparable": "Bang em/A o prereg \u00a713.5 ke thua tu results/PENDING/phase-T2/sweep_r3 = cert.tau_sweep, tuc estimand margin/cost_ms. Chien dich 20R2 dung decision_error_v2, tuc RMS_ALLACTION_DELAY (all_action, delay_ms). HAI DAI LUONG KHAC NHAU CUNG TEN COT. So sanh chung la lap lai DUNG loi A-T2-3 (decision_error_v2.py:56-58)."
+ },
+ "WHAT_THIS_IS": "BAN GIAO. Do lai tren dieu kien 20R2 cai gi DINH DANH DUOC tu parquet chien dich. KHONG phai phan quyet.",
+ "closes_partially": {
+  "20R2-D5": "cbr@0.850 GIO DA CO em do tren dieu kien 20R2 (hai gia tri a) -- nhung o estimand RMS_ALLACTION_DELAY, KHONG phai estimand cua bang em/A. D5 nhu da phat bieu VAN MO."
+ },
+ "em_measured_on_20r2": [
+  {
+   "a": 0.9,
+   "cell": "cbr@0.700",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.007255204330007909,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "cbr@0.700",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.00845962882732859,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "cbr@0.850",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.007959383080265251,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "cbr@0.850",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.008087460626687335,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "h2@0.700",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.19096325936657135,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "h2@0.700",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.21354616420236233,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "h2@0.850",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.1676364575008718,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "h2@0.850",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.16435371322709919,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "h2@0.925",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.08586986800479487,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "h2@0.925",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.057413392461769436,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "h2@0.960",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.07920073926268109,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "h2@0.960",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.07097580879614239,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "poisson@0.700",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.07659588483357427,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "poisson@0.700",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.06309230584179591,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "poisson@0.850",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.31482612290104367,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "poisson@0.850",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.30218586682930415,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "poisson@0.925",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.34018799030563335,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "poisson@0.925",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.31249372731196795,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.9,
+   "cell": "poisson@0.960",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.27506154253934106,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  },
+  {
+   "a": 0.5,
+   "cell": "poisson@0.960",
+   "conditions": "SLA exogenous_g114_S-B, luoi 20r2_measured, 5 seed, 8 tau",
+   "em_bar_20r2": 0.27967886530887304,
+   "em_is_z_independent": true,
+   "em_spread_over_z": 0.0,
+   "estimand": "RMS_ALLACTION_DELAY",
+   "n_z": 13,
+   "source": "measured_20R2 (chien dich 20R2.5)"
+  }
+ ],
+ "generated_by": "tools/20r2_8_handoff.py",
+ "identifiability": {
+  "A": "KHONG dinh danh duoc -- luat chi cho TICH c*A^2 nhu MOT tham so. Nen em/A va span_ratio_to_pure KHONG tinh duoc tu day.",
+  "em": "DINH DANH DUOC -- rms_e_model khong phu thuoc z (do duoc, xem em_spread_over_z)",
+  "law": "rms_total(z) = sqrt(em^2 + c*A^2*(1 - exp(-z/tau)))  [tau_sweep.py:268]"
+ },
+ "n_rows": 20,
+ "schema": "dt4n.handoff_20r2_8.v1",
+ "t2_rows_missing_em": []
+}

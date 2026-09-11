@@ -714,3 +714,69 @@ Khong viet lai lich su (da push, va lich su la bang chung); ghi dinh chinh o day
   §20 va 07a-dsla-structure.json nam o commit dong bang truoc do.
 Bai hoc: `git add -A` trong mot chuoi nhieu buoc se gop cac buoc lai; stage TUNG
 duong dan khi mot commit can noi dung mot viec.
+
+## 2026-09-11 - Lesson 20R2.8: dong phase 20R2
+
+### QD-20R2.8-1: dong phase voi trang thai CONFIRMED_WITH_A_HETEROGENEOUS_POPULATION
+
+Phan quyet GIU 5/8 tren 8 o DA KY. Nhung ket qua GIA TRI NHAT khong phai 5/8: do
+la quan the 8 o "dong nhat" thuc ra PHAN HOA ~300 lan (ti so err/Sheppard tung o
+0.006 - 1.655), va TOAN BO 3 MISS phu thuoc MOT o (h2@0.960) ma T2-R7 da cam dung
+lam headline tu 2026-09-08. So GOP che dieu do, va khong co co che nao trong quy
+trinh bat duoc cho toi khi mo hop.
+
+### QD-20R2.8-2: ★ SUYT LAP LAI LOI A-T2-3 khi ban giao
+
+De ban giao, toi tinh `em` tu du lieu chien dich roi so voi `em_bar` cua T2, thay
+lech toi -99%, va GAN NHU bao do la mot phat hien.
+
+NO KHONG PHAI PHAT HIEN -- no la LOI PHAM TRU:
+  decision_error_v2.rms_e_model  = RMS_ALLACTION_DELAY  (all_action, delay_ms)
+  cert/tau_sweep.py rms_e_model  = margin, cost_ms      (DI QUA w_loss)
+decision_error_v2.py:56-58 da ghi rang hai cai nay TUNG bi doc lan nhau va lam
+T2.6 luot 2 do SAI dai luong so voi du doan da ky.
+
+Phat hien vi kiem `provenance` cua artifact T2 TRUOC khi tin con so: source_dir =
+results/PENDING/phase-T2/sweep_r3 = cert.tau_sweep, tuc estimand THU HAI.
+
+HE QUA DUNG: D4/D5 KHONG dong duoc bang du lieu chien dich; chi dong duoc bang
+cert.tau_sweep chay tren dieu kien 20R2.
+Chan co hoc: test/test_20r2_8_handoff.py -- gom mot test doi KHONG duoc bia ra
+em/A (A khong dinh danh duoc: luat chi cho TICH c*A^2) va mot test doi D5 KHONG
+bi go nham thanh "da dong".
+
+### QD-20R2.8-3: cai gi DINH DANH DUOC tu parquet chien dich
+
+luat rms: rms_total(z) = sqrt(em^2 + c*A^2*(1 - exp(-z/tau)))   [tau_sweep.py:268]
+  em  DINH DANH DUOC. rms_e_model khong phu thuoc z -- DO DUOC o ca 13 diem, 20/20
+      hang co spread = 0 TUYET DOI. Day la mot DOI CHUNG cho luat rms, khong phai
+      gia dinh. cbr@0.850 (T2 thieu) gio DA CO em tren dieu kien 20R2.
+  A   KHONG dinh danh duoc: luat chi cho TICH c*A^2 nhu MOT tham so.
+      => em/A va span_ratio_to_pure KHONG tinh duoc tu day, va tool KHONG bia ra.
+
+### QD-20R2.8-4: KHONG chay N3/N4, va do la lua chon co chu dich
+
+D4 can `cert.tau_sweep` voi DU DOAN KY TRUOC cho N3/N4 -- tuc mot gate MOI voi
+mot chu ky MOI. Ky du doan khoa hoc thay nguoi dung la dung ranh gioi da giu o
+§11. Ban giao kem KHUON GATE day du (da dung 4 lan trong phase nay):
+  prereg khoa cach doc -> tool + test tren DU LIEU GIA -> mutation test -> commit
+  -> TAG DONG BANG -> push -> chay MOT lan -> commit artifact.
+
+### QD-20R2.8-5: banh coc han che TU LEN NONG
+
+So dang ky them 20R2-R1 (bang theo tung o la BAT BUOC) va 20R2-R2 (rms_e_model co
+hai nghia), ca hai rang buoc CA 20R2 (hoi to) VA 21R2.
+Test sua de: phase CHUA co prereg thi KHONG phai vi pham (bao cao, khong im lang),
+nhung ngay khi prereg xuat hien thi doi tra loi. Kem mot test doi moi han che phai
+rang buoc IT NHAT MOT phase DANG TON TAI -- de khong ai park mot han che vao tuong
+lai roi khong bao gio tra loi.
+Da xac nhan test DO truoc khi viet §18.2b, xanh sau.
+
+### QD-20R2.8-6: no moi ghi ra
+
+20R2-D9   G4 sai HE THONG o poisson@0.700: du doan QUA CAO ca hai dieu kien
+          (-38.8% o a=0.9, -28.5% o a=0.5), CUNG CHIEU. Chua giai thich. KHONG va
+          mo hinh sau khi da thay du lieu.
+20R2-D10  2/8 o cua phep thu G4 gan nhu KHONG THE TRUOT vi san tuyet doi 0.02
+          (h2@0.925 tol/G4 = 91%; h2@0.960 moi gia tri trong [0;0.02] deu qua).
+          "7/8" thuc chat la 5/6 o rui ro that. Can thong ke khac cho vung gan 0.

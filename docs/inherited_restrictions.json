@@ -10,7 +10,8 @@
    "detectable_flag": "cot `extrapolation_contaminated` = True trong parquet (do duoc: tt_domain_clip_max = 5.03%)",
    "id": "T2-R7",
    "phases_in_scope": [
-    "docs/phase-20R2"
+    "docs/phase-20R2",
+    "docs/phase-21R2"
    ],
    "reason_independent_of_results": "Link `ad` co mu = rho_bar + 0.0625 = 1.0225, chi cach tran mien bang su that (1.04) dung 1.82 sigma. np.interp KEP PHANG ngoai mien va IM LANG. Do duoc tt_domain_clip 1.80-8.56% qua 5 seed.",
    "scope": "KHONG dung lam headline. KHONG loai khoi luoi chay.",
@@ -50,6 +51,41 @@
    "source": "docs/phase-20R/00o-amendment-14.md :: muc 16",
    "status": "ACTIVE",
    "title": "artifact co is_smoke = true chi de debug, KHONG duoc trich"
+  },
+  {
+   "applies_to": [
+    "moi estimand tren quan the 8 o gate"
+   ],
+   "detectable_flag": "so o trong artifact: neu chi co 1 hang gop thi thieu bang tung o",
+   "id": "20R2-R1",
+   "phases_in_scope": [
+    "docs/phase-20R2",
+    "docs/phase-21R2"
+   ],
+   "reason_independent_of_results": "Do duoc: ti so err_total/Sheppard theo tung o trai 0.006 - 1.655 (chenh ~300 lan). Mot trung binh tren mot quan the phan hoa co do khong dai dien cho o nao. Ly do nay phat bieu duoc doc lap voi viec so gop ra bao nhieu.",
+   "scope": "Moi so GOP phai dung CANH mot bang theo tung o. Khong duoc bao cao so gop mot minh nhu dai dien cho quan the.",
+   "signed_date": "2026-09-11",
+   "source": "docs/phase-20R2/99-gate-decision.md :: muc 2.1",
+   "status": "ACTIVE",
+   "title": "quan the 8 o gate KHONG dong nhat -- bang theo TUNG O la BAT BUOC"
+  },
+  {
+   "applies_to": [
+    "bang em/A",
+    "moi so sanh rms_e_model qua hai harness"
+   ],
+   "detectable_flag": "truong `estimand` trong tung hang artifact",
+   "id": "20R2-R2",
+   "phases_in_scope": [
+    "docs/phase-20R2",
+    "docs/phase-21R2"
+   ],
+   "reason_independent_of_results": "decision_error_v2.py:56-58 ghi rang hai cai nay TUNG bi doc lan nhau va lam T2.6 luot 2 do SAI dai luong so voi du doan da ky (A-T2-3). Ly do la CAU TAO cua hai harness, khong phu thuoc ket qua.",
+   "scope": "decision_error_v2.rms_e_model = RMS_ALLACTION_DELAY (all_action, delay_ms); cert/tau_sweep.rms_e_model = margin, cost_ms. KHONG so sanh, KHONG thay the nhau. Bang em/A cua 20R2 §13.5 thuoc estimand THU HAI.",
+   "signed_date": "2026-09-11",
+   "source": "docs/phase-20R2/08-handoff-21R2.md :: muc 2",
+   "status": "ACTIVE",
+   "title": "rms_e_model co HAI nghia -- khong so sanh hai estimand cung ten cot"
   }
  ],
  "schema": "dt4n.inherited_restrictions.v1"

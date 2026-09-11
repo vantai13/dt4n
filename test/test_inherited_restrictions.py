@@ -47,12 +47,14 @@ def test_registry_entries_are_complete(registry):
 
 def test_every_phase_in_scope_answers_every_active_restriction(registry):
     """DAY LA CAI CHAN. Prereg khong nhac mot han che => DO."""
-    missing = []
+    missing, not_started = [], []
     for r in _active(registry):
         for phase in r["phases_in_scope"]:
             p = ROOT / phase / "00-preregistration.md"
             if not p.is_file():
-                missing.append("%s: khong co prereg tai %s" % (r["id"], phase))
+                # Phase CHUA BAT DAU -> chua phai vi pham. Banh coc TU LEN NONG:
+                # ngay khi prereg cua phase do xuat hien, test nay doi no tra loi.
+                not_started.append("%s @ %s" % (r["id"], phase))
                 continue
             text = p.read_text(encoding="utf-8")
             if not re.search(r"%s\s*:\s*(ACCEPT|OVERRIDE)" % re.escape(r["id"]), text):
@@ -60,6 +62,20 @@ def test_every_phase_in_scope_answers_every_active_restriction(registry):
                                "hoac '%s: OVERRIDE -- <ly do>')"
                                % (r["id"], phase, r["id"], r["id"]))
     assert not missing, "han che ke thua chua duoc tra loi:\n  " + "\n  ".join(missing)
+    # Bao cao phan chua len nong -- KHONG im lang bo qua.
+    if not_started:
+        print("\nphase chua bat dau (banh coc se len nong khi co prereg): %s"
+              % ", ".join(not_started))
+
+
+def test_every_restriction_binds_at_least_one_existing_phase(registry):
+    """Mot han che chi tro tuong lai thi khong rang buoc gi ca -- no se song mai
+    ma khong bao gio duoc tra loi. Phai co IT NHAT MOT phase DA TON TAI trong scope."""
+    for r in _active(registry):
+        exists = [ph for ph in r["phases_in_scope"]
+                  if (ROOT / ph / "00-preregistration.md").is_file()]
+        assert exists, ("%s khong rang buoc phase nao DANG TON TAI -> no chi la mot loi "
+                        "hua. Them mot phase da co prereg vao phases_in_scope." % r["id"])
 
 
 def test_override_must_carry_a_reason(registry):
