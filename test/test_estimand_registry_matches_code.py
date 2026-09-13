@@ -42,6 +42,10 @@ def test_registry_declares_the_unit_the_contract_requires(eid: str) -> None:
         "%s: GLOSSARY khai UNIT=%r, hop dong doi %r.\n"
         "  -> mot dinh chinh da duoc ap vao MA ma khong chep ve SO DANG KY."
         % (eid, m.group(1), CONTRACT[eid]["unit"]))
+    if eid == "SLA_VIOL_BY_AGE":
+        # The summary elsewhere in the same registry must not retain cost_ms.
+        text = GLOSSARY.read_text(encoding="utf-8")
+        assert not re.search(r"d_sla\s+->\s+SLA_VIOL_BY_AGE\s+\(cost_ms\)", text)
 
 
 @pytest.mark.parametrize("eid", sorted(CONTRACT))
@@ -51,6 +55,7 @@ def test_registry_declares_all_seven_fields(eid: str) -> None:
                   "BRANCH", "CODE", "ARTIFACT_FIELD"):
         assert re.search(r"^%s\s+\S" % field, block, re.M), \
             "%s: thieu truong bat buoc %s (H4 doi du 7)" % (eid, field)
+    assert re.search(r"^LEVEL\s+(\S+)", block, re.M).group(1) == CONTRACT[eid]["level"]
 
 
 def test_every_artifact_field_maps_to_a_registered_estimand() -> None:
@@ -79,3 +84,4 @@ def test_erratum_exists_and_is_referenced_from_the_registry() -> None:
     text = GLOSSARY.read_text(encoding="utf-8")
     assert "20R2.7-B1" in text, \
         "GLOSSARY khong dan nguon dinh chinh -- nguoi doc khong truy nguoc duoc"
+    assert "docs/phase-20R2/E1-erratum.md" in text

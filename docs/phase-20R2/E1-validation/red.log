@@ -1,0 +1,39 @@
+..F.....F                                                                [100%]
+=================================== FAILURES ===================================
+____ test_registry_declares_the_unit_the_contract_requires[SLA_VIOL_BY_AGE] ____
+
+eid = 'SLA_VIOL_BY_AGE'
+
+    @pytest.mark.parametrize("eid", sorted(CONTRACT))
+    def test_registry_declares_the_unit_the_contract_requires(eid: str) -> None:
+        block = _entry(GLOSSARY.read_text(encoding="utf-8"), eid)
+        m = re.search(r"^UNIT\s+(\S+)", block, re.M)
+        assert m, "%s: thieu truong UNIT" % eid
+>       assert m.group(1) == CONTRACT[eid]["unit"], (
+            "%s: GLOSSARY khai UNIT=%r, hop dong doi %r.\n"
+            "  -> mot dinh chinh da duoc ap vao MA ma khong chep ve SO DANG KY."
+            % (eid, m.group(1), CONTRACT[eid]["unit"]))
+E       AssertionError: SLA_VIOL_BY_AGE: GLOSSARY khai UNIT='ms', hop dong doi 'dimensionless'.
+E           -> mot dinh chinh da duoc ap vao MA ma khong chep ve SO DANG KY.
+E       assert 'ms' == 'dimensionless'
+E         
+E         - dimensionless
+E         + ms
+
+test/test_estimand_registry_matches_code.py:41: AssertionError
+___________ test_erratum_exists_and_is_referenced_from_the_registry ____________
+
+    def test_erratum_exists_and_is_referenced_from_the_registry() -> None:
+        """Mot dinh chinh khong co van ban thi khong ai truy nguoc duoc."""
+        root = GLOSSARY.parent
+>       assert (root / "phase-20R2/E1-erratum.md").exists(), "thieu E1-erratum.md"
+E       AssertionError: thieu E1-erratum.md
+E       assert False
+E        +  where False = exists()
+E        +    where exists = (PosixPath('/home/ubuntu/dt4n/docs') / 'phase-20R2/E1-erratum.md').exists
+
+test/test_estimand_registry_matches_code.py:78: AssertionError
+=========================== short test summary info ============================
+FAILED test/test_estimand_registry_matches_code.py::test_registry_declares_the_unit_the_contract_requires[SLA_VIOL_BY_AGE]
+FAILED test/test_estimand_registry_matches_code.py::test_erratum_exists_and_is_referenced_from_the_registry
+2 failed, 7 passed in 0.98s

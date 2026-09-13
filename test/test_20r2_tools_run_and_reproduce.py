@@ -59,6 +59,8 @@ TOOLS = {
     "tools.20r2_4_grid_and_gate": (PENDING_DIR, "grid_prescreen"),
     "tools.20r2_4_em_over_a": (PENDING_DIR, "em_over_a"),
     "tools.20r2_4_n3_n4_recheck": (PENDING_DIR, "n3_n4_baseline"),
+    "tools.20r2_9_partition_invariance": (DOCS_DIR, "E1b-partition-invariance"),
+    "tools.20r2_9_e1_mechanics": (DOCS_DIR, "E1-mechanics"),
 }
 
 # 20R2.5 -- ke hoach chien dich. TAT DINH, nhung KHONG tai lap duoc TAI HEAD nua.
@@ -152,6 +154,8 @@ VOLATILE = ("generated_utc", "generated_at")
 
 
 def _run(module: str, out: pathlib.Path, *extra: str) -> subprocess.CompletedProcess:
+    if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics"}:
+        extra = ("--deterministic", *extra)
     return subprocess.run(
         [sys.executable, "-m", module, "--out", str(out), *extra],
         cwd=str(ROOT), capture_output=True, text=True,

@@ -1,0 +1,123 @@
+{
+  "schema": "dt4n.e1_validation.v1",
+  "generated_utc": "2026-09-13T16:38:44.423268+00:00",
+  "base_commit": "042c58f4dd20dc6f7b78cdfe7f3473a6e3745ffb",
+  "tested_code_commit_before_validation_commit": "ff4ddf862c03df6587ac766f995eb3078a8db7e8",
+  "tests": {
+    "estimand_red": {
+      "failed": 2,
+      "passed": 7,
+      "log": "red.log"
+    },
+    "e1_final": {
+      "passed": 31,
+      "failed": 0,
+      "log": "e1-tests.log"
+    },
+    "inherited_restrictions": {
+      "passed": 13,
+      "failed": 0,
+      "included_in_e1_final": true,
+      "log": "restrictions-green.log"
+    },
+    "tool_reproduction": {
+      "passed": 5,
+      "deselected": 27,
+      "failed": 0,
+      "log": "tool-reproduction-tests.log"
+    },
+    "regression": {
+      "passed": 66,
+      "failed": 0,
+      "log": "regression.log"
+    },
+    "no_stale_axes": {
+      "before": {
+        "failed": 17,
+        "passed": 715,
+        "skipped": 42
+      },
+      "after": {
+        "failed": 17,
+        "passed": 715,
+        "skipped": 42
+      },
+      "same_failure_ids": true,
+      "new_failures": [],
+      "resolved_failures": [],
+      "failure_ids": [
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/adjudication_r2.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/calib_p0925_tau10_report.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/calib_p0925_tau10_v3_report.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/clip_direction_r2.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/conformal_u_cond.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/conformal_u_cond_load.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/conformal_u_main.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/hygiene_checks.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/hygiene_checks_r2.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/preservation_r2.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/realizability_grid.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/rms_reference_check_r2.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/traces/rho_p0925_tau10_s101.meta.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/traces/rho_p0925_tau10_s102.meta.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/traces/rho_p0925_tau10_s103.meta.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/traces/rho_p0925_tau10_s104.meta.json]",
+        "FAILED test/test_no_stale_axes.py::test_pending_artifacts_declare_what_they_wait_for[/home/ubuntu/dt4n/results/PENDING/phase-T2/traces/rho_p0925_tau10_s105.meta.json]"
+      ]
+    }
+  },
+  "custody": {
+    "closed_commit": "042c58f4dd20dc6f7b78cdfe7f3473a6e3745ffb",
+    "campaign_sha_check": {
+      "n_runs": 167,
+      "n_files_checked": 334,
+      "bad": []
+    },
+    "frozen_worktree_check": {
+      "n_files": 525,
+      "changed": []
+    },
+    "adjudicator_diff": ""
+  },
+  "reproduction": [
+    {
+      "module": "20r2_9_partition_invariance",
+      "command": [
+        "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python",
+        "-m",
+        "tools.20r2_9_partition_invariance",
+        "--deterministic",
+        "--out",
+        "/tmp/20r2-e1-reproduce-nxevs_bt/E1b-partition-invariance.json"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 2.014,
+      "committed_sha256": "2d6bbf1d5a1265cca56c3b68cbc9162330df88c2a465b1b2d4ca004e79b15849",
+      "rerun_sha256": "2d6bbf1d5a1265cca56c3b68cbc9162330df88c2a465b1b2d4ca004e79b15849",
+      "byte_identical": true
+    },
+    {
+      "module": "20r2_9_e1_mechanics",
+      "command": [
+        "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python",
+        "-m",
+        "tools.20r2_9_e1_mechanics",
+        "--deterministic",
+        "--out",
+        "/tmp/20r2-e1-reproduce-nxevs_bt/E1-mechanics.json"
+      ],
+      "returncode": 0,
+      "elapsed_seconds": 2.881,
+      "committed_sha256": "3ca4119bb7df0bfc27d18422964a41011a7fb5162aff438f2e027365e91c5a32",
+      "rerun_sha256": "3ca4119bb7df0bfc27d18422964a41011a7fb5162aff438f2e027365e91c5a32",
+      "byte_identical": true
+    }
+  ],
+  "original_verdict": "PRIMARY 5/8 unchanged",
+  "gates": {
+    "E1-1": "PASS: 525 existing frozen files unchanged; 334 campaign hashes match",
+    "E1-2": "PASS: 31 E1 + 5 tool + 66 regression checks; no new stale-axis failures; 2 byte-identical artifacts",
+    "E1-3": "PASS: erratum explains unchanged 5/8 and limits of reopening checks",
+    "E1-4": "Publication occurs after this validation commit; see /home/ubuntu/20r2-e1-publish.log for actual tag and remote verification"
+  }
+}

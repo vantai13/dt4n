@@ -1,0 +1,21 @@
+..F..                                                                    [100%]
+=================================== FAILURES ===================================
+___________ test_every_restriction_binds_at_least_one_existing_phase ___________
+
+registry = {'HOW_ENFORCED': 'test/test_inherited_restrictions.py: prereg cua MOI phase trong `phases_in_scope` phai chua mot dong...E_cost_composition.rows[].loss_share_of_cost', 'id': '20R2-R3', ...}, ...], 'schema': 'dt4n.inherited_restrictions.v1'}
+
+    def test_every_restriction_binds_at_least_one_existing_phase(registry):
+        """Mot han che chi tro tuong lai thi khong rang buoc gi ca -- no se song mai
+        ma khong bao gio duoc tra loi. Phai co IT NHAT MOT phase DA TON TAI trong scope."""
+        for r in _active(registry):
+            exists = [ph for ph in r["phases_in_scope"]
+                      if (ROOT / ph / "00-preregistration.md").is_file()]
+>           assert exists, ("%s khong rang buoc phase nao DANG TON TAI -> no chi la mot loi "
+                            "hua. Them mot phase da co prereg vao phases_in_scope." % r["id"])
+E           AssertionError: 20R2-R3 khong rang buoc phase nao DANG TON TAI -> no chi la mot loi hua. Them mot phase da co prereg vao phases_in_scope.
+E           assert []
+
+test/test_inherited_restrictions.py:77: AssertionError
+=========================== short test summary info ============================
+FAILED test/test_inherited_restrictions.py::test_every_restriction_binds_at_least_one_existing_phase
+1 failed, 4 passed in 0.38s
