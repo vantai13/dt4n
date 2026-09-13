@@ -86,6 +86,42 @@
    "source": "docs/phase-20R2/08-handoff-21R2.md :: muc 2",
    "status": "ACTIVE",
    "title": "rms_e_model co HAI nghia -- khong so sanh hai estimand cung ten cot"
+  },
+  {
+   "acknowledged_in": "docs/phase-20R2/E1-erratum.md",
+   "applies_to": [
+    "moi o gate co loss_share >= 0.50"
+   ],
+   "detectable_flag": "E1-mechanics.json :: E_cost_composition.rows[].loss_share_of_cost",
+   "id": "20R2-R3",
+   "phases_in_scope": [
+    "docs/phase-21R2"
+   ],
+   "reason_independent_of_results": "loss_share duoc tinh tu bang tra su that va w_loss cua manifest, KHONG dung mot cot ket qua nao cua chien dich. 14/16 to hop >= 50%.",
+   "scope": "Moi ket luan ve err_total phai di kem loss_share cua o do. KHONG mo ta chi phi nhu do tre thuan o o loss_share >= 50%. Ty trong trung binh KHONG chung minh so hang nao quyet dinh argmin; can so sanh chenh lech giua duong hoac thi nghiem do nhay rieng.",
+   "signed_date": "2026-09-13",
+   "source": "docs/phase-20R2/E1-erratum.md :: muc E1-e",
+   "status": "ACTIVE",
+   "title": "thanh phan chi phi co ty trong mat goi lon; chua suy ra nguyen nhan argmin"
+  },
+  {
+   "acknowledged_in": "docs/phase-20R2/E1-erratum.md",
+   "applies_to": [
+    "rho_bar 0.850 x tau {0.5,1}",
+    "rho_bar 0.925 x tau {0.5,1,2,3,5,10}",
+    "rho_bar 0.960 x tau {0.5,1,2,3,5,10}"
+   ],
+   "detectable_flag": "E1-mechanics.json :: D_quasi_static.verdict_by_rho_bar[<rho_bar>].tau_violating_quasi_static",
+   "id": "20R2-R4",
+   "phases_in_scope": [
+    "docs/phase-21R2"
+   ],
+   "reason_independent_of_results": "Thoi gian dac trung uoc tinh tu bw, q, MTU va rho; khong doc cot ket qua. Day la sang loc mo hinh, chua la can tren chat cho thoi gian can bang ngau nhien.",
+   "scope": "Ket luan tai cac o duoc gan co sang loc phai khai 20R2-L9. Khong mac nhien doc nhu he da can bang. MIN hai thoi gian dac trung va nguong tau/5 la gia dinh sang loc, khong phai bang chung he dong luc hoc da vi pham.",
+   "signed_date": "2026-09-13",
+   "source": "docs/phase-20R2/E1-erratum.md :: muc E1-d",
+   "status": "ACTIVE",
+   "title": "sang loc gia dinh tua-tinh tai cac o rho_bar cao, tau ngan"
   }
  ],
  "schema": "dt4n.inherited_restrictions.v1"

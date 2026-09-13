@@ -68,14 +68,75 @@ def test_every_phase_in_scope_answers_every_active_restriction(registry):
               % ", ".join(not_started))
 
 
+def _has_erratum_acknowledgement(r):
+    """E1: tiep nhan tai erratum cua phase da co, khong sua prereg da dong.
+
+    Chi cho phep tai chinh van ban nguon, co ACCEPT tuong minh. Kiem prereg
+    cua moi phase trong scope van bat buoc, ke ca khi co acknowledgement.
+    """
+    rel = r.get("acknowledged_in")
+    if not rel or rel != r["source"].split(" :: ")[0]:
+        return False
+    p = ROOT / rel
+    if not p.is_file() or not (p.parent / "00-preregistration.md").is_file():
+        return False
+    return bool(re.search(r"^%s\s*:\s*ACCEPT\b" % re.escape(r["id"]),
+                          p.read_text(encoding="utf-8"), re.M))
+
+
 def test_every_restriction_binds_at_least_one_existing_phase(registry):
-    """Mot han che chi tro tuong lai thi khong rang buoc gi ca -- no se song mai
-    ma khong bao gio duoc tra loi. Phai co IT NHAT MOT phase DA TON TAI trong scope."""
+    """Can phase hien huu trong scope HOAC tiep nhan tai erratum nguon.
+
+    Khong chap nhan han che chi tro tuong lai ma khong co ai tiep nhan.
+    """
     for r in _active(registry):
         exists = [ph for ph in r["phases_in_scope"]
                   if (ROOT / ph / "00-preregistration.md").is_file()]
-        assert exists, ("%s khong rang buoc phase nao DANG TON TAI -> no chi la mot loi "
-                        "hua. Them mot phase da co prereg vao phases_in_scope." % r["id"])
+        assert exists or _has_erratum_acknowledgement(r), (
+            "%s can phase hien huu trong scope hoac ACCEPT tai erratum nguon; "
+            "khong sua prereg da dong." % r["id"])
+
+
+@pytest.mark.parametrize("case", ["valid", "no_ack", "missing_file", "wrong_source",
+                                  "missing_accept", "wrong_id", "no_parent_phase"])
+def test_erratum_acknowledgement_requires_a_real_source_and_explicit_accept(case, tmp_path,
+                                                                          monkeypatch):
+    monkeypatch.setattr(__import__(__name__, fromlist=["ROOT"]), "ROOT", tmp_path)
+    phase = tmp_path / "docs/phase-test"
+    phase.mkdir(parents=True)
+    (phase / "00-preregistration.md").write_text("signed prereg\n")
+    doc = phase / "E1-erratum.md"
+    doc.write_text("TEST-R: ACCEPT — inherited by the next phase\n", encoding="utf-8")
+    rel = "docs/phase-test/E1-erratum.md"
+    r = {"id": "TEST-R", "source": rel + " :: test", "acknowledged_in": rel}
+    if case == "no_ack":
+        r.pop("acknowledged_in")
+    elif case == "missing_file":
+        doc.unlink()
+    elif case == "wrong_source":
+        r["source"] = "docs/unrelated.md :: test"
+    elif case == "missing_accept":
+        doc.write_text("TEST-R: TODO\n")
+    elif case == "wrong_id":
+        doc.write_text("OTHER-R: ACCEPT\n")
+    elif case == "no_parent_phase":
+        (phase / "00-preregistration.md").unlink()
+    assert _has_erratum_acknowledgement(r) == (case == "valid")
+
+
+def test_erratum_acknowledgement_does_not_bypass_future_prereg(tmp_path, monkeypatch):
+    monkeypatch.setattr(__import__(__name__, fromlist=["ROOT"]), "ROOT", tmp_path)
+    phase = tmp_path / "docs/phase-future"
+    phase.mkdir(parents=True)
+    prereg = phase / "00-preregistration.md"
+    prereg.write_text("Missing restriction\n")
+    registry = {"restrictions": [{"id": "TEST-R", "status": "ACTIVE",
+                                  "phases_in_scope": ["docs/phase-future"],
+                                  "acknowledged_in": "docs/phase-old/E1-erratum.md"}]}
+    with pytest.raises(AssertionError, match="KHONG tra loi"):
+        test_every_phase_in_scope_answers_every_active_restriction(registry)
+    prereg.write_text("TEST-R: ACCEPT\n")
+    test_every_phase_in_scope_answers_every_active_restriction(registry)
 
 
 def test_override_must_carry_a_reason(registry):
