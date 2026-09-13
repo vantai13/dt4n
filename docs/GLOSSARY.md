@@ -215,14 +215,22 @@ ID              SLA_VIOL_BY_AGE
 LEVEL           all_action
 POPULATION      GIONG DECISION_ERR_BY_AGE (co chu dich: hai estimand phai noi
                 ve cung mot quan the thi moi doc chung duoc trong mot ket luan)
-SCALE           cost_ms -- DI QUA ham chi phi (delay + w_loss * loss), nen
-                NHAY voi w_loss va voi truc SLA.
-                /!\ Day la khac biet CHINH voi DECISION_ERR_BY_AGE:
-                    err la TI LE, d_sla la CHI PHI. Khac ca THANG va DON VI.
-                    Bang chung do duoc: G23-203 cho max|diff| = 0.0 tren
-                    rms_e_*/cov_e (thang delay_ms) khi doi truc SLA, con
-                    err_total/d_sla (di qua argmin bang chi phi) thi KHONG.
-UNIT            ms
+SCALE           ti le vi pham (khong thu nguyen), trong [-1, 1]
+                /!\ DINH CHINH 20R2.7-B1 (2026-09-11), nguon:
+                    measurements/decision_error_v2.py:571
+                        d_sla = viol[a_twin].mean() - viol[a_truth].mean()
+                    `viol` (dong 388) la phep so NGUONG tra BOOLEAN, nen day
+                    la HIEU HAI TI LE, KHONG thu nguyen.
+                /!\ Ban CU khai "SCALE cost_ms / UNIT ms" -- SAI. Ham chi phi
+                    chi cham vao GIAN TIEP qua viec chon argmin. Xem
+                    docs/phase-20R2/E1-erratum.md muc E1-a va 07-dsla.md muc 1.
+                /!\ Khac biet voi DECISION_ERR_BY_AGE KHONG con o DON VI (ca hai
+                    khong thu nguyen) ma o CAI DUOC DEM: err dem HANG SAI,
+                    d_sla dem CHENH LECH TI LE VI PHAM SLA. Cung thang, khac
+                    quan the su kien. KHONG duoc dat chung mot nguong.
+                /!\ Van NHAY voi truc SLA: nguong (T_delay, T_loss) quyet dinh
+                    `viol`, va w_loss quyet dinh argmin. Doi truc SLA -> doi so.
+UNIT            dimensionless
 BRANCH          z_fixed
 CODE            measurements/decision_error_v2.py : run_cell
 ARTIFACT_FIELD  per_z[<z_key>].d_sla                            (dong 485)
@@ -254,7 +262,7 @@ Nghia la MOT artifact cua run_cell se mang MOT nhan, trong khi per_z[] cua no
 chua BA estimand khac nhau:
     rms_e_model / rms_e_stale / cov_e  -> RMS_ALLACTION_DELAY  (delay_ms)
     err_total / err_model / err_stale  -> DECISION_ERR_BY_AGE  (ti le)
-    d_sla                              -> SLA_VIOL_BY_AGE      (cost_ms)
+    d_sla                              -> SLA_VIOL_BY_AGE      (dimensionless, [-1, 1])
 
 Nhan o muc artifact KHONG DU DO PHAN GIAI de phan biet ba cai do. Vi vay
 `ESTIMAND_BY_FIELD` duoc them vao module: no khai theo TRUONG, va no la thu
