@@ -1,0 +1,234 @@
+{
+ "P1_role_is_carried_verbatim_into_exogenous": {
+  "differences": [],
+  "verdict": "CARRIED",
+  "why_it_matters": "Manifest exogenous da XOA opt_viol_rate/in_band vi khong an toan de doc, nhung GIU role -- ma role duoc SUY RA tu chinh in_band. Bo nhiet ke, giu chan doan."
+ },
+ "P2_partition_equals_axis_free_predicate": {
+  "mismatch": [],
+  "n_cells": 12,
+  "n_match": 12,
+  "predicate": "role == 'gate'  <=>  mode != 'cbr'",
+  "verdict": "PARTITION_IS_AXIS_FREE"
+ },
+ "P3_negative_control_in_band_is_NOT_invariant": {
+  "flipped_cells": [
+   "poisson@0.700",
+   "poisson@0.850",
+   "poisson@0.925",
+   "poisson@0.960",
+   "h2@0.700",
+   "h2@0.850",
+   "h2@0.925",
+   "h2@0.960"
+  ],
+  "n_feasible": 10,
+  "n_flip": 8,
+  "reading": "Tren truc self_calibrated MOI o kha thi khong suy bien deu ra DUNG target_viol = 0.15 -- vi diem bat dong NHAM toi 0.15. Nen in_band la TAUTOLOGY tren truc do: no chi phan biet 'phan phoi suy bien' voi 'khong suy bien'. Doi chung am nay la BANG CHUNG cho P2, khong phai loi.",
+  "verdict": "CRITERION_NOT_INVARIANT"
+ },
+ "WHAT_THIS_IS": "Tinh chat MOI TRUONG. Khong doc mot cot ket qua nao. Tra loi DUY NHAT cau: phan hoach gate/pc1 co phu thuoc truc SLA khong.",
+ "constants": {
+  "T_delay_ms": 50.0,
+  "T_loss": 0.01,
+  "dt": 0.005,
+  "n": 50000,
+  "seed": 100,
+  "tau": 1.0,
+  "viol_band": [
+   0.1,
+   0.25
+  ],
+  "w_loss": 5000.0
+ },
+ "generated_by": "tools/20r2_9_partition_invariance.py",
+ "inputs_sha256": {
+  "results/LIVE/phase-20R/sla_calibration.json": "0387d300dbdd039c004a7fc89d062a0e9219968be8ad0cfeac65e53cf34826db",
+  "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606",
+  "results/LIVE/phase-20R/truth_table.parquet": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e"
+ },
+ "rows": [
+  {
+   "axis_free_predicate_mode_ne_cbr": false,
+   "cell": "cbr@0.700",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": false,
+   "is_gate": false,
+   "mode": "cbr",
+   "opt_viol_rate_exogenous": 0.0,
+   "opt_viol_rate_self_calibrated": 0.0,
+   "predicate_matches_role": true,
+   "rho_bar": 0.7,
+   "role": "pc1"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": false,
+   "cell": "cbr@0.850",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": false,
+   "is_gate": false,
+   "mode": "cbr",
+   "opt_viol_rate_exogenous": 0.0,
+   "opt_viol_rate_self_calibrated": 0.0,
+   "predicate_matches_role": true,
+   "rho_bar": 0.85,
+   "role": "pc1"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": false,
+   "cell": "cbr@0.925",
+   "feasible": false,
+   "in_band_exogenous": null,
+   "in_band_self_calibrated": false,
+   "is_gate": false,
+   "mode": "cbr",
+   "opt_viol_rate_exogenous": null,
+   "opt_viol_rate_self_calibrated": null,
+   "predicate_matches_role": true,
+   "rho_bar": 0.925,
+   "role": "pc1_excluded_by_q8"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": false,
+   "cell": "cbr@0.960",
+   "feasible": false,
+   "in_band_exogenous": null,
+   "in_band_self_calibrated": false,
+   "is_gate": false,
+   "mode": "cbr",
+   "opt_viol_rate_exogenous": null,
+   "opt_viol_rate_self_calibrated": null,
+   "predicate_matches_role": true,
+   "rho_bar": 0.96,
+   "role": "pc1_excluded_by_q8"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": true,
+   "cell": "poisson@0.700",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": true,
+   "is_gate": true,
+   "mode": "poisson",
+   "opt_viol_rate_exogenous": 0.0,
+   "opt_viol_rate_self_calibrated": 0.150005,
+   "predicate_matches_role": true,
+   "rho_bar": 0.7,
+   "role": "gate"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": true,
+   "cell": "poisson@0.850",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": true,
+   "is_gate": true,
+   "mode": "poisson",
+   "opt_viol_rate_exogenous": 0.03578,
+   "opt_viol_rate_self_calibrated": 0.149995,
+   "predicate_matches_role": true,
+   "rho_bar": 0.85,
+   "role": "gate"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": true,
+   "cell": "poisson@0.925",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": true,
+   "is_gate": true,
+   "mode": "poisson",
+   "opt_viol_rate_exogenous": 0.99242,
+   "opt_viol_rate_self_calibrated": 0.150005,
+   "predicate_matches_role": true,
+   "rho_bar": 0.925,
+   "role": "gate"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": true,
+   "cell": "poisson@0.960",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": true,
+   "is_gate": true,
+   "mode": "poisson",
+   "opt_viol_rate_exogenous": 1.0,
+   "opt_viol_rate_self_calibrated": 0.150005,
+   "predicate_matches_role": true,
+   "rho_bar": 0.96,
+   "role": "gate"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": true,
+   "cell": "h2@0.700",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": true,
+   "is_gate": true,
+   "mode": "h2",
+   "opt_viol_rate_exogenous": 0.84854,
+   "opt_viol_rate_self_calibrated": 0.149995,
+   "predicate_matches_role": true,
+   "rho_bar": 0.7,
+   "role": "gate"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": true,
+   "cell": "h2@0.850",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": true,
+   "is_gate": true,
+   "mode": "h2",
+   "opt_viol_rate_exogenous": 1.0,
+   "opt_viol_rate_self_calibrated": 0.150005,
+   "predicate_matches_role": true,
+   "rho_bar": 0.85,
+   "role": "gate"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": true,
+   "cell": "h2@0.925",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": true,
+   "is_gate": true,
+   "mode": "h2",
+   "opt_viol_rate_exogenous": 1.0,
+   "opt_viol_rate_self_calibrated": 0.15,
+   "predicate_matches_role": true,
+   "rho_bar": 0.925,
+   "role": "gate"
+  },
+  {
+   "axis_free_predicate_mode_ne_cbr": true,
+   "cell": "h2@0.960",
+   "feasible": true,
+   "in_band_exogenous": false,
+   "in_band_self_calibrated": true,
+   "is_gate": true,
+   "mode": "h2",
+   "opt_viol_rate_exogenous": 1.0,
+   "opt_viol_rate_self_calibrated": 0.15,
+   "predicate_matches_role": true,
+   "rho_bar": 0.96,
+   "role": "gate"
+  }
+ ],
+ "schema": "dt4n.partition_invariance_20r2_e1.v1",
+ "source_sha256": {
+  "measurements/decision_error_v2.py": "647464373a93a531ab69111827a887b823b462980423a4a7a28f69b56b7d57be",
+  "measurements/sla_calib_v2.py": "985260d8b7d4a0f500834f1837fac738fb22ccecde957bf28447dadb2cee591a",
+  "tools/20r2_9_partition_invariance.py": "981dcfa92b79d1e45ebf973386f8ce7dc6aab7721405ab474089da0ab3c9f9b7",
+  "twin/cost_v2.py": "444d1d24a7d8be3789a1857ed2a5614f9e58594ba69be9d1663912ac5a26a6d8",
+  "twin/link_model.py": "fd7a943a809354e7f6a559944afdeadc3bd5d13516bbc8d38b44cdb65fce7a14",
+  "twin/topology_v7.py": "235280407c6077e59dd3f452fbf4101992dbed1887fe0f76e08030cdbdf960bd"
+ },
+ "validity": {
+  "axis_role": "measures_axis",
+  "note": "Artifact DO tinh bat bien cua phan hoach. Co dung truc SLA exogenous lam DOI CHUNG AM, khong dung lam nguon ket luan.",
+  "schema": "dt4n.validity.v1"
+ }
+}

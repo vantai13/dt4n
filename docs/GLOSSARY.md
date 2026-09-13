@@ -195,6 +195,23 @@ POPULATION      8 o `gate` cua luoi 20R2: c_a thuoc {poisson, h2} x rho_bar
                 con lai bi loai boi q8 (sigma_max_regime = 0).
                 => Gop cbr vao trung binh la NGUY BIEN GOP: cbr la che do de
                    nhat, no KEO err trung binh XUONG.
+                /!\ BO SUNG E1-b (2026-09-13). Phan hoach gate/pc1 duoc KE THUA
+                    tu results/LIVE/phase-20R/sla_calibration.json, tuc truc
+                    self_calibrated (DEPRECATED, S14), tai tau = 1.0, a = 0.9.
+                    Manifest exogenous da XOA opt_viol_rate/in_band nhung GIU
+                    `role` -- ma role duoc SUY RA tu in_band.
+                    DA KIEM (docs/phase-20R2/E1b-partition-invariance.json):
+                      P2  role == 'gate' <=> mode != 'cbr'      12/12 KHOP
+                      P3  in_band KHONG bat bien: 8/10 o kha thi lat khi tinh
+                          lai tren truc exogenous
+                    ⟹ TIEU CHI khong bat bien, nhung PHAN HOACH trung khop voi
+                      mot vi tu KHONG dinh nghia qua truc SLA. Ly do cbr khac
+                      la CAU TRUC: duong cong su that cbr phang, khe ho giua hai
+                      duong tot nhat (1.494 ms) lon gap 18.9 lan bien do toi da
+                      cua mot hieu hai duong (0.079 ms) -> argmin BAT DONG.
+                      Xem E1-mechanics.json muc C_cbr_mechanism.
+                /!\ T2-R7: 2 o rho_bar = 0.96 mang co EXTRAPOLATION_CONTAMINATED
+                    va KHONG duoc dung lam headline (docs/inherited_restrictions.json).
 SCALE           ti le (khong thu nguyen), trong [0, 1]
                 /!\ KHONG phai delay_ms. `err` la TI LE hang sai, khong phai
                     mot do tre. KHONG duoc dat cung nguong voi d_sla.
