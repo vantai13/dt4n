@@ -1,0 +1,984 @@
+{
+ "C_cbr_mechanism": {
+  "WHAT_IT_ANSWERS": "Truth-table argmin stability over its clipped lookup domain.",
+  "flip_analysis": {
+   "cbr": {
+    "argmin_can_flip": false,
+    "argmin_invariance_certified": true,
+    "delay_only_bound_applies_to_full_cost": true,
+    "flip_witnesses": [
+     {
+      "path_cost_ms": [
+       12.467287637875923,
+       14.478031032291415,
+       13.96438277621152,
+       13.961636081602826
+      ],
+      "rho_by_link": {
+       "ac": 0.5525,
+       "ad": 0.5625,
+       "bc": 0.5475,
+       "bd": 0.5575,
+       "uA": 0.4325,
+       "uB": 0.4524999999999999,
+       "vC": 0.4325,
+       "vD": 0.4624999999999999
+      },
+      "winner": "P1"
+     }
+    ],
+    "gap_over_span": 18.894746419219487,
+    "interpretation": "No flip witness alone does not certify invariance; use the bound.",
+    "max_margin_span_ms": 0.07908803910736115,
+    "min_path_cost_gap_ms": 1.4943484437269028,
+    "path_span_ms": {
+     "P1": 0.04025239953646112,
+     "P2": 0.03883563957090003,
+     "P3": 0.0329585914502917,
+     "P4": 0.025664783364122284
+    },
+    "reference_rho_by_link": {
+     "ac": 0.5525,
+     "ad": 0.5625,
+     "bc": 0.5475,
+     "bd": 0.5575,
+     "uA": 0.4325,
+     "uB": 0.4524999999999999,
+     "vC": 0.4325,
+     "vD": 0.4624999999999999
+    }
+   },
+   "h2": {
+    "argmin_can_flip": true,
+    "argmin_invariance_certified": false,
+    "delay_only_bound_applies_to_full_cost": false,
+    "flip_witnesses": [
+     {
+      "path_cost_ms": [
+       19.61014594510477,
+       43.67410047584242,
+       21.19595159614763,
+       22.41741198149765
+      ],
+      "rho_by_link": {
+       "ac": 0.5525,
+       "ad": 0.5625,
+       "bc": 0.5475,
+       "bd": 0.5575,
+       "uA": 0.4325,
+       "uB": 0.4524999999999999,
+       "vC": 0.4325,
+       "vD": 0.4624999999999999
+      },
+      "winner": "P1"
+     },
+     {
+      "path_cost_ms": [
+       379.95930922144686,
+       43.67410047584242,
+       381.9189988724959,
+       703.6851807255515
+      ],
+      "rho_by_link": {
+       "ac": 0.5,
+       "ad": 0.6,
+       "bc": 0.5,
+       "bd": 1.04,
+       "uA": 0.5,
+       "uB": 0.5,
+       "vC": 0.96,
+       "vD": 0.5
+      },
+      "winner": "P2"
+     },
+     {
+      "path_cost_ms": [
+       701.2743595247872,
+       43.67410047584242,
+       18.15223645394067,
+       18.616630184896938
+      ],
+      "rho_by_link": {
+       "ac": 1.04,
+       "ad": 0.6,
+       "bc": 0.5,
+       "bd": 0.5,
+       "uA": 0.5,
+       "uB": 0.5,
+       "vC": 0.5,
+       "vD": 0.5
+      },
+      "winner": "P3"
+     },
+     {
+      "path_cost_ms": [
+       379.95930922144686,
+       43.67410047584242,
+       381.9189988724959,
+       18.616630184896938
+      ],
+      "rho_by_link": {
+       "ac": 0.5,
+       "ad": 0.6,
+       "bc": 0.5,
+       "bd": 0.5,
+       "uA": 0.5,
+       "uB": 0.5,
+       "vC": 0.96,
+       "vD": 0.5
+      },
+      "winner": "P4"
+     }
+    ],
+    "gap_over_span": 0.021745367787746165,
+    "interpretation": "No flip witness alone does not certify invariance; use the bound.",
+    "max_margin_span_ms": 72.92613610961715,
+    "min_path_cost_gap_ms": 1.585805651042861,
+    "path_span_ms": {
+     "P1": 35.13431425458818,
+     "P2": 34.84517130876496,
+     "P3": 36.02015012140178,
+     "P4": 36.90598598821536
+    },
+    "reference_rho_by_link": {
+     "ac": 0.5525,
+     "ad": 0.5625,
+     "bc": 0.5475,
+     "bd": 0.5575,
+     "uA": 0.4325,
+     "uB": 0.4524999999999999,
+     "vC": 0.4325,
+     "vD": 0.4624999999999999
+    }
+   },
+   "poisson": {
+    "argmin_can_flip": true,
+    "argmin_invariance_certified": false,
+    "delay_only_bound_applies_to_full_cost": false,
+    "flip_witnesses": [
+     {
+      "path_cost_ms": [
+       13.272797853917043,
+       16.437122929095302,
+       14.839488331098073,
+       14.950088865581808
+      ],
+      "rho_by_link": {
+       "ac": 0.5525,
+       "ad": 0.5625,
+       "bc": 0.5475,
+       "bd": 0.5575,
+       "uA": 0.4325,
+       "uB": 0.4524999999999999,
+       "vC": 0.4325,
+       "vD": 0.4624999999999999
+      },
+      "winner": "P1"
+     },
+     {
+      "path_cost_ms": [
+       80.33078438689918,
+       16.437122929095302,
+       81.91211154984778,
+       318.1543636685623
+      ],
+      "rho_by_link": {
+       "ac": 0.5,
+       "ad": 0.6,
+       "bc": 0.5,
+       "bd": 1.04,
+       "uA": 0.5,
+       "uB": 0.5,
+       "vC": 0.96,
+       "vD": 0.5
+      },
+      "winner": "P2"
+     },
+     {
+      "path_cost_ms": [
+       316.49170934266516,
+       16.437122929095302,
+       14.747337908545559,
+       14.828665071494157
+      ],
+      "rho_by_link": {
+       "ac": 1.04,
+       "ad": 0.6,
+       "bc": 0.5,
+       "bd": 0.5,
+       "uA": 0.5,
+       "uB": 0.5,
+       "vC": 0.5,
+       "vD": 0.5
+      },
+      "winner": "P3"
+     },
+     {
+      "path_cost_ms": [
+       80.33078438689918,
+       16.437122929095302,
+       81.91211154984778,
+       14.828665071494157
+      ],
+      "rho_by_link": {
+       "ac": 0.5,
+       "ad": 0.6,
+       "bc": 0.5,
+       "bd": 0.5,
+       "uA": 0.5,
+       "uB": 0.5,
+       "vC": 0.96,
+       "vD": 0.5
+      },
+      "winner": "P4"
+     }
+    ],
+    "gap_over_span": 0.02007454213708192,
+    "interpretation": "No flip witness alone does not certify invariance; use the bound.",
+    "max_margin_span_ms": 78.0436468479658,
+    "min_path_cost_gap_ms": 1.5666904771810302,
+    "path_span_ms": {
+     "P1": 31.50872376709276,
+     "P2": 36.71932841734974,
+     "P3": 36.41652109885441,
+     "P4": 41.32431843061606
+    },
+    "reference_rho_by_link": {
+     "ac": 0.5525,
+     "ad": 0.5625,
+     "bc": 0.5475,
+     "bd": 0.5575,
+     "uA": 0.4325,
+     "uB": 0.4524999999999999,
+     "vC": 0.4325,
+     "vD": 0.4624999999999999
+    }
+   }
+  },
+  "per_link": {
+   "cbr": {
+    "ac": {
+     "delay_max_ms": 0.1414790903120685,
+     "delay_min_ms": 0.13292416252402775,
+     "loss_max": 0.0,
+     "queue_span_ms": 0.008554927788040761,
+     "rho_domain": [
+      0.5,
+      0.95
+     ]
+    },
+    "ad": {
+     "delay_max_ms": 0.148154668977644,
+     "delay_min_ms": 0.13372269306899492,
+     "loss_max": 0.0,
+     "queue_span_ms": 0.014431975908649086,
+     "rho_domain": [
+      0.6,
+      0.95
+     ]
+    },
+    "bc": {
+     "delay_max_ms": 0.1414790903120685,
+     "delay_min_ms": 0.13292416252402775,
+     "loss_max": 0.0,
+     "queue_span_ms": 0.008554927788040761,
+     "rho_domain": [
+      0.5,
+      0.95
+     ]
+    },
+    "bd": {
+     "delay_max_ms": 0.1414790903120685,
+     "delay_min_ms": 0.13292416252402775,
+     "loss_max": 0.0,
+     "queue_span_ms": 0.008554927788040761,
+     "rho_domain": [
+      0.5,
+      0.95
+     ]
+    },
+    "uA": {
+     "delay_max_ms": 0.14550432963626672,
+     "delay_min_ms": 0.12965559376205654,
+     "loss_max": 0.0,
+     "queue_span_ms": 0.01584873587421018,
+     "rho_domain": [
+      0.5,
+      0.85
+     ]
+    },
+    "uB": {
+     "delay_max_ms": 0.1414790903120685,
+     "delay_min_ms": 0.13292416252402775,
+     "loss_max": 0.0,
+     "queue_span_ms": 0.008554927788040761,
+     "rho_domain": [
+      0.5,
+      0.95
+     ]
+    },
+    "vC": {
+     "delay_max_ms": 0.14550432963626672,
+     "delay_min_ms": 0.12965559376205654,
+     "loss_max": 0.0,
+     "queue_span_ms": 0.01584873587421018,
+     "rho_domain": [
+      0.5,
+      0.85
+     ]
+    },
+    "vD": {
+     "delay_max_ms": 0.1414790903120685,
+     "delay_min_ms": 0.13292416252402775,
+     "loss_max": 0.0,
+     "queue_span_ms": 0.008554927788040761,
+     "rho_domain": [
+      0.5,
+      0.95
+     ]
+    }
+   },
+   "h2": {
+    "ac": {
+     "delay_max_ms": 13.924775027806215,
+     "delay_min_ms": 1.622779698401093,
+     "loss_max": 0.13457025739039008,
+     "queue_span_ms": 12.301995329405122,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    },
+    "ad": {
+     "delay_max_ms": 15.70575182191772,
+     "delay_min_ms": 4.578735305149412,
+     "loss_max": 0.15711028479717412,
+     "queue_span_ms": 11.127016516768307,
+     "rho_domain": [
+      0.6,
+      1.04
+     ]
+    },
+    "bc": {
+     "delay_max_ms": 13.924775027806215,
+     "delay_min_ms": 1.622779698401093,
+     "loss_max": 0.13457025739039008,
+     "queue_span_ms": 12.301995329405122,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    },
+    "bd": {
+     "delay_max_ms": 13.924775027806215,
+     "delay_min_ms": 1.622779698401093,
+     "loss_max": 0.13457025739039008,
+     "queue_span_ms": 12.301995329405122,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    },
+    "uA": {
+     "delay_max_ms": 12.64530823510681,
+     "delay_min_ms": 1.2291487725152792,
+     "loss_max": 0.07047200259231676,
+     "queue_span_ms": 11.416159462591532,
+     "rho_domain": [
+      0.5,
+      0.96
+     ]
+    },
+    "uB": {
+     "delay_max_ms": 13.924775027806215,
+     "delay_min_ms": 1.622779698401093,
+     "loss_max": 0.13457025739039008,
+     "queue_span_ms": 12.301995329405122,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    },
+    "vC": {
+     "delay_max_ms": 12.64530823510681,
+     "delay_min_ms": 1.2291487725152792,
+     "loss_max": 0.07047200259231676,
+     "queue_span_ms": 11.416159462591532,
+     "rho_domain": [
+      0.5,
+      0.96
+     ]
+    },
+    "vD": {
+     "delay_max_ms": 13.924775027806215,
+     "delay_min_ms": 1.622779698401093,
+     "loss_max": 0.13457025739039008,
+     "queue_span_ms": 12.301995329405122,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    }
+   },
+   "poisson": {
+    "ac": {
+     "delay_max_ms": 14.201661167370073,
+     "delay_min_ms": 0.4268883571647188,
+     "loss_max": 0.057910185157372576,
+     "queue_span_ms": 13.774772810205354,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    },
+    "ad": {
+     "delay_max_ms": 15.093849322784877,
+     "delay_min_ms": 1.0162691940841926,
+     "loss_max": 0.06549162400079489,
+     "queue_span_ms": 14.077580128700685,
+     "rho_domain": [
+      0.6,
+      1.04
+     ]
+    },
+    "bc": {
+     "delay_max_ms": 14.201661167370073,
+     "delay_min_ms": 0.4268883571647188,
+     "loss_max": 0.057910185157372576,
+     "queue_span_ms": 13.774772810205354,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    },
+    "bd": {
+     "delay_max_ms": 14.201661167370073,
+     "delay_min_ms": 0.4268883571647188,
+     "loss_max": 0.057910185157372576,
+     "queue_span_ms": 13.774772810205354,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    },
+    "uA": {
+     "delay_max_ms": 9.216536672659824,
+     "delay_min_ms": 0.34956119421612114,
+     "loss_max": 0.0116595596325717,
+     "queue_span_ms": 8.866975478443702,
+     "rho_domain": [
+      0.5,
+      0.96
+     ]
+    },
+    "uB": {
+     "delay_max_ms": 14.201661167370073,
+     "delay_min_ms": 0.4268883571647188,
+     "loss_max": 0.057910185157372576,
+     "queue_span_ms": 13.774772810205354,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    },
+    "vC": {
+     "delay_max_ms": 9.216536672659824,
+     "delay_min_ms": 0.34956119421612114,
+     "loss_max": 0.0116595596325717,
+     "queue_span_ms": 8.866975478443702,
+     "rho_domain": [
+      0.5,
+      0.96
+     ]
+    },
+    "vD": {
+     "delay_max_ms": 14.201661167370073,
+     "delay_min_ms": 0.4268883571647188,
+     "loss_max": 0.057910185157372576,
+     "queue_span_ms": 13.774772810205354,
+     "rho_domain": [
+      0.5,
+      1.04
+     ]
+    }
+   }
+  },
+  "per_mode_summary": {
+   "cbr": {
+    "loss_max_over_links": 0.0,
+    "queue_span_ms_max_over_links": 0.01584873587421018
+   },
+   "h2": {
+    "loss_max_over_links": 0.15711028479717412,
+    "queue_span_ms_max_over_links": 12.301995329405122
+   },
+   "poisson": {
+    "loss_max_over_links": 0.06549162400079489,
+    "queue_span_ms_max_over_links": 14.077580128700685
+   }
+  },
+  "reading": "For cbr, loss is zero and the full-domain delay variation bound is smaller than the reference best/second-best gap: truth argmin is invariant. The curves are nearly flat, not exactly constant. This does not alone prove err_total=0: the fitted twin must choose the same action. For h2/poisson the delay-only bound is not a full-cost bound; flip_witnesses demonstrate any reported argmin change."
+ },
+ "D_quasi_static": {
+  "WHAT_IT_ANSWERS": "Bang tra SU THAT la duong cong TRANG THAI DUNG delay=f(rho). Gia dinh ngam: hang doi KIP can bang truoc khi rho doi dang ke. O dau gia dinh do VO?",
+  "caveat": "Heuristic screening, not measured queue dynamics or a rigorous mixing-time bound. The M/M/1 characteristic-time approximation and finite-buffer drift time need not describe cbr/h2 transients. Taking MIN is an explicit modeling assumption. QS_MARGIN=5 is a convention, not derived from a law. Flagged tau values identify conditions needing a dynamic experiment; they do not establish failure or a cause of the campaign MISS outcomes.",
+  "model": {
+   "L_bits": 12096.0,
+   "MTU_BYTES": 1512,
+   "finite_buffer_q": "T = q*(L/C)/|1-rho|  (thoi gian day/xa het buffer)",
+   "mm1_infinite_buffer": "T = (L/C)/(1-rho)^2",
+   "quasi_static_criterion": "T_relax <= tau / 5",
+   "rule": "MIN of two characteristic-time estimates; not a proven stochastic relaxation bound"
+  },
+  "per_link": [
+   {
+    "bw_mbps": 8.0,
+    "by_rho_bar": {
+     "0.700": {
+      "T_relax_s": 0.011195335276967927,
+      "bound_used": "mm1",
+      "rho_link": 0.6325
+     },
+     "0.850": {
+      "T_relax_s": 0.03196195005945302,
+      "bound_used": "mm1",
+      "rho_link": 0.7825
+     },
+     "0.925": {
+      "T_relax_s": 0.07445983379501389,
+      "bound_used": "mm1",
+      "rho_link": 0.8575
+     },
+     "0.960": {
+      "T_relax_s": 0.13083829096809074,
+      "bound_used": "mm1",
+      "rho_link": 0.8925
+     }
+    },
+    "link": "uA",
+    "link_offset": -0.0675,
+    "q_pkts": 18,
+    "service_time_ms": 1.512
+   },
+   {
+    "bw_mbps": 6.0,
+    "by_rho_bar": {
+     "0.700": {
+      "T_relax_s": 0.016694788054448517,
+      "bound_used": "mm1",
+      "rho_link": 0.6524999999999999
+     },
+     "0.850": {
+      "T_relax_s": 0.05168402499599417,
+      "bound_used": "mm1",
+      "rho_link": 0.8024999999999999
+     },
+     "0.925": {
+      "T_relax_s": 0.13434402332361506,
+      "bound_used": "mm1",
+      "rho_link": 0.8775
+     },
+     "0.960": {
+      "T_relax_s": 0.2633142857142849,
+      "bound_used": "mm1",
+      "rho_link": 0.9124999999999999
+     }
+    },
+    "link": "uB",
+    "link_offset": -0.0475000000000001,
+    "q_pkts": 13,
+    "service_time_ms": 2.016
+   },
+   {
+    "bw_mbps": 6.0,
+    "by_rho_bar": {
+     "0.700": {
+      "T_relax_s": 0.032910927456381994,
+      "bound_used": "mm1",
+      "rho_link": 0.7525
+     },
+     "0.850": {
+      "T_relax_s": 0.21207100591715963,
+      "bound_used": "mm1",
+      "rho_link": 0.9025
+     },
+     "0.925": {
+      "T_relax_s": 1.1648000000000018,
+      "bound_used": "finite_buffer",
+      "rho_link": 0.9775
+     },
+     "0.960": {
+      "T_relax_s": 2.096640000000007,
+      "bound_used": "finite_buffer",
+      "rho_link": 1.0125
+     }
+    },
+    "link": "ac",
+    "link_offset": 0.05249999999999999,
+    "q_pkts": 13,
+    "service_time_ms": 2.016
+   },
+   {
+    "bw_mbps": 4.0,
+    "by_rho_bar": {
+     "0.700": {
+      "T_relax_s": 0.05361108033240995,
+      "bound_used": "mm1",
+      "rho_link": 0.7625
+     },
+     "0.850": {
+      "T_relax_s": 0.3455999999999999,
+      "bound_used": "finite_buffer",
+      "rho_link": 0.9125
+     },
+     "0.925": {
+      "T_relax_s": 2.419200000000009,
+      "bound_used": "finite_buffer",
+      "rho_link": 0.9875
+     },
+     "0.960": {
+      "T_relax_s": 1.3440000000000023,
+      "bound_used": "finite_buffer",
+      "rho_link": 1.0225
+     }
+    },
+    "link": "ad",
+    "link_offset": 0.0625,
+    "q_pkts": 10,
+    "service_time_ms": 3.024
+   },
+   {
+    "bw_mbps": 6.0,
+    "by_rho_bar": {
+     "0.700": {
+      "T_relax_s": 0.03162042936966963,
+      "bound_used": "mm1",
+      "rho_link": 0.7474999999999999
+     },
+     "0.850": {
+      "T_relax_s": 0.19188578227245673,
+      "bound_used": "mm1",
+      "rho_link": 0.8975
+     },
+     "0.925": {
+      "T_relax_s": 0.9530181818181829,
+      "bound_used": "finite_buffer",
+      "rho_link": 0.9725
+     },
+     "0.960": {
+      "T_relax_s": 3.4944000000000743,
+      "bound_used": "finite_buffer",
+      "rho_link": 1.0074999999999998
+     }
+    },
+    "link": "bc",
+    "link_offset": 0.04749999999999999,
+    "q_pkts": 13,
+    "service_time_ms": 2.016
+   },
+   {
+    "bw_mbps": 6.0,
+    "by_rho_bar": {
+     "0.700": {
+      "T_relax_s": 0.0342820703581677,
+      "bound_used": "mm1",
+      "rho_link": 0.7575
+     },
+     "0.850": {
+      "T_relax_s": 0.23561723886048197,
+      "bound_used": "mm1",
+      "rho_link": 0.9075
+     },
+     "0.925": {
+      "T_relax_s": 1.4976000000000034,
+      "bound_used": "finite_buffer",
+      "rho_link": 0.9825
+     },
+     "0.960": {
+      "T_relax_s": 1.4975999999999938,
+      "bound_used": "finite_buffer",
+      "rho_link": 1.0175
+     }
+    },
+    "link": "bd",
+    "link_offset": 0.057499999999999996,
+    "q_pkts": 13,
+    "service_time_ms": 2.016
+   },
+   {
+    "bw_mbps": 8.0,
+    "by_rho_bar": {
+     "0.700": {
+      "T_relax_s": 0.011195335276967927,
+      "bound_used": "mm1",
+      "rho_link": 0.6325
+     },
+     "0.850": {
+      "T_relax_s": 0.03196195005945302,
+      "bound_used": "mm1",
+      "rho_link": 0.7825
+     },
+     "0.925": {
+      "T_relax_s": 0.07445983379501389,
+      "bound_used": "mm1",
+      "rho_link": 0.8575
+     },
+     "0.960": {
+      "T_relax_s": 0.13083829096809074,
+      "bound_used": "mm1",
+      "rho_link": 0.8925
+     }
+    },
+    "link": "vC",
+    "link_offset": -0.0675,
+    "q_pkts": 18,
+    "service_time_ms": 1.512
+   },
+   {
+    "bw_mbps": 6.0,
+    "by_rho_bar": {
+     "0.700": {
+      "T_relax_s": 0.017698765432098754,
+      "bound_used": "mm1",
+      "rho_link": 0.6624999999999999
+     },
+     "0.850": {
+      "T_relax_s": 0.05734399999999993,
+      "bound_used": "mm1",
+      "rho_link": 0.8124999999999999
+     },
+     "0.925": {
+      "T_relax_s": 0.15928888888888879,
+      "bound_used": "mm1",
+      "rho_link": 0.8875
+     },
+     "0.960": {
+      "T_relax_s": 0.3356503642039531,
+      "bound_used": "mm1",
+      "rho_link": 0.9224999999999999
+     }
+    },
+    "link": "vD",
+    "link_offset": -0.03750000000000009,
+    "q_pkts": 13,
+    "service_time_ms": 2.016
+   }
+  ],
+  "verdict_by_rho_bar": {
+   "0.700": {
+    "T_relax_worst_s": 0.05361108033240995,
+    "n_tau_violating": 0,
+    "tau_min_safe_s": 0.2680554016620498,
+    "tau_violating_quasi_static": [],
+    "worst_link": "ad"
+   },
+   "0.850": {
+    "T_relax_worst_s": 0.3455999999999999,
+    "n_tau_violating": 2,
+    "tau_min_safe_s": 1.7279999999999995,
+    "tau_violating_quasi_static": [
+     0.5,
+     1.0
+    ],
+    "worst_link": "ad"
+   },
+   "0.925": {
+    "T_relax_worst_s": 2.419200000000009,
+    "n_tau_violating": 6,
+    "tau_min_safe_s": 12.096000000000044,
+    "tau_violating_quasi_static": [
+     0.5,
+     1.0,
+     2.0,
+     3.0,
+     5.0,
+     10.0
+    ],
+    "worst_link": "ad"
+   },
+   "0.960": {
+    "T_relax_worst_s": 3.4944000000000743,
+    "n_tau_violating": 6,
+    "tau_min_safe_s": 17.47200000000037,
+    "tau_violating_quasi_static": [
+     0.5,
+     1.0,
+     2.0,
+     3.0,
+     5.0,
+     10.0
+    ],
+    "worst_link": "bc"
+   }
+  }
+ },
+ "E_cost_composition": {
+  "WHAT_IT_ANSWERS": "cost = delay_ms + w_loss*loss.  argmin ma 20R2 do dang xep hang theo DAI LUONG VAT LY NAO?",
+  "constants": {
+   "dt": 0.005,
+   "n": 50000,
+   "seed": 101,
+   "tau": 3.0,
+   "w_loss": 5000.0,
+   "w_loss_rule": "T_delay/T_loss = 50/0.01"
+  },
+  "reading": "Loss share is the ratio of means over all times and all four paths. It describes cost composition, not which term determines argmin. Ranking depends on pairwise path differences; causal attribution to w_loss requires a separate sensitivity experiment.",
+  "rows": [
+   {
+    "a": 0.5,
+    "cell": "poisson@0.700",
+    "delay_ms_mean": 17.18170608744721,
+    "loss_share_of_cost": 0.11571718950932851,
+    "sigma": 0.0256782945736434,
+    "w_loss_term_ms_mean": 2.2483969108383866
+   },
+   {
+    "a": 0.9,
+    "cell": "poisson@0.700",
+    "delay_ms_mean": 17.309673957216035,
+    "loss_share_of_cost": 0.15179756464612812,
+    "sigma": 0.046220930232558126,
+    "w_loss_term_ms_mean": 3.097805714773355
+   },
+   {
+    "a": 0.5,
+    "cell": "poisson@0.850",
+    "delay_ms_mean": 24.64686463008971,
+    "loss_share_of_cost": 0.6654129612105063,
+    "sigma": 0.02664728682170544,
+    "w_loss_term_ms_mean": 49.016672126324664
+   },
+   {
+    "a": 0.9,
+    "cell": "poisson@0.850",
+    "delay_ms_mean": 25.080681598460153,
+    "loss_share_of_cost": 0.7066121949031149,
+    "sigma": 0.04796511627906979,
+    "w_loss_term_ms_mean": 60.40576726800786
+   },
+   {
+    "a": 0.5,
+    "cell": "poisson@0.925",
+    "delay_ms_mean": 32.65193012441021,
+    "loss_share_of_cost": 0.8358690763778484,
+    "sigma": 0.012112403100775193,
+    "w_loss_term_ms_mean": 166.28638938190485
+   },
+   {
+    "a": 0.9,
+    "cell": "poisson@0.925",
+    "delay_ms_mean": 32.73733366413005,
+    "loss_share_of_cost": 0.8391021133112933,
+    "sigma": 0.021802325581395346,
+    "w_loss_term_ms_mean": 170.72918996689677
+   },
+   {
+    "a": 0.5,
+    "cell": "poisson@0.960",
+    "delay_ms_mean": 37.741827529636055,
+    "loss_share_of_cost": 0.8781763595173792,
+    "sigma": 0.005329457364341101,
+    "w_loss_term_ms_mean": 272.06526229395405
+   },
+   {
+    "a": 0.9,
+    "cell": "poisson@0.960",
+    "delay_ms_mean": 37.720879732818155,
+    "loss_share_of_cost": 0.8786321287088419,
+    "sigma": 0.009593023255813982,
+    "w_loss_term_ms_mean": 273.0770219814407
+   },
+   {
+    "a": 0.5,
+    "cell": "h2@0.700",
+    "delay_ms_mean": 28.55425249396874,
+    "loss_share_of_cost": 0.8353017374906146,
+    "sigma": 0.0256782945736434,
+    "w_loss_term_ms_mean": 144.81887275282347
+   },
+   {
+    "a": 0.9,
+    "cell": "h2@0.700",
+    "delay_ms_mean": 28.63415765310248,
+    "loss_share_of_cost": 0.844520756356027,
+    "sigma": 0.046220930232558126,
+    "w_loss_term_ms_mean": 155.5329181700275
+   },
+   {
+    "a": 0.5,
+    "cell": "h2@0.850",
+    "delay_ms_mean": 40.48117405269027,
+    "loss_share_of_cost": 0.9357172611635584,
+    "sigma": 0.02664728682170544,
+    "w_loss_term_ms_mean": 589.2551250755855
+   },
+   {
+    "a": 0.9,
+    "cell": "h2@0.850",
+    "delay_ms_mean": 40.36094111535347,
+    "loss_share_of_cost": 0.9370308180668192,
+    "sigma": 0.04796511627906979,
+    "w_loss_term_ms_mean": 600.6024615564836
+   },
+   {
+    "a": 0.5,
+    "cell": "h2@0.925",
+    "delay_ms_mean": 46.55624364684457,
+    "loss_share_of_cost": 0.9528129087609273,
+    "sigma": 0.012112403100775193,
+    "w_loss_term_ms_mean": 940.0746849469108
+   },
+   {
+    "a": 0.9,
+    "cell": "h2@0.925",
+    "delay_ms_mean": 46.47691460176379,
+    "loss_share_of_cost": 0.952879458463303,
+    "sigma": 0.021802325581395346,
+    "w_loss_term_ms_mean": 939.8639271215445
+   },
+   {
+    "a": 0.5,
+    "cell": "h2@0.960",
+    "delay_ms_mean": 49.204510110676345,
+    "loss_share_of_cost": 0.9578957937100209,
+    "sigma": 0.005329457364341101,
+    "w_loss_term_ms_mean": 1119.4319385091192
+   },
+   {
+    "a": 0.9,
+    "cell": "h2@0.960",
+    "delay_ms_mean": 49.17997914545224,
+    "loss_share_of_cost": 0.9579421296800912,
+    "sigma": 0.009593023255813982,
+    "w_loss_term_ms_mean": 1120.1607119397083
+   }
+  ],
+  "summary": {
+   "max": 0.9579421296800912,
+   "median": 0.8613485579367031,
+   "min": 0.11571718950932851,
+   "n_combos": 16,
+   "n_loss_dominated_ge_50pct": 14
+  }
+ },
+ "WHAT_THIS_IS": "BA tinh chat MOI TRUONG lam bang chung may moc cho 20R2-E1. Khong doc mot cot ket qua nao cua chien dich. Cung the loai voi 07a-dsla-structure.json.",
+ "generated_by": "tools/20r2_9_e1_mechanics.py",
+ "inputs_sha256": {
+  "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json": "a0da346756a9c4cdc32082e4773d6aa83632d6d14c25623a74dd6a9723d6c606",
+  "results/LIVE/phase-20R/truth_table.parquet": "5260b8f8aabb59ca81e2af1168bbbc98a7dfd804aa0506a266d0b34fac5d927e"
+ },
+ "schema": "dt4n.e1_mechanics_20r2.v1",
+ "source_sha256": {
+  "measurements/decision_error_v2.py": "647464373a93a531ab69111827a887b823b462980423a4a7a28f69b56b7d57be",
+  "measurements/sla_calib_v2.py": "985260d8b7d4a0f500834f1837fac738fb22ccecde957bf28447dadb2cee591a",
+  "tools/20r2_9_e1_mechanics.py": "2de464714878894589173bdb9852db3293334cb846f199b40c82fcbeddb41c1c",
+  "twin/cost_v2.py": "444d1d24a7d8be3789a1857ed2a5614f9e58594ba69be9d1663912ac5a26a6d8",
+  "twin/link_model.py": "fd7a943a809354e7f6a559944afdeadc3bd5d13516bbc8d38b44cdb65fce7a14",
+  "twin/topology_v7.py": "235280407c6077e59dd3f452fbf4101992dbed1887fe0f76e08030cdbdf960bd"
+ },
+ "validity": {
+  "axis_role": "measures_axis",
+  "note": "C va D KHONG dung truc SLA lan truc AoI. E CO dung truc SLA qua w_loss = 5000 (exogenous S-B), khai o constants.",
+  "schema": "dt4n.validity.v1"
+ }
+}
