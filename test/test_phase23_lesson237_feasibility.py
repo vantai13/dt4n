@@ -208,7 +208,12 @@ def test_script_khong_ky_gi(rep):
     assert rep["cell"] == "poisson@0.925"
 
 
+# [20R2.9-C/C-3] G23-222: doc results/SUPERSEDED/phase-22/calib_set_v3.parquet
+# (67 MB, ngoai git). `slow` KHONG cuu duoc o CI: dong lenh CI ghi de addopts
+# bang -m "not live and not custody", nen `slow` VAN chay va that bai vi vang
+# mat du lieu, khong phai vi mot bat bien nao.
 @pytest.mark.slow
+@pytest.mark.custody
 def test_end_to_end_tai_lap_duoc(tmp_path):
     """Chay lai toan bo (~2 phut) va doi chieu cac truong quyet dinh."""
     out = F.build(str(tmp_path / "out.json"))

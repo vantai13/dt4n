@@ -1,0 +1,113 @@
+{
+  "schema": "dt4n.custody_debt.v1",
+  "created": "2026-09-14",
+  "step": "20R2.9-C/C-3",
+  "why": "Gate 8-5 chap nhan CI xanh HOAC moi that bai con lai co TEN va LY DO. Moi test mang mark `custody` la mot phan DO PHU BI MAT o CI; so nay giu cho phan mat do khong im lang. Quy tac nguon: G23-222 (test that bai vi VANG MAT du lieu local phai mang mark custody) va pytest.ini.",
+  "measured_on": "clone sach tu origin, defc2531, full history + tags, env sdn_rl python 3.12.13",
+  "entries": [
+    {
+      "test": "test/test_capture_wave4_digests.py::test_digest_build_covers_passing_ledger",
+      "missing_input": "12 parquet wave-4: results/LIVE/phase-21R/*_U{0,3}_measured_v7.parquet va results/SUPERSEDED/phase-21R/*_legacy_sawtooth_51ms.parquet",
+      "ignored_by": ".gitignore:167-168",
+      "approx_bytes_each": 67000000,
+      "added_by": "20R2.9-C",
+      "reason": "tools/capture_wave4_digests.build() doi du 12 tep truoc khi bam digest; tren clone sach dung o SystemExit.",
+      "coverage_lost": "khong con kiem o CI rang so digest = 12 va ledger jobs == passed == 12; van kiem duoc o may tac gia bang `pytest -m custody`.",
+      "closes_when": "12 parquet nay co ban rut gon nam trong git, hoac digest duoc kiem qua mot manifest sha256 da commit thay vi doc parquet."
+    },
+    {
+      "test": "test/test_g23_229_family_selection_control.py::test_nondefault_family_reaches_selected_probability_path",
+      "missing_input": "results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet",
+      "ignored_by": ".gitignore:167",
+      "approx_bytes_each": 67000000,
+      "added_by": "20R2.9-C",
+      "reason": "fixture module-scope goi C.run(); FileNotFoundError o buoc _calib_path.",
+      "coverage_lost": "doi chung G23-229 (phan biet F6=F2 quan sat duoc voi mot selector chua noi day) khong chay o CI.",
+      "closes_when": "calib_set duoc thay bang mot mau da commit du de chay selector, hoac test doc tu artifact JSON da ky."
+    },
+    {
+      "test": "test/test_g23_229_family_selection_control.py::test_forced_action_family_is_a_positive_control",
+      "missing_input": "results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet",
+      "ignored_by": ".gitignore:167",
+      "approx_bytes_each": 67000000,
+      "added_by": "20R2.9-C",
+      "reason": "cung fixture module-scope.",
+      "coverage_lost": "positive control F2b_constant_P3 (forced_F2b_minus_F2 = 0.012923831842096334) khong chay o CI.",
+      "closes_when": "nhu tren."
+    },
+    {
+      "test": "test/test_phase23_lesson237_feasibility.py::test_end_to_end_tai_lap_duoc",
+      "missing_input": "results/SUPERSEDED/phase-22/calib_set_v3.parquet",
+      "ignored_by": "khong duoc whitelist boi bat ky dong ! nao trong .gitignore cho results/SUPERSEDED/phase-22/",
+      "approx_bytes_each": 67000000,
+      "added_by": "20R2.9-C",
+      "reason": "tai lap end-to-end doc calib_set_v3; `slow` khong bao ve duoc vi CI ghi de addopts va VAN chay slow.",
+      "coverage_lost": "tai lap end-to-end cua lesson 23.7 feasibility khong chay o CI.",
+      "closes_when": "calib_set_v3 co ban rut gon trong git, hoac buoc tai lap doc tu artifact SUPERSEDED da commit."
+    },
+    {
+      "test": "test/test_phase23_lesson237_structure.py::test_refactor_khong_doi_mot_con_so_nao[lesson23_7_range_calibration]",
+      "missing_input": "results/SUPERSEDED/phase-22/calib_set_v3.parquet",
+      "ignored_by": "khong duoc whitelist trong .gitignore",
+      "approx_bytes_each": 67000000,
+      "added_by": "20R2.9-C",
+      "reason": "chay lai script roi doi chieu tung con so; script nap calib_set_v3.",
+      "coverage_lost": "kiem 'refactor khong doi mot con so nao' mat 2/3 tham so o CI; `lesson23_7_calibration_2b` VAN chay.",
+      "closes_when": "nhu tren."
+    },
+    {
+      "test": "test/test_phase23_lesson237_structure.py::test_refactor_khong_doi_mot_con_so_nao[lesson23_7_feasibility]",
+      "missing_input": "results/SUPERSEDED/phase-22/calib_set_v3.parquet",
+      "ignored_by": "khong duoc whitelist trong .gitignore",
+      "approx_bytes_each": 67000000,
+      "added_by": "20R2.9-C",
+      "reason": "nhu tren.",
+      "coverage_lost": "nhu tren.",
+      "closes_when": "nhu tren."
+    },
+    {
+      "test": "test/test_documented_interpreter.py::test_documented_interpreter_exists",
+      "missing_input": "trinh thong dich duoc ghi trong tai lieu, chi ton tai tren may tac gia",
+      "ignored_by": "khong ap dung",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "muc nay khong phai mot tep du lieu nen khong co kich thuoc",
+      "added_by": "truoc 20R2.9-C",
+      "reason": "da mang mark custody tu truoc; ghi vao day de so nay phu HET tap custody.",
+      "coverage_lost": "kiem moi truong chay cua may tac gia khong co nghia o CI.",
+      "closes_when": "khong dong; day la kiem theo may."
+    },
+    {
+      "test": "test/test_no_dangling_parquet_refs.py::test_pinned_files_still_present",
+      "missing_input": "cac parquet duoc ghim, ngoai git",
+      "ignored_by": ".gitignore, nhieu dong",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "muc nay bao trum nhieu tep co kich thuoc khac nhau",
+      "added_by": "truoc 20R2.9-C (G23-222)",
+      "reason": "kiem su HIEN DIEN tren dia -- theo dinh nghia khong kha chuyen.",
+      "coverage_lost": "canh gac 'file custody da bien mat khoi dia' chi chay o may tac gia.",
+      "closes_when": "khong dong; day la kiem custody theo dung thiet ke."
+    },
+    {
+      "test": "test/test_no_dangling_parquet_refs.py::test_no_hardcoded_missing_parquet",
+      "missing_input": "cac parquet duoc ghim, ngoai git",
+      "ignored_by": ".gitignore, nhieu dong",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "nhu tren",
+      "added_by": "truoc 20R2.9-C (G23-222)",
+      "reason": "nhu tren.",
+      "coverage_lost": "nhu tren.",
+      "closes_when": "khong dong."
+    },
+    {
+      "test": "test/test_no_dangling_parquet_refs.py::test_closed_evidence_tiers_are_read_only",
+      "missing_input": "cay results/ cua may tac gia (quyen 555 o tang dong)",
+      "ignored_by": "khong ap dung",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "kiem quyen thu muc, khong phai mot tep",
+      "added_by": "truoc 20R2.9-C (G23-222)",
+      "reason": "kiem quyen tren cay results/ that.",
+      "coverage_lost": "khoa ghi tang dong khong duoc kiem o CI.",
+      "closes_when": "khong dong."
+    }
+  ]
+}

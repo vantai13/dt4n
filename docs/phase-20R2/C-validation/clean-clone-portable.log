@@ -1,0 +1,1113 @@
+........................................................................ [  1%]
+........................................................................ [  2%]
+.............F.......................................................... [  4%]
+.........s...s......................................................ssss [  5%]
+sssss..............s.................................................... [  6%]
+..............................................................s......s.. [  8%]
+....s........................sss........................................ [  9%]
+........................................................................ [ 10%]
+........................................................................ [ 12%]
+........................................................................ [ 13%]
+........................................................................ [ 14%]
+..s......ssssssssss..ss................................................. [ 16%]
+........................................................................ [ 17%]
+........................................................................ [ 18%]
+........................................................................ [ 20%]
+......................................................................ss [ 21%]
+ssssssssssssssssssssssssssss.........................F.s....s.......s... [ 22%]
+..................s....s.s....s.......s............ss................... [ 24%]
+s.s....ss....s........sss......ss.......s.....ss......sss..s.s.....s..s. [ 25%]
+..................................s..ss..ssss...s......ssssss..s.ss...ss [ 26%]
+s.......s...sss.........ss.s..s...s.ssssssss..s.sss.s........s.s.ssssss. [ 28%]
+.s..s.s.....sssss....s.ss...s.............ssss.......................... [ 29%]
+........................................................................ [ 30%]
+........EE.............................................................. [ 32%]
+........................................................................ [ 33%]
+........................................................................ [ 34%]
+........................................................................ [ 36%]
+........................................................................ [ 37%]
+........................................................................ [ 39%]
+........................................................................ [ 40%]
+........................................................................ [ 41%]
+........................................................................ [ 43%]
+........................................................................ [ 44%]
+........................................................................ [ 45%]
+.............................................................s.......... [ 47%]
+........................................................................ [ 48%]
+........................................................................ [ 49%]
+........................................................................ [ 51%]
+........................................................................ [ 52%]
+............................................................s........... [ 53%]
+........................................................................ [ 55%]
+...............................s......s......s........................ss [ 56%]
+s....................................................................... [ 57%]
+........................................................................ [ 59%]
+........................................................................ [ 60%]
+........................................................................ [ 61%]
+........................................................................ [ 63%]
+........................................................................ [ 64%]
+........................................................................ [ 65%]
+....................s......ssssssssss..ss............................... [ 67%]
+........................................................................ [ 68%]
+........................................................................ [ 69%]
+........................................................................ [ 71%]
+........................................................................ [ 72%]
+................ssssssssssssssssssssssssssssss.......................... [ 73%]
+........................................................................ [ 75%]
+........................................................................ [ 76%]
+........................................................................ [ 78%]
+.............................................................sssssssssss [ 79%]
+ss.......ssssssssssssssssssssss......................................... [ 80%]
+............................sssssss...ssssss..........................ss [ 82%]
+ssssss.................ssss.sssssssssss................................s [ 83%]
+sssssssssssssssss........................s..........sssssssss........... [ 84%]
+..................................................F.........FF.......... [ 86%]
+...............................ssssssssssssssssssssssss.sssss........... [ 87%]
+...................................................................s.... [ 88%]
+......................................................sss.....ss........ [ 90%]
+.........s...........sssssssssss........................................ [ 91%]
+........................................................................ [ 92%]
+........................................................................ [ 94%]
+........................................................................ [ 95%]
+........................................................................ [ 96%]
+........................................................................ [ 98%]
+........................................................................ [ 99%]
+........................                                                 [100%]
+==================================== ERRORS ====================================
+__ ERROR at setup of test_nondefault_family_reaches_selected_probability_path __
+
+    @pytest.fixture(scope="module")
+    def report() -> dict:
+>       return C.run()
+               ^^^^^^^
+
+test/test_g23_229_family_selection_control.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/g23_229_family_selection_control.py:24: in run
+    path = L._calib_path(spec, L.CALIB_TEMPLATE_WAVE4)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+spec = {'mode': 'poisson', 'rho_bar': 0.9}
+tpl = 'results/LIVE/phase-21R/calib_set_{mode}_{rho:.3f}_U3_measured_v7.parquet'
+
+    def _calib_path(spec: Mapping[str, Any], tpl: str | None) -> str:
+        """Resolve regenerated input and fail loudly instead of using dead L51 paths."""
+        if tpl is None:
+            if "parquet" not in spec:
+                raise SystemExit(
+                    "cell %s@%.3f khong co duong parquet co dinh (4 parquet "
+                    "Phase 22 da mat -- L51b). Truyen --calib-template."
+                    % (spec["mode"], float(spec["rho_bar"]))
+                )
+            return str(spec["parquet"])
+        path = tpl.format(mode=spec["mode"], rho=float(spec["rho_bar"]))
+        if not os.path.exists(path):
+>           raise FileNotFoundError(
+                "thieu calib_set: %s\n  -> chay tools/run_23_20_matrix.py "
+                "--wave 4" % path
+            )
+E           FileNotFoundError: thieu calib_set: results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet
+E             -> chay tools/run_23_20_matrix.py --wave 4
+
+cert/live_region_sweep.py:77: FileNotFoundError
+______ ERROR at setup of test_forced_action_family_is_a_positive_control _______
+
+    @pytest.fixture(scope="module")
+    def report() -> dict:
+>       return C.run()
+               ^^^^^^^
+
+test/test_g23_229_family_selection_control.py:11: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/g23_229_family_selection_control.py:24: in run
+    path = L._calib_path(spec, L.CALIB_TEMPLATE_WAVE4)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+spec = {'mode': 'poisson', 'rho_bar': 0.9}
+tpl = 'results/LIVE/phase-21R/calib_set_{mode}_{rho:.3f}_U3_measured_v7.parquet'
+
+    def _calib_path(spec: Mapping[str, Any], tpl: str | None) -> str:
+        """Resolve regenerated input and fail loudly instead of using dead L51 paths."""
+        if tpl is None:
+            if "parquet" not in spec:
+                raise SystemExit(
+                    "cell %s@%.3f khong co duong parquet co dinh (4 parquet "
+                    "Phase 22 da mat -- L51b). Truyen --calib-template."
+                    % (spec["mode"], float(spec["rho_bar"]))
+                )
+            return str(spec["parquet"])
+        path = tpl.format(mode=spec["mode"], rho=float(spec["rho_bar"]))
+        if not os.path.exists(path):
+>           raise FileNotFoundError(
+                "thieu calib_set: %s\n  -> chay tools/run_23_20_matrix.py "
+                "--wave 4" % path
+            )
+E           FileNotFoundError: thieu calib_set: results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet
+E             -> chay tools/run_23_20_matrix.py --wave 4
+
+cert/live_region_sweep.py:77: FileNotFoundError
+=================================== FAILURES ===================================
+_____________ test_historical_producer_cli[hygiene-hygiene_checks] _____________
+
+kind = 'hygiene', name = 'hygiene_checks'
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-4/test_historical_producer_cli_h0')
+
+    @pytest.mark.parametrize("kind,name",[("hygiene","hygiene_checks"),("grid","realizability_grid")])
+    def test_historical_producer_cli(kind,name,tmp_path):
+        out=tmp_path/"replay.json"
+>       subprocess.run([sys.executable,"-m","tools.20r2_9_regenerate_legacy_metadata","--kind",kind,"--out",str(out)],cwd=ROOT,check=True,capture_output=True)
+
+test/test_20r2_9_legacy_metadata.py:10: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = True, timeout = None, check = True
+popenargs = (['/home/ubuntu/miniforge3/envs/sdn_rl/bin/python', '-m', 'tools.20r2_9_regenerate_legacy_metadata', '--kind', 'hygiene', '--out', ...],)
+kwargs = {'cwd': PosixPath('/tmp/dt4n-c-clean'), 'stderr': -1, 'stdout': -1}
+process = <Popen: returncode: 1 args: ['/home/ubuntu/miniforge3/envs/sdn_rl/bin/python...>
+stdout = b''
+stderr = b'Traceback (most recent call last):\n  File "<frozen runpy>", line 198, in _run_module_as_main\n  File "<frozen runpy...dError: [Errno 2] No such file or directory: \'/tmp/dt4n-c-clean/results/PENDING/phase-T2/sweep/t2_6_r0000.parquet\'\n'
+retcode = 1
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['/home/ubuntu/miniforge3/envs/sdn_rl/bin/python', '-m', 'tools.20r2_9_regenerate_legacy_metadata', '--kind', 'hygiene', '--out', '/tmp/pytest-of-ubuntu/pytest-4/test_historical_producer_cli_h0/replay.json']' returned non-zero exit status 1.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+___________________ test_digest_build_covers_passing_ledger ____________________
+
+    def test_digest_build_covers_passing_ledger() -> None:
+>       payload = D.build()
+                  ^^^^^^^^^
+
+test/test_capture_wave4_digests.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+    def build() -> dict:
+        paths = planned_parquets()
+        if len(paths) != len(set(paths)) or len(paths) != 12:
+            raise SystemExit("Wave 4 must resolve to exactly 12 unique parquets")
+        missing = [str(path) for path in paths if not path.is_file()]
+        if missing:
+>           raise SystemExit("missing Wave-4 parquets: %s" % missing)
+E           SystemExit: missing Wave-4 parquets: ['results/LIVE/phase-21R/calib_set_h2_0.650_U3_measured_v7.parquet', 'results/LIVE/phase-21R/calib_set_h2_0.675_U3_measured_v7.parquet', 'results/LIVE/phase-21R/calib_set_poisson_0.875_U3_measured_v7.parquet', 'results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet', 'results/SUPERSEDED/phase-21R/calib_set_h2_0.650_U0_legacy_sawtooth_51ms.parquet', 'results/LIVE/phase-21R/calib_set_h2_0.650_U0_measured_v7.parquet', 'results/SUPERSEDED/phase-21R/calib_set_h2_0.675_U0_legacy_sawtooth_51ms.parquet', 'results/LIVE/phase-21R/calib_set_h2_0.675_U0_measured_v7.parquet', 'results/SUPERSEDED/phase-21R/calib_set_poisson_0.875_U0_legacy_sawtooth_51ms.parquet', 'results/LIVE/phase-21R/calib_set_poisson_0.875_U0_measured_v7.parquet', 'results/SUPERSEDED/phase-21R/calib_set_poisson_0.900_U0_legacy_sawtooth_51ms.parquet', 'results/LIVE/phase-21R/calib_set_poisson_0.900_U0_measured_v7.parquet']
+
+tools/capture_wave4_digests.py:41: SystemExit
+_________________________ test_end_to_end_tai_lap_duoc _________________________
+
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-4/test_end_to_end_tai_lap_duoc0')
+
+    @pytest.mark.slow
+    def test_end_to_end_tai_lap_duoc(tmp_path):
+        """Chay lai toan bo (~2 phut) va doi chieu cac truong quyet dinh."""
+>       out = F.build(str(tmp_path / "out.json"))
+              ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_phase23_lesson237_feasibility.py:214: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cert/lesson23_7_feasibility.py:440: in build
+    astar = verify_astar_reproduces(base)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cert/lesson23_7_feasibility.py:193: in verify_astar_reproduces
+    ref = pd.read_parquet(MAIN_CALIB, columns=["a_star", "a_twin", "block_id", "z_s", "is_calib"])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:671: in read_parquet
+    return impl.read(
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:253: in read
+    path_or_handle, handles, filesystem = _get_path_or_handle(
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:141: in _get_path_or_handle
+    handles = get_handle(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path_or_buf = 'results/SUPERSEDED/phase-22/calib_set_v3.parquet', mode = 'rb'
+
+    def get_handle(
+        path_or_buf: FilePath | BaseBuffer,
+        mode: str,
+        *,
+        encoding: str | None = None,
+        compression: CompressionOptions | None = None,
+        memory_map: bool = False,
+        is_text: bool = True,
+        errors: str | None = None,
+        storage_options: StorageOptions | None = None,
+    ) -> IOHandles[str] | IOHandles[bytes]:
+        """
+        Get file handle for given path/buffer and mode.
+    
+        Parameters
+        ----------
+        path_or_buf : str or file handle
+            File path or object.
+        mode : str
+            Mode to open path_or_buf with.
+        encoding : str or None
+            Encoding to use.
+        compression : str or dict, default 'infer'
+            For on-the-fly compression of the output data. If 'infer' and 'path_or_buf'
+            is path-like, then detect compression from the following extensions: '.gz',
+            '.bz2', '.zip', '.xz', '.zst', '.tar', '.tar.gz', '.tar.xz' or '.tar.bz2'
+            (otherwise no compression).
+            Set to ``None`` for no compression.
+            Can also be a dict with key ``'method'`` set
+            to one of {``'zip'``, ``'gzip'``, ``'bz2'``, ``'zstd'``, ``'xz'``, ``'tar'``}
+            and other key-value pairs are forwarded to
+            ``zipfile.ZipFile``, ``gzip.GzipFile``,
+            ``bz2.BZ2File``, ``zstandard.ZstdCompressor``, ``lzma.LZMAFile`` or
+            ``tarfile.TarFile``, respectively.
+            As an example, the following could be passed for faster compression and to
+            create a reproducible gzip archive:
+            ``compression={'method': 'gzip', 'compresslevel': 1, 'mtime': 1}``.
+    
+               May be a dict with key 'method' as compression mode
+               and other keys as compression options if compression
+               mode is 'zip'.
+    
+               Passing compression options as keys in dict is
+               supported for compression modes 'gzip', 'bz2', 'zstd' and 'zip'.
+    
+        memory_map : bool, default False
+            See parsers._parser_params for more information. Only used by read_csv.
+        is_text : bool, default True
+            Whether the type of the content passed to the file/buffer is string or
+            bytes. This is not the same as `"b" not in mode`. If a string content is
+            passed to a binary file/buffer, a wrapper is inserted.
+        errors : str, default 'strict'
+            Specifies how encoding and decoding errors are to be handled.
+            See the errors argument for :func:`open` for a full list
+            of options.
+        storage_options: StorageOptions = None
+            Passed to _get_filepath_or_buffer
+    
+        Returns the dataclass IOHandles
+        """
+        # Windows does not default to utf-8. Set to utf-8 for a consistent behavior
+        encoding = encoding or "utf-8"
+    
+        errors = errors or "strict"
+    
+        # read_csv does not know whether the buffer is opened in binary/text mode
+        if _is_binary_mode(path_or_buf, mode) and "b" not in mode:
+            mode += "b"
+    
+        # validate encoding and errors
+        codecs.lookup(encoding)
+        if isinstance(errors, str):
+            codecs.lookup_error(errors)
+    
+        # open URLs
+        ioargs = _get_filepath_or_buffer(
+            path_or_buf,
+            encoding=encoding,
+            compression=compression,
+            mode=mode,
+            storage_options=storage_options,
+        )
+    
+        handle = ioargs.filepath_or_buffer
+        handles: list[BaseBuffer]
+    
+        # memory mapping needs to be the first step
+        # only used for read_csv
+        handle, memory_map, handles = _maybe_memory_map(handle, memory_map)
+    
+        is_path = isinstance(handle, str)
+        compression_args = dict(ioargs.compression)
+        compression = compression_args.pop("method")
+    
+        # Only for write methods
+        if "r" not in mode and is_path:
+            check_parent_directory(str(handle))
+    
+        if compression:
+            if compression != "zstd":
+                # compression libraries do not like an explicit text-mode
+                ioargs.mode = ioargs.mode.replace("t", "")
+            elif compression == "zstd" and "b" not in ioargs.mode:
+                # python-zstandard defaults to text mode, but we always expect
+                # compression libraries to use binary mode.
+                ioargs.mode += "b"
+    
+            # GZ Compression
+            if compression == "gzip":
+                if isinstance(handle, str):
+                    # error: Incompatible types in assignment (expression has type
+                    # "GzipFile", variable has type "Union[str, BaseBuffer]")
+                    handle = gzip.GzipFile(  # type: ignore[assignment]
+                        filename=handle,
+                        mode=ioargs.mode,
+                        **compression_args,
+                    )
+                else:
+                    handle = gzip.GzipFile(
+                        # No overload variant of "GzipFile" matches argument types
+                        # "Union[str, BaseBuffer]", "str", "Dict[str, Any]"
+                        fileobj=handle,  # type: ignore[call-overload]
+                        mode=ioargs.mode,
+                        **compression_args,
+                    )
+    
+            # BZ Compression
+            elif compression == "bz2":
+                import bz2
+    
+                # Overload of "BZ2File" to handle pickle protocol 5
+                # "Union[str, BaseBuffer]", "str", "Dict[str, Any]"
+                handle = bz2.BZ2File(  # type: ignore[call-overload]
+                    handle,
+                    mode=ioargs.mode,
+                    **compression_args,
+                )
+    
+            # ZIP Compression
+            elif compression == "zip":
+                # error: Argument 1 to "_BytesZipFile" has incompatible type
+                # "Union[str, BaseBuffer]"; expected "Union[Union[str, PathLike[str]],
+                # ReadBuffer[bytes], WriteBuffer[bytes]]"
+                handle = _BytesZipFile(
+                    handle,  # type: ignore[arg-type]
+                    ioargs.mode,
+                    **compression_args,
+                )
+                if handle.buffer.mode == "r":
+                    handles.append(handle)
+                    zip_names = handle.buffer.namelist()
+                    if len(zip_names) == 1:
+                        handle = handle.buffer.open(zip_names.pop())
+                    elif not zip_names:
+                        raise ValueError(f"Zero files found in ZIP file {path_or_buf}")
+                    else:
+                        raise ValueError(
+                            "Multiple files found in ZIP file. "
+                            f"Only one file per ZIP: {zip_names}"
+                        )
+    
+            # TAR Encoding
+            elif compression == "tar":
+                compression_args.setdefault("mode", ioargs.mode)
+                if isinstance(handle, str):
+                    handle = _BytesTarFile(name=handle, **compression_args)
+                else:
+                    # error: Argument "fileobj" to "_BytesTarFile" has incompatible
+                    # type "BaseBuffer"; expected "Union[ReadBuffer[bytes],
+                    # WriteBuffer[bytes], None]"
+                    handle = _BytesTarFile(
+                        fileobj=handle,  # type: ignore[arg-type]
+                        **compression_args,
+                    )
+                assert isinstance(handle, _BytesTarFile)
+                if "r" in handle.buffer.mode:
+                    handles.append(handle)
+                    files = handle.buffer.getnames()
+                    if len(files) == 1:
+                        file = handle.buffer.extractfile(files[0])
+                        assert file is not None
+                        handle = file
+                    elif not files:
+                        raise ValueError(f"Zero files found in TAR archive {path_or_buf}")
+                    else:
+                        raise ValueError(
+                            "Multiple files found in TAR archive. "
+                            f"Only one file per TAR archive: {files}"
+                        )
+    
+            # XZ Compression
+            elif compression == "xz":
+                # error: Argument 1 to "LZMAFile" has incompatible type "Union[str,
+                # BaseBuffer]"; expected "Optional[Union[Union[str, bytes, PathLike[str],
+                # PathLike[bytes]], IO[bytes]], None]"
+                import lzma
+    
+                handle = lzma.LZMAFile(
+                    handle,  # type: ignore[arg-type]
+                    ioargs.mode,
+                    **compression_args,
+                )
+    
+            # Zstd Compression
+            elif compression == "zstd":
+                zstd = import_optional_dependency("zstandard")
+                if "r" in ioargs.mode:
+                    open_args = {"dctx": zstd.ZstdDecompressor(**compression_args)}
+                else:
+                    open_args = {"cctx": zstd.ZstdCompressor(**compression_args)}
+                handle = zstd.open(
+                    handle,
+                    mode=ioargs.mode,
+                    **open_args,
+                )
+    
+            # Unrecognized Compression
+            else:
+                msg = f"Unrecognized compression type: {compression}"
+                raise ValueError(msg)
+    
+            assert not isinstance(handle, str)
+            handles.append(handle)
+    
+        elif isinstance(handle, str):
+            # Check whether the filename is to be opened in binary mode.
+            # Binary mode does not support 'encoding' and 'newline'.
+            if ioargs.encoding and "b" not in ioargs.mode:
+                # Encoding
+                handle = open(
+                    handle,
+                    ioargs.mode,
+                    encoding=ioargs.encoding,
+                    errors=errors,
+                    newline="",
+                )
+            else:
+                # Binary mode
+>               handle = open(handle, ioargs.mode)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E               FileNotFoundError: [Errno 2] No such file or directory: 'results/SUPERSEDED/phase-22/calib_set_v3.parquet'
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/common.py:935: FileNotFoundError
+_____ test_refactor_khong_doi_mot_con_so_nao[lesson23_7_range_calibration] _____
+
+name = 'lesson23_7_range_calibration'
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-4/test_refactor_khong_doi_mot_co0')
+
+    @pytest.mark.slow
+    @pytest.mark.parametrize("name", CALIBRATION_SCRIPTS)
+    def test_refactor_khong_doi_mot_con_so_nao(name, tmp_path):
+        """Chay lai script va doi chieu tung con so voi artifact da commit."""
+        import importlib
+    
+        artifact = "results/SUPERSEDED/phase-23/%s.json" % name
+        if not os.path.exists(artifact):
+            pytest.skip("chua co artifact %s" % artifact)
+        with open(artifact, "r", encoding="utf-8") as fh:
+            committed = _strip_provenance(json.load(fh))
+    
+        mod = importlib.import_module("cert.%s" % name)
+        fresh = json.loads(json.dumps(mod.json_clean(mod.build(str(tmp_path / "o.json")))
+                                      if hasattr(mod, "json_clean")
+>                                     else mod._json_clean(mod.build(str(tmp_path / "o.json")))))
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_phase23_lesson237_structure.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cert/lesson23_7_range_calibration.py:581: in build
+    df = pd.read_parquet(MAIN_CALIB)
+         ^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:671: in read_parquet
+    return impl.read(
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:253: in read
+    path_or_handle, handles, filesystem = _get_path_or_handle(
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:141: in _get_path_or_handle
+    handles = get_handle(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path_or_buf = 'results/SUPERSEDED/phase-22/calib_set_v3.parquet', mode = 'rb'
+
+    def get_handle(
+        path_or_buf: FilePath | BaseBuffer,
+        mode: str,
+        *,
+        encoding: str | None = None,
+        compression: CompressionOptions | None = None,
+        memory_map: bool = False,
+        is_text: bool = True,
+        errors: str | None = None,
+        storage_options: StorageOptions | None = None,
+    ) -> IOHandles[str] | IOHandles[bytes]:
+        """
+        Get file handle for given path/buffer and mode.
+    
+        Parameters
+        ----------
+        path_or_buf : str or file handle
+            File path or object.
+        mode : str
+            Mode to open path_or_buf with.
+        encoding : str or None
+            Encoding to use.
+        compression : str or dict, default 'infer'
+            For on-the-fly compression of the output data. If 'infer' and 'path_or_buf'
+            is path-like, then detect compression from the following extensions: '.gz',
+            '.bz2', '.zip', '.xz', '.zst', '.tar', '.tar.gz', '.tar.xz' or '.tar.bz2'
+            (otherwise no compression).
+            Set to ``None`` for no compression.
+            Can also be a dict with key ``'method'`` set
+            to one of {``'zip'``, ``'gzip'``, ``'bz2'``, ``'zstd'``, ``'xz'``, ``'tar'``}
+            and other key-value pairs are forwarded to
+            ``zipfile.ZipFile``, ``gzip.GzipFile``,
+            ``bz2.BZ2File``, ``zstandard.ZstdCompressor``, ``lzma.LZMAFile`` or
+            ``tarfile.TarFile``, respectively.
+            As an example, the following could be passed for faster compression and to
+            create a reproducible gzip archive:
+            ``compression={'method': 'gzip', 'compresslevel': 1, 'mtime': 1}``.
+    
+               May be a dict with key 'method' as compression mode
+               and other keys as compression options if compression
+               mode is 'zip'.
+    
+               Passing compression options as keys in dict is
+               supported for compression modes 'gzip', 'bz2', 'zstd' and 'zip'.
+    
+        memory_map : bool, default False
+            See parsers._parser_params for more information. Only used by read_csv.
+        is_text : bool, default True
+            Whether the type of the content passed to the file/buffer is string or
+            bytes. This is not the same as `"b" not in mode`. If a string content is
+            passed to a binary file/buffer, a wrapper is inserted.
+        errors : str, default 'strict'
+            Specifies how encoding and decoding errors are to be handled.
+            See the errors argument for :func:`open` for a full list
+            of options.
+        storage_options: StorageOptions = None
+            Passed to _get_filepath_or_buffer
+    
+        Returns the dataclass IOHandles
+        """
+        # Windows does not default to utf-8. Set to utf-8 for a consistent behavior
+        encoding = encoding or "utf-8"
+    
+        errors = errors or "strict"
+    
+        # read_csv does not know whether the buffer is opened in binary/text mode
+        if _is_binary_mode(path_or_buf, mode) and "b" not in mode:
+            mode += "b"
+    
+        # validate encoding and errors
+        codecs.lookup(encoding)
+        if isinstance(errors, str):
+            codecs.lookup_error(errors)
+    
+        # open URLs
+        ioargs = _get_filepath_or_buffer(
+            path_or_buf,
+            encoding=encoding,
+            compression=compression,
+            mode=mode,
+            storage_options=storage_options,
+        )
+    
+        handle = ioargs.filepath_or_buffer
+        handles: list[BaseBuffer]
+    
+        # memory mapping needs to be the first step
+        # only used for read_csv
+        handle, memory_map, handles = _maybe_memory_map(handle, memory_map)
+    
+        is_path = isinstance(handle, str)
+        compression_args = dict(ioargs.compression)
+        compression = compression_args.pop("method")
+    
+        # Only for write methods
+        if "r" not in mode and is_path:
+            check_parent_directory(str(handle))
+    
+        if compression:
+            if compression != "zstd":
+                # compression libraries do not like an explicit text-mode
+                ioargs.mode = ioargs.mode.replace("t", "")
+            elif compression == "zstd" and "b" not in ioargs.mode:
+                # python-zstandard defaults to text mode, but we always expect
+                # compression libraries to use binary mode.
+                ioargs.mode += "b"
+    
+            # GZ Compression
+            if compression == "gzip":
+                if isinstance(handle, str):
+                    # error: Incompatible types in assignment (expression has type
+                    # "GzipFile", variable has type "Union[str, BaseBuffer]")
+                    handle = gzip.GzipFile(  # type: ignore[assignment]
+                        filename=handle,
+                        mode=ioargs.mode,
+                        **compression_args,
+                    )
+                else:
+                    handle = gzip.GzipFile(
+                        # No overload variant of "GzipFile" matches argument types
+                        # "Union[str, BaseBuffer]", "str", "Dict[str, Any]"
+                        fileobj=handle,  # type: ignore[call-overload]
+                        mode=ioargs.mode,
+                        **compression_args,
+                    )
+    
+            # BZ Compression
+            elif compression == "bz2":
+                import bz2
+    
+                # Overload of "BZ2File" to handle pickle protocol 5
+                # "Union[str, BaseBuffer]", "str", "Dict[str, Any]"
+                handle = bz2.BZ2File(  # type: ignore[call-overload]
+                    handle,
+                    mode=ioargs.mode,
+                    **compression_args,
+                )
+    
+            # ZIP Compression
+            elif compression == "zip":
+                # error: Argument 1 to "_BytesZipFile" has incompatible type
+                # "Union[str, BaseBuffer]"; expected "Union[Union[str, PathLike[str]],
+                # ReadBuffer[bytes], WriteBuffer[bytes]]"
+                handle = _BytesZipFile(
+                    handle,  # type: ignore[arg-type]
+                    ioargs.mode,
+                    **compression_args,
+                )
+                if handle.buffer.mode == "r":
+                    handles.append(handle)
+                    zip_names = handle.buffer.namelist()
+                    if len(zip_names) == 1:
+                        handle = handle.buffer.open(zip_names.pop())
+                    elif not zip_names:
+                        raise ValueError(f"Zero files found in ZIP file {path_or_buf}")
+                    else:
+                        raise ValueError(
+                            "Multiple files found in ZIP file. "
+                            f"Only one file per ZIP: {zip_names}"
+                        )
+    
+            # TAR Encoding
+            elif compression == "tar":
+                compression_args.setdefault("mode", ioargs.mode)
+                if isinstance(handle, str):
+                    handle = _BytesTarFile(name=handle, **compression_args)
+                else:
+                    # error: Argument "fileobj" to "_BytesTarFile" has incompatible
+                    # type "BaseBuffer"; expected "Union[ReadBuffer[bytes],
+                    # WriteBuffer[bytes], None]"
+                    handle = _BytesTarFile(
+                        fileobj=handle,  # type: ignore[arg-type]
+                        **compression_args,
+                    )
+                assert isinstance(handle, _BytesTarFile)
+                if "r" in handle.buffer.mode:
+                    handles.append(handle)
+                    files = handle.buffer.getnames()
+                    if len(files) == 1:
+                        file = handle.buffer.extractfile(files[0])
+                        assert file is not None
+                        handle = file
+                    elif not files:
+                        raise ValueError(f"Zero files found in TAR archive {path_or_buf}")
+                    else:
+                        raise ValueError(
+                            "Multiple files found in TAR archive. "
+                            f"Only one file per TAR archive: {files}"
+                        )
+    
+            # XZ Compression
+            elif compression == "xz":
+                # error: Argument 1 to "LZMAFile" has incompatible type "Union[str,
+                # BaseBuffer]"; expected "Optional[Union[Union[str, bytes, PathLike[str],
+                # PathLike[bytes]], IO[bytes]], None]"
+                import lzma
+    
+                handle = lzma.LZMAFile(
+                    handle,  # type: ignore[arg-type]
+                    ioargs.mode,
+                    **compression_args,
+                )
+    
+            # Zstd Compression
+            elif compression == "zstd":
+                zstd = import_optional_dependency("zstandard")
+                if "r" in ioargs.mode:
+                    open_args = {"dctx": zstd.ZstdDecompressor(**compression_args)}
+                else:
+                    open_args = {"cctx": zstd.ZstdCompressor(**compression_args)}
+                handle = zstd.open(
+                    handle,
+                    mode=ioargs.mode,
+                    **open_args,
+                )
+    
+            # Unrecognized Compression
+            else:
+                msg = f"Unrecognized compression type: {compression}"
+                raise ValueError(msg)
+    
+            assert not isinstance(handle, str)
+            handles.append(handle)
+    
+        elif isinstance(handle, str):
+            # Check whether the filename is to be opened in binary mode.
+            # Binary mode does not support 'encoding' and 'newline'.
+            if ioargs.encoding and "b" not in ioargs.mode:
+                # Encoding
+                handle = open(
+                    handle,
+                    ioargs.mode,
+                    encoding=ioargs.encoding,
+                    errors=errors,
+                    newline="",
+                )
+            else:
+                # Binary mode
+>               handle = open(handle, ioargs.mode)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E               FileNotFoundError: [Errno 2] No such file or directory: 'results/SUPERSEDED/phase-22/calib_set_v3.parquet'
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/common.py:935: FileNotFoundError
+________ test_refactor_khong_doi_mot_con_so_nao[lesson23_7_feasibility] ________
+
+name = 'lesson23_7_feasibility'
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-4/test_refactor_khong_doi_mot_co1')
+
+    @pytest.mark.slow
+    @pytest.mark.parametrize("name", CALIBRATION_SCRIPTS)
+    def test_refactor_khong_doi_mot_con_so_nao(name, tmp_path):
+        """Chay lai script va doi chieu tung con so voi artifact da commit."""
+        import importlib
+    
+        artifact = "results/SUPERSEDED/phase-23/%s.json" % name
+        if not os.path.exists(artifact):
+            pytest.skip("chua co artifact %s" % artifact)
+        with open(artifact, "r", encoding="utf-8") as fh:
+            committed = _strip_provenance(json.load(fh))
+    
+        mod = importlib.import_module("cert.%s" % name)
+        fresh = json.loads(json.dumps(mod.json_clean(mod.build(str(tmp_path / "o.json")))
+                                      if hasattr(mod, "json_clean")
+>                                     else mod._json_clean(mod.build(str(tmp_path / "o.json")))))
+                                                           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_phase23_lesson237_structure.py:154: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+cert/lesson23_7_feasibility.py:440: in build
+    astar = verify_astar_reproduces(base)
+            ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+cert/lesson23_7_feasibility.py:193: in verify_astar_reproduces
+    ref = pd.read_parquet(MAIN_CALIB, columns=["a_star", "a_twin", "block_id", "z_s", "is_calib"])
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:671: in read_parquet
+    return impl.read(
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:253: in read
+    path_or_handle, handles, filesystem = _get_path_or_handle(
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/parquet.py:141: in _get_path_or_handle
+    handles = get_handle(
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+path_or_buf = 'results/SUPERSEDED/phase-22/calib_set_v3.parquet', mode = 'rb'
+
+    def get_handle(
+        path_or_buf: FilePath | BaseBuffer,
+        mode: str,
+        *,
+        encoding: str | None = None,
+        compression: CompressionOptions | None = None,
+        memory_map: bool = False,
+        is_text: bool = True,
+        errors: str | None = None,
+        storage_options: StorageOptions | None = None,
+    ) -> IOHandles[str] | IOHandles[bytes]:
+        """
+        Get file handle for given path/buffer and mode.
+    
+        Parameters
+        ----------
+        path_or_buf : str or file handle
+            File path or object.
+        mode : str
+            Mode to open path_or_buf with.
+        encoding : str or None
+            Encoding to use.
+        compression : str or dict, default 'infer'
+            For on-the-fly compression of the output data. If 'infer' and 'path_or_buf'
+            is path-like, then detect compression from the following extensions: '.gz',
+            '.bz2', '.zip', '.xz', '.zst', '.tar', '.tar.gz', '.tar.xz' or '.tar.bz2'
+            (otherwise no compression).
+            Set to ``None`` for no compression.
+            Can also be a dict with key ``'method'`` set
+            to one of {``'zip'``, ``'gzip'``, ``'bz2'``, ``'zstd'``, ``'xz'``, ``'tar'``}
+            and other key-value pairs are forwarded to
+            ``zipfile.ZipFile``, ``gzip.GzipFile``,
+            ``bz2.BZ2File``, ``zstandard.ZstdCompressor``, ``lzma.LZMAFile`` or
+            ``tarfile.TarFile``, respectively.
+            As an example, the following could be passed for faster compression and to
+            create a reproducible gzip archive:
+            ``compression={'method': 'gzip', 'compresslevel': 1, 'mtime': 1}``.
+    
+               May be a dict with key 'method' as compression mode
+               and other keys as compression options if compression
+               mode is 'zip'.
+    
+               Passing compression options as keys in dict is
+               supported for compression modes 'gzip', 'bz2', 'zstd' and 'zip'.
+    
+        memory_map : bool, default False
+            See parsers._parser_params for more information. Only used by read_csv.
+        is_text : bool, default True
+            Whether the type of the content passed to the file/buffer is string or
+            bytes. This is not the same as `"b" not in mode`. If a string content is
+            passed to a binary file/buffer, a wrapper is inserted.
+        errors : str, default 'strict'
+            Specifies how encoding and decoding errors are to be handled.
+            See the errors argument for :func:`open` for a full list
+            of options.
+        storage_options: StorageOptions = None
+            Passed to _get_filepath_or_buffer
+    
+        Returns the dataclass IOHandles
+        """
+        # Windows does not default to utf-8. Set to utf-8 for a consistent behavior
+        encoding = encoding or "utf-8"
+    
+        errors = errors or "strict"
+    
+        # read_csv does not know whether the buffer is opened in binary/text mode
+        if _is_binary_mode(path_or_buf, mode) and "b" not in mode:
+            mode += "b"
+    
+        # validate encoding and errors
+        codecs.lookup(encoding)
+        if isinstance(errors, str):
+            codecs.lookup_error(errors)
+    
+        # open URLs
+        ioargs = _get_filepath_or_buffer(
+            path_or_buf,
+            encoding=encoding,
+            compression=compression,
+            mode=mode,
+            storage_options=storage_options,
+        )
+    
+        handle = ioargs.filepath_or_buffer
+        handles: list[BaseBuffer]
+    
+        # memory mapping needs to be the first step
+        # only used for read_csv
+        handle, memory_map, handles = _maybe_memory_map(handle, memory_map)
+    
+        is_path = isinstance(handle, str)
+        compression_args = dict(ioargs.compression)
+        compression = compression_args.pop("method")
+    
+        # Only for write methods
+        if "r" not in mode and is_path:
+            check_parent_directory(str(handle))
+    
+        if compression:
+            if compression != "zstd":
+                # compression libraries do not like an explicit text-mode
+                ioargs.mode = ioargs.mode.replace("t", "")
+            elif compression == "zstd" and "b" not in ioargs.mode:
+                # python-zstandard defaults to text mode, but we always expect
+                # compression libraries to use binary mode.
+                ioargs.mode += "b"
+    
+            # GZ Compression
+            if compression == "gzip":
+                if isinstance(handle, str):
+                    # error: Incompatible types in assignment (expression has type
+                    # "GzipFile", variable has type "Union[str, BaseBuffer]")
+                    handle = gzip.GzipFile(  # type: ignore[assignment]
+                        filename=handle,
+                        mode=ioargs.mode,
+                        **compression_args,
+                    )
+                else:
+                    handle = gzip.GzipFile(
+                        # No overload variant of "GzipFile" matches argument types
+                        # "Union[str, BaseBuffer]", "str", "Dict[str, Any]"
+                        fileobj=handle,  # type: ignore[call-overload]
+                        mode=ioargs.mode,
+                        **compression_args,
+                    )
+    
+            # BZ Compression
+            elif compression == "bz2":
+                import bz2
+    
+                # Overload of "BZ2File" to handle pickle protocol 5
+                # "Union[str, BaseBuffer]", "str", "Dict[str, Any]"
+                handle = bz2.BZ2File(  # type: ignore[call-overload]
+                    handle,
+                    mode=ioargs.mode,
+                    **compression_args,
+                )
+    
+            # ZIP Compression
+            elif compression == "zip":
+                # error: Argument 1 to "_BytesZipFile" has incompatible type
+                # "Union[str, BaseBuffer]"; expected "Union[Union[str, PathLike[str]],
+                # ReadBuffer[bytes], WriteBuffer[bytes]]"
+                handle = _BytesZipFile(
+                    handle,  # type: ignore[arg-type]
+                    ioargs.mode,
+                    **compression_args,
+                )
+                if handle.buffer.mode == "r":
+                    handles.append(handle)
+                    zip_names = handle.buffer.namelist()
+                    if len(zip_names) == 1:
+                        handle = handle.buffer.open(zip_names.pop())
+                    elif not zip_names:
+                        raise ValueError(f"Zero files found in ZIP file {path_or_buf}")
+                    else:
+                        raise ValueError(
+                            "Multiple files found in ZIP file. "
+                            f"Only one file per ZIP: {zip_names}"
+                        )
+    
+            # TAR Encoding
+            elif compression == "tar":
+                compression_args.setdefault("mode", ioargs.mode)
+                if isinstance(handle, str):
+                    handle = _BytesTarFile(name=handle, **compression_args)
+                else:
+                    # error: Argument "fileobj" to "_BytesTarFile" has incompatible
+                    # type "BaseBuffer"; expected "Union[ReadBuffer[bytes],
+                    # WriteBuffer[bytes], None]"
+                    handle = _BytesTarFile(
+                        fileobj=handle,  # type: ignore[arg-type]
+                        **compression_args,
+                    )
+                assert isinstance(handle, _BytesTarFile)
+                if "r" in handle.buffer.mode:
+                    handles.append(handle)
+                    files = handle.buffer.getnames()
+                    if len(files) == 1:
+                        file = handle.buffer.extractfile(files[0])
+                        assert file is not None
+                        handle = file
+                    elif not files:
+                        raise ValueError(f"Zero files found in TAR archive {path_or_buf}")
+                    else:
+                        raise ValueError(
+                            "Multiple files found in TAR archive. "
+                            f"Only one file per TAR archive: {files}"
+                        )
+    
+            # XZ Compression
+            elif compression == "xz":
+                # error: Argument 1 to "LZMAFile" has incompatible type "Union[str,
+                # BaseBuffer]"; expected "Optional[Union[Union[str, bytes, PathLike[str],
+                # PathLike[bytes]], IO[bytes]], None]"
+                import lzma
+    
+                handle = lzma.LZMAFile(
+                    handle,  # type: ignore[arg-type]
+                    ioargs.mode,
+                    **compression_args,
+                )
+    
+            # Zstd Compression
+            elif compression == "zstd":
+                zstd = import_optional_dependency("zstandard")
+                if "r" in ioargs.mode:
+                    open_args = {"dctx": zstd.ZstdDecompressor(**compression_args)}
+                else:
+                    open_args = {"cctx": zstd.ZstdCompressor(**compression_args)}
+                handle = zstd.open(
+                    handle,
+                    mode=ioargs.mode,
+                    **open_args,
+                )
+    
+            # Unrecognized Compression
+            else:
+                msg = f"Unrecognized compression type: {compression}"
+                raise ValueError(msg)
+    
+            assert not isinstance(handle, str)
+            handles.append(handle)
+    
+        elif isinstance(handle, str):
+            # Check whether the filename is to be opened in binary mode.
+            # Binary mode does not support 'encoding' and 'newline'.
+            if ioargs.encoding and "b" not in ioargs.mode:
+                # Encoding
+                handle = open(
+                    handle,
+                    ioargs.mode,
+                    encoding=ioargs.encoding,
+                    errors=errors,
+                    newline="",
+                )
+            else:
+                # Binary mode
+>               handle = open(handle, ioargs.mode)
+                         ^^^^^^^^^^^^^^^^^^^^^^^^^
+E               FileNotFoundError: [Errno 2] No such file or directory: 'results/SUPERSEDED/phase-22/calib_set_v3.parquet'
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/site-packages/pandas/io/common.py:935: FileNotFoundError
+=============================== warnings summary ===============================
+bridge/command_agent.py:114
+bridge/command_agent.py:114
+  /tmp/dt4n-c-clean/bridge/command_agent.py:114: DeprecationWarning: datetime.datetime.utcnow() is deprecated and scheduled for removal in a future version. Use timezone-aware objects to represent datetimes in UTC: datetime.datetime.now(datetime.UTC).
+    'ts': datetime.datetime.utcnow().isoformat() + 'Z',
+
+-- Docs: https://docs.pytest.org/en/stable/how-to/capture-warnings.html
+=========================== short test summary info ============================
+FAILED test/test_20r2_9_legacy_metadata.py::test_historical_producer_cli[hygiene-hygiene_checks]
+FAILED test/test_capture_wave4_digests.py::test_digest_build_covers_passing_ledger
+FAILED test/test_phase23_lesson237_feasibility.py::test_end_to_end_tai_lap_duoc
+FAILED test/test_phase23_lesson237_structure.py::test_refactor_khong_doi_mot_con_so_nao[lesson23_7_range_calibration]
+FAILED test/test_phase23_lesson237_structure.py::test_refactor_khong_doi_mot_con_so_nao[lesson23_7_feasibility]
+ERROR test/test_g23_229_family_selection_control.py::test_nondefault_family_reaches_selected_probability_path
+ERROR test/test_g23_229_family_selection_control.py::test_forced_action_family_is_a_positive_control
+5 failed, 4991 passed, 354 skipped, 4 deselected, 2 warnings, 2 errors in 522.62s (0:08:42)

@@ -1,7 +1,7 @@
 # 20R2 — Sổ chấm bảy gate cấp phase, bổ sung 20R2.9-A
 
 Ngày 2026-09-14. Giữ nguyên `99-gate-decision.md` và các artifact đã đóng.
-Nguồn định nghĩa: hướng dẫn BƯỚC 2 do người dùng cung cấp và các mục prereg dẫn dưới đây. `PHASE_20R2.md` được hướng dẫn viện dẫn nhưng không có trong checkout/lịch sử tìm được; chưa đối chiếu trực tiếp tài liệu đó. Bảng có tám dòng vì lưu cả gate 3 đã rút và gate 3′ thay thế.
+Nguồn định nghĩa: khai **theo từng gate** trong [99c-gate-definition-sources.json](99c-gate-definition-sources.json) — 4/8 dòng trích được một câu chữ trong kho (file:dòng, có test kiểm), 2/8 chỉ viện dẫn, 2/8 không có nguồn trong kho. `PHASE_20R2.md` và `MASTER_PLAN_v10.md` được hướng dẫn viện dẫn nhưng không có trong checkout/lịch sử tìm được (20R2.9-C/C-1, `BLOCKED_INPUT_SOURCE`); chưa đối chiếu trực tiếp hai tài liệu đó và **không** tái dựng chúng. `test_a_missing_specification_cannot_arrive_unnoticed` sẽ đỏ ngay khi byte gốc xuất hiện, buộc nâng cấp sổ nguồn. Bảng có tám dòng vì lưu cả gate 3 đã rút và gate 3′ thay thế.
 
 Nhãn: PASS = thoả; FAIL = không thoả (VALIDITY phải sửa, không gọi là kết quả khoa học); VOID = tiền đề đã rút; DEFERRED = có phase nhận, amendment và điều kiện đóng; SUBSTITUTED = thay phép kiểm, phải công khai phần mất độ phủ.
 

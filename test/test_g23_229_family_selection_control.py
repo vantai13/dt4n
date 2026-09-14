@@ -5,6 +5,13 @@ import pytest
 
 from tools import g23_229_family_selection_control as C
 
+# [20R2.9-C/C-3] G23-222: mot test that bai vi VANG MAT du lieu ngoai git
+# phai mang mark `custody`. `C.run()` doc
+# results/LIVE/phase-21R/calib_set_poisson_0.900_U3_measured_v7.parquet (67 MB,
+# .gitignore:167). Tren clone sach hai test nay ERROR o setup fixture, nen CI
+# do THUONG TRUC ma khong do duoc gi. Van chay o may tac gia: `pytest -m custody`.
+pytestmark = pytest.mark.custody
+
 
 @pytest.fixture(scope="module")
 def report() -> dict:

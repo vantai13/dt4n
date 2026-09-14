@@ -199,6 +199,15 @@ results/**/phase-T2/traces/*.csv
 # Verified: 166 files, 10,940 rows, 3,097,390 bytes; SHA matches reports.
 !results/PENDING/phase-T2/sweep_r2/*.parquet
 
+# [20R2.9-C/C-3] Luot 1 (`sweep/`) bi BO SOT khi luot 2 duoc bao ton o tren.
+# Hau qua do duoc: `tools/20r2_9_regenerate_legacy_metadata --kind hygiene`
+# doc CA 166 parquet luot 1 va kiem sha256 cua chung, nen tren mot clone sach
+# no dung o FileNotFoundError -- tuc doi chung hygiene KHONG TON TAI voi
+# nguoi khac (prereg 15.2). Cung bac kich thuoc voi luot 2.
+# Da kiem truoc khi them: 166 file, 2,794,107 byte, 166/166 khop sha256 ghi
+# trong sweep/run_log.jsonl.
+!results/PENDING/phase-T2/sweep/*.parquet
+
 # [20R2.5-P6] Chien dich 20R2: parquet vao git qua ngoai le CO PHAM VI, theo
 # dung tien le 60a88784 (bao ton 166 parquet cua T2). Quyet TRUOC khi chay,
 # vi "mot ban giao chi co that khi no nam trong git" -- quyet sau khi da co

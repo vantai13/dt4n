@@ -1,0 +1,89 @@
+{
+  "schema": "dt4n.gate_definition_sources.v1",
+  "created": "2026-09-14",
+  "step": "20R2.9-C/C-1",
+  "why": "Sau kiem toan F1: ban than TIEU CHI CHAM DIEM cua bay gate cap phase nam NGOAI chuoi bang chung. 99b-gate-ledger.md ghi NHAN cho tung gate, nhung dinh nghia 'PASS nghia la gi' lai dan ve mot tai lieu khong co trong kho. So nay khong tai dung tai lieu do; no khai TUNG GATE mot cach kiem duoc: dinh nghia nam trong kho o dau, hoac khai ro la thieu nguon.",
+  "missing_documents": [
+    {
+      "name": "PHASE_20R2.md",
+      "searched": "find /home/ubuntu /tmp /mnt /workspace theo dung ten co so; git log --all --name-only; tep dinh kem",
+      "result": "0 ket qua o ca ba pham vi (C-validation/C1-source-search.log)",
+      "class": "UNVERIFIABLE_HERE theo docs/NT_REGISTRY.md",
+      "rule": "KHONG tai dung noi dung tu tri nho hoac tu ban kiem toan; muon dung phai commit byte goc truoc."
+    },
+    {
+      "name": "MASTER_PLAN_v10.md",
+      "searched": "nhu tren; ngoai ra duong dan duoc khai /mnt/user-data/uploads/MASTER_PLAN_v10.md khong ton tai",
+      "result": "0 ket qua; chi co docs/phase-23/MASTER_PLAN_v8-closeout-addendum.md",
+      "class": "EXTERNAL theo docs/NT_REGISTRY.md muc EXTERNAL",
+      "rule": "nhu tren."
+    }
+  ],
+  "gates": [
+    {
+      "gate": "20R2-1",
+      "status": "EXTERNAL_MISSING",
+      "named_source": "PHASE_20R2.md",
+      "note": "Tieu chi da ky la 'tai tao BIT-EXACT ket qua v8'. Cau chu do den tu huong dan BUOC 2, khong co ban trong kho. 99b ghi SUBSTITUTED va cong khai phan mat do phu; nhung nguoi doc kho hom nay KHONG the doi chieu voi cau chu goc."
+    },
+    {
+      "gate": "20R2-2",
+      "status": "IN_REPO",
+      "path": "docs/phase-20R2/00-preregistration.md",
+      "line": 871,
+      "quote": "≥ 7/8 điểm đơn điệu        → 20R2-2 PASS"
+    },
+    {
+      "gate": "20R2-3",
+      "status": "IN_REPO",
+      "path": "docs/phase-20R2/00-preregistration.md",
+      "line": 503,
+      "quote": "· gate 20R2-3 VOID vi omega khong phai truc -- KHONG vi G-A020",
+      "note": "Day la co so RUT gate, khong phai tieu chi PASS cua no."
+    },
+    {
+      "gate": "20R2-3′",
+      "status": "IN_REPO",
+      "path": "docs/phase-20R2/00-preregistration.md",
+      "line": 2026,
+      "quote": "Gate 20R2-3′ được thoả **một cách TẦM THƯỜNG**"
+    },
+    {
+      "gate": "20R2-4",
+      "status": "PARTIAL_IN_REPO",
+      "path": "docs/phase-20R2/00-preregistration.md",
+      "line": 564,
+      "quote": "[W5, RT20-7, gate 20R2-4 muc 4-2]",
+      "note": "Kho chi VIEN DAN 'muc 4-2'; van ban cua muc 4-2 nam trong tai lieu thieu. Phan chay duoc (320/320 REALIZABLE strict) co bang chung trong kho, phan DINH NGHIA thi khong."
+    },
+    {
+      "gate": "20R2-5",
+      "status": "IN_REPO",
+      "path": "docs/phase-20R2/00-preregistration.md",
+      "line": 417,
+      "quote": "⚠️ Cảnh báo khi ký gate `20R2-5` (\"CPU khớp ước tính ±30%\")",
+      "note": "Nguong ±30% duoc phat bieu trong kho; moc uoc tinh (29,4 phut hai nhanh) cung o dong nay."
+    },
+    {
+      "gate": "20R2-6",
+      "status": "EXTERNAL_MISSING",
+      "named_source": "PHASE_20R2.md",
+      "note": "Hai ve (a) truy nguyen va (b) lua chon tuong minh duoc phat bieu trong 99b, khong tim duoc ban dinh nghia nao trong kho de doi chieu."
+    },
+    {
+      "gate": "20R2-7",
+      "status": "PARTIAL_IN_REPO",
+      "path": "docs/phase-20R2/AMENDMENT-20R2-A2.md",
+      "line": 5,
+      "quote": "Gate 20R2-7 có nhãn **DEFERRED**. Phase nhận: **21R2**.",
+      "note": "Dieu kien HOAN lai nam trong kho; tieu chi PASS goc thi khong."
+    }
+  ],
+  "summary": {
+    "n_gates": 8,
+    "IN_REPO": 4,
+    "PARTIAL_IN_REPO": 2,
+    "EXTERNAL_MISSING": 2,
+    "reading": "4/8 dong gate co the doi chieu voi mot cau chu trong kho; 2/8 chi vien dan; 2/8 khong co nguon trong kho. KHONG duoc doc thanh 'F1 da sua'."
+  }
+}

@@ -136,8 +136,18 @@ def _diff(a: Any, b: Any, path: str = "") -> List[str]:
     return out
 
 
+# [20R2.9-C/C-3] G23-222: hai trong ba script nap
+# results/SUPERSEDED/phase-22/calib_set_v3.parquet (67 MB, ngoai git), nen tren
+# clone sach chung that bai vi VANG MAT du lieu. `calibration_2b` khong doc tep
+# do va VAN duoc chay o CI. Danh dau tung tham so, khong danh dau ca test.
+CUSTODY_BOUND_SCRIPTS = ("lesson23_7_range_calibration", "lesson23_7_feasibility")
+
+
 @pytest.mark.slow
-@pytest.mark.parametrize("name", CALIBRATION_SCRIPTS)
+@pytest.mark.parametrize("name", [
+    pytest.param(n, marks=pytest.mark.custody) if n in CUSTODY_BOUND_SCRIPTS else n
+    for n in CALIBRATION_SCRIPTS
+])
 def test_refactor_khong_doi_mot_con_so_nao(name, tmp_path):
     """Chay lai script va doi chieu tung con so voi artifact da commit."""
     import importlib

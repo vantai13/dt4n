@@ -1,0 +1,1337 @@
+F............F..........F..................F..............F..F.....FF... [  5%]
+....s...........FF........FF..FFFFF..................................... [ 10%]
+......................................................s................. [ 15%]
+........................................................................ [ 21%]
+.........................s......s......s........................sss..... [ 26%]
+........................................................................ [ 31%]
+........................................................................ [ 36%]
+........................................................................ [ 42%]
+........................................................................ [ 47%]
+........................................................................ [ 52%]
+........................................................................ [ 58%]
+........................................................................ [ 63%]
+..............s......ssssssssss..ss..................................... [ 68%]
+........................................................................ [ 73%]
+........................................................................ [ 79%]
+........................................................................ [ 84%]
+........................................................................ [ 89%]
+..........ssssssssssssssssssssssssssssss..................s............. [ 95%]
+.........................................F........................F      [100%]
+=================================== FAILURES ===================================
+________ test_grid_addition_preserves_every_original_value_and_identity ________
+
+    def test_grid_addition_preserves_every_original_value_and_identity():
+>       source=subprocess.check_output(['git','show','1de19e1c:measurements/decision_error_v2.py'],cwd=C.ROOT,text=True)
+               ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+test/test_20r2_9_s2.py:13: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'show', '1de19e1c:measurements/decision_error_v2.py'],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1, 'text': True}
+process = <Popen: returncode: 128 args: ['git', 'show', '1de19e1c:measurements/decisio...>
+stdout = '', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'show', '1de19e1c:measurements/decision_error_v2.py']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: invalid object name '1de19e1c'.
+__________ test_plan_is_deterministic_and_has_exact_signed_factorial ___________
+
+    def test_plan_is_deterministic_and_has_exact_signed_factorial():
+        P=importlib.import_module('tools.20r2_9_s2_plan')
+>       first=P.build();second=P.build()
+              ^^^^^^^^^
+
+test/test_20r2_9_s2.py:73: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+tools/20r2_9_s2_plan.py:21: in build
+    return {**C.provenance('tools/20r2_9_s2_plan.py',[C.OLD_PLAN,C.OLD_LOG,C.PRED,
+tools/sensitivity_20r2.py:38: in provenance
+    require_reading()
+tools/sensitivity_20r2.py:33: in require_reading
+    raw = subprocess.check_output(['git', 'show', READING_TAG+':'+READING], cwd=ROOT)
+          ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'show', 'phase-20R2-B-reading-signed:docs/phase-20R2/B0-reading-signed.md'],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1}
+process = <Popen: returncode: 128 args: ['git', 'show', 'phase-20R2-B-reading-signed:d...>
+stdout = b'', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'show', 'phase-20R2-B-reading-signed:docs/phase-20R2/B0-reading-signed.md']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: invalid object name 'phase-20R2-B-reading-signed'.
+______________ test_artifact_fields_actually_exist_in_the_harness ______________
+
+pred = {'acceptance_band': {'AXIS_FLOOR_why': 'do nhay CON LAI trong ho measured sau khi truc da ky, THEO TUNG tau (1.109% o ...', 'ARTIFACT_FIELD_LINE': 570, 'BRANCH': 'z_fixed', 'CODE': 'measurements/decision_error_v2.py : run_cell', ...}}, ...}
+
+    def test_artifact_fields_actually_exist_in_the_harness(pred):
+        """Estimand tro vao mot truong KHONG ton tai la mot estimand chet.
+    
+        Kiem bang DAU VET trong ma nguon, khong bang tri nho.
+        """
+        src = (ROOT / "measurements/decision_error_v2.py").read_text(encoding="utf-8")
+        import subprocess
+        # Frozen line references belong to the actual historical source.
+>       lines = subprocess.check_output([
+            "git", "show", "phase-20R2-erratum-1:measurements/decision_error_v2.py"
+        ], cwd=ROOT, text=True).splitlines()
+
+test/test_20r2_2_prediction.py:119: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'show', 'phase-20R2-erratum-1:measurements/decision_error_v2.py'],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1, 'text': True}
+process = <Popen: returncode: 128 args: ['git', 'show', 'phase-20R2-erratum-1:measurem...>
+stdout = '', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'show', 'phase-20R2-erratum-1:measurements/decision_error_v2.py']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: invalid object name 'phase-20R2-erratum-1'.
+____ test_the_prediction_tool_still_runs_and_reproduces_the_signed_content _____
+
+    def test_the_prediction_tool_still_runs_and_reproduces_the_signed_content():
+        """DAY CHUYEN, khong chi SAN PHAM.
+    
+        Hash ghim o tren bao ve artifact khoi bi SUA. No KHONG bao ve cong cu
+        khoi bi HONG: neu tools/20r2_2_predictions.py ngung chay, hash van khop
+        va moi test van xanh -- artifact chi la mot tep tren dia. Do la dung lo
+        hong da de tools/20r2_0_axis_audit.py thoat ma 1 suot 3 commit.
+    
+        So sanh NOI DUNG (tru truong bien thien), khong so sanh byte: generated_utc
+        doi moi lan chay theo THIET KE.
+        """
+        import subprocess
+        import sys
+        import tempfile
+    
+        out = pathlib.Path(tempfile.mkdtemp()) / "regen.json"
+        r = subprocess.run(
+            [sys.executable, "-m", "tools.20r2_2_predictions", "--out", str(out)],
+            cwd=str(ROOT), capture_output=True, text=True)
+        assert r.returncode == 0, (
+            "tools/20r2_2_predictions.py thoat ma %d:\n%s"
+            % (r.returncode, r.stderr[-1500:]))
+    
+        a = json.loads(SIGNED.read_text(encoding="utf-8"))
+        b = json.loads(out.read_text(encoding="utf-8"))
+        a.pop("generated_utc", None)
+        b.pop("generated_utc", None)
+        # Only five source-location leaves may move. Verify both historical and
+        # current references before comparing all scientific values exactly.
+        import importlib
+        custody = importlib.import_module("tools.artifact_custody")
+>       old_lines = subprocess.check_output([
+            "git", "show", "phase-20R2-erratum-1:measurements/decision_error_v2.py"
+        ], cwd=ROOT, text=True).splitlines()
+
+test/test_20r2_2_prediction.py:421: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'show', 'phase-20R2-erratum-1:measurements/decision_error_v2.py'],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1, 'text': True}
+process = <Popen: returncode: 128 args: ['git', 'show', 'phase-20R2-erratum-1:measurem...>
+stdout = '', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'show', 'phase-20R2-erratum-1:measurements/decision_error_v2.py']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: invalid object name 'phase-20R2-erratum-1'.
+__ test_tool_reproduces_the_committed_artifact[tools.20r2_0_axis_audit-spec0] __
+
+module = 'tools.20r2_0_axis_audit'
+spec = ('results/PENDING/phase-20R2', 'axis_audit')
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6/test_tool_reproduces_the_commi0')
+
+    @pytest.mark.parametrize("module,spec", sorted(TOOLS.items()))
+    def test_tool_reproduces_the_committed_artifact(module, spec, tmp_path):
+        """TAI LAP: chay lai phai ra DUNG thu da commit.
+    
+        Neu test nay do ma test thoat-ma-0 o tren xanh, thi tool con chay nhung
+        da DOI DAU RA -- artifact da commit khong con la san pham cua tool nua.
+        """
+        subdir, artifact = spec
+        committed = ROOT / subdir / (artifact + ".json")
+        if not committed.is_file():
+            pytest.skip("chua co artifact da commit: " + artifact)
+        out = tmp_path / (artifact + ".json")
+        if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics",
+                       "tools.20r2_0_axis_audit", "tools.20r2_2_predictions"}:
+            # Source hashes/line numbers describe historical code. Replay that code;
+            # the separate exit test still runs every producer at current HEAD.
+            import io, tarfile
+            replay = tmp_path / "historical_e1"
+            replay.mkdir()
+>           archive = subprocess.check_output(
+                ["git", "archive", "phase-20R2-erratum-1", "measurements", "cert", "twin", "tools"], cwd=ROOT)
+
+test/test_20r2_tools_run_and_reproduce.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'archive', 'phase-20R2-erratum-1', 'measurements', 'cert', 'twin', ...],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1}
+process = <Popen: returncode: 128 args: ['git', 'archive', 'phase-20R2-erratum-1', 'me...>
+stdout = b'', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'archive', 'phase-20R2-erratum-1', 'measurements', 'cert', 'twin', 'tools']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: not a valid object name: phase-20R2-erratum-1
+_ test_tool_reproduces_the_committed_artifact[tools.20r2_2_predictions-spec3] __
+
+module = 'tools.20r2_2_predictions'
+spec = ('docs/phase-20R2', '01-prediction-signed')
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6/test_tool_reproduces_the_commi3')
+
+    @pytest.mark.parametrize("module,spec", sorted(TOOLS.items()))
+    def test_tool_reproduces_the_committed_artifact(module, spec, tmp_path):
+        """TAI LAP: chay lai phai ra DUNG thu da commit.
+    
+        Neu test nay do ma test thoat-ma-0 o tren xanh, thi tool con chay nhung
+        da DOI DAU RA -- artifact da commit khong con la san pham cua tool nua.
+        """
+        subdir, artifact = spec
+        committed = ROOT / subdir / (artifact + ".json")
+        if not committed.is_file():
+            pytest.skip("chua co artifact da commit: " + artifact)
+        out = tmp_path / (artifact + ".json")
+        if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics",
+                       "tools.20r2_0_axis_audit", "tools.20r2_2_predictions"}:
+            # Source hashes/line numbers describe historical code. Replay that code;
+            # the separate exit test still runs every producer at current HEAD.
+            import io, tarfile
+            replay = tmp_path / "historical_e1"
+            replay.mkdir()
+>           archive = subprocess.check_output(
+                ["git", "archive", "phase-20R2-erratum-1", "measurements", "cert", "twin", "tools"], cwd=ROOT)
+
+test/test_20r2_tools_run_and_reproduce.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'archive', 'phase-20R2-erratum-1', 'measurements', 'cert', 'twin', ...],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1}
+process = <Popen: returncode: 128 args: ['git', 'archive', 'phase-20R2-erratum-1', 'me...>
+stdout = b'', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'archive', 'phase-20R2-erratum-1', 'measurements', 'cert', 'twin', 'tools']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: not a valid object name: phase-20R2-erratum-1
+_ test_tool_reproduces_the_committed_artifact[tools.20r2_9_e1_mechanics-spec9] _
+
+module = 'tools.20r2_9_e1_mechanics', spec = ('docs/phase-20R2', 'E1-mechanics')
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6/test_tool_reproduces_the_commi9')
+
+    @pytest.mark.parametrize("module,spec", sorted(TOOLS.items()))
+    def test_tool_reproduces_the_committed_artifact(module, spec, tmp_path):
+        """TAI LAP: chay lai phai ra DUNG thu da commit.
+    
+        Neu test nay do ma test thoat-ma-0 o tren xanh, thi tool con chay nhung
+        da DOI DAU RA -- artifact da commit khong con la san pham cua tool nua.
+        """
+        subdir, artifact = spec
+        committed = ROOT / subdir / (artifact + ".json")
+        if not committed.is_file():
+            pytest.skip("chua co artifact da commit: " + artifact)
+        out = tmp_path / (artifact + ".json")
+        if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics",
+                       "tools.20r2_0_axis_audit", "tools.20r2_2_predictions"}:
+            # Source hashes/line numbers describe historical code. Replay that code;
+            # the separate exit test still runs every producer at current HEAD.
+            import io, tarfile
+            replay = tmp_path / "historical_e1"
+            replay.mkdir()
+>           archive = subprocess.check_output(
+                ["git", "archive", "phase-20R2-erratum-1", "measurements", "cert", "twin", "tools"], cwd=ROOT)
+
+test/test_20r2_tools_run_and_reproduce.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'archive', 'phase-20R2-erratum-1', 'measurements', 'cert', 'twin', ...],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1}
+process = <Popen: returncode: 128 args: ['git', 'archive', 'phase-20R2-erratum-1', 'me...>
+stdout = b'', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'archive', 'phase-20R2-erratum-1', 'measurements', 'cert', 'twin', 'tools']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: not a valid object name: phase-20R2-erratum-1
+_ test_tool_reproduces_the_committed_artifact[tools.20r2_9_partition_invariance-spec10] _
+
+module = 'tools.20r2_9_partition_invariance'
+spec = ('docs/phase-20R2', 'E1b-partition-invariance')
+tmp_path = PosixPath('/tmp/pytest-of-ubuntu/pytest-6/test_tool_reproduces_the_commi10')
+
+    @pytest.mark.parametrize("module,spec", sorted(TOOLS.items()))
+    def test_tool_reproduces_the_committed_artifact(module, spec, tmp_path):
+        """TAI LAP: chay lai phai ra DUNG thu da commit.
+    
+        Neu test nay do ma test thoat-ma-0 o tren xanh, thi tool con chay nhung
+        da DOI DAU RA -- artifact da commit khong con la san pham cua tool nua.
+        """
+        subdir, artifact = spec
+        committed = ROOT / subdir / (artifact + ".json")
+        if not committed.is_file():
+            pytest.skip("chua co artifact da commit: " + artifact)
+        out = tmp_path / (artifact + ".json")
+        if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics",
+                       "tools.20r2_0_axis_audit", "tools.20r2_2_predictions"}:
+            # Source hashes/line numbers describe historical code. Replay that code;
+            # the separate exit test still runs every producer at current HEAD.
+            import io, tarfile
+            replay = tmp_path / "historical_e1"
+            replay.mkdir()
+>           archive = subprocess.check_output(
+                ["git", "archive", "phase-20R2-erratum-1", "measurements", "cert", "twin", "tools"], cwd=ROOT)
+
+test/test_20r2_tools_run_and_reproduce.py:208: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'archive', 'phase-20R2-erratum-1', 'measurements', 'cert', 'twin', ...],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1}
+process = <Popen: returncode: 128 args: ['git', 'archive', 'phase-20R2-erratum-1', 'me...>
+stdout = b'', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'archive', 'phase-20R2-erratum-1', 'measurements', 'cert', 'twin', 'tools']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: not a valid object name: phase-20R2-erratum-1
+__________ test_evidence_pins_actual_inputs_and_source[E1-mechanics] ___________
+
+name = 'E1-mechanics'
+
+    @pytest.mark.parametrize("name", ["E1-mechanics", "E1b-partition-invariance"])
+    def test_evidence_pins_actual_inputs_and_source(name):
+        data = json.loads((ROOT / "docs/phase-20R2" / (name + ".json")).read_text())
+        assert "generated_utc" not in data and "git_commit" not in data
+        assert "results/LIVE/phase-20R/truth_table.parquet" in data["inputs_sha256"]
+        for section in ("inputs_sha256", "source_sha256"):
+            for rel, expected in data[section].items():
+>               raw = (subprocess.check_output(
+                    ['git', 'show', 'phase-20R2-erratum-1:' + rel], cwd=ROOT)
+                    if section == 'source_sha256' else (ROOT / rel).read_bytes())
+
+test/test_20r2_e1_evidence.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'show', 'phase-20R2-erratum-1:measurements/decision_error_v2.py'],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1}
+process = <Popen: returncode: 128 args: ['git', 'show', 'phase-20R2-erratum-1:measurem...>
+stdout = b'', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'show', 'phase-20R2-erratum-1:measurements/decision_error_v2.py']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: invalid object name 'phase-20R2-erratum-1'.
+____ test_evidence_pins_actual_inputs_and_source[E1b-partition-invariance] _____
+
+name = 'E1b-partition-invariance'
+
+    @pytest.mark.parametrize("name", ["E1-mechanics", "E1b-partition-invariance"])
+    def test_evidence_pins_actual_inputs_and_source(name):
+        data = json.loads((ROOT / "docs/phase-20R2" / (name + ".json")).read_text())
+        assert "generated_utc" not in data and "git_commit" not in data
+        assert "results/LIVE/phase-20R/truth_table.parquet" in data["inputs_sha256"]
+        for section in ("inputs_sha256", "source_sha256"):
+            for rel, expected in data[section].items():
+>               raw = (subprocess.check_output(
+                    ['git', 'show', 'phase-20R2-erratum-1:' + rel], cwd=ROOT)
+                    if section == 'source_sha256' else (ROOT / rel).read_bytes())
+
+test/test_20r2_e1_evidence.py:27: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'show', 'phase-20R2-erratum-1:measurements/decision_error_v2.py'],)
+kwargs = {'cwd': PosixPath('/tmp/claude-1000/-home-ubuntu-dt4n/28c3bdef-6c1a-4b14-8cd9-6c69b44dbd00/scratchpad/shallowclone'), 'stdout': -1}
+process = <Popen: returncode: 128 args: ['git', 'show', 'phase-20R2-erratum-1:measurem...>
+stdout = b'', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'show', 'phase-20R2-erratum-1:measurements/decision_error_v2.py']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: invalid object name 'phase-20R2-erratum-1'.
+____________________ test_no_artifact_claims_a_missing_tag _____________________
+
+audit = {'docs': {'lesson-23-22-b3-prereg': ['docs/phase-23/46-recalibrate-transfer.md'], 'lesson-23-22-complete': ['docs/phas...['results/SMOKE/phase-G/g0_roundtrip_v2.json'], 'phase-G-g0-prereg': ['results/SMOKE/phase-G/g0_roundtrip.json'], ...}}
+
+    def test_no_artifact_claims_a_missing_tag(audit):
+        """VE NANG: artifact la chung cu. Mot chung cu tro toi cai ten khong co
+        la mot chung cu hong. KHONG co ngoai le -- neu ve nay do, phai gan tag
+        hoac sinh lai artifact, khong duoc noi test."""
+        missing = sorted(t for t in audit["json"] if t not in audit["have"])
+        detail = {t: audit["json"][t][:3] for t in missing}
+>       assert not missing, f"artifact claim tag khong ton tai: {detail}"
+E       AssertionError: artifact claim tag khong ton tai: {'lesson-23-22-b3-prereg': ['results/LIVE/phase-23/recalibrate_transfer.json'], 'lesson-23-22d-a-prereg': ['results/LIVE/phase-23/a070_extension.json', 'results/LIVE/phase-23/a070_extension_wiring.json', 'results/LIVE/phase-23/a070_overlap.json'], 'phase-G-g0-amendment-v2-prereg': ['results/SMOKE/phase-G/g0_roundtrip_v2.json'], 'phase-G-g0-prereg': ['results/SMOKE/phase-G/g0_roundtrip.json'], 'phase-G-g1-4-prereg': ['results/SMOKE/phase-G/g1_4_physical_reanalysis.json'], 'phase-G-g1-static-nc-prereg': ['results/SMOKE/phase-G/g1_static_smoke_cert.json', 'results/SMOKE/phase-G/g1_static_smoke_detail.json'], 'phase-G-g1-static-nc-v2-prereg': ['results/SMOKE/phase-G/g1_static_v2_smoke_cert.json', 'results/SMOKE/phase-G/g1_static_v2_smoke_detail.json'], 'phase-G-g1-static-nc-v3-prereg': ['results/SMOKE/phase-G/g1_static_v3_smoke_cert.json', 'results/SMOKE/phase-G/g1_static_v3_smoke_detail.json'], 'phase-G-g1a-g-a002-prereg': ['results/SMOKE/phase-G/g1a_two_band_validation.json'], 'phase-G-g1a-prereg': ['results/SMOKE/phase-G/g1a_estimator_validation.json'], 'phase-G-offered-nugget-check-prereg': ['results/SMOKE/phase-G/g1_offered_nugget_check.json'], 'phase-G2-g3a-prereg': ['results/SMOKE/phase-G2/g3a_omega_sweep.json'], 'phase-G2-g3b-prereg': ['results/SMOKE/phase-G2/g3b_sigma_tau.json'], 'phase-G2-kill-test-prereg': ['results/SMOKE/phase-G2/g2_kill_test.json', 'results/SMOKE/phase-G2/g2_kill_test_run1_invalid.json', 'results/SMOKE/phase-G2/g2_kill_test_run3_instrumented.json']}
+E       assert not ['lesson-23-22-b3-prereg', 'lesson-23-22d-a-prereg', 'phase-G-g0-amendment-v2-prereg', 'phase-G-g0-prereg', 'phase-G-g1-4-prereg', 'phase-G-g1-static-nc-prereg', ...]
+
+test/test_closure_tags_exist.py:69: AssertionError
+_______________________ test_no_doc_claims_a_missing_tag _______________________
+
+audit = {'docs': {'lesson-23-22-b3-prereg': ['docs/phase-23/46-recalibrate-transfer.md'], 'lesson-23-22-complete': ['docs/phas...['results/SMOKE/phase-G/g0_roundtrip_v2.json'], 'phase-G-g0-prereg': ['results/SMOKE/phase-G/g0_roundtrip.json'], ...}}
+
+    def test_no_doc_claims_a_missing_tag(audit):
+        """VE NHE: doc la dien giai. Van phai dung, nhung mot lenh trong doc
+        khong chay duoc thi nguoi doc lai chi mat thoi gian, khong mat chung cu."""
+        missing = sorted(t for t in audit["docs"]
+                         if t not in audit["have"] and t not in UNRESOLVED_DOC_CLAIMS)
+        detail = {t: audit["docs"][t][:3] for t in missing}
+>       assert not missing, f"doc claim tag khong ton tai: {detail}"
+E       AssertionError: doc claim tag khong ton tai: {'lesson-23-22-b3-prereg': ['docs/phase-23/46-recalibrate-transfer.md'], 'lesson-23-22-complete': ['docs/phase-23/47-close-23-22.md', 'docs/phase-23/47-close-23-22.md', 'docs/phase-23/49-close-23-22d.md'], 'lesson-23-22-prereg': ['docs/phase-23/43-taxonomy-audit.md'], 'lesson-23-23-complete': ['docs/phase-23/51-close-23-23.md', 'docs/phase-23/A074-amendment-74.md'], 'lesson-23-24-complete': ['docs/phase-23/A076-amendment-76.md'], 'lesson-23-24b-complete': ['docs/phase-23/A077-amendment-77.md', 'docs/phase-23/A077-amendment-77.md'], 'lesson-23-24b-start': ['docs/phase-23/A076-amendment-76.md'], 'lesson-23-25-complete': ['docs/phase-23/A078-amendment-78.md'], 'lesson-23-25b-complete': ['docs/phase-23/A079-amendment-79.md'], 'lesson-23.8a4-rho-fix': ['docs/phase-23/20-aoi-on-topology-v7.md'], 'phase-20R2-B-complete': ['docs/phase-20R2/20R2.9-C-execution-report.md'], 'phase-20R2-adjudicator-frozen': ['docs/phase-20R2/06-adjudication.md', 'docs/phase-20R2/E1-erratum.md'], 'phase-20R2-dsla-frozen': ['docs/phase-20R2/07-dsla.md'], 'phase-20R2-g4-frozen': ['docs/phase-20R2/06c-g4.md'], 'phase-20R2-prereg-signed': ['docs/phase-20R2/00-preregistration.md', 'docs/phase-20R2/00-preregistration.md', 'docs/phase-20R2/00-preregistration.md'], 'phase-D-cellC-start': ['docs/phase-D/00-preregistration.md', 'docs/phase-D/03-gate-decision.md', 'docs/phase-D/04-execution-report.md'], 'phase-D-pc-c2-prime-start': ['docs/phase-D/04-execution-report.md', 'docs/phase-D/05-pc-c2-prime-readjudication.md'], 'phase-D-pc-c2-second-start': ['docs/phase-D/03-gate-decision.md', 'docs/phase-D/A002-amendment-pc-c2-prime.md'], 'phase-D-pc-c3-start': ['docs/phase-D/03-gate-decision.md'], 'phase-G-g-a004-prereg': ['docs/phase-G/13-amendment-G-A004.md', 'docs/phase-G/14-g-a004-results.md'], 'phase-G-g0-amendment-v2-prereg': ['docs/phase-G/01b-g0-v2-results.md'], 'phase-G-g0-prereg': ['docs/phase-G/01-g0-results.md'], 'phase-G-g1-4-prereg': ['docs/phase-G/08-g1-4-results.md'], 'phase-G-g1-static-nc-prereg': ['docs/phase-23/LIMITS.md'], 'phase-G-g1a-g-a002-prereg': ['docs/phase-G/06-g1a-G-A002-results.md'], 'phase-G-g1a-prereg': ['docs/phase-G/04-g1a-results.md'], 'phase-G-g3-a014-prereg': ['docs/phase-G/43-amendment-G-A014a-corrigendum-and-reanchor.md', 'docs/phase-G/44-g-a014-results.md'], 'phase-G-g3-a016-prereg': ['docs/phase-G/52-g-a016-reduced-loopback-results.md'], 'phase-G-g3-dryrun-prereg': ['docs/phase-G/32-g3-dryrun-results.md'], 'phase-G-g3-emitter-ladder-prereg': ['docs/phase-G/40-amendment-g3-emitter-ladder.md'], 'phase-G-g3-emitter-prereg': ['docs/phase-G/39-prereg-g3-emitter-dryrun.md'], 'phase-G-g3-emitter-reduction-prereg': ['docs/phase-G/41-amendment-g3-emitter-reduction.md'], 'phase-G-g3-emitter-run-2-prereg': ['docs/phase-G/49-amendment-G-A015-emit4-satisfiability.md'], 'phase-G-g3-emitter-run-prereg': ['docs/phase-G/43-amendment-G-A014a-corrigendum-and-reanchor.md', 'docs/phase-G/45-g3-emitter-dryrun-results.md'], 'phase-G-offered-nugget-check-prereg': ['docs/phase-G/10-offered-nugget-check-results.md'], 'phase-G2-a017-prereg': ['docs/phase-G/57-amendment-G-A017a-nugget-decomposition.md', 'docs/phase-G/61-amendment-G-A019-nugget-colour-and-sf-retirement.md'], 'phase-G2-g3a-prereg': ['docs/phase-G/64-g3a-omega-positive-control-results.md'], 'phase-G2-g3b-prereg': ['docs/phase-G/66-g3b-results.md'], 'phase-G2-g4-prereg': ['docs/phase-G/68-measurement-path-cert-v2.md'], 'phase-G2-g5-prereg': ['docs/phase-G/70-g5-results.md', 'docs/phase-G/74-prereg-g5c-monotone.md'], 'phase-G2-g5b-prereg': ['docs/phase-G/73-g5b-results.md'], 'phase-G2-g5c-prereg': ['docs/phase-G/74-prereg-g5c-monotone.md', 'docs/phase-G/75-g5c-results.md'], 'phase-G2-kill-test-prereg': ['docs/phase-G/59-amendment-g2-harness-defect-and-null.md', 'docs/phase-G/60-kill-test-results.md'], 'pre-aoi-fix': ['docs/phase-23/00zx-amendment-44.md', 'docs/phase-23/21-freeze-label-tidy.md', 'docs/phase-23/21-freeze-label-tidy.md']}
+E       assert not ['lesson-23-22-b3-prereg', 'lesson-23-22-complete', 'lesson-23-22-prereg', 'lesson-23-23-complete', 'lesson-23-24-complete', 'lesson-23-24b-complete', ...]
+
+test/test_closure_tags_exist.py:78: AssertionError
+_________ test_lesson_23_22_tags_are_annotated[lesson-23-22-complete] __________
+
+name = 'lesson-23-22-complete'
+audit = {'docs': {'lesson-23-22-b3-prereg': ['docs/phase-23/46-recalibrate-transfer.md'], 'lesson-23-22-complete': ['docs/phas...['results/SMOKE/phase-G/g0_roundtrip_v2.json'], 'phase-G-g0-prereg': ['results/SMOKE/phase-G/g0_roundtrip.json'], ...}}
+
+    @pytest.mark.parametrize("name", ["lesson-23-22-complete",
+                                      "lesson-23-22-prereg",
+                                      "lesson-23-22-b3-prereg",
+                                      "lesson-23-22d-a-prereg"])
+    def test_lesson_23_22_tags_are_annotated(name, audit):
+        """Tag phai la ANNOTATED. Lightweight tag khong mang ngay tao, nen
+        khong phan biet duoc tag goc voi tag hoi to -- va viec phan biet duoc
+        do CHINH LA thu `L114` doi hoi."""
+        if name not in audit["have"]:
+>           pytest.fail(f"thieu tag {name}")
+E           Failed: thieu tag lesson-23-22-complete
+
+test/test_closure_tags_exist.py:109: Failed
+__________ test_lesson_23_22_tags_are_annotated[lesson-23-22-prereg] ___________
+
+name = 'lesson-23-22-prereg'
+audit = {'docs': {'lesson-23-22-b3-prereg': ['docs/phase-23/46-recalibrate-transfer.md'], 'lesson-23-22-complete': ['docs/phas...['results/SMOKE/phase-G/g0_roundtrip_v2.json'], 'phase-G-g0-prereg': ['results/SMOKE/phase-G/g0_roundtrip.json'], ...}}
+
+    @pytest.mark.parametrize("name", ["lesson-23-22-complete",
+                                      "lesson-23-22-prereg",
+                                      "lesson-23-22-b3-prereg",
+                                      "lesson-23-22d-a-prereg"])
+    def test_lesson_23_22_tags_are_annotated(name, audit):
+        """Tag phai la ANNOTATED. Lightweight tag khong mang ngay tao, nen
+        khong phan biet duoc tag goc voi tag hoi to -- va viec phan biet duoc
+        do CHINH LA thu `L114` doi hoi."""
+        if name not in audit["have"]:
+>           pytest.fail(f"thieu tag {name}")
+E           Failed: thieu tag lesson-23-22-prereg
+
+test/test_closure_tags_exist.py:109: Failed
+_________ test_lesson_23_22_tags_are_annotated[lesson-23-22-b3-prereg] _________
+
+name = 'lesson-23-22-b3-prereg'
+audit = {'docs': {'lesson-23-22-b3-prereg': ['docs/phase-23/46-recalibrate-transfer.md'], 'lesson-23-22-complete': ['docs/phas...['results/SMOKE/phase-G/g0_roundtrip_v2.json'], 'phase-G-g0-prereg': ['results/SMOKE/phase-G/g0_roundtrip.json'], ...}}
+
+    @pytest.mark.parametrize("name", ["lesson-23-22-complete",
+                                      "lesson-23-22-prereg",
+                                      "lesson-23-22-b3-prereg",
+                                      "lesson-23-22d-a-prereg"])
+    def test_lesson_23_22_tags_are_annotated(name, audit):
+        """Tag phai la ANNOTATED. Lightweight tag khong mang ngay tao, nen
+        khong phan biet duoc tag goc voi tag hoi to -- va viec phan biet duoc
+        do CHINH LA thu `L114` doi hoi."""
+        if name not in audit["have"]:
+>           pytest.fail(f"thieu tag {name}")
+E           Failed: thieu tag lesson-23-22-b3-prereg
+
+test/test_closure_tags_exist.py:109: Failed
+_________ test_lesson_23_22_tags_are_annotated[lesson-23-22d-a-prereg] _________
+
+name = 'lesson-23-22d-a-prereg'
+audit = {'docs': {'lesson-23-22-b3-prereg': ['docs/phase-23/46-recalibrate-transfer.md'], 'lesson-23-22-complete': ['docs/phas...['results/SMOKE/phase-G/g0_roundtrip_v2.json'], 'phase-G-g0-prereg': ['results/SMOKE/phase-G/g0_roundtrip.json'], ...}}
+
+    @pytest.mark.parametrize("name", ["lesson-23-22-complete",
+                                      "lesson-23-22-prereg",
+                                      "lesson-23-22-b3-prereg",
+                                      "lesson-23-22d-a-prereg"])
+    def test_lesson_23_22_tags_are_annotated(name, audit):
+        """Tag phai la ANNOTATED. Lightweight tag khong mang ngay tao, nen
+        khong phan biet duoc tag goc voi tag hoi to -- va viec phan biet duoc
+        do CHINH LA thu `L114` doi hoi."""
+        if name not in audit["have"]:
+>           pytest.fail(f"thieu tag {name}")
+E           Failed: thieu tag lesson-23-22d-a-prereg
+
+test/test_closure_tags_exist.py:109: Failed
+_____________________ test_prereg_tag_carries_its_warning ______________________
+
+audit = {'docs': {'lesson-23-22-b3-prereg': ['docs/phase-23/46-recalibrate-transfer.md'], 'lesson-23-22-complete': ['docs/phas...['results/SMOKE/phase-G/g0_roundtrip_v2.json'], 'phase-G-g0-prereg': ['results/SMOKE/phase-G/g0_roundtrip.json'], ...}}
+
+    def test_prereg_tag_carries_its_warning(audit):
+        """`lesson-23-22-prereg` tro vao `7c23151`, la commit THEM
+        `cert/taxonomy_audit.py` -- ma do luong DA co tai moc do. Ten tag noi
+        'prereg', moc thi khong. Canh bao phai nam TRONG tag, vi nguoi doc lai
+        se thay tag truoc khi thay `L114`."""
+        name = "lesson-23-22-prereg"
+        if name not in audit["have"]:
+>           pytest.fail(f"thieu tag {name}")
+E           Failed: thieu tag lesson-23-22-prereg
+
+test/test_closure_tags_exist.py:127: Failed
+_______________________ test_a14_khong_dung_toi_duong_do _______________________
+
+    def test_a14_khong_dung_toi_duong_do():
+        """Amendment 14 changes gates/provenance only, not measurement mechanics.
+    
+        G3 rows were produced by two commits: 2eec098e before A14 and 10dcd4d8
+        after A14. Validity depends on A14 not touching load generation, rho
+        trajectories, packet timestamps, or OWD analysis. See Amendment 14.
+        """
+        import subprocess
+    
+        changed = set(
+>           subprocess.check_output(
+                ["git", "diff", "--name-only", "2eec098e", "10dcd4d8"],
+                text=True,
+            ).split()
+        )
+
+test/test_phase_t_gate_specs.py:331: 
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:466: in check_output
+    return run(*popenargs, stdout=PIPE, timeout=timeout, check=True,
+_ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ _ 
+
+input = None, capture_output = False, timeout = None, check = True
+popenargs = (['git', 'diff', '--name-only', '2eec098e', '10dcd4d8'],)
+kwargs = {'stdout': -1, 'text': True}
+process = <Popen: returncode: 128 args: ['git', 'diff', '--name-only', '2eec098e', '10...>
+stdout = '', stderr = None, retcode = 128
+
+    def run(*popenargs,
+            input=None, capture_output=False, timeout=None, check=False, **kwargs):
+        """Run command with arguments and return a CompletedProcess instance.
+    
+        The returned instance will have attributes args, returncode, stdout and
+        stderr. By default, stdout and stderr are not captured, and those attributes
+        will be None. Pass stdout=PIPE and/or stderr=PIPE in order to capture them,
+        or pass capture_output=True to capture both.
+    
+        If check is True and the exit code was non-zero, it raises a
+        CalledProcessError. The CalledProcessError object will have the return code
+        in the returncode attribute, and output & stderr attributes if those streams
+        were captured.
+    
+        If timeout (seconds) is given and the process takes too long,
+         a TimeoutExpired exception will be raised.
+    
+        There is an optional argument "input", allowing you to
+        pass bytes or a string to the subprocess's stdin.  If you use this argument
+        you may not also use the Popen constructor's "stdin" argument, as
+        it will be used internally.
+    
+        By default, all communication is in bytes, and therefore any "input" should
+        be bytes, and the stdout and stderr will be bytes. If in text mode, any
+        "input" should be a string, and stdout and stderr will be strings decoded
+        according to locale encoding, or by "encoding" if set. Text mode is
+        triggered by setting any of text, encoding, errors or universal_newlines.
+    
+        The other arguments are the same as for the Popen constructor.
+        """
+        if input is not None:
+            if kwargs.get('stdin') is not None:
+                raise ValueError('stdin and input arguments may not both be used.')
+            kwargs['stdin'] = PIPE
+    
+        if capture_output:
+            if kwargs.get('stdout') is not None or kwargs.get('stderr') is not None:
+                raise ValueError('stdout and stderr arguments may not be used '
+                                 'with capture_output.')
+            kwargs['stdout'] = PIPE
+            kwargs['stderr'] = PIPE
+    
+        with Popen(*popenargs, **kwargs) as process:
+            try:
+                stdout, stderr = process.communicate(input, timeout=timeout)
+            except TimeoutExpired as exc:
+                process.kill()
+                if _mswindows:
+                    # Windows accumulates the output in a single blocking
+                    # read() call run on child threads, with the timeout
+                    # being done in a join() on those threads.  communicate()
+                    # _after_ kill() is required to collect that and add it
+                    # to the exception.
+                    exc.stdout, exc.stderr = process.communicate()
+                else:
+                    # POSIX _communicate already populated the output so
+                    # far into the TimeoutExpired exception.
+                    process.wait()
+                raise
+            except:  # Including KeyboardInterrupt, communicate handled that.
+                process.kill()
+                # We don't call process.wait() as .__exit__ does that for us.
+                raise
+            retcode = process.poll()
+            if check and retcode:
+>               raise CalledProcessError(retcode, process.args,
+                                         output=stdout, stderr=stderr)
+E               subprocess.CalledProcessError: Command '['git', 'diff', '--name-only', '2eec098e', '10dcd4d8']' returned non-zero exit status 128.
+
+/home/ubuntu/miniforge3/envs/sdn_rl/lib/python3.12/subprocess.py:571: CalledProcessError
+----------------------------- Captured stderr call -----------------------------
+fatal: ambiguous argument '2eec098e': unknown revision or path not in the working tree.
+Use '--' to separate paths from revisions, like this:
+'git <command> [<revision>...] -- [<file>...]'
+______ test_synthetic_artifacts_declare_a_commit_that_contains_their_tool ______
+
+    def test_synthetic_artifacts_declare_a_commit_that_contains_their_tool():
+        artifacts = sorted(ARTIFACT_ROOT.glob("g3_emit*_a016.json"))
+        artifacts += sorted(ARTIFACT_ROOT.glob("host_jitter_*_quiesce.json"))
+        assert len(artifacts) >= 4
+        for artifact in artifacts:
+            payload = json.loads(artifact.read_text(encoding="utf-8"))
+            commit = payload["git_hash"]
+            tool = payload["tool_path"]
+            probe = subprocess.run(
+                ["git", "show", f"{commit}:{tool}"],
+                capture_output=True,
+                check=False,
+            )
+>           assert probe.returncode == 0, f"{artifact}: {commit} lacks {tool}"
+E           AssertionError: results/SMOKE/phase-G/g3_emit2_null_a016.json: 68b3a219697834119037408dda4466969cbeb38c lacks tools/g3_emit2_null.py
+E           assert 128 == 0
+E            +  where 128 = CompletedProcess(args=['git', 'show', '68b3a219697834119037408dda4466969cbeb38c:tools/g3_emit2_null.py'], returncode=1...stderr=b"fatal: path 'tools/g3_emit2_null.py' exists on disk, but not in '68b3a219697834119037408dda4466969cbeb38c'\n").returncode
+
+test/test_g3_a016_artifact_provenance.py:26: AssertionError
+=========================== short test summary info ============================
+FAILED test/test_20r2_9_s2.py::test_grid_addition_preserves_every_original_value_and_identity
+FAILED test/test_20r2_9_s2.py::test_plan_is_deterministic_and_has_exact_signed_factorial
+FAILED test/test_20r2_2_prediction.py::test_artifact_fields_actually_exist_in_the_harness
+FAILED test/test_20r2_2_prediction.py::test_the_prediction_tool_still_runs_and_reproduces_the_signed_content
+FAILED test/test_20r2_tools_run_and_reproduce.py::test_tool_reproduces_the_committed_artifact[tools.20r2_0_axis_audit-spec0]
+FAILED test/test_20r2_tools_run_and_reproduce.py::test_tool_reproduces_the_committed_artifact[tools.20r2_2_predictions-spec3]
+FAILED test/test_20r2_tools_run_and_reproduce.py::test_tool_reproduces_the_committed_artifact[tools.20r2_9_e1_mechanics-spec9]
+FAILED test/test_20r2_tools_run_and_reproduce.py::test_tool_reproduces_the_committed_artifact[tools.20r2_9_partition_invariance-spec10]
+FAILED test/test_20r2_e1_evidence.py::test_evidence_pins_actual_inputs_and_source[E1-mechanics]
+FAILED test/test_20r2_e1_evidence.py::test_evidence_pins_actual_inputs_and_source[E1b-partition-invariance]
+FAILED test/test_closure_tags_exist.py::test_no_artifact_claims_a_missing_tag
+FAILED test/test_closure_tags_exist.py::test_no_doc_claims_a_missing_tag - As...
+FAILED test/test_closure_tags_exist.py::test_lesson_23_22_tags_are_annotated[lesson-23-22-complete]
+FAILED test/test_closure_tags_exist.py::test_lesson_23_22_tags_are_annotated[lesson-23-22-prereg]
+FAILED test/test_closure_tags_exist.py::test_lesson_23_22_tags_are_annotated[lesson-23-22-b3-prereg]
+FAILED test/test_closure_tags_exist.py::test_lesson_23_22_tags_are_annotated[lesson-23-22d-a-prereg]
+FAILED test/test_closure_tags_exist.py::test_prereg_tag_carries_its_warning
+FAILED test/test_phase_t_gate_specs.py::test_a14_khong_dung_toi_duong_do - su...
+FAILED test/test_g3_a016_artifact_provenance.py::test_synthetic_artifacts_declare_a_commit_that_contains_their_tool
+19 failed, 1292 passed, 52 skipped, 3 deselected in 256.06s (0:04:16)
