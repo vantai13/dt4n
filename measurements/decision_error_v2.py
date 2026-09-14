@@ -500,8 +500,15 @@ def run_cell(
     sigma_override: Optional[float] = None,
     a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
+    sla_grid: Optional[Sequence[Tuple[float, float]]] = None,
 ) -> Dict[str, Any]:
     check_z_grid(z_values, dt)
+    if sla_grid is not None:
+        sla_grid = tuple((float(td), float(tl)) for td, tl in sla_grid)
+        if (not sla_grid or len(set(sla_grid)) != len(sla_grid)
+                or any(not math.isfinite(td) or not math.isfinite(tl)
+                       or td <= 0 or not 0 <= tl <= 1 for td, tl in sla_grid)):
+            raise ValueError('sla_grid must contain distinct finite delay/loss thresholds')
     mode = str(cal_cell["mode"])
     rho_bar = float(cal_cell["rho_bar"])
     sigma, sigma_source = resolve_sigma(cal_cell, sigma_override=sigma_override, a_override=a_override)
@@ -578,6 +585,26 @@ def run_cell(
             "cov_e": float(np.mean(e_model * e_stale)),
             "extrapolated": bool(float(z_s) in Z_EXTRAP),
         }
+    if sla_grid is not None:
+        # S2 changes only the scoring thresholds, never costs, actions or RNG.
+        # One (n, paths) boolean array at a time, not 108 arrays retained together.
+        out['sla_grid'] = []
+        current = rows[common_start:int(n)]
+        truth_actions = a_true[current]
+        for td, tl in sla_grid:
+            grid_viol = _viol(d_true, arrays['l_true'], td, tl)
+            truth_rate = float(grid_viol[current, truth_actions].mean())
+            for z_s in z_values:
+                k = int(round(float(z_s) / float(dt)))
+                twin_actions = a_fresh[current - k]
+                twin_rate = float(grid_viol[current, twin_actions].mean())
+                out['sla_grid'].append({
+                    'z_s': float(z_s), 't_delay_ms': td, 't_loss': tl,
+                    'd_sla_at_threshold': twin_rate - truth_rate,
+                    'viol_rate_truth': truth_rate, 'viol_rate_twin': twin_rate,
+                    'estimand_id': 'SLA_VIOL_BY_AGE_BY_THRESHOLD',
+                })
+            del grid_viol
     return out
 
 

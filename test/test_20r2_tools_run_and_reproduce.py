@@ -116,6 +116,10 @@ TOO_SLOW_FOR_SUITE = {
 # 20R2.5 -- ba tool KHONG chay duoc trong bo test, moi cai mot ly do KHAC nhau.
 # Chung van phai duoc CANH, nen moi cai ghi ro no duoc kiem O DAU.
 NEEDS_SIGNED_CAMPAIGN = {
+    "tools.20r2_9_s2_plan": "deterministic design and original campaign; test_20r2_9_s2.py",
+    "tools.20r2_9_s2_worker": "signed S2 plan and output transaction; test_20r2_9_s2.py",
+    "tools.20r2_9_s2_run": "six guard mutations and resume/orphan controls; test_20r2_9_s2.py",
+    "tools.20r2_9_s2_summarize": "full S2 campaign; schema, aggregation and identity controls in test_20r2_9_s2.py",
     "tools.20r2_9_omega_sensitivity": "signed reading and 24 margin traces; test_20r2_9_sensitivity.py",
     "tools.20r2_9_axis_marginal": "pinned campaign plus actual age generators; test_20r2_9_sensitivity.py",
     "tools.20r2_9_axis_chain": "historical pins and campaign; test_axis_chain_resolves.py",
