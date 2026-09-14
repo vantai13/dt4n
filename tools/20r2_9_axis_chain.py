@@ -58,6 +58,11 @@ def audit(root):
         edge_cache[key]=out
         return out
     for p in sorted((root/'docs/phase-20R2').glob('*.json')):
+        if p.name.startswith('B'):
+            # B artifacts have their own validity/pin audit; this is the frozen A inventory.
+            obj=json.loads(p.read_text())
+            assert obj.get('inputs_sha256') and obj.get('validity'), 'B artifact must declare its inputs and axes'
+            continue
         obj=json.loads(p.read_text());pins=obj.get('inputs_sha256',{})
         if not pins:
             assert p.name in NO_PINS_YET, 'new derived artifact lacks source pins: '+p.name

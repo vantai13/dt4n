@@ -116,6 +116,8 @@ TOO_SLOW_FOR_SUITE = {
 # 20R2.5 -- ba tool KHONG chay duoc trong bo test, moi cai mot ly do KHAC nhau.
 # Chung van phai duoc CANH, nen moi cai ghi ro no duoc kiem O DAU.
 NEEDS_SIGNED_CAMPAIGN = {
+    "tools.20r2_9_omega_sensitivity": "signed reading and 24 margin traces; test_20r2_9_sensitivity.py",
+    "tools.20r2_9_axis_marginal": "pinned campaign plus actual age generators; test_20r2_9_sensitivity.py",
     "tools.20r2_9_axis_chain": "historical pins and campaign; test_axis_chain_resolves.py",
     "tools.20r2_9_custody_diff": "historical git bytes; test_pins_resolve_through_custody.py",
     "tools.20r2_9_backfill_validity": "transactional mutation controls; test_20r2_9_backfill_safety.py",
