@@ -215,3 +215,25 @@ def test_the_mininet_stub_refuses_to_pretend_it_has_a_network() -> None:
         else:
             raise AssertionError("%r phai no khi duoc khoi tao" % factory)
     assert "stub" in stub.MESSAGE
+
+
+def test_b4_quantifies_the_seed_margin_from_the_artifact_itself() -> None:
+    """Cau chu ve bien an toan cua S1 phai khop SO trong artifact, khong phai tri nho."""
+    import csv
+    import math
+
+    rows = [r for r in csv.DictReader(
+        (ROOT / "docs/phase-20R2/B-validation/S1-per-cell-tau.csv").open(encoding="utf-8"))
+        if r["cell"] == "h2@0.960" and float(r["tau"]) == 3.0]
+    assert len(rows) == 1
+    snr0, star = float(rows[0]["snr0"]), float(rows[0]["SNR_star"])
+    assert math.isclose(snr0 / star - 1, float(rows[0]["snr_relative_distance"]), rel_tol=0, abs_tol=0)
+
+    critical = 1.10 * star
+    text = (ROOT / "docs/phase-20R2/B4-limit-update.md").read_text(encoding="utf-8")
+    assert repr(critical) in text, repr(critical)
+    assert repr(snr0) in text, repr(snr0)
+    # Mot seed va ba seed, tinh bang sd da cong bo.
+    assert "2.65 sd" in text and "4.59 sd" in text
+    assert round((snr0 - critical) / 0.1039, 2) == 2.65
+    assert round((snr0 - critical) / (0.1039 / math.sqrt(3)), 2) == 4.59

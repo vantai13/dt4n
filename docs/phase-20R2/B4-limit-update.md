@@ -21,6 +21,10 @@ SNR*=2.575323556 tại τ=3; từng τ có ngưỡng và khoảng cách riêng. 
 
 Biên nhỏ nhất của `h2@0.960` là `snr_relative_distance=0.2068`, chỉ khoảng hai lần vùng UNREADABLE 0.10. Độ lệch chuẩn SNR qua ba seed là 0.1039; vì vậy việc dùng ba seed và báo độ ổn định là phần chịu lực của kết luận ngưỡng. Không suy kết luận tương đương từ một seed đơn lẻ.
 
+[20R2.9-C] Lượng hoá phần chịu lực đó. `snr_relative_distance = snr0/SNR* − 1`, nên UNREADABLE tương đương `snr0 ≤ 1.10·SNR* = 2.832855911601598`, cách `snr0 = 3.107912593019434` đúng `0.275056681` — tức **2.65 sd một seed**, hoặc **4.59 sd của trung bình ba seed**. Dưới mô hình Gauss: `P ≈ 4.06e-3` với một seed, `P ≈ 2.27e-6` với ba, chênh **3.25 bậc độ lớn**.
+
+⚠️ Con số “3.25 bậc” là của MÔ HÌNH, không phải của phép đo. `sd = 0.1039` được ước lượng từ đúng **ba** seed, nên bản thân nó có 2 bậc tự do; đọc bằng Student-t(df=2) thì hai xác suất là `5.90e-2` và `2.22e-2` — chênh **0.42 bậc**. Nói cách khác: ba seed đủ để **kết luận** READABLE, nhưng **không** đủ để định lượng biên an toàn của chính kết luận đó. Một phép đo **ngưỡng** cần số seed đủ để ước lượng `sd`, không chỉ đủ để ước lượng trung bình.
+
 ω=.10 là kịch bản đã cố định. CI cũ của Lesson 23.25 tự ghi độ rộng bị đánh giá thiếu; closeout phân biệt noise floor với tương quan thực. Không dùng CI đó để chứng nhận .10 là cận bảo thủ. G1 được lượng hóa một phần, **không đóng nợ đo tải chung 21R2**.
 
 ## G2/G3/G4 — giữ phạm vi, bổ sung bản đồ
