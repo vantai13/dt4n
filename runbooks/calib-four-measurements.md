@@ -3,11 +3,10 @@
 This runbook measures the four model claims in order:
 
 - A: one-link delay/loss model
-- B: path composition/additivity
+- ?B: path composition/additivity
 - C: routing AoI and observation error through Ditto
-- D: TCP-vs-UDP instrument effect
-
-Do not delete earlier CSV files unless you intentionally want a clean run.
+-? D: TCP-vs-UDP instrument effect
+=Do not delete earlier CSV files unless you intentionally want a clean run.
 Most commands append or write named output files under `results/calib/`.
 
 ## 0. Preflight
