@@ -163,6 +163,8 @@ def test_cpu_preflight_refuses_unavailable_cpu():
     assert unavailable in detail["missing"]
 
 
+# [20R2.9-C] `cpu_preflight` doi CPU 0..7 CO THAT tren may; 4 CPU thi khong.
+@pytest.mark.hostcap(cpus=8)
 def test_ladder_maps_share_emitters_but_isolate_sampler_and_sink():
     maps = build_ladder_cpu_maps(tuple(range(8)))
     assert len(set(maps["L0"][:8])) == 6

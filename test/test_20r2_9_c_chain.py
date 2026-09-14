@@ -65,7 +65,17 @@ def test_t2_round1_parquet_goldens_are_in_git() -> None:
     assert wanted <= set(parquets)
 
 
-CUSTODY_DEBT = ROOT / "docs/phase-20R2/C-validation/custody-debt.json"
+CI_DEBT = ROOT / "docs/phase-20R2/C-validation/ci-coverage-debt.json"
+
+
+def _collected(marker: str) -> set[str]:
+    out = subprocess.run(
+        [sys.executable, "-m", "pytest", "test/", "-m", marker,
+         "-q", "--collect-only", "--no-header", "-p", "no:cacheprovider",
+         "--continue-on-collection-errors"],
+        cwd=ROOT, capture_output=True, text=True,
+    ).stdout
+    return {line.strip() for line in out.splitlines() if "::" in line}
 
 
 def test_every_custody_mark_has_a_named_missing_input() -> None:
@@ -81,23 +91,59 @@ def test_every_custody_mark_has_a_named_missing_input() -> None:
     # tiep qua loi, roi doi BANG NHAU HAI CHIEU: neu dung module chua mot test
     # custody bi hong import, no bien khoi `marked` va chieu `ledgered <= marked`
     # se do -- tuc van bat duoc, khong im lang.
-    collected = subprocess.run(
-        [sys.executable, "-m", "pytest", "test/", "-m", "custody",
-         "-q", "--collect-only", "--no-header", "-p", "no:cacheprovider",
-         "--continue-on-collection-errors"],
-        cwd=ROOT, capture_output=True, text=True,
-    ).stdout
-    marked = {line.strip() for line in collected.splitlines() if "::" in line}
-    debt = json.loads(CUSTODY_DEBT.read_text(encoding="utf-8"))
-    ledgered = {e["test"] for e in debt["entries"]}
+    marked = _collected("custody")
+    debt = json.loads(CI_DEBT.read_text(encoding="utf-8"))
+    ledgered = {e["test"] for e in debt["custody_entries"]}
 
     assert marked, "khong thu gom duoc test custody nao -- phep kiem se rong"
     assert marked <= ledgered, sorted(marked - ledgered)
     assert ledgered <= marked, sorted(ledgered - marked)
-    for entry in debt["entries"]:
+    for entry in debt["custody_entries"]:
         assert entry["missing_input"].strip()
         assert entry["reason"].strip()
         assert entry["coverage_lost"].strip()
+
+
+def test_every_hostcap_mark_names_the_capability_and_the_coverage_lost() -> None:
+    """Cung luat voi custody, cho phan bi mat vi KHA NANG cua may.
+
+    `hostcap` bo qua co dieu kien, nen tren may du CPU tap nay van chay; nhung o
+    CI no la do phu bi mat, va do phu bi mat phai co ten.
+    """
+    marked = _collected("hostcap")
+    debt = json.loads(CI_DEBT.read_text(encoding="utf-8"))
+    ledgered = {e["test"] for e in debt["hostcap_entries"]}
+
+    assert marked, "khong thu gom duoc test hostcap nao -- phep kiem se rong"
+    assert marked == ledgered, (sorted(marked - ledgered), sorted(ledgered - marked))
+    for entry in debt["hostcap_entries"]:
+        assert entry["missing_capability"].strip()
+        assert entry["raised_at"].strip()
+        assert entry["coverage_lost"].strip()
+        assert entry["closes_when"].strip()
+
+
+def test_hostcap_is_conditional_not_an_unconditional_deselect() -> None:
+    """Phan biet `hostcap` voi `custody`: no chi bo qua khi may THUC SU thieu.
+
+    Neu ai do doi hook thanh bo chon vo dieu kien thi tren may du CPU cac test do
+    se bien mat lang le, va test nay do.
+    """
+    import os
+
+    available = len(os.sched_getaffinity(0))
+    needed = max(e["missing_capability"] for e in
+                 json.loads(CI_DEBT.read_text(encoding="utf-8"))["hostcap_entries"])
+    assert needed == "cpus>=8"
+    ran = subprocess.run(
+        [sys.executable, "-m", "pytest", "test/test_g3_emitter.py",
+         "-q", "--no-header", "-p", "no:cacheprovider", "-rs"],
+        cwd=ROOT, capture_output=True, text=True,
+    ).stdout
+    if available >= 8:
+        assert "hostcap: can >=" not in ran, ran[-800:]
+    else:
+        assert "hostcap: can >=" in ran, ran[-800:]
 
 
 GATE_SOURCES = ROOT / "docs/phase-20R2/99c-gate-definition-sources.json"

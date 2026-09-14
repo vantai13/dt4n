@@ -45,11 +45,15 @@ def main() -> int:
 
     found = list(failures(path))
     print("::notice::pytest bao %d test that bai/loi" % len(found))
+
+    # GitHub chi HIEN khoang 10 annotation moi buoc, nen danh sach dai bi cat.
+    # Gom TOAN BO ten vao MOT annotation -- `%0A` la ky tu xuong dong trong
+    # cu phap workflow command -- roi moi in tung muc co chi tiet.
+    if found:
+        joined = "%0A".join("%s  [%s]" % (name, kind) for kind, name, _ in found)
+        print("::error title=danh sach day du (%d)::%s" % (len(found), joined))
     for kind, name, message in found[:MAX_ANNOTATIONS]:
         print("::error title=%s::%s: %s" % (kind, name, message[:300]))
-    if len(found) > MAX_ANNOTATIONS:
-        print("::error::... va %d muc nua; xem bang tom tat cua job"
-              % (len(found) - MAX_ANNOTATIONS))
 
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:
