@@ -1,7 +1,9 @@
 """20R2.9-C: portable CI, tracked ledgers, and explained nullable fields."""
 from __future__ import annotations
 
+import importlib
 import json
+import os
 import pathlib
 import subprocess
 import sys
@@ -140,3 +142,76 @@ def test_a_missing_specification_cannot_arrive_unnoticed() -> None:
             cwd=ROOT, check=True, capture_output=True, text=True,
         ).stdout.split()
         assert not in_history, (name, in_history)
+
+
+def test_the_declaration_category_is_not_a_way_to_skip_pinning() -> None:
+    """Loai thu ba chi mo ra khi tep TU KHAI du ba truong -- quen ghim thi van do."""
+    chain = importlib.import_module("tools.20r2_9_axis_chain")
+    declared = {
+        "artifact_kind": "declaration",
+        "has_measured_inputs": False,
+        "why_no_pins": "khong co dau vao do duoc",
+    }
+    assert chain.is_declaration(declared)
+    for drop in declared:
+        assert not chain.is_declaration({k: v for k, v in declared.items() if k != drop})
+    assert not chain.is_declaration({**declared, "why_no_pins": "   "})
+    assert not chain.is_declaration({**declared, "has_measured_inputs": True})
+    assert not chain.is_declaration({})
+
+
+def test_the_suite_collects_without_a_real_mininet() -> None:
+    """F2 lop hai: CI hong o buoc THU GOM, truoc khi chay duoc mot test nao.
+
+    `mininet/` cua kho la goi cua CHINH du an va trung ten voi Mininet that;
+    cac module viet `from mininet.topo import Topo` o muc module. Runner CI
+    khong co Mininet he thong, nen import do no luc thu gom va `pytest` dung
+    lai -- marker `live` chi bo qua luc CHAY. Test nay chay pytest voi mot
+    sys.path KHONG co Mininet that va doi thu gom sach.
+    """
+    import mininet
+
+    env = dict(os.environ)
+    env["PYTHONPATH"] = str(ROOT)
+    script = (
+        "import sys, mininet\n"
+        "real = [p for p in mininet.__path__ if 'dt4n' not in p and '_absent_mininet' not in p]\n"
+        "sys.exit(0 if not real else 7)\n"
+    )
+    has_real = subprocess.run([sys.executable, "-c", script], cwd=ROOT,
+                              capture_output=True, text=True).returncode == 7
+    if has_real:
+        # May nay CO Mininet that, nen khong tai lap duoc dieu kien CI o day.
+        assert mininet.MININET_IS_STUB is False
+        return
+
+    assert mininet.MININET_IS_STUB is True
+    collected = subprocess.run(
+        [sys.executable, "-m", "pytest", "test/", "-q", "--collect-only",
+         "-m", "not live and not custody", "-p", "no:cacheprovider"],
+        cwd=ROOT, capture_output=True, text=True, env=env,
+    )
+    assert "errors during collection" not in collected.stdout, collected.stdout[-2000:]
+    assert collected.returncode == 0, collected.stdout[-2000:]
+
+
+def test_the_mininet_stub_refuses_to_pretend_it_has_a_network() -> None:
+    """Stub duoc phep im lang voi NHAT KY, nhung phai NO khi ai do dung mang."""
+    stub = importlib.import_module("mininet._absent_mininet._stub")
+    log = importlib.import_module("mininet._absent_mininet.log")
+    topo = importlib.import_module("mininet._absent_mininet.topo")
+    net = importlib.import_module("mininet._absent_mininet.net")
+
+    assert log.setLogLevel("info") is None and log.info("x") is None
+
+    class _Child(topo.Topo):
+        pass
+
+    for factory in (topo.Topo, net.Mininet, _Child):
+        try:
+            factory()
+        except RuntimeError as exc:
+            assert "Mininet" in str(exc)
+        else:
+            raise AssertionError("%r phai no khi duoc khoi tao" % factory)
+    assert "stub" in stub.MESSAGE

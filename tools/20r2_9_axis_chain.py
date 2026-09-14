@@ -9,10 +9,27 @@ NO_PINS_YET={
  '06c-g4-predictions.json','06c-g4-score.json','07-dsla.json','07a-dsla-structure.json',
  '08-handoff-measurements.json'}
 
+def is_declaration(obj):
+    """[20R2.9-C] Loai thu BA: tai lieu KHAI, khong phai ket qua DAN XUAT.
+
+    Truoc day ham nay chi co hai o: hoac artifact mang `inputs_sha256`, hoac no
+    nam trong NO_PINS_YET (tuc no D11). Mot tai lieu nhu
+    `99c-gate-definition-sources.json` -- khai NGUON DINH NGHIA cua bay gate --
+    khong co dau vao DO DUOC nao de ghim, va nhet no vao NO_PINS_YET se lam
+    phong so no D11 tu 9 len 10 bang mot muc khong phai no.
+
+    Khong phai mot danh sach ten: tep phai TU KHAI ba truong duoi day, nen
+    khong the lang le bo qua phep ghim chi bang cach quen `inputs_sha256`.
+    """
+    return (obj.get('artifact_kind')=='declaration'
+            and obj.get('has_measured_inputs') is False
+            and isinstance(obj.get('why_no_pins'),str)
+            and bool(obj['why_no_pins'].strip()))
+
 def audit(root):
     events=load_events(root)
     registry=json.loads((root/'docs/phase-23/axis_registry.json').read_text())['sla_axis']
-    docs=[];edge_cache={}
+    docs=[];declarations=[];edge_cache={}
     def walk(rel,want,stack):
         assert rel not in stack, 'cycle in input pins: '+rel
         key=(rel,want)
@@ -65,6 +82,11 @@ def audit(root):
             continue
         obj=json.loads(p.read_text());pins=obj.get('inputs_sha256',{})
         if not pins:
+            if is_declaration(obj):
+                declarations.append({'artifact':str(p.relative_to(root)),
+                                     'status':'DECLARATION_NO_MEASURED_INPUTS',
+                                     'why_no_pins':obj['why_no_pins']})
+                continue
             assert p.name in NO_PINS_YET, 'new derived artifact lacks source pins: '+p.name
             docs.append({'artifact':str(p.relative_to(root)),'status':'DEBT_D11_NO_CANONICAL_PINS'})
             continue
@@ -75,9 +97,10 @@ def audit(root):
         docs.append({'artifact':str(p.relative_to(root)),'status':'PINS_RESOLVED',
                      'sla_labels':labels,'comparison_control_exception':p.name=='E1b-partition-invariance.json',
                      'all_artifact_axes_explicit':False,'inputs':children})
-    return {'schema':'dt4n.axis_chain_20r2_a1.v1','derived':docs,
+    return {'schema':'dt4n.axis_chain_20r2_a1.v1','derived':docs,'declarations':declarations,
             'summary':{'n_derived':len(docs),'n_pin_bearing':sum(d['status']=='PINS_RESOLVED' for d in docs),
                        'n_without_canonical_pins':sum(d['status']!='PINS_RESOLVED' for d in docs),
+                       'n_declarations':len(declarations),
                        'gate_20R2_6a':'FAIL_WITH_PARTIAL_LINEAGE_REPAIR',
                        'note':'Resolvable pinned SLA evidence does not make every frozen artifact explicitly declare all axes. D11 remains open.'}}
 

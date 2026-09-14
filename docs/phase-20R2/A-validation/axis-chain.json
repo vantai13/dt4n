@@ -284,10 +284,18 @@
       ]
     }
   ],
+  "declarations": [
+    {
+      "artifact": "docs/phase-20R2/99c-gate-definition-sources.json",
+      "status": "DECLARATION_NO_MEASURED_INPUTS",
+      "why_no_pins": "Tep nay KHAI nguon dinh nghia cua bay gate; no khong dan xuat tu mot phep do nao nen khong co dau vao do duoc de ghim sha256. Cac trich dan IN_REPO duoc kiem bang test_in_repo_gate_definitions_quote_a_line_that_really_says_it (file:dong phai chua dung cau chu), khong bang chuoi ghim."
+    }
+  ],
   "summary": {
     "n_derived": 13,
     "n_pin_bearing": 4,
     "n_without_canonical_pins": 9,
+    "n_declarations": 1,
     "gate_20R2_6a": "FAIL_WITH_PARTIAL_LINEAGE_REPAIR",
     "note": "Resolvable pinned SLA evidence does not make every frozen artifact explicitly declare all axes. D11 remains open."
   }
