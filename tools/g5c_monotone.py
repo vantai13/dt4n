@@ -9,19 +9,14 @@ thuc phat dung hieu ung dang tim. Gate ghi VOID -- khong PASS khong FAIL.
     P-3   (void)   min(diff(acceptance)) >= -0.005      phat su GIAM
     P-3b  (day)    max(diff(acceptance)) <= +0.005      phat su TANG
 
-`tools/g5b_power_axis.py` KHONG bi sua: artifact cua no duoc tham chieu bang
-SHA256 trong doc 73. Hang so `SEED` cua no duoc rebind luc import -- dung
-khuon mau `tools/g2_kill_test.py:66` dung cho `g3_dryrun.DT_S` -- va ca hash
-file lan gia tri rebind deu duoc ghi vao artifact.
-
-⚠️ TAC DUNG PHU CO Y: import module nay DOI `g5b.SEED` cua ca tien trinh.
-   Test nao can seed goc cua g5b phai tu dat lai. Rebind o cap module (thay
-   vi trong main) la co chu dich: no khong the bi QUEN.
+20R2.9-A5: g5b's seed is bound only during main(), then restored even on
+failure. Importing this module leaves every other module unchanged.
 
     python -m tools.g5c_monotone
 """
 from __future__ import annotations
 
+import contextlib
 import json
 import subprocess
 import sys
@@ -44,7 +39,6 @@ STEP_UP_TOLERANCE = 0.005    # ngan sach sai so: doc 74 section 3
 
 # Rebind TRUOC moi loi goi vao g5b.make_inputs. Lam viec nay sau khi sweep()
 # da bat dau se cho mot lan chay nua seed nay nua seed kia.
-g5b.SEED = SEED_C
 
 
 def monotone_stats(acceptance) -> dict:
@@ -115,7 +109,22 @@ def adjudicate(primary, null, monotone, independence) -> dict:
             "irreducible_remainder": remainder}
 
 
+@contextlib.contextmanager
+def _seed_c():
+    old = g5b.SEED
+    g5b.SEED = SEED_C
+    try:
+        yield
+    finally:
+        g5b.SEED = old
+
+
 def main() -> None:
+    with _seed_c():
+        _run()
+
+
+def _run() -> None:
     if OUT.exists():
         raise FileExistsError(OUT)
     if g5b.SEED != SEED_C:

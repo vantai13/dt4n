@@ -79,10 +79,7 @@ GATE_SINK = 0.02        # S-1
 GATE_UNDERRUN = 0.001   # K-2
 GATE_LAG_SPAN = 0.30    # T-5
 
-# ★ `g3_dryrun.ar1` reads the MODULE-level DT_S, not a caller argument
-#   (`G-L101`; it invalidated run 1 of the kill test). Bind it once, then
-#   VERIFY the realised phi rather than trusting the binding.
-g3_dryrun.DT_S = DT_S
+# G-L101 / 20R2.9-A5: each generator call selects dt_s explicitly.
 
 
 def assert_realised_tau(tau_s: float) -> None:
@@ -95,7 +92,7 @@ def assert_realised_tau(tau_s: float) -> None:
             self.first = False
             return value
 
-    probe = g3_dryrun.ar1(1, tau_s, 4, ImpulseRng())[0]
+    probe = g3_dryrun.ar1(1, tau_s, 4, ImpulseRng(), dt_s=DT_S)[0]
     phi = float(probe[1] / probe[0])
     tau_eff = -DT_S / np.log(phi)
     if not np.isclose(tau_eff, tau_s, rtol=1e-10):
@@ -117,7 +114,7 @@ def run_cell(tau_s: float, sigma_ref: float, n_rep: int, rng,
         print(f"START tau={tau_s:g} sigma={sigma_ref:g} rep={rep+1}/{n_rep} "
               f"duration={n_win * DT_S:g}s UTC={datetime.now(timezone.utc).isoformat()}",
               flush=True)
-        trace = physical_trace(OMEGA, tau_s, tau_s, n_win, rng, a0=a0)
+        trace = physical_trace(OMEGA, tau_s, tau_s, n_win, rng, a0=a0, dt_s=DT_S)
         rho_target = trace["rho_target"].T                  # (n_win, n_link)
 
         monitor = BacklogMonitor(IFACE)
@@ -310,7 +307,11 @@ def main() -> None:
     if args.dry:
         _dry_run(Path(args.out).with_name("g3b_dry_run.json")); return
 
-    out = Path(args.out)
+    if args.run:
+        _run(Path(args.out))
+
+
+def _run(out: Path) -> None:
     npz = out.with_name(out.stem + "_series.npz")
     checkpoint_dir = out.with_name(out.stem + "_checkpoints")
     for path in (out, npz, checkpoint_dir):

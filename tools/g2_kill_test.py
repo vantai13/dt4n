@@ -58,14 +58,8 @@ PEER = [f"g2p{i}" for i in range(len(LINKS))]
 ADDR_ROOT = [f"10.90.{i}.1" for i in range(len(LINKS))]
 ADDR_PEER = [f"10.90.{i}.2" for i in range(len(LINKS))]
 
-# ★ `tools.g3_dryrun.ar1` reads the module-level `DT_S` (0.2 s) rather than a
-# caller-supplied step, so `physical_trace(tau_s=...)` silently generates
-# `phi = exp(-DT_S/tau)`. Driving that series at a different `dt` realises
-# `tau_eff = -dt/log(phi)`, not `tau`. Run 1 of the kill test was executed at
-# `tau_eff = 1.0 s` instead of the signed 2.0 s for exactly this reason, and
-# was recorded invalid. Bind the constant to the step actually used, and put
-# the value in the artifact so the realised tau is never implicit again.
-g3_dryrun.DT_S = DT_S
+# G-L101 / 20R2.9-A5: pass dt_s at each generator call; never mutate
+# g3_dryrun during import. Historical run 1 used the wrong time step.
 
 
 def sh(*cmd: str, check: bool = True) -> subprocess.CompletedProcess:
@@ -176,7 +170,7 @@ class BacklogMonitor(threading.Thread):
 
 def run_replicate(rep: int, n_link: int, n_win: int, rng) -> dict:
     ifaces, caps = IFACE[:n_link], CAP_BPS[:n_link]
-    trace = physical_trace(OMEGA, TAU_S, TAU_S, n_win, rng)
+    trace = physical_trace(OMEGA, TAU_S, TAU_S, n_win, rng, dt_s=DT_S)
     rho_target = trace["rho_target"][:n_link].T          # (n_win, n_link)
     clips = {k: float(trace[k]) for k in
              ("component_clip_fraction", "path_clip_fraction",
@@ -331,20 +325,23 @@ def chown_back(path: Path) -> None:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--setup", action="store_true")
-    ap.add_argument("--teardown", action="store_true")
-    ap.add_argument("--smoke", action="store_true")
-    ap.add_argument("--run", action="store_true")
+    mode = ap.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--setup", action="store_true")
+    mode.add_argument("--teardown", action="store_true")
+    mode.add_argument("--smoke", action="store_true")
+    mode.add_argument("--run", action="store_true")
     args = ap.parse_args()
-
     if args.setup:
         setup()
-        return
-    if args.teardown:
+    elif args.teardown:
         teardown()
-        return
+    elif args.smoke:
+        _run(smoke=True)
+    elif args.run:
+        _run(smoke=False)
 
-    smoke = args.smoke
+
+def _run(*, smoke: bool) -> None:
     n_link = 1 if smoke else len(LINKS)
     n_rep = 1 if smoke else N_REPLICATES
     n_win = int(round((60.0 if smoke else T_RUN_S) / DT_S))

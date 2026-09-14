@@ -17,11 +17,16 @@ def ideal_cells():
             for t, s, _ in GRID]
 
 
-def test_guard_checks_recurrence_and_detects_wrong_module_step(monkeypatch):
-    monkeypatch.setattr(g3_dryrun, "DT_S", .1)
+def test_guard_checks_recurrence_and_detects_wrong_generator_step(monkeypatch):
+    # Changing a foreign module global no longer affects this explicit caller.
+    monkeypatch.setattr(g3_dryrun, "DT_S", .2)
     for tau in (2, 5, 30):
         assert_realised_tau(tau)
-    monkeypatch.setattr(g3_dryrun, "DT_S", .2)
+    original = g3_dryrun.ar1
+    def wrong_step(*args, **kwargs):
+        kwargs["dt_s"] = .2
+        return original(*args, **kwargs)
+    monkeypatch.setattr(g3_dryrun, "ar1", wrong_step)
     for tau in (2, 5, 30):
         with pytest.raises(RuntimeError, match="G-L101"):
             assert_realised_tau(tau)

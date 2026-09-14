@@ -50,7 +50,6 @@ N_PAIRS = len(LINKS) * (len(LINKS) - 1) // 2
 # `tau_eff = 1.0 s` instead of the signed 2.0 s for exactly this reason, and
 # was recorded invalid. Bind the constant to the step actually used, and put
 # the value in the artifact so the realised tau is never implicit again.
-g3_dryrun.DT_S = DT_S
 
 
 def fisher_pool(rs: np.ndarray) -> np.ndarray:
@@ -68,7 +67,7 @@ def main() -> None:
     for trial in range(N_TRIALS):
         reps = []
         for _ in range(N_REPLICATES):
-            trace = physical_trace(0.0, TAU_S, TAU_S, n, rng)
+            trace = physical_trace(0.0, TAU_S, TAU_S, n, rng, dt_s=DT_S)
             reps.append(np.corrcoef(trace["rho_target"])[upper])
         pooled = np.abs(fisher_pool(np.array(reps)))
         maxes[trial] = pooled.max()

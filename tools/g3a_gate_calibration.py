@@ -43,8 +43,7 @@ V_PER_LINK = None          # filled from the measured artifact at run time
 SERIES_ANALYSIS = Path("results/SMOKE/phase-G2/g2_series_analysis.json")
 SEED = 2026_09_05
 
-# G-L101: bind the generator's step to the step actually driven.
-g3_dryrun.DT_S = DT_S
+# G-L101 / A5: generator step is passed explicitly at the call below.
 
 
 def main() -> None:
@@ -64,7 +63,7 @@ def main() -> None:
         for _ in range(N_TRIALS):
             per_rep = []
             for _ in range(N_REPLICATES):
-                trace = physical_trace(omega, TAU_S, TAU_S, n_win, rng)
+                trace = physical_trace(omega, TAU_S, TAU_S, n_win, rng, dt_s=DT_S)
                 rho = trace["rho_target"].T                     # (n_win, n_link)
                 # MA(1) nugget: the conserving path measured in G'.2
                 # absolute MA(1) nugget at the measured per-link variance

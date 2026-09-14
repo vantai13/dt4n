@@ -152,9 +152,13 @@ def component_baselines(a0: float = A0) -> tuple[np.ndarray, np.ndarray, np.ndar
 
 
 def ar1(
-    n_processes: int, tau_s: float, n: int, rng: np.random.Generator
+    n_processes: int, tau_s: float, n: int, rng: np.random.Generator,
+    *, dt_s: float | None = None,
 ) -> np.ndarray:
-    phi = float(np.exp(-DT_S / tau_s))
+    step = DT_S if dt_s is None else float(dt_s)
+    if not np.isfinite(step) or step <= 0:
+        raise ValueError("dt_s must be finite and positive")
+    phi = float(np.exp(-step / tau_s))
     innovation_scale = float(np.sqrt(1.0 - phi * phi))
     values = np.empty((n_processes, n), dtype=float)
     values[:, 0] = rng.standard_normal(n_processes)
@@ -173,17 +177,18 @@ def physical_trace(
     n: int,
     rng: np.random.Generator,
     a0: float = A0,
+    *, dt_s: float | None = None,
 ) -> dict[str, object]:
     """Generate nonnegative physical components and aggregate link targets."""
     path_base, private_base, reconstructed = component_baselines(a0)
     path_rate_raw = (
         path_base[:, None]
-        + a0 * np.sqrt(omega) * ar1(len(path_base), tau_path_s, n, rng)
+        + a0 * np.sqrt(omega) * ar1(len(path_base), tau_path_s, n, rng, dt_s=dt_s)
     )
     private_amplitude = a0 * np.sqrt((1.0 - omega) * DEGREE)
     private_rate_raw = (
         private_base[:, None]
-        + private_amplitude[:, None] * ar1(len(LINKS), tau_link_s, n, rng)
+        + private_amplitude[:, None] * ar1(len(LINKS), tau_link_s, n, rng, dt_s=dt_s)
     )
     path_rate = np.maximum(path_rate_raw, 0.0)
     private_rate = np.maximum(private_rate_raw, 0.0)

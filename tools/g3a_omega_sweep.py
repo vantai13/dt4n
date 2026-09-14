@@ -40,7 +40,6 @@ FIT_LAGS = 8
 FIT_LAG_LO = 2          # G-A019/G-L103
 SEED = 2026_09_05
 
-g3_dryrun.DT_S = DT_S   # G-L101
 
 
 def sf_from_series(x: np.ndarray) -> float:
@@ -62,7 +61,7 @@ def run_level(omega: float, n_win: int, rng) -> dict:
     n_link = len(LINKS)
     reps = []
     for rep in range(N_REPLICATES):
-        trace = physical_trace(omega, TAU_S, TAU_S, n_win, rng)
+        trace = physical_trace(omega, TAU_S, TAU_S, n_win, rng, dt_s=DT_S)
         rho_target = trace["rho_target"].T
         monitor = BacklogMonitor(IFACE)
         rx0 = [peer_rx_bytes(i) for i in range(n_link)]
@@ -190,15 +189,20 @@ def gates(levels: list[dict]) -> dict:
 
 def main() -> None:
     ap = argparse.ArgumentParser()
-    ap.add_argument("--setup", action="store_true")
-    ap.add_argument("--teardown", action="store_true")
-    ap.add_argument("--run", action="store_true")
+    mode = ap.add_mutually_exclusive_group(required=True)
+    mode.add_argument("--setup", action="store_true")
+    mode.add_argument("--teardown", action="store_true")
+    mode.add_argument("--run", action="store_true")
     args = ap.parse_args()
     if args.setup:
-        setup(); return
-    if args.teardown:
-        teardown(); return
+        setup()
+    elif args.teardown:
+        teardown()
+    elif args.run:
+        _run()
 
+
+def _run() -> None:
     n_win = int(round(T_RUN_S / DT_S))
     python_bin = os.environ.get("G2_PYTHON", "python3")
     procs = start_traffic(python_bin, len(LINKS))
