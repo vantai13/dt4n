@@ -47,6 +47,34 @@ def _side(p: pathlib.Path) -> pathlib.Path:
     return p.with_name(p.name[: -len(".parquet")] + "_report.json")
 
 
+def realizability_pass2(d, gate=None):
+    """H8's production reader, also exercised by missing-argument mutations."""
+    import measurements.decision_error_v2 as DE
+    from measurements.sla_calib_v2 import DEFAULT_DT
+    from cert.realizability_gate import realizability_gate
+    if gate is None:
+        gate = realizability_gate
+    rows8 = []
+    for (br, mode, rb, tau, sig), g in d.groupby(
+            ["branch", "mode", "rho_bar", "tau_rho", "sigma_rho"]):
+        n = int(g["n"].iloc[0])
+        blocks = int(math.floor(n * DEFAULT_DT / (DE.BLOCKS_PER_TAU * float(tau))))
+        r = gate(
+            mode=str(mode), rho_bar=float(rb), tau=float(tau), dt=DEFAULT_DT, n=n,
+            sigma=float(sig),
+            clip_fraction=float(g["ar1_clip_ratio"].max()),
+            min_cell_blocks=blocks)
+        if r["verdict_strict"] != "REALIZABLE":
+            rows8.append({"branch": br, "cell": "%s@%.3f" % (mode, rb), "tau": float(tau),
+                          "verdict": r["verdict"],
+                          "verdict_strict": r["verdict_strict"],
+                          "not_evaluated": r["not_evaluated"],
+                          "failed": r["failed"]})
+    return {"n_cells": int(d.groupby(
+        ["branch", "mode", "rho_bar", "tau_rho", "sigma_rho"]).ngroups),
+        "rejected": rows8}
+
+
 def main(argv=None) -> int:
     import measurements.decision_error_v2 as DE
     from measurements.sla_calib_v2 import DEFAULT_DT
@@ -171,24 +199,9 @@ def main(argv=None) -> int:
         d["branch"] = e["branch"]
         frames.append(d)
     d = pd.concat(frames, ignore_index=True)
-    rows8 = []
-    for (br, mode, rb, tau, sig), g in d.groupby(
-            ["branch", "mode", "rho_bar", "tau_rho", "sigma_rho"]):
-        n = int(g["n"].iloc[0])
-        blocks = int(math.floor(n * DEFAULT_DT / (DE.BLOCKS_PER_TAU * float(tau))))
-        r = realizability_gate(
-            mode=str(mode), rho_bar=float(rb), tau=float(tau), dt=DEFAULT_DT, n=n,
-            sigma=float(sig),
-            clip_fraction=float(g["ar1_clip_ratio"].max()),
-            min_cell_blocks=blocks)
-        if r["verdict"] != "REALIZABLE":
-            rows8.append({"branch": br, "cell": "%s@%.3f" % (mode, rb), "tau": float(tau),
-                          "verdict": r["verdict"],
-                          "failed": [k for k, c in r["checks"].items()
-                                     if isinstance(c, dict) and c.get("ok") is False]})
-    put("H8_realizability_pass2_on_measured", not rows8,
-        n_cells=int(d.groupby(["branch", "mode", "rho_bar", "tau_rho", "sigma_rho"]).ngroups),
-        rejected=rows8, mapping=plan["realizability_pass2_mapping"])
+    pass2 = realizability_pass2(d)
+    put("H8_realizability_pass2_on_measured", not pass2["rejected"],
+        **pass2, mapping=plan["realizability_pass2_mapping"])
 
     # H9 -- NGAN SACH, khong phai validity. Lech ngan sach khong lam ket qua sai.
     secs = sum(e["seconds"] for e in non)

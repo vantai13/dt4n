@@ -192,7 +192,11 @@ def realizability_gate(
         "checks": checks,
         "failed": failed,
         "not_evaluated": not_eval,
+        # 20R2.9-A2: preserve the signed narrow verdict and expose completeness.
         "verdict": "REALIZABLE" if not failed else "REJECTED",
+        "complete": not not_eval,
+        "verdict_strict": ("REJECTED" if failed else
+                           "INCOMPLETE" if not_eval else "REALIZABLE"),
     }
 
 
