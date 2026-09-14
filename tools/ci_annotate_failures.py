@@ -53,7 +53,9 @@ def main() -> int:
         joined = "%0A".join("%s  [%s]" % (name, kind) for kind, name, _ in found)
         print("::error title=danh sach day du (%d)::%s" % (len(found), joined))
     for kind, name, message in found[:MAX_ANNOTATIONS]:
-        print("::error title=%s::%s: %s" % (kind, name, message[:300]))
+        # Thong bao dai hon 300 ky tu: phan duoi cung cua stderr thuong la
+        # CHO DUY NHAT noi ly do that su (vd mot tool thoat ma 1).
+        print("::error title=%s::%s: %s" % (kind, name, message[:1800]))
 
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:

@@ -108,6 +108,61 @@
       "reason": "kiem quyen tren cay results/ that.",
       "coverage_lost": "khoa ghi tang dong khong duoc kiem o CI.",
       "closes_when": "khong dong."
+    },
+    {
+      "missing_input": "/home/ubuntu/backups/dt4n/20260906T100621Z/SEAL.json (va cay backup kem theo)",
+      "ignored_by": "khong phai .gitignore -- duong dan TUYET DOI ngoai kho, ghi o results/DATA_MANIFEST.json:52",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "seal tro toi mot cay backup ngoai kho, khong do duoc tu day",
+      "added_by": "20R2.9-C (do run #219 khai ten)",
+      "test": "test/test_phase_g_custody.py::test_local_phase_g_gate_is_open_but_public_archive_is_not",
+      "reason": "evaluate() doc seal that; thieu seal thi basis tro thanh USER_ATTESTED.../BACKUP_WAIVER.",
+      "coverage_lost": "doi chung 'cong gate G cuc bo MO nhung luu tru cong khai thi KHONG' khong chay o CI.",
+      "closes_when": "seal va manifest duoc tro toi mot duong dan TRONG kho (hoac mot mau da commit), hoac phep kiem doc tu mot receipt da commit thay vi tu cay backup cua may tac gia."
+    },
+    {
+      "missing_input": "/home/ubuntu/backups/dt4n/20260906T100621Z/SEAL.json (va cay backup kem theo)",
+      "ignored_by": "khong phai .gitignore -- duong dan TUYET DOI ngoai kho, ghi o results/DATA_MANIFEST.json:52",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "seal tro toi mot cay backup ngoai kho, khong do duoc tu day",
+      "added_by": "20R2.9-C (do run #219 khai ten)",
+      "test": "test/test_phase_g_custody.py::test_verified_seal_opens_campaign_execution_without_a_doi",
+      "reason": "cung duong dan seal; khong co seal thi co mo chien dich la False.",
+      "coverage_lost": "doi chung 'seal da kiem cho phep chay chien dich ma khong can DOI' khong chay o CI.",
+      "closes_when": "seal va manifest duoc tro toi mot duong dan TRONG kho (hoac mot mau da commit), hoac phep kiem doc tu mot receipt da commit thay vi tu cay backup cua may tac gia."
+    },
+    {
+      "missing_input": "/home/ubuntu/backups/dt4n/20260906T100621Z/SEAL.json (va cay backup kem theo)",
+      "ignored_by": "khong phai .gitignore -- duong dan TUYET DOI ngoai kho, ghi o results/DATA_MANIFEST.json:52",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "seal tro toi mot cay backup ngoai kho, khong do duoc tu day",
+      "added_by": "20R2.9-C (do run #219 khai ten)",
+      "test": "test/test_phase_g_custody.py::test_seal_is_reverified_not_trusted_from_the_manifest",
+      "reason": "monkeypatch mot seal gia roi doi thong bao 'changed'; khong co seal that thi thong bao la 'seal file missing'.",
+      "coverage_lost": "doi chung 'seal duoc KIEM LAI chu khong tin theo manifest' khong chay o CI.",
+      "closes_when": "seal va manifest duoc tro toi mot duong dan TRONG kho (hoac mot mau da commit), hoac phep kiem doc tu mot receipt da commit thay vi tu cay backup cua may tac gia."
+    },
+    {
+      "missing_input": "/home/ubuntu/backups/dt4n/20260906T100621Z/SEAL.json (va cay backup kem theo)",
+      "ignored_by": "khong phai .gitignore -- duong dan TUYET DOI ngoai kho, ghi o results/DATA_MANIFEST.json:52",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "seal tro toi mot cay backup ngoai kho, khong do duoc tu day",
+      "added_by": "20R2.9-C (do run #219 khai ten)",
+      "test": "test/test_phase_g_custody.py::test_shallow_check_still_catches_a_truncated_archive",
+      "reason": "nhu tren, tren nhanh archive bi cat ngan.",
+      "coverage_lost": "doi chung phat hien archive bi cat ngan khong chay o CI.",
+      "closes_when": "seal va manifest duoc tro toi mot duong dan TRONG kho (hoac mot mau da commit), hoac phep kiem doc tu mot receipt da commit thay vi tu cay backup cua may tac gia."
+    },
+    {
+      "missing_input": "/home/ubuntu/backups/dt4n/20260906T100621Z/SEAL.json (va cay backup kem theo)",
+      "ignored_by": "khong phai .gitignore -- duong dan TUYET DOI ngoai kho, ghi o results/DATA_MANIFEST.json:52",
+      "approx_bytes_each": null,
+      "approx_bytes_each_undefined_reason": "seal tro toi mot cay backup ngoai kho, khong do duoc tu day",
+      "added_by": "20R2.9-C (do run #219 khai ten)",
+      "test": "test/test_phase_g_custody.py::test_seal_file_itself_never_carries_a_doi",
+      "reason": "doc thang tep seal.",
+      "coverage_lost": "doi chung 'tep seal khong bao gio mang DOI' khong chay o CI.",
+      "closes_when": "seal va manifest duoc tro toi mot duong dan TRONG kho (hoac mot mau da commit), hoac phep kiem doc tu mot receipt da commit thay vi tu cay backup cua may tac gia."
     }
   ],
   "hostcap_entries": [

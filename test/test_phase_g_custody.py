@@ -6,6 +6,11 @@ import pytest
 from tools.check_phase_g_custody import evaluate
 
 
+# [20R2.9-C] G23-222: `evaluate()` doc seal thuc te tai duong dan TUYET DOI ghi
+# trong results/DATA_MANIFEST.json:52 -- /home/ubuntu/backups/... -- nam NGOAI kho
+# va ngoai may bat ky ai khac. Tren clone CI -> FileNotFoundError.
+# `test_seal_cannot_assert_public_archival` thuan logic nen VAN chay o CI.
+@pytest.mark.custody
 def test_local_phase_g_gate_is_open_but_public_archive_is_not():
     result = evaluate()
 
@@ -16,6 +21,11 @@ def test_local_phase_g_gate_is_open_but_public_archive_is_not():
     assert result["historical_cleanup_allowed"] is False
 
 
+# [20R2.9-C] G23-222: `evaluate()` doc seal thuc te tai duong dan TUYET DOI ghi
+# trong results/DATA_MANIFEST.json:52 -- /home/ubuntu/backups/... -- nam NGOAI kho
+# va ngoai may bat ky ai khac. Tren clone CI -> FileNotFoundError.
+# `test_seal_cannot_assert_public_archival` thuan logic nen VAN chay o CI.
+@pytest.mark.custody
 def test_verified_seal_opens_campaign_execution_without_a_doi():
     result = evaluate()
 
@@ -23,6 +33,11 @@ def test_verified_seal_opens_campaign_execution_without_a_doi():
     assert result["doi"] is None
 
 
+# [20R2.9-C] G23-222: `evaluate()` doc seal thuc te tai duong dan TUYET DOI ghi
+# trong results/DATA_MANIFEST.json:52 -- /home/ubuntu/backups/... -- nam NGOAI kho
+# va ngoai may bat ky ai khac. Tren clone CI -> FileNotFoundError.
+# `test_seal_cannot_assert_public_archival` thuan logic nen VAN chay o CI.
+@pytest.mark.custody
 def test_seal_is_reverified_not_trusted_from_the_manifest(tmp_path, monkeypatch):
     """A seal whose file no longer matches must fall back, not silently pass."""
     import tools.check_phase_g_custody as module
@@ -39,6 +54,11 @@ def test_seal_is_reverified_not_trusted_from_the_manifest(tmp_path, monkeypatch)
     assert "changed" in result["seal_detail"]
 
 
+# [20R2.9-C] G23-222: `evaluate()` doc seal thuc te tai duong dan TUYET DOI ghi
+# trong results/DATA_MANIFEST.json:52 -- /home/ubuntu/backups/... -- nam NGOAI kho
+# va ngoai may bat ky ai khac. Tren clone CI -> FileNotFoundError.
+# `test_seal_cannot_assert_public_archival` thuan logic nen VAN chay o CI.
+@pytest.mark.custody
 def test_shallow_check_still_catches_a_truncated_archive(tmp_path, monkeypatch):
     """Size is the cheap half of the archive check; it runs without --deep."""
     import tools.check_phase_g_custody as module
@@ -69,6 +89,11 @@ def test_seal_cannot_assert_public_archival():
     assert held is False and "public archival" in detail
 
 
+# [20R2.9-C] G23-222: `evaluate()` doc seal thuc te tai duong dan TUYET DOI ghi
+# trong results/DATA_MANIFEST.json:52 -- /home/ubuntu/backups/... -- nam NGOAI kho
+# va ngoai may bat ky ai khac. Tren clone CI -> FileNotFoundError.
+# `test_seal_cannot_assert_public_archival` thuan logic nen VAN chay o CI.
+@pytest.mark.custody
 def test_seal_file_itself_never_carries_a_doi():
     manifest = json.loads(Path("results/DATA_MANIFEST.json").read_text())
     seal = json.loads(Path(manifest["custody"]["local_backup_seal"]["seal_path"]).read_text())
