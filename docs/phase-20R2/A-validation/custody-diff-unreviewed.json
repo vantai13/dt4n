@@ -1,0 +1,102 @@
+{
+  "all_field_diff": {
+    "/estimands/DECISION_ERR_BY_AGE/ARTIFACT_FIELD_LINE": {
+      "after": 567,
+      "after_present": true,
+      "before": 564,
+      "before_present": true
+    },
+    "/estimands/DECISION_ERR_BY_AGE/DECOMPOSITION/per_z[<z_key>].err_model": {
+      "after": 568,
+      "after_present": true,
+      "before": 565,
+      "before_present": true
+    },
+    "/estimands/DECISION_ERR_BY_AGE/DECOMPOSITION/per_z[<z_key>].err_stale": {
+      "after": 569,
+      "after_present": true,
+      "before": 566,
+      "before_present": true
+    },
+    "/estimands/DECISION_ERR_BY_AGE/DECOMPOSITION/per_z[<z_key>].extrapolated": {
+      "after": 574,
+      "after_present": true,
+      "before": 571,
+      "before_present": true
+    },
+    "/estimands/SLA_VIOL_BY_AGE/ARTIFACT_FIELD_LINE": {
+      "after": 570,
+      "after_present": true,
+      "before": 567,
+      "before_present": true
+    },
+    "/estimands/SLA_VIOL_BY_AGE/CORRECTED": {
+      "after": "20R2.7-B1: UNIT va SCALE cua ban truoc SAI so voi ma (khai 'ms'/'cost_ms'). ARTIFACT_FIELD_LINE thi DUNG tu dau.",
+      "after_present": true,
+      "before": null,
+      "before_present": false
+    },
+    "/estimands/SLA_VIOL_BY_AGE/IDENTITY": {
+      "after": "d_sla = err_total * Delta_cond, voi Delta_cond = E[viol_twin - viol_truth | twin SAI] in [-1, 1]. Suy ra tu dinh nghia: tai moi t co a_twin == a_truth thi hieu = 0. He qua CHINH XAC: |d_sla| <= err_total.",
+      "after_present": true,
+      "before": null,
+      "before_present": false
+    },
+    "/estimands/SLA_VIOL_BY_AGE/SCALE": {
+      "after": "hieu TI LE VI PHAM SLA giua duong twin chon va duong dung: mean_t[viol(t, a_twin)] - mean_t[viol(t, a_truth)], voi viol = (delay > T_delay) OR (loss > T_loss) (dong 388). PHU THUOC truc SLA TRUC TIEP qua hai NGUONG, va GIAN TIEP qua w_loss (vi w_loss quyet dinh argmin). KHAC DECISION_ERR_BY_AGE: err dem SAI QUYET DINH, d_sla dem HAU QUA SLA cua sai do.",
+      "after_present": true,
+      "before": "cost_ms -- DI QUA ham chi phi (delay + w_loss * loss), nen NHAY voi w_loss va voi truc SLA. Day la khac biet CHINH voi DECISION_ERR_BY_AGE: err la TI LE, d_sla la CHI PHI. Khac ca THANG va DON VI.",
+      "before_present": true
+    },
+    "/estimands/SLA_VIOL_BY_AGE/UNIT": {
+      "after": "dimensionless -- hieu hai ti le, trong [-1, 1]",
+      "after_present": true,
+      "before": "ms",
+      "before_present": true
+    },
+    "/generated_utc": {
+      "after": "2026-09-11T01:55:19.132475+00:00",
+      "after_present": true,
+      "before": "2026-09-10T11:17:35.917183+00:00",
+      "before_present": true
+    }
+  },
+  "commit_after": "79de5a0",
+  "commit_before": "b855d49",
+  "numeric_diff": {
+    "/estimands/DECISION_ERR_BY_AGE/ARTIFACT_FIELD_LINE": [
+      564,
+      567
+    ],
+    "/estimands/DECISION_ERR_BY_AGE/DECOMPOSITION/per_z[<z_key>].err_model": [
+      565,
+      568
+    ],
+    "/estimands/DECISION_ERR_BY_AGE/DECOMPOSITION/per_z[<z_key>].err_stale": [
+      566,
+      569
+    ],
+    "/estimands/DECISION_ERR_BY_AGE/DECOMPOSITION/per_z[<z_key>].extrapolated": [
+      571,
+      574
+    ],
+    "/estimands/SLA_VIOL_BY_AGE/ARTIFACT_FIELD_LINE": [
+      567,
+      570
+    ]
+  },
+  "numeric_fields_changed": 5,
+  "numeric_fields_total": 149,
+  "path": "docs/phase-20R2/01-prediction-signed.json",
+  "reason": "20R2.7-B1: correct UNIT/SCALE and source line references without changing predictions",
+  "sha_after": "6ec81b2584779f128d33bc20e3cd55bf57f7ebc5b545fcc8de8795d303897291",
+  "sha_before": "d9eef23b75c26881f5df2ad7c44a12017593aad2eb92323f7297b42d4462beac",
+  "string_fields_changed": [
+    "/estimands/SLA_VIOL_BY_AGE/CORRECTED",
+    "/estimands/SLA_VIOL_BY_AGE/IDENTITY",
+    "/estimands/SLA_VIOL_BY_AGE/SCALE",
+    "/estimands/SLA_VIOL_BY_AGE/UNIT",
+    "/generated_utc"
+  ],
+  "verdict_affected": null
+}

@@ -116,6 +116,10 @@ TOO_SLOW_FOR_SUITE = {
 # 20R2.5 -- ba tool KHONG chay duoc trong bo test, moi cai mot ly do KHAC nhau.
 # Chung van phai duoc CANH, nen moi cai ghi ro no duoc kiem O DAU.
 NEEDS_SIGNED_CAMPAIGN = {
+    "tools.20r2_9_axis_chain": "historical pins and campaign; test_axis_chain_resolves.py",
+    "tools.20r2_9_custody_diff": "historical git bytes; test_pins_resolve_through_custody.py",
+    "tools.20r2_9_backfill_validity": "transactional mutation controls; test_20r2_9_backfill_safety.py",
+    "tools.20r2_9_regenerate_legacy_metadata": "historical T2 inputs; CLI replay in test_20r2_9_legacy_metadata.py",
     # Tat dinh, nhung ~3-4 phut (2 luoi x 8 tau x 10 o). Duoc kiem bang HANH VI
     # o test_20r2_3_anchors.py: mot test chay that qua run_cell, mot test cay
     # loi lech-mot va DOI doi chung phai do (mutation testing).

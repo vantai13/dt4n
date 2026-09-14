@@ -1,0 +1,294 @@
+{
+  "schema": "dt4n.axis_chain_20r2_a1.v1",
+  "derived": [
+    {
+      "artifact": "docs/phase-20R2/01-prediction-signed.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/02-se-pilot.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/03-run-plan.json",
+      "status": "PINS_RESOLVED",
+      "sla_labels": [
+        "exogenous_g114_S-B"
+      ],
+      "comparison_control_exception": false,
+      "all_artifact_axes_explicit": false,
+      "inputs": [
+        {
+          "path": "docs/phase-20R2/01-prediction-signed.json",
+          "pin_status": "CUSTODY",
+          "sla_labels": [],
+          "unresolved_leaves": [
+            "docs/phase-20R2/01-prediction-signed.json"
+          ],
+          "children": []
+        },
+        {
+          "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+          "pin_status": "CURRENT",
+          "sla_labels": [
+            "exogenous_g114_S-B"
+          ],
+          "unresolved_leaves": [],
+          "children": []
+        },
+        {
+          "path": "results/PENDING/phase-20R2/cpu_pilot.json",
+          "pin_status": "CURRENT",
+          "sla_labels": [],
+          "unresolved_leaves": [
+            "results/PENDING/phase-20R2/cpu_pilot.json"
+          ],
+          "children": [],
+          "declared_validity": {
+            "aoi_axis": {
+              "label": "UNREGISTERED",
+              "note": "chi phi do bang cach TRUYEN luoi z 20R2 qua tham so; harness van dung luoi legacy (20R2-D3). Con so 35.7 phut chi dung sau khi noi luoi vao ma.",
+              "z_grid_s": []
+            },
+            "axis_role": "cpu_pilot",
+            "note": "chi phi do bang cach TRUYEN luoi z 20R2 qua tham so; harness van dung luoi legacy (20R2-D3). Con so 35.7 phut chi dung sau khi noi luoi vao ma.",
+            "omega": null,
+            "pending_on": [
+              "aoi_axis",
+              "sla_axis"
+            ],
+            "schema": "dt4n.validity.v1",
+            "sla_axis": {
+              "label": "UNREGISTERED",
+              "match_method": "none",
+              "note": "cho A5 (prereg muc 3) duoc KY; chua chay tren mot truc SLA nao"
+            },
+            "w_loss": null
+          }
+        }
+      ]
+    },
+    {
+      "artifact": "docs/phase-20R2/05-hygiene.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/06-adjudication.json",
+      "status": "PINS_RESOLVED",
+      "sla_labels": [
+        "exogenous_g114_S-B"
+      ],
+      "comparison_control_exception": false,
+      "all_artifact_axes_explicit": false,
+      "inputs": [
+        {
+          "path": "docs/phase-20R2/01-prediction-signed.json",
+          "pin_status": "CUSTODY",
+          "sla_labels": [],
+          "unresolved_leaves": [
+            "docs/phase-20R2/01-prediction-signed.json"
+          ],
+          "children": []
+        },
+        {
+          "path": "docs/phase-20R2/02-se-pilot.json",
+          "pin_status": "CURRENT",
+          "sla_labels": [],
+          "unresolved_leaves": [
+            "docs/phase-20R2/02-se-pilot.json"
+          ],
+          "children": []
+        },
+        {
+          "path": "docs/phase-20R2/03-run-plan.json",
+          "pin_status": "CURRENT",
+          "sla_labels": [
+            "exogenous_g114_S-B"
+          ],
+          "unresolved_leaves": [
+            "docs/phase-20R2/01-prediction-signed.json",
+            "results/PENDING/phase-20R2/cpu_pilot.json"
+          ],
+          "children": [
+            {
+              "path": "docs/phase-20R2/01-prediction-signed.json",
+              "pin_status": "CUSTODY",
+              "sla_labels": [],
+              "unresolved_leaves": [
+                "docs/phase-20R2/01-prediction-signed.json"
+              ],
+              "children": []
+            },
+            {
+              "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+              "pin_status": "CURRENT",
+              "sla_labels": [
+                "exogenous_g114_S-B"
+              ],
+              "unresolved_leaves": [],
+              "children": []
+            },
+            {
+              "path": "results/PENDING/phase-20R2/cpu_pilot.json",
+              "pin_status": "CURRENT",
+              "sla_labels": [],
+              "unresolved_leaves": [
+                "results/PENDING/phase-20R2/cpu_pilot.json"
+              ],
+              "children": [],
+              "declared_validity": {
+                "aoi_axis": {
+                  "label": "UNREGISTERED",
+                  "note": "chi phi do bang cach TRUYEN luoi z 20R2 qua tham so; harness van dung luoi legacy (20R2-D3). Con so 35.7 phut chi dung sau khi noi luoi vao ma.",
+                  "z_grid_s": []
+                },
+                "axis_role": "cpu_pilot",
+                "note": "chi phi do bang cach TRUYEN luoi z 20R2 qua tham so; harness van dung luoi legacy (20R2-D3). Con so 35.7 phut chi dung sau khi noi luoi vao ma.",
+                "omega": null,
+                "pending_on": [
+                  "aoi_axis",
+                  "sla_axis"
+                ],
+                "schema": "dt4n.validity.v1",
+                "sla_axis": {
+                  "label": "UNREGISTERED",
+                  "match_method": "none",
+                  "note": "cho A5 (prereg muc 3) duoc KY; chua chay tren mot truc SLA nao"
+                },
+                "w_loss": null
+              }
+            }
+          ]
+        },
+        {
+          "path": "docs/phase-20R2/04-campaign-log.jsonl",
+          "pin_status": "CURRENT",
+          "sla_labels": [
+            "exogenous_g114_S-B"
+          ],
+          "unresolved_leaves": [],
+          "children": [],
+          "campaign_noncanary_count": 160,
+          "campaign_axis_contexts": [
+            {
+              "branch": "control_legacy",
+              "sla": "exogenous_g114_S-B",
+              "aoi": "aoi_axis_free",
+              "z_grid": "legacy"
+            },
+            {
+              "branch": "main",
+              "sla": "exogenous_g114_S-B",
+              "aoi": "aoi_axis_free",
+              "z_grid": "20r2_measured"
+            }
+          ]
+        },
+        {
+          "path": "docs/phase-20R2/05-hygiene.json",
+          "pin_status": "CURRENT",
+          "sla_labels": [],
+          "unresolved_leaves": [
+            "docs/phase-20R2/05-hygiene.json"
+          ],
+          "children": []
+        }
+      ]
+    },
+    {
+      "artifact": "docs/phase-20R2/06b-per-cell.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/06c-g4-predictions.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/06c-g4-score.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/07-dsla.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/07a-dsla-structure.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/08-handoff-measurements.json",
+      "status": "DEBT_D11_NO_CANONICAL_PINS"
+    },
+    {
+      "artifact": "docs/phase-20R2/E1-mechanics.json",
+      "status": "PINS_RESOLVED",
+      "sla_labels": [
+        "exogenous_g114_S-B"
+      ],
+      "comparison_control_exception": false,
+      "all_artifact_axes_explicit": false,
+      "inputs": [
+        {
+          "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+          "pin_status": "CURRENT",
+          "sla_labels": [
+            "exogenous_g114_S-B"
+          ],
+          "unresolved_leaves": [],
+          "children": []
+        },
+        {
+          "path": "results/LIVE/phase-20R/truth_table.parquet",
+          "pin_status": "CURRENT",
+          "sla_labels": [],
+          "unresolved_leaves": [],
+          "children": []
+        }
+      ]
+    },
+    {
+      "artifact": "docs/phase-20R2/E1b-partition-invariance.json",
+      "status": "PINS_RESOLVED",
+      "sla_labels": [
+        "exogenous_g114_S-B",
+        "self_calibrated"
+      ],
+      "comparison_control_exception": true,
+      "all_artifact_axes_explicit": false,
+      "inputs": [
+        {
+          "path": "results/LIVE/phase-20R/sla_calibration.json",
+          "pin_status": "CURRENT",
+          "sla_labels": [
+            "self_calibrated"
+          ],
+          "unresolved_leaves": [],
+          "children": []
+        },
+        {
+          "path": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json",
+          "pin_status": "CURRENT",
+          "sla_labels": [
+            "exogenous_g114_S-B"
+          ],
+          "unresolved_leaves": [],
+          "children": []
+        },
+        {
+          "path": "results/LIVE/phase-20R/truth_table.parquet",
+          "pin_status": "CURRENT",
+          "sla_labels": [],
+          "unresolved_leaves": [],
+          "children": []
+        }
+      ]
+    }
+  ],
+  "summary": {
+    "n_derived": 13,
+    "n_pin_bearing": 4,
+    "n_without_canonical_pins": 9,
+    "gate_20R2_6a": "FAIL_WITH_PARTIAL_LINEAGE_REPAIR",
+    "note": "Resolvable pinned SLA evidence does not make every frozen artifact explicitly declare all axes. D11 remains open."
+  }
+}
