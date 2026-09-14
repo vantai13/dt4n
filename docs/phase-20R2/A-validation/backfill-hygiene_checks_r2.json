@@ -1,0 +1,16 @@
+{
+  "artifact": "results/PENDING/phase-T2/hygiene_checks_r2.json",
+  "generator_argv": [
+    "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python",
+    "-m",
+    "tools.t2_6_hygiene_r2",
+    "--out",
+    "/tmp/20r2-a3-61yxwxcy/hygiene_checks_r2.json"
+  ],
+  "returncode": 0,
+  "sha_before": "d55cb759f9a4d5684d87c3cca5294b79dbd45ae4e4c995889387a34c9639ba91",
+  "sha_after": "896198a3705a1a5b1931a82bc897247b5426c36898712c75b91f114c119a2e9d",
+  "non_validity_canonical_bytes_identical": true,
+  "generator_stdout": "KIEM_1_canary_NC_T2_4 -> PASS\nKIEM_3_branch_join_NC_T2_2 -> PASS\nKIEM_2 ar1 -> PASS\n-> /tmp/20r2-a3-61yxwxcy/hygiene_checks_r2.json\n{\n  \"KIEM_1_canary_NC_T2_4\": {\n    \"max_span_any_numeric_column\": 0.0,\n    \"n_canary\": 6,\n    \"n_distinct_sha256\": 1,\n    \"verdict\": \"PASS\"\n  },\n  \"KIEM_2_clip\": {\n    \"ar1_clip\": {\n      \"R5_threshold\": 0.0009,\n      \"median_max_over_cells\": 0.0008651785714285714,\n      \"single_draw_max\": 0.0030504464285714284,\n      \"verdict\": \"PASS\",\n      \"worst_cell\": \"('cbr', np.float64(0.7), np.float64(28.0), np.float64(0.046220930232558126))\"\n    },\n    \"headline_cells\": {\n      \"('h2', 0.7)\": {\n        \"ar1_median\": 0.0008651785714285714,\n        \"tt_median\": 0.0002\n      },\n      \"('poisson', 0.85)\": {\n        \"ar1_median\": 0.000693125,\n        \"tt_median\": 0.0061\n      },\n      \"('poisson', 0.925)\": {\n        \"ar1_median\": 0.000438125,\n        \"tt_median\": 0.00759\n      }\n    },\n    \"note\": \"Trung vi va min/max qua 5 seed; tau=28 co n*dt/tau=50, uoc luong duoi nhieu.\",\n    \"tt_domain_clip\": {\n      \"median_max_over_cells\": 0.033405,\n      \"note\": \"R7 -- ngoai suy phang, KHONG co nguong da ky\",\n      \"single_draw_max\": 0.08563928571428571,\n      \"worst_cell\": \"('h2', np.float64(0.96), np.float64(0.5), np.float64(0.009593023255813982))\"\n    }\n  },\n  \"KIEM_3_branch_join_NC_T2_2\": {\n    \"max_rel_span_err_total\": 0.0,\n    \"max_rel_span_rms_e_model\": 0.0,\n    \"note\": \"rms_e_model KHONG phu thuoc z; khac 0 la bang chung cua so lech\",\n    \"threshold\": 0.01,\n    \"verdict\": \"PASS\"\n  },\n  \"git_commit\": \"d8956cf5650c023c809659aa0c58886b79388b4a\",\n  \"n_commands\": 166,\n  \"n_rows\": 10940,\n  \"n_rows_without_canaries\": 10400,\n  \"phase\": \"T2.6 luot 2 -- sau A-T2-1 va A-T2-2\",\n  \"seconds\": 1834.2758779525757,\n  \"validity\": {\n    \"aoi_axis\": {\n      \"label\": \"UNREGISTERED\",\n      \"note\": \"T2 fixed/scaled age grids are not an approved measured-v7 certificate axis; this is a hygiene audit, not a new outcome.\"\n    },\n    \"axis_role\": \"hygiene_only\",\n    \"note\": \"Metadata completion only; no promotion or new adjudication. T2 fixed/scaled age grids are not an approved measured-v7 certificate axis; this is a hygiene audit, not a new outcome.\",\n    \"pending_on\": [\n      \"aoi_axis\"\n    ],\n    \"schema\": \"dt4n.validity.v1\",\n    \"sla_axis\": {\n      \"label\": \"UNREGISTERED\",\n      \"note\": \"No approved SLA claim is inferred from this historical diagnostic.\"\n    }\n  }\n}\n",
+  "generator_stderr": ""
+}

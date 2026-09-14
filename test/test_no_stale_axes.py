@@ -376,6 +376,10 @@ PENDING_NO_VALIDITY_GRANDFATHERED.update({
 })
 
 
+# AMENDMENT-20R2-A3: exact eight historical exceptions, each with executable expiry.
+PENDING_NO_VALIDITY_GRANDFATHERED.update({'phase-T2/adjudication_r2.json': 'A3/L3: historical adjudication; no outcome rerun. Remove when a reviewed successor adjudication exists and this artifact receives truthful validity.', 'phase-T2/clip_direction_r2.json': 'A3/L2: generator exists only as untracked results/PENDING/phase-T2/t2_clip_direction.py; no maintained, tested producer. Remove when tools/t2_clip_direction.py is restored or validity is produced.', 'phase-T2/preservation_r2.json': 'A3/L2: untracked finish script requires missing /tmp/t2_r1_preservation.json; cannot reconstruct the historical before-snapshot. Remove when a maintained preservation producer restores that custody input.', 'phase-T2/conformal_u_main.json': 'A3/L2: no maintained producer for the u certificate with its exact historical inputs. Remove when tools/t2_conformal_u.py emits validity.', 'phase-T2/conformal_u_cond.json': 'A3/L2: no maintained producer for the conditional-u certificate and original split. Remove when tools/t2_conformal_u.py emits validity.', 'phase-T2/conformal_u_cond_load.json': 'A3/L2: no maintained producer for the load-conditional u certificate and original split. Remove when tools/t2_conformal_u.py emits validity.', 'phase-T2/calib_p0925_tau10_report.json': 'A3/L2: calibration report producer/command not preserved in tools; do not guess axes from a report name. Remove when tools/t2_calib_report.py is restored or truthful validity is emitted.', 'phase-T2/calib_p0925_tau10_v3_report.json': 'A3/L2: exact historical v3 calibration command/report producer not preserved. Remove when tools/t2_calib_report.py is restored or truthful validity is emitted.'})
+
+
 def _pending_json() -> list[str]:
     return sorted(glob.glob(os.path.join(PENDING, "**", "*.json"), recursive=True))
 

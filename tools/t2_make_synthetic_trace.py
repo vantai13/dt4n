@@ -139,6 +139,11 @@ def main(argv=None) -> int:
                  "(chu ky dong bo), KHONG tu file nay."),
         "sha256_csv": hashlib.sha256(out.read_bytes()).hexdigest(),
     }
+    from measurements.legacy_pending_validity import pending_validity
+    meta['validity'] = pending_validity('load_trace_axis_free',
+        'This load trace generates no AoI; its downstream certificate still needs an approved '
+        'age axis and resolution of the documented B3 sigma-scale mismatch. No AoI generator '
+        'or approved SLA axis is attributed to this trace.')
     meta_path = out.with_suffix(".meta.json")
     meta_path.write_text(json.dumps(meta, indent=2, sort_keys=True) + "\n")
 

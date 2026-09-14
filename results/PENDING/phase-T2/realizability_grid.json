@@ -7876,5 +7876,26 @@
       ],
       "verdict": "REALIZABLE"
     }
-  ]
+  ],
+  "validity": {
+    "aoi_axis": {
+      "label": "UNREGISTERED",
+      "note": "Historical T2 fixed/scaled age choices or a pre-screen with no age axis; not an approved measured-v7 AoI certificate. Retain in PENDING until the corresponding age/certificate axis is specified and reviewed."
+    },
+    "axis_role": "historical_grid",
+    "historical_gate_ref": "576e360f",
+    "note": "Metadata completion only; no promotion or new adjudication. Historical T2 fixed/scaled age choices or a pre-screen with no age axis; not an approved measured-v7 AoI certificate. Retain in PENDING until the corresponding age/certificate axis is specified and reviewed.",
+    "pending_on": [
+      "aoi_axis"
+    ],
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "UNREGISTERED",
+      "note": "No approved SLA claim is inferred from this historical diagnostic."
+    },
+    "strict_reading": {
+      "n_incomplete": 96,
+      "note": "The 96 legacy REALIZABLE labels do not certify completeness."
+    }
+  }
 }

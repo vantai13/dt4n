@@ -47,5 +47,21 @@
   "n_rows": 10940,
   "n_rows_without_canaries": 10400,
   "phase": "T2.6 luot 2 -- sau A-T2-1 va A-T2-2",
-  "seconds": 1834.2758779525757
+  "seconds": 1834.2758779525757,
+  "validity": {
+    "aoi_axis": {
+      "label": "UNREGISTERED",
+      "note": "T2 fixed/scaled age grids are not an approved measured-v7 certificate axis; this is a hygiene audit, not a new outcome."
+    },
+    "axis_role": "hygiene_only",
+    "note": "Metadata completion only; no promotion or new adjudication. T2 fixed/scaled age grids are not an approved measured-v7 certificate axis; this is a hygiene audit, not a new outcome.",
+    "pending_on": [
+      "aoi_axis"
+    ],
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "UNREGISTERED",
+      "note": "No approved SLA claim is inferred from this historical diagnostic."
+    }
+  }
 }

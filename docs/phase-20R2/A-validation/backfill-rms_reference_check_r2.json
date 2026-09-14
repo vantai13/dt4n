@@ -1,0 +1,16 @@
+{
+  "artifact": "results/PENDING/phase-T2/rms_reference_check_r2.json",
+  "generator_argv": [
+    "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python",
+    "-m",
+    "tools.t2_6_rms_reference_check",
+    "--out",
+    "/tmp/20r2-a3-7dmihqia/rms_reference_check_r2.json"
+  ],
+  "returncode": 0,
+  "sha_before": "0c48f960dced192675559e21dc0cf5cec4c2fecb704eb2d1e80629b7586be7b2",
+  "sha_after": "c582664a62efdf4fcce42d22515680f198a5a32290d9ec5377fe1d3c2a7cdc3d",
+  "non_validity_canonical_bytes_identical": true,
+  "generator_stdout": "{\n  \"formula\": \"sqrt(rms_e_model**2 + 2*cov_e + rms_e_stale**2)\",\n  \"formula_verdict\": \"PASS\",\n  \"reference_source\": \"results/SUPERSEDED/phase-22/tau_sweep_poisson_0.925.json\",\n  \"reference_sha256\": \"659878301da7fdb7c3511aaba170a79fe172d6d6518142f5c66f464a4c2530b2\",\n  \"reference_tau\": 0.5,\n  \"reference_provenance\": {\n    \"calibration\": \"results/phase-20R/sla_calibration.json\",\n    \"dt\": 0.005,\n    \"git_dirty\": true,\n    \"git_hash\": \"bf98eb536be4147af57192cc903d0ffc4c5fc6fb\",\n    \"n\": 200000,\n    \"script\": \"cert/tau_sweep.py\",\n    \"seeds\": [\n      101,\n      102,\n      103,\n      104,\n      105\n    ],\n    \"sigma_rho\": 0.0096,\n    \"timestamp_utc\": \"2026-08-13T13:21:33.694050+00:00\",\n    \"truth_table\": \"results/phase-20R/truth_table.parquet\"\n  },\n  \"n_decomposition_rows\": 100,\n  \"max_abs_formula_error\": 7.105427357601002e-15,\n  \"reference_fit_difference\": {\n    \"A\": 0.0,\n    \"c\": 8.881784197001252e-16,\n    \"rms_e_model\": 8.43769498715119e-15\n  },\n  \"example\": {\n    \"z_s\": 0.054999999701976776,\n    \"n\": 10000.0,\n    \"rms_e_model\": 2.15153199684004,\n    \"rms_e_stale\": 8.380710429373005,\n    \"cov_e\": -3.5175494720007237,\n    \"rms_total\": 8.235915145897662,\n    \"corr_e\": -0.1950794713037984,\n    \"rms_total_reconstructed\": 8.235915145897662\n  },\n  \"cross_phase_estimand_verdict\": \"INCOMPATIBLE\",\n  \"phase22_quantity\": \"RMS of cost margin error between two actions ranked by stale twin; cost includes w_loss * loss\",\n  \"t2_quantity\": \"RMS of delay error over all actions; delay excludes w_loss * loss\",\n  \"phase22_code\": \"cert/tau_sweep.py:build_at_tau + decompose\",\n  \"t2_code\": \"measurements/decision_error_v2.py:run_cell\",\n  \"consequence\": \"Algebraic identity passes, but it does not make the two estimands equal. Do not adjudicate signed RMS predictions or infer conformal lift from T2 delay RMS.\",\n  \"validity\": {\n    \"schema\": \"dt4n.validity.v1\",\n    \"axis_role\": \"estimand_reference_audit\",\n    \"pending_on\": [\n      \"aoi_axis\"\n    ],\n    \"aoi_axis\": {\n      \"label\": \"UNREGISTERED\",\n      \"note\": \"Historical margin/cost reference uses legacy age, not the measured-v7 all-action estimand; retain until its certificate axis is registered.\"\n    },\n    \"sla_axis\": {\n      \"label\": \"UNREGISTERED\",\n      \"note\": \"No approved SLA claim is inferred from this historical diagnostic.\"\n    },\n    \"note\": \"Metadata completion only; no promotion or new adjudication. Historical margin/cost reference uses legacy age, not the measured-v7 all-action estimand; retain until its certificate axis is registered.\"\n  }\n}\n",
+  "generator_stderr": ""
+}

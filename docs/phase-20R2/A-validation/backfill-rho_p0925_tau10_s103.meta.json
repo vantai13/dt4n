@@ -1,0 +1,30 @@
+{
+  "artifact": "results/PENDING/phase-T2/traces/rho_p0925_tau10_s103.meta.json",
+  "generator_argv": [
+    "/home/ubuntu/miniforge3/envs/sdn_rl/bin/python",
+    "-m",
+    "tools.t2_make_synthetic_trace",
+    "--mode",
+    "poisson",
+    "--rho-bar",
+    "0.925",
+    "--a",
+    "0.9",
+    "--tau",
+    "10",
+    "--seed",
+    "103",
+    "--dt",
+    "0.005",
+    "--n",
+    "200000",
+    "--out",
+    "/tmp/20r2-a3-anmwxrxm/rho_p0925_tau10_s103.csv"
+  ],
+  "returncode": 0,
+  "sha_before": "51c731c6fde7b5c7fc8012564e16170bfe19b631e60f7d27bcd6f8dd376f8985",
+  "sha_after": "06ab201048302d7eb1180464b8dc6e893eae05e9c60b1dc8bdfd844b27b38459",
+  "non_validity_canonical_bytes_identical": true,
+  "generator_stdout": "-> /tmp/20r2-a3-anmwxrxm/rho_p0925_tau10_s103.csv  (200000 hang x 8 link)\n-> /tmp/20r2-a3-anmwxrxm/rho_p0925_tau10_s103.meta.json\n   sigma_hat=0.0207775 (design 0.0218023)  clip=0.0024%  cycles=100.0\n   B3: sigma trace / SIGMA_RHO calib = 2.18x\n",
+  "generator_stderr": ""
+}

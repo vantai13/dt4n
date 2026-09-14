@@ -35,5 +35,21 @@
     "tau_load_of_this_trace": 10.0,
     "why": "sigma_z van dung tau_core = 2.87 (DO DUOC) chu KHONG dong bo theo tau_load. Day la lua chon CO CHU Y theo QD-1/F1: tau_core va tau_load la hai dai luong khac nhau. Ghi ca hai so de khong ai doc nham thanh mot loi."
   },
-  "tau_load": 10.0
+  "tau_load": 10.0,
+  "validity": {
+    "aoi_axis": {
+      "label": "UNREGISTERED",
+      "note": "This load trace generates no AoI; its downstream certificate still needs an approved age axis and resolution of the documented B3 sigma-scale mismatch. No AoI generator or approved SLA axis is attributed to this trace."
+    },
+    "axis_role": "load_trace_axis_free",
+    "note": "Metadata completion only; no promotion or new adjudication. This load trace generates no AoI; its downstream certificate still needs an approved age axis and resolution of the documented B3 sigma-scale mismatch. No AoI generator or approved SLA axis is attributed to this trace.",
+    "pending_on": [
+      "aoi_axis"
+    ],
+    "schema": "dt4n.validity.v1",
+    "sla_axis": {
+      "label": "UNREGISTERED",
+      "note": "No approved SLA claim is inferred from this historical diagnostic."
+    }
+  }
 }

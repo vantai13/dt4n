@@ -44,5 +44,21 @@
   "t2_quantity": "RMS of delay error over all actions; delay excludes w_loss * loss",
   "phase22_code": "cert/tau_sweep.py:build_at_tau + decompose",
   "t2_code": "measurements/decision_error_v2.py:run_cell",
-  "consequence": "Algebraic identity passes, but it does not make the two estimands equal. Do not adjudicate signed RMS predictions or infer conformal lift from T2 delay RMS."
+  "consequence": "Algebraic identity passes, but it does not make the two estimands equal. Do not adjudicate signed RMS predictions or infer conformal lift from T2 delay RMS.",
+  "validity": {
+    "schema": "dt4n.validity.v1",
+    "axis_role": "estimand_reference_audit",
+    "pending_on": [
+      "aoi_axis"
+    ],
+    "aoi_axis": {
+      "label": "UNREGISTERED",
+      "note": "Historical margin/cost reference uses legacy age, not the measured-v7 all-action estimand; retain until its certificate axis is registered."
+    },
+    "sla_axis": {
+      "label": "UNREGISTERED",
+      "note": "No approved SLA claim is inferred from this historical diagnostic."
+    },
+    "note": "Metadata completion only; no promotion or new adjudication. Historical margin/cost reference uses legacy age, not the measured-v7 all-action estimand; retain until its certificate axis is registered."
+  }
 }
