@@ -14,6 +14,15 @@ matplotlib==3.10.8
 networkx==3.6.1
 pytest==9.0.3
 
+# [20R2.9-C] Hai goi nay TRUOC DAY khong duoc ghim, va hau qua chi thay o CI:
+# tren mot moi truong chi cai dung tep nay, 5 module test dung o buoc THU GOM
+# (`requests` 4, `mpmath` 1), nen `pytest` Interrupted va khong chay test nao.
+# Chung co san trong env `sdn_rl` nen o local khong ai thay. Day dung la benh
+# ma chinh tep nay duoc lap ra de chua: mot con so loi chi so sanh duoc giua
+# hai lan chay CUNG moi truong.
+requests==2.33.1
+mpmath==1.3.0
+
 # ---------------------------------------------------------------------------
 # MININET -- doc ky, day la cho de sai nhat trong repo nay.
 #
