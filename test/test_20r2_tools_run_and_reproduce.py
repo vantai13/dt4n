@@ -212,6 +212,25 @@ def _n1_failure_state(out: pathlib.Path) -> str:
     return json.dumps(state, sort_keys=True, ensure_ascii=True)
 
 
+def test_n1_parquet_diagnostic_keeps_the_changed_value(tmp_path: pathlib.Path) -> None:
+    """Neu N1 tai phat, annotation phai noi cot/hang/gia tri nao da doi."""
+    import importlib
+    import pandas as pd
+
+    regression = importlib.import_module("tools.20r2_3_bit_exact_regression")
+
+    expected = tmp_path / "expected.parquet"
+    actual = tmp_path / "actual.parquet"
+    pd.DataFrame({"x": [1.0, 2.0]}).to_parquet(expected, index=False)
+    pd.DataFrame({"x": [1.0, 2.0 + 2 ** -50]}).to_parquet(actual, index=False)
+    detail = regression._parquet_difference(expected, actual)
+    changed = detail["value_differences"]
+    assert detail["values_equal"] is False
+    assert changed[0]["column"] == "x"
+    assert changed[0]["samples"][0]["row"] == 1
+    assert changed[0]["samples"][0]["delta"] != 0.0
+
+
 @pytest.mark.parametrize("module,spec", sorted(TOOLS.items()))
 def test_tool_exits_zero_on_its_own_documented_command(module, spec, tmp_path):
     """DAY CHUYEN: lenh trong docstring cua tool phai thoat ma 0.

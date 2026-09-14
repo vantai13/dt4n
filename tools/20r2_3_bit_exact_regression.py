@@ -67,6 +67,53 @@ def _sha256(path: pathlib.Path) -> str:
     return h.hexdigest()
 
 
+def _parquet_difference(expected: pathlib.Path, actual: pathlib.Path) -> dict:
+    """Describe a mismatch before the temporary replay file is deleted."""
+    import pandas as pd
+
+    left = pd.read_parquet(expected)
+    right = pd.read_parquet(actual)
+    detail: dict[str, object] = {
+        "expected_bytes": expected.stat().st_size,
+        "actual_bytes": actual.stat().st_size,
+        "shape_expected": list(left.shape),
+        "shape_actual": list(right.shape),
+        "columns_equal": list(left.columns) == list(right.columns),
+        "dtypes_expected": {name: str(dtype) for name, dtype in left.dtypes.items()},
+        "dtypes_actual": {name: str(dtype) for name, dtype in right.dtypes.items()},
+    }
+    if left.shape != right.shape or list(left.columns) != list(right.columns):
+        return detail
+
+    differences = []
+    for column in left.columns:
+        a = left[column]
+        b = right[column]
+        equal = a.eq(b) | (a.isna() & b.isna())
+        if bool(equal.all()):
+            continue
+        positions = [int(i) for i in range(len(equal)) if not bool(equal.iloc[i])]
+        samples = []
+        for position in positions[:5]:
+            av, bv = a.iloc[position], b.iloc[position]
+            sample = {"row": position, "expected": repr(av), "actual": repr(bv)}
+            if isinstance(av, float) and isinstance(bv, float):
+                sample.update({
+                    "expected_hex": av.hex(),
+                    "actual_hex": bv.hex(),
+                    "delta": bv - av,
+                })
+            samples.append(sample)
+        differences.append({
+            "column": str(column),
+            "n_unequal": len(positions),
+            "samples": samples,
+        })
+    detail["values_equal"] = not differences
+    detail["value_differences"] = differences
+    return detail
+
+
 def _entries() -> list:
     out = []
     with open(REPO / RUN_LOG_REL, encoding="utf-8") as fh:
@@ -120,7 +167,13 @@ def run(limit: int | None, reuse_rows: str | None = None) -> dict:
         out = os.path.join(tmp, "replay_r%04d.parquet" % e["run_index"])
         cmd = _replay_cmd(e, out)
         r = subprocess.run(cmd, cwd=str(REPO), capture_output=True, text=True)
-        actual = _sha256(pathlib.Path(out)) if os.path.exists(out) else None
+        actual_path = pathlib.Path(out)
+        actual = _sha256(actual_path) if actual_path.exists() else None
+        matches = actual == e["sha256"]
+        difference = None
+        if actual_path.exists() and not matches:
+            expected_path = REPO / e["out"]
+            difference = _parquet_difference(expected_path, actual_path)
         rows.append({
             "run_index": e["run_index"],
             "tau": e["tau"], "seed": e["seed"], "a": e.get("a"),
@@ -129,9 +182,10 @@ def run(limit: int | None, reuse_rows: str | None = None) -> dict:
             "git_commit_original": e.get("git_commit"),
             "sha_expected": e["sha256"],
             "sha_actual": actual,
-            "match": actual == e["sha256"],
+            "match": matches,
             "returncode": r.returncode,
             "stderr_tail": r.stderr[-300:] if r.returncode else "",
+            "difference": difference,
         })
         if os.path.exists(out):
             os.remove(out)
