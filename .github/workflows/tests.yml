@@ -29,4 +29,11 @@ jobs:
         run: pytest test/test_no_stale_axes.py -q
       # `custody` doc parquet ngoai git tren may tac gia; clone CI khong co va
       # khong nen do. Bat bien noi dung van nam trong suite portable.
-      - run: pytest test/ -q -m "not live and not custody"
+      # `--junitxml` de buoc duoi bien that bai thanh ANNOTATION. Nhat ky job
+      # doi quyen admin kho (403), nen khong co buoc do thi mot nguoi ngoai chi
+      # doc duoc "failure" ma khong biet TEST NAO -- tuc CI khong doc duoc, va
+      # mot co che phong thu khong ai doc duoc thi da chet.
+      - run: pytest test/ -q -m "not live and not custody" --junitxml=pytest.xml
+      - name: surface pytest failures as readable annotations
+        if: always()
+        run: python tools/ci_annotate_failures.py pytest.xml
