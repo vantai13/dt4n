@@ -338,8 +338,12 @@ def test_harness_declares_estimands_per_field_not_only_per_artifact(pred):
     assert m["err_total"] == "DECISION_ERR_BY_AGE"
     assert m["d_sla"] == "SLA_VIOL_BY_AGE"
     assert m["rms_e_model"] == "RMS_ALLACTION_DELAY"
-    assert len(set(m.values())) == 3, (
-        "ban do phai phan biet DUNG ba estimand; gop lai la mat do phan giai")
+    assert {
+        "RMS_ALLACTION_DELAY", "DECISION_ERR_BY_AGE", "SLA_VIOL_BY_AGE",
+        "SLA_VIOL_BY_AGE_BY_THRESHOLD",
+    } <= set(m.values()), (
+        "ban do phai phan biet cac estimand da co trong harness; "
+        "gop hoac bo sot la mat do phan giai")
 
 
 def test_every_20r2_estimand_field_is_in_the_harness_map(pred):

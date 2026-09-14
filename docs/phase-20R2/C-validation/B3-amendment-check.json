@@ -1,0 +1,64 @@
+{
+  "after_sha256": "bb1106f32c3deeae2f0ee161544019870745b7b78cd24817edd2afaa12397ab5",
+  "artifact": "docs/phase-20R2/B3-axis-marginal.json",
+  "base_commit": "b4299d913d464a057b5f48a63de6a09a72d22bd9",
+  "before_sha256": "49f4a4d4556feec6ad627aa25328ab760bbed85e6cb556ce95caf1ebd7d0af74",
+  "changes": [
+    {
+      "after": "not applicable to generator base_age_steps",
+      "kind": "added",
+      "pointer": "/age_distributions/measured/generator/d_sync_s_undefined_reason"
+    },
+    {
+      "after": "not applicable to generator base_age_steps",
+      "kind": "added",
+      "pointer": "/age_distributions/measured/generator/sync_period_s_undefined_reason"
+    },
+    {
+      "after": "undefined in seeds 103",
+      "kind": "added",
+      "pointer": "/rows/30/legacy/jensen_gap_relative_undefined_reason"
+    },
+    {
+      "after": "undefined in seeds 103",
+      "kind": "added",
+      "pointer": "/rows/30/measured/jensen_gap_relative_undefined_reason"
+    },
+    {
+      "after": "err_at_E_Z == 0 or Jensen gap undefined",
+      "kind": "added",
+      "pointer": "/rows/30/seeds/2/legacy/jensen_gap_relative_undefined_reason"
+    },
+    {
+      "after": "err_at_E_Z == 0 or Jensen gap undefined",
+      "kind": "added",
+      "pointer": "/rows/30/seeds/2/measured/jensen_gap_relative_undefined_reason"
+    },
+    {
+      "after": "166ddefd06b1c346b6c764da3e562f633d55faa8191a70472003f39ba358f406",
+      "before": "d0277ebe655d5d596486f5dd5e518e0a2fedde95283c41887b62b8d987663760",
+      "kind": "changed",
+      "pointer": "/source_sha256/tools/20r2_9_axis_marginal.py"
+    },
+    {
+      "after": "not applicable to generator base_age_steps",
+      "kind": "added",
+      "pointer": "/validity/aoi_axis/axes/measured/d_sync_s_undefined_reason"
+    },
+    {
+      "after": "not applicable to generator base_age_steps",
+      "kind": "added",
+      "pointer": "/validity/aoi_axis/axes/measured/sync_period_s_undefined_reason"
+    },
+    {
+      "after": "omega is not an axis of the S3 integration",
+      "kind": "added",
+      "pointer": "/validity/omega_undefined_reason"
+    }
+  ],
+  "n_changes": 10,
+  "reason": "F5 adds a local explanation for every null and refreshes the producer source digest.",
+  "schema": "dt4n.20r2_9_c.b3_amendment.v1",
+  "scientific_values_changed": false,
+  "status": "PASS"
+}

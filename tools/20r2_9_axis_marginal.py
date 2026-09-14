@@ -7,6 +7,8 @@ import pandas as pd
 from tools import sensitivity_20r2 as C
 from measurements.validity import aoi_axis
 
+ESTIMAND_BY_FIELD={'E_err':'DECISION_ERR_BY_AXIS'}
+
 def age_distributions(n=1000000,dt=.005):
     from measurements.decision_error import sawtooth_age_steps
     from measurements.aoi_model_v7 import AoIModelV7
@@ -14,10 +16,14 @@ def age_distributions(n=1000000,dt=.005):
     result={}
     for name,fn in generators.items():
         values=fn(n,dt)*dt; levels,counts=np.unique(values,return_counts=True)
+        generator=aoi_axis(fn)
+        for key in ('d_sync_s','sync_period_s'):
+            if generator.get(key) is None:
+                generator[key+'_undefined_reason']='not applicable to generator '+generator['generator_name']
         result[name]={'levels':levels.tolist(),'weights':(counts/n).tolist(),
             'mean_s':float(values.mean()),'cv':float(values.std()/values.mean()),
             'support_s':[float(values.min()),float(values.max())],
-            'generator':aoi_axis(fn),'n_age':n,'dt':dt}
+            'generator':generator,'n_age':n,'dt':dt}
     return result
 
 def integrate(levels,weights,zs,errs):
@@ -32,10 +38,17 @@ def integrate(levels,weights,zs,errs):
     full=partial if mass==0 else None
     status='READABLE' if mass==0 and at_mean is not None else ('PARTIAL_BOUNDED' if mass<=.01 and at_mean is not None else 'UNREADABLE')
     gap=full-at_mean if full is not None and at_mean is not None else None
-    return {'E_err':full,'err_at_E_Z':at_mean,'E_Z':mean,'jensen_gap':gap,
+    result={'E_err':full,'err_at_E_Z':at_mean,'E_Z':mean,'jensen_gap':gap,
         'jensen_gap_relative':gap/at_mean if gap is not None and at_mean else None,
         'mass_outside':mass,'in_domain_integral':partial,'E_err_bounds':[partial,partial+mass],
         'status':status}
+    reasons={'E_err':'age mass outside interpolation domain',
+             'err_at_E_Z':'mean age outside interpolation domain',
+             'jensen_gap':'E_err or err_at_E_Z undefined',
+             'jensen_gap_relative':'err_at_E_Z == 0 or Jensen gap undefined'}
+    for key,reason in reasons.items():
+        if result[key] is None:result[key+'_undefined_reason']=reason
+    return result
 
 def decompose(leg,mea):
     if any(x[k] is None or x[k]<=0 for x in (leg,mea) for k in ('E_err','err_at_E_Z')):
@@ -76,16 +89,21 @@ def build():
             for key in ('E_err','err_at_E_Z','E_Z','jensen_gap','jensen_gap_relative','mass_outside'):
                 vals=[x[name][key] for x in seeds]
                 row[name][key]=float(np.mean(vals)) if all(x is not None for x in vals) else None
+                if row[name][key] is None:
+                    missing=[x['seed'] for x in seeds if x[name][key] is None]
+                    row[name][key+'_undefined_reason']='undefined in seeds '+','.join(map(str,missing))
             row[name]['status']='READABLE' if all(x[name]['status']=='READABLE' for x in seeds) else 'UNREADABLE_OR_PARTIAL'
         row['decomposition']=decompose(row['legacy'],row['measured']);rows.append(row)
     doc={**C.provenance('tools/20r2_9_axis_marginal.py',[C.OLD_PLAN,C.OLD_LOG,
              *[r['out'] for r in runs]],[]),
-        'schema':'dt4n.s3_axis_marginal.v1','estimand_id':'DECISION_ERR_BY_AXIS',
+        'schema':'dt4n.s3_axis_marginal.v1','estimand_id':ESTIMAND_BY_FIELD['E_err'],
         'age_distributions':ages,'shared_z_control':h6,'rows':rows,
         'reading':'Per cell and tau. Piecewise-linear interpolation of stored err(z) using scalar base age distributions. Jensen gap is not a proof of global curvature.'}
     doc['validity']['axis_role']='consumes_axis'
     doc['validity']['aoi_axis']={'label':'COMPARISON_LEGACY_AND_MEASURED','axes':{k:v['generator'] for k,v in ages.items()},
         'note':'Legacy is a named comparison, not approved as a new operating axis.'}
+    if doc['validity'].get('omega') is None:
+        doc['validity']['omega_undefined_reason']='omega is not an axis of the S3 integration'
     doc['source_sha256'].update({p:C.sha(p) for p in ['measurements/decision_error.py','measurements/aoi_model_v7.py']})
     return doc
 

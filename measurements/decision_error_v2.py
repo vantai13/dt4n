@@ -77,6 +77,9 @@ ESTIMAND_BY_FIELD = {
     # phep so NGUONG tra BOOLEAN, va dong 567 lay HIEU HAI TRUNG BINH cua no.
     # Ham chi phi chi cham vao GIAN TIEP qua viec chon argmin.
     "d_sla": "SLA_VIOL_BY_AGE",
+    # [20R2.9-C/F4] Optional S2 threshold-map output. Keep this in the source
+    # registry so registry coverage cannot pass while silently skipping it.
+    "d_sla_at_threshold": "SLA_VIOL_BY_AGE_BY_THRESHOLD",
     # do tre thuan, ms -- w_loss KHONG cham toi duoc
     "rms_e_model": "RMS_ALLACTION_DELAY",
     "rms_e_stale": "RMS_ALLACTION_DELAY",
@@ -602,7 +605,7 @@ def run_cell(
                     'z_s': float(z_s), 't_delay_ms': td, 't_loss': tl,
                     'd_sla_at_threshold': twin_rate - truth_rate,
                     'viol_rate_truth': truth_rate, 'viol_rate_twin': twin_rate,
-                    'estimand_id': 'SLA_VIOL_BY_AGE_BY_THRESHOLD',
+                    'estimand_id': ESTIMAND_BY_FIELD['d_sla_at_threshold'],
                 })
             del grid_viol
     return out

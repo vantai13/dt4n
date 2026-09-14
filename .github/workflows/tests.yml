@@ -7,6 +7,12 @@ jobs:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v4
+        with:
+          # Provenance tests read signed tags and historical source with
+          # git show/log/merge-base. A depth-1 checkout makes them fail by
+          # construction, before they can test the repository.
+          fetch-depth: 0
+          fetch-tags: true
       - uses: actions/setup-python@v5
         with:
           # 3.12 = phien ban da do requirements-test.txt (env sdn_rl).

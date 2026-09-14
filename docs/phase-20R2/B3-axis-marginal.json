@@ -229,13 +229,15 @@
       "dt": 0.005,
       "generator": {
         "d_sync_s": null,
+        "d_sync_s_undefined_reason": "not applicable to generator base_age_steps",
         "generator_module": "measurements.aoi_model_v7",
         "generator_name": "base_age_steps",
         "generator_source_sha256": "aad0454243f4904a4eb8fced0fad70fcbb2ce6893232f5cfa2a14fd1452a9a08",
         "label": "measured_v7_uniform",
         "source_path": "measurements/aoi_model_v7.py",
         "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
-        "sync_period_s": null
+        "sync_period_s": null,
+        "sync_period_s_undefined_reason": "not applicable to generator base_age_steps"
       },
       "levels": [
         0.115,
@@ -7249,6 +7251,7 @@
         "err_at_E_Z": 0.00033165829145728645,
         "jensen_gap": 3.477194634453293e-07,
         "jensen_gap_relative": null,
+        "jensen_gap_relative_undefined_reason": "undefined in seeds 103",
         "mass_outside": 0.0,
         "status": "READABLE"
       },
@@ -7258,6 +7261,7 @@
         "err_at_E_Z": 0.0003399534798994975,
         "jensen_gap": -1.7295680627050667e-06,
         "jensen_gap_relative": null,
+        "jensen_gap_relative_undefined_reason": "undefined in seeds 103",
         "mass_outside": 0.0,
         "status": "READABLE"
       },
@@ -7354,6 +7358,7 @@
             "in_domain_integral": 0.0,
             "jensen_gap": 0.0,
             "jensen_gap_relative": null,
+            "jensen_gap_relative_undefined_reason": "err_at_E_Z == 0 or Jensen gap undefined",
             "mass_outside": 0.0,
             "status": "READABLE"
           },
@@ -7368,6 +7373,7 @@
             "in_domain_integral": 0.0,
             "jensen_gap": 0.0,
             "jensen_gap_relative": null,
+            "jensen_gap_relative_undefined_reason": "err_at_E_Z == 0 or Jensen gap undefined",
             "mass_outside": 0.0,
             "status": "READABLE"
           },
@@ -14822,7 +14828,7 @@
     "measurements/aoi_model_v7.py": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
     "measurements/decision_error.py": "6197c74c16816d2d2b37c6310bb7bce147babcab69bebfc22ec8c5dac8bab92e",
     "measurements/validity.py": "57d8ee6e999c3124e247263a1f923d2526070ce18a052de60895e265d17f6c69",
-    "tools/20r2_9_axis_marginal.py": "d0277ebe655d5d596486f5dd5e518e0a2fedde95283c41887b62b8d987663760",
+    "tools/20r2_9_axis_marginal.py": "166ddefd06b1c346b6c764da3e562f633d55faa8191a70472003f39ba358f406",
     "tools/sensitivity_20r2.py": "c4535fac7e396ff00ac8aaf32809500b9cc9450f68eb680c80b5f22e43c77992"
   },
   "validity": {
@@ -14840,13 +14846,15 @@
         },
         "measured": {
           "d_sync_s": null,
+          "d_sync_s_undefined_reason": "not applicable to generator base_age_steps",
           "generator_module": "measurements.aoi_model_v7",
           "generator_name": "base_age_steps",
           "generator_source_sha256": "aad0454243f4904a4eb8fced0fad70fcbb2ce6893232f5cfa2a14fd1452a9a08",
           "label": "measured_v7_uniform",
           "source_path": "measurements/aoi_model_v7.py",
           "source_sha256": "b6e55a7faceac3b2c736b304ec310a5fc537f000ba2715ff7e473811f737f151",
-          "sync_period_s": null
+          "sync_period_s": null,
+          "sync_period_s_undefined_reason": "not applicable to generator base_age_steps"
         }
       },
       "label": "COMPARISON_LEGACY_AND_MEASURED",
@@ -14855,6 +14863,7 @@
     "axis_role": "consumes_axis",
     "note": "Exploratory sensitivity under B0; does not revise the signed 5/8 decision.",
     "omega": null,
+    "omega_undefined_reason": "omega is not an axis of the S3 integration",
     "schema": "dt4n.validity.v1",
     "sla_axis": {
       "label": "exogenous_g114_S-B",

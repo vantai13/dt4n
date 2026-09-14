@@ -75,6 +75,8 @@ results/**/*
 !results/**/phase-*/*.csv
 !results/**/phase-*/*.png
 !results/**/phase-*/*.sha256
+# Run ledgers are evidence needed to reproduce committed JSON reports.
+!results/**/run_log.jsonl
 
 # Lesson 23.17 -- so sach cua kho phan tang. Phai duoc track.
 !results/MANIFEST.md

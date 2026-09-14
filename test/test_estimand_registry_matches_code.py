@@ -8,12 +8,15 @@ Test nay lam viec do khong the lap lai lang le.
 """
 from __future__ import annotations
 
+import importlib
 import pathlib
 import re
 
 import pytest
 
 from measurements import decision_error_v2 as DE
+
+AXIS = importlib.import_module("tools.20r2_9_axis_marginal")
 
 GLOSSARY = pathlib.Path(__file__).resolve().parents[1] / "docs/GLOSSARY.md"
 
@@ -22,6 +25,18 @@ CONTRACT = {
     "RMS_ALLACTION_DELAY": {"unit": "ms",            "level": "all_action"},
     "DECISION_ERR_BY_AGE": {"unit": "dimensionless", "level": "all_action"},
     "SLA_VIOL_BY_AGE":     {"unit": "dimensionless", "level": "all_action"},
+    "SLA_VIOL_BY_AGE_BY_THRESHOLD": {"unit": "dimensionless", "level": "all_action"},
+    "DECISION_ERR_BY_AXIS": {"unit": "dimensionless", "level": "all_action"},
+}
+
+PRODUCER_FIELDS = {
+    **DE.ESTIMAND_BY_FIELD,
+    **getattr(AXIS, "ESTIMAND_BY_FIELD", {}),
+}
+
+REQUIRED_NEW_FIELDS = {
+    "d_sla_at_threshold": "SLA_VIOL_BY_AGE_BY_THRESHOLD",
+    "E_err": "DECISION_ERR_BY_AXIS",
 }
 
 
@@ -60,8 +75,15 @@ def test_registry_declares_all_seven_fields(eid: str) -> None:
 
 def test_every_artifact_field_maps_to_a_registered_estimand() -> None:
     """Khong mot cot parquet nao duoc mang mot estimand_id khong co trong so."""
-    unknown = {f: e for f, e in DE.ESTIMAND_BY_FIELD.items() if e not in CONTRACT}
+    unknown = {f: e for f, e in PRODUCER_FIELDS.items() if e not in CONTRACT}
     assert not unknown, "cot mang estimand_id chua dang ky: %r" % unknown
+
+
+def test_new_estimands_are_reachable_from_their_producer_fields() -> None:
+    """Chan den xanh rong: moi contract B phai duoc source map su dung."""
+    for field, estimand in REQUIRED_NEW_FIELDS.items():
+        assert PRODUCER_FIELDS.get(field) == estimand
+    assert set(REQUIRED_NEW_FIELDS.values()) <= set(PRODUCER_FIELDS.values())
 
 
 def test_d_sla_is_a_difference_of_rates_not_a_cost() -> None:

@@ -19,6 +19,8 @@ Ngày 2026-09-14. Đọc cùng [B0 đã ký](B0-reading-signed.md). Phụ lục 
 
 SNR*=2.575323556 tại τ=3; từng τ có ngưỡng và khoảng cách riêng. Không hàng nào trong vùng biên ±10%. Đây là độ nhạy của mô hình Gaussian hai đường, giữ r/cặp đường/hình dạng margin và kế thừa SNR ở τ=3. Chưa chứng minh là cận cho pipeline bốn đường hoặc SNR bất biến theo τ.
 
+Biên nhỏ nhất của `h2@0.960` là `snr_relative_distance=0.2068`, chỉ khoảng hai lần vùng UNREADABLE 0.10. Độ lệch chuẩn SNR qua ba seed là 0.1039; vì vậy việc dùng ba seed và báo độ ổn định là phần chịu lực của kết luận ngưỡng. Không suy kết luận tương đương từ một seed đơn lẻ.
+
 ω=.10 là kịch bản đã cố định. CI cũ của Lesson 23.25 tự ghi độ rộng bị đánh giá thiếu; closeout phân biệt noise floor với tương quan thực. Không dùng CI đó để chứng nhận .10 là cận bảo thủ. G1 được lượng hóa một phần, **không đóng nợ đo tải chung 21R2**.
 
 ## G2/G3/G4 — giữ phạm vi, bổ sung bản đồ
