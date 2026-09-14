@@ -1,0 +1,15 @@
+F                                                                        [100%]
+=================================== FAILURES ===================================
+__________________ test_cpu_preflight_refuses_unavailable_cpu __________________
+
+    def test_cpu_preflight_refuses_unavailable_cpu():
+        allowed = sorted(os.sched_getaffinity(0))
+        unavailable = max(allowed) + 1000
+>       candidate = (allowed[0],) * 8 + (allowed[-2], unavailable)
+                                         ^^^^^^^^^^^
+E       IndexError: list index out of range
+
+test/test_g3_emitter.py:160: IndexError
+=========================== short test summary info ============================
+FAILED test/test_g3_emitter.py::test_cpu_preflight_refuses_unavailable_cpu - ...
+1 failed in 0.12s

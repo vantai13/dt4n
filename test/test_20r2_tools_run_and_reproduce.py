@@ -30,7 +30,10 @@ hong; kiem day chuyen bat duoc LY DO lo sau se hong.
 from __future__ import annotations
 
 import json
+import hashlib
+import os
 import pathlib
+import resource
 import subprocess
 import sys
 
@@ -170,6 +173,43 @@ def _run(module: str, out: pathlib.Path, *extra: str) -> subprocess.CompletedPro
         [sys.executable, "-m", module, "--out", str(out), *extra],
         cwd=str(ROOT), capture_output=True, text=True,
     )
+
+
+def _n1_failure_state(out: pathlib.Path) -> str:
+    """Bang chung tai CHINH lan N1 do; khong chay lai de lam mat flake."""
+    state: dict[str, object] = {
+        "affinity": sorted(os.sched_getaffinity(0)),
+        "cpu_count": os.cpu_count(),
+        "loadavg": os.getloadavg(),
+        "children_maxrss_kib": resource.getrusage(resource.RUSAGE_CHILDREN).ru_maxrss,
+        "thread_env": {
+            key: os.environ.get(key)
+            for key in (
+                "OMP_NUM_THREADS", "OPENBLAS_NUM_THREADS", "MKL_NUM_THREADS",
+                "NUMEXPR_NUM_THREADS", "PYTHONHASHSEED", "PYTEST_XDIST_WORKER",
+            )
+        },
+    }
+    paths = [ROOT / "results/PENDING/phase-T2/sweep_r2/run_log.jsonl"]
+    if paths[0].is_file():
+        for line in paths[0].read_text(encoding="utf-8").splitlines()[:3]:
+            paths.append(ROOT / json.loads(line)["out"])
+    state["input_sha256"] = {
+        str(path.relative_to(ROOT)): hashlib.sha256(path.read_bytes()).hexdigest()
+        for path in paths if path.is_file()
+    }
+    if out.is_file():
+        try:
+            doc = json.loads(out.read_text(encoding="utf-8"))
+            state["replay_summary"] = doc.get("summary")
+            state["mismatched_rows"] = [
+                row for row in doc.get("rows", []) if not row.get("match")
+            ]
+        except (OSError, json.JSONDecodeError) as error:
+            state["output_read_error"] = repr(error)
+    else:
+        state["output_missing"] = True
+    return json.dumps(state, sort_keys=True, ensure_ascii=True)
 
 
 @pytest.mark.parametrize("module,spec", sorted(TOOLS.items()))
@@ -417,8 +457,12 @@ def test_slow_tool_runs_on_a_small_slice(module, spec, tmp_path):
     import json as _json
     out = tmp_path / (spec[1] + ".json")
     r = _run(module, out, "--limit", "3")
+    failure_state = _n1_failure_state(out) if r.returncode else ""
     assert r.returncode == 0, (
-        module + " thoat ma " + str(r.returncode) + ":\n" + r.stderr[-1200:])
+        module + " thoat ma " + str(r.returncode) + ":\n"
+        + "N1_STATE=" + failure_state + "\n"
+        + "STDOUT_TAIL=" + r.stdout[-1800:] + "\n"
+        + "STDERR_TAIL=" + r.stderr[-1800:])
     d = _json.loads(out.read_text(encoding="utf-8"))
     assert d["summary"]["n_runs"] == 3
     assert d["summary"]["all_match"], (

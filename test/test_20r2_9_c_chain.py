@@ -175,6 +175,22 @@ def test_in_repo_gate_definitions_quote_a_line_that_really_says_it() -> None:
     assert checked == 6, checked
 
 
+def test_in_repo_gate_source_does_not_point_to_a_superseded_rule() -> None:
+    """Nguon hien hanh phai khac dong cu va moi dau vet dinh chinh phai doc duoc."""
+    for gate in _gate_sources()["gates"]:
+        old = gate.get("superseded_source")
+        if old is None:
+            continue
+        current = (gate["path"], gate["line"], gate["quote"])
+        superseded = (old["path"], old["line"], old["quote"])
+        assert current != superseded, gate["gate"]
+        for source in (old, gate["correction_evidence"]):
+            lines = (ROOT / source["path"]).read_text(encoding="utf-8").splitlines()
+            assert source["quote"] in lines[source["line"] - 1], (
+                gate["gate"], source["path"], source["line"]
+            )
+
+
 def test_a_missing_specification_cannot_arrive_unnoticed() -> None:
     """Khi byte goc xuat hien, so nguon PHAI duoc nang cap -- test nay bat buoc dieu do.
 

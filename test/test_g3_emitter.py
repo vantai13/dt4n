@@ -156,8 +156,15 @@ def test_cpu_map_allows_shared_emitters_but_isolates_sampler_roles():
 
 def test_cpu_preflight_refuses_unavailable_cpu():
     allowed = sorted(os.sched_getaffinity(0))
+    if len(allowed) < 2:
+        pytest.skip(
+            "phep kiem can >= 2 CPU de dung mot ung vien hop le kem mot CPU la"
+        )
     unavailable = max(allowed) + 1000
-    candidate = (allowed[0],) * 8 + (allowed[-2], unavailable)
+    # Tam phan tu la HINH DANG giao thuc (8 emitter), khong phai so CPU may.
+    # Cac emitter duoc phep dung chung CPU; hai vi tri cuoi la sampler va sink.
+    body = (allowed[0],) * 8
+    candidate = body + (allowed[-2], unavailable)
     detail = cpu_preflight(candidate)
     assert not detail["pass"]
     assert unavailable in detail["missing"]

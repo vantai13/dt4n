@@ -9,3 +9,14 @@ Search scopes:
 Several pasted audit/instruction texts mention these names, but none contains the
 complete original document as a file payload. Mentions are not source bytes.
 Status: BLOCKED_INPUT_SOURCE. No retrospective specification was fabricated.
+
+Recheck after independent audit, 2026-09-14
+Reported fingerprints:
+- PHASE_20R2.md: 6ed31baae871b05218dcf3e7553c9e771b14fbce7e763319b03d307feb13ef74, 29077 B, 573 lines
+- MASTER_PLAN_v10.md: 59171a70af966bbfd39f8d6cb974b13b0bdde84024b7d50a173e17a393732360, 94189 B, 1553 lines
+- sha256sum of every readable file under /home/ubuntu/.codex/attachments: 0 matches
+- exact basename search under /home/ubuntu/.codex/attachments, /home/ubuntu/dt4n,
+  /tmp, /mnt, /workspace: 0 matches
+- git log --all for all four requested destination/source names: 0 matches
+The audit attachment contains lines 447-475 as a quotation, not the 29077-byte
+source payload. It cannot satisfy an exact-byte custody claim.

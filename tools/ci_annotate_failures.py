@@ -31,9 +31,18 @@ def failures(path: pathlib.Path):
             if node is None:
                 continue
             name = "%s::%s" % (case.get("classname", ""), case.get("name", ""))
-            first = (node.get("message") or "").strip().splitlines()
-            yield kind, name.replace(".", "/", name.count(".") - 1), first[0] if first else ""
+            headline = (node.get("message") or "").strip()
+            detail = (node.text or "").strip()
+            message = headline
+            if detail and detail not in headline:
+                message = (headline + "\n" + detail).strip()
+            yield kind, name.replace(".", "/", name.count(".") - 1), message
             break
+
+
+def workflow_escape(value: str) -> str:
+    """Escape GitHub workflow-command data without throwing away newlines."""
+    return value.replace("%", "%25").replace("\r", "%0D").replace("\n", "%0A")
 
 
 def main() -> int:
@@ -50,12 +59,14 @@ def main() -> int:
     # Gom TOAN BO ten vao MOT annotation -- `%0A` la ky tu xuong dong trong
     # cu phap workflow command -- roi moi in tung muc co chi tiet.
     if found:
-        joined = "%0A".join("%s  [%s]" % (name, kind) for kind, name, _ in found)
+        joined = "%0A".join(workflow_escape("%s  [%s]" % (name, kind))
+                             for kind, name, _ in found)
         print("::error title=danh sach day du (%d)::%s" % (len(found), joined))
     for kind, name, message in found[:MAX_ANNOTATIONS]:
         # Thong bao dai hon 300 ky tu: phan duoi cung cua stderr thuong la
         # CHO DUY NHAT noi ly do that su (vd mot tool thoat ma 1).
-        print("::error title=%s::%s: %s" % (kind, name, message[:1800]))
+        print("::error title=%s::%s" % (
+            kind, workflow_escape("%s: %s" % (name, message[-6000:]))))
 
     summary = os.environ.get("GITHUB_STEP_SUMMARY")
     if summary:

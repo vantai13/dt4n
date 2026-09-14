@@ -9,15 +9,21 @@
   "missing_documents": [
     {
       "name": "PHASE_20R2.md",
+      "reported_expected_sha256": "6ed31baae871b05218dcf3e7553c9e771b14fbce7e763319b03d307feb13ef74",
+      "reported_expected_bytes": 29077,
+      "reported_expected_lines": 573,
       "searched": "find /home/ubuntu /tmp /mnt /workspace theo dung ten co so; git log --all --name-only; tep dinh kem",
-      "result": "0 ket qua o ca ba pham vi (C-validation/C1-source-search.log)",
+      "result": "0 ket qua o ca ba pham vi; 0 tep dinh kem khop SHA-256 do ban kiem toan bao (C-validation/C1-source-search.log)",
       "class": "UNVERIFIABLE_HERE theo docs/NT_REGISTRY.md",
       "rule": "KHONG tai dung noi dung tu tri nho hoac tu ban kiem toan; muon dung phai commit byte goc truoc."
     },
     {
       "name": "MASTER_PLAN_v10.md",
+      "reported_expected_sha256": "59171a70af966bbfd39f8d6cb974b13b0bdde84024b7d50a173e17a393732360",
+      "reported_expected_bytes": 94189,
+      "reported_expected_lines": 1553,
       "searched": "nhu tren; ngoai ra duong dan duoc khai /mnt/user-data/uploads/MASTER_PLAN_v10.md khong ton tai",
-      "result": "0 ket qua; chi co docs/phase-23/MASTER_PLAN_v8-closeout-addendum.md",
+      "result": "0 ket qua; 0 tep dinh kem khop SHA-256 do ban kiem toan bao; chi co docs/phase-23/MASTER_PLAN_v8-closeout-addendum.md",
       "class": "EXTERNAL theo docs/NT_REGISTRY.md muc EXTERNAL",
       "rule": "nhu tren."
     }
@@ -32,9 +38,20 @@
     {
       "gate": "20R2-2",
       "status": "IN_REPO",
-      "path": "docs/phase-20R2/00-preregistration.md",
-      "line": 871,
-      "quote": "≥ 7/8 điểm đơn điệu        → 20R2-2 PASS"
+      "path": "docs/phase-20R2/01-prediction-signed.json",
+      "line": 256,
+      "quote": "\"pass_rule\": \"don dieu o >= 6/7 CAP => 20R2-2 PASS\",",
+      "superseded_source": {
+        "path": "docs/phase-20R2/00-preregistration.md",
+        "line": 871,
+        "quote": "≥ 7/8 điểm đơn điệu        → 20R2-2 PASS"
+      },
+      "correction_evidence": {
+        "path": "docs/phase-20R2/01-prediction-signed.json",
+        "line": 260,
+        "quote": "CAP LIEN KE, khong phai DIEM. 8 tau cho 7 cap.",
+        "reason": "Ban ky dau dung don dieu tren DIEM; ban ky truoc chien dich sua don vi so sanh thanh CAP vao 2026-09-10."
+      }
     },
     {
       "gate": "20R2-3",
