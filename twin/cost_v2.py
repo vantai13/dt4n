@@ -16,6 +16,8 @@ Hop dong delay ba thanh phan:
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import math
 from typing import Dict, Sequence, Tuple
@@ -104,7 +106,8 @@ def sigma_from_a_regime(mode: str, rho_bar: float, a: float) -> float:
 class CostV2:
     """Bang cost end-to-end. Moi lesson sau deu goi qua lop nay."""
 
-    def __init__(self, fit_path: str = FIT_PATH, strict_reliable: bool = True):
+    def __init__(self, fit_path: str = MUST_CHOOSE, strict_reliable: bool = True):
+        fit_path = require_choice(fit_path, 'fit_path')
         self.m = LinkModelV2.load(fit_path)
         self.strict_reliable = bool(strict_reliable)
         self._cache: Dict[str, Tuple[np.ndarray, np.ndarray]] = {}
@@ -226,7 +229,7 @@ def _path_from_link_fn(link_fn, path: str, w_loss: float) -> Tuple[float, float,
 
 def audit_v1_vs_v2(mode: str = "poisson", w_loss: float = 2500.0) -> str:
     """Return the short audit printed by ``python3 -m twin.cost_v2 --audit``."""
-    cv2 = CostV2(strict_reliable=False)
+    cv2 = CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     lines = [
         "BANG 1 -- lech theo link tai LOAD_MEAN (mode=%s)" % mode,
         "link  bw  q   rho   | v1_delay v1_loss | v2_delay v2_loss | v2/v1",

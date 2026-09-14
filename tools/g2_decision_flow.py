@@ -189,7 +189,7 @@ def _nonlinear_profile(
     rng: np.random.Generator,
 ) -> dict[str, object]:
     """Evaluate current CostV2 after removing the deterministic base margin."""
-    model = CostV2(strict_reliable=False)
+    model = CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     lag = int(round(Z_S / DT_S))
     mean_dict = dict(zip(LINKS, mean_load.tolist()))
     baseline_cost = model.tables(mean_dict, MODE, W_LOSS)[2]

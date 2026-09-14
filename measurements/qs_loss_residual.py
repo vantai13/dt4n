@@ -13,6 +13,8 @@ designed Phase T trajectory and arrival intensity, matching the delay-side
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import math
@@ -68,7 +70,8 @@ def _cell_seed(row: Mapping[str, Any]) -> CellSeed:
 
 
 class LossResidualCalculator:
-    def __init__(self, model_path: str = MODEL_PATH):
+    def __init__(self, model_path: str = MUST_CHOOSE):
+        model_path = require_choice(model_path, 'model_path')
         self.model = LinkModelV2.load(model_path)
         self._cache: Dict[str, Dict[str, Any]] = {}
 
@@ -237,12 +240,15 @@ def _group_rows(rows: Iterable[Mapping[str, Any]], keys: Sequence[str]) -> Dict[
 
 
 def run(
-    main_state: str = MAIN_STATE,
-    control_state: str = CONTROL_STATE,
-    model_path: str = MODEL_PATH,
+    main_state: str = MUST_CHOOSE,
+    control_state: str = MUST_CHOOSE,
+    model_path: str = MUST_CHOOSE,
     modes: Sequence[str] = ("h2", "poisson"),
     a_levels: Sequence[float] = (0.2, 0.9),
 ) -> Dict[str, Any]:
+    main_state = require_choice(main_state, 'main_state')
+    control_state = require_choice(control_state, 'control_state')
+    model_path = require_choice(model_path, 'model_path')
     calc = LossResidualCalculator(model_path)
     rows = _paired_row_diffs(
         _load_rows(main_state),

@@ -11,7 +11,7 @@ from measurements.sla_manifest_exogenous import DERIVED_FROM_SLA, FIXPOINT_TRACE
 
 @pytest.fixture(scope="module")
 def report():
-    return M.build_manifest()
+    return M.build_manifest(wave4_path='results/LIVE/phase-23/sla_exogenous_wave4.json')
 
 
 def test_G23_210_has_14_unique_feasible_cells(report) -> None:

@@ -12,6 +12,8 @@ adds a coarse model-error stress test for the Phase 21R case study.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import hashlib
 import json
@@ -53,7 +55,8 @@ def sha256_file(path: str) -> str:
     return h.hexdigest()
 
 
-def load_calibration(path: str = CAL_PATH) -> Tuple[Dict[Tuple[str, float], Mapping[str, object]], Mapping[str, object]]:
+def load_calibration(path: str = MUST_CHOOSE) -> Tuple[Dict[Tuple[str, float], Mapping[str, object]], Mapping[str, object]]:
+    path = require_choice(path, 'path')
     with open(path, "r", encoding="utf-8") as f:
         report = json.load(f)
     cells = {}
@@ -62,7 +65,8 @@ def load_calibration(path: str = CAL_PATH) -> Tuple[Dict[Tuple[str, float], Mapp
     return cells, report
 
 
-def load_fit(path: str = FIT_PATH) -> Mapping[str, object]:
+def load_fit(path: str = MUST_CHOOSE) -> Mapping[str, object]:
+    path = require_choice(path, 'path')
     with open(path, "r", encoding="utf-8") as f:
         return json.load(f)
 
@@ -281,12 +285,14 @@ def zero_pc1_prediction(cal_cell: Mapping[str, object]) -> Dict[str, object]:
 
 def run_predictions(
     n: int = N,
-    cal_path: str = CAL_PATH,
-    fit_path: str = FIT_PATH,
+    cal_path: str = MUST_CHOOSE,
+    fit_path: str = MUST_CHOOSE,
 ) -> Dict[str, object]:
+    cal_path = require_choice(cal_path, 'cal_path')
+    fit_path = require_choice(fit_path, 'fit_path')
     cal, cal_report = load_calibration(cal_path)
     fit = load_fit(fit_path)
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     main: Dict[str, object] = {}
     model_err: Dict[str, object] = {}
     sensitivity_tau: Dict[str, object] = {}

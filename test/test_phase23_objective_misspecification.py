@@ -28,11 +28,11 @@ def test_relative_path_shift_dung_bang_rescale_w_loss_ve_cost():
 
 
 def test_cell_matrices_ratio_one_override_tai_lap_default():
-    cell = _load_cell("poisson", 0.925)
-    base = cell_matrices(TruthTable(TRUTH_TABLE), n=1200)
+    cell = _load_cell("poisson", 0.925, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
+    base = cell_matrices(TruthTable(TRUTH_TABLE), n=1200, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     same = cell_matrices(
         TruthTable(TRUTH_TABLE), n=1200, w_loss_override=float(cell["w_loss"])
-    )
+    , calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     assert np.array_equal(base["y_true"], same["y_true"])
     assert np.array_equal(base["y_hat"], same["y_hat"])
 

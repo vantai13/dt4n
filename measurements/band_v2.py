@@ -1551,7 +1551,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     if unknown:
         raise ValueError("unknown variants: %s" % unknown)
     records = RS.load(args.residual)
-    cv2 = C.CostV2()
+    cv2 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     tt0 = D.TruthTable()
     cells = [cell for cell in D.feasible_cells(D.CALIBRATION, include_pc1=True) if str(cell["mode"]) != "cbr"]
     if args.rho_bar is not None:

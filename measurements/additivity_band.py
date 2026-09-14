@@ -23,6 +23,8 @@ Design notes:
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import math
@@ -44,8 +46,10 @@ Z90 = 1.644854
 G2_FLOOR = 0.03
 
 
-def load_residuals(diag_ca: str = DIAG_CA, check_report: str = CHECK_REPORT) -> Dict[str, Dict[str, Any]]:
+def load_residuals(diag_ca: str = MUST_CHOOSE, check_report: str = MUST_CHOOSE) -> Dict[str, Dict[str, Any]]:
     """Per-mode residual: point estimate, pooled SE, and a homogeneity test."""
+    diag_ca = require_choice(diag_ca, 'diag_ca')
+    check_report = require_choice(check_report, 'check_report')
     with open(diag_ca, "r", encoding="utf-8") as f:
         sens = json.load(f)["burstiness_sensitivity"]
     with open(check_report, "r", encoding="utf-8") as f:
@@ -153,7 +157,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     seeds = [int(x) for x in args.seeds.split(",") if x.strip()]
 
     resid = load_residuals(args.diag_ca, args.check_report)
-    cv2 = C.CostV2()
+    cv2 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     tt0 = D.TruthTable()
     cells = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True) if str(c["mode"]) != "cbr"]
 

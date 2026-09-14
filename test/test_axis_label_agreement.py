@@ -26,8 +26,8 @@ CODE_TO_REGISTRY = {
 def artifact(request):
     axis, profile = request.param
     df, meta = B.build_one_v3(
-        B._load_cell('poisson', .925), 101, B.TruthTable(B.TRUTH_TABLE),
-        B.C.CostV2(strict_reliable=False), n=20000, aoi_profile=profile, axis=axis)
+        B._load_cell('poisson', .925, calibration_path='results/LIVE/phase-20R/sla_calibration.json'), 101, B.TruthTable(B.TRUTH_TABLE),
+        B.C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json'), n=20000, aoi_profile=profile, axis=axis, sigma=0.0096)
     validity = validity_block(
         aoi_generator=B.AOI_V7 if axis == B.AXIS_MEASURED else B.sawtooth_age_steps,
         z_edges=meta['z_edges_primary'], sla_path=B.CALIBRATION,

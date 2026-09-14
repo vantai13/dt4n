@@ -78,7 +78,7 @@ def test_truth_table_parquet_records_truth_field_metadata(tmp_path):
         encoding="utf-8",
     )
 
-    table = B.write_truth_table(str(phase_l_path), str(phase20r_path), str(out), None)
+    table = B.write_truth_table(str(phase_l_path), str(phase20r_path), str(out), None, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
 
     assert table["delay_mean_ms"].iloc[0] == pytest.approx(7.0)
     try:
@@ -105,7 +105,7 @@ def test_write_truth_table_keeps_only_phase20r_preregistered_grid(tmp_path):
         encoding="utf-8",
     )
 
-    table = B.write_truth_table(str(phase_l_path), str(phase20r_path), str(out), None)
+    table = B.write_truth_table(str(phase_l_path), str(phase20r_path), str(out), None, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
 
     assert len(table) == 1
     assert table["mode"].iloc[0] == "h2"

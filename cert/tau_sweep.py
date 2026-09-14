@@ -149,8 +149,8 @@ def build_at_tau(
             "docs/phase-T2/00-preregistration.md muc A-T2-3 (d2)."
         )
     tt = V3.TruthTable(V3.TRUTH_TABLE)
-    cv = V3.C.CostV2(strict_reliable=False)
-    cell = V3._load_cell(str(mode), float(rho_bar))
+    cv = V3.C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
+    cell = V3._load_cell(str(mode), float(rho_bar), calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     lb = block_len_for_tau(tau, dt)
     sig_kw = ({"sigma_override": float(sigma)} if sigma is not None
               else {"a_override": float(a)})

@@ -188,7 +188,20 @@ def test_tool_reproduces_the_committed_artifact(module, spec, tmp_path):
     if not committed.is_file():
         pytest.skip("chua co artifact da commit: " + artifact)
     out = tmp_path / (artifact + ".json")
-    r = _run(module, out)
+    if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics"}:
+        # E1 pins source bytes. Reproduce its bytes with its actual historical code.
+        import io, tarfile
+        replay = tmp_path / "historical_e1"
+        replay.mkdir()
+        archive = subprocess.check_output(
+            ["git", "archive", "phase-20R2-erratum-1", "measurements", "cert", "twin", "tools"], cwd=ROOT)
+        with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
+            tar.extractall(replay, filter="data")
+        (replay / "results").symlink_to(ROOT / "results", target_is_directory=True)
+        r = subprocess.run([sys.executable, "-m", module, "--deterministic", "--out", str(out)],
+                           cwd=replay, capture_output=True, text=True)
+    else:
+        r = _run(module, out)
     if r.returncode != 0:
         pytest.skip("tool khong chay duoc -- xem test thoat-ma-0")
     a = json.loads(committed.read_text(encoding="utf-8"))

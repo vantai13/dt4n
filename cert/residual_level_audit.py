@@ -20,6 +20,8 @@ cach cham M-23..M-26.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -155,11 +157,13 @@ def relative_artifact_path(cell: str) -> str:
 
 
 def relative_point_from_raw(
-    branch_b: str = RAW_RELATIVE_B,
-    branch_c: str = RAW_RELATIVE_C,
+    branch_b: str = MUST_CHOOSE,
+    branch_c: str = MUST_CHOOSE,
     mode: str = "poisson",
 ) -> Dict[str, Any]:
     """Recompute absolute and relative loss residuals from raw B/C rows."""
+    branch_b = require_choice(branch_b, 'branch_b')
+    branch_c = require_choice(branch_c, 'branch_c')
     with open(branch_b, "r", encoding="utf-8") as handle:
         rows_b = json.load(handle).get("rows", [])
     with open(branch_c, "r", encoding="utf-8") as handle:
@@ -424,10 +428,10 @@ def audit_endpoint(
     tt_l1 = B.truth_table_for(rec, "common_mode", abs(float(r_path)), sign=-1.0)
     tables = (tt_path, tt_path_clip, tt_l0, tt_l1)
     changed = {
-        "H_path_correct_level": cell_matrices(tt_path, mode=mode, rho_bar=rho_bar),
-        "H_path_with_clip_descriptive": cell_matrices(tt_path_clip, mode=mode, rho_bar=rho_bar),
-        "H_link_no_clip": cell_matrices(tt_l0, mode=mode, rho_bar=rho_bar),
-        "H_link_with_clip": cell_matrices(tt_l1, mode=mode, rho_bar=rho_bar),
+        "H_path_correct_level": cell_matrices(tt_path, mode=mode, rho_bar=rho_bar, calibration_path='results/LIVE/phase-20R/sla_calibration.json'),
+        "H_path_with_clip_descriptive": cell_matrices(tt_path_clip, mode=mode, rho_bar=rho_bar, calibration_path='results/LIVE/phase-20R/sla_calibration.json'),
+        "H_link_no_clip": cell_matrices(tt_l0, mode=mode, rho_bar=rho_bar, calibration_path='results/LIVE/phase-20R/sla_calibration.json'),
+        "H_link_with_clip": cell_matrices(tt_l1, mode=mode, rho_bar=rho_bar, calibration_path='results/LIVE/phase-20R/sla_calibration.json'),
     }
     return _audit_matrices(base, changed, tables, float(r_path))
 
@@ -498,7 +502,7 @@ def run_cell(cell: str) -> Dict[str, Any]:
     rec = _loss_record(spec["mode"])
     if rec.mode != spec["mode"]:
         raise AssertionError("mode mismatch")
-    base = cell_matrices(D.TruthTable(TRUTH_TABLE), mode=spec["mode"], rho_bar=spec["rho_bar"])
+    base = cell_matrices(D.TruthTable(TRUTH_TABLE), mode=spec["mode"], rho_bar=spec["rho_bar"], calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     report: Dict[str, Any] = {
         "schema": "residual_level_audit/v1",
         "lesson": "23.7-bis",
@@ -544,11 +548,11 @@ def run_relative_cell(cell: str) -> Dict[str, Any]:
     spec = CELL_SPECS[cell]
     mode, rho_bar = str(spec["mode"]), float(spec["rho_bar"])
     rec = _loss_record(mode)
-    relative = relative_point_from_raw(mode=mode)
+    relative = relative_point_from_raw(mode=mode, branch_b='results/SUPERSEDED/phase-20R/branch_b_fixed_s104_108.json', branch_c='results/SUPERSEDED/phase-20R/branch_c_fixed_s104_108.json')
     rel = float(relative["relative_point"])
-    base = cell_matrices(D.TruthTable(TRUTH_TABLE), mode=mode, rho_bar=rho_bar)
+    base = cell_matrices(D.TruthTable(TRUTH_TABLE), mode=mode, rho_bar=rho_bar, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     shifted_tt = RelativePathShiftTruthTable(rel, mode)
-    shifted = cell_matrices(shifted_tt, mode=mode, rho_bar=rho_bar)
+    shifted = cell_matrices(shifted_tt, mode=mode, rho_bar=rho_bar, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     prep = prepare(base)
     test = ~prep["is_calib"]
     base_astar = np.asarray(base["y_true"]).argmin(axis=1)

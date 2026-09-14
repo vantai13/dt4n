@@ -18,7 +18,7 @@ def test_qs_loss_reconstructs_the_phase_t_trajectory():
         and float(r.get("a")) == 0.9
     )
 
-    terms = QL.LossResidualCalculator().row_terms(row)
+    terms = QL.LossResidualCalculator(model_path='results/LIVE/phase-L/link_model_v2_fit.json').row_terms(row)
 
     assert terms["trajectory_digest_ok"]
     assert 0.0 <= terms["packet_weighted_qs_loss"] <= 1.0

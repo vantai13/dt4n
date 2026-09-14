@@ -8,6 +8,8 @@ summaries. It does not start Mininet.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import html
 import json
@@ -1116,11 +1118,13 @@ def write_report(
 
 def fit_from_state(
     state_path: str = DEFAULT_STATE,
-    out_path: str = OUT,
-    reich_path: str = REICH_OUT,
+    out_path: str = MUST_CHOOSE,
+    reich_path: str = MUST_CHOOSE,
     report_path: str = REPORT,
     compute_reich: bool = True,
 ) -> Dict[str, Any]:
+    out_path = require_choice(out_path, 'out_path')
+    reich_path = require_choice(reich_path, 'reich_path')
     state = load_state(state_path)
     rows = state["rows"]
     selected = fit_rows(rows)

@@ -123,7 +123,7 @@ def test_interior_argmax_is_testable():
 
 
 def test_prediction_3_uses_only_significant_cells():
-    out = P.prediction_3()
+    out = P.prediction_3(maps_path='results/SUPERSEDED/phase-20R/mechanism_maps.json')
     maps = P.load_json(P.MAPS)
     expected = sum(1 for r in maps["rows"] if r["significant_d2_loss"])
 
@@ -132,7 +132,7 @@ def test_prediction_3_uses_only_significant_cells():
 
 
 def test_a_prediction_is_supported_only_when_every_relevant_cell_agrees():
-    out = P.prediction_3()
+    out = P.prediction_3(maps_path='results/SUPERSEDED/phase-20R/mechanism_maps.json')
 
     assert out["supported"] == (out["n_loss_dominates"] == out["n_cells"])
 

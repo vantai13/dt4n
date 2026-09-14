@@ -20,6 +20,8 @@ phai ve err_total tai moi z.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import hashlib
 import json
@@ -160,7 +162,8 @@ def z_key(z_s: float) -> str:
     return "%.3f" % float(z_s)
 
 
-def load_calibration(path: str = CALIBRATION) -> List[Dict[str, Any]]:
+def load_calibration(path: str = MUST_CHOOSE) -> List[Dict[str, Any]]:
+    path = require_choice(path, 'path')
     with open(path, "r", encoding="utf-8") as f:
         report = json.load(f)
     return [dict(row) for row in report["cells"]]
@@ -236,7 +239,8 @@ def resolve_sigma(cal_cell: Mapping[str, Any], sigma_override: Optional[float] =
     return float(cal_cell["sigma_rho"]), "calibration"
 
 
-def feasible_cells(path: str = CALIBRATION, include_pc1: bool = True) -> List[Dict[str, Any]]:
+def feasible_cells(path: str = MUST_CHOOSE, include_pc1: bool = True) -> List[Dict[str, Any]]:
+    path = require_choice(path, 'path')
     rows = []
     for cell in load_calibration(path):
         if not cell.get("feasible"):
@@ -257,7 +261,7 @@ def extra_calibrated_cells(
 ) -> List[Dict[str, Any]]:
     if not rho_bars:
         return []
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     rows: List[Dict[str, Any]] = []
     for mode in modes:
         for rho_bar in rho_bars:
@@ -273,13 +277,14 @@ def extra_calibrated_cells(
 
 
 def measurement_cells(
-    calibration_path: str = CALIBRATION,
+    calibration_path: str = MUST_CHOOSE,
     include_pc1: bool = True,
     rho_bar_extra: Sequence[float] = (),
     n: int = N,
     dt: float = DT,
     tau: float = TAU,
 ) -> List[Dict[str, Any]]:
+    calibration_path = require_choice(calibration_path, 'calibration_path')
     rows = feasible_cells(calibration_path, include_pc1=include_pc1)
     existing = {(str(row["mode"]), round(float(row["rho_bar"]), 12)) for row in rows}
     extra = []
@@ -730,8 +735,8 @@ def _fixed_metric_series(arrays: Mapping[str, Any], z_s: float, max_k: int) -> D
 
 def fixed_summary_with_bootstrap(
     truth_path: str = TRUTH_TABLE,
-    calibration_path: str = CALIBRATION,
-    out_path: str = SUMMARY_OUT,
+    calibration_path: str = MUST_CHOOSE,
+    out_path: str = MUST_CHOOSE,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103, 104, 105),
     tau: float = TAU,
@@ -743,13 +748,15 @@ def fixed_summary_with_bootstrap(
     a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
 ) -> pd.DataFrame:
+    calibration_path = require_choice(calibration_path, 'calibration_path')
+    out_path = require_choice(out_path, 'out_path')
     check_z_grid(z_values, DT)
     block_len = int(round(float(block_s) / DT))
     max_k = scoring_window_start(tau, DT)  # A-T2-2: same window as run_cell
     if max_k >= int(n) or any(int(round(z / DT)) > max_k for z in z_values):
         raise ValueError("invalid scoring window for trace or z grid")
     tt = TruthTable(truth_path)
-    cv2 = C.CostV2(strict_reliable=False)
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     out_rows: List[Dict[str, Any]] = []
     for cell in feasible_cells(calibration_path, include_pc1=True):
         arrays_by_seed = [
@@ -859,8 +866,8 @@ def _sawtooth_metric_series(arrays: Mapping[str, Any]) -> Dict[str, np.ndarray]:
 
 def sawtooth_summary(
     truth_path: str = TRUTH_TABLE,
-    calibration_path: str = CALIBRATION,
-    out_path: str = SAWTOOTH_OUT,
+    calibration_path: str = MUST_CHOOSE,
+    out_path: str = MUST_CHOOSE,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103, 104, 105),
     tau: float = TAU,
@@ -871,10 +878,12 @@ def sawtooth_summary(
     a_override: Optional[float] = None,
     w_loss_override: Optional[float] = None,
 ) -> Dict[str, Any]:
+    calibration_path = require_choice(calibration_path, 'calibration_path')
+    out_path = require_choice(out_path, 'out_path')
     check_z_grid(Z_ALL, DT)
     block_len = int(round(float(block_s) / DT))
     tt = TruthTable(truth_path)
-    cv2 = C.CostV2(strict_reliable=False)
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     rows = []
     summary_rows = []
     for cell in feasible_cells(calibration_path, include_pc1=True):
@@ -1037,7 +1046,7 @@ def _control_one(
 def controls(
     tt: TruthTable,
     cv2: C.CostV2,
-    calibration_path: str = CALIBRATION,
+    calibration_path: str = MUST_CHOOSE,
     n: int = CONTROL_N,
     seed: int = 100,
     rho_source: str = RHO_SOURCE,
@@ -1051,6 +1060,7 @@ def controls(
     TRUC, khong phai tien nghi -- mot mac dinh im lang o day chinh la
     duong ma tau=1.0 len vao 20R/21R/22/23 ma khong ai ky (T2.0 muc F4).
     """
+    calibration_path = require_choice(calibration_path, 'calibration_path')
     check = check_z_grid(list(Z_ALL), DT)
     cells = feasible_cells(calibration_path, include_pc1=True)
     rows = [_control_one(tt, cv2, cell, n=n, seed=seed,
@@ -1105,7 +1115,7 @@ def flatten_cell_result(result: Mapping[str, Any]) -> List[Dict[str, Any]]:
 def run_fixed_grid(
     truth_path: str = TRUTH_TABLE,
     calibration_path: Optional[str] = None,   # [20R2.5-P2] khong con mac dinh
-    out_path: str = FIXED_OUT,
+    out_path: str = MUST_CHOOSE,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103, 104, 105),
     tau: float = TAU,
@@ -1116,6 +1126,7 @@ def run_fixed_grid(
     w_loss_override: Optional[float] = None,
     rho_bar_extra: Sequence[float] = (),
 ) -> pd.DataFrame:
+    out_path = require_choice(out_path, 'out_path')
     if calibration_path is None:
         # [20R2.5-P2] PHAM VI: chi duong goi nay. fixed_summary_with_bootstrap,
         # sawtooth_summary va compute_margin_cv VAN con mac dinh -- xem §16.
@@ -1124,7 +1135,7 @@ def run_fixed_grid(
             "cu (self_calibrated) da lam se pilot 20R2 do bang chap nhan tren "
             "truc SAI ma khong bao mot loi nao [20R2.5-P2].")
     tt = TruthTable(truth_path)
-    cv2 = C.CostV2(strict_reliable=False)
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     rows = []
     cells = measurement_cells(calibration_path, include_pc1=True, rho_bar_extra=rho_bar_extra, n=n, tau=tau)
     for cell in cells:
@@ -1227,8 +1238,8 @@ def write_validity_sidecar(
 
 
 def compute_margin_cv(
-    calibration_path: str = CALIBRATION,
-    out_path: str = MARGIN_CV_OUT,
+    calibration_path: str = MUST_CHOOSE,
+    out_path: str = MUST_CHOOSE,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103),
     tau_values: Sequence[float] = (TAU,),
@@ -1238,7 +1249,9 @@ def compute_margin_cv(
     w_loss_override: Optional[float] = None,
     rho_bar_extra: Sequence[float] = (),
 ) -> pd.DataFrame:
-    cv2 = C.CostV2(strict_reliable=False)
+    calibration_path = require_choice(calibration_path, 'calibration_path')
+    out_path = require_choice(out_path, 'out_path')
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     rows: List[Dict[str, Any]] = []
     for tau in tau_values:
         cells = measurement_cells(calibration_path, include_pc1=True, rho_bar_extra=rho_bar_extra, n=n, tau=float(tau))
@@ -1376,8 +1389,8 @@ def bootstrap_seed_mean_margin_cv(
 
 
 def compute_margin_cv_ci(
-    calibration_path: str = CALIBRATION,
-    out_path: str = MARGIN_CV_CI_OUT,
+    calibration_path: str = MUST_CHOOSE,
+    out_path: str = MUST_CHOOSE,
     n: int = N,
     seeds: Sequence[int] = (101, 102, 103),
     tau_values: Sequence[float] = (TAU,),
@@ -1389,10 +1402,12 @@ def compute_margin_cv_ci(
     block_s: float = BLOCK_S,
     n_boot: int = N_BOOT,
 ) -> Dict[str, Any]:
+    calibration_path = require_choice(calibration_path, 'calibration_path')
+    out_path = require_choice(out_path, 'out_path')
     block_len = int(round(float(block_s) / DT))
     if block_len <= 0:
         raise ValueError("block_s too small")
-    cv2 = C.CostV2(strict_reliable=False)
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     rows: List[Dict[str, Any]] = []
     for tau in tau_values:
         cells = measurement_cells(calibration_path, include_pc1=True, rho_bar_extra=rho_bar_extra, n=n, tau=float(tau))
@@ -1550,7 +1565,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     rho_bar_extra = parse_float_list(args.rho_bar_extra)
 
     tt = TruthTable(args.truth_table)
-    cv2 = C.CostV2(strict_reliable=False)
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     if args.control:
         report = controls(tt, cv2, args.calibration, n=args.control_n,
                           rho_source=args.rho_source, tau=tau)

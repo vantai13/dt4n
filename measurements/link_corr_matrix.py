@@ -401,7 +401,7 @@ def err_forecast(snr_median: float, r: float) -> dict:
 
 def snr_and_forecast(mats, cells, tau_system: float) -> dict:
     """`SNR_dec = |E[m]|/sd(m)` tren cost THAT, + du bao `err(w)` qua Sheppard."""
-    cv = C.CostV2(strict_reliable=False)     # cung quy uoc `cell_matrices`
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')     # cung quy uoc `cell_matrices`
     acc, clipped = defaultdict(list), 0.0
     for X, cell in zip(mats, cells):
         if X.size == 0:
@@ -834,7 +834,7 @@ def margin_acf_at_lag(mats, z_s: float = Z_MEDIAN_S,
     lag_lo = max(1, int(np.floor(lag_float)))
     lag_hi = max(lag_lo + 1, int(np.ceil(lag_float)))
     frac = lag_float - lag_lo
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     series = defaultdict(list)
     for X in mats:
         Xc = np.clip(X, C.RHO_MIN, C.RHO_MAX)

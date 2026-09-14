@@ -110,7 +110,7 @@ def m32(
     path_rows: Mapping[str, Sequence[Mapping[str, Any]]], n_boot: int
 ) -> Dict[str, Any]:
     indexed = {path: _by_rho_seed(path_rows[path])[0.925] for path in PATHS}
-    base = cell_matrices(D.TruthTable(TRUTH_TABLE), mode="poisson", rho_bar=0.925)
+    base = cell_matrices(D.TruthTable(TRUTH_TABLE), mode="poisson", rho_bar=0.925, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     test = ~prepare(base)["is_calib"]
     loss = np.asarray(base["loss_true"], dtype=float)[test]
     cost = np.asarray(base["y_true"], dtype=float)[test]

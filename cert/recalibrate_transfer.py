@@ -49,6 +49,8 @@ Chay:
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import os
@@ -320,13 +322,14 @@ def print_pilot(out: Dict[str, Any]) -> None:
 # Nhanh R -- mot lan chay la mot bo (A, B, n, draw)
 # ---------------------------------------------------------------------------
 
-def load_kappa_A(path: str = PILOT_OUT) -> Dict[str, float]:
+def load_kappa_A(path: str = MUST_CHOOSE) -> Dict[str, float]:
     """`kappa_A` doc THANG tu artifact pilot -- khong giai lai.
 
     Ky thuat cua `G23-247`: mot dai luong da do va da commit thi doc lai,
     khong chay lai. Giai lai ton 11 phut VA mo cua cho hai gia tri `kappa_A`
     khac nhau ton tai trong cung mot do an.
     """
+    path = require_choice(path, 'path')
     full = path if os.path.isabs(path) else os.path.join(REPO, path)
     if not os.path.exists(full):
         raise FileNotFoundError(
@@ -859,7 +862,7 @@ def wiring() -> Dict[str, Any]:
     ve CODE.
     """
     live, _dead = TM.cells_by_role()
-    kappa = load_kappa_A()
+    kappa = load_kappa_A(path='results/LIVE/phase-23/recalibrate_transfer_pilot.json')
     m200 = score_M200(live)
 
     # `NC-B3-2` tren MOT cell B o `n` nho -- du de bat wiring hong, va ton
@@ -882,7 +885,7 @@ def wiring() -> Dict[str, Any]:
 
 def run() -> Dict[str, Any]:
     live, dead = TM.cells_by_role()
-    kappa = load_kappa_A()
+    kappa = load_kappa_A(path='results/LIVE/phase-23/recalibrate_transfer_pilot.json')
 
     rows, paths = run_cell_matrix(live, kappa, "live")
     dead_rows, dead_paths = run_cell_matrix(dead, kappa, "dead")

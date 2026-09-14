@@ -98,7 +98,7 @@ def test_margin_is_non_negative_and_bound_radius_is_conservative():
 
 def test_radius_uses_the_per_cell_w_loss_not_the_0925_constant():
     tt = D.TruthTable()
-    cells = {(str(c["mode"]), float(c["rho_bar"])): c for c in D.measurement_cells()}
+    cells = {(str(c["mode"]), float(c["rho_bar"])): c for c in D.measurement_cells(calibration_path='results/LIVE/phase-20R/sla_calibration.json')}
     cell = cells[("poisson", 0.7)]
 
     out = MR.cell_radius(tt, cell, seeds=(101,), n=2000)

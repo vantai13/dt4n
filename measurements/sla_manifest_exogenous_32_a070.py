@@ -2,6 +2,8 @@
 """Manifest SLA S-B 32 cell: 20 cell A069 + 12 cell cua so A070."""
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import json
 import os
 from typing import Any, Dict
@@ -19,7 +21,8 @@ RHOS = (0.744, 0.750, 0.756, 0.760, 0.764, 0.770)
 MODES = ("poisson", "h2")
 
 
-def build_manifest(base_path: str = BASE) -> Dict[str, Any]:
+def build_manifest(base_path: str = MUST_CHOOSE) -> Dict[str, Any]:
+    base_path = require_choice(base_path, 'base_path')
     with open(base_path, "r", encoding="utf-8") as fh:
         base = json.load(fh)
     cells = [dict(cell) for cell in base["cells"]]
@@ -69,7 +72,7 @@ def build_manifest(base_path: str = BASE) -> Dict[str, Any]:
 
 
 def main() -> int:
-    report = build_manifest()
+    report = build_manifest(base_path='results/LIVE/phase-20R/sla_manifest_exogenous_S-B_20cells_A069.json')
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as fh:
         json.dump(report, fh, indent=2, sort_keys=True, ensure_ascii=False)

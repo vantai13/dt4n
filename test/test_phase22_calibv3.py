@@ -27,8 +27,8 @@ N_SMALL = 20_000
 @pytest.fixture(scope="module")
 def small():
     tt = TruthTable(TRUTH_TABLE)
-    cv = C.CostV2(strict_reliable=False)
-    cell = V3._load_cell(CELL_MODE, CELL_RHO)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
+    cell = V3._load_cell(CELL_MODE, CELL_RHO, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     arr = _cell_arrays(tt, cv, cell, seed=101, n=N_SMALL, sigma_override=V3.SIGMA)
     cur, old, _ = V3._valid_rows(N_SMALL, DT, axis=V3.AXIS_LEGACY)
     keep = old >= 200
@@ -161,7 +161,7 @@ def test_GC8_mhat_bins_are_scale_free():
 
 @pytest.mark.skipif(not os.path.exists(V2_PARQUET), reason="thieu artifact 21R")
 def test_GC9_full_build_reproduces_21R_and_passes_V22():
-    df, _meta = V3.build_cell(CELL_MODE, CELL_RHO, aoi_profile="U0")
+    df, _meta = V3.build_cell(CELL_MODE, CELL_RHO, aoi_profile="U0", calibration_path='results/LIVE/phase-20R/sla_calibration.json', axis='legacy_sawtooth_51ms')
     report = V3.validate_v3(df, V2_PARQUET)
     assert report["V22_1_worst"] == 0.0
     assert report["V22_2_max_abs_diff"] <= 1e-6

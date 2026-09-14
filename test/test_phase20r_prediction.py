@@ -51,7 +51,7 @@ def test_zero_pc1_prediction_covers_all_declared_z_values():
 
 
 def test_model_error_summary_matches_phase_l_artifact():
-    fit = P.load_fit()
+    fit = P.load_fit(path='results/LIVE/phase-L/link_model_v2_fit.json')
     summary = P.model_error_summary(fit)["by_mode"]
 
     assert summary["poisson"]["e_model_pure_min_ms"] == pytest.approx(0.0580, abs=0.0001)

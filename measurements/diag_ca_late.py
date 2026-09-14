@@ -19,6 +19,8 @@ only the runs that actually built the truth table are compared.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import glob
 import json
@@ -77,7 +79,8 @@ def _meta_row(path: str) -> Optional[Dict[str, Any]]:
     }
 
 
-def aprime_rows(raw_dir: str = APRIME_RAW) -> List[Dict[str, Any]]:
+def aprime_rows(raw_dir: str = MUST_CHOOSE) -> List[Dict[str, Any]]:
+    raw_dir = require_choice(raw_dir, 'raw_dir')
     link_of = {name: name for name, _t7, _bw, _q, _b in TANDEM_LINKS}
     rows: List[Dict[str, Any]] = []
     for path in sorted(glob.glob(os.path.join(raw_dir, "*_load_L*_tx.meta.json"))):

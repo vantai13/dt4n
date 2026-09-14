@@ -33,8 +33,8 @@ def main():
     old_ts = old_module('cert/tau_sweep.py')
     old_ts.V3 = old
     rows = []
-    cell = B._load_cell('poisson', .925)
-    tt, cv = B.TruthTable(B.TRUTH_TABLE), B.C.CostV2(strict_reliable=False)
+    cell = B._load_cell('poisson', .925, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
+    tt, cv = B.TruthTable(B.TRUTH_TABLE), B.C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     for axis, profile in [(B.AXIS_LEGACY, 'U0'), (B.AXIS_MEASURED, 'U0'),
                           (B.AXIS_MEASURED, 'U1'), (B.AXIS_MEASURED, 'U3')]:
         kwargs = dict(n=20000, dt=.005, axis=axis, aoi_profile=profile)

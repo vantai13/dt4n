@@ -11,6 +11,8 @@ Branches:
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import hashlib
 import json
@@ -332,7 +334,8 @@ class TruthLossSE:
     traffic-ensemble mean -- the right quantity for the A side of ``A' - A``.
     """
 
-    def __init__(self, campaign_state: str = CAMPAIGN_STATE):
+    def __init__(self, campaign_state: str = MUST_CHOOSE):
+        campaign_state = require_choice(campaign_state, 'campaign_state')
         self.curves: Dict[Tuple[str, float, int], Tuple[np.ndarray, np.ndarray, int]] = {}
         self.source = str(campaign_state)
         if not os.path.exists(campaign_state):
@@ -413,8 +416,9 @@ def branch_a_link_rows(
     calibration_path: str = D.CALIBRATION,
     modes: Sequence[str] = MODES,
     rho_bars: Sequence[float] = C_RHO_BARS,
-    campaign_state: str = CAMPAIGN_STATE,
+    campaign_state: str = MUST_CHOOSE,
 ) -> List[Dict[str, Any]]:
+    campaign_state = require_choice(campaign_state, 'campaign_state')
     tt = D.TruthTable(truth_table)
     se_table = TruthDelaySE(truth_table)
     loss_se_table = TruthLossSE(campaign_state)
@@ -678,7 +682,7 @@ def analyze(
 ) -> Dict[str, Any]:
     plan = build_plan(modes=modes)
     live_rhos = sorted({float(row["rho_bar"]) for row in measurement_rows if "rho_bar" in row} | set(C_RHO_BARS) | set(APRIME_RHO_BARS))
-    a_rows = branch_a_link_rows(truth_table, calibration_path, modes=modes, rho_bars=live_rhos)
+    a_rows = branch_a_link_rows(truth_table, calibration_path, modes=modes, rho_bars=live_rhos, campaign_state='results/SUPERSEDED/phase-20R/campaign_state.json')
     a = pd.DataFrame(a_rows)
     df = _measurement_frame(measurement_rows)
     result: Dict[str, Any] = {

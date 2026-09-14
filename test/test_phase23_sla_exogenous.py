@@ -19,7 +19,7 @@ N_FAST = 20_000          # du de bat sai co hoc, khong du de la mot ket qua
 
 @pytest.fixture(scope="module")
 def cv2():
-    return C.CostV2(strict_reliable=True)
+    return C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
 
 
 # -- tinh chat dai so, khong can chay mo phong --------------------------------

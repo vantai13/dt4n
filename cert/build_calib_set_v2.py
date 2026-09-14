@@ -8,6 +8,8 @@ only assembles the conformal dataset and its locked diagnostics.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import hashlib
 import json
@@ -104,9 +106,10 @@ def build_one(
     cv: C.CostV2,
     n: int = N,
     dt: float = DT,
-    sigma: float = SIGMA,
+    sigma: float = MUST_CHOOSE,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """Build one operating cell and one seed for sawtooth AoI."""
+    sigma = require_choice(sigma, 'sigma')
     arr = _cell_arrays(tt, cv, cell, seed=seed, n=n, dt=dt, sigma_override=sigma)
 
     age = sawtooth_age_steps(n, dt)
@@ -272,9 +275,10 @@ def reproduce_20R_fixed_z(
     seeds: Sequence[int] = SEEDS,
     n: int = N,
     dt: float = DT,
-    sigma: float = SIGMA,
+    sigma: float = MUST_CHOOSE,
 ) -> Dict[str, float]:
     """V5: reproduce Phase 20R fixed-z errors using its common window."""
+    sigma = require_choice(sigma, 'sigma')
     out = {}
     for z in z_list:
         k = int(round(float(z) / float(dt)))
@@ -358,20 +362,20 @@ def main() -> None:
     args = parser.parse_args()
 
     tt = TruthTable(TRUTH_TABLE)
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cell = _load_cell(args.mode, args.rho_bar)
 
     parts, metas = [], []
     for seed in args.seeds:
         print("  seed %d ..." % int(seed), flush=True)
-        frame, meta = build_one(cell, int(seed), tt, cv, n=int(args.n))
+        frame, meta = build_one(cell, int(seed), tt, cv, n=int(args.n), sigma=0.0096)
         parts.append(frame)
         metas.append(meta)
     df = pd.concat(parts, ignore_index=True)
     df = (split_by_sample_V3 if args.v3 else split_by_block)(df)
 
     report = validate(df)
-    reproduced = reproduce_20R_fixed_z(cell, tt, cv, seeds=args.seeds, n=int(args.n))
+    reproduced = reproduce_20R_fixed_z(cell, tt, cv, seeds=args.seeds, n=int(args.n), sigma=0.0096)
     report.update(
         {
             "cell": "%s@%.3f" % (str(args.mode), float(args.rho_bar)),

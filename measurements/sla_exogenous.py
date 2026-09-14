@@ -419,7 +419,7 @@ def run_t_loss_sweep(t_delay_ms: float = 50.0, **kw) -> Dict[str, Any]:
     `T_loss`. Ba spec roi rac khong du de tra loi "sao chon 1%"; mot duong
     cong thi du.
     """
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     grid: Dict[str, Any] = {}
     for tl in T_LOSS_GRID:
         w = w_loss_equal_budget(t_delay_ms, tl)
@@ -500,7 +500,7 @@ def run_t_loss_fine(t_delay_ms: float = 50.0, seed: int = S14.DEFAULT_SEED,
         endo = {(c["mode"], float(c["rho_bar"])): float(c["t_loss"])
                 for c in json.load(fh)["cells"]
                 if c.get("feasible") and c.get("role") == "gate"}
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     out: Dict[str, Any] = {}
     for (mode, rb), t_endo in sorted(endo.items()):
         sigma = C.sigma_from_a_regime(mode, rb, S14.DEFAULT_A)
@@ -570,7 +570,7 @@ def run_local_fine(seed: int = S14.DEFAULT_SEED,
         endo = {"%s@%.3f" % (c["mode"], float(c["rho_bar"])): float(c["t_loss"])
                 for c in json.load(fh)["cells"]
                 if c.get("feasible") and c.get("role") == "gate"}
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     out: Dict[str, Any] = {}
     for key, (lo, hi) in sorted(LOCAL_FINE.items()):
         mode, rb = key.split("@")[0], float(key.split("@")[1])
@@ -627,7 +627,7 @@ def run_sigma_rho_plane(spec_id: str = PRIMARY_SPEC,
     """
     spec = SLA_SPECS[spec_id]
     w = w_loss_equal_budget(spec["t_delay_ms"], spec["t_loss"])
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     planes: Dict[str, Any] = {}
     for mode in ("poisson", "h2"):
         rows = {}
@@ -672,7 +672,7 @@ def run_a_sweep(spec_id: str = PRIMARY_SPEC,
     """
     spec = SLA_SPECS[spec_id]
     w = w_loss_equal_budget(spec["t_delay_ms"], spec["t_loss"])
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     out: Dict[str, Any] = {}
     for a in A_GRID:
         row = {}
@@ -717,7 +717,7 @@ def run_rho_grid(grid: Mapping[str, Any] | None = None,
     """
     spec = SLA_SPECS[spec_id]
     w = w_loss_equal_budget(spec["t_delay_ms"], spec["t_loss"])
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     if grid is None:
         grid = ({m: RHO_GRID_SIGMA_FIXED for m in ("poisson", "h2")}
                 if sigma_fixed else RHO_GRID_MAIN)
@@ -749,7 +749,7 @@ def run_wave4(spec_id: str = PRIMARY_SPEC, **kw) -> Dict[str, Any]:
     """
     spec = SLA_SPECS[spec_id]
     w = w_loss_equal_budget(spec["t_delay_ms"], spec["t_loss"])
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cells = [evaluate_cell(cv2, m, rb, t_delay_ms=spec["t_delay_ms"],
                            t_loss=spec["t_loss"], w_loss=w, with_ci=True, **kw)
              for m, rb in WAVE4_CELLS]
@@ -769,7 +769,7 @@ def run_spec(spec_id: str, w_loss: float | None = None, **kw) -> Dict[str, Any]:
     spec = SLA_SPECS[spec_id]
     w = (w_loss_equal_budget(spec["t_delay_ms"], spec["t_loss"])
          if w_loss is None else float(w_loss))
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cells = [
         evaluate_cell(cv2, mode, rb, t_delay_ms=spec["t_delay_ms"],
                       t_loss=spec["t_loss"], w_loss=w, **kw)
@@ -856,7 +856,7 @@ def selftest(n: int = S14.DEFAULT_N) -> Dict[str, Any]:
     with open(LEGACY_SLA, "r", encoding="utf-8") as fh:
         legacy = {(c["mode"], float(c["rho_bar"])): c
                   for c in json.load(fh)["cells"] if c.get("feasible")}
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     res: Dict[str, Any] = {"NC1": [], "NC2": [], "NC3": [], "PC1": [], "PC2": []}
 
     for (mode, rb), old in sorted(legacy.items()):

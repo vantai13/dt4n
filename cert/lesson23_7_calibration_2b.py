@@ -327,7 +327,7 @@ def markdown_tables(rep: Mapping[str, Any]) -> str:
 # ---------------------------------------------------------------------------
 
 def build(out_path: str) -> Dict[str, Any]:
-    base = cell_matrices(TruthTable(TRUTH_TABLE))
+    base = cell_matrices(TruthTable(TRUTH_TABLE), calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     prep = _prepare(base)
     rep: Dict[str, Any] = {
         "lesson": "23.7",

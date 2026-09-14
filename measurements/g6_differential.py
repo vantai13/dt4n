@@ -24,6 +24,8 @@ them to all eight links is a class-wise mapping, not an extrapolation.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import itertools
 import json
@@ -76,11 +78,13 @@ def class_coverage() -> Dict[str, Any]:
 
 
 def load_residuals(
-    diag_ca: str = DIAG_CA,
-    check_report: str = CHECK_REPORT,
+    diag_ca: str = MUST_CHOOSE,
+    check_report: str = MUST_CHOOSE,
     modes: Sequence[str] = MODES,
 ) -> Dict[str, Dict[str, Dict[str, float]]]:
     """Per-link residual loss (after removing the c_a-explained part) and delay."""
+    diag_ca = require_choice(diag_ca, 'diag_ca')
+    check_report = require_choice(check_report, 'check_report')
     with open(diag_ca, "r", encoding="utf-8") as f:
         sens = json.load(f)["burstiness_sensitivity"]
     with open(check_report, "r", encoding="utf-8") as f:
@@ -229,8 +233,9 @@ def evaluate_cell(
     return out
 
 
-def _per_link_loss_se(check_report: str = CHECK_REPORT) -> Dict[Tuple[str, str], float]:
+def _per_link_loss_se(check_report: str = MUST_CHOOSE) -> Dict[Tuple[str, str], float]:
     """Standard error of each per-link loss contrast, for the bias/power split."""
+    check_report = require_choice(check_report, 'check_report')
     if not os.path.exists(check_report):
         return {}
     with open(check_report, "r", encoding="utf-8") as f:
@@ -252,11 +257,11 @@ def run(
     worst_case_permutations: bool = True,
 ) -> Dict[str, Any]:
     tt = D.TruthTable()
-    cv2 = C.CostV2()
-    se_per_link = _per_link_loss_se()
+    cv2 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
+    se_per_link = _per_link_loss_se(check_report='results/SMOKE/phase-20R/additivity_check_budgetfix_bg.json')
     cells = {
         str(cell["mode"]): cell
-        for cell in D.feasible_cells(include_pc1=False)
+        for cell in D.feasible_cells(include_pc1=False, path='results/LIVE/phase-20R/sla_calibration.json')
         if abs(float(cell["rho_bar"]) - float(rho_bar)) < 1e-9
     }
     z_values = D.z_values_for()

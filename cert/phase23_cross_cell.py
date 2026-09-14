@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import csv
 import json
@@ -110,10 +112,11 @@ def _cell_margins(g23_17a: Mapping[str, Any]) -> Dict[str, Dict[str, float]]:
 
 def lift_law_report(
     audit_paths: Mapping[str, str] = DEFAULT_AUDITS,
-    g23_17a_path: str = DEFAULT_G23_17A,
+    g23_17a_path: str = MUST_CHOOSE,
     tol: float = 1e-9,
 ) -> Dict[str, Any]:
     """G23-23: benefit iff lift exceeds swing on the rejected set."""
+    g23_17a_path = require_choice(g23_17a_path, 'g23_17a_path')
     margins = _cell_margins(_load_json(g23_17a_path))
     rows = []
     max_abs_delta_error = 0.0

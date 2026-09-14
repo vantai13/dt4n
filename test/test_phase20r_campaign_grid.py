@@ -9,7 +9,7 @@ from measurements import l6_campaign_fine as F
 
 
 def test_fine_grid_budget_matches_preregistered_new_work():
-    rows = F.grid_summary(F.load_calibration())
+    rows = F.grid_summary(F.load_calibration(path='results/LIVE/phase-20R/sla_calibration.json'))
 
     assert len(rows) == 9
     assert sum(row["n_new_levels"] for row in rows) == 118

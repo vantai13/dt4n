@@ -309,7 +309,7 @@ def _aprime_rows(link_costs, seeds=A.SEEDS, mode="poisson"):
 
 
 def test_topology_transfer_primary_estimand_is_path_level():
-    a = pd.DataFrame(A.branch_a_link_rows(modes=("poisson",), rho_bars=(0.925,)))
+    a = pd.DataFrame(A.branch_a_link_rows(modes=("poisson",), rho_bars=(0.925,), campaign_state='results/SUPERSEDED/phase-20R/campaign_state.json'))
     a_costs = a.set_index("link")["cost_ms"]
     offset = 0.05
     rows = _aprime_rows([float(a_costs[link]) + offset for link in ("L1", "L2", "L3")])
@@ -341,7 +341,7 @@ def test_topology_transfer_primary_estimand_is_path_level():
 
 
 def test_branch_a_cost_se_includes_the_loss_term():
-    a = pd.DataFrame(A.branch_a_link_rows(modes=("h2",), rho_bars=(0.925,)))
+    a = pd.DataFrame(A.branch_a_link_rows(modes=("h2",), rho_bars=(0.925,), campaign_state='results/SUPERSEDED/phase-20R/campaign_state.json'))
 
     assert a["se_cost_includes_loss"].all()
     # w_loss is O(1e3), so the loss term dominates the branch-A cost uncertainty.
@@ -670,7 +670,7 @@ def test_quasistatic_band_delay_residual_does_not_move_argmin():
     """
     from measurements import quasistatic_band as QB
 
-    cv2, tt0 = C.CostV2(), D.TruthTable()
+    cv2, tt0 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json'), D.TruthTable()
     cells = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True)
              if str(c["mode"]) == "poisson"][:1]
     rows = QB.sweep(tt0, cv2, cells, [101], 20_000, resid_loss=0.0, resid_delay_ms=-0.029)
@@ -686,7 +686,7 @@ def test_quasistatic_band_loss_residual_does_move_the_gate():
     """
     from measurements import quasistatic_band as QB
 
-    cv2, tt0 = C.CostV2(), D.TruthTable()
+    cv2, tt0 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json'), D.TruthTable()
     cells = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True) if str(c["mode"]) != "cbr"]
     rows = QB.sweep(tt0, cv2, cells, [101], 20_000, resid_loss=-0.010, resid_delay_ms=0.0)
 

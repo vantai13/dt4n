@@ -40,7 +40,7 @@ def _sha256(path: str) -> str:
 def margin_stats(X: np.ndarray) -> dict:
     """Tra `abs(E[m])` va `sd(m)` cho 6 cap, chua tao ti so."""
     Xc = np.clip(X, C.RHO_MIN, C.RHO_MAX)
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     _delay, _loss, cost = cv.tables_batch(Xc, MODE, W_LOSS)
     out = {}
     for pi, pj in PATH_PAIRS:

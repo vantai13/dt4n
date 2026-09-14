@@ -375,7 +375,7 @@ def build_report(
     alpha: float = 0.05,
 ) -> Dict[str, Any]:
     tt = D.TruthTable()
-    cells = [c for c in D.measurement_cells() if str(c["mode"]) in set(modes)]
+    cells = [c for c in D.measurement_cells(calibration_path='results/LIVE/phase-20R/sla_calibration.json') if str(c["mode"]) in set(modes)]
     computed = [cell_radius(tt, cell, seeds=seeds, n=n, tau=tau) for cell in cells]
     err = load_err(z=z)
     return {

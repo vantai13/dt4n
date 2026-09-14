@@ -9,6 +9,8 @@ Chay:
 """
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import json
 import os
 from typing import Any, Dict
@@ -81,8 +83,9 @@ def clean_wave4_cell(cell: Dict[str, Any], citation: str) -> Dict[str, Any]:
     return new
 
 
-def build_manifest(wave4_path: str = WAVE4) -> Dict[str, Any]:
-    base = build()
+def build_manifest(wave4_path: str = MUST_CHOOSE) -> Dict[str, Any]:
+    wave4_path = require_choice(wave4_path, 'wave4_path')
+    base = build(legacy='results/LIVE/phase-20R/sla_calibration.json')
     base_cells = [dict(cell) for cell in base["cells"] if cell.get("feasible")]
     if len(base_cells) != 10:
         raise ValueError("manifest base phai co dung 10 cell feasible, thay %d" % len(base_cells))
@@ -152,7 +155,7 @@ def build_manifest(wave4_path: str = WAVE4) -> Dict[str, Any]:
 
 
 def main() -> int:
-    report = build_manifest()
+    report = build_manifest(wave4_path='results/LIVE/phase-23/sla_exogenous_wave4.json')
     os.makedirs(os.path.dirname(OUT), exist_ok=True)
     with open(OUT, "w", encoding="utf-8") as handle:
         json.dump(report, handle, indent=2, sort_keys=True, ensure_ascii=False)

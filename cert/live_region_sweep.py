@@ -2,6 +2,8 @@
 """Lesson 23.21h -- score the live region under the exogenous S-B SLA."""
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -132,8 +134,9 @@ def truth_domain_check(cell: Mapping[str, Any]) -> Dict[str, Any]:
     }
 
 
-def load_sla_exogenous(path: str = SLA_EXOGENOUS_14) -> Dict[str, Any]:
+def load_sla_exogenous(path: str = MUST_CHOOSE) -> Dict[str, Any]:
     """Load the external manifest without any endogenous calibration step."""
+    path = require_choice(path, 'path')
     with open(path, "r", encoding="utf-8") as handle:
         sla = json.load(handle)
 
@@ -178,12 +181,14 @@ def _new_valid_cells(sla: Mapping[str, Any]) -> list[str]:
 
 def analyze_base_cells(
     *,
-    sla_path: str = SLA_EXOGENOUS_14,
-    calib_template: str = BASE_CALIB_TEMPLATE,
+    sla_path: str = MUST_CHOOSE,
+    calib_template: str = MUST_CHOOSE,
     axis: str = AXIS_MEASURED,
     aoi_profile: str = "U3",
 ) -> Dict[str, Any]:
     """Shared eight-cell path used by the sweep and the G23-212b NC."""
+    sla_path = require_choice(sla_path, 'sla_path')
+    calib_template = require_choice(calib_template, 'calib_template')
     return {
         cell: E.analyze_cell(
             cell,
@@ -306,10 +311,12 @@ def _input_path(cell: str, base_template: str, wave_template: str) -> str:
 
 def run_sweep(
     calib_template: str | None = CALIB_TEMPLATE_WAVE4,
-    sla_path: str = SLA_EXOGENOUS_14,
-    base_calib_template: str = BASE_CALIB_TEMPLATE,
+    sla_path: str = MUST_CHOOSE,
+    base_calib_template: str = MUST_CHOOSE,
     base_aoi_profile: str = "U3",
 ) -> Dict[str, Any]:
+    sla_path = require_choice(sla_path, 'sla_path')
+    base_calib_template = require_choice(base_calib_template, 'base_calib_template')
     sla = load_sla_exogenous(sla_path)
     cells = analyze_base_cells(
         sla_path=sla_path,

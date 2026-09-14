@@ -7,6 +7,8 @@ run without root or Mininet.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import math
@@ -134,7 +136,8 @@ def build_plan() -> List[Point]:
     return out
 
 
-def load_state(path: str = STATE) -> State:
+def load_state(path: str = MUST_CHOOSE) -> State:
+    path = require_choice(path, 'path')
     if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
@@ -147,7 +150,8 @@ def load_state(path: str = STATE) -> State:
     }
 
 
-def save_state(state: State, path: str = STATE) -> None:
+def save_state(state: State, path: str = MUST_CHOOSE) -> None:
+    path = require_choice(path, 'path')
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:

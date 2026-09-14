@@ -347,7 +347,7 @@ def main() -> None:
     args = parser.parse_args()
 
     tt = TruthTable(TRUTH_TABLE)
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cells = list(feasible_cells(CALIBRATION, include_pc1=True))
 
     operational: Dict[str, Dict[str, Any]] = {}

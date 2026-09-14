@@ -2,6 +2,8 @@
 """A070 nhanh E: NC-E-0, ba cell song moi, truc kappa va sensitivity."""
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import hashlib
 import json
@@ -70,8 +72,9 @@ def compare_reference(reference: Mapping[str, Any], generated: Mapping[str, Any]
     }
 
 
-def run_wiring(reference_path: str = REFERENCE) -> Dict[str, Any]:
+def run_wiring(reference_path: str = MUST_CHOOSE) -> Dict[str, Any]:
     """NC-E-0: chi dung 8 cell cu qua DUNG RT.run()."""
+    reference_path = require_choice(reference_path, 'reference_path')
     with open(reference_path, "r", encoding="utf-8") as fh:
         reference = json.load(fh)
     generated = RT.run()
@@ -126,7 +129,7 @@ def load_all_kappa(live: Sequence[str]) -> Dict[str, float]:
     dead. `M-220` duoc ky tren 11 cell song va `score_m220` bao cao
     `n_cells = len(kappa)`, nen map phai duoc CAT ve dung tap song.
     """
-    pool = RT.load_kappa_A()
+    pool = RT.load_kappa_A(path='results/LIVE/phase-23/recalibrate_transfer_pilot.json')
     with open(A069_PILOT, "r", encoding="utf-8") as fh:
         pilot = json.load(fh)
     by_cell = {row["cell"]: row for row in pilot["cells"]}
@@ -370,8 +373,10 @@ def score_m221(reference: Mapping[str, Any], old_live: Sequence[str]
     }
 
 
-def run_extension(wiring_path: str = WIRING_OUT,
-                  reference_path: str = REFERENCE) -> Dict[str, Any]:
+def run_extension(wiring_path: str = MUST_CHOOSE,
+                  reference_path: str = MUST_CHOOSE) -> Dict[str, Any]:
+    wiring_path = require_choice(wiring_path, 'wiring_path')
+    reference_path = require_choice(reference_path, 'reference_path')
     with open(wiring_path, "r", encoding="utf-8") as fh:
         wiring = json.load(fh)
     if not wiring["NC_E_0"]["hit"]:

@@ -135,8 +135,8 @@ def jensen_gap_theory(z_bar: float, off_ms: np.ndarray, tau: float = V3.TAU) -> 
 def zero_offset_path_diagnostic(mode: str, rho_bar: float, seed: int = 101, n: int = 20_000) -> Dict[str, Any]:
     """G22-12: rho-shift and row-shift are identical when all offsets are zero."""
     tt = V3.TruthTable(V3.TRUTH_TABLE)
-    cv = V3.C.CostV2(strict_reliable=False)
-    cell = V3._load_cell(str(mode), float(rho_bar))
+    cv = V3.C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
+    cell = V3._load_cell(str(mode), float(rho_bar), calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     arr = V3._cell_arrays(tt, cv, cell, seed=int(seed), n=int(n), dt=V3.DT, sigma_override=V3.SIGMA)
     cur, old, _n_z0 = V3._valid_rows(int(n), V3.DT, axis=V3.AXIS_LEGACY)
     rho = V3.rho_matrix_from_cell(str(mode), float(rho_bar), V3.SIGMA, int(seed), tau=V3.TAU, n=int(n), dt=V3.DT)
@@ -161,8 +161,8 @@ def build_profile(
 ) -> tuple[pd.DataFrame, Dict[str, Any]]:
     """Build one centred AoI profile using the v3 measured-truth physics."""
     tt = V3.TruthTable(V3.TRUTH_TABLE)
-    cv = V3.C.CostV2(strict_reliable=False)
-    cell = V3._load_cell(str(mode), float(rho_bar))
+    cv = V3.C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
+    cell = V3._load_cell(str(mode), float(rho_bar), calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     off, shift, stats = centred_offsets(str(profile), float(dt))
     lb = block_len(float(dt))
     parts: list[pd.DataFrame] = []

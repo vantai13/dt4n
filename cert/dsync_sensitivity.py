@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import gc
 from datetime import datetime, timezone
@@ -132,7 +134,7 @@ def build_and_analyze(cell: str, d_sync: float, n: int) -> Dict[str, Any]:
         n=int(n),
         calibration_path=SLA_ARTIFACT,
         d_sync=float(d_sync),
-    )
+    axis='legacy_sawtooth_51ms')
     built = time.perf_counter()
     outcome = analyze_frame(df)
     finished = time.perf_counter()
@@ -343,7 +345,8 @@ def run(n: int = 200_000) -> Dict[str, Any]:
     )
 
 
-def plot_report(report: Mapping[str, Any], path: str = FIGURE) -> None:
+def plot_report(report: Mapping[str, Any], path: str = MUST_CHOOSE) -> None:
+    path = require_choice(path, 'path')
     fig, axes = plt.subplots(1, 3, figsize=(13.2, 4.2))
     colors = plt.get_cmap("tab10")
     for index, (cell, summary) in enumerate(report["cells"].items()):

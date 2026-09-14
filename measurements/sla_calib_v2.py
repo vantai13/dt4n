@@ -297,7 +297,7 @@ def run_calibration(
     a: float = DEFAULT_A,
     seed: int = DEFAULT_SEED,
 ) -> Dict[str, object]:
-    cv2 = C.CostV2(strict_reliable=True)
+    cv2 = C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cells: List[Dict[str, object]] = []
     for mode in MODE_GRID:
         for rho_bar in RHO_BAR_GRID:

@@ -80,7 +80,7 @@ def snr_by_pair(X: np.ndarray) -> dict:
     """Tinh `|E[m]|/sd(m)` cho 6 cap; bao cao clip cua mien CostV2."""
     clip_share = float(np.mean((X < C.RHO_MIN) | (X > C.RHO_MAX)))
     Xc = np.clip(X, C.RHO_MIN, C.RHO_MAX)
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     _delay, _loss, cost = cv.tables_batch(Xc, MODE, W_LOSS)
     out = {"_clip_share": clip_share}
     for pi, pj in PATH_PAIRS:

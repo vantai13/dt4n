@@ -35,7 +35,7 @@ def test_run_cell_emits_both_clip_columns_and_they_differ():
         TRUTH_TABLE, flatten_cell_result, measurement_cells, run_cell,
         z_values_for, CALIBRATION)
     tt = TruthTable(TRUTH_TABLE)
-    cv2 = C.CostV2(strict_reliable=False)
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cells = [c for c in measurement_cells(CALIBRATION, include_pc1=True)
              if c["mode"] == "poisson" and abs(float(c["rho_bar"]) - 0.96) < 1e-9]
     assert cells, "khong tim thay o poisson@0.960"

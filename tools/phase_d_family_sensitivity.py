@@ -38,7 +38,7 @@ def load_campaign() -> tuple[list[np.ndarray], list[str]]:
 
 
 def snr_for_mode(mats: list[np.ndarray], cells: list[str], mode: str) -> dict[str, object]:
-    model = C.CostV2(strict_reliable=False)
+    model = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     accum: dict[str, list[float]] = defaultdict(list)
     for matrix, cell in zip(mats, cells):
         clipped = np.clip(matrix, C.RHO_MIN, C.RHO_MAX)

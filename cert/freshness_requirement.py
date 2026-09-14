@@ -20,6 +20,8 @@ difference depending on which interpretation is intended.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import os
@@ -156,9 +158,10 @@ def build_fixed_z(
     seeds: Sequence[int] = SEEDS,
     n: int = N,
     dt: float = DT,
-    sigma: float = SIGMA,
+    sigma: float = MUST_CHOOSE,
 ) -> pd.DataFrame:
     """Build one fixed-z table, evaluated on the common Phase 20R window."""
+    sigma = require_choice(sigma, 'sigma')
     parts = []
     for seed in seeds:
         arrays = _cell_arrays(tt, cv, cell, seed=int(seed), n=int(n), dt=float(dt), sigma_override=sigma)
@@ -174,9 +177,10 @@ def build_fixed_z_tables(
     seeds: Sequence[int] = SEEDS,
     n: int = N,
     dt: float = DT,
-    sigma: float = SIGMA,
+    sigma: float = MUST_CHOOSE,
 ) -> Dict[float, pd.DataFrame]:
     """Build all fixed-z tables while reusing each seed's physical arrays."""
+    sigma = require_choice(sigma, 'sigma')
     tables: Dict[float, list[pd.DataFrame]] = {float(z): [] for z in z_grid}
     for seed in seeds:
         arrays = _cell_arrays(tt, cv, cell, seed=int(seed), n=int(n), dt=float(dt), sigma_override=sigma)
@@ -413,10 +417,10 @@ def main() -> None:
     args = parser.parse_args()
 
     tt = TruthTable(TRUTH_TABLE)
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cell = _load_cell(args.mode, float(args.rho_bar))
 
-    tables = build_fixed_z_tables(cell, tt, cv, n=int(args.n))
+    tables = build_fixed_z_tables(cell, tt, cv, n=int(args.n), sigma=0.0096)
     table = pd.DataFrame(
         [dict(z=float(z), **evaluate_at_z(df)) for z, df in tables.items()]
     ).sort_values("z")

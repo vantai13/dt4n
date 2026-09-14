@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 from datetime import datetime, timezone
 import json
@@ -77,7 +79,7 @@ def analyze_cell(cell: str, fallback_report: Mapping[str, Any]) -> Dict[str, Any
     selected_probs = crossfit["selected_probs"]
     a_twin = df["a_twin"].to_numpy(np.int64)
 
-    calibration_cell = _load_cell(str(meta["mode"]), float(meta["rho_bar"]))
+    calibration_cell = _load_cell(str(meta["mode"]), float(meta["rho_bar"]), calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     w_loss = float(calibration_cell["w_loss"])
 
     def evaluate(ratio: float) -> Dict[str, Any]:
@@ -86,7 +88,7 @@ def analyze_cell(cell: str, fallback_report: Mapping[str, Any]) -> Dict[str, Any
             mode=str(meta["mode"]),
             rho_bar=float(meta["rho_bar"]),
             w_loss_override=w_loss * float(ratio),
-        )
+        calibration_path='results/LIVE/phase-20R/sla_calibration.json')
         a_star = np.asarray(mats["y_true"]).argmin(axis=1)
         if len(a_star) != len(df):
             raise AssertionError("truth/parquet length mismatch")
@@ -168,7 +170,8 @@ def run() -> Dict[str, Any]:
     )
 
 
-def plot(report: Mapping[str, Any], out_path: str = FIGURE) -> None:
+def plot(report: Mapping[str, Any], out_path: str = MUST_CHOOSE) -> None:
+    out_path = require_choice(out_path, 'out_path')
     import matplotlib
 
     matplotlib.use("Agg")

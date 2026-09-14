@@ -31,6 +31,8 @@ Khoa boi: docs/phase-23/00zzt-amendment-57.md (tag amendment-57).
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import datetime
 import hashlib
 import json
@@ -82,7 +84,7 @@ def sha256_file(path: str) -> str:
     return h.hexdigest()
 
 
-def build(spec_id: str = PRIMARY_SPEC, legacy: str = LEGACY,
+def build(spec_id: str = PRIMARY_SPEC, legacy: str = MUST_CHOOSE,
           w_loss_override: float | None = None) -> Dict[str, Any]:
     """Doc manifest NOI SINH cu, thay DUNG ba truong, xoa dau vet fixpoint.
 
@@ -95,6 +97,7 @@ def build(spec_id: str = PRIMARY_SPEC, legacy: str = LEGACY,
     `w = t_delay / loss_exchange` duoc giu bang cach suy `loss_exchange` tu `w`,
     de khong co hai dinh nghia `w` mau thuan trong cung mot file.
     """
+    legacy = require_choice(legacy, 'legacy')
     spec = SLA_SPECS[spec_id]
     w = float(spec["t_delay_ms"]) / float(spec["t_loss"])
     if w_loss_override is not None:
@@ -188,7 +191,7 @@ def main() -> None:
                         "M-136. Mac dinh None = ty gia equal-budget (K06).")
     a = p.parse_args()
 
-    rep = build(a.spec, w_loss_override=a.w_loss)
+    rep = build(a.spec, w_loss_override=a.w_loss, legacy='results/LIVE/phase-20R/sla_calibration.json')
     out = a.out or (OUT_TMPL % a.spec)
     os.makedirs(os.path.dirname(os.path.abspath(out)), exist_ok=True)
     with open(out, "w", encoding="utf-8") as fh:

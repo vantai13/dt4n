@@ -234,7 +234,7 @@ def sensitivity_astar(
     records = RS.load(RESIDUAL)
     rec = next(r for r in records if r.mode == MODE and r.channel == CHANNEL)
     tt_pert = B.truth_table_for(rec, VARIANT, float(endpoint), sign=float(sign))
-    pert = cell_matrices(tt_pert)
+    pert = cell_matrices(tt_pert, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     # 20R ghi clip_ratio = 43.20% cho poisson/loss: loss bi chan tai 0 nen tac
     # dong that LON HON cai do duoc. Phai bao cao kem, neu khong M-15 bi doc
     # nhu mot uoc luong khong chech.
@@ -436,7 +436,7 @@ def build(out_path: str) -> Dict[str, Any]:
     chain = verify_input_chain()
     k4 = reproduce_k4()
     tt0 = TruthTable(TRUTH_TABLE)
-    base = cell_matrices(tt0)
+    base = cell_matrices(tt0, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     astar = verify_astar_reproduces(base)
 
     feasible = bool(

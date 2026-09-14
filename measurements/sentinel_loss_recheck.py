@@ -15,6 +15,8 @@ reference is read from the Phase L campaign state, not hardcoded.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import math
@@ -49,8 +51,9 @@ def git_hash() -> str:
         return "unknown"
 
 
-def reference_stats(campaign_state: str = CAMPAIGN_STATE, cell: Mapping[str, Any] = SENTINEL) -> Dict[str, Any]:
+def reference_stats(campaign_state: str = MUST_CHOOSE, cell: Mapping[str, Any] = SENTINEL) -> Dict[str, Any]:
     """Phase L sentinel statistics, gate-clean rows only."""
+    campaign_state = require_choice(campaign_state, 'campaign_state')
     with open(campaign_state, "r", encoding="utf-8") as f:
         rows = json.load(f)["rows"]
     df = pd.DataFrame(rows)
@@ -116,7 +119,8 @@ def z_score(today: Sequence[float], ref: Mapping[str, Any]) -> Dict[str, Any]:
     }
 
 
-def run_live(reps: int = N_REPS, raw_dir: str = RAW) -> List[Dict[str, Any]]:
+def run_live(reps: int = N_REPS, raw_dir: str = MUST_CHOOSE) -> List[Dict[str, Any]]:
+    raw_dir = require_choice(raw_dir, 'raw_dir')
     from mininet.link import Link
     from mininet.net import Mininet
     from mininet.node import OVSBridge

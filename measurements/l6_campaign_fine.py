@@ -8,6 +8,8 @@ with a fixed seed, and a Phase L sentinel is inserted every 30 regular rows.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import hashlib
 import json
@@ -212,7 +214,8 @@ def stop_net_best_effort(net: Any, timeout_s: float) -> None:
         print("WARNING: net.stop failed: %s; run `sudo mn -c` before resume" % exc, file=sys.stderr)
 
 
-def load_calibration(path: str = CALIBRATION) -> List[Mapping[str, Any]]:
+def load_calibration(path: str = MUST_CHOOSE) -> List[Mapping[str, Any]]:
+    path = require_choice(path, 'path')
     with open(path, "r", encoding="utf-8") as f:
         return list(json.load(f)["cells"])
 
@@ -332,7 +335,7 @@ def _regular_full_points(calib: Sequence[Mapping[str, Any]]) -> List[Point]:
 
 def build_full_plan(calib: Optional[Sequence[Mapping[str, Any]]] = None) -> List[Point]:
     if calib is None:
-        calib = load_calibration()
+        calib = load_calibration(path='results/LIVE/phase-20R/sla_calibration.json')
     regular = _regular_full_points(calib)
     out: List[Point] = []
     for i, point in enumerate(regular, 1):
@@ -344,7 +347,7 @@ def build_full_plan(calib: Optional[Sequence[Mapping[str, Any]]] = None) -> List
 
 def build_smoke_plan(calib: Optional[Sequence[Mapping[str, Any]]] = None) -> List[Point]:
     if calib is None:
-        calib = load_calibration()
+        calib = load_calibration(path='results/LIVE/phase-20R/sla_calibration.json')
     by_key = {(row["mode"], row["bw"], row["q"]): row for row in grid_summary(calib)}
     selected = [
         ("cbr", 4.0, 10, 0.65, 21),
@@ -766,7 +769,7 @@ def run_live(args: argparse.Namespace) -> None:
 
 
 def write_grid_doc(path: str = "docs/phase-20R/04-campaign-grid.md") -> None:
-    calib = load_calibration()
+    calib = load_calibration(path='results/LIVE/phase-20R/sla_calibration.json')
     rows = grid_summary(calib)
     full = build_full_plan(calib)
     smoke = build_smoke_plan(calib)

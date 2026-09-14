@@ -15,6 +15,8 @@ Thuc thi bang `test_ba_script_hieu_chuan_khong_import_lan_nhau`.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import hashlib
 import json
 import subprocess
@@ -180,7 +182,7 @@ def cell_matrices(
     seeds: Sequence[int] = SEEDS,
     n: int = N,
     w_loss_override: float | None = None,
-    calibration_path: str = SLA_CALIB,
+    calibration_path: str = MUST_CHOOSE,
     axis: str | None = None,
     aoi_profile: str = "U0",
 ) -> Dict[str, np.ndarray]:
@@ -192,7 +194,8 @@ def cell_matrices(
     Su tach doi nay da co san trong `_cell_arrays`; day la ly do phan tich do
     nhay lam duoc ma khong phai sua kien truc.
     """
-    cv = C.CostV2(strict_reliable=False)
+    calibration_path = require_choice(calibration_path, 'calibration_path')
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cell = _load_cell(
         str(mode), float(rho_bar), calibration_path=str(calibration_path)
     )

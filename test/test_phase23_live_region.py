@@ -36,7 +36,7 @@ def test_missing_wave4_template_fails_loudly() -> None:
 
 
 def test_exogenous_loader_preserves_domain_control_and_none_semantics() -> None:
-    report = L.load_sla_exogenous()
+    report = L.load_sla_exogenous(path='results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json')
     assert len(report["cells"]) == 14
     assert report["fallback_triggered"] is None
     assert len(report["requested_cells"]) == 4

@@ -20,6 +20,8 @@ have to be before a gate flips -- which is the number a reviewer asks for.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import os
@@ -50,13 +52,14 @@ G2_FLOOR = 0.03
 OUT = "results/SUPERSEDED/phase-20R/quasistatic_band.json"
 
 
-def phase_t_err_dyn(path: str = PHASE_T_PAIRED) -> Dict[str, Dict[str, float]]:
+def phase_t_err_dyn(path: str = MUST_CHOOSE) -> Dict[str, Dict[str, float]]:
     """Per-mode quasi-static error at LINK level, with the CI of the mean.
 
     A systematic offset applies to every link at once, so the relevant
     uncertainty is that of the mean, not the per-run spread. The per-run
     percentiles are carried along anyway because they bound a single window.
     """
+    path = require_choice(path, 'path')
     with open(path, "r", encoding="utf-8") as f:
         summary = json.load(f)["summary_dyn_by_mode"]
     out: Dict[str, Dict[str, float]] = {}
@@ -133,7 +136,7 @@ def main(argv: Optional[Sequence[str]] = None) -> int:
     seeds = [int(x) for x in args.seeds.split(",") if x.strip()]
 
     err_dyn = phase_t_err_dyn(args.phase_t)
-    cv2, tt0 = C.CostV2(), D.TruthTable()
+    cv2, tt0 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json'), D.TruthTable()
     cells = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True) if str(c["mode"]) != "cbr"]
 
     print("=== SAI SO TUA TINH DO O PHASE T (muc link) ===")

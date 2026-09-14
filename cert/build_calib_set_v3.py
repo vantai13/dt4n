@@ -19,6 +19,8 @@ offset is nonzero. Both directions are tested.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import hashlib
 import json
@@ -193,8 +195,9 @@ def _git(*cmd: str) -> str:
 def _load_cell(
     mode: str,
     rho_bar: float,
-    calibration_path: str = CALIBRATION,
+    calibration_path: str = MUST_CHOOSE,
 ) -> Mapping[str, Any]:
+    calibration_path = require_choice(calibration_path, 'calibration_path')
     cells = {
         (str(c["mode"]), float(c["rho_bar"])): c
         for c in feasible_cells(calibration_path, include_pc1=True)
@@ -315,11 +318,13 @@ def build_one_v3(
     aoi_profile: str = "U0",
     n: int = N,
     dt: float = DT,
-    sigma: float = SIGMA,
+    sigma: float = MUST_CHOOSE,
     d_sync: float = D_SYNC,
-    axis: str = AXIS_LEGACY,
+    axis: str = MUST_CHOOSE,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
     """Build one operating cell, one seed, one AoI profile."""
+    sigma = require_choice(sigma, 'sigma')
+    axis = require_choice(axis, 'axis')
     arr = _cell_arrays(tt, cv, cell, seed=seed, n=n, dt=dt, sigma_override=sigma)
     off = offset_steps(aoi_profile, dt)
     if axis == AXIS_MEASURED:
@@ -637,12 +642,14 @@ def build_cell(
     aoi_profile: str = "U0",
     n: int = N,
     v3_split: bool = False,
-    calibration_path: str = CALIBRATION,
+    calibration_path: str = MUST_CHOOSE,
     d_sync: float = D_SYNC,
-    axis: str = AXIS_LEGACY,
+    axis: str = MUST_CHOOSE,
 ) -> Tuple[pd.DataFrame, Dict[str, Any]]:
+    calibration_path = require_choice(calibration_path, 'calibration_path')
+    axis = require_choice(axis, 'axis')
     tt = TruthTable(TRUTH_TABLE)
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cell = _load_cell(mode, rho_bar, calibration_path=calibration_path)
     parts, metas = [], []
     for seed in seeds:
@@ -655,7 +662,7 @@ def build_cell(
             n=int(n),
             d_sync=float(d_sync),
             axis=str(axis),
-        )
+        sigma=0.0096)
         parts.append(frame)
         metas.append(meta)
     df = pd.concat(parts, ignore_index=True)
@@ -687,11 +694,12 @@ def staleness_path_diagnostic(
     rho_bar: float,
     seed: int = 101,
     n: int = 20_000,
-    calibration_path: str = CALIBRATION,
+    calibration_path: str = MUST_CHOOSE,
     *, axis: str,
 ) -> Dict[str, Any]:
+    calibration_path = require_choice(calibration_path, 'calibration_path')
     tt = TruthTable(TRUTH_TABLE)
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cell = _load_cell(mode, rho_bar, calibration_path=calibration_path)
     arr = _cell_arrays(tt, cv, cell, seed=seed, n=n, dt=DT, sigma_override=SIGMA)
     aoi = AoIModelV7(d_s=d_base_s((0.0,) * 8, DT), profile="U0")
@@ -771,12 +779,12 @@ def main() -> None:
     report = validate_v3(df, v2_path)
 
     tt = TruthTable(TRUTH_TABLE)
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cell = _load_cell(
         str(args.mode), float(args.rho_bar), calibration_path=str(args.calibration)
     )
     if args.aoi_profile == "U0":
-        reproduced = reproduce_20R_fixed_z(cell, tt, cv, seeds=args.seeds, n=int(args.n))
+        reproduced = reproduce_20R_fixed_z(cell, tt, cv, seeds=args.seeds, n=int(args.n), sigma=0.0096)
         try:
             v5_compare = compare_20R_constant_sigma(
                 reproduced, str(args.mode), float(args.rho_bar)

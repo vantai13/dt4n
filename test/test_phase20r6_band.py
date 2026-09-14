@@ -230,7 +230,7 @@ def test_pairing_rejects_traversed_link_mismatch():
 def test_common_mode_delay_leaves_err_bitwise_unchanged():
     cell = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True)
             if c["mode"] == "poisson" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
-    cv2 = C.CostV2()
+    cv2 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     base = B2.cell_metrics(D.TruthTable(), cv2, cell, seeds=[101], n=400)
     rec = _record(
         estimand="common mode delay residual applied equally to every measured link class",
@@ -316,7 +316,7 @@ def test_full_equals_differential_on_err_for_delay_channel():
     assert all(len(path) == 3 for path in T7.PATHS.values())
     cell = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True)
             if c["mode"] == "h2" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
-    cv2 = C.CostV2()
+    cv2 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     rec = _record(
         estimand="per-link delay residual from transfer smoke used for algebraic invariant",
         source="test",
@@ -341,7 +341,7 @@ def test_full_equals_differential_on_err_for_delay_channel():
 def test_differential_injection_changes_err_more_than_common_mode():
     cell = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True)
             if c["mode"] == "poisson" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
-    cv2 = C.CostV2()
+    cv2 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     base = B2.cell_metrics(D.TruthTable(), cv2, cell, seeds=[101], n=5000)
     rec = _record(
         estimand="per-link delay residual with large differential component on L3",
@@ -546,7 +546,7 @@ def test_joint_qt3_uses_dimensionless_anchor_symmetric_lambda():
 def test_joint_equals_full_in_band_mode_by_construction():
     cell = [c for c in D.feasible_cells(D.CALIBRATION, include_pc1=True)
             if c["mode"] == "h2" and abs(float(c["rho_bar"]) - 0.925) < 1e-9][0]
-    cv2 = C.CostV2()
+    cv2 = C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     records = [
         _record(
             estimand="h2 loss residual for band joint identity test",
@@ -641,7 +641,7 @@ def test_run_band_marks_d_sla_and_joint_fields():
         per_unit={"L1": 0.4, "L2": 0.4, "L3": 0.4},
     )
 
-    row = B2.run_band([rec], C.CostV2(), D.TruthTable(), [cell], seeds=[101], n=600, variants=["common_mode"])[0]
+    row = B2.run_band([rec], C.CostV2(fit_path='results/LIVE/phase-L/link_model_v2_fit.json'), D.TruthTable(), [cell], seeds=[101], n=600, variants=["common_mode"])[0]
 
     assert row["is_algebraic_identity"] is True
     assert row["worst_endpoint_resolvable"] is None

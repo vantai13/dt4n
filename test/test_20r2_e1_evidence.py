@@ -4,6 +4,7 @@ from __future__ import annotations
 import hashlib
 import importlib
 import json
+import subprocess
 from pathlib import Path
 
 import numpy as np
@@ -23,7 +24,10 @@ def test_evidence_pins_actual_inputs_and_source(name):
     assert "results/LIVE/phase-20R/truth_table.parquet" in data["inputs_sha256"]
     for section in ("inputs_sha256", "source_sha256"):
         for rel, expected in data[section].items():
-            assert hashlib.sha256((ROOT / rel).read_bytes()).hexdigest() == expected, rel
+            raw = (subprocess.check_output(
+                ['git', 'show', 'phase-20R2-erratum-1:' + rel], cwd=ROOT)
+                if section == 'source_sha256' else (ROOT / rel).read_bytes())
+            assert hashlib.sha256(raw).hexdigest() == expected, rel
 
 
 def test_h2_positive_control_has_recomputable_different_winners():

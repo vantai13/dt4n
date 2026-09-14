@@ -25,6 +25,8 @@ differences. It never sees sub-grid structure, so Amendment 16 is respected.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import math
@@ -113,7 +115,8 @@ def path_curvature_map(
     return rows
 
 
-def prediction_1(radius_path: str = RADIUS) -> Dict[str, Any]:
+def prediction_1(radius_path: str = MUST_CHOOSE) -> Dict[str, Any]:
+    radius_path = require_choice(radius_path, 'radius_path')
     report = load_json(radius_path)
     h1 = report["h1_bound"]
     return {
@@ -199,7 +202,8 @@ def prediction_2(
     }
 
 
-def prediction_3(maps_path: str = MAPS) -> Dict[str, Any]:
+def prediction_3(maps_path: str = MUST_CHOOSE) -> Dict[str, Any]:
+    maps_path = require_choice(maps_path, 'maps_path')
     report = load_json(maps_path)
     rows = [r for r in report["rows"] if bool(r["significant_d2_loss"])]
     detail = [
@@ -233,13 +237,15 @@ def prediction_3(maps_path: str = MAPS) -> Dict[str, Any]:
 
 
 def build_report(
-    maps_path: str = MAPS,
-    radius_path: str = RADIUS,
+    maps_path: str = MUST_CHOOSE,
+    radius_path: str = MUST_CHOOSE,
     modes: Sequence[str] = MODES,
     z: float = MR.Z_OPERATING,
     h: float = 0.02,
     step: float = 0.02,
 ) -> Dict[str, Any]:
+    maps_path = require_choice(maps_path, 'maps_path')
+    radius_path = require_choice(radius_path, 'radius_path')
     err = MR.load_err(z=z)
     p1 = prediction_1(radius_path)
     p2 = prediction_2(err, modes=modes, h=h, step=step)

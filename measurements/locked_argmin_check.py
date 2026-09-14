@@ -80,7 +80,7 @@ def run(
     n: int,
 ) -> Dict[str, Any]:
     tt = D.TruthTable()
-    cv2 = C.CostV2(strict_reliable=False)
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     rows: List[Dict[str, Any]] = []
     for mode in modes:
         for rho_bar in rho_bars:

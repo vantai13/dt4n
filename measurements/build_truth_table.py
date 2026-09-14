@@ -7,6 +7,8 @@ Sentinels, failed rows, on/off rows, and probe-off controls are excluded.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import math
@@ -51,7 +53,8 @@ def usable_row(row: Mapping[str, Any]) -> bool:
     return True
 
 
-def truth_grid(calibration_path: str = CALIBRATION) -> Dict[Tuple[str, float, int], set[float]]:
+def truth_grid(calibration_path: str = MUST_CHOOSE) -> Dict[Tuple[str, float, int], set[float]]:
+    calibration_path = require_choice(calibration_path, 'calibration_path')
     calib = FINE.load_calibration(calibration_path)
     need = FINE.required_rho_ranges(calib)
     return {
@@ -165,12 +168,16 @@ def write_parquet_with_metadata(table: pd.DataFrame, out_path: str) -> None:
 
 
 def write_truth_table(
-    phase_l_path: str = PHASE_L_STATE,
-    phase_20r_path: str = PHASE_20R_STATE,
+    phase_l_path: str = MUST_CHOOSE,
+    phase_20r_path: str = MUST_CHOOSE,
     out_path: str = TRUTH_TABLE,
-    csv_path: Optional[str] = TRUTH_TABLE_CSV,
-    calibration_path: str = CALIBRATION,
+    csv_path: Optional[str] = MUST_CHOOSE,
+    calibration_path: str = MUST_CHOOSE,
 ) -> pd.DataFrame:
+    phase_l_path = require_choice(phase_l_path, 'phase_l_path')
+    phase_20r_path = require_choice(phase_20r_path, 'phase_20r_path')
+    csv_path = require_choice(csv_path, 'csv_path')
+    calibration_path = require_choice(calibration_path, 'calibration_path')
     table = merge_states(load_state(phase_l_path), load_state(phase_20r_path), truth_grid(calibration_path))
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -288,10 +295,13 @@ def continuity_report(
 
 
 def write_continuity_check(
-    phase_l_path: str = PHASE_L_STATE,
-    continuity_path: str = CONTINUITY_STATE,
-    out_path: str = CONTINUITY_JSON,
+    phase_l_path: str = MUST_CHOOSE,
+    continuity_path: str = MUST_CHOOSE,
+    out_path: str = MUST_CHOOSE,
 ) -> Dict[str, Any]:
+    phase_l_path = require_choice(phase_l_path, 'phase_l_path')
+    continuity_path = require_choice(continuity_path, 'continuity_path')
+    out_path = require_choice(out_path, 'out_path')
     report = continuity_report(load_state(phase_l_path), load_state(continuity_path))
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)
@@ -312,9 +322,11 @@ def sentinel_report(phase_20r_state: Mapping[str, Any]) -> Dict[str, Any]:
 
 
 def write_sentinel_control(
-    phase_20r_path: str = PHASE_20R_STATE,
-    out_path: str = SENTINEL_JSON,
+    phase_20r_path: str = MUST_CHOOSE,
+    out_path: str = MUST_CHOOSE,
 ) -> Dict[str, Any]:
+    phase_20r_path = require_choice(phase_20r_path, 'phase_20r_path')
+    out_path = require_choice(out_path, 'out_path')
     report = sentinel_report(load_state(phase_20r_path))
     out = Path(out_path)
     out.parent.mkdir(parents=True, exist_ok=True)

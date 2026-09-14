@@ -13,7 +13,7 @@ from measurements.sla_exogenous import SLA_SPECS
 
 @pytest.fixture(scope="module")
 def rep():
-    return M.build()
+    return M.build(legacy='results/LIVE/phase-20R/sla_calibration.json')
 
 
 def test_same_schema_as_legacy(rep):

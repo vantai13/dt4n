@@ -6,7 +6,7 @@ from measurements.sla_manifest_exogenous_14 import ALLOWED, LABEL
 
 @pytest.fixture(scope="module")
 def report():
-    return M.build_manifest()
+    return M.build_manifest(base_path='results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json')
 
 
 def test_a069_manifest_has_exact_20_unique_feasible_cells(report) -> None:

@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 def _calib_path(spec: dict, tpl) -> str:
     """Duong dan calib_set: mau neu co, khong thi giu NGUYEN duong cu.
 
@@ -70,10 +72,11 @@ LEGACY_DELTA = {
 
 def sla_objective_for_cell(
     cell: str,
-    artifact: str = SLA_ARTIFACT,
+    artifact: str = MUST_CHOOSE,
     spec: Mapping[str, Any] | None = None,
 ) -> Dict[str, float]:
     """Read both objective parameters from the frozen SLA artifact."""
+    artifact = require_choice(artifact, 'artifact')
     spec = CELL_SPECS[cell] if spec is None else spec
     with open(artifact, "r", encoding="utf-8") as handle:
         rows = json.load(handle)["cells"]
@@ -94,10 +97,11 @@ def sla_objective_for_cell(
 
 def w_loss_for_cell(
     cell: str,
-    artifact: str = SLA_ARTIFACT,
+    artifact: str = MUST_CHOOSE,
     spec: Mapping[str, Any] | None = None,
 ) -> float:
     """Read the cell-specific objective weight from the frozen SLA artifact."""
+    artifact = require_choice(artifact, 'artifact')
     return float(sla_objective_for_cell(cell, artifact, spec=spec)["w_loss"])
 
 
@@ -172,10 +176,11 @@ def _objective_curve(
     crossfit: Mapping[str, Any],
     selected_at_one: Mapping[str, float],
     spec: Mapping[str, Any] | None = None,
-    sla_artifact: str = SLA_ARTIFACT,
+    sla_artifact: str = MUST_CHOOSE,
     axis: str | None = None,
     aoi_profile: str = "U0",
 ) -> Dict[str, Any]:
+    sla_artifact = require_choice(sla_artifact, 'sla_artifact')
     spec = CELL_SPECS[cell] if spec is None else spec
     objective = sla_objective_for_cell(cell, sla_artifact, spec=spec)
     w_loss = float(objective["w_loss"])
@@ -223,11 +228,12 @@ def _objective_curve(
 def analyze_cell(
     cell: str,
     spec: Mapping[str, Any] | None = None,
-    sla_artifact: str = SLA_ARTIFACT,
+    sla_artifact: str = MUST_CHOOSE,
     calib_template: str | None = None,
     axis: str | None = None,
     aoi_profile: str = "U0",
 ) -> Dict[str, Any]:
+    sla_artifact = require_choice(sla_artifact, 'sla_artifact')
     spec = CELL_SPECS[cell] if spec is None else spec
     df = pd.read_parquet(_calib_path(spec, calib_template))
     score, accept = F.c3_accept_set(df)
@@ -316,7 +322,8 @@ def _axis_or_legacy(axis):
 def run_eight_cells(calib_template: str | None = None,
                     axis: str | None = None,
                     aoi_profile: str = "U0",
-                    sla_artifact: str = SLA_ARTIFACT) -> Dict[str, Any]:
+                    sla_artifact: str = MUST_CHOOSE) -> Dict[str, Any]:
+    sla_artifact = require_choice(sla_artifact, 'sla_artifact')
     cells = {cell: analyze_cell(cell, calib_template=calib_template,
                                 axis=axis, aoi_profile=aoi_profile,
                                 sla_artifact=sla_artifact)

@@ -18,7 +18,7 @@ def _require_inputs(paths) -> None:
 def test_G23_23_lift_law_reconstructs_break_even_delta() -> None:
     """Benefit is exactly lift > swing on each rejected set."""
     _require_inputs([CC.DEFAULT_G23_17A, *CC.DEFAULT_AUDITS.values()])
-    out = CC.lift_law_report()
+    out = CC.lift_law_report(g23_17a_path='results/SUPERSEDED/phase-23/g23_17a_cell_margins.json')
     assert out["gate"] == "G23-23"
     assert out["checks"]["identity_pass"] is True
     assert out["checks"]["all_signs_match"] is True

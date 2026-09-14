@@ -26,6 +26,8 @@ Tong hop artifact, Figure 6 va tai lieu::
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import os
@@ -777,7 +779,7 @@ def _perturbed_matrices(
 ) -> Tuple[Dict[str, np.ndarray], Dict[str, Dict[str, np.ndarray]], Dict[str, Any]]:
     spec = CELL_SPECS[cell]
     tt = TruthTable(TRUTH_TABLE)
-    base = cell_matrices(tt, mode=spec["mode"], rho_bar=spec["rho_bar"])
+    base = cell_matrices(tt, mode=spec["mode"], rho_bar=spec["rho_bar"], calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     records = RS.load(RESIDUAL)
     rec = next(
         r
@@ -790,7 +792,7 @@ def _perturbed_matrices(
         tt_pert = B.truth_table_for(rec, "common_mode", endpoint, sign=SIGN)
         perturbed[label] = cell_matrices(
             tt_pert, mode=spec["mode"], rho_bar=spec["rho_bar"]
-        )
+        , calibration_path='results/LIVE/phase-20R/sla_calibration.json')
         n_eval = int(getattr(tt_pert, "eval_count", 0))
         n_clip = int(getattr(tt_pert, "clip_events", 0))
         clip[label] = {
@@ -863,9 +865,9 @@ def _relative_matrices(
     estimate = _relative_estimand_from_record(rec)
     base = cell_matrices(
         TruthTable(TRUTH_TABLE), mode=mode, rho_bar=float(spec["rho_bar"])
-    )
+    , calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     table = B.RelativePathShiftTruthTable(float(estimate["relative_point"]), mode)
-    pert = cell_matrices(table, mode=mode, rho_bar=float(spec["rho_bar"]))
+    pert = cell_matrices(table, mode=mode, rho_bar=float(spec["rho_bar"]), calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     return base, pert, table, estimate
 
 
@@ -1236,7 +1238,8 @@ def _format_value(value: Any) -> str:
     return "%.6f" % float(value)
 
 
-def plot_figure6(summary: Mapping[str, Any], out_path: str = FIGURE_PATH) -> None:
+def plot_figure6(summary: Mapping[str, Any], out_path: str = MUST_CHOOSE) -> None:
+    out_path = require_choice(out_path, 'out_path')
     import matplotlib
 
     matplotlib.use("Agg")
@@ -1377,7 +1380,7 @@ def main() -> None:
             handle.write("\n")
         with open(DOC_PATH, "w", encoding="utf-8") as handle:
             handle.write(markdown_report(summary))
-        plot_figure6(summary)
+        plot_figure6(summary, out_path='results/SUPERSEDED/phase-23/fig6_conditioning_audit.png')
         print("summary -> %s" % SUMMARY_PATH)
         print("figure  -> %s" % FIGURE_PATH)
         print("doc     -> %s" % DOC_PATH)

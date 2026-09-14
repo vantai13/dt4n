@@ -31,7 +31,7 @@ def test_ar1_matrix_clips_to_family_reliability_ceiling():
 
 def test_cbr_high_load_is_q8_infeasible_before_calibration():
     cell = S.calibrate_cell(
-        C.CostV2(strict_reliable=True),
+        C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json'),
         "cbr",
         0.925,
         seed=1,
@@ -45,7 +45,7 @@ def test_cbr_high_load_is_q8_infeasible_before_calibration():
 
 def test_loss_exchange_is_distinct_from_calibrated_t_loss():
     cell = S.calibrate_cell(
-        C.CostV2(strict_reliable=True),
+        C.CostV2(strict_reliable=True, fit_path='results/LIVE/phase-L/link_model_v2_fit.json'),
         "h2",
         0.70,
         seed=5,

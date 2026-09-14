@@ -3,6 +3,8 @@
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import math
@@ -250,14 +252,16 @@ def build_plan(stage: str) -> List[Point]:
     raise ValueError("stage khong hop le: %s" % stage)
 
 
-def load_state(path: str = STATE) -> State:
+def load_state(path: str = MUST_CHOOSE) -> State:
+    path = require_choice(path, 'path')
     if os.path.exists(path):
         with open(path, "r", encoding="utf-8") as f:
             return json.load(f)
     return {"done_idx": [], "rows": [], "sentinels": []}
 
 
-def save_state(state: State, path: str = STATE) -> None:
+def save_state(state: State, path: str = MUST_CHOOSE) -> None:
+    path = require_choice(path, 'path')
     os.makedirs(os.path.dirname(os.path.abspath(path)) or ".", exist_ok=True)
     tmp = path + ".tmp"
     with open(tmp, "w", encoding="utf-8") as f:
@@ -307,7 +311,8 @@ def sealed_row(row: Dict[str, Any]) -> Dict[str, Any]:
     return {key: value for key, value in row.items() if key not in GATE_FIELDS}
 
 
-def save_sealed_row(row: Dict[str, Any], sealed_dir: str = SEALED) -> None:
+def save_sealed_row(row: Dict[str, Any], sealed_dir: str = MUST_CHOOSE) -> None:
+    sealed_dir = require_choice(sealed_dir, 'sealed_dir')
     os.makedirs(sealed_dir, exist_ok=True)
     pid = str(row["pid"])
     payload = {"pid": pid, "sealed": sealed_row(row)}
@@ -396,7 +401,8 @@ def make_traj(point: Point):
     )
 
 
-def load_phase_l_refs(path: str = PHASE_L_STATE):
+def load_phase_l_refs(path: str = MUST_CHOOSE):
+    path = require_choice(path, 'path')
     with open(path, "r", encoding="utf-8") as f:
         phase_l_state = json.load(f)
     rows = phase_l_state.get("rows", [])
@@ -619,7 +625,7 @@ def run_live(args: argparse.Namespace) -> None:
     model = LinkModelV2.load(MODEL_PATH)
     phase_l_ref = phase_l_seed_ref = None
     if args.stage in ("controls", "controls-sameseed", "controls-samesed"):
-        phase_l_ref, phase_l_seed_ref = load_phase_l_refs()
+        phase_l_ref, phase_l_seed_ref = load_phase_l_refs(path='results/SUPERSEDED/phase-L/campaign_state.json')
         if args.stage == "controls":
             phase_l_seed_ref = None
     os.makedirs(RAW, exist_ok=True)

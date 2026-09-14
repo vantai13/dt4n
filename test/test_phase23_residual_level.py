@@ -25,7 +25,7 @@ def poisson_record():
 def rho_small():
     cell = next(
         row
-        for row in D.load_calibration()
+        for row in D.load_calibration(path='results/LIVE/phase-20R/sla_calibration.json')
         if row.get("feasible") and row["mode"] == "poisson" and row["rho_bar"] == 0.925
     )
     sigma, _source = D.resolve_sigma(cell)
@@ -71,7 +71,7 @@ def test_mode_mismatch_lam_do(rho_small):
 
 
 def test_relative_point_khop_residual_cascade_va_ghi_diem_do():
-    out = A.relative_point_from_raw(mode="poisson")
+    out = A.relative_point_from_raw(mode="poisson", branch_b='results/SUPERSEDED/phase-20R/branch_b_fixed_s104_108.json', branch_c='results/SUPERSEDED/phase-20R/branch_c_fixed_s104_108.json')
     assert out["matches_residual_cascade"]
     assert out["rho_bar_measured"] == 0.925
     assert -0.20 <= out["relative_point"] <= -0.12
@@ -91,7 +91,7 @@ def test_estimand_loss_khong_con_ghi_chi_phi():
 
 
 def test_M30_mo_hinh_tuong_doi_khong_cat_nguong(rho_small):
-    rel = A.relative_point_from_raw(mode="poisson")["relative_point"]
+    rel = A.relative_point_from_raw(mode="poisson", branch_b='results/SUPERSEDED/phase-20R/branch_b_fixed_s104_108.json', branch_c='results/SUPERSEDED/phase-20R/branch_c_fixed_s104_108.json')["relative_point"]
     tt = A.RelativePathShiftTruthTable(rel, "poisson")
     _delay, loss, _cost = tt.path_tables("poisson", rho_small, 3222.244681647411)
     assert tt.clip_events == 0

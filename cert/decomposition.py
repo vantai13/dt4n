@@ -8,6 +8,8 @@ older Phase 20R quantities.
 
 from __future__ import annotations
 
+from measurements.explicit_choice import MUST_CHOOSE, require_choice
+
 import argparse
 import json
 import os
@@ -131,10 +133,11 @@ def sweep_z(
     seeds: Sequence[int] = SEEDS,
     n: int = N,
     dt: float = DT,
-    sigma: float = SIGMA,
+    sigma: float = MUST_CHOOSE,
     arrays: Sequence[Mapping[str, Any]] | None = None,
 ) -> pd.DataFrame:
     """Sweep z and return one row per age for one level/channel pair."""
+    sigma = require_choice(sigma, 'sigma')
     if level not in ("margin", "path"):
         raise ValueError("level phai la 'margin' hoac 'path'")
     if channel not in ("cost", "delay"):
@@ -240,7 +243,7 @@ def _git(*cmd: str) -> str:
 
 
 def _load_cell(mode: str, rho_bar: float) -> Mapping[str, Any]:
-    cells = {(str(c["mode"]), float(c["rho_bar"])): c for c in feasible_cells(include_pc1=True)}
+    cells = {(str(c["mode"]), float(c["rho_bar"])): c for c in feasible_cells(include_pc1=True, path='results/LIVE/phase-20R/sla_calibration.json')}
     key = (str(mode), float(rho_bar))
     if key not in cells:
         raise SystemExit("o %s khong kha thi trong sla_calibration.json" % (key,))
@@ -258,7 +261,7 @@ def main() -> None:
     args = parser.parse_args()
 
     tt = TruthTable()
-    cv = C.CostV2(strict_reliable=False)
+    cv = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     cell = _load_cell(args.mode, args.rho_bar)
     arrays = _arrays_for_sweep(cell, tt, cv, args.seeds, int(args.n), DT, SIGMA)
 
@@ -270,7 +273,7 @@ def main() -> None:
     for level in ("margin", "path"):
         for channel in ("cost", "delay"):
             tag = "%s_%s" % (level, channel)
-            df = sweep_z(cell, tt, cv, level=level, channel=channel, seeds=args.seeds, n=int(args.n), arrays=arrays)
+            df = sweep_z(cell, tt, cv, level=level, channel=channel, seeds=args.seeds, n=int(args.n), arrays=arrays, sigma=0.0096)
             out["sweeps"][tag] = df.to_dict(orient="records")
             out["z_cross"][tag] = find_z_cross(df)
             if level == "margin" and channel == "cost":
