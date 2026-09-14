@@ -1,0 +1,3597 @@
+{
+  "schema": "dt4n.b.provenance_and_preservation.v1",
+  "status": "PASS",
+  "baseline_before_B": "1de19e1cbbf47951e4b718e7100777848c0eab3c",
+  "original_closed_tag_commit": "042c58f4dd20dc6f7b78cdfe7f3473a6e3745ffb",
+  "pre_B_scientific_files_checked": 5522,
+  "pre_B_modified_or_deleted_scientific_files": [],
+  "signed_tags": {
+    "phase-20R2-B-reading-signed": {
+      "commit": "33489835f2d0bbf7f140873608f997f8568785d4",
+      "remote_commit": "33489835f2d0bbf7f140873608f997f8568785d4",
+      "file": "docs/phase-20R2/B0-reading-signed.md",
+      "sha256": "4220896ed1a5113ce9f0fde952e69fc05c027a787f5a1785e4b7b379c783d991"
+    },
+    "phase-20R2-B2-plan-signed": {
+      "commit": "95d7bb7c9491b6405eb1fb67467bf40f204ffcbc",
+      "remote_commit": "95d7bb7c9491b6405eb1fb67467bf40f204ffcbc",
+      "file": "docs/phase-20R2/B2-run-plan.json",
+      "sha256": "20d7d525e69d28ce94739255057ff03fb14535ddc99f39a36df3ac1758926d9e"
+    }
+  },
+  "artifacts": [
+    {
+      "artifact": "docs/phase-20R2/B1-omega-sensitivity.json",
+      "sha256": "d15472b4c23232951ca7d6aa68659b79822c19deae95349b03d9fd98dacae833",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "c7105c79774381c06c3b695adc582f38233ede12",
+        "measurements/sla_calib_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_omega_sensitivity.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes",
+        "twin/topology_v7.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "docs/phase-20R2/B2-run-plan.json",
+      "sha256": "20d7d525e69d28ce94739255057ff03fb14535ddc99f39a36df3ac1758926d9e",
+      "input_count": 45,
+      "source_versions": {
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_plan.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "docs/phase-20R2/B2-sla-threshold-map.json",
+      "sha256": "45a0f1bd2b4dfb6a31a586501fcc45ec1410641570abad4844734be54f1a4755",
+      "input_count": 644,
+      "source_versions": {
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_summarize.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "docs/phase-20R2/B3-axis-marginal.json",
+      "sha256": "49f4a4d4556feec6ad627aa25328ab760bbed85e6cb556ce95caf1ebd7d0af74",
+      "input_count": 84,
+      "source_versions": {
+        "measurements/aoi_model_v7.py": "current bytes",
+        "measurements/decision_error.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_axis_marginal.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0000_report.json",
+      "sha256": "b1a5c3730d462654e78ea1a5c1c9d23e043ad0ede21027215b4a391a071ce9ea",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0001_report.json",
+      "sha256": "7be22e250e7c54edd95a50dadf79decffb625519a3d073ebcc54795bed2270ec",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0002_report.json",
+      "sha256": "847a2bac57febb3de6a2382fc57c54b68b56e1d15165c079192ccb24abc062e3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0003_report.json",
+      "sha256": "70d2659b383eedfab3c74da632912a48e44abf4ea5cfdee3a31749b92abcbe80",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0004_report.json",
+      "sha256": "b29b48503327312a5e2d68e19fadcaa79e4cda772aee38b7ec9f642ea535e2c2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0005_report.json",
+      "sha256": "01aa21ae7a4305d658a0785fc28e9f7d8b65c2ec7fb6db39877cc688f24da664",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0006_report.json",
+      "sha256": "0a48a19a459a8075e962ca5cb5fe5103f2e716f2c079f2b909e0a18ebcd75c57",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0007_report.json",
+      "sha256": "875087debacfc6cb921daa735b449a091a7f41580d0671c6bfac2ec76b370374",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0008_report.json",
+      "sha256": "c6d89de489ac144f5973e2f568c819cf1b9aa1937fdd8f7243acdd8555fba542",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0009_report.json",
+      "sha256": "41c0dfcb22ff91ce1d153b000a5a760fb24eefa1d0714e5f8a48c268e66d9777",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0010_report.json",
+      "sha256": "c955caaa799d2308f2f7774101506f4bfd3e123b981d4ce9825f3f89138943fe",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0011_report.json",
+      "sha256": "f535c7acaaf7730e6110f535c4ded470f0dbabb9d96895df92e7b4ec517b984d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0012_report.json",
+      "sha256": "b82d667b0df8a89f8ebeef69925dd0c336916e56805f44f8ca28fe8e7da96103",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0013_report.json",
+      "sha256": "c4bf15f7e2d779c3566f226e23dd100e46412b84582b6758dc4833b860de76bd",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0014_report.json",
+      "sha256": "c285e6b152ee6828e2065de89dc66a74ef19615fb738d50a456198657d95fcce",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0015_report.json",
+      "sha256": "4cb56eaf5e3f58bc738aa16a1a374cc3b6abb2a27b3de25b7fe8fe4d5ae90433",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0016_report.json",
+      "sha256": "08f3394a904ee2c5bfb3e1af184387eeee62aa5fd8fe858a6f5753996773b981",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0017_report.json",
+      "sha256": "8a5faee12222eb9f0b2f9ce7d703c45a7ca8082821a03e661c2dba7c805915b9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0018_report.json",
+      "sha256": "732161d993c03a989310fa9e108f93d9a5e42238451af01843ade4df92ac72d6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0019_report.json",
+      "sha256": "23bf7458edbe9f7e477defe95f55a7622fa8a185a3dde5732ffc68fe208aedff",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0020_report.json",
+      "sha256": "213a2a8cde65305021b4cd6fa03c1ff18c7a242570f76019ad99e65c75efecca",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0021_report.json",
+      "sha256": "d36f118abb9eee51dc8af4e8828595f8fe3c7815c1efcff93eb027c061b1e7e7",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0022_report.json",
+      "sha256": "a03bf43d565194b735586feac500f394dd856f39faf5ee712d651a1643eb3ae8",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0023_report.json",
+      "sha256": "50866ae85307fea23358ad0e25ce557bf4530a7feb2395cb983b317d9c4dccad",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0024_report.json",
+      "sha256": "be6c94fa8e335d2ca65d9296029bdb9fd09132dd89fb5d8523fe5928e36c2048",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0025_report.json",
+      "sha256": "82292eb39bf72922b62c851a604a1f619648edfd33a63fe741013fc876fb3af9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0026_report.json",
+      "sha256": "89262b33cc2f72716faf250c9977fb8304f4dd3ccaf45b58e84c5623a9d72098",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0027_report.json",
+      "sha256": "6fc8042cf67e1052dd8155979ca664299fc486e0544e2a64df6ce8f532bcb038",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0028_report.json",
+      "sha256": "7ede4d05c00cbcb11ab0cde43321666bc84a61f55ac394e3e5fa06045f29cec2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0029_report.json",
+      "sha256": "9ea31a6ce1843e0089e16226b29929c1c20b6fa3184152f45000621f2d18f353",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0030_report.json",
+      "sha256": "967a01de591ceaca8e53d212c373cc7e31ae159fad5a0760fa729a2f2863820a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0031_report.json",
+      "sha256": "4bcd836a2936574c01b3f696374829e83735eda0abc531fd08eac752daa0e2d2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0032_report.json",
+      "sha256": "60d324ec232f7e721a991c43d010b8e57288f5d6f935c63e1b4cc95938b2000e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0033_report.json",
+      "sha256": "5abeb82e321d46d82900e6f8a7debe326d5f6ae72ac68c6b22d5c9c8b7c883bf",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0034_report.json",
+      "sha256": "f2f536ebdbd573e0c58acc7cb38496969726e54f9a6b2b9ea4a59246f1487c6e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0035_report.json",
+      "sha256": "9df293c11dfe1d6c85926ab4ef2ead0004c91961cabb98dcaa57defa7fd555b4",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0036_report.json",
+      "sha256": "7c81d5d997cb80a70c9c6547b09d346793308ff91a4ef303ee068bc2228d48b8",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0037_report.json",
+      "sha256": "71c1a37bbd6ca127f219c1e6c28626c4cbd3dac193fd6041d11fda7aa1a7f84d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0038_report.json",
+      "sha256": "c85b6b099ee2dd1ef1d0356ae32361fa0cea740b02d96d84be8d8943ca8d1125",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0039_report.json",
+      "sha256": "a4d53e6e6ee8ad81623e52cdf10d5cb7965a0bd4670e8ce84dbfd3c62e615710",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0040_report.json",
+      "sha256": "d89dd2195ad6f33f340e94e2ea41c768b3aa3a965a3ed58bd4aab18a1959ec5f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0041_report.json",
+      "sha256": "8cc16ec840a118dbe282abc0141658b6a6bbbd2ebe05bafb623fa8d359d1d3b2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0042_report.json",
+      "sha256": "f2b4210195ef0a0a5bd7b7fdf2872526bce2e10fd9caa9d6a8603c3d2339ffad",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0043_report.json",
+      "sha256": "b156d5e3eea81d2334d5e06daee1a970df66de83a08af35d1f2f72884f5fa24b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0044_report.json",
+      "sha256": "605dbfe8c5a6563924388787f5f51e0a1c2ac5b72f646955876257356c64513a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0045_report.json",
+      "sha256": "b3ded7d00fd1a72f9afbd38d666482a313410d8748ad1719f735ed1190f66b87",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0046_report.json",
+      "sha256": "4abfbed1aaef152249711e7323b0db65ba72bb703c8ef5c088795d9c27c98c56",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0047_report.json",
+      "sha256": "c86d361e433bb64e04d68c8488edfc263512e2eba4bc62b1e4b642e894ecb425",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0048_report.json",
+      "sha256": "a31da634e6127da678bde21aa78150df9f161180ee3b305cf264260a147e1d56",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0049_report.json",
+      "sha256": "9000542451fe429f3583f18898bd983858396162502b3d12498c52d5f24ba439",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0050_report.json",
+      "sha256": "fe0eea6ceadb375cee4acbf6b19bdc64a1a22fcf2436f4a38157aa21ecfdb2a7",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0051_report.json",
+      "sha256": "c5de566fa0f542cc2804100584d59801ecd6ad7e1eaf0d00d64aad10d8f71c06",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0052_report.json",
+      "sha256": "cf529f7b12827cdb0490d3c3c212d641c10c02984c47c1b12767d7c2792280c8",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0053_report.json",
+      "sha256": "d10e4b144b11b12a5021747052a0e0e1aba211cd01789c41b54f13033d7e8fed",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0054_report.json",
+      "sha256": "a380838f65110f972c492ee4cbffc1b0635e36c720edb54d65a74667c965fd4b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0055_report.json",
+      "sha256": "a1e1379490c6c4d03d16154814fcb6959ad28dfb70b05ec03ea791c49a33bab1",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0056_report.json",
+      "sha256": "9e76971325ee3a42115261063e99ac526f85e3429e22dba0ea7e07b661045c0d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0057_report.json",
+      "sha256": "38ef7af19cbb7497669696c5a15d6f6d29d726a585f01ef0eb8f46b0adef936a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0058_report.json",
+      "sha256": "4ba7d95b017dcbc9b1ea9aaa2ef6edbbbb14c4066b7439e54337e98f934b83dd",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0059_report.json",
+      "sha256": "0809837ac441f5cd1a3f24e32a9f81eda3466c4dd3d7454ba274e9bfc4e41556",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0060_report.json",
+      "sha256": "aef7ea52c549bcd2b9da7788a18dfd37ac4ea8ea0c95967721b9d1bc84584f61",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0061_report.json",
+      "sha256": "10bf033eeb0e2b51da2ba71a016e235ea41ca91f58bef406ed5e53dd1bf58e75",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0062_report.json",
+      "sha256": "8764d3ec314852f664e09e1d933de0c32724e546004a885d7d7857ba45454d54",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0063_report.json",
+      "sha256": "7a7f0fd45c12f80a5e718be208fcd04c68a6ec133ccfbf7b52e21f8f72aa7de2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0064_report.json",
+      "sha256": "525a89f333df04827d990ddad79db03794ba3424ffd4f5c72edbbef0cd831aa2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0065_report.json",
+      "sha256": "5fb9e3ff88dbe510aa3efdafc56059b58769bed0f3b8e93d81b1dfbfff9e7137",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0066_report.json",
+      "sha256": "a4e242d344ce8376b566c3e7d061fb5a2b61c353e72e563bf6adb1530ff6ffa4",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0067_report.json",
+      "sha256": "a898309a572ae1dabfa6a586982e8f0351f3a8ec8ec4ebefc6f763bc693798ea",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0068_report.json",
+      "sha256": "b90a6a75ae61dc5e20df81fa734c53c532323c634e1c91c2871b9abf1003944f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0069_report.json",
+      "sha256": "f8a6324417df9bfd4b8113a0c51d2b852cff73e54ab0bfbd5167c53bbb06b5c6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0070_report.json",
+      "sha256": "ea39e5582cdb62b384aa2136a7e890f169242ca7f5d92dc3758a1125ad19cf55",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0071_report.json",
+      "sha256": "73b08708a0e94489f08c6dac5e5846dc90c56791e397dbf243dbb74897136292",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0072_report.json",
+      "sha256": "df7e8c75365143cf1877fa16b332f7798f73a0c02cabced1cc812d457961333f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0073_report.json",
+      "sha256": "cb63aeb40833f6f5b41f9ae769e6194784f2b9c12de45acc7533d63d515f8661",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0074_report.json",
+      "sha256": "c7b819ce9e9f2eba991ad2fedf22a1a0c518c4d56dbb35253b40b8ff0f9f3116",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0075_report.json",
+      "sha256": "9dd149326339131697659e699c6e3faed55848d37f9016303fa7dad8a34fff5c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0076_report.json",
+      "sha256": "a1b2032d3399e4ab095679f8e43e9d0bd181c40067c75e362bbe421089ef70ba",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0077_report.json",
+      "sha256": "b876c112bbfd8f7b9dc66c2a7c915b2eff8726481d45c48e76b29559e812bb66",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0078_report.json",
+      "sha256": "4ed1f34a781221e72028b7458b1fff29052865ca0f980a83dd8e35608593709b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0079_report.json",
+      "sha256": "6ce17b3e395099ba860cc42821ab8fb96ae96ea6c9e5072e71af6f0dc73a7af2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0080_report.json",
+      "sha256": "8dd6ee0ffc220db95c45bf4f53a761eb10c34e3976698381431bde1b88c54e8d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0081_report.json",
+      "sha256": "1f881ef14783f8045ce90fb5b44570fa1431cadfa3532c658ef23a1f958cd832",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0082_report.json",
+      "sha256": "560f8e6fa6b3127b0edd082560cad95bf32222178f37b2a208c52891fd54993c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0083_report.json",
+      "sha256": "52a1e57308258f7e135d7f91bb76052a12d025154ce732b9d3d35095fd164064",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0084_report.json",
+      "sha256": "6c6d27aa748957f37c65e95e5fe1866fa08880489dc8572033af6ca51d1f0e5b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0085_report.json",
+      "sha256": "346a02661d89f07518faa8675c729cc23e5c64dc8d131b024ffe0932672e8cfa",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0086_report.json",
+      "sha256": "0a969d91cdbe46aa5930217b496d384ddaffcb167df942819d9e012535a91fdf",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0087_report.json",
+      "sha256": "ed5bef57c63c5dec6f8c8f8fb8a53ca64eabcd68f7dc042d9b3787a0542f7a75",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0088_report.json",
+      "sha256": "1e53f1da70e68d56bb6cc8b2d9c88be0367a76adf617db20ac0ea142c8b5a7f6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0089_report.json",
+      "sha256": "e2ad928bb6cd33043abdd55b613376d49fc5f8848d0b53ed4601f06f1debb34f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0090_report.json",
+      "sha256": "aaeaa1114833edc2ee1365e9fd0338225f867a12b7ca4ad8e58d1c94f373fd9a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0091_report.json",
+      "sha256": "5b63f01c36617183c0add02e78b5ea967fc85eb0c8124056e7e5b135c1a2c136",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0092_report.json",
+      "sha256": "d12793ddf7471bf66cd6465ebd49e266b07a8480039b7fed4b0f7dc58a70893a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0093_report.json",
+      "sha256": "d4421ea74a5a9a5d6c0cc34e29a13c06d6ce44feb117793ddb75405af9ff99ef",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0094_report.json",
+      "sha256": "aa8087de2d8d9c96606505f2f77c63d99e07406a96a32e08a042f03a3e266553",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0095_report.json",
+      "sha256": "222811e213c6da165aca0cc26d721d794e2974bff2630aee94ac9d01391bbcc3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0096_report.json",
+      "sha256": "6c22326bebe4a5bdf3d8f67080717c75d03a8cfe15f7f6545daea70f36baa787",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0097_report.json",
+      "sha256": "b29ce52ca5a663685cf759343bf841e59b57a74ebee89bdb573eb3f0eeb37d89",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0098_report.json",
+      "sha256": "a55dcea0985b571f6566a61f75b6ed34e051aaba10c06780e5913cd985ad1446",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0099_report.json",
+      "sha256": "b34dbaa2bb15ab43bb9dce0c94abb0b6ba2b2a652b4454d32ce461174080c4f0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0100_report.json",
+      "sha256": "6d02fffca31e39dad6140e4fd2dcfb2e98400dfdc695151877c578c695e4794c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0101_report.json",
+      "sha256": "97b55a1a99be94ab597490a40bcc9a9870f1ad014703195d8f1ae6fc8624ed0d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0102_report.json",
+      "sha256": "080a246aff18077497f9156a9b970955067741e80e9dacb903459be9f6cc3aed",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0103_report.json",
+      "sha256": "b18c2d49ace48fdef37c33d2db170cb5a8964915dbcda818cde30463f636546d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0104_report.json",
+      "sha256": "eaef651ce70cfd8b6206f8025530d0499651d2f944caa69743ea15306f490d5c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0105_report.json",
+      "sha256": "0ac2a68fe3cb1a6e3463bd29b75dfee35b3ffd67f7b0bc56fec1568bb77d16eb",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0106_report.json",
+      "sha256": "25bbd8aed2abe677ad152a27cf9dc96c49b2ecae893a0012d7fb49fc85cdd077",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0107_report.json",
+      "sha256": "349854b5dd4d4e3a5074a0ebb797f0a82c12fffcdcebca87cdb873877e9c8227",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0108_report.json",
+      "sha256": "f453d19f5bd0555b47269382355a06172e80e0c21d32861105a6ee1a36600f05",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0109_report.json",
+      "sha256": "1c754602cd3aef30201d545baf22d0dbcdbf137921ce35305eb0a2c4a0f20136",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0110_report.json",
+      "sha256": "42c88b57fef1461d2bb95b40462edaba3dc35605f0ed452cd846a9027c7e191a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0111_report.json",
+      "sha256": "0889354c219ac5b51a1b1e2d68224f54bf54717f167fcc7cb72478455e9994e0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0112_report.json",
+      "sha256": "0a57c24ee5da1c06bfacfbdafaee561aca266b56a744c99b81860837d7888c2e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0113_report.json",
+      "sha256": "90cf1c521c8d8dd7c4b22b7abe4d32d5d33dbd83da6b814a546357fd62247d7e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0114_report.json",
+      "sha256": "b64ad18e7d5967f4d2d986d41c03989f20e6d4a64b5c76a5d100b3aa8bbc1a4e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0115_report.json",
+      "sha256": "dc9623c937ffd64039a25b59e9f3b56c3550442718fbee6227e534b20f5543d6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0116_report.json",
+      "sha256": "921fe27cb5035f9d7b1a7cf4653d7218f927d1c25592c18e0f726a26dc7bdee9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0117_report.json",
+      "sha256": "949847a724490db04cb2ded6100c74610c35582cce76538ea08ecd34a3ae90c3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0118_report.json",
+      "sha256": "a0eb6ab884712d7c51e1b93b700d8026e693f11e96eb5f7607301cfb96b0e954",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0119_report.json",
+      "sha256": "cf998b0cc8ae8e3208c0331c009026548716963620d148760210423d3ecbd7c9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0120_report.json",
+      "sha256": "2882b667b670fb2a34ba464092127ccfae8f6971f599546538b156fb2ee74b0c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0121_report.json",
+      "sha256": "17aba48dc0298164ce55a4845096bbca05babbe6b1143dba3b4578bab80e50ed",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0122_report.json",
+      "sha256": "d5bd7bebee552fc893af4619e442583e47cdf4704efe1759558cf7f284f9b3db",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0123_report.json",
+      "sha256": "71e51a1eee96ea199b77d0e237b5abd64b97c8fe23f482e27c854929dfb12cb0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0124_report.json",
+      "sha256": "61fbac9876c6f927feece2b7929d3f0e65e9ce5091e94958c8abc5da4dd7a6ef",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0125_report.json",
+      "sha256": "8ccaf7726f05dd41b578312e7bea56e93245a66a6847fb3b8708c6d3a2490d5a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0126_report.json",
+      "sha256": "8c5da9549b3677c471f02526f3d2580cb49cba7eb79fd1e4927e06d481606e77",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0127_report.json",
+      "sha256": "52ec63aeebddb1bca09010123181b5daa1c8dd05e894ea404ec246bf52c2bef7",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0128_report.json",
+      "sha256": "eb8018e733850327eb3a5d7b59e76a5486f37c4456fe51e55d442faf2fc125e0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0129_report.json",
+      "sha256": "8cd3a724eb1a31a0e8ce69badd541822c5b2cfc3ef32f7032980cd4c895be536",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0130_report.json",
+      "sha256": "bb5cd7de2e61cbc2b4575df8bd3c51aec96f68ee6b4ab2e5bcd5b3f29229ce52",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0131_report.json",
+      "sha256": "830e9efa3e47d4be3d1f08f174d68788bd0e091fc45b41dc9daf8f23dec60fd5",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0132_report.json",
+      "sha256": "d89c53ce44ef68f0bbbd13bad7208569f86eda85b8fb13eec3d0af2663b8fe98",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0133_report.json",
+      "sha256": "7398bff04a000bd8e3409601c7e5811e0ca26f003e83b8507cb30427b6575957",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0134_report.json",
+      "sha256": "dfa2b7fbd2a6ae76af7a95cb0a965a17135713916ebcc8641275d92e02c9f418",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0135_report.json",
+      "sha256": "74b5dfaba2643616f998bb2ff69e6287708deecc371329771121911f14cbc8c3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0136_report.json",
+      "sha256": "05d2c89aaf007d2b7e890a249403ba0fad5018e5e9872a0c0a15c56b07995293",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0137_report.json",
+      "sha256": "d417a5df24d9e24bd58031ddc62e2d239c82385a648debd9eb78cf4bb9b63a29",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0138_report.json",
+      "sha256": "1802a4bf1725dd2ca6429adf5a6795f4441e0e8242eba1b6a7bc9cf7eddc3179",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0139_report.json",
+      "sha256": "66c6235f846cac7d3bbc8070c200dfa73843fa8773b720e6e24ef52dc19fcfd1",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0140_report.json",
+      "sha256": "77716ff1bd91735854cb02ab1455bc9d6678c1c4c799b8cbe4a913773e501424",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0141_report.json",
+      "sha256": "155649ba89742a5ec72d81c037454f94c78ef09986f808012e266b02ca0cf1b3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0142_report.json",
+      "sha256": "eaa9d28d0d46c4999404efe1c188fe7fc3973f1a58982d59ba474f76cbcdc1f6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0143_report.json",
+      "sha256": "6ab86a768acc25f06fa46886db58ca31b5ca3ca521916f30633760bf365d6e31",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0144_report.json",
+      "sha256": "03e1fd1cc52e44f6823d05b15817f418829cb868e5865c1cbd3266b8eb38610f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0145_report.json",
+      "sha256": "c34fffc65a07f7b5551d4152ee745cc761586cbbc0680ea5fb9850cce19722fa",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0146_report.json",
+      "sha256": "59fcdfe2a67fefe9d84075d612674496e6868b874ea331e1e3f9d53cc3fe0bd9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0147_report.json",
+      "sha256": "d6ad480938dbf5a620aef05fa7efd912c35cf077f5300f9ac7c334a452b36cf7",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0148_report.json",
+      "sha256": "b6c455aaf91d055a7b9f32c18a2f419acc5ec717efeca5bd1d44d8dbd485c7d0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0149_report.json",
+      "sha256": "fd52133fda214b18e10bebc89e86f6a26c9b1f7848582dccc8a223870a46fb68",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0150_report.json",
+      "sha256": "10da2458a1c5109204040161e108fc6cae4307bcd39f48e890124e7bde88c3d6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0151_report.json",
+      "sha256": "24b85657ba4d5129571fe4d10c0782d4fce7436cc17f2e8136d6682c6965f541",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0152_report.json",
+      "sha256": "fe03137fb85f9a22249fd3fb86cc19eeb5ce49b8b43467f188808cd3d0d4f16a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0153_report.json",
+      "sha256": "72128a9d64086691a36c211ae1ae7ddc352f097c17aaccf5002b6a6e72afae1b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0154_report.json",
+      "sha256": "503c9927a47bf86026b2307898b30fa11995769ee1320f860214f5229ae9a018",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0155_report.json",
+      "sha256": "4c99cf48507ce247ba9797aaca0d83d2715b4a86fe249145207d1bac6620402e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0156_report.json",
+      "sha256": "3e5a198a63e1192887f91d5fe295bde6b7ae10d3dd15da91a64d76d3a7bd4694",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0157_report.json",
+      "sha256": "341fd66118dd943805e65f3dd692617f521ab0649b4f6d60fa649845b911be57",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0158_report.json",
+      "sha256": "94c34d67fb103a3a450cc37a7e85b35b8a4b7b0fa2a23053fa86d607dc7b5eb5",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0159_report.json",
+      "sha256": "dd10d8b518d371e8a104e51c34c0bede97c519a1b86c2e803355d22e1ce59cf6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0160_report.json",
+      "sha256": "2d5c15815972de55a5d35234560ee6f3af0ed925b279671b970f2dc34f753b69",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0161_report.json",
+      "sha256": "174cbb138025da6d2f3ba75c95f080f7ac8dd308a7c893d865e579512ec8c9e1",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0162_report.json",
+      "sha256": "612e429905f6a156a48393e87faed767e9504392d7f73cb56ad73d076aaad658",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0163_report.json",
+      "sha256": "6d8817fc73d2b404165604f4e75b47cf0566a501fbaa2b4a8b52e9342c502a90",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0164_report.json",
+      "sha256": "eb82fb8475f2720b54047508db4c2a3f049072aaa5381d47c0bc9608676097f6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0165_report.json",
+      "sha256": "6a8beaab37edc0a2cfa816ba24c27a304a90e66c1bdf69bafe86720fc5563bdb",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0166_report.json",
+      "sha256": "2f1573b1c1a2b309863dba1497f6e803d26f96030e6767fba304fc2028e3b0fb",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0167_report.json",
+      "sha256": "127911ec937b91bdb5f8fbaba1eaa79bd4859bbb295afbaa2c18237285d767f2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0168_report.json",
+      "sha256": "9a9e745ae2b9089593855d9246ea8ec4cdb16e12aa27fe5de00b71b8f4f69326",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0169_report.json",
+      "sha256": "65f2773d5bcb744ab52988ea6b895da6f76c870a6ce13f1c3669b39121225e9c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0170_report.json",
+      "sha256": "f596ae3251989dc49ef8aa330283ed25e3bde70e28a7798125943f86f933e2bf",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0171_report.json",
+      "sha256": "0f561f0e4726c354fb577406bbdad4a10454a6cb7013e6a20dc29f29f3f3d044",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0172_report.json",
+      "sha256": "207c75e59adbe1f1a4452e818ea2d2451c3f6cecc85cf6ed8f32e5ec57bb2e9f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0173_report.json",
+      "sha256": "6c3b4e85b983b88b2955ed939222baf586630aec3999bece036e5c7a8fed75c8",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0174_report.json",
+      "sha256": "6d90d4a2d22c2c8c86a17f809a7053c240927f9f20e065209da5d1dc6548036e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0175_report.json",
+      "sha256": "052dcc4afe05b05517c0b343df131af58c59b762079fcd4a0728a26189130cb5",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0176_report.json",
+      "sha256": "1956f4357d6ed85700cefa914c1cbff9a204230cb455a7f127ea8535e4581f87",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0177_report.json",
+      "sha256": "9681baf5a577c6a4dae64b65b91d7023440e36f55ae8ef596fa0d5441f2dc72d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0178_report.json",
+      "sha256": "5d8028f930c2cb9d8ba2497b92cbd7aa04240459a06e8ab4b74c306ce7db49fd",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0179_report.json",
+      "sha256": "199079ec554ffcc39ade488e6983b3f0b6e5b9ea531cf2b018dc6e41be62e037",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0180_report.json",
+      "sha256": "5b3258d96ee9fbe5f5787cbbd9a31515f5d269130f5c81ddc7163a5bf99c1690",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0181_report.json",
+      "sha256": "48a1efdc6f67416de27e369d099fbc3dd2fb6eac9ac0254ed6e49b0ed1336998",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0182_report.json",
+      "sha256": "00063bc0c8dbafcdad73730a728b79346f7a0358e68d325260c846ce112f6309",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0183_report.json",
+      "sha256": "0cfddc2024ae4d6bc2f788f4d0029906d6de175c067049b00043b32379427bc3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0184_report.json",
+      "sha256": "20786a8d8f9b27471bf1a49716b9a54a51a3283acf38c74a0ea7b616a00c0444",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0185_report.json",
+      "sha256": "aa9516ac593837a35087977b241473ae2a043f8ec3c430ba05d4a9a74dab098c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0186_report.json",
+      "sha256": "3ae4ab6461e7f4894f173b4ca689ab0f01aa6632ff4d15118b92a4c8886b4449",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0187_report.json",
+      "sha256": "bcda8c4123f1abb6d38bd2b03bdc3f12ec4d011259c8f4a610b7bf0fc927187b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0188_report.json",
+      "sha256": "abf6075a3cc76eea239009f7205f0f77758b50228071bef7a32e474f325fa134",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0189_report.json",
+      "sha256": "8021d4b5543189082628620696c2c75ad33fa208fb747b823416cf0a8387aa5e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0190_report.json",
+      "sha256": "7a3c9fe2efe0f1e637bd0d222ff88468d207312385fbe4d4346cf0b2282d43c3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0191_report.json",
+      "sha256": "60f136b53afe84903672a76b0fedbdbc2c7353deddcfee2f0122062b7f38c6e3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0192_report.json",
+      "sha256": "40f2bf0a688f74b4f259d20de3610aea87592be03e0334cde598af5b5975e58f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0193_report.json",
+      "sha256": "553096d12a76863f91661ccaa8e32dfca7bf5eeb8436edfdd128513ae1e81a01",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0194_report.json",
+      "sha256": "f7afba48c7e20d48f83fdd20f2c65eaf061be731203fe8dfe8d9e1f95aa5cf88",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0195_report.json",
+      "sha256": "a2f352d56c42e0721244fb4a535befa0cba62145bff86726e5c1f49f20bead0e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0196_report.json",
+      "sha256": "cdb07ec479b3b4da554f70ac348e3f1fa16d8a74a58160f61b1640c49026d048",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0197_report.json",
+      "sha256": "bda038a344efabc6d3554e9f401aab01fd21b865736e58ae0dfe14fd1903b9f4",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0198_report.json",
+      "sha256": "0d00e8162b4a0975d7ab908c5a8164e559084720771a8ff3b53852e155adbc22",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0199_report.json",
+      "sha256": "f459f1becc34b10c9a370e95bb9806c0e7c7aa054a349ad04f6e3cf80a851460",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0200_report.json",
+      "sha256": "858adbf0811e4b057c27e21598f956b4b4cb7ba230a0f0e999b2d00f8ba42ae2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0201_report.json",
+      "sha256": "4441734bca108f11b8e18778f495c6666bbb8d2bc7a1376a6e0b1513fa3b7df2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0202_report.json",
+      "sha256": "4ad77422a4b19e89539a7e6e94c93af8502b77dab53e6f7865da07b4c70a139c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0203_report.json",
+      "sha256": "9cd44c4f8ba269fddf7946f794996bf322eea995b2cc460a26f294c1f44494c1",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0204_report.json",
+      "sha256": "83832fbaa6c16eeb27c91c6110deb46d1f0cb38db4eab0eeb13078d1e64c2c8e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0205_report.json",
+      "sha256": "36fef2eaaa85e444b6aa0343c885060a9fdcf1329d3b8b5da9e63c19219d1104",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0206_report.json",
+      "sha256": "c24138c337df1ad804937227d2932f7e414e4ae141dcdcdbb56d527db02c18f2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0207_report.json",
+      "sha256": "7a5b11d7c16e8030990194be1432fae93c7ee9a7eeb6dfe82203f642abf97da7",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0208_report.json",
+      "sha256": "1120a28c89593f1a0270984d9590edc481ada183ff339252d33a77ef0f45a0c8",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0209_report.json",
+      "sha256": "82675d61a1aa17d901bfbc70be7dd167f319a7d909ab1a93954c83779d3c45e8",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0210_report.json",
+      "sha256": "fe5c7b2024371b2c49111f1f697b871ff776f89a348d1065713d9766ae1baa6a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0211_report.json",
+      "sha256": "b5dbd942ea7293662471579812015a75040ca208c6ee1222cebef51af2163c4c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0212_report.json",
+      "sha256": "a322855fb4739d97dad675a2f95c9798bc2358b2212eca0412a9243945f12394",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0213_report.json",
+      "sha256": "134aa8124f2de5e88b9ada4dc7bbab92450bb62c933f18f0e08ae4d811bd0b9f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0214_report.json",
+      "sha256": "f1117f452ce05a6ad2d062be7670a82b5612d4d5bb17dafe7f1c534983fb30e5",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0215_report.json",
+      "sha256": "9e2e054d8daff9b8bc76a6ec07a3acd3c0003084957457f45dcd1c40476d4ed0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0216_report.json",
+      "sha256": "4b71518bc153585d56357ee4a47a5b1ac8098ed4ba4de6e819bad7f2fcc244b9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0217_report.json",
+      "sha256": "14c512dcef4b9d3fba552503dc9b5769e6dfe4495d38097b8b66343d2eae453f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0218_report.json",
+      "sha256": "0b4edbf0d26d28a469e0218ba92284b47554a08cbc05daa0493ef674b50a5d56",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0219_report.json",
+      "sha256": "98d818bac64acf0f8a28cfd8a8f96ddc1d2fc0685f3396740556bff7eb4f3d79",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0220_report.json",
+      "sha256": "96c7864c3e4311ab536471e9e8c9f4864fbd086d14fedbc89d77ad34ab484fc7",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0221_report.json",
+      "sha256": "8eb3fb36370c955ea4ac686e923848361cf66004eb7ffc416529045ce82cf222",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0222_report.json",
+      "sha256": "1a809116da660ee1fba8f7a97eca805539f840ab49525f265d102eb67acea6eb",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0223_report.json",
+      "sha256": "fedf798eaef5e378640bcda8284eb44aa8e1853ced89d202f7478e0710ae2c18",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0224_report.json",
+      "sha256": "06bac0e88631e82f8df8fbd53c112bb80870abbf9ee41e0b4e5953b395e624ca",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0225_report.json",
+      "sha256": "c018aac1ad8aaf68f2f6d4634adea97ab95b87944e3e6ad7599a4efe4649c457",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0226_report.json",
+      "sha256": "99209fb4cd0ded2337c024c097d5fc1573962d9bdcef804a85fecc3dd9f0a13d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0227_report.json",
+      "sha256": "d9aba4dab99179a9abe312e6fc364da22fb91e9d4d4a5e1731cbc849f0b8b9cb",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0228_report.json",
+      "sha256": "d2b18942973911c9efab9aebb423eae4f713a61b8fa65e90806c2ed6c081cc4b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0229_report.json",
+      "sha256": "02fb28cc03dd0dc9e79dacd27ed9b978712562617e4bb4564f9920867d3c6636",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0230_report.json",
+      "sha256": "9421fd521b870415bd524280a07921e1676e37116b5dc6072adc38d5a288d37a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0231_report.json",
+      "sha256": "9211dca35d454717618ec9dfe5317102c9b6c55a31ed02434d4b65b314563e68",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0232_report.json",
+      "sha256": "d2c60bb9399ca1a51f1ca4e6b162c8d4ee8f61090977a94c8573e76b1124bafa",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0233_report.json",
+      "sha256": "53133d0cd3760574d1aa28c36998cbc67423134a39d50ae6eb15bf40cdfc23aa",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0234_report.json",
+      "sha256": "36e5d3f293122d839091c9b25e98c982af74ec75d549288bc5515338d5842ab1",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0235_report.json",
+      "sha256": "9b0bc9eebd119679ddc094558540eae2f3fda1c4c890e5cd5ee480597064fca9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0236_report.json",
+      "sha256": "d8cf9f2b9b49cc0653653c50edafd2ef2f19e4bc036f43fd4ffd7b1e4b8c4f95",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0237_report.json",
+      "sha256": "f17c798cd606ff75a3fe5baf58373be18aafec69fefabc4812d4a866a73b6af1",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0238_report.json",
+      "sha256": "0bd7ac6de0e858f87a2ea9300ee3e34032ca56fba764aa7c10a421fdd5d9d337",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0239_report.json",
+      "sha256": "3a20b4474c50e491e72ebadc46094b6db0d4e95956b368c3942880813eeb090e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0240_report.json",
+      "sha256": "5608d38c8b7cfe504109f0df8f84e0e0637cb58eef48963023dfd4bf98862fa5",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0241_report.json",
+      "sha256": "3ade2298f0fb1c1bd4721d5fc772a4c30a1a6ef26e26ef6ef8fd10ee9e886a18",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0242_report.json",
+      "sha256": "f710688df2bfff40512ec4e5be4f33afbb75f1603a31c397ef78a66519bc0e17",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0243_report.json",
+      "sha256": "fec19fbe1ad0324ce8b56c9d99b555f42ba692edf54b15749ab00dcafb3f8f99",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0244_report.json",
+      "sha256": "8294e14cf820f9d81f00e153ab05e9f7625b43ae3e190d7207ad70ac480279ce",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0245_report.json",
+      "sha256": "3b462343bb75f1eb4d67cb5a6374c3b93fa65828494a1e4cae795567632cfff6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0246_report.json",
+      "sha256": "43c1bc16e5a7ea4317a85d169b67473744a3f3a86ce3338fe8cde3ef87e612fd",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0247_report.json",
+      "sha256": "1a44c51f45ed0ab3bf0031cf0e8ab94301921896fae22ebd22a5879d3445074a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0248_report.json",
+      "sha256": "89fa9dd1134072191282ec6fb24728b89662be9238c2481655c3abbcd6d1bd46",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0249_report.json",
+      "sha256": "8ed502eb65357301ea025eaf998ac7ffca33440130fc7f101228524f021da714",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0250_report.json",
+      "sha256": "50c12417d7351a1c3f4e20ff44c6104a6dd4a4d3eb22e2eb6c69a5296e4f24aa",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0251_report.json",
+      "sha256": "10149fa341bf16511eea3c4fb98192aa97746b408f4e1e4ad49519da5ec42f44",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0252_report.json",
+      "sha256": "7d88abef4122f372aaffce344665ae686bf92c33215af8792680a3f14fdc7fda",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0253_report.json",
+      "sha256": "c8f67b8a4247e4e9067defec62d1a775d788a4ec8c94dcc63492e5244e3f8a10",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0254_report.json",
+      "sha256": "d651242802e7d6815e944b7af0c921ac4729eefc5c44dc532709a07e4395dc4c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0255_report.json",
+      "sha256": "b218b3146237b8f0600874061a7ded6aa498cafe0dcf9126264af6ecbc668396",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0256_report.json",
+      "sha256": "905007345fde561b4556e61653424bb7481f7681e4eee74c25c781a48f7f6407",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0257_report.json",
+      "sha256": "09f29fbbdd25e21f5a646305534197fd345a4fc90114c723ba6cf240bb5a3e76",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0258_report.json",
+      "sha256": "490d8a3b37ca62147664a12f9bf316aabaacb56bfa60005bb53d5d001fb2c64e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0259_report.json",
+      "sha256": "4bc309ad3cce10cdc24ca116df20d998d63a72437e979b800709ecb496f42386",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0260_report.json",
+      "sha256": "84405d5aabbfc1a20b446110c68c37bb2026c00602458949f38531a6e6203e2a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0261_report.json",
+      "sha256": "4bf6df90b6455a28eb388a82e14dcb6c925bd5fd0bb3fd0bd9ce291a1ee377d4",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0262_report.json",
+      "sha256": "4c70068a71844e72f02ac05beffa36f00886111f18ede626f1a910a2d4a9aa2f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0263_report.json",
+      "sha256": "daba13a53d85982f43fdfe511639a6f02fff021740041a0e852e81e0a5277ca2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0264_report.json",
+      "sha256": "460325f02ad1567ac19f07c9866b285a2bdffc1de043ca2b8e7bc209dd6d9aec",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0265_report.json",
+      "sha256": "1bcc939b0e632941f3e0b3933ce5b45b891628a29af38cc3e516b6fe4c6c1c79",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0266_report.json",
+      "sha256": "5a2c033b9d65f62142b70ada2f375e308a6f222128d54d21355e2a6fdef131a4",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0267_report.json",
+      "sha256": "cfda2076ebe137f4d50232de1dbbb1c779513a64373138e751738002ca4828e6",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0268_report.json",
+      "sha256": "13a5c0a13c06c5aca2a17463c5d9f99f376e2922222ebfd575ccf7976bb98fcf",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0269_report.json",
+      "sha256": "2cd846df3a1fcf2cab2c8aae44efd75dcf2fc42f5c698794049165c777f01b2a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0270_report.json",
+      "sha256": "df44caa92169e1ceda072081357dfd539625f62f4ea31b1e2941ce3b91b56a4b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0271_report.json",
+      "sha256": "17344046bfb735e9ed13124ed9f9b9d1f8a54dc100e7daca9dabe307b8314bc9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0272_report.json",
+      "sha256": "bb15dbbad191c3d9fd9d347ff6f42d52b9d2df25125b1908d25f5327e332689b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0273_report.json",
+      "sha256": "eeec7051713f1a37fc798f0696703c83761768202d110cf9dac7929366f47d84",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0274_report.json",
+      "sha256": "251102f783da41bbaae9ec172d64cc1900e52f4e964030a42ed5b687342f130a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0275_report.json",
+      "sha256": "c2b94e4c1a6aa1c1894159a5c4fe58864e2b1234c8d07124439f53ce9074f686",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0276_report.json",
+      "sha256": "b76e6a549884dfbbf2e0fb6883fbfaf79d98fd1eab57af9eb0e797de28a1a8d1",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0277_report.json",
+      "sha256": "97ee2fc53faf584cdd00e09b057528f311be4711e6c20a0e0cb30eeebd5c05ca",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0278_report.json",
+      "sha256": "e94037b2a504430351f15c4434aca70f90a32d8e569ea9af6049882938d737bf",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0279_report.json",
+      "sha256": "c65fe34dcf93e3bf9741a471bc4941cba993bd9e02b0dc6863878121212644b3",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0280_report.json",
+      "sha256": "844c9d19c229b0a21d09e69c352181feed39b19cffebe2432b3db7a4c5ac3f41",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0281_report.json",
+      "sha256": "34627f68454b277d893522e8b5777ae8e8cb3c0f7860e87c02fc745603357950",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0282_report.json",
+      "sha256": "36534124f03b2a44aac652d2a5f7036bc55abb4f336dd5a58310f10b0aebda9a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0283_report.json",
+      "sha256": "464bff6f0f31938761417c040a627662773f18beb5960ac2ba8aa6d1ab35f3e7",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0284_report.json",
+      "sha256": "bc8044688d5c6775625064198680688a08946d463b09af6e749539aff300bd04",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0285_report.json",
+      "sha256": "8b802a88cc067aaba8bff2541c53d052b3d74bef62d88f956e2e10f843bbcc9f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0286_report.json",
+      "sha256": "f76e7904e34eef19d24e44a70d5d4069f8f1b1136319330ae9ce27d7df26283d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0287_report.json",
+      "sha256": "d2611964c2fb4f35784ed81425df653b1c28ddb1cb4c10478cb135f8585d3894",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0288_report.json",
+      "sha256": "9a62f190aa061c9a3b6fa2b915004b15913f2858975f4292e0f0e17e7a911726",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0289_report.json",
+      "sha256": "40c960061ee1fe38f0cf5536b7059badca5879e83a484d85e97ab7bc0f2adf9f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0290_report.json",
+      "sha256": "24c9168e3fbb67d01bbaf4dd7e9e9f056fecb9e768194ef14c139d6bd1335f15",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0291_report.json",
+      "sha256": "f7a3c2e16b93984a69775066e99e301e68889478137f0cdf7cd1106ecfca50c0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0292_report.json",
+      "sha256": "813b4eac1bcf4d1e9afc6d74ad2e114075bf36f3b9eacd56169889686a09e81b",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0293_report.json",
+      "sha256": "ae92c35284e58931072f98e20d96e6edb6ce27a35e1170dd4348e6cc8b7f4099",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0294_report.json",
+      "sha256": "fffc09f3f663c6d55099ad28691b273570c430a3f193606cf0c4b0bec525ce9e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0295_report.json",
+      "sha256": "170926e97314fdbe7baaab236970a72a207dcea6ba7a15ebe046a65a8f8b17a2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0296_report.json",
+      "sha256": "9ba842298fac568bdb27b3a1caa5489735a47cc0987be64d064bb276c3d6950e",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0297_report.json",
+      "sha256": "a49bb726ce90fa4ba34afe6baee76c3a2839ff6a1ffc88226a6b791ab830f481",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0298_report.json",
+      "sha256": "30be99f026fb7e1ddc48dff1c9a51f786683661d5fce45c5869196267cf413a9",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0299_report.json",
+      "sha256": "f6cdfaeba079a412d741aa61fb1ad1cae6775cb468e5c7d9a1bc54e258154a84",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0300_report.json",
+      "sha256": "8e8afa9edede7bb753b19266d1864157e58e93d31a4fb7f76bca6366866d79ee",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0301_report.json",
+      "sha256": "4896be7bb76587cbd5376ae492cd17bfbd3bf28facc15556b514b4d099109fc5",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0302_report.json",
+      "sha256": "c4dae101d8a6f7e913a21dd1ba3e29934a9c0f7dc1c0ec80ce5190089a617e38",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0303_report.json",
+      "sha256": "8d14c746fc7959e6148eebf142f8e323fcc5257fcdaea13ab15880bec855ddd0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0304_report.json",
+      "sha256": "0a8cf9cb5622182ed571b536a7fb1596fa40a3037a5d7bdd5f9f2afdd5166389",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0305_report.json",
+      "sha256": "c1a257e8876360b490e430fe7dbc82b893af6e764a1eede31fd3cb8f4698f82f",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0306_report.json",
+      "sha256": "e4f965986243f5dce565c2b1e20006102f19dc1cb3d96f080ecfd9f6f89221c2",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0307_report.json",
+      "sha256": "03bc8409e1768f21f5dbbd93ec350808cc0339c3689f967c6c6a050e4a659d20",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0308_report.json",
+      "sha256": "4f4ab4cd7ab090a7faeb4c7edc81449b7cda19ef5e0fc8493ffd09c4625afdd8",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0309_report.json",
+      "sha256": "5f8fc12377b1627ffecd5c2bb6b38f56dd49647e328ac40e67dfcaf3fb04a4ff",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0310_report.json",
+      "sha256": "2cd7f1216200eccc037d32c9678cddd47d58f7691bb29e008ff05664cb2395b0",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0311_report.json",
+      "sha256": "d801eeeb4eed41625aff97859ac0774e53408d1c9cb12b924ef153e2129bab75",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0312_report.json",
+      "sha256": "0dd41daf5034151942aa2895f48c98ee5125fb212a9b393c4bf1988663b75b53",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0313_report.json",
+      "sha256": "9a94707dc0af829b51fb96ca1abb3d95f3db817ff5797d4c7b54e443cffb0e4d",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0314_report.json",
+      "sha256": "d8b2d19c6c91c7b0325f48bf85fa7d69884799136d95784364da6f7cc43afcd8",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0315_report.json",
+      "sha256": "83ac8a6375e9cd66c47a66e00c35858d1607133184ea746d9973199f4036ef3c",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0316_report.json",
+      "sha256": "d297e094c238e13905bafef7253d2fae026ea3455667798ad955d990f0f9bd00",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0317_report.json",
+      "sha256": "9e833f97a2361190f28bcd1cbb4bcb2ff64f45aba3713056473191e68b4be716",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0318_report.json",
+      "sha256": "d029c41074ea3f083be8ba3c89ecad613378639ad3be62f5bb2610cfdd27a3ee",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    },
+    {
+      "artifact": "results/PENDING/phase-20R2-B/S2/cell_0319_report.json",
+      "sha256": "2eca97abd75e2055792781cdc40b08590d3589a7115c91660bdbb38ed6da052a",
+      "input_count": 6,
+      "source_versions": {
+        "measurements/decision_error_v2.py": "current bytes",
+        "measurements/validity.py": "current bytes",
+        "tools/20r2_9_s2_worker.py": "current bytes",
+        "tools/sensitivity_20r2.py": "current bytes"
+      }
+    }
+  ],
+  "n_completed_runs": 320,
+  "summary_controls": {
+    "all_original_fields_exact": true,
+    "ledger_complete_and_hashes_verified": true,
+    "n_signed_threshold_identities": 4160,
+    "signed_threshold_max_abs_diff": 0.0
+  },
+  "scope": "B raw/report/input/source/plan/figure integrity and preservation; does not close inherited scientific gates or INV-01."
+}

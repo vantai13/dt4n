@@ -1,0 +1,37 @@
+{
+  "schema": "dt4n.20r2_9_b.validation.v1",
+  "before": {
+    "failed": 2,
+    "passed": 4199,
+    "skipped": 209,
+    "deselected": 13,
+    "warnings": 2,
+    "seconds": 862.64,
+    "failures": [
+      "test/test_no_dangling_parquet_refs.py::test_known_dangling_only_shrinks",
+      "test/test_phase23_cell_margins.py::test_G23_225_canonical_input_preserves_published_numbers[g23-17c]"
+    ]
+  },
+  "after": {
+    "failed": 2,
+    "passed": 5197,
+    "skipped": 210,
+    "deselected": 13,
+    "warnings": 2,
+    "seconds": 884.39,
+    "failures": [
+      "test/test_no_dangling_parquet_refs.py::test_known_dangling_only_shrinks",
+      "test/test_phase23_cell_margins.py::test_G23_225_canonical_input_preserves_published_numbers[g23-17c]"
+    ]
+  },
+  "new_failures": [],
+  "command": "python -m pytest -q",
+  "marker_scope": "pytest.ini default: not slow and not custody; existing live availability guards",
+  "inputs_sha256": {
+    "docs/phase-20R2/B1-omega-sensitivity.json": "d15472b4c23232951ca7d6aa68659b79822c19deae95349b03d9fd98dacae833",
+    "docs/phase-20R2/B2-sla-threshold-map.json": "45a0f1bd2b4dfb6a31a586501fcc45ec1410641570abad4844734be54f1a4755",
+    "docs/phase-20R2/B3-axis-marginal.json": "49f4a4d4556feec6ad627aa25328ab760bbed85e6cb556ce95caf1ebd7d0af74",
+    "docs/phase-20R2/B-validation/pytest-default.log": "9014303ec95a94d5d1de61309e8a98efe5263329ec2de1d796acd238e092b0f7",
+    "docs/phase-20R2/B-validation/provenance-and-preservation.json": "92e49928830063c39dd55a14967cae4bbb8bf5a0ba9d590206aca28c52450a1e"
+  }
+}

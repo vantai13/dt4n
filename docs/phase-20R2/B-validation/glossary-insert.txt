@@ -1,0 +1,47 @@
+ID              SLA_VIOL_BY_AGE_BY_THRESHOLD
+LEVEL           all_action
+POPULATION      20R2.9-B/S2: 8 o gate x 8 tau x 5 seed101..105 x 13 z,
+                CHI a=0.9; nhan 9 T_delay x 12 T_loss = 108 nguong chung
+                ky tai docs/phase-20R2/B0-reading-signed.md. Luoi co thong tin
+                pilot, khong chon theo phan vi tung o.
+SCALE           hieu hai ti le vi pham, trong [-1, 1]
+UNIT            dimensionless
+BRANCH          z_fixed
+DEFINITION      mean(viol_threshold[action_twin]) -
+                mean(viol_threshold[action_truth]), cung scoring window.
+                Chi doi nguong cham diem; giu w_loss=5000 va quyet dinh duong.
+CODE            measurements/decision_error_v2.py : run_cell (sla_grid)
+ARTIFACT_FIELD  sla_grid[].d_sla_at_threshold
+                kem viol_rate_truth, viol_rate_twin; bang mean 5 seed giu
+                min/max seed va mien truth=0, truth=1, noi mien/hon hop.
+DUNG CHO        Ban do do nhay, khong doi nguong van hanh/phan quyet da ky.
+                Nonzero quan sat chua la y nghia thong ke.
+GIA TRI MOC     (50 ms, 1%) == d_sla goc, sai so 0 tren ca 4160 doi chung.
+SOURCE          docs/phase-20R2/B2-sla-threshold-map.json
+                results/PENDING/phase-20R2-B/S2/*_report.json
+--------------------------------------------------------------------------
+ID              DECISION_ERR_BY_AXIS
+LEVEL           all_action
+POPULATION      20R2.9-B/S3: 8 o gate x 8 tau, CHI a=0.9; tinh tung seed
+                101..105 roi bao mean 5 seed theo tung o/tau.
+SCALE           ti le loi, trong [0, 1]
+UNIT            dimensionless
+BRANCH          axis_marginal
+DEFINITION      E_{Z~axis}[err_total(Z)] tren phan phoi tuoi CO SO VO HUONG
+                sinh boi sawtooth_age_steps / AoIModelV7.base_age_steps.
+                N_AGE=1000000, dt=.005; noi suy err(z) main+legacy sau doi
+                chung cung seed/z. Khong tai mo phong AoI nhieu link.
+CODE            tools/20r2_9_axis_marginal.py : integrate
+ARTIFACT_FIELD  rows[].{legacy,measured}.E_err
+                kem err_at_E_Z, jensen_gap, jensen_gap_relative, mass_outside,
+                decomposition va seeds[]. E[Z] la TRUNG BINH.
+DUNG CHO        RQ-20R2e; gap khong chung minh do cong toan mien, decomposition
+                la dai so, khong nhan qua hinh dang doc lap voi dich tuoi.
+GIA TRI MOC     Poisson@0.925, tau=3: legacy 0.176757353802,
+                measured 0.195827609378; chi dai dien dung o/tau nay.
+SOURCE          docs/phase-20R2/B3-axis-marginal.json
+/!\             Mien ngoai >1% => UNREADABLE; (0,1%] chi bao partial va can,
+                khong ngoai suy. Chien dich nay mass_out=0. Mau so 0 => ty so
+                khong xac dinh; giu seed va null. T2-R7 van ap cho CA HAI o
+                rho=.960 o ca S2 va S3.
+--------------------------------------------------------------------------

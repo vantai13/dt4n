@@ -1,0 +1,80 @@
+{
+  "schema": "dt4n.inv01.reduction_propagation.v1",
+  "status": "OPEN",
+  "inputs_sha256": {
+    "docs/phase-20R2/A-validation/g23-17c-diff.json": "d24ffdb5102afd0afce66a16f6a472b293fbcb14ccd436f7f113de8171d62a7b",
+    "results/SUPERSEDED/phase-22/calib_set_v3.parquet": "e37965269d73191f3caf0c9a0d7645d7fced2c82bdc2c3e6217521b39d9b98b3",
+    "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.850.parquet": "1565767d87060304be9ee651a627c2fa0cb737e0fd11e578078b34579aa16f66",
+    "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.700.parquet": "cae93a3c1008e39e7ef76b4f7f20dea07186b96cef256920725cc2a8bf08ce05"
+  },
+  "source_sha256": {
+    "cert/phase23_cell_margins.py": "84a604b53b8e5f19f388f94aa972a2d3350f5f4c4b0d42a910b016784c86ee1a",
+    "cert/fallback.py": "c3149fb1a24746d99a5204643779ef109249fcde6c0c9ed7e49044c200fb185e",
+    "docs/phase-20R2/B-validation/trace-inv01-propagation.py": "bb5c5fb5b64a2088088b33fafd7e949a6c2b4667314f76e72de931edff27dd7d"
+  },
+  "validity": {
+    "scope": "controlled arithmetic diagnostic on current inputs"
+  },
+  "intervention": "Only regret reduction changed to math.fsum/n in this isolated diagnostic process; dependent fields use unchanged production arithmetic. Source files and tests are unchanged.",
+  "changed_leaves": [
+    {
+      "field": "/rows/0/normpen_per_margin",
+      "published": 0.7368846705753274,
+      "numpy_current": 0.7368846705753276,
+      "fsum_diagnostic": 0.7368846705753274,
+      "matches_published_exactly": true
+    },
+    {
+      "field": "/rows/0/penalty_per_error",
+      "published": 7.947262408576082,
+      "numpy_current": 7.9472624085760835,
+      "fsum_diagnostic": 7.947262408576082,
+      "matches_published_exactly": true
+    },
+    {
+      "field": "/rows/0/regret_neo",
+      "published": 1.767460655872071,
+      "numpy_current": 1.7674606558720711,
+      "fsum_diagnostic": 1.767460655872071,
+      "matches_published_exactly": true
+    },
+    {
+      "field": "/rows/1/normpen_ratio_vs_poisson_0p925",
+      "published": 0.9796493195211314,
+      "numpy_current": 0.9796493195211311,
+      "fsum_diagnostic": 0.9796493195211314,
+      "matches_published_exactly": true
+    },
+    {
+      "field": "/rows/1/three_factor_abs_error_vs_regret_ratio",
+      "published": 1.1102230246251565e-16,
+      "numpy_current": 0.0,
+      "fsum_diagnostic": 1.1102230246251565e-16,
+      "matches_published_exactly": true
+    },
+    {
+      "field": "/rows/1/three_factor_regret_ratio_product",
+      "published": 0.2895604169794912,
+      "numpy_current": 0.2895604169794911,
+      "fsum_diagnostic": 0.2895604169794912,
+      "matches_published_exactly": true
+    },
+    {
+      "field": "/rows/2/normpen_ratio_vs_poisson_0p925",
+      "published": 0.5532678677230771,
+      "numpy_current": 0.5532678677230769,
+      "fsum_diagnostic": 0.5532678677230771,
+      "matches_published_exactly": true
+    },
+    {
+      "field": "/rows/2/three_factor_regret_ratio_product",
+      "published": 0.278829525907535,
+      "numpy_current": 0.2788295259075349,
+      "fsum_diagnostic": 0.278829525907535,
+      "matches_published_exactly": true
+    }
+  ],
+  "n_matches": 8,
+  "n_previously_changed_leaves": 8,
+  "conclusion": "Reproducing published values this way demonstrates a sufficient numerical explanation, not evidence of the historical reduction algorithm or unchanged historical input."
+}

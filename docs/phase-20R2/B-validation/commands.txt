@@ -1,0 +1,47 @@
+# 20R2.9-B — lệnh thi công từ /home/ubuntu/dt4n
+# Python dùng cho đợt này:
+# /home/ubuntu/miniforge3/envs/sdn_rl/bin/python
+# Các output khoa học bên dưới đã tồn tại sau khi hoàn tất. Công cụ đo từ
+# chối ghi đè; đây là biên bản lệnh, không phải lời mời chạy đè bằng chứng.
+
+# 1. B0 được commit/tag/push trước các phép tái lập.
+git show phase-20R2-B-reading-signed:docs/phase-20R2/B0-reading-signed.md
+
+# 2. S1, rồi S3, trước bản vá S2.
+python -m tools.20r2_9_omega_sensitivity --out docs/phase-20R2/B1-omega-sensitivity.json
+python -m tools.20r2_9_axis_marginal --out docs/phase-20R2/B3-axis-marginal.json
+
+# 3. Kiểm bản vá sla_grid=None với source tại 1de19e1c và identity không tầm thường.
+python -m pytest test/test_20r2_9_s2.py test/test_20r2_9_sensitivity.py -q
+# Log nhóm bản vá/hồi quy: S2-patch-tests.log; nhóm tích hợp: B-integration-tests.log.
+
+# 4. Sinh kế hoạch, commit/tag/push, rồi mới chạy đủ 320 lượt.
+python -m tools.20r2_9_s2_plan --out docs/phase-20R2/B2-run-plan.json
+git show phase-20R2-B2-plan-signed:docs/phase-20R2/B2-run-plan.json
+python -m tools.20r2_9_s2_run --plan docs/phase-20R2/B2-run-plan.json
+# Sau khi phiên ngắt ở run_index244, chạy cùng lệnh để resume. Guard kiểm
+# đúng commit/môi trường, hash 244 completion cũ, giữ nguyên run_start bị ngắt.
+# Chỉ resume từ exact signed commit; không force-move tag hoặc bỏ guard.
+
+# 5. Kiểm sổ chạy đủ/hash, tổng hợp riêng từng ô/τ/z và vẽ bản đồ.
+python -m tools.20r2_9_s2_summarize --out docs/phase-20R2/B2-sla-threshold-map.json --table docs/phase-20R2/B-validation/S2-threshold-seed-means.parquet --pdf docs/phase-20R2/B2-sla-threshold-maps.pdf --png docs/phase-20R2/B2-sla-threshold-tau3.png
+
+# 6. Chẩn đoán riêng INV-01, không sửa source khoa học/test/số công bố.
+python docs/phase-20R2/B-validation/trace-inv01.py
+python docs/phase-20R2/B-validation/trace-inv01-propagation.py
+python docs/phase-20R2/B-validation/export-b13-tables.py
+
+# 7. Kiểm toàn bộ phạm vi pytest mặc định và nguồn/bảo toàn; tạo báo cáo.
+python -m pytest -q
+python docs/phase-20R2/B-validation/audit-b-results.py --out docs/phase-20R2/B-validation/provenance-and-preservation.json
+python docs/phase-20R2/B-validation/build-execution-report.py
+
+# Đọc kết quả:
+# docs/phase-20R2/20R2.9-B-execution-report.md : báo cáo và bảng trên màn hình
+# docs/phase-20R2/B2-sla-threshold-tau3.png : ảnh tổng quan 8 ô tại τ=3
+# docs/phase-20R2/B2-sla-threshold-maps.pdf : 8 trang, mỗi ô đủ 8 τ
+# docs/phase-20R2/B-validation/S2-threshold-seed-means.parquet : 89856 hàng
+# results/PENDING/phase-20R2-B/S2/cell_NNNN.parquet : 1404 hàng mỗi lượt
+# results/PENDING/phase-20R2-B/S2/cell_NNNN_report.json : nguồn, hash, identity, RSS
+# docs/phase-20R2/B2-campaign-log.jsonl : start/completion, thời gian, hash, môi trường
+# docs/phase-20R2/B-validation/pytest-default.log : stdout/traceback pytest đầy đủ
