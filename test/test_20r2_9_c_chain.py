@@ -76,10 +76,16 @@ def test_every_custody_mark_has_a_named_missing_input() -> None:
     do dung la mot den xanh rong. Test nay doi moi test custody phai co mot
     dong trong so, kem TEP THIEU va PHAN DO PHU BI MAT.
     """
+    # `-m` chi loc luc CHON, pytest VAN import moi module truoc do, nen mot
+    # module hong import o dau do cung lam ca phep kiem nay do. Cho thu gom di
+    # tiep qua loi, roi doi BANG NHAU HAI CHIEU: neu dung module chua mot test
+    # custody bi hong import, no bien khoi `marked` va chieu `ledgered <= marked`
+    # se do -- tuc van bat duoc, khong im lang.
     collected = subprocess.run(
         [sys.executable, "-m", "pytest", "test/", "-m", "custody",
-         "-q", "--collect-only", "--no-header", "-p", "no:cacheprovider"],
-        cwd=ROOT, check=True, capture_output=True, text=True,
+         "-q", "--collect-only", "--no-header", "-p", "no:cacheprovider",
+         "--continue-on-collection-errors"],
+        cwd=ROOT, capture_output=True, text=True,
     ).stdout
     marked = {line.strip() for line in collected.splitlines() if "::" in line}
     debt = json.loads(CUSTODY_DEBT.read_text(encoding="utf-8"))
