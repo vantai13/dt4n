@@ -9,9 +9,12 @@ from tools import g5b_power_axis as g5b
 G5B_ACCEPTANCE = [0.53977, 0.50899, 0.48303, 0.45946, 0.43800]
 
 
-def test_seed_rebinding_took_effect():
+def test_seed_rebinding_is_scoped_to_the_g5c_run():
     assert M.SEED_C == 20260909
-    assert g5b.SEED == M.SEED_C, "import g5c phai rebind seed cua g5b"
+    assert g5b.SEED == 20260908
+    with M._seed_c():
+        assert g5b.SEED == M.SEED_C
+    assert g5b.SEED == 20260908
 
 
 def test_p3b_passes_the_vector_that_void_p3_failed():

@@ -163,7 +163,7 @@ def z_key(z_s: float) -> str:
 
 
 def load_calibration(path: str = MUST_CHOOSE) -> List[Dict[str, Any]]:
-    path = require_choice(path, 'path')
+    path = require_choice(path, 'calibration_path')
     with open(path, "r", encoding="utf-8") as f:
         report = json.load(f)
     return [dict(row) for row in report["cells"]]
@@ -240,7 +240,7 @@ def resolve_sigma(cal_cell: Mapping[str, Any], sigma_override: Optional[float] =
 
 
 def feasible_cells(path: str = MUST_CHOOSE, include_pc1: bool = True) -> List[Dict[str, Any]]:
-    path = require_choice(path, 'path')
+    path = require_choice(path, 'calibration_path')
     rows = []
     for cell in load_calibration(path):
         if not cell.get("feasible"):

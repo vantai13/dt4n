@@ -75,7 +75,7 @@ def cost_moments(cell, a):
     """(mu, Sigma, argmin_shares) cua chi phi TWIN, tu seed NGOAI thiet ke."""
     import measurements.decision_error_v2 as DE
     from twin import cost_v2 as C
-    cv2 = C.CostV2(strict_reliable=False)
+    cv2 = C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     sig, _ = DE.resolve_sigma(cell, a_override=a)
     cs = []
     for seed in STRUCT_SEEDS:

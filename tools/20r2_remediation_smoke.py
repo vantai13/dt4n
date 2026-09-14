@@ -31,13 +31,15 @@ def main():
     args = ap.parse_args()
     old = old_module('cert/build_calib_set_v3.py')
     old_ts = old_module('cert/tau_sweep.py')
+    # Keep the historical CostV2 constructor contract in the isolated old module.
+    old.C = old_module('twin/cost_v2.py')
     old_ts.V3 = old
     rows = []
     cell = B._load_cell('poisson', .925, calibration_path='results/LIVE/phase-20R/sla_calibration.json')
     tt, cv = B.TruthTable(B.TRUTH_TABLE), B.C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     for axis, profile in [(B.AXIS_LEGACY, 'U0'), (B.AXIS_MEASURED, 'U0'),
                           (B.AXIS_MEASURED, 'U1'), (B.AXIS_MEASURED, 'U3')]:
-        kwargs = dict(n=20000, dt=.005, axis=axis, aoi_profile=profile)
+        kwargs = dict(n=20000, dt=.005, sigma=.0096, axis=axis, aoi_profile=profile)
         before, bm = old.build_one_v3(cell, 101, tt, cv, **kwargs)
         after, am = B.build_one_v3(cell, 101, tt, cv, **kwargs)
         pd.testing.assert_frame_equal(before, after, check_exact=True)

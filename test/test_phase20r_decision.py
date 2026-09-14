@@ -696,7 +696,7 @@ def test_quasistatic_band_loss_residual_does_move_the_gate():
 def test_phase_t_err_dyn_is_read_from_the_artifact_not_hardcoded():
     from measurements import quasistatic_band as QB
 
-    err = QB.phase_t_err_dyn()
+    err = QB.phase_t_err_dyn(path='results/SUPERSEDED/phase-T/t6e_paired.json')
 
     assert set(err) >= {"h2", "poisson"}
     for mode in ("h2", "poisson"):

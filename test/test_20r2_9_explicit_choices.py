@@ -19,3 +19,8 @@ def test_explicit_exogenous_population_still_has_eight_gate_cells():
     cells = DE.feasible_cells('results/LIVE/phase-20R/sla_manifest_exogenous_S-B.json',
                               include_pc1=False)
     assert len(cells) == 8
+
+@pytest.mark.parametrize("fn", [DE.load_calibration, DE.feasible_cells])
+def test_none_is_not_a_calibration_choice(fn):
+    with pytest.raises(ValueError, match="calibration_path"):
+        fn(None)

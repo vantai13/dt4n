@@ -114,7 +114,11 @@ def test_artifact_fields_actually_exist_in_the_harness(pred):
     Kiem bang DAU VET trong ma nguon, khong bang tri nho.
     """
     src = (ROOT / "measurements/decision_error_v2.py").read_text(encoding="utf-8")
-    lines = src.splitlines()
+    import subprocess
+    # Frozen line references belong to the actual historical source.
+    lines = subprocess.check_output([
+        "git", "show", "phase-20R2-erratum-1:measurements/decision_error_v2.py"
+    ], cwd=ROOT, text=True).splitlines()
     for eid, e in pred["estimands"].items():
         field = e["ARTIFACT_FIELD"].split(".")[-1]
         assert ('"%s"' % field) in src, eid + ": khong thay truong " + field
@@ -406,6 +410,24 @@ def test_the_prediction_tool_still_runs_and_reproduces_the_signed_content():
     b = json.loads(out.read_text(encoding="utf-8"))
     a.pop("generated_utc", None)
     b.pop("generated_utc", None)
+    # Only five source-location leaves may move. Verify both historical and
+    # current references before comparing all scientific values exactly.
+    import importlib
+    custody = importlib.import_module("tools.artifact_custody")
+    old_lines = subprocess.check_output([
+        "git", "show", "phase-20R2-erratum-1:measurements/decision_error_v2.py"
+    ], cwd=ROOT, text=True).splitlines()
+    new_lines = (ROOT / "measurements/decision_error_v2.py").read_text().splitlines()
+    for pointer in custody.CODE_LINES:
+        parts = pointer.strip("/").split("/")
+        x, y = a, b
+        for key in parts[:-1]:
+            x, y = x[key], y[key]
+        key = parts[-1]
+        field = ("err_total" if parts[1] == "DECISION_ERR_BY_AGE" else "d_sla") if key == "ARTIFACT_FIELD_LINE" else key.split(".")[-1]
+        assert '"' + field + '"' in old_lines[x[key] - 1]
+        assert '"' + field + '"' in new_lines[y[key] - 1]
+        del x[key], y[key]
     diff = sorted(k for k in set(a) | set(b) if a.get(k) != b.get(k))
     assert not diff, (
         "cong cu khong con sinh ra artifact da ky. Khoa lech: " + str(diff)

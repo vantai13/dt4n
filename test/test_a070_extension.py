@@ -18,7 +18,7 @@ def test_load_all_kappa_returns_exactly_live_cells_not_dead_ones(
         for c in E.NEW_LIVE]}))
     monkeypatch.setattr(E, "A069_PILOT", str(pilot))
     monkeypatch.setattr(E, "pin", lambda path: {"sha256": "digest"})
-    monkeypatch.setattr(E.RT, "load_kappa_A", lambda: {
+    monkeypatch.setattr(E.RT, "load_kappa_A", lambda *, path: {
         "h2@0.650": 1.0, "poisson@0.960": 2.0,
         "h2@0.850": 9.0, "poisson@0.700": 9.0,
     })
@@ -38,7 +38,7 @@ def test_load_all_kappa_refuses_a_live_cell_it_has_no_kappa_for(
         for c in E.NEW_LIVE]}))
     monkeypatch.setattr(E, "A069_PILOT", str(pilot))
     monkeypatch.setattr(E, "pin", lambda path: {"sha256": "digest"})
-    monkeypatch.setattr(E.RT, "load_kappa_A", lambda: {"h2@0.650": 1.0})
+    monkeypatch.setattr(E.RT, "load_kappa_A", lambda *, path: {"h2@0.650": 1.0})
     try:
         E.load_all_kappa(("h2@0.650", "poisson@0.960") + E.NEW_LIVE)
     except RuntimeError as exc:

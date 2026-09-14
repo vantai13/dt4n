@@ -173,7 +173,7 @@ def _run() -> None:
         **decision,
         "design": {
             "seed": SEED_C,
-            "seed_source": "rebound tools.g5b_power_axis.SEED at import",
+            "seed_source": "scoped tools.g5b_power_axis.SEED during main; restored afterwards",
             "omega_grid": list(g5b.OMEGAS),
             "replicates": g5b.REPLICATES,
             "dt_s": g5b.DT, "tau_s": g5b.TAU,

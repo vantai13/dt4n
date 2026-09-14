@@ -192,8 +192,10 @@ def test_tool_reproduces_the_committed_artifact(module, spec, tmp_path):
     if not committed.is_file():
         pytest.skip("chua co artifact da commit: " + artifact)
     out = tmp_path / (artifact + ".json")
-    if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics"}:
-        # E1 pins source bytes. Reproduce its bytes with its actual historical code.
+    if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics",
+                   "tools.20r2_0_axis_audit", "tools.20r2_2_predictions"}:
+        # Source hashes/line numbers describe historical code. Replay that code;
+        # the separate exit test still runs every producer at current HEAD.
         import io, tarfile
         replay = tmp_path / "historical_e1"
         replay.mkdir()
@@ -202,7 +204,9 @@ def test_tool_reproduces_the_committed_artifact(module, spec, tmp_path):
         with tarfile.open(fileobj=io.BytesIO(archive)) as tar:
             tar.extractall(replay, filter="data")
         (replay / "results").symlink_to(ROOT / "results", target_is_directory=True)
-        r = subprocess.run([sys.executable, "-m", module, "--deterministic", "--out", str(out)],
+        (replay / "docs").symlink_to(ROOT / "docs", target_is_directory=True)
+        flags = ["--deterministic"] if module in {"tools.20r2_9_partition_invariance", "tools.20r2_9_e1_mechanics"} else []
+        r = subprocess.run([sys.executable, "-m", module, *flags, "--out", str(out)],
                            cwd=replay, capture_output=True, text=True)
     else:
         r = _run(module, out)

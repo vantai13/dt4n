@@ -52,8 +52,8 @@ def test_old_rule_offset_reverses_sign_across_the_tau_axis():
 @pytest.mark.parametrize("dt", (0.005, 0.01))
 def test_run_cell_scores_common_rows(dt):
     from measurements import decision_error_v2 as D
-    cell = D.measurement_cells()[0]
-    tt, cv = D.TruthTable(), D.C.CostV2(strict_reliable=False)
+    cell = D.measurement_cells(calibration_path='results/LIVE/phase-20R/sla_calibration.json')[0]
+    tt, cv = D.TruthTable(), D.C.CostV2(strict_reliable=False, fit_path='results/LIVE/phase-L/link_model_v2_fit.json')
     results = [D.run_cell(tt, cv, cell, seed=101, tau=1.0, n=2000, dt=dt,
                          z_values=D.z_values_for(1.0, scaled=scaled))
                for scaled in (False, True)]
@@ -63,10 +63,11 @@ def test_run_cell_scores_common_rows(dt):
 
 def test_summary_entry_point_scores_common_rows(monkeypatch, tmp_path):
     from measurements import decision_error_v2 as D
-    cell = D.measurement_cells()[0]
+    cell = D.measurement_cells(calibration_path='results/LIVE/phase-20R/sla_calibration.json')[0]
     monkeypatch.setattr(D, "feasible_cells", lambda *a, **kw: [cell])
     frames = [D.fixed_summary_with_bootstrap(
         out_path=str(tmp_path / (str(scaled) + ".parquet")), n=2000,
+        calibration_path="results/LIVE/phase-20R/sla_calibration.json",
         seeds=(101, 102), tau=1.0, z_values=D.z_values_for(1.0, scaled=scaled),
         block_s=0.1, n_boot=10) for scaled in (False, True)]
     left, right = [f.set_index("z_s") for f in frames]
