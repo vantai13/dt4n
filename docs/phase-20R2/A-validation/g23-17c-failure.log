@@ -1,0 +1,418 @@
+============================= test session starts ==============================
+platform linux -- Python 3.12.13, pytest-9.0.3, pluggy-1.6.0 -- /home/ubuntu/miniforge3/envs/sdn_rl/bin/python
+cachedir: .pytest_cache
+rootdir: /home/ubuntu/dt4n
+configfile: pytest.ini
+plugins: anyio-4.13.0
+collecting ... collected 1 item
+
+test/test_phase23_cell_margins.py::test_G23_225_canonical_input_preserves_published_numbers[g23-17c] FAILED [100%]
+
+=================================== FAILURES ===================================
+______ test_G23_225_canonical_input_preserves_published_numbers[g23-17c] _______
+
+audit = 'g23-17c'
+
+    @pytest.mark.parametrize("audit", sorted(HISTORICAL_REPORTS))
+    def test_G23_225_canonical_input_preserves_published_numbers(audit: str) -> None:
+        """L85 sua danh tinh input, khong duoc am tham sua ket luan G23-17."""
+        _require_cell_artifacts()
+        build, historical_path = HISTORICAL_REPORTS[audit]
+        with open(historical_path, encoding="utf-8") as handle:
+            historical = json.load(handle)
+        current = build(CM.DEFAULT_CELLS, rowset="test")
+>       assert _without_artifact_identity(current) == _without_artifact_identity(
+            historical
+        )
+E       AssertionError: assert {'gate': 'G23-17c', 'rowset': 'test', 'ratio_tolerance': 0.15, 'purpose': 'Check whether cross-cell regret differences track the true-margin scale, decompose regret ratios into true-effect and unit factors, and whether SLA thresholds are comparable across cells.', 'decomposition_identity': 'regret_ratio = err_ratio * normpen_ratio * scale_ratio, where normpen = (regret / err) / median_m_true_1 and scale_ratio is median_m_true_1_ratio_vs_poisson_0p925.', 'checks': {'poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol': True, 'all_regret_ratios_match_m_true_ratios_within_tol': False, 'three_factor_identity_matches_regret_ratio': True, 'poisson_0p850_true_effect_ratios_near_one_within_tol': True, 'h2_true_effect_ratios_both_below_0p70': True, 'sla_t_delay_same_across_cells': False, 'sla_t_loss_same_across_cells': False, 'sla_thresholds_same_across_cells': False}, 'mechanism_8_summary': {'poisson_0p850': 'err and normalized penalty ratios are near 1, while scale is near the regret ratio; the regret drop is a unit artifact for the poisson control pair.', 'h2_0p700': 'err and normalized penalty ratios are both about 0.55, while scale is near 0.89; most of the regret drop is a real decision effect, not a unit artifact.'}, 'interpretation': {'regret_cross_cell': 'Raw regret is not a standalone cross-cell headline. Report the three-factor decomposition before deciding whether a difference is a unit artifact or a real decision effect.', 'sla_cross_cell': 'SLA thresholds differ across cells; SLA is not a clean cross-cell headline unless thresholds are fixed or a separate normalization is preregistered.'}, 'rows': [{'cell': 'poisson@0.925', 'metadata': {'t_delay_ms': 32.22244681647411, 't_loss': 0.029211978731282062, 'eps_regret_ms': 3.2222446816474113}, 'rowset': 'test', 'n_rows_total': 999945, 'n_rows': 499967, 'n_blocks': 500, 'err_neo': 0.22239867831276863, 'regret_neo': 1.7674606558720711, 'penalty_per_error': 7.9472624085760835, 'median_m_true_1': 10.784947395324707, 'normpen_per_margin': 0.7368846705753276, 't_delay_ms': 32.22244681647411, 't_loss': 0.029211978731282062, 'eps_regret_ms': 3.2222446816474113, 'regret_neo_ratio_vs_poisson_0p925': 1.0, 'err_neo_ratio_vs_poisson_0p925': 1.0, 'median_m_true_1_ratio_vs_poisson_0p925': 1.0, 'normpen_ratio_vs_poisson_0p925': 1.0, 'three_factor_regret_ratio_product': 1.0, 'three_factor_abs_error_vs_regret_ratio': 0.0, 'abs_ratio_gap': 0.0, 'ratio_gap_fraction_of_m_true_ratio': 0.0, 'regret_ratio_matches_m_true_ratio_within_tol': True}, {'cell': 'poisson@0.850', 'metadata': {'t_delay_ms': 24.243596038611255, 't_loss': 0.0072216594767288275, 'eps_regret_ms': 2.4243596038611255}, 'rowset': 'test', 'n_rows_total': 999945, 'n_rows': 499967, 'n_blocks': 500, 'err_neo': 0.22072656795348494, 'regret_neo': 0.5117866445091617, 'penalty_per_error': 2.318645413890609, 'median_m_true_1': 3.211915969848633, 'normpen_per_margin': 0.7218885660946726, 't_delay_ms': 24.243596038611255, 't_loss': 0.0072216594767288275, 'eps_regret_ms': 2.4243596038611255, 'regret_neo_ratio_vs_poisson_0p925': 0.2895604169794911, 'err_neo_ratio_vs_poisson_0p925': 0.9924814734873013, 'median_m_true_1_ratio_vs_poisson_0p925': 0.29781470897493706, 'normpen_ratio_vs_poisson_0p925': 0.9796493195211311, 'three_factor_regret_ratio_product': 0.2895604169794911, 'three_factor_abs_error_vs_regret_ratio': 0.0, 'abs_ratio_gap': 0.008254291995445973, 'ratio_gap_fraction_of_m_true_ratio': 0.02771619986083569, 'regret_ratio_matches_m_true_ratio_within_tol': True}, {'cell': 'h2@0.700', 'metadata': {'t_delay_ms': 28.613953008919122, 't_loss': 0.02645414317289722, 'eps_regret_ms': 2.861395300891912}, 'rowset': 'test', 'n_rows_total': 999945, 'n_rows': 499967, 'n_blocks': 500, 'err_neo': 0.12653635139919234, 'regret_neo': 0.49282021673703036, 'penalty_per_error': 3.8946928000341883, 'median_m_true_1': 9.552966117858887, 'normpen_per_margin': 0.4076946104470335, 't_delay_ms': 28.613953008919122, 't_loss': 0.02645414317289722, 'eps_regret_ms': 2.861395300891912, 'regret_neo_ratio_vs_poisson_0p925': 0.27882952590753496, 'err_neo_ratio_vs_poisson_0p925': 0.5689617958126484, 'median_m_true_1_ratio_vs_poisson_0p925': 0.8857684481613803, 'normpen_ratio_vs_poisson_0p925': 0.5532678677230769, 'three_factor_regret_ratio_product': 0.2788295259075349, 'three_factor_abs_error_vs_regret_ratio': 5.551115123125783e-17, 'abs_ratio_gap': 0.6069389222538454, 'ratio_gap_fraction_of_m_true_ratio': 0.6852117204148434, 'regret_ratio_matches_m_true_ratio_within_tol': False}]} == {'checks': {'all_regret_ratios_match_m_true_ratios_within_tol': False, 'h2_true_effect_ratios_both_below_0p70': True, 'poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol': True, 'poisson_0p850_true_effect_ratios_near_one_within_tol': True, 'sla_t_delay_same_across_cells': False, 'sla_t_loss_same_across_cells': False, 'sla_thresholds_same_across_cells': False, 'three_factor_identity_matches_regret_ratio': True}, 'decomposition_identity': 'regret_ratio = err_ratio * normpen_ratio * scale_ratio, where normpen = (regret / err) / median_m_true_1 and scale_ratio is median_m_true_1_ratio_vs_poisson_0p925.', 'gate': 'G23-17c', 'interpretation': {'regret_cross_cell': 'Raw regret is not a standalone cross-cell headline. Report the three-factor decomposition before deciding whether a difference is a unit artifact or a real decision effect.', 'sla_cross_cell': 'SLA thresholds differ across cells; SLA is not a clean cross-cell headline unless thresholds are fixed or a separate normalization is preregistered.'}, 'mechanism_8_summary': {'h2_0p700': 'err and normalized penalty ratios are both about 0.55, while scale is near 0.89; most of the regret drop is a real decision effect, not a unit artifact.', 'poisson_0p850': 'err and normalized penalty ratios are near 1, while scale is near the regret ratio; the regret drop is a unit artifact for the poisson control pair.'}, 'purpose': 'Check whether cross-cell regret differences track the true-margin scale, decompose regret ratios into true-effect and unit factors, and whether SLA thresholds are comparable across cells.', 'ratio_tolerance': 0.15, 'rows': [{'abs_ratio_gap': 0.0, 'cell': 'poisson@0.925', 'eps_regret_ms': 3.2222446816474113, 'err_neo': 0.22239867831276863, 'err_neo_ratio_vs_poisson_0p925': 1.0, 'median_m_true_1': 10.784947395324707, 'median_m_true_1_ratio_vs_poisson_0p925': 1.0, 'metadata': {'eps_regret_ms': 3.2222446816474113, 't_delay_ms': 32.22244681647411, 't_loss': 0.029211978731282062}, 'n_blocks': 500, 'n_rows': 499967, 'n_rows_total': 999945, 'normpen_per_margin': 0.7368846705753274, 'normpen_ratio_vs_poisson_0p925': 1.0, 'penalty_per_error': 7.947262408576082, 'ratio_gap_fraction_of_m_true_ratio': 0.0, 'regret_neo': 1.767460655872071, 'regret_neo_ratio_vs_poisson_0p925': 1.0, 'regret_ratio_matches_m_true_ratio_within_tol': True, 'rowset': 'test', 't_delay_ms': 32.22244681647411, 't_loss': 0.029211978731282062, 'three_factor_abs_error_vs_regret_ratio': 0.0, 'three_factor_regret_ratio_product': 1.0}, {'abs_ratio_gap': 0.008254291995445973, 'cell': 'poisson@0.850', 'eps_regret_ms': 2.4243596038611255, 'err_neo': 0.22072656795348494, 'err_neo_ratio_vs_poisson_0p925': 0.9924814734873013, 'median_m_true_1': 3.211915969848633, 'median_m_true_1_ratio_vs_poisson_0p925': 0.29781470897493706, 'metadata': {'eps_regret_ms': 2.4243596038611255, 't_delay_ms': 24.243596038611255, 't_loss': 0.0072216594767288275}, 'n_blocks': 500, 'n_rows': 499967, 'n_rows_total': 999945, 'normpen_per_margin': 0.7218885660946726, 'normpen_ratio_vs_poisson_0p925': 0.9796493195211314, 'penalty_per_error': 2.318645413890609, 'ratio_gap_fraction_of_m_true_ratio': 0.02771619986083569, 'regret_neo': 0.5117866445091617, 'regret_neo_ratio_vs_poisson_0p925': 0.2895604169794911, 'regret_ratio_matches_m_true_ratio_within_tol': True, 'rowset': 'test', 't_delay_ms': 24.243596038611255, 't_loss': 0.0072216594767288275, 'three_factor_abs_error_vs_regret_ratio': 1.1102230246251565e-16, 'three_factor_regret_ratio_product': 0.2895604169794912}, {'abs_ratio_gap': 0.6069389222538454, 'cell': 'h2@0.700', 'eps_regret_ms': 2.861395300891912, 'err_neo': 0.12653635139919234, 'err_neo_ratio_vs_poisson_0p925': 0.5689617958126484, 'median_m_true_1': 9.552966117858887, 'median_m_true_1_ratio_vs_poisson_0p925': 0.8857684481613803, 'metadata': {'eps_regret_ms': 2.861395300891912, 't_delay_ms': 28.613953008919122, 't_loss': 0.02645414317289722}, 'n_blocks': 500, 'n_rows': 499967, 'n_rows_total': 999945, 'normpen_per_margin': 0.4076946104470335, 'normpen_ratio_vs_poisson_0p925': 0.5532678677230771, 'penalty_per_error': 3.8946928000341883, 'ratio_gap_fraction_of_m_true_ratio': 0.6852117204148434, 'regret_neo': 0.49282021673703036, 'regret_neo_ratio_vs_poisson_0p925': 0.27882952590753496, 'regret_ratio_matches_m_true_ratio_within_tol': False, 'rowset': 'test', 't_delay_ms': 28.613953008919122, 't_loss': 0.02645414317289722, 'three_factor_abs_error_vs_regret_ratio': 5.551115123125783e-17, 'three_factor_regret_ratio_product': 0.278829525907535}], 'rowset': 'test'}
+E         
+E         Common items:
+E         {'checks': {'all_regret_ratios_match_m_true_ratios_within_tol': False,
+E                     'h2_true_effect_ratios_both_below_0p70': True,
+E                     'poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol': True,
+E                     'poisson_0p850_true_effect_ratios_near_one_within_tol': True,
+E                     'sla_t_delay_same_across_cells': False,
+E                     'sla_t_loss_same_across_cells': False,
+E                     'sla_thresholds_same_across_cells': False,
+E                     'three_factor_identity_matches_regret_ratio': True},
+E          'decomposition_identity': 'regret_ratio = err_ratio * normpen_ratio * '
+E                                    'scale_ratio, where normpen = (regret / err) / '
+E                                    'median_m_true_1 and scale_ratio is '
+E                                    'median_m_true_1_ratio_vs_poisson_0p925.',
+E          'gate': 'G23-17c',
+E          'interpretation': {'regret_cross_cell': 'Raw regret is not a standalone '
+E                                                  'cross-cell headline. Report the '
+E                                                  'three-factor decomposition before '
+E                                                  'deciding whether a difference is a '
+E                                                  'unit artifact or a real decision '
+E                                                  'effect.',
+E                             'sla_cross_cell': 'SLA thresholds differ across cells; SLA '
+E                                               'is not a clean cross-cell headline '
+E                                               'unless thresholds are fixed or a '
+E                                               'separate normalization is '
+E                                               'preregistered.'},
+E          'mechanism_8_summary': {'h2_0p700': 'err and normalized penalty ratios are '
+E                                              'both about 0.55, while scale is near '
+E                                              '0.89; most of the regret drop is a real '
+E                                              'decision effect, not a unit artifact.',
+E                                  'poisson_0p850': 'err and normalized penalty ratios '
+E                                                   'are near 1, while scale is near the '
+E                                                   'regret ratio; the regret drop is a '
+E                                                   'unit artifact for the poisson '
+E                                                   'control pair.'},
+E          'purpose': 'Check whether cross-cell regret differences track the true-margin '
+E                     'scale, decompose regret ratios into true-effect and unit factors, '
+E                     'and whether SLA thresholds are comparable across cells.',
+E          'ratio_tolerance': 0.15,
+E          'rowset': 'test'}
+E         Differing items:
+E         {'rows': [{'abs_ratio_gap': 0.0, 'cell': 'poisson@0.925', 'eps_regret_ms': 3.2222446816474113, 'err_neo': 0.2223986783...ap': 0.6069389222538454, 'cell': 'h2@0.700', 'eps_regret_ms': 2.861395300891912, 'err_neo': 0.12653635139919234, ...}]} != {'rows': [{'abs_ratio_gap': 0.0, 'cell': 'poisson@0.925', 'eps_regret_ms': 3.2222446816474113, 'err_neo': 0.2223986783...ap': 0.6069389222538454, 'cell': 'h2@0.700', 'eps_regret_ms': 2.861395300891912, 'err_neo': 0.12653635139919234, ...}]}
+E         
+E         Full diff:
+E           {
+E               'checks': {
+E                   'all_regret_ratios_match_m_true_ratios_within_tol': False,
+E                   'h2_true_effect_ratios_both_below_0p70': True,
+E                   'poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol': True,
+E                   'poisson_0p850_true_effect_ratios_near_one_within_tol': True,
+E                   'sla_t_delay_same_across_cells': False,
+E                   'sla_t_loss_same_across_cells': False,
+E                   'sla_thresholds_same_across_cells': False,
+E                   'three_factor_identity_matches_regret_ratio': True,
+E               },
+E               'decomposition_identity': 'regret_ratio = err_ratio * normpen_ratio * scale_ratio, where normpen = '
+E               '(regret / err) / median_m_true_1 and scale_ratio is '
+E               'median_m_true_1_ratio_vs_poisson_0p925.',
+E               'gate': 'G23-17c',
+E               'interpretation': {
+E                   'regret_cross_cell': 'Raw regret is not a standalone cross-cell headline. Report the '
+E                   'three-factor decomposition before deciding whether a difference is a '
+E                   'unit artifact or a real decision effect.',
+E                   'sla_cross_cell': 'SLA thresholds differ across cells; SLA is not a clean cross-cell '
+E                   'headline unless thresholds are fixed or a separate normalization is '
+E                   'preregistered.',
+E               },
+E               'mechanism_8_summary': {
+E                   'h2_0p700': 'err and normalized penalty ratios are both about 0.55, while scale is '
+E                   'near 0.89; most of the regret drop is a real decision effect, not a '
+E                   'unit artifact.',
+E                   'poisson_0p850': 'err and normalized penalty ratios are near 1, while scale is near the '
+E                   'regret ratio; the regret drop is a unit artifact for the poisson '
+E                   'control pair.',
+E               },
+E               'purpose': 'Check whether cross-cell regret differences track the true-margin scale, '
+E               'decompose regret ratios into true-effect and unit factors, and whether '
+E               'SLA thresholds are comparable across cells.',
+E               'ratio_tolerance': 0.15,
+E               'rows': [
+E                   {
+E                       'abs_ratio_gap': 0.0,
+E                       'cell': 'poisson@0.925',
+E                       'eps_regret_ms': 3.2222446816474113,
+E                       'err_neo': 0.22239867831276863,
+E                       'err_neo_ratio_vs_poisson_0p925': 1.0,
+E                       'median_m_true_1': 10.784947395324707,
+E                       'median_m_true_1_ratio_vs_poisson_0p925': 1.0,
+E                       'metadata': {
+E                           'eps_regret_ms': 3.2222446816474113,
+E                           't_delay_ms': 32.22244681647411,
+E                           't_loss': 0.029211978731282062,
+E                       },
+E                       'n_blocks': 500,
+E                       'n_rows': 499967,
+E                       'n_rows_total': 999945,
+E         -             'normpen_per_margin': 0.7368846705753274,
+E         ?                                                    ^
+E         +             'normpen_per_margin': 0.7368846705753276,
+E         ?                                                    ^
+E                       'normpen_ratio_vs_poisson_0p925': 1.0,
+E         -             'penalty_per_error': 7.947262408576082,
+E         ?                                                  ^
+E         +             'penalty_per_error': 7.9472624085760835,
+E         ?                                                  ^^
+E                       'ratio_gap_fraction_of_m_true_ratio': 0.0,
+E         -             'regret_neo': 1.767460655872071,
+E         +             'regret_neo': 1.7674606558720711,
+E         ?                                            +
+E                       'regret_neo_ratio_vs_poisson_0p925': 1.0,
+E                       'regret_ratio_matches_m_true_ratio_within_tol': True,
+E                       'rowset': 'test',
+E                       't_delay_ms': 32.22244681647411,
+E                       't_loss': 0.029211978731282062,
+E                       'three_factor_abs_error_vs_regret_ratio': 0.0,
+E                       'three_factor_regret_ratio_product': 1.0,
+E                   },
+E                   {
+E                       'abs_ratio_gap': 0.008254291995445973,
+E                       'cell': 'poisson@0.850',
+E                       'eps_regret_ms': 2.4243596038611255,
+E                       'err_neo': 0.22072656795348494,
+E                       'err_neo_ratio_vs_poisson_0p925': 0.9924814734873013,
+E                       'median_m_true_1': 3.211915969848633,
+E                       'median_m_true_1_ratio_vs_poisson_0p925': 0.29781470897493706,
+E                       'metadata': {
+E                           'eps_regret_ms': 2.4243596038611255,
+E                           't_delay_ms': 24.243596038611255,
+E                           't_loss': 0.0072216594767288275,
+E                       },
+E                       'n_blocks': 500,
+E                       'n_rows': 499967,
+E                       'n_rows_total': 999945,
+E                       'normpen_per_margin': 0.7218885660946726,
+E         -             'normpen_ratio_vs_poisson_0p925': 0.9796493195211314,
+E         ?                                                                ^
+E         +             'normpen_ratio_vs_poisson_0p925': 0.9796493195211311,
+E         ?                                                                ^
+E                       'penalty_per_error': 2.318645413890609,
+E                       'ratio_gap_fraction_of_m_true_ratio': 0.02771619986083569,
+E                       'regret_neo': 0.5117866445091617,
+E                       'regret_neo_ratio_vs_poisson_0p925': 0.2895604169794911,
+E                       'regret_ratio_matches_m_true_ratio_within_tol': True,
+E                       'rowset': 'test',
+E                       't_delay_ms': 24.243596038611255,
+E                       't_loss': 0.0072216594767288275,
+E         -             'three_factor_abs_error_vs_regret_ratio': 1.1102230246251565e-16,
+E         ?                                                       ^ -- -----------------
+E         +             'three_factor_abs_error_vs_regret_ratio': 0.0,
+E         ?                                                       ^
+E         -             'three_factor_regret_ratio_product': 0.2895604169794912,
+E         ?                                                                   ^
+E         +             'three_factor_regret_ratio_product': 0.2895604169794911,
+E         ?                                                                   ^
+E                   },
+E                   {
+E                       'abs_ratio_gap': 0.6069389222538454,
+E                       'cell': 'h2@0.700',
+E                       'eps_regret_ms': 2.861395300891912,
+E                       'err_neo': 0.12653635139919234,
+E                       'err_neo_ratio_vs_poisson_0p925': 0.5689617958126484,
+E                       'median_m_true_1': 9.552966117858887,
+E                       'median_m_true_1_ratio_vs_poisson_0p925': 0.8857684481613803,
+E                       'metadata': {
+E                           'eps_regret_ms': 2.861395300891912,
+E                           't_delay_ms': 28.613953008919122,
+E                           't_loss': 0.02645414317289722,
+E                       },
+E                       'n_blocks': 500,
+E                       'n_rows': 499967,
+E                       'n_rows_total': 999945,
+E                       'normpen_per_margin': 0.4076946104470335,
+E         -             'normpen_ratio_vs_poisson_0p925': 0.5532678677230771,
+E         ?                                                               ^^
+E         +             'normpen_ratio_vs_poisson_0p925': 0.5532678677230769,
+E         ?                                                               ^^
+E                       'penalty_per_error': 3.8946928000341883,
+E                       'ratio_gap_fraction_of_m_true_ratio': 0.6852117204148434,
+E                       'regret_neo': 0.49282021673703036,
+E                       'regret_neo_ratio_vs_poisson_0p925': 0.27882952590753496,
+E                       'regret_ratio_matches_m_true_ratio_within_tol': False,
+E                       'rowset': 'test',
+E                       't_delay_ms': 28.613953008919122,
+E                       't_loss': 0.02645414317289722,
+E                       'three_factor_abs_error_vs_regret_ratio': 5.551115123125783e-17,
+E         -             'three_factor_regret_ratio_product': 0.278829525907535,
+E         ?                                                                  ^
+E         +             'three_factor_regret_ratio_product': 0.2788295259075349,
+E         ?                                                                  ^^
+E                   },
+E               ],
+E               'rowset': 'test',
+E           }
+
+test/test_phase23_cell_margins.py:77: AssertionError
+=========================== short test summary info ============================
+FAILED test/test_phase23_cell_margins.py::test_G23_225_canonical_input_preserves_published_numbers[g23-17c] - AssertionError: assert {'gate': 'G23-17c', 'rowset': 'test', 'ratio_tolerance': 0.15, 'purpose': 'Check whether cross-cell regret differences track the true-margin scale, decompose regret ratios into true-effect and unit factors, and whether SLA thresholds are comparable across cells.', 'decomposition_identity': 'regret_ratio = err_ratio * normpen_ratio * scale_ratio, where normpen = (regret / err) / median_m_true_1 and scale_ratio is median_m_true_1_ratio_vs_poisson_0p925.', 'checks': {'poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol': True, 'all_regret_ratios_match_m_true_ratios_within_tol': False, 'three_factor_identity_matches_regret_ratio': True, 'poisson_0p850_true_effect_ratios_near_one_within_tol': True, 'h2_true_effect_ratios_both_below_0p70': True, 'sla_t_delay_same_across_cells': False, 'sla_t_loss_same_across_cells': False, 'sla_thresholds_same_across_cells': False}, 'mechanism_8_summary': {'poisson_0p850': 'err and normalized penalty ratios are near 1, while scale is near the regret ratio; the regret drop is a unit artifact for the poisson control pair.', 'h2_0p700': 'err and normalized penalty ratios are both about 0.55, while scale is near 0.89; most of the regret drop is a real decision effect, not a unit artifact.'}, 'interpretation': {'regret_cross_cell': 'Raw regret is not a standalone cross-cell headline. Report the three-factor decomposition before deciding whether a difference is a unit artifact or a real decision effect.', 'sla_cross_cell': 'SLA thresholds differ across cells; SLA is not a clean cross-cell headline unless thresholds are fixed or a separate normalization is preregistered.'}, 'rows': [{'cell': 'poisson@0.925', 'metadata': {'t_delay_ms': 32.22244681647411, 't_loss': 0.029211978731282062, 'eps_regret_ms': 3.2222446816474113}, 'rowset': 'test', 'n_rows_total': 999945, 'n_rows': 499967, 'n_blocks': 500, 'err_neo': 0.22239867831276863, 'regret_neo': 1.7674606558720711, 'penalty_per_error': 7.9472624085760835, 'median_m_true_1': 10.784947395324707, 'normpen_per_margin': 0.7368846705753276, 't_delay_ms': 32.22244681647411, 't_loss': 0.029211978731282062, 'eps_regret_ms': 3.2222446816474113, 'regret_neo_ratio_vs_poisson_0p925': 1.0, 'err_neo_ratio_vs_poisson_0p925': 1.0, 'median_m_true_1_ratio_vs_poisson_0p925': 1.0, 'normpen_ratio_vs_poisson_0p925': 1.0, 'three_factor_regret_ratio_product': 1.0, 'three_factor_abs_error_vs_regret_ratio': 0.0, 'abs_ratio_gap': 0.0, 'ratio_gap_fraction_of_m_true_ratio': 0.0, 'regret_ratio_matches_m_true_ratio_within_tol': True}, {'cell': 'poisson@0.850', 'metadata': {'t_delay_ms': 24.243596038611255, 't_loss': 0.0072216594767288275, 'eps_regret_ms': 2.4243596038611255}, 'rowset': 'test', 'n_rows_total': 999945, 'n_rows': 499967, 'n_blocks': 500, 'err_neo': 0.22072656795348494, 'regret_neo': 0.5117866445091617, 'penalty_per_error': 2.318645413890609, 'median_m_true_1': 3.211915969848633, 'normpen_per_margin': 0.7218885660946726, 't_delay_ms': 24.243596038611255, 't_loss': 0.0072216594767288275, 'eps_regret_ms': 2.4243596038611255, 'regret_neo_ratio_vs_poisson_0p925': 0.2895604169794911, 'err_neo_ratio_vs_poisson_0p925': 0.9924814734873013, 'median_m_true_1_ratio_vs_poisson_0p925': 0.29781470897493706, 'normpen_ratio_vs_poisson_0p925': 0.9796493195211311, 'three_factor_regret_ratio_product': 0.2895604169794911, 'three_factor_abs_error_vs_regret_ratio': 0.0, 'abs_ratio_gap': 0.008254291995445973, 'ratio_gap_fraction_of_m_true_ratio': 0.02771619986083569, 'regret_ratio_matches_m_true_ratio_within_tol': True}, {'cell': 'h2@0.700', 'metadata': {'t_delay_ms': 28.613953008919122, 't_loss': 0.02645414317289722, 'eps_regret_ms': 2.861395300891912}, 'rowset': 'test', 'n_rows_total': 999945, 'n_rows': 499967, 'n_blocks': 500, 'err_neo': 0.12653635139919234, 'regret_neo': 0.49282021673703036, 'penalty_per_error': 3.8946928000341883, 'median_m_true_1': 9.552966117858887, 'normpen_per_margin': 0.4076946104470335, 't_delay_ms': 28.613953008919122, 't_loss': 0.02645414317289722, 'eps_regret_ms': 2.861395300891912, 'regret_neo_ratio_vs_poisson_0p925': 0.27882952590753496, 'err_neo_ratio_vs_poisson_0p925': 0.5689617958126484, 'median_m_true_1_ratio_vs_poisson_0p925': 0.8857684481613803, 'normpen_ratio_vs_poisson_0p925': 0.5532678677230769, 'three_factor_regret_ratio_product': 0.2788295259075349, 'three_factor_abs_error_vs_regret_ratio': 5.551115123125783e-17, 'abs_ratio_gap': 0.6069389222538454, 'ratio_gap_fraction_of_m_true_ratio': 0.6852117204148434, 'regret_ratio_matches_m_true_ratio_within_tol': False}]} == {'checks': {'all_regret_ratios_match_m_true_ratios_within_tol': False, 'h2_true_effect_ratios_both_below_0p70': True, 'poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol': True, 'poisson_0p850_true_effect_ratios_near_one_within_tol': True, 'sla_t_delay_same_across_cells': False, 'sla_t_loss_same_across_cells': False, 'sla_thresholds_same_across_cells': False, 'three_factor_identity_matches_regret_ratio': True}, 'decomposition_identity': 'regret_ratio = err_ratio * normpen_ratio * scale_ratio, where normpen = (regret / err) / median_m_true_1 and scale_ratio is median_m_true_1_ratio_vs_poisson_0p925.', 'gate': 'G23-17c', 'interpretation': {'regret_cross_cell': 'Raw regret is not a standalone cross-cell headline. Report the three-factor decomposition before deciding whether a difference is a unit artifact or a real decision effect.', 'sla_cross_cell': 'SLA thresholds differ across cells; SLA is not a clean cross-cell headline unless thresholds are fixed or a separate normalization is preregistered.'}, 'mechanism_8_summary': {'h2_0p700': 'err and normalized penalty ratios are both about 0.55, while scale is near 0.89; most of the regret drop is a real decision effect, not a unit artifact.', 'poisson_0p850': 'err and normalized penalty ratios are near 1, while scale is near the regret ratio; the regret drop is a unit artifact for the poisson control pair.'}, 'purpose': 'Check whether cross-cell regret differences track the true-margin scale, decompose regret ratios into true-effect and unit factors, and whether SLA thresholds are comparable across cells.', 'ratio_tolerance': 0.15, 'rows': [{'abs_ratio_gap': 0.0, 'cell': 'poisson@0.925', 'eps_regret_ms': 3.2222446816474113, 'err_neo': 0.22239867831276863, 'err_neo_ratio_vs_poisson_0p925': 1.0, 'median_m_true_1': 10.784947395324707, 'median_m_true_1_ratio_vs_poisson_0p925': 1.0, 'metadata': {'eps_regret_ms': 3.2222446816474113, 't_delay_ms': 32.22244681647411, 't_loss': 0.029211978731282062}, 'n_blocks': 500, 'n_rows': 499967, 'n_rows_total': 999945, 'normpen_per_margin': 0.7368846705753274, 'normpen_ratio_vs_poisson_0p925': 1.0, 'penalty_per_error': 7.947262408576082, 'ratio_gap_fraction_of_m_true_ratio': 0.0, 'regret_neo': 1.767460655872071, 'regret_neo_ratio_vs_poisson_0p925': 1.0, 'regret_ratio_matches_m_true_ratio_within_tol': True, 'rowset': 'test', 't_delay_ms': 32.22244681647411, 't_loss': 0.029211978731282062, 'three_factor_abs_error_vs_regret_ratio': 0.0, 'three_factor_regret_ratio_product': 1.0}, {'abs_ratio_gap': 0.008254291995445973, 'cell': 'poisson@0.850', 'eps_regret_ms': 2.4243596038611255, 'err_neo': 0.22072656795348494, 'err_neo_ratio_vs_poisson_0p925': 0.9924814734873013, 'median_m_true_1': 3.211915969848633, 'median_m_true_1_ratio_vs_poisson_0p925': 0.29781470897493706, 'metadata': {'eps_regret_ms': 2.4243596038611255, 't_delay_ms': 24.243596038611255, 't_loss': 0.0072216594767288275}, 'n_blocks': 500, 'n_rows': 499967, 'n_rows_total': 999945, 'normpen_per_margin': 0.7218885660946726, 'normpen_ratio_vs_poisson_0p925': 0.9796493195211314, 'penalty_per_error': 2.318645413890609, 'ratio_gap_fraction_of_m_true_ratio': 0.02771619986083569, 'regret_neo': 0.5117866445091617, 'regret_neo_ratio_vs_poisson_0p925': 0.2895604169794911, 'regret_ratio_matches_m_true_ratio_within_tol': True, 'rowset': 'test', 't_delay_ms': 24.243596038611255, 't_loss': 0.0072216594767288275, 'three_factor_abs_error_vs_regret_ratio': 1.1102230246251565e-16, 'three_factor_regret_ratio_product': 0.2895604169794912}, {'abs_ratio_gap': 0.6069389222538454, 'cell': 'h2@0.700', 'eps_regret_ms': 2.861395300891912, 'err_neo': 0.12653635139919234, 'err_neo_ratio_vs_poisson_0p925': 0.5689617958126484, 'median_m_true_1': 9.552966117858887, 'median_m_true_1_ratio_vs_poisson_0p925': 0.8857684481613803, 'metadata': {'eps_regret_ms': 2.861395300891912, 't_delay_ms': 28.613953008919122, 't_loss': 0.02645414317289722}, 'n_blocks': 500, 'n_rows': 499967, 'n_rows_total': 999945, 'normpen_per_margin': 0.4076946104470335, 'normpen_ratio_vs_poisson_0p925': 0.5532678677230771, 'penalty_per_error': 3.8946928000341883, 'ratio_gap_fraction_of_m_true_ratio': 0.6852117204148434, 'regret_neo': 0.49282021673703036, 'regret_neo_ratio_vs_poisson_0p925': 0.27882952590753496, 'regret_ratio_matches_m_true_ratio_within_tol': False, 'rowset': 'test', 't_delay_ms': 28.613953008919122, 't_loss': 0.02645414317289722, 'three_factor_abs_error_vs_regret_ratio': 5.551115123125783e-17, 'three_factor_regret_ratio_product': 0.278829525907535}], 'rowset': 'test'}
+  
+  Common items:
+  {'checks': {'all_regret_ratios_match_m_true_ratios_within_tol': False,
+              'h2_true_effect_ratios_both_below_0p70': True,
+              'poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol': True,
+              'poisson_0p850_true_effect_ratios_near_one_within_tol': True,
+              'sla_t_delay_same_across_cells': False,
+              'sla_t_loss_same_across_cells': False,
+              'sla_thresholds_same_across_cells': False,
+              'three_factor_identity_matches_regret_ratio': True},
+   'decomposition_identity': 'regret_ratio = err_ratio * normpen_ratio * '
+                             'scale_ratio, where normpen = (regret / err) / '
+                             'median_m_true_1 and scale_ratio is '
+                             'median_m_true_1_ratio_vs_poisson_0p925.',
+   'gate': 'G23-17c',
+   'interpretation': {'regret_cross_cell': 'Raw regret is not a standalone '
+                                           'cross-cell headline. Report the '
+                                           'three-factor decomposition before '
+                                           'deciding whether a difference is a '
+                                           'unit artifact or a real decision '
+                                           'effect.',
+                      'sla_cross_cell': 'SLA thresholds differ across cells; SLA '
+                                        'is not a clean cross-cell headline '
+                                        'unless thresholds are fixed or a '
+                                        'separate normalization is '
+                                        'preregistered.'},
+   'mechanism_8_summary': {'h2_0p700': 'err and normalized penalty ratios are '
+                                       'both about 0.55, while scale is near '
+                                       '0.89; most of the regret drop is a real '
+                                       'decision effect, not a unit artifact.',
+                           'poisson_0p850': 'err and normalized penalty ratios '
+                                            'are near 1, while scale is near the '
+                                            'regret ratio; the regret drop is a '
+                                            'unit artifact for the poisson '
+                                            'control pair.'},
+   'purpose': 'Check whether cross-cell regret differences track the true-margin '
+              'scale, decompose regret ratios into true-effect and unit factors, '
+              'and whether SLA thresholds are comparable across cells.',
+   'ratio_tolerance': 0.15,
+   'rowset': 'test'}
+  Differing items:
+  {'rows': [{'abs_ratio_gap': 0.0, 'cell': 'poisson@0.925', 'eps_regret_ms': 3.2222446816474113, 'err_neo': 0.2223986783...ap': 0.6069389222538454, 'cell': 'h2@0.700', 'eps_regret_ms': 2.861395300891912, 'err_neo': 0.12653635139919234, ...}]} != {'rows': [{'abs_ratio_gap': 0.0, 'cell': 'poisson@0.925', 'eps_regret_ms': 3.2222446816474113, 'err_neo': 0.2223986783...ap': 0.6069389222538454, 'cell': 'h2@0.700', 'eps_regret_ms': 2.861395300891912, 'err_neo': 0.12653635139919234, ...}]}
+  
+  Full diff:
+    {
+        'checks': {
+            'all_regret_ratios_match_m_true_ratios_within_tol': False,
+            'h2_true_effect_ratios_both_below_0p70': True,
+            'poisson_0p850_regret_ratio_matches_m_true_ratio_within_tol': True,
+            'poisson_0p850_true_effect_ratios_near_one_within_tol': True,
+            'sla_t_delay_same_across_cells': False,
+            'sla_t_loss_same_across_cells': False,
+            'sla_thresholds_same_across_cells': False,
+            'three_factor_identity_matches_regret_ratio': True,
+        },
+        'decomposition_identity': 'regret_ratio = err_ratio * normpen_ratio * scale_ratio, where normpen = '
+        '(regret / err) / median_m_true_1 and scale_ratio is '
+        'median_m_true_1_ratio_vs_poisson_0p925.',
+        'gate': 'G23-17c',
+        'interpretation': {
+            'regret_cross_cell': 'Raw regret is not a standalone cross-cell headline. Report the '
+            'three-factor decomposition before deciding whether a difference is a '
+            'unit artifact or a real decision effect.',
+            'sla_cross_cell': 'SLA thresholds differ across cells; SLA is not a clean cross-cell '
+            'headline unless thresholds are fixed or a separate normalization is '
+            'preregistered.',
+        },
+        'mechanism_8_summary': {
+            'h2_0p700': 'err and normalized penalty ratios are both about 0.55, while scale is '
+            'near 0.89; most of the regret drop is a real decision effect, not a '
+            'unit artifact.',
+            'poisson_0p850': 'err and normalized penalty ratios are near 1, while scale is near the '
+            'regret ratio; the regret drop is a unit artifact for the poisson '
+            'control pair.',
+        },
+        'purpose': 'Check whether cross-cell regret differences track the true-margin scale, '
+        'decompose regret ratios into true-effect and unit factors, and whether '
+        'SLA thresholds are comparable across cells.',
+        'ratio_tolerance': 0.15,
+        'rows': [
+            {
+                'abs_ratio_gap': 0.0,
+                'cell': 'poisson@0.925',
+                'eps_regret_ms': 3.2222446816474113,
+                'err_neo': 0.22239867831276863,
+                'err_neo_ratio_vs_poisson_0p925': 1.0,
+                'median_m_true_1': 10.784947395324707,
+                'median_m_true_1_ratio_vs_poisson_0p925': 1.0,
+                'metadata': {
+                    'eps_regret_ms': 3.2222446816474113,
+                    't_delay_ms': 32.22244681647411,
+                    't_loss': 0.029211978731282062,
+                },
+                'n_blocks': 500,
+                'n_rows': 499967,
+                'n_rows_total': 999945,
+  -             'normpen_per_margin': 0.7368846705753274,
+  ?                                                    ^
+  +             'normpen_per_margin': 0.7368846705753276,
+  ?                                                    ^
+                'normpen_ratio_vs_poisson_0p925': 1.0,
+  -             'penalty_per_error': 7.947262408576082,
+  ?                                                  ^
+  +             'penalty_per_error': 7.9472624085760835,
+  ?                                                  ^^
+                'ratio_gap_fraction_of_m_true_ratio': 0.0,
+  -             'regret_neo': 1.767460655872071,
+  +             'regret_neo': 1.7674606558720711,
+  ?                                            +
+                'regret_neo_ratio_vs_poisson_0p925': 1.0,
+                'regret_ratio_matches_m_true_ratio_within_tol': True,
+                'rowset': 'test',
+                't_delay_ms': 32.22244681647411,
+                't_loss': 0.029211978731282062,
+                'three_factor_abs_error_vs_regret_ratio': 0.0,
+                'three_factor_regret_ratio_product': 1.0,
+            },
+            {
+                'abs_ratio_gap': 0.008254291995445973,
+                'cell': 'poisson@0.850',
+                'eps_regret_ms': 2.4243596038611255,
+                'err_neo': 0.22072656795348494,
+                'err_neo_ratio_vs_poisson_0p925': 0.9924814734873013,
+                'median_m_true_1': 3.211915969848633,
+                'median_m_true_1_ratio_vs_poisson_0p925': 0.29781470897493706,
+                'metadata': {
+                    'eps_regret_ms': 2.4243596038611255,
+                    't_delay_ms': 24.243596038611255,
+                    't_loss': 0.0072216594767288275,
+                },
+                'n_blocks': 500,
+                'n_rows': 499967,
+                'n_rows_total': 999945,
+                'normpen_per_margin': 0.7218885660946726,
+  -             'normpen_ratio_vs_poisson_0p925': 0.9796493195211314,
+  ?                                                                ^
+  +             'normpen_ratio_vs_poisson_0p925': 0.9796493195211311,
+  ?                                                                ^
+                'penalty_per_error': 2.318645413890609,
+                'ratio_gap_fraction_of_m_true_ratio': 0.02771619986083569,
+                'regret_neo': 0.5117866445091617,
+                'regret_neo_ratio_vs_poisson_0p925': 0.2895604169794911,
+                'regret_ratio_matches_m_true_ratio_within_tol': True,
+                'rowset': 'test',
+                't_delay_ms': 24.243596038611255,
+                't_loss': 0.0072216594767288275,
+  -             'three_factor_abs_error_vs_regret_ratio': 1.1102230246251565e-16,
+  ?                                                       ^ -- -----------------
+  +             'three_factor_abs_error_vs_regret_ratio': 0.0,
+  ?                                                       ^
+  -             'three_factor_regret_ratio_product': 0.2895604169794912,
+  ?                                                                   ^
+  +             'three_factor_regret_ratio_product': 0.2895604169794911,
+  ?                                                                   ^
+            },
+            {
+                'abs_ratio_gap': 0.6069389222538454,
+                'cell': 'h2@0.700',
+                'eps_regret_ms': 2.861395300891912,
+                'err_neo': 0.12653635139919234,
+                'err_neo_ratio_vs_poisson_0p925': 0.5689617958126484,
+                'median_m_true_1': 9.552966117858887,
+                'median_m_true_1_ratio_vs_poisson_0p925': 0.8857684481613803,
+                'metadata': {
+                    'eps_regret_ms': 2.861395300891912,
+                    't_delay_ms': 28.613953008919122,
+                    't_loss': 0.02645414317289722,
+                },
+                'n_blocks': 500,
+                'n_rows': 499967,
+                'n_rows_total': 999945,
+                'normpen_per_margin': 0.4076946104470335,
+  -             'normpen_ratio_vs_poisson_0p925': 0.5532678677230771,
+  ?                                                               ^^
+  +             'normpen_ratio_vs_poisson_0p925': 0.5532678677230769,
+  ?                                                               ^^
+                'penalty_per_error': 3.8946928000341883,
+                'ratio_gap_fraction_of_m_true_ratio': 0.6852117204148434,
+                'regret_neo': 0.49282021673703036,
+                'regret_neo_ratio_vs_poisson_0p925': 0.27882952590753496,
+                'regret_ratio_matches_m_true_ratio_within_tol': False,
+                'rowset': 'test',
+                't_delay_ms': 28.613953008919122,
+                't_loss': 0.02645414317289722,
+                'three_factor_abs_error_vs_regret_ratio': 5.551115123125783e-17,
+  -             'three_factor_regret_ratio_product': 0.278829525907535,
+  ?                                                                  ^
+  +             'three_factor_regret_ratio_product': 0.2788295259075349,
+  ?                                                                  ^^
+            },
+        ],
+        'rowset': 'test',
+    }
+============================== 1 failed in 1.40s ===============================

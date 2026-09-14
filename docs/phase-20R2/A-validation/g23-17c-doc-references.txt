@@ -1,0 +1,13 @@
+docs/phase-23/A061b-amendment-61b.md:108:G23-17c  all diffs=4  semantic/numeric diffs=0
+docs/phase-23/00s-amendment-18.md:33:Ket qua G23-17c:
+docs/phase-23/00s-amendment-18.md:84:Bang diem S2 cua G23-17c:
+docs/phase-23/BACKLOG.md:36:| L122 | 1h | (rong) -- moi lech <= 1e-15, thang phat bieu la 0.15/0.70 | "g23-17c so bang == tuyet doi tren so thuc; DO mot ULP tren may tac gia" | 2 | HOAN |
+docs/phase-23/LIMITS.md:156:| L122 | `test_G23_225_canonical_input_preserves_published_numbers[g23-17c]` DO tren may tac gia (khong phai do dot don 23.22): so hien tai lech so voi ban luu tru dung **mot ULP**. Do duoc 8 truong, vd `normpen_per_margin` 0.7368846705753276 vs ...274; `three_factor_abs_error_vs_regret_ratio` **0.0** vs **1.1102230246251565e-16** (= 1 ULP cua 1.0). Sai so tuong doi ~2e-16 | do 2026-08-26 tren `main` = `d046dabd`, TRUOC moi thay doi cua dot don nay | Test so bang `==` TUYET DOI tren so thuc, dieu KHONG THE giu qua doi moi truong/thu vien. Dung hien tuong `L71`/`L74` da ghi ("nguong NC 1e-9 khong dat duoc voi ban luu tru sinh o moi truong khac"; "BIT-EXACT 19 cot, lech <= 3.11e-15"). Ket luan KHOA HOC khong doi: moi lech deu duoi 1e-15, con `G23-17c` phat bieu o thang 0.15 va 0.70. Cach sua dung la mot dung sai tuong doi (vd 1e-12) nhu `_objective_curve` da dung. KHONG sua trong lesson nay -- `A071` R2 |
+docs/phase-23/GATES.md:68:| G23-17c | 23.4 | ADJUDICATED | results/phase-23/g23_17c_scale_and_sla.json |
+docs/phase-23/99-gate-decision.md:28:| `results/phase-23/g23_17c_scale_and_sla.json` | G23-17c scale/SLA comparability and Mechanism #8 |
+docs/phase-23/04-baselines.md:504:Sau G23-17c, `regret` khong duoc doc nhu mot headline tho giua cac cell. Dong
+docs/phase-23/49-close-23-22d.md:179:test_phase23_cell_margins.py::...preserves_published_numbers[g23-17c] -> L122
+docs/phase-D/04-execution-report.md:246:                                  g23-17c historical-number drift tồn tại sẵn
+docs/phase-20R2/baseline_failures.txt:41:   test/test_phase23_cell_margins.py::test_G23_225_canonical_input_preserves_published_numbers[g23-17c]
+docs/phase-20R2/01-recovery-and-remediation.md:261:| 5 | `test_phase23_cell_margins.py::test_G23_225_canonical_input_preserves_published_numbers[g23-17c]` | lệch số đã công bố g23-17c |
+docs/phase-G/32-g3-dryrun-results.md:89:- the historical `g23-17c` report differs from its current canonical rebuild.
