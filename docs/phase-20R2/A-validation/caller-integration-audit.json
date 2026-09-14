@@ -1,0 +1,40 @@
+{
+  "initial_ast_caller_expressions": 128,
+  "additional_integrated_sites": [
+    {
+      "file": "tools/20r2_remediation_smoke.py",
+      "detail": "sigma=.0096 forwarded with existing explicit axis in kwargs; historical CostV2 loaded from the same baseline source"
+    },
+    {
+      "file": "tools/20r2_6c_g4.py",
+      "detail": "function-local CostV2 call supplies the historical fit_path"
+    },
+    {
+      "file": "test/test_phase20r_decision.py",
+      "detail": "function-local QB.phase_t_err_dyn supplies the historical JSON path"
+    },
+    {
+      "file": "test/test_t2_scoring_window.py",
+      "detail": "both measurement_cells calls, CostV2, and fixed_summary_with_bootstrap supply historical paths"
+    },
+    {
+      "file": "test/test_a070_extension.py",
+      "detail": "two mocks accept required explicit path keyword"
+    }
+  ],
+  "remaining_static_candidate": [
+    {
+      "file": "tools/20r2_remediation_smoke.py",
+      "line": 44,
+      "call": "cert.build_calib_set_v3.build_one_v3",
+      "missing": [
+        "axis",
+        "sigma"
+      ],
+      "star_kwargs": true,
+      "code": "B.build_one_v3(cell, 101, tt, cv, **kwargs)"
+    }
+  ],
+  "remaining_candidate_resolution": "The sole kwargs call receives axis and sigma from the immediately preceding kwargs construction; verified by an actual bit-exact smoke run.",
+  "source_commit": "64a722ec74496b60276a2ddaa60127c29b6786ff"
+}

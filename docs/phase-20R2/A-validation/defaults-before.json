@@ -1,0 +1,754 @@
+[
+  {
+    "path": "measurements/additivity_band.py",
+    "line": 47,
+    "function": "load_residuals",
+    "argument": "diag_ca",
+    "default": "DIAG_CA",
+    "value": "results/SUPERSEDED/phase-20R/diag_ca_late_inband.json"
+  },
+  {
+    "path": "measurements/additivity_band.py",
+    "line": 47,
+    "function": "load_residuals",
+    "argument": "check_report",
+    "default": "CHECK_REPORT",
+    "value": "results/SMOKE/phase-20R/additivity_check_inband_bg.json"
+  },
+  {
+    "path": "measurements/additivity_check.py",
+    "line": 411,
+    "function": "branch_a_link_rows",
+    "argument": "campaign_state",
+    "default": "CAMPAIGN_STATE",
+    "value": "results/SUPERSEDED/phase-20R/campaign_state.json"
+  },
+  {
+    "path": "measurements/additivity_check.py",
+    "line": 335,
+    "function": "__init__",
+    "argument": "campaign_state",
+    "default": "CAMPAIGN_STATE",
+    "value": "results/SUPERSEDED/phase-20R/campaign_state.json"
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 54,
+    "function": "truth_grid",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": null
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 167,
+    "function": "write_truth_table",
+    "argument": "phase_l_path",
+    "default": "PHASE_L_STATE",
+    "value": "results/SUPERSEDED/phase-L/campaign_state.json"
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 167,
+    "function": "write_truth_table",
+    "argument": "phase_20r_path",
+    "default": "PHASE_20R_STATE",
+    "value": "results/SUPERSEDED/phase-20R/campaign_state.json"
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 167,
+    "function": "write_truth_table",
+    "argument": "csv_path",
+    "default": "TRUTH_TABLE_CSV",
+    "value": "results/SUPERSEDED/phase-20R/truth_table.csv"
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 167,
+    "function": "write_truth_table",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": null
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 290,
+    "function": "write_continuity_check",
+    "argument": "phase_l_path",
+    "default": "PHASE_L_STATE",
+    "value": "results/SUPERSEDED/phase-L/campaign_state.json"
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 290,
+    "function": "write_continuity_check",
+    "argument": "continuity_path",
+    "default": "CONTINUITY_STATE",
+    "value": "results/SUPERSEDED/phase-20R/continuity_state.json"
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 290,
+    "function": "write_continuity_check",
+    "argument": "out_path",
+    "default": "CONTINUITY_JSON",
+    "value": "results/SUPERSEDED/phase-20R/continuity_check.json"
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 314,
+    "function": "write_sentinel_control",
+    "argument": "phase_20r_path",
+    "default": "PHASE_20R_STATE",
+    "value": "results/SUPERSEDED/phase-20R/campaign_state.json"
+  },
+  {
+    "path": "measurements/build_truth_table.py",
+    "line": 314,
+    "function": "write_sentinel_control",
+    "argument": "out_path",
+    "default": "SENTINEL_JSON",
+    "value": "results/SUPERSEDED/phase-20R/sentinel_control.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 163,
+    "function": "load_calibration",
+    "argument": "path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 239,
+    "function": "feasible_cells",
+    "argument": "path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 275,
+    "function": "measurement_cells",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 731,
+    "function": "fixed_summary_with_bootstrap",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 731,
+    "function": "fixed_summary_with_bootstrap",
+    "argument": "out_path",
+    "default": "SUMMARY_OUT",
+    "value": "results/SUPERSEDED/phase-20R/decision_error_by_age_summary.parquet"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 860,
+    "function": "sawtooth_summary",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 860,
+    "function": "sawtooth_summary",
+    "argument": "out_path",
+    "default": "SAWTOOTH_OUT",
+    "value": "results/SUPERSEDED/phase-20R/decision_error_sawtooth.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 1037,
+    "function": "controls",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 1105,
+    "function": "run_fixed_grid",
+    "argument": "out_path",
+    "default": "FIXED_OUT",
+    "value": "results/LIVE/phase-20R/decision_error_by_age_by_regime.parquet"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 1229,
+    "function": "compute_margin_cv",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 1229,
+    "function": "compute_margin_cv",
+    "argument": "out_path",
+    "default": "MARGIN_CV_OUT",
+    "value": "results/SUPERSEDED/phase-20R/margin_cv_by_tau.parquet"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 1378,
+    "function": "compute_margin_cv_ci",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/decision_error_v2.py",
+    "line": 1378,
+    "function": "compute_margin_cv_ci",
+    "argument": "out_path",
+    "default": "MARGIN_CV_CI_OUT",
+    "value": "results/SUPERSEDED/phase-20R/margin_cv_ci.json"
+  },
+  {
+    "path": "measurements/diag_ca_late.py",
+    "line": 80,
+    "function": "aprime_rows",
+    "argument": "raw_dir",
+    "default": "APRIME_RAW",
+    "value": "results/SUPERSEDED/phase-20R/raw_additivity_budgetfix"
+  },
+  {
+    "path": "measurements/g6_differential.py",
+    "line": 78,
+    "function": "load_residuals",
+    "argument": "diag_ca",
+    "default": "DIAG_CA",
+    "value": "results/SUPERSEDED/phase-20R/diag_ca_late.json"
+  },
+  {
+    "path": "measurements/g6_differential.py",
+    "line": 78,
+    "function": "load_residuals",
+    "argument": "check_report",
+    "default": "CHECK_REPORT",
+    "value": "results/SMOKE/phase-20R/additivity_check_budgetfix_bg.json"
+  },
+  {
+    "path": "measurements/g6_differential.py",
+    "line": 232,
+    "function": "_per_link_loss_se",
+    "argument": "check_report",
+    "default": "CHECK_REPORT",
+    "value": "results/SMOKE/phase-20R/additivity_check_budgetfix_bg.json"
+  },
+  {
+    "path": "measurements/l6_campaign.py",
+    "line": 137,
+    "function": "load_state",
+    "argument": "path",
+    "default": "STATE",
+    "value": "results/SUPERSEDED/phase-L/campaign_state.json"
+  },
+  {
+    "path": "measurements/l6_campaign.py",
+    "line": 150,
+    "function": "save_state",
+    "argument": "path",
+    "default": "STATE",
+    "value": "results/SUPERSEDED/phase-L/campaign_state.json"
+  },
+  {
+    "path": "measurements/l6_campaign_fine.py",
+    "line": 215,
+    "function": "load_calibration",
+    "argument": "path",
+    "default": "CALIBRATION",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/l7_fit.py",
+    "line": 1117,
+    "function": "fit_from_state",
+    "argument": "out_path",
+    "default": "OUT",
+    "value": "results/LIVE/phase-L/link_model_v2_fit.json"
+  },
+  {
+    "path": "measurements/l7_fit.py",
+    "line": 1117,
+    "function": "fit_from_state",
+    "argument": "reich_path",
+    "default": "REICH_OUT",
+    "value": "results/SUPERSEDED/phase-L/l7_reich_workload.json"
+  },
+  {
+    "path": "measurements/mechanism_predictions.py",
+    "line": 116,
+    "function": "prediction_1",
+    "argument": "radius_path",
+    "default": "RADIUS",
+    "value": "results/SUPERSEDED/phase-20R/margin_radius.json"
+  },
+  {
+    "path": "measurements/mechanism_predictions.py",
+    "line": 202,
+    "function": "prediction_3",
+    "argument": "maps_path",
+    "default": "MAPS",
+    "value": "results/SUPERSEDED/phase-20R/mechanism_maps.json"
+  },
+  {
+    "path": "measurements/mechanism_predictions.py",
+    "line": 235,
+    "function": "build_report",
+    "argument": "maps_path",
+    "default": "MAPS",
+    "value": "results/SUPERSEDED/phase-20R/mechanism_maps.json"
+  },
+  {
+    "path": "measurements/mechanism_predictions.py",
+    "line": 235,
+    "function": "build_report",
+    "argument": "radius_path",
+    "default": "RADIUS",
+    "value": "results/SUPERSEDED/phase-20R/margin_radius.json"
+  },
+  {
+    "path": "measurements/predict_err_quick.py",
+    "line": 56,
+    "function": "load_calibration",
+    "argument": "path",
+    "default": "CAL_PATH",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/predict_err_quick.py",
+    "line": 65,
+    "function": "load_fit",
+    "argument": "path",
+    "default": "FIT_PATH",
+    "value": "results/LIVE/phase-L/link_model_v2_fit.json"
+  },
+  {
+    "path": "measurements/predict_err_quick.py",
+    "line": 282,
+    "function": "run_predictions",
+    "argument": "cal_path",
+    "default": "CAL_PATH",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/predict_err_quick.py",
+    "line": 282,
+    "function": "run_predictions",
+    "argument": "fit_path",
+    "default": "FIT_PATH",
+    "value": "results/LIVE/phase-L/link_model_v2_fit.json"
+  },
+  {
+    "path": "measurements/qs_loss_residual.py",
+    "line": 239,
+    "function": "run",
+    "argument": "main_state",
+    "default": "MAIN_STATE",
+    "value": "results/SUPERSEDED/phase-T/campaign_state.json"
+  },
+  {
+    "path": "measurements/qs_loss_residual.py",
+    "line": 239,
+    "function": "run",
+    "argument": "control_state",
+    "default": "CONTROL_STATE",
+    "value": "results/SUPERSEDED/phase-T/control_state.json"
+  },
+  {
+    "path": "measurements/qs_loss_residual.py",
+    "line": 239,
+    "function": "run",
+    "argument": "model_path",
+    "default": "MODEL_PATH",
+    "value": "results/LIVE/phase-L/link_model_v2_fit.json"
+  },
+  {
+    "path": "measurements/qs_loss_residual.py",
+    "line": 71,
+    "function": "__init__",
+    "argument": "model_path",
+    "default": "MODEL_PATH",
+    "value": "results/LIVE/phase-L/link_model_v2_fit.json"
+  },
+  {
+    "path": "measurements/quasistatic_band.py",
+    "line": 53,
+    "function": "phase_t_err_dyn",
+    "argument": "path",
+    "default": "PHASE_T_PAIRED",
+    "value": "results/SUPERSEDED/phase-T/t6e_paired.json"
+  },
+  {
+    "path": "measurements/sentinel_loss_recheck.py",
+    "line": 52,
+    "function": "reference_stats",
+    "argument": "campaign_state",
+    "default": "CAMPAIGN_STATE",
+    "value": "results/SUPERSEDED/phase-20R/campaign_state.json"
+  },
+  {
+    "path": "measurements/sentinel_loss_recheck.py",
+    "line": 119,
+    "function": "run_live",
+    "argument": "raw_dir",
+    "default": "RAW",
+    "value": "results/SUPERSEDED/phase-20R/raw_sentinel_recheck"
+  },
+  {
+    "path": "measurements/sla_manifest_exogenous.py",
+    "line": 85,
+    "function": "build",
+    "argument": "legacy",
+    "default": "LEGACY",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "measurements/sla_manifest_exogenous_14.py",
+    "line": 84,
+    "function": "build_manifest",
+    "argument": "wave4_path",
+    "default": "WAVE4",
+    "value": "results/LIVE/phase-23/sla_exogenous_wave4.json"
+  },
+  {
+    "path": "measurements/sla_manifest_exogenous_20_a069.py",
+    "line": 41,
+    "function": "build_manifest",
+    "argument": "base_path",
+    "default": "BASE",
+    "value": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json"
+  },
+  {
+    "path": "measurements/sla_manifest_exogenous_32_a070.py",
+    "line": 22,
+    "function": "build_manifest",
+    "argument": "base_path",
+    "default": "BASE",
+    "value": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_20cells_A069.json"
+  },
+  {
+    "path": "measurements/t5_campaign.py",
+    "line": 253,
+    "function": "load_state",
+    "argument": "path",
+    "default": "STATE",
+    "value": "results/SUPERSEDED/phase-T/campaign_state.json"
+  },
+  {
+    "path": "measurements/t5_campaign.py",
+    "line": 260,
+    "function": "save_state",
+    "argument": "path",
+    "default": "STATE",
+    "value": "results/SUPERSEDED/phase-T/campaign_state.json"
+  },
+  {
+    "path": "measurements/t5_campaign.py",
+    "line": 310,
+    "function": "save_sealed_row",
+    "argument": "sealed_dir",
+    "default": "SEALED",
+    "value": "results/RAW/phase-T/sealed"
+  },
+  {
+    "path": "measurements/t5_campaign.py",
+    "line": 399,
+    "function": "load_phase_l_refs",
+    "argument": "path",
+    "default": "PHASE_L_STATE",
+    "value": "results/SUPERSEDED/phase-L/campaign_state.json"
+  },
+  {
+    "path": "measurements/t5_step.py",
+    "line": 227,
+    "function": "load_state",
+    "argument": "path",
+    "default": "STATE",
+    "value": "results/SUPERSEDED/phase-T/step_v2_state.json"
+  },
+  {
+    "path": "measurements/t5_step.py",
+    "line": 234,
+    "function": "save_state",
+    "argument": "path",
+    "default": "STATE",
+    "value": "results/SUPERSEDED/phase-T/step_v2_state.json"
+  },
+  {
+    "path": "cert/a070_extension.py",
+    "line": 73,
+    "function": "run_wiring",
+    "argument": "reference_path",
+    "default": "REFERENCE",
+    "value": "results/LIVE/phase-23/recalibrate_transfer.json"
+  },
+  {
+    "path": "cert/a070_extension.py",
+    "line": 373,
+    "function": "run_extension",
+    "argument": "wiring_path",
+    "default": "WIRING_OUT",
+    "value": "results/LIVE/phase-23/a070_extension_wiring.json"
+  },
+  {
+    "path": "cert/a070_extension.py",
+    "line": 373,
+    "function": "run_extension",
+    "argument": "reference_path",
+    "default": "REFERENCE",
+    "value": "results/LIVE/phase-23/recalibrate_transfer.json"
+  },
+  {
+    "path": "cert/build_calib_set_v2.py",
+    "line": 100,
+    "function": "build_one",
+    "argument": "sigma",
+    "default": "SIGMA",
+    "value": 0.0096
+  },
+  {
+    "path": "cert/build_calib_set_v2.py",
+    "line": 267,
+    "function": "reproduce_20R_fixed_z",
+    "argument": "sigma",
+    "default": "SIGMA",
+    "value": 0.0096
+  },
+  {
+    "path": "cert/build_calib_set_v3.py",
+    "line": 193,
+    "function": "_load_cell",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": null
+  },
+  {
+    "path": "cert/build_calib_set_v3.py",
+    "line": 310,
+    "function": "build_one_v3",
+    "argument": "sigma",
+    "default": "SIGMA",
+    "value": null
+  },
+  {
+    "path": "cert/build_calib_set_v3.py",
+    "line": 310,
+    "function": "build_one_v3",
+    "argument": "axis",
+    "default": "AXIS_LEGACY",
+    "value": "legacy_sawtooth_51ms"
+  },
+  {
+    "path": "cert/build_calib_set_v3.py",
+    "line": 633,
+    "function": "build_cell",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": null
+  },
+  {
+    "path": "cert/build_calib_set_v3.py",
+    "line": 633,
+    "function": "build_cell",
+    "argument": "axis",
+    "default": "AXIS_LEGACY",
+    "value": "legacy_sawtooth_51ms"
+  },
+  {
+    "path": "cert/build_calib_set_v3.py",
+    "line": 685,
+    "function": "staleness_path_diagnostic",
+    "argument": "calibration_path",
+    "default": "CALIBRATION",
+    "value": null
+  },
+  {
+    "path": "cert/cell_matrices.py",
+    "line": 176,
+    "function": "cell_matrices",
+    "argument": "calibration_path",
+    "default": "SLA_CALIB",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "cert/conditioning_audit.py",
+    "line": 1239,
+    "function": "plot_figure6",
+    "argument": "out_path",
+    "default": "FIGURE_PATH",
+    "value": "results/SUPERSEDED/phase-23/fig6_conditioning_audit.png"
+  },
+  {
+    "path": "cert/decomposition.py",
+    "line": 124,
+    "function": "sweep_z",
+    "argument": "sigma",
+    "default": "SIGMA",
+    "value": 0.0096
+  },
+  {
+    "path": "cert/dsync_sensitivity.py",
+    "line": 346,
+    "function": "plot_report",
+    "argument": "path",
+    "default": "FIGURE",
+    "value": "results/SUPERSEDED/phase-23/fig7_dsync_sensitivity.png"
+  },
+  {
+    "path": "cert/eight_cell_sweep.py",
+    "line": 71,
+    "function": "sla_objective_for_cell",
+    "argument": "artifact",
+    "default": "SLA_ARTIFACT",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "cert/eight_cell_sweep.py",
+    "line": 95,
+    "function": "w_loss_for_cell",
+    "argument": "artifact",
+    "default": "SLA_ARTIFACT",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "cert/eight_cell_sweep.py",
+    "line": 168,
+    "function": "_objective_curve",
+    "argument": "sla_artifact",
+    "default": "SLA_ARTIFACT",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "cert/eight_cell_sweep.py",
+    "line": 223,
+    "function": "analyze_cell",
+    "argument": "sla_artifact",
+    "default": "SLA_ARTIFACT",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "cert/eight_cell_sweep.py",
+    "line": 316,
+    "function": "run_eight_cells",
+    "argument": "sla_artifact",
+    "default": "SLA_ARTIFACT",
+    "value": "results/LIVE/phase-20R/sla_calibration.json"
+  },
+  {
+    "path": "cert/freshness_requirement.py",
+    "line": 151,
+    "function": "build_fixed_z",
+    "argument": "sigma",
+    "default": "SIGMA",
+    "value": 0.0096
+  },
+  {
+    "path": "cert/freshness_requirement.py",
+    "line": 169,
+    "function": "build_fixed_z_tables",
+    "argument": "sigma",
+    "default": "SIGMA",
+    "value": 0.0096
+  },
+  {
+    "path": "cert/live_region_sweep.py",
+    "line": 135,
+    "function": "load_sla_exogenous",
+    "argument": "path",
+    "default": "SLA_EXOGENOUS_14",
+    "value": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json"
+  },
+  {
+    "path": "cert/live_region_sweep.py",
+    "line": 179,
+    "function": "analyze_base_cells",
+    "argument": "sla_path",
+    "default": "SLA_EXOGENOUS_14",
+    "value": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json"
+  },
+  {
+    "path": "cert/live_region_sweep.py",
+    "line": 179,
+    "function": "analyze_base_cells",
+    "argument": "calib_template",
+    "default": "BASE_CALIB_TEMPLATE",
+    "value": "results/LIVE/phase-21R/calib_set_{mode}_{rho:.3f}_U3_measured_v7.parquet"
+  },
+  {
+    "path": "cert/live_region_sweep.py",
+    "line": 307,
+    "function": "run_sweep",
+    "argument": "sla_path",
+    "default": "SLA_EXOGENOUS_14",
+    "value": "results/LIVE/phase-20R/sla_manifest_exogenous_S-B_14cells.json"
+  },
+  {
+    "path": "cert/live_region_sweep.py",
+    "line": 307,
+    "function": "run_sweep",
+    "argument": "base_calib_template",
+    "default": "BASE_CALIB_TEMPLATE",
+    "value": "results/LIVE/phase-21R/calib_set_{mode}_{rho:.3f}_U3_measured_v7.parquet"
+  },
+  {
+    "path": "cert/objective_misspecification.py",
+    "line": 171,
+    "function": "plot",
+    "argument": "out_path",
+    "default": "FIGURE",
+    "value": "results/SUPERSEDED/phase-23/fig2_objective_misspecification.png"
+  },
+  {
+    "path": "cert/phase23_cross_cell.py",
+    "line": 111,
+    "function": "lift_law_report",
+    "argument": "g23_17a_path",
+    "default": "DEFAULT_G23_17A",
+    "value": "results/SUPERSEDED/phase-23/g23_17a_cell_margins.json"
+  },
+  {
+    "path": "cert/recalibrate_transfer.py",
+    "line": 323,
+    "function": "load_kappa_A",
+    "argument": "path",
+    "default": "PILOT_OUT",
+    "value": "results/LIVE/phase-23/recalibrate_transfer_pilot.json"
+  },
+  {
+    "path": "cert/residual_level_audit.py",
+    "line": 157,
+    "function": "relative_point_from_raw",
+    "argument": "branch_b",
+    "default": "RAW_RELATIVE_B",
+    "value": "results/SUPERSEDED/phase-20R/branch_b_fixed_s104_108.json"
+  },
+  {
+    "path": "cert/residual_level_audit.py",
+    "line": 157,
+    "function": "relative_point_from_raw",
+    "argument": "branch_c",
+    "default": "RAW_RELATIVE_C",
+    "value": "results/SUPERSEDED/phase-20R/branch_c_fixed_s104_108.json"
+  },
+  {
+    "path": "twin/cost_v2.py",
+    "line": 107,
+    "function": "__init__",
+    "argument": "fit_path",
+    "default": "FIT_PATH",
+    "value": "results/LIVE/phase-L/link_model_v2_fit.json"
+  }
+]

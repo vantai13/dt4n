@@ -1,0 +1,33 @@
+=== 20R2.2 du doan ky truoc ===
+z tham chieu = 0.3650 s  (KHONG 0.369)
+
+tau      rho        err
+  0.5   0.481909   0.339944
+  1.0   0.694197   0.255760
+  2.0   0.833185   0.186515
+  3.0   0.885443   0.153855
+  5.0   0.929601   0.120152
+ 10.0   0.964158   0.085480
+ 20.0   0.981916   0.060628
+ 28.0   0.987049   0.051285
+
+do nhay truc CON LAI (ho measured, sau khi ky): 1.47%
+tuong phan legacy (DOI CHUNG AM, KHONG dung lam san bang): 8.95%
+
+bang: band_rel(tau) = max(AXIS_FLOOR(tau), K_MC * se_pilot_rel(tau))
+  K_MC = 3.0   san chu ky = 200   C = 0.4064 (trung binh + 1sd)
+
+  tau   nhan  chu ky   san truc   se(luat)    BANG
+    0.5  x1    2000.0    1.109%     0.909%     2.726%
+    1.0  x1    1000.0    1.291%     1.285%     3.856%
+    2.0  x1     500.0    1.383%     1.818%     5.453%
+    3.0  x1     333.3    1.413%     2.226%     6.678%
+    5.0  x1     200.0    1.437%     2.874%     8.621%
+   10.0  x2     200.0    1.455%     2.874%     8.621%
+   20.0  x4     200.0    1.464%     2.874%     8.621%
+   28.0  x4     200.0    1.466%     2.874%     8.621%
+
+POPULATION = 8 o gate; cbr = DOWNGRADED_TO_DIAGNOSTIC, bao cao RIENG
+don dieu   : don dieu o >= 6/7 CAP => 20R2-2 PASS  (7 cap)
+
+-> docs/phase-20R2/A-validation/prediction-current.json

@@ -1,0 +1,80 @@
+{
+  "status": "OPEN_BASELINE_CUSTODY_CLEANUP",
+  "test": "test/test_no_dangling_parquet_refs.py::test_known_dangling_only_shrinks",
+  "note": "Inventory only. Local presence does not prove restoration of original historical bytes or clean-clone availability. Neither raw files nor the exemption table were changed by A.",
+  "n_present": 7,
+  "rows": [
+    {
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.875.parquet",
+      "known_dangling_reason": "L41/L51 - Dot 4, Viec 3",
+      "exists": true,
+      "tracked": false,
+      "size": 69411082,
+      "sha256": "19e0a824901da96265cbc1adbf4e7a0ec776bc17941bbe80a96fd50a4559b7ab",
+      "surviving_calib_digest_entry": null
+    },
+    {
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.900.parquet",
+      "known_dangling_reason": "L41/L51 - Dot 4, Viec 3",
+      "exists": true,
+      "tracked": false,
+      "size": 69433751,
+      "sha256": "bc6c69dcca9d26f9815ff5dbd03ed7c6b49262be6d0c3f5185ef5e47856f3237",
+      "surviving_calib_digest_entry": null
+    },
+    {
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.650.parquet",
+      "known_dangling_reason": "L41/L51 - Dot 4, Viec 3",
+      "exists": true,
+      "tracked": false,
+      "size": 68822989,
+      "sha256": "52427ba3cd7285b730da24f0bcc4b6da0d63a8a4a693db6d9e1c98aee526ec38",
+      "surviving_calib_digest_entry": null
+    },
+    {
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.675.parquet",
+      "known_dangling_reason": "L41/L51 - Dot 4, Viec 3",
+      "exists": false,
+      "tracked": false,
+      "size": null,
+      "sha256": null,
+      "surviving_calib_digest_entry": null
+    },
+    {
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_poisson_0.960.parquet",
+      "known_dangling_reason": "L51 - chan sinh lai eight_cell",
+      "exists": true,
+      "tracked": false,
+      "size": 69211254,
+      "sha256": "903b9e17459aed6b038cac2c71a93b834270be9a2875817b820d4c8e2b1659b5",
+      "surviving_calib_digest_entry": null
+    },
+    {
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.850.parquet",
+      "known_dangling_reason": "L51 - chan sinh lai eight_cell",
+      "exists": true,
+      "tracked": false,
+      "size": 67691631,
+      "sha256": "2999a57234f8420f9d6d62ee1c88568446738672c20ca91212a5a5f0ba6f127e",
+      "surviving_calib_digest_entry": null
+    },
+    {
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.925.parquet",
+      "known_dangling_reason": "L51 - chan sinh lai eight_cell",
+      "exists": true,
+      "tracked": false,
+      "size": 67648360,
+      "sha256": "ee04acc7ad9eed94d42b07987eae3e35a3eae5149e9dbb619fd1b4c5e5defffe",
+      "surviving_calib_digest_entry": null
+    },
+    {
+      "path": "results/SUPERSEDED/phase-22/calib_set_v3_h2_0.960.parquet",
+      "known_dangling_reason": "L51 - chan sinh lai eight_cell",
+      "exists": true,
+      "tracked": false,
+      "size": 67701785,
+      "sha256": "5fde4ae6ee11c6f7ff5adc3cd63ad76f0462687f06353563355729edd843460a",
+      "surviving_calib_digest_entry": null
+    }
+  ]
+}
